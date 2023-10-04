@@ -56,7 +56,7 @@ class RegisterTest(TestCase):
         data["password"] = new_password
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(users_number(),2)
+        self.assertEqual(users_number(), 2)
         self.assertEqual(emails_sent_number(), 0)
 
         # new password without uppercase letter
