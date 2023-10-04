@@ -11,9 +11,13 @@ jobs:
     runs-on: ubuntu-latest 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v2  
+      - run: ls    
+      - run: cd backend
+      - run: ls
+      - run: cd backend
+      - run: ls
       - run: pip install -r requirements.txt 
-      - run: cd backend .
       - run: pylint backend --recursive=true 
       - run: black .
       - run: python manage.py test
