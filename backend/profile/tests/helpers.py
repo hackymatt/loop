@@ -34,7 +34,6 @@ def get_profile(user: User):
 def is_data_match(obj, data):
     for key, value in data.items():
         if not value == getattr(obj, key):
-            print(key, value, getattr(obj, key))
             return False
 
     return True
