@@ -9,14 +9,42 @@ on:
 jobs:
   test_backend:
     runs-on: ubuntu-latest 
+    
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ github.workspace }}/backend
+    
+    env:
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+
+      ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+
+      EMAIL_USE_TLS: ${{ secrets.EMAIL_USE_TLS }}
+      EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+      EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+      EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
+      EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
+      EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+
+    services:
+      postgres:
+        image: postgres:12.5
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2  
-      - run: ls    
-      - run: cd backend
-      - run: ls
-      - run: cd backend
-      - run: ls
       - run: pip install -r requirements.txt 
       - run: pylint backend --recursive=true 
       - run: black .
