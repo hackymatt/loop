@@ -44,12 +44,12 @@ class VerifyTest(TestCase):
         data["email"] = "email@example.com"
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        self.assertEqual(users_number(), 2)
+        self.assertEqual(users_number(), 3)
 
     def test_active_user(self):
         response = self.client.post(self.endpoint, self.data_2)
         self.assertEqual(response.status_code, status.HTTP_304_NOT_MODIFIED)
-        self.assertEqual(users_number(), 2)
+        self.assertEqual(users_number(), 3)
         self.assertTrue(self.user_2.is_active)
 
     def test_code_expiration(self):
@@ -59,7 +59,7 @@ class VerifyTest(TestCase):
         self.profile_1.save()
         response = self.client.post(self.endpoint, self.data_1)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(users_number(), 2)
+        self.assertEqual(users_number(), 3)
         self.assertFalse(self.user_1.is_active)
 
     def test_incorrect_code(self):
@@ -67,13 +67,13 @@ class VerifyTest(TestCase):
         data["code"] = "code4567"
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(users_number(), 2)
+        self.assertEqual(users_number(), 3)
         self.assertFalse(self.user_1.is_active)
 
     def test_verify_success(self):
         response = self.client.post(self.endpoint, self.data_1)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(users_number(), 2)
+        self.assertEqual(users_number(), 3)
         self.assertTrue(get_user(self.data_1["email"]).is_active)
 
 

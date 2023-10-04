@@ -37,7 +37,7 @@ class RegisterTest(TestCase):
         data["email"] = "email@example.com"
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(users_number(), 1)
+        self.assertEqual(users_number(), 2)
         self.assertEqual(emails_sent_number(), 0)
 
     def test_password_strength(self):
@@ -47,7 +47,7 @@ class RegisterTest(TestCase):
         data["password"] = new_password
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(users_number(), 1)
+        self.assertEqual(users_number(), 2)
         self.assertEqual(emails_sent_number(), 0)
 
         # new password without numbers and uppercase letter
@@ -56,7 +56,7 @@ class RegisterTest(TestCase):
         data["password"] = new_password
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(users_number(), 1)
+        self.assertEqual(users_number(),2)
         self.assertEqual(emails_sent_number(), 0)
 
         # new password without uppercase letter
@@ -65,7 +65,7 @@ class RegisterTest(TestCase):
         data["password"] = new_password
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(users_number(), 1)
+        self.assertEqual(users_number(), 2)
         self.assertEqual(emails_sent_number(), 0)
 
     def test_new_password_match(self):
@@ -75,13 +75,13 @@ class RegisterTest(TestCase):
         data["password2"] = new_password_2
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(users_number(), 1)
+        self.assertEqual(users_number(), 2)
         self.assertEqual(emails_sent_number(), 0)
 
     def test_register_success(self):
         response = self.client.post(self.endpoint, self.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(users_number(), 2)
+        self.assertEqual(users_number(), 3)
         self.assertEqual(profiles_number(), 1)
         self.assertTrue(is_user_found(self.data["email"]))
 
