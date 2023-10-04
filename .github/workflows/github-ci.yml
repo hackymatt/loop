@@ -21,6 +21,7 @@ jobs:
       - uses: actions/setup-python@v2  
       - run: pip install pylint
       - run: pip install black
+      - run: pip install -r requirements.txt 
       - run: pylint backend --recursive=true --fail-under=10
       - run: black . --check
       
