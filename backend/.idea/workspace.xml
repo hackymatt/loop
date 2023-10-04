@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="30c6f728-2320-45d8-9ff1-3e6ed7101f09" name="Changes" comment="" />
+    <list default="true" id="30c6f728-2320-45d8-9ff1-3e6ed7101f09" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/profile/tests/helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/profile/tests/helpers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/profile/tests/test_register.py" beforeDir="false" afterPath="$PROJECT_DIR$/profile/tests/test_register.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/profile/tests/test_verify.py" beforeDir="false" afterPath="$PROJECT_DIR$/profile/tests/test_verify.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -38,7 +43,7 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/profile/tests" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -58,7 +63,6 @@
   </component>
   <component name="RunManager" selected="Python.runserver">
     <configuration name="runserver" type="PythonConfigurationType" factoryName="Python">
-      <module name="backend" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -69,6 +73,7 @@
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manage.py" />
       <option name="PARAMETERS" value="runserver" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -92,6 +97,10 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.runserver" />
+      <item itemvalue="Python tests.Python tests for tests.test_details.PasswordChangeTest.test_amend_details_authenticated" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python tests.Python tests for tests.test_details.PasswordChangeTest.test_amend_details_authenticated" />
