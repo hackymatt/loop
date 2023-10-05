@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backend/:/usr/src/app/
+    environment:
+      - DB_NAME=codeedu
+      - DB_USER=codeedu_dev
+      - DB_PASSWORD=codeedu_devpassword
+      - DB_HOST=db
+      - DB_PORT=5432
+      - ADMIN_EMAIL=matios94@gmail.com
+      - ADMIN_PASSWORD=19Mateusz94!
+      - EMAIL_USE_TLS=True
+      - EMAIL_FROM=matios94@gmail.com
+      - EMAIL_HOST=smtp.gmail.com
+      - EMAIL_HOST_USER=matios94@gmail.com
+      - EMAIL_HOST_PASSWORD=bvmanocbsnyxozuf
+      - EMAIL_PORT=587
+    depends_on:
+      - db
+
+
+  db:
+    restart: always
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=codeedu
+      - POSTGRES_USER=codeedu_dev
+      - POSTGRES_PASSWORD=codeedu_devpassword
+
+volumes:
+  postgres_data:
