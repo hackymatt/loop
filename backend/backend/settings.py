@@ -90,6 +90,7 @@ DATABASES = {
         "USER": os.getenv("DB_USER", "codeedu_dev"),
         "PASSWORD": os.getenv("DB_PASSWORD", "codeedu_devpassword"),
         "HOST": os.getenv("DB_HOST", "localhost"),
+        "PORT": os.environ.get("DB_PORT", "5432"),
     }
 }
 
