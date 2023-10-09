@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from profile.details.serializers import ProfileDetailsSerializer
 from django.contrib.auth.models import User
-import os
 
 
 class ProfileDetailsViewSet(ModelViewSet):

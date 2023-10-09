@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django_cleanup.apps.CleanupConfig",
     "rest_framework",
     "profile",
+    "course",
 ]
 
 MIDDLEWARE = [
