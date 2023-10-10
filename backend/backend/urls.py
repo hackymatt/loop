@@ -5,6 +5,7 @@ from profile.logout.views import ProfileLogoutViewSet
 from profile.password_change.views import ProfilePasswordChangeViewSet
 from profile.password_reset.views import ProfilePasswordResetViewSet
 from profile.details.views import ProfileDetailsViewSet
+from course.views import CourseViewSet
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
@@ -24,6 +25,9 @@ router.register(
 )
 router.register(
     r"verify-code", ProfileVerificationCodeViewSet, basename="user_verification_code"
+)
+router.register(
+    r"courses", CourseViewSet, basename="courses"
 )
 
 # The API URLs are now determined automatically by the router.
