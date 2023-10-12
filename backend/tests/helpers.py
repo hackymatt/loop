@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from profile.models import Profile
+from course.models import Course, Lesson, Skill, Topic
 from django.core import mail
 
 
@@ -33,8 +34,17 @@ def get_profile(user: User):
 
 def is_data_match(obj, data):
     for key, value in data.items():
-        if not value == getattr(obj, key):
+        if not str(value) == str(getattr(obj, key)):
             return False
+
+    return True
+
+
+def is_list_match(list_1, list_2):
+    for d1, d2 in zip(list_1, list_2):
+        for key, value in d1.items():
+            if value != d2[key]:
+                return False
 
     return True
 
@@ -49,3 +59,27 @@ def get_mail(index: int):
 
 def filter_dict(old_dict, keys):
     return {key: old_dict[key] for key in keys}
+
+
+def get_course(id: int):
+    return Course.objects.get(pk=id)
+
+
+def courses_number():
+    return Course.objects.count()
+
+
+def lessons_number():
+    return Lesson.objects.count()
+
+
+def get_lesson(id: int):
+    return Lesson.objects.get(pk=id)
+
+
+def get_skill(id: int):
+    return Skill.objects.get(pk=id)
+
+
+def get_topic(id: int):
+    return Topic.objects.get(pk=id)

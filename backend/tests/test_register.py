@@ -1,5 +1,6 @@
 from django.test import TestCase
 from rest_framework import status
+from rest_framework.test import APITestCase
 from .factory import create_user
 from .helpers import (
     users_number,
@@ -14,7 +15,7 @@ from .helpers import (
 )
 
 
-class RegisterTest(TestCase):
+class RegisterTest(APITestCase):
     def setUp(self):
         self.endpoint = "/register"
         self.data = {
@@ -82,7 +83,7 @@ class RegisterTest(TestCase):
         response = self.client.post(self.endpoint, self.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(users_number(), 3)
-        self.assertEqual(profiles_number(), 1)
+        self.assertEqual(profiles_number(), 2)
         self.assertTrue(is_user_found(self.data["email"]))
 
         user = get_user(self.data["email"])

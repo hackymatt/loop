@@ -25,12 +25,13 @@ class Profile(Model):
     )
     USER_TYPE_CHOICES = (
         ("S", "Student"),
-        ("L", "Lecturer"),
+        ("W", "Wykładowca"),
         ("A", "Admin"),
     )
     uuid = UUIDField(default=uuid.uuid4)
     user = OneToOneField(User, on_delete=CASCADE)
     user_type = CharField(choices=USER_TYPE_CHOICES, default="S")
+    user_title = CharField(null=True)
     verification_code = CharField(max_length=8, null=True)
     verification_code_created_at = DateTimeField(null=True)
     phone_number = CharField(null=True)

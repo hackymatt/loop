@@ -1,11 +1,12 @@
 from django.test import TestCase
 from rest_framework import status
+from rest_framework.test import APITestCase
 from .factory import create_user, create_profile
 from .helpers import login, emails_sent_number, get_mail
 from django.contrib import auth
 
 
-class PasswordResetTest(TestCase):
+class PasswordResetTest(APITestCase):
     def setUp(self):
         self.endpoint = "/password-reset"
         self.data = {"email": "email@example.com", "password": "test_password"}

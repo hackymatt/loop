@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_cleanup.apps.CleanupConfig",
+    "django_filters",
     "rest_framework",
     "profile",
     "course",
@@ -58,7 +59,9 @@ REST_FRAMEWORK = {
     "DEFAULT_PARSER_CLASSES": (
         "rest_framework.parsers.JSONParser",
         "rest_framework.parsers.MultiPartParser",
-    )
+    ),
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "TEST_REQUEST_DEFAULT_FORMAT": "json",
 }
 
 ROOT_URLCONF = "backend.urls"

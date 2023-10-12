@@ -1,11 +1,12 @@
 from django.test import TestCase
 from rest_framework import status
+from rest_framework.test import APITestCase
 from .factory import create_user
 from django.contrib import auth
 from .helpers import login
 
 
-class LogoutTest(TestCase):
+class LogoutTest(APITestCase):
     def setUp(self):
         self.endpoint = "/logout"
         self.data = {"email": "email@example.com", "password": "test_password"}
