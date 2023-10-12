@@ -1,11 +1,12 @@
 from django.test import TestCase
 from rest_framework import status
+from rest_framework.test import APITestCase
 from .factory import create_user
 from .helpers import login
 from django.contrib import auth
 
 
-class PasswordChangeTest(TestCase):
+class PasswordChangeTest(APITestCase):
     def setUp(self):
         self.endpoint = "/password-change"
         self.data = {"email": "email@example.com", "password": "test_password"}

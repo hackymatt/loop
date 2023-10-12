@@ -1,5 +1,6 @@
 from django.test import TestCase
 from rest_framework import status
+from rest_framework.test import APITestCase
 from .factory import create_user
 from .helpers import (
     users_number,
@@ -14,7 +15,7 @@ from .helpers import (
 )
 
 
-class RegisterTest(TestCase):
+class RegisterTest(APITestCase):
     def setUp(self):
         self.endpoint = "/register"
         self.data = {

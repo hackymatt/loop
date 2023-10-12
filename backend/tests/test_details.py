@@ -1,5 +1,6 @@
 from django.test import TestCase
 from rest_framework import status
+from rest_framework.test import APITestCase
 from .factory import create_user, create_profile, create_image
 from .helpers import login, is_data_match, filter_dict, get_user, get_profile
 from django.contrib import auth
@@ -7,7 +8,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 import json
 
 
-class DetailsTest(TestCase):
+class DetailsTest(APITestCase):
     def setUp(self):
         self.endpoint = "/details"
         self.data = {
@@ -74,17 +75,9 @@ class DetailsTest(TestCase):
             "zip_code": "30-100",
             "city": "Miasto",
             "country": "Polska",
-            "image": SimpleUploadedFile(
-                "test.png", create_image().read(), content_type="image/png"
-            ),
+            "image": None,
         }
-        response = self.client.put(
-            self.endpoint,
-            new_data,
-            headers={
-                "content-type": "multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0g"
-            },
-        )
+        response = self.client.put(self.endpoint, new_data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_amend_details_authenticated(self):
@@ -109,11 +102,7 @@ class DetailsTest(TestCase):
             "country": "Polska",
             "image": None,
         }
-        response = self.client.put(
-            self.endpoint,
-            json.dumps(new_data),
-            headers={"content-type": "application/json"},
-        )
+        response = self.client.put(self.endpoint, new_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user_data = filter_dict(new_data, self.user_columns)
         profile_data = filter_dict(new_data, self.profile_columns)
@@ -131,10 +120,6 @@ class DetailsTest(TestCase):
         new_data = {
             "email": "new_email@example.com",
         }
-        response = self.client.put(
-            self.endpoint,
-            json.dumps(new_data),
-            headers={"content-type": "application/json"},
-        )
+        response = self.client.put(self.endpoint, new_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(is_data_match(get_user(self.data["email"]), new_data))

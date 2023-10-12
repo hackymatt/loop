@@ -1,12 +1,13 @@
 from django.test import TestCase
 from rest_framework import status
+from rest_framework.test import APITestCase
 from .factory import create_user, create_profile
 from .helpers import users_number, get_user, emails_sent_number, get_mail, get_profile
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 
 
-class VerifyTest(TestCase):
+class VerifyTest(APITestCase):
     def setUp(self):
         self.endpoint = "/verify"
         self.data_1 = {
@@ -77,7 +78,7 @@ class VerifyTest(TestCase):
         self.assertTrue(get_user(self.data_1["email"]).is_active)
 
 
-class VerificationCodeTest(TestCase):
+class VerificationCodeTest(APITestCase):
     def setUp(self):
         self.endpoint = "/verify-code"
         self.data = {"email": "test_email@example.com"}
