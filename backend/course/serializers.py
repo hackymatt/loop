@@ -5,9 +5,15 @@ from rest_framework.serializers import (
     EmailField,
 )
 from rest_framework.serializers import ValidationError
-from course.models import Lesson, Course, Skill, Topic
+from course.models import Lesson, Course, Technology, Skill, Topic
 from profile.models import Profile
 from django.db.models import Sum
+
+
+class TechnologySerializer(ModelSerializer):
+    class Meta:
+        model = Technology
+        fields = "__all__"
 
 
 class SkillSerializer(ModelSerializer):
@@ -41,6 +47,7 @@ class LessonSerializer(ModelSerializer):
 
 
 class CourseListSerializer(ModelSerializer):
+    technology = TechnologySerializer()
     duration = SerializerMethodField("get_duration")
     lecturers = SerializerMethodField("get_lecturers")
 
@@ -67,6 +74,7 @@ class CourseListSerializer(ModelSerializer):
 class CourseSerializer(ModelSerializer):
     duration = SerializerMethodField("get_duration")
     lessons = LessonSerializer(many=True)
+    technology = TechnologySerializer()
     skills = SkillSerializer(many=True)
     topics = TopicSerializer(many=True)
     lecturers = SerializerMethodField("get_lecturers")
@@ -111,6 +119,11 @@ class CourseSerializer(ModelSerializer):
             )
 
         return topic
+
+    def add_technology(self, technology):
+        obj, created = Technology.objects.get_or_create(name=technology["name"])
+
+        return obj
 
     def add_skills(self, course, skills):
         objs = []
@@ -158,10 +171,13 @@ class CourseSerializer(ModelSerializer):
 
     def create(self, validated_data):
         lessons = validated_data.pop("lessons")
+        technology = validated_data.pop("technology")
         skills = validated_data.pop("skills")
         topics = validated_data.pop("topics")
 
-        course = Course.objects.create(**validated_data)
+        course = Course.objects.create(
+            **validated_data, technology=self.add_technology(technology=technology)
+        )
         self.create_lessons(course=course, lessons=lessons)
         course = self.add_skills(course=course, skills=skills)
         course = self.add_topics(course=course, topics=topics)
@@ -171,6 +187,7 @@ class CourseSerializer(ModelSerializer):
 
     def update(self, instance, validated_data):
         lessons = validated_data.pop("lessons")
+        technology = validated_data.pop("technology")
         skills = validated_data.pop("skills")
         topics = validated_data.pop("topics")
 
@@ -178,12 +195,12 @@ class CourseSerializer(ModelSerializer):
 
         instance.title = validated_data.get("title", instance.title)
         instance.description = validated_data.get("description", instance.description)
-        instance.technology = validated_data.get("technology", instance.technology)
         instance.level = validated_data.get("level", instance.level)
         instance.price = validated_data.get("price", instance.price)
         instance.github_repo_link = validated_data.get(
             "github_repo_link", instance.github_repo_link
         )
+        instance.technology = self.add_technology(technology=technology)
         instance.skills.clear()
         instance = self.add_skills(course=instance, skills=skills)
         instance.topics.clear()

@@ -1,4 +1,3 @@
-from django.test import TestCase
 from rest_framework import status
 from rest_framework.test import APITestCase
 from .factory import (
@@ -6,6 +5,7 @@ from .factory import (
     create_profile,
     create_course,
     create_lesson,
+    create_technology,
     create_skill,
     create_topic,
     create_lecturer,
@@ -17,6 +17,7 @@ from .helpers import (
     get_profile,
     get_course,
     get_lesson,
+    get_technology,
     get_skill,
     get_topic,
     courses_number,
@@ -64,7 +65,7 @@ class CourseTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
-            technology="Python",
+            technology=create_technology(name="Python"),
             level="Podstawowy",
             price="99.99",
             github_repo_link="www.example.com",
@@ -129,11 +130,15 @@ class CourseTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         course_data = json.loads(response.content)
         lessons_data = course_data.pop("lessons")
+        technology_data = course_data.pop("technology")
         skills_data = course_data.pop("skills")
         topics_data = course_data.pop("topics")
         duration = course_data.pop("duration")
         lecturers = course_data.pop("lecturers")
         self.assertTrue(is_data_match(get_course(self.course.id), course_data))
+        self.assertTrue(
+            is_data_match(get_technology(technology_data["id"]), technology_data)
+        )
         self.assertEqual(
             duration, sum(lesson_data["duration"] for lesson_data in lessons_data)
         )
@@ -175,11 +180,15 @@ class CourseTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         course_data = json.loads(response.content)
         lessons_data = course_data.pop("lessons")
+        technology_data = course_data.pop("technology")
         skills_data = course_data.pop("skills")
         topics_data = course_data.pop("topics")
         duration = course_data.pop("duration")
         lecturers = course_data.pop("lecturers")
         self.assertTrue(is_data_match(get_course(self.course.id), course_data))
+        self.assertTrue(
+            is_data_match(get_technology(technology_data["id"]), technology_data)
+        )
         self.assertEqual(
             duration, sum(lesson_data["duration"] for lesson_data in lessons_data)
         )
@@ -219,7 +228,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": "Javascript",
+            "technology": create_technology(name="Javascript"),
             "level": "E",
             "price": "999.99",
             "github_repo_link": "https://github.com/hackymatt/CodeEdu",
@@ -265,7 +274,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": "Javascript",
+            "technology": create_technology(name="Javascript"),
             "level": "E",
             "price": "999.99",
             "github_repo_link": "https://github.com/hackymatt/CodeEdu",
@@ -310,11 +319,15 @@ class CourseTest(APITestCase):
         self.assertEqual(courses_number(), 2)
         course_data = json.loads(response.content)
         lessons_data = course_data.pop("lessons")
+        technology_data = course_data.pop("technology")
         skills_data = course_data.pop("skills")
         topics_data = course_data.pop("topics")
         duration = course_data.pop("duration")
         lecturers = course_data.pop("lecturers")
         self.assertTrue(is_data_match(get_course(course_data["id"]), course_data))
+        self.assertTrue(
+            is_data_match(get_technology(technology_data["id"]), technology_data)
+        )
         self.assertEqual(
             duration, sum(lesson_data["duration"] for lesson_data in lessons_data)
         )
@@ -355,7 +368,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": "Javascript",
+            "technology": create_technology(name="Javascript"),
             "level": "E",
             "price": "999.99",
             "github_repo_link": "https://github.com/hackymatt/CodeEdu",
@@ -379,7 +392,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": "Javascript",
+            "technology": create_technology(name="Javascript"),
             "level": "E",
             "price": "999.99",
             "github_repo_link": "https://github.com/hackymatt/CodeEdu",
@@ -431,7 +444,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": "Javascript",
+            "technology": create_technology(name="Javascript"),
             "level": "E",
             "price": "999.99",
             "github_repo_link": "https://github.com/hackymatt/CodeEdu",
@@ -479,7 +492,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": "Javascript",
+            "technology": create_technology(name="Javascript"),
             "level": "E",
             "price": "999.99",
             "github_repo_link": "https://github.com/hackymatt/CodeEdu",
@@ -525,7 +538,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": "Javascript",
+            "technology": create_technology(name="Javascript"),
             "level": "E",
             "price": "999.99",
             "active": "False",
@@ -571,11 +584,15 @@ class CourseTest(APITestCase):
         self.assertEqual(courses_number(), 1)
         course_data = json.loads(response.content)
         lessons_data = course_data.pop("lessons")
+        technology_data = course_data.pop("technology")
         skills_data = course_data.pop("skills")
         topics_data = course_data.pop("topics")
         duration = course_data.pop("duration")
         lecturers = course_data.pop("lecturers")
-        self.assertTrue(is_data_match(get_course(course_data["id"]), course_data))
+        self.assertTrue(is_data_match(get_course(self.course.id), course_data))
+        self.assertTrue(
+            is_data_match(get_technology(technology_data["id"]), technology_data)
+        )
         self.assertEqual(
             duration, sum(lesson_data["duration"] for lesson_data in lessons_data)
         )
@@ -616,7 +633,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": "Javascript",
+            "technology": create_technology(name="Javascript"),
             "level": "E",
             "price": "999.99",
             "github_repo_link": "https://github.com/hackymatt/CodeEdu",
@@ -640,7 +657,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": "Javascript",
+            "technology": create_technology(name="Javascript"),
             "level": "E",
             "price": "999.99",
             "github_repo_link": "https://github.com/hackymatt/CodeEdu",
@@ -692,7 +709,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": "Javascript",
+            "technology": create_technology(name="Javascript"),
             "level": "E",
             "price": "999.99",
             "github_repo_link": "https://github.com/hackymatt/CodeEdu",
