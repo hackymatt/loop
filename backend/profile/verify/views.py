@@ -35,7 +35,7 @@ class ProfileVerifyViewSet(ModelViewSet):
                 data={"code": "Użytkownik już jest aktywny."},
             )
 
-        profile = Profile.objects.get(user_id=user.id)
+        profile = Profile.objects.get(user=user)
 
         if make_aware(
             datetime.now()
@@ -78,7 +78,7 @@ class ProfileVerificationCodeViewSet(ModelViewSet):
             )
 
         user = User.objects.get(email=email)
-        profile = Profile.objects.get(user_id=user.id)
+        profile = Profile.objects.get(user=user)
 
         profile.verification_code = ProfileVerificationCodeSerializer.generate()
         profile.verification_code_created_at = make_aware(datetime.now())

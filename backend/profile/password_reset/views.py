@@ -31,7 +31,7 @@ class ProfilePasswordResetViewSet(ModelViewSet):
         user.set_password(code)
         user.save()
 
-        profile = Profile.objects.get(user_id=user.id)
+        profile = Profile.objects.get(user=user)
         profile.verification_code = code
         profile.verification_code_created_at = make_aware(datetime.now())
         profile.save()
