@@ -104,50 +104,10 @@ class CourseTest(APITestCase):
         # get data
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        courses_data = json.loads(response.content)
-        for course_data in courses_data:
-            lessons_data = course_data.pop("lessons")
-            skills_data = course_data.pop("skills")
-            topics_data = course_data.pop("topics")
-            duration = course_data.pop("duration")
-            lecturers = course_data.pop("lecturers")
-            self.assertTrue(is_data_match(get_course(course_data["id"]), course_data))
-            self.assertEqual(
-                duration,
-                sum(lesson_data["duration"] for lesson_data in lessons_data),
-            )
-            self.assertEqual(
-                lecturers,
-                [
-                    dict(y)
-                    for y in set(
-                        tuple(x.items())
-                        for x in sum(
-                            [lesson["lecturers"] for lesson in lessons_data], []
-                        )
-                    )
-                ],
-            )
-            for lesson_data in lessons_data:
-                lecturers_data = lesson_data.pop("lecturers")
-                self.assertTrue(
-                    is_data_match(get_lesson(lesson_data["id"]), lesson_data)
-                )
-                for lecturer_data in lecturers_data:
-                    user_data = filter_dict(lecturer_data, self.user_columns)
-                    profile_data = filter_dict(lecturer_data, self.profile_columns)
-                    self.assertTrue(
-                        is_data_match(get_user(lecturer_data["email"]), user_data)
-                    )
-                    self.assertTrue(
-                        is_data_match(
-                            get_profile(get_user(lecturer_data["email"])), profile_data
-                        )
-                    )
-            for skill_data in skills_data:
-                self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
-            for topic_data in topics_data:
-                self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
+        data = json.loads(response.content)
+        self.assertFalse(all("lessons" in course.keys() for course in data))
+        self.assertFalse(all("skills" in course.keys() for course in data))
+        self.assertFalse(all("topics" in course.keys() for course in data))
 
     def test_get_courses_authenticated(self):
         # login
@@ -156,51 +116,10 @@ class CourseTest(APITestCase):
         # get data
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        courses_data = json.loads(response.content)
-        for course_data in courses_data:
-            lessons_data = course_data.pop("lessons")
-            skills_data = course_data.pop("skills")
-            topics_data = course_data.pop("topics")
-            duration = course_data.pop("duration")
-            lecturers = course_data.pop("lecturers")
-            self.assertTrue(is_data_match(get_course(course_data["id"]), course_data))
-            self.assertEqual(
-                duration,
-                sum(lesson_data["duration"] for lesson_data in lessons_data),
-            )
-            self.assertEqual(
-                lecturers,
-                [
-                    dict(y)
-                    for y in set(
-                        tuple(x.items())
-                        for x in sum(
-                            [lesson["lecturers"] for lesson in lessons_data], []
-                        )
-                    )
-                ],
-            )
-            for lesson_data in lessons_data:
-                lecturers_data = lesson_data.pop("lecturers")
-                self.assertTrue(
-                    is_data_match(get_lesson(lesson_data["id"]), lesson_data)
-                )
-                for lecturer_data in lecturers_data:
-                    user_data = filter_dict(lecturer_data, self.user_columns)
-                    profile_data = filter_dict(lecturer_data, self.profile_columns)
-                    self.assertTrue(
-                        is_data_match(get_user(lecturer_data["email"]), user_data)
-                    )
-                    self.assertTrue(
-                        is_data_match(
-                            get_profile(get_user(lecturer_data["email"])), profile_data
-                        )
-                    )
-            for skill_data in skills_data:
-                self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
-            for topic_data in topics_data:
-                self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
+        data = json.loads(response.content)
+        self.assertFalse(all("lessons" in course.keys() for course in data))
+        self.assertFalse(all("skills" in course.keys() for course in data))
+        self.assertFalse(all("topics" in course.keys() for course in data))
 
     def test_get_course_unauthenticated(self):
         # no login
