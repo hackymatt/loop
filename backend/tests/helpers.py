@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from profile.models import Profile
-from course.models import Course, Lesson, Skill, Topic
+from course.models import Course, Lesson, Technology, Skill, Topic
 from django.core import mail
 
 
@@ -75,6 +75,14 @@ def lessons_number():
 
 def get_lesson(id: int):
     return Lesson.objects.get(pk=id)
+
+
+def technologies_number():
+    return Technology.objects.count()
+
+
+def get_technology(id: int):
+    return Technology.objects.get(pk=id)
 
 
 def get_skill(id: int):

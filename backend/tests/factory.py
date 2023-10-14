@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from profile.models import Profile
-from course.models import Course, Lesson, Skill, Topic
+from course.models import Course, Lesson, Technology, Skill, Topic
 from datetime import datetime
 from django.utils.timezone import make_aware
 from PIL import Image
@@ -47,7 +47,13 @@ def create_image():
     return image_data
 
 
-def create_field(instance, values, model):
+def create_field(value, model):
+    obj, created = model.objects.get_or_create(name=value["name"])
+
+    return obj
+
+
+def create_fields(values, model):
     objs = []
     for value in values:
         obj, created = model.objects.get_or_create(name=value["name"])
@@ -68,7 +74,7 @@ def add_lecturers(lesson, lecturers):
 def create_course(
     title: str,
     description: str,
-    technology: str,
+    technology,
     level: str,
     price: str,
     github_repo_link: str,
@@ -79,13 +85,14 @@ def create_course(
     course = Course.objects.create(
         title=title,
         description=description,
-        technology=technology,
+        technology=create_field(technology, Technology),
         level=level,
         price=price,
         github_repo_link=github_repo_link,
     )
-    course.skills.add(*create_field(course, skills, Skill))
-    course.topics.add(*create_field(course, topics, Topic))
+
+    course.skills.add(*create_fields(skills, Skill))
+    course.topics.add(*create_fields(topics, Topic))
     course.save()
 
     for lesson in lessons:
@@ -128,6 +135,10 @@ def create_lecturer(lecturer: Profile):
         "last_name": lecturer.user.last_name,
         "email": lecturer.user.email,
     }
+
+
+def create_technology(name: str):
+    return {"name": name}
 
 
 def create_skill(name: str):

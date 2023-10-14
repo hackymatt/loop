@@ -15,6 +15,13 @@ from decimal import Decimal
 from profile.models import Profile
 
 
+class Technology(Model):
+    name = CharField()
+
+    class Meta:
+        db_table = "technology"
+
+
 class Skill(Model):
     name = CharField()
 
@@ -38,7 +45,7 @@ class Course(Model):
     )
     title = CharField()
     description = TextField()
-    technology = CharField()
+    technology = ForeignKey(Technology, on_delete=CASCADE, related_name="technology")
     level = CharField(choices=LEVEL_CHOICES, null=True)
     github_repo_link = URLField()
     price = DecimalField(

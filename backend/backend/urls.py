@@ -10,7 +10,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
-from course.views import CourseViewSet
+from course.views import CourseViewSet, TechnologyViewSet
 
 router = DefaultRouter(trailing_slash=False)
 router.register(r"register", ProfileRegisterViewSet, basename="user_register")
@@ -27,6 +27,7 @@ router.register(
     r"verify-code", ProfileVerificationCodeViewSet, basename="user_verification_code"
 )
 router.register(r"courses", CourseViewSet, basename="courses")
+router.register(r"technologies", TechnologyViewSet, basename="technologies")
 
 # The API URLs are now determined automatically by the router.
 urlpatterns = [

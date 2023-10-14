@@ -1,8 +1,18 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from course.serializers import CourseListSerializer, CourseSerializer
-from course.models import Course
+from course.serializers import (
+    CourseListSerializer,
+    CourseSerializer,
+    TechnologySerializer,
+)
+from course.models import Course, Technology
+
+
+class TechnologyViewSet(ModelViewSet):
+    http_method_names = ["get"]
+    queryset = Technology.objects.all()
+    serializer_class = TechnologySerializer
 
 
 class CourseViewSet(ModelViewSet):
