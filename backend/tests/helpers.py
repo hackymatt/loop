@@ -25,11 +25,11 @@ def profiles_number():
 
 
 def is_profile_found(user: User):
-    return Profile.objects.filter(user_id=user.id).exists()
+    return Profile.objects.filter(user=user).exists()
 
 
 def get_profile(user: User):
-    return Profile.objects.get(user_id=user.id)
+    return Profile.objects.get(user=user)
 
 
 def is_data_match(obj, data):

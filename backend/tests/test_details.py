@@ -26,6 +26,21 @@ class DetailsTest(APITestCase):
         )
         self.profile = create_profile(user=self.user)
 
+        self.data_lecturer = {
+            "first_name": "test_first_name_lecturer",
+            "last_name": "test_last_name_lecturer",
+            "email": "test_email_lecturer@example.com",
+            "password": "password_lecturer",
+        }
+        self.user_lecturer = create_user(
+            first_name=self.data_lecturer["first_name"],
+            last_name=self.data_lecturer["last_name"],
+            email=self.data_lecturer["email"],
+            password=self.data_lecturer["password"],
+            is_active=True,
+        )
+        self.profile_lecturer = create_profile(user=self.user_lecturer, user_type="W")
+
         self.user_columns = ["first_name", "last_name", "email"]
         self.profile_columns = [
             "phone_number",
@@ -43,6 +58,28 @@ class DetailsTest(APITestCase):
         # get data
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_details_student(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(self.endpoint)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        self.assertFalse("user_type" in data.keys())
+        self.assertFalse("user_title" in data.keys())
+
+    def test_get_details_other(self):
+        # login
+        login(self, self.data_lecturer["email"], self.data_lecturer["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(self.endpoint)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        self.assertTrue("user_type" in data.keys())
+        self.assertTrue("user_title" in data.keys())
 
     def test_get_details_authenticated(self):
         # login

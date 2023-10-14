@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from course.serializers import CourseSerializer
 from course.models import Course
-import re
 
 
 class CourseViewSet(ModelViewSet):
@@ -35,7 +34,6 @@ class CourseViewSet(ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         user = request.user
-        id = re.search("\d+$", request.path).group()
 
         if not user.is_authenticated:
             return Response(
@@ -43,7 +41,7 @@ class CourseViewSet(ModelViewSet):
                 data={"course": "Użytkownik niezalogowany."},
             )
 
-        if Course.objects.get(pk=id).active:
+        if self.get_object().active:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
                 data={"course": "Kurs jest aktywny."},
