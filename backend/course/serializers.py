@@ -40,6 +40,30 @@ class LessonSerializer(ModelSerializer):
         exclude = ("course",)
 
 
+class CourseListSerializer(ModelSerializer):
+    duration = SerializerMethodField("get_duration")
+    lecturers = SerializerMethodField("get_lecturers")
+
+    def get_duration(self, course):
+        return Lesson.objects.filter(course=course).aggregate(Sum("duration"))[
+            "duration__sum"
+        ]
+
+    def get_lecturers(self, course):
+        lessons = LessonSerializer(Lesson.objects.filter(course=course), many=True).data
+        lecturers = [lesson["lecturers"] for lesson in lessons]
+        lecturers_joined = sum(lecturers, [])
+        lecturers_unique = [
+            dict(y) for y in set(tuple(x.items()) for x in lecturers_joined)
+        ]
+
+        return lecturers_unique
+
+    class Meta:
+        model = Course
+        exclude = ("active", "skills", "topics")
+
+
 class CourseSerializer(ModelSerializer):
     duration = SerializerMethodField("get_duration")
     lessons = LessonSerializer(many=True)

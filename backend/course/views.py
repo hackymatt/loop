@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from course.serializers import CourseSerializer
+from course.serializers import CourseListSerializer, CourseSerializer
 from course.models import Course
 
 
@@ -9,6 +9,12 @@ class CourseViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return CourseListSerializer
+
+        return super(CourseViewSet, self).get_serializer_class()
 
     def create(self, request, *args, **kwargs):
         user = request.user
