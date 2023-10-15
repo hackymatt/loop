@@ -13,7 +13,7 @@ from django.contrib import auth
 import json
 
 
-class CourseTest(APITestCase):
+class TechnologyTest(APITestCase):
     def setUp(self):
         self.endpoint = "/technologies"
         self.data = {
