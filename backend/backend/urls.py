@@ -5,6 +5,7 @@ from profile.logout.views import ProfileLogoutViewSet
 from profile.password_change.views import ProfilePasswordChangeViewSet
 from profile.password_reset.views import ProfilePasswordResetViewSet
 from profile.details.views import ProfileDetailsViewSet
+from profile.lecturers.views import LecturerViewSet
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
@@ -28,6 +29,8 @@ router.register(
 )
 router.register(r"courses", CourseViewSet, basename="courses")
 router.register(r"technologies", TechnologyViewSet, basename="technologies")
+router.register(r"lecturers", LecturerViewSet, basename="lecturers")
+
 
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
