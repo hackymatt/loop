@@ -8,7 +8,6 @@ from .helpers import (
     login,
     technologies_number,
 )
-from course.models import Technology
 from django.contrib import auth
 import json
 
@@ -27,11 +26,11 @@ class TechnologyTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        Technology.objects.create(name="Python")
-        Technology.objects.create(name="JavaScript")
-        Technology.objects.create(name="C++")
-        Technology.objects.create(name="C#")
-        Technology.objects.create(name="VBA")
+        create_technology(name="Python")
+        create_technology(name="JavaScript")
+        create_technology(name="C++")
+        create_technology(name="C#")
+        create_technology(name="VBA")
 
     def test_get_technologies_unauthenticated(self):
         # no login
