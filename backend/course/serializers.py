@@ -3,11 +3,13 @@ from rest_framework.serializers import (
     SerializerMethodField,
     CharField,
     EmailField,
+    IntegerField,
 )
 from rest_framework.serializers import ValidationError
 from course.models import Lesson, Course, Technology, Skill, Topic
 from profile.models import Profile
-from django.db.models import Sum
+from review.models import Review
+from django.db.models import Sum, Avg
 
 
 class TechnologySerializer(ModelSerializer):
@@ -32,14 +34,41 @@ class LecturerSerializer(ModelSerializer):
     first_name = CharField(source="user.first_name")
     last_name = CharField(source="user.last_name")
     email = EmailField(source="user.email")
+    rating = SerializerMethodField("get_rating")
+    rating_count = SerializerMethodField("get_rating_count")
+
+    def get_rating(self, lecturer):
+        lessons = Lesson.lecturers.through.objects.filter(profile=lecturer).values(
+            "lesson"
+        )
+        return Review.objects.filter(lesson__in=lessons).aggregate(Avg("rating"))[
+            "rating__avg"
+        ]
+
+    def get_rating_count(self, lecturer):
+        lessons = Lesson.lecturers.through.objects.filter(profile=lecturer).values(
+            "lesson"
+        )
+        return Review.objects.filter(lesson__in=lessons).count()
 
     class Meta:
         model = Profile
-        fields = ("uuid", "first_name", "last_name", "email")
+        fields = ("uuid", "first_name", "last_name", "email", "rating", "rating_count")
 
 
 class LessonSerializer(ModelSerializer):
+    id = IntegerField()
     lecturers = LecturerSerializer(many=True)
+    rating = SerializerMethodField("get_rating")
+    rating_count = SerializerMethodField("get_rating_count")
+
+    def get_rating(self, lesson):
+        return Review.objects.filter(lesson=lesson).aggregate(Avg("rating"))[
+            "rating__avg"
+        ]
+
+    def get_rating_count(self, lesson):
+        return Review.objects.filter(lesson=lesson).count()
 
     class Meta:
         model = Lesson
@@ -50,6 +79,8 @@ class CourseListSerializer(ModelSerializer):
     technology = TechnologySerializer()
     duration = SerializerMethodField("get_duration")
     lecturers = SerializerMethodField("get_lecturers")
+    rating = SerializerMethodField("get_rating")
+    rating_count = SerializerMethodField("get_rating_count")
 
     def get_duration(self, course):
         return Lesson.objects.filter(course=course).aggregate(Sum("duration"))[
@@ -65,6 +96,16 @@ class CourseListSerializer(ModelSerializer):
         ]
 
         return lecturers_unique
+
+    def get_rating(self, course):
+        lessons = course.lessons.all()
+        return Review.objects.filter(lesson__in=lessons).aggregate(Avg("rating"))[
+            "rating__avg"
+        ]
+
+    def get_rating_count(self, course):
+        lessons = course.lessons.all()
+        return Review.objects.filter(lesson__in=lessons).count()
 
     class Meta:
         model = Course
@@ -78,6 +119,8 @@ class CourseSerializer(ModelSerializer):
     skills = SkillSerializer(many=True)
     topics = TopicSerializer(many=True)
     lecturers = SerializerMethodField("get_lecturers")
+    rating = SerializerMethodField("get_rating")
+    rating_count = SerializerMethodField("get_rating_count")
 
     def get_duration(self, course):
         return Lesson.objects.filter(course=course).aggregate(Sum("duration"))[
@@ -93,6 +136,14 @@ class CourseSerializer(ModelSerializer):
         ]
 
         return lecturers_unique
+
+    def get_rating(self, course):
+        return Review.objects.filter(lesson__in=course.lessons.all()).aggregate(
+            Avg("rating")
+        )["rating__avg"]
+
+    def get_rating_count(self, course):
+        return Review.objects.filter(lesson__in=course.lessons.all()).count()
 
     class Meta:
         model = Course
@@ -153,6 +204,14 @@ class CourseSerializer(ModelSerializer):
 
         return lesson
 
+    @staticmethod
+    def is_lesson_in_list(lesson, lessons_list):
+        for lesson_obj in lessons_list:
+            if lesson_obj["id"] == lesson.id:
+                return True
+
+        return False
+
     def create_lessons(self, course, lessons):
         for lesson in lessons:
             obj = Lesson.objects.create(
@@ -166,8 +225,35 @@ class CourseSerializer(ModelSerializer):
             obj = self.add_lecturers(lesson=obj, lecturers=lesson["lecturers"])
             obj.save()
 
-    def delete_lessons(self, course):
-        Lesson.objects.filter(course=course).all().delete()
+    def edit_lessons(self, lessons):
+        for lesson in lessons:
+            id = lesson.pop("id")
+            obj = Lesson.objects.get(pk=id)
+            obj.title = lesson.get("title", obj.title)
+            obj.description = lesson.get("description", obj.description)
+            obj.duration = lesson.get("duration", obj.duration)
+            obj.github_branch_link = lesson.get(
+                "github_branch_link", obj.github_branch_link
+            )
+            obj.price = lesson.get("price", obj.price)
+            obj = self.add_lecturers(lesson=obj, lecturers=lesson["lecturers"])
+            obj.save()
+
+    def delete_lessons(self, lesson_ids):
+        Lesson.objects.filter(id__in=lesson_ids).delete()
+
+    def manage_lessons(self, course, lessons):
+        current_lessons = Lesson.objects.filter(course=course).all()
+        new_lessons = [lesson for lesson in lessons if lesson["id"] == -1]
+        edit_lessons = [lesson for lesson in lessons if lesson["id"] != -1]
+        delete_lessons = [
+            lesson.id
+            for lesson in current_lessons
+            if not self.is_lesson_in_list(lesson, lessons)
+        ]
+        self.create_lessons(course=course, lessons=new_lessons)
+        self.delete_lessons(lesson_ids=delete_lessons)
+        self.edit_lessons(lessons=edit_lessons)
 
     def create(self, validated_data):
         lessons = validated_data.pop("lessons")
@@ -191,7 +277,7 @@ class CourseSerializer(ModelSerializer):
         skills = validated_data.pop("skills")
         topics = validated_data.pop("topics")
 
-        self.delete_lessons(course=instance)
+        self.manage_lessons(course=instance, lessons=lessons)
 
         instance.title = validated_data.get("title", instance.title)
         instance.description = validated_data.get("description", instance.description)
@@ -207,7 +293,5 @@ class CourseSerializer(ModelSerializer):
         instance = self.add_topics(course=instance, topics=topics)
 
         instance.save()
-
-        self.create_lessons(course=instance, lessons=lessons)
 
         return instance

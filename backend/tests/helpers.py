@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from profile.models import Profile
 from course.models import Course, Lesson, Technology, Skill, Topic
+from review.models import Review
 from django.core import mail
 
 
@@ -69,6 +70,10 @@ def courses_number():
     return Course.objects.count()
 
 
+def is_course_found(id: int):
+    return Course.objects.filter(id=id).exists()
+
+
 def lessons_number():
     return Lesson.objects.count()
 
@@ -79,6 +84,18 @@ def get_lesson(id: int):
 
 def technologies_number():
     return Technology.objects.count()
+
+
+def reviews_number():
+    return Review.objects.count()
+
+
+def get_review(id: int):
+    return Review.objects.get(pk=id)
+
+
+def is_review_found(id: int):
+    return Review.objects.filter(id=id).exists()
 
 
 def get_technology(id: int):

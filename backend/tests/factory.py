@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from profile.models import Profile
 from course.models import Course, Lesson, Technology, Skill, Topic
+from review.models import Review
 from datetime import datetime
 from django.utils.timezone import make_aware
 from PIL import Image
@@ -110,7 +111,8 @@ def create_course(
     return course
 
 
-def create_lesson(
+def create_lesson_obj(
+    id: int,
     title: str,
     description: str,
     duration: int,
@@ -119,6 +121,7 @@ def create_lesson(
     lecturers,
 ):
     return {
+        "id": id,
         "title": title,
         "description": description,
         "duration": duration,
@@ -128,7 +131,7 @@ def create_lesson(
     }
 
 
-def create_lecturer(lecturer: Profile):
+def create_lecturer_obj(lecturer: Profile):
     return {
         "uuid": lecturer.uuid,
         "first_name": lecturer.user.first_name,
@@ -138,12 +141,22 @@ def create_lecturer(lecturer: Profile):
 
 
 def create_technology(name: str):
+    return Technology.objects.create(name=name)
+
+
+def create_technology_obj(name: str):
     return {"name": name}
 
 
-def create_skill(name: str):
+def create_skill_obj(name: str):
     return {"name": name}
 
 
-def create_topic(name: str):
+def create_topic_obj(name: str):
     return {"name": name}
+
+
+def create_review(lesson: Lesson, profile: Profile, rating: int, review: str = None):
+    return Review.objects.create(
+        lesson=lesson, profile=profile, rating=rating, review=review
+    )

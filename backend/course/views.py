@@ -24,7 +24,7 @@ class CourseViewSet(ModelViewSet):
         if self.action == "list":
             return CourseListSerializer
 
-        return super(CourseViewSet, self).get_serializer_class()
+        return self.serializer_class
 
     def create(self, request, *args, **kwargs):
         user = request.user
