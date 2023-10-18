@@ -14,15 +14,14 @@ class ReviewViewSet(ModelViewSet):
 
     def get_queryset(self):
         if self.action == "list":
-            return self.queryset.filter(rating=5, review__isnull=False).all()
+            course_id = self.request.query_params.get("course_id", None)
+            if course_id:
+                lessons = Lesson.objects.filter(course_id=course_id).all()
+                return self.queryset.filter(lesson__in=lessons).all()
+            else:
+                return self.queryset
 
         return self.queryset
-
-    def get_serializer_class(self):
-        if self.action == "list":
-            return BestReviewSerializer
-
-        return self.serializer_class
 
     @staticmethod
     def is_review_created(user, lesson_id):
@@ -91,3 +90,9 @@ class ReviewViewSet(ModelViewSet):
             )
 
         return super().destroy(request, *args, **kwargs)
+
+
+class BestReviewViewSet(ModelViewSet):
+    http_method_names = ["get"]
+    queryset = Review.objects.filter(rating=5, review__isnull=False).all()
+    serializer_class = BestReviewSerializer

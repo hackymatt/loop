@@ -12,7 +12,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from course.views import CourseViewSet, TechnologyViewSet
-from review.views import ReviewViewSet
+from review.views import ReviewViewSet, BestReviewViewSet
 
 router = DefaultRouter(trailing_slash=False)
 router.register(r"register", ProfileRegisterViewSet, basename="user_register")
@@ -32,6 +32,7 @@ router.register(r"courses", CourseViewSet, basename="courses")
 router.register(r"technologies", TechnologyViewSet, basename="technologies")
 router.register(r"lecturers", LecturerViewSet, basename="lecturers")
 router.register(r"reviews", ReviewViewSet, basename="reviews")
+router.register(r"best-reviews", BestReviewViewSet, basename="best_reviews")
 
 
 # The API URLs are now determined automatically by the router.
