@@ -19,6 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2  
+      - run: pip install --upgrade pip
       - run: pip install pylint==2.17.7
       - run: pip install black==23.9.1
       - run: pip install -r requirements.txt 
@@ -64,6 +65,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2  
+      - run: pip install --upgrade pip
+      - run: pip install coverage==7.3.2
       - run: pip install -r requirements.txt 
-      - run: python manage.py test
+      - run: coverage run manage.py test
+      - run: coverage report
       

@@ -50,8 +50,8 @@ class RegisterTest(APITestCase):
         self.assertEqual(users_number(), 2)
         self.assertEqual(emails_sent_number(), 0)
 
-        # new password without numbers and uppercase letter
-        new_password = "abcdefghi"
+        # new password without numbers
+        new_password = "testpassword"
         data = self.data.copy()
         data["password"] = new_password
         response = self.client.post(self.endpoint, data)
