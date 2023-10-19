@@ -13,11 +13,6 @@ def validate_password_strength(password):
             {"password": "Hasło musi składać się z minimum jednej cyfry."}
         )
 
-    if not any(char.isalpha() for char in password):
-        raise ValidationError(
-            {"password": "Hasło musi składać się z minimum jednej litery."}
-        )
-
     if not any(char.isupper() for char in password):
         raise ValidationError(
             {"password": "Hasło musi składać się z minimum jednej dużej litery."}
