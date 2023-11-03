@@ -9,6 +9,7 @@ from rest_framework.serializers import ValidationError
 from course.models import Lesson, Course, Technology, Skill, Topic
 from profile.models import Profile
 from review.models import Review
+from purchase.models import Purchase
 from django.db.models import Sum, Avg
 
 
@@ -34,6 +35,7 @@ class LecturerSerializer(ModelSerializer):
     first_name = CharField(source="user.first_name")
     last_name = CharField(source="user.last_name")
     email = EmailField(source="user.email")
+    students_count = SerializerMethodField("get_students_count")
     rating = SerializerMethodField("get_rating")
     rating_count = SerializerMethodField("get_rating_count")
 
@@ -51,14 +53,29 @@ class LecturerSerializer(ModelSerializer):
         )
         return Review.objects.filter(lesson__in=lessons).count()
 
+    def get_students_count(self, lecturer):
+        lessons = Lesson.lecturers.through.objects.filter(profile=lecturer).values(
+            "lesson"
+        )
+        return Purchase.objects.filter(lesson__in=lessons).count()
+
     class Meta:
         model = Profile
-        fields = ("uuid", "first_name", "last_name", "email", "rating", "rating_count")
+        fields = (
+            "uuid",
+            "first_name",
+            "last_name",
+            "email",
+            "students_count",
+            "rating",
+            "rating_count",
+        )
 
 
 class LessonSerializer(ModelSerializer):
     id = IntegerField()
     lecturers = LecturerSerializer(many=True)
+    students_count = SerializerMethodField("get_students_count")
     rating = SerializerMethodField("get_rating")
     rating_count = SerializerMethodField("get_rating_count")
 
@@ -70,6 +87,9 @@ class LessonSerializer(ModelSerializer):
     def get_rating_count(self, lesson):
         return Review.objects.filter(lesson=lesson).count()
 
+    def get_students_count(self, lesson):
+        return Purchase.objects.filter(lesson=lesson).count()
+
     class Meta:
         model = Lesson
         exclude = ("course",)
@@ -79,6 +99,7 @@ class CourseListSerializer(ModelSerializer):
     technology = TechnologySerializer()
     duration = SerializerMethodField("get_duration")
     lecturers = SerializerMethodField("get_lecturers")
+    students_count = SerializerMethodField("get_students_count")
     rating = SerializerMethodField("get_rating")
     rating_count = SerializerMethodField("get_rating_count")
 
@@ -107,6 +128,10 @@ class CourseListSerializer(ModelSerializer):
         lessons = course.lessons.all()
         return Review.objects.filter(lesson__in=lessons).count()
 
+    def get_students_count(self, course):
+        lessons = course.lessons.all()
+        return Purchase.objects.filter(lesson__in=lessons).count()
+
     class Meta:
         model = Course
         exclude = ("active", "skills", "topics")
@@ -119,6 +144,7 @@ class CourseSerializer(ModelSerializer):
     skills = SkillSerializer(many=True)
     topics = TopicSerializer(many=True)
     lecturers = SerializerMethodField("get_lecturers")
+    students_count = SerializerMethodField("get_students_count")
     rating = SerializerMethodField("get_rating")
     rating_count = SerializerMethodField("get_rating_count")
 
@@ -144,6 +170,9 @@ class CourseSerializer(ModelSerializer):
 
     def get_rating_count(self, course):
         return Review.objects.filter(lesson__in=course.lessons.all()).count()
+
+    def get_students_count(self, course):
+        return Purchase.objects.filter(lesson__in=course.lessons.all()).count()
 
     class Meta:
         model = Course
