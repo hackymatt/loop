@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from profile.models import Profile
 from course.models import Course, Lesson, Technology, Skill, Topic
 from review.models import Review
+from purchase.models import Purchase
 from datetime import datetime
 from django.utils.timezone import make_aware
 from PIL import Image
@@ -160,3 +161,7 @@ def create_review(lesson: Lesson, profile: Profile, rating: int, review: str = N
     return Review.objects.create(
         lesson=lesson, profile=profile, rating=rating, review=review
     )
+
+
+def create_purchase(lesson: Lesson, profile: Profile):
+    return Purchase.objects.create(lesson=lesson, profile=profile)

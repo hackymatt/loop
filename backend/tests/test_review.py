@@ -10,6 +10,7 @@ from .factory import (
     create_topic_obj,
     create_lecturer_obj,
     create_review,
+    create_purchase,
 )
 from .helpers import (
     login,
@@ -105,8 +106,25 @@ class ReviewTest(APITestCase):
                     price="2.99",
                     lecturers=[create_lecturer_obj(self.lecturer_profile)],
                 ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Python lesson 4",
+                    description="bbbb",
+                    duration="30",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="2.99",
+                    lecturers=[create_lecturer_obj(self.lecturer_profile)],
+                ),
             ],
         )
+
+        create_purchase(lesson=self.course.lessons.all()[0], profile=self.profile_1)
+        create_purchase(lesson=self.course.lessons.all()[0], profile=self.profile_2)
+        create_purchase(lesson=self.course.lessons.all()[0], profile=self.profile_3)
+        create_purchase(lesson=self.course.lessons.all()[1], profile=self.profile_1)
+        create_purchase(lesson=self.course.lessons.all()[1], profile=self.profile_2)
+        create_purchase(lesson=self.course.lessons.all()[1], profile=self.profile_3)
+        create_purchase(lesson=self.course.lessons.all()[2], profile=self.profile_1)
 
         self.review_1 = create_review(
             lesson=self.course.lessons.all()[0],
@@ -191,7 +209,18 @@ class ReviewTest(APITestCase):
         self.assertEqual(reviews_number(), 6)
 
     def test_create_review_authenticated_not_purchased(self):
-        pass
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "lesson": self.course.lessons.all()[3].id,
+            "rating": 3,
+            "review": "Good lesson.",
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(reviews_number(), 6)
 
     def test_create_review_authenticated_already_created(self):
         # login

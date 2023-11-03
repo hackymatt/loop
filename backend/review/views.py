@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from review.serializers import ReviewSerializer, BestReviewSerializer
 from review.models import Review
+from purchase.models import Purchase
 from course.models import Lesson
 from profile.models import Profile
 
@@ -22,6 +23,13 @@ class ReviewViewSet(ModelViewSet):
                 return self.queryset
 
         return self.queryset
+
+    @staticmethod
+    def is_lesson_purchased(user, lesson_id):
+        profile = Profile.objects.get(user=user)
+        lesson = Lesson.objects.get(pk=lesson_id)
+
+        return Purchase.objects.filter(profile=profile, lesson=lesson).exists()
 
     @staticmethod
     def is_review_created(user, lesson_id):
@@ -52,7 +60,11 @@ class ReviewViewSet(ModelViewSet):
                 data={"review": "Recenzja już istnieje."},
             )
 
-        # TODO: check if user bought the lesson
+        if not self.is_lesson_purchased(user=user, lesson_id=data["lesson"]):
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={"review": "Użytkownik nie kupił kursu."},
+            )
 
         return super().create(request, *args, **kwargs)
 
