@@ -13,6 +13,7 @@ from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from course.views import CourseViewSet, TechnologyViewSet
 from review.views import ReviewViewSet, BestReviewViewSet
+from stats.views import StatsViewSet
 
 router = DefaultRouter(trailing_slash=False)
 router.register(r"register", ProfileRegisterViewSet, basename="user_register")
@@ -34,10 +35,9 @@ router.register(r"lecturers", LecturerViewSet, basename="lecturers")
 router.register(r"reviews", ReviewViewSet, basename="reviews")
 router.register(r"best-reviews", BestReviewViewSet, basename="best_reviews")
 
-
-# The API URLs are now determined automatically by the router.
 urlpatterns = [
     path("", include(router.urls)),
     path("admin", admin.site.urls),
     path("details", ProfileDetailsViewSet.as_view({"get": "list", "put": "update"})),
+    path("stats", StatsViewSet.as_view({"get": "get_stats"})),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
