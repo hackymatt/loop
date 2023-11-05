@@ -10,6 +10,7 @@ from profile.models import Profile
 from profile.verify.serializers import (
     ProfileVerificationCodeSerializer,
 )
+from newsletter.models import Newsletter
 from datetime import datetime
 from django.utils.timezone import make_aware
 from profile.validators import validate_password_match, validate_password_strength
@@ -75,5 +76,10 @@ class ProfileRegisterSerializer(ModelSerializer):
         ProfileVerificationCodeSerializer.send(
             profile, "verification_email.html", "Aktywuj swoje konto."
         )
+
+        newsletter, created = Newsletter.objects.get_or_create(email=email)
+        if not created:
+            newsletter.active = True
+            newsletter.save()
 
         return user

@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from profile.models import Profile
 from course.models import Course, Lesson, Technology, Skill, Topic
 from review.models import Review
+from newsletter.models import Newsletter
 from django.core import mail
 
 
@@ -90,8 +91,16 @@ def reviews_number():
     return Review.objects.count()
 
 
+def newsletters_number():
+    return Newsletter.objects.count()
+
+
 def get_review(id: int):
     return Review.objects.get(pk=id)
+
+
+def get_newsletter(uuid: str):
+    return Newsletter.objects.get(uuid=uuid)
 
 
 def is_review_found(id: int):

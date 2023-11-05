@@ -13,6 +13,11 @@ from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from course.views import CourseViewSet, TechnologyViewSet
 from review.views import ReviewViewSet, BestReviewViewSet
+from newsletter.views import (
+    NewsletterEntriesViewSet,
+    NewsletterSubscribeViewSet,
+    NewsletterUnsubscribeViewSet,
+)
 from stats.views import StatsViewSet
 
 router = DefaultRouter(trailing_slash=False)
@@ -34,10 +39,15 @@ router.register(r"technologies", TechnologyViewSet, basename="technologies")
 router.register(r"lecturers", LecturerViewSet, basename="lecturers")
 router.register(r"reviews", ReviewViewSet, basename="reviews")
 router.register(r"best-reviews", BestReviewViewSet, basename="best_reviews")
+router.register(r"newsletter", NewsletterEntriesViewSet, basename="newsletter")
+router.register(
+    r"newsletter-subscribe", NewsletterSubscribeViewSet, basename="newsletter_subscribe"
+)
 
 urlpatterns = [
     path("", include(router.urls)),
     path("admin", admin.site.urls),
     path("details", ProfileDetailsViewSet.as_view({"get": "list", "put": "update"})),
     path("stats", StatsViewSet.as_view({"get": "get_stats"})),
+    path("newsletter-unsubscribe/<str:uuid>", NewsletterUnsubscribeViewSet.unsubscribe),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
