@@ -1,6 +1,6 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .factory import create_user
+from .factory import create_user, create_newsletter
 from .helpers import (
     users_number,
     is_user_found,
@@ -11,6 +11,7 @@ from .helpers import (
     is_data_match,
     emails_sent_number,
     get_mail,
+    newsletters_number,
 )
 
 
@@ -39,6 +40,7 @@ class RegisterTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(users_number(), 2)
         self.assertEqual(emails_sent_number(), 0)
+        self.assertEqual(newsletters_number(), 0)
 
     def test_password_strength(self):
         # new password with less than 8 characters
@@ -49,6 +51,7 @@ class RegisterTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(users_number(), 2)
         self.assertEqual(emails_sent_number(), 0)
+        self.assertEqual(newsletters_number(), 0)
 
         # new password without numbers
         new_password = "testpassword"
@@ -58,6 +61,7 @@ class RegisterTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(users_number(), 2)
         self.assertEqual(emails_sent_number(), 0)
+        self.assertEqual(newsletters_number(), 0)
 
         # new password without uppercase letter
         new_password = "abcde1234"
@@ -67,6 +71,7 @@ class RegisterTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(users_number(), 2)
         self.assertEqual(emails_sent_number(), 0)
+        self.assertEqual(newsletters_number(), 0)
 
     def test_new_password_match(self):
         # new password and password 2 does not match
@@ -77,8 +82,9 @@ class RegisterTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(users_number(), 2)
         self.assertEqual(emails_sent_number(), 0)
+        self.assertEqual(newsletters_number(), 0)
 
-    def test_register_success(self):
+    def test_register_success_without_newsletter(self):
         response = self.client.post(self.endpoint, self.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(users_number(), 3)
@@ -107,3 +113,36 @@ class RegisterTest(APITestCase):
         email = get_mail(0)
         self.assertEqual(email.to, [self.data["email"]])
         self.assertEqual(email.subject, "Aktywuj swoje konto.")
+        self.assertEqual(newsletters_number(), 1)
+
+    def test_register_success_with_newsletter(self):
+        create_newsletter(email=self.data["email"], active=False)
+        response = self.client.post(self.endpoint, self.data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(users_number(), 3)
+        self.assertEqual(profiles_number(), 2)
+        self.assertTrue(is_user_found(self.data["email"]))
+
+        user = get_user(self.data["email"])
+        profile = get_profile(user)
+
+        self.assertTrue(is_profile_found(user))
+
+        user_data = {
+            "first_name": self.data["first_name"],
+            "last_name": self.data["last_name"],
+            "username": self.data["email"],
+            "email": self.data["email"],
+            "is_active": False,
+        }
+
+        self.assertTrue(is_data_match(user, user_data))
+        self.assertNotEqual(user.password, None)
+        self.assertTrue(user.check_password(self.data["password"]))
+        self.assertNotEqual(profile.verification_code, None)
+        self.assertNotEqual(profile.verification_code_created_at, None)
+        self.assertEqual(emails_sent_number(), 1)
+        email = get_mail(0)
+        self.assertEqual(email.to, [self.data["email"]])
+        self.assertEqual(email.subject, "Aktywuj swoje konto.")
+        self.assertEqual(newsletters_number(), 1)
