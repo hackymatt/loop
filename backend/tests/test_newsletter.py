@@ -1,13 +1,40 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .factory import create_newsletter
-from .helpers import newsletters_number, get_newsletter, is_data_match
+from .factory import create_user, create_profile, create_newsletter
+from .helpers import login, newsletters_number, get_newsletter, is_data_match
+from django.contrib import auth
 import json
 
 
 class NewsletterEntriesTest(APITestCase):
     def setUp(self):
         self.endpoint = "/newsletter"
+
+        self.admin_data = {
+            "email": "admin_test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.admin_data["email"],
+            password=self.admin_data["password"],
+            is_active=True,
+        )
+        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_profile(user=self.user)
 
         self.active_newsletters = [
             create_newsletter(email=f"test_active_{i}@example.com") for i in range(15)
@@ -17,7 +44,23 @@ class NewsletterEntriesTest(APITestCase):
             for i in range(5)
         ]
 
-    def test_get_newsletter_entries(self):
+    def test_get_newsletter_entries_unauthenticated(self):
+        # get data
+        response = self.client.get(self.endpoint)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_newsletter_entries_not_admin(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(self.endpoint)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_newsletter_entries_success(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -25,6 +68,9 @@ class NewsletterEntriesTest(APITestCase):
         self.assertEqual(len(data), 20)
 
     def test_get_active_newsletter_entries(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(f"{self.endpoint}?active=True")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -32,13 +78,34 @@ class NewsletterEntriesTest(APITestCase):
         self.assertEqual(len(data), 15)
 
     def test_get_inactive_newsletter_entries(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(f"{self.endpoint}?active=False")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         self.assertEqual(len(data), 5)
 
-    def test_get_newsletter_entry(self):
+    def test_get_newsletter_entry_unauthenticated(self):
+        # login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.active_newsletters[0].id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_newsletter_entry_not_admin(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.active_newsletters[0].id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_newsletter_entry_success(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(f"{self.endpoint}/{self.active_newsletters[0].id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
