@@ -34,6 +34,18 @@ import json
 class CourseTest(APITestCase):
     def setUp(self):
         self.endpoint = "/courses"
+        self.admin_data = {
+            "email": "admin_test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.admin_data["email"],
+            password=self.admin_data["password"],
+            is_active=True,
+        )
+        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -354,9 +366,58 @@ class CourseTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(courses_number(), 1)
 
-    def test_create_course_authenticated(self):
+    def test_create_course_not_admin(self):
         # login
         login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "title": "Javascript course",
+            "description": "course_description",
+            "technology": create_technology_obj(name="Javascript"),
+            "level": "E",
+            "price": "999.99",
+            "github_repo_link": "https://github.com/hackymatt/CodeEdu",
+            "lessons": [
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 1",
+                    description="bbbb",
+                    duration="90",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="9.99",
+                    lecturers=[
+                        create_lecturer_obj(self.lecturer_profile_1),
+                        create_lecturer_obj(self.lecturer_profile_2),
+                    ],
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 2",
+                    description="bbbb",
+                    duration="30",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="2.99",
+                    lecturers=[create_lecturer_obj(self.lecturer_profile_1)],
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 3",
+                    description="bbbb",
+                    duration="50",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="29.99",
+                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
+                ),
+            ],
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(courses_number(), 1)
+
+    def test_create_course_authenticated(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
@@ -465,7 +526,7 @@ class CourseTest(APITestCase):
 
     def test_create_course_without_lesson(self):
         # login
-        login(self, self.data["email"], self.data["password"])
+        login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
@@ -489,7 +550,7 @@ class CourseTest(APITestCase):
 
     def test_create_course_without_skills(self):
         # login
-        login(self, self.data["email"], self.data["password"])
+        login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
@@ -544,7 +605,7 @@ class CourseTest(APITestCase):
 
     def test_create_course_without_topics(self):
         # login
-        login(self, self.data["email"], self.data["password"])
+        login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
@@ -642,9 +703,58 @@ class CourseTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(courses_number(), 1)
 
-    def test_update_course_authenticated(self):
+    def test_update_course_not_admin(self):
         # login
         login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "title": "Javascript course",
+            "description": "course_description",
+            "technology": create_technology_obj(name="Javascript"),
+            "level": "E",
+            "price": "999.99",
+            "github_repo_link": "https://github.com/hackymatt/CodeEdu",
+            "lessons": [
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 1",
+                    description="bbbb",
+                    duration="90",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="9.99",
+                    lecturers=[
+                        create_lecturer_obj(self.lecturer_profile_1),
+                        create_lecturer_obj(self.lecturer_profile_2),
+                    ],
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 2",
+                    description="bbbb",
+                    duration="30",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="2.99",
+                    lecturers=[create_lecturer_obj(self.lecturer_profile_1)],
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 3",
+                    description="bbbb",
+                    duration="50",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="29.99",
+                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
+                ),
+            ],
+        }
+        response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(courses_number(), 1)
+
+    def test_update_course_authenticated(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
@@ -759,7 +869,7 @@ class CourseTest(APITestCase):
 
     def test_update_course_without_lesson(self):
         # login
-        login(self, self.data["email"], self.data["password"])
+        login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
@@ -783,7 +893,7 @@ class CourseTest(APITestCase):
 
     def test_update_course_without_skills(self):
         # login
-        login(self, self.data["email"], self.data["password"])
+        login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
@@ -838,7 +948,7 @@ class CourseTest(APITestCase):
 
     def test_update_course_without_topics(self):
         # login
-        login(self, self.data["email"], self.data["password"])
+        login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
@@ -896,9 +1006,18 @@ class CourseTest(APITestCase):
         self.assertEqual(courses_number(), 1)
         self.assertTrue(is_course_found(self.course.id))
 
-    def test_delete_course_authenticated_active(self):
+    def test_delete_course_not_admin(self):
         # login
         login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        response = self.client.delete(f"{self.endpoint}/{self.course.id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(courses_number(), 1)
+        self.assertTrue(is_course_found(self.course.id))
+
+    def test_delete_course_authenticated_active(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         response = self.client.delete(f"{self.endpoint}/{self.course.id}")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -907,7 +1026,7 @@ class CourseTest(APITestCase):
 
     def test_delete_course_authenticated_inactive(self):
         # login
-        login(self, self.data["email"], self.data["password"])
+        login(self, self.admin_data["email"], self.admin_data["password"])
         self.course.active = False
         self.course.save()
         self.assertTrue(auth.get_user(self.client).is_authenticated)

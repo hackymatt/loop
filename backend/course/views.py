@@ -7,6 +7,7 @@ from course.serializers import (
     TechnologySerializer,
 )
 from course.models import Course, Technology
+from profile.models import Profile
 
 
 class TechnologyViewSet(ModelViewSet):
@@ -35,6 +36,13 @@ class CourseViewSet(ModelViewSet):
                 data={"course": "Użytkownik niezalogowany."},
             )
 
+        profile = Profile.objects.get(user=user)
+        if not profile.user_type == "A":
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"course": "Brak dostępu."},
+            )
+
         return super().create(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
@@ -46,6 +54,13 @@ class CourseViewSet(ModelViewSet):
                 data={"course": "Użytkownik niezalogowany."},
             )
 
+        profile = Profile.objects.get(user=user)
+        if not profile.user_type == "A":
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"course": "Brak dostępu."},
+            )
+
         return super().update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
@@ -55,6 +70,13 @@ class CourseViewSet(ModelViewSet):
             return Response(
                 status=status.HTTP_403_FORBIDDEN,
                 data={"course": "Użytkownik niezalogowany."},
+            )
+
+        profile = Profile.objects.get(user=user)
+        if not profile.user_type == "A":
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"course": "Brak dostępu."},
             )
 
         if self.get_object().active:
