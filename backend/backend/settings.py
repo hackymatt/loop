@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django_cleanup.apps.CleanupConfig",
     "django_filters",
     "rest_framework",
+    "utils.filtering",
     "profile",
     "course",
     "review",
@@ -63,7 +64,7 @@ REST_FRAMEWORK = {
         "rest_framework.parsers.JSONParser",
         "rest_framework.parsers.MultiPartParser",
     ),
-    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "DEFAULT_FILTER_BACKENDS": ("utils.filtering.backends.ComplexFilterBackend",),
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
 }
 
@@ -72,7 +73,10 @@ ROOT_URLCONF = "backend.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "profile", "verify", "templates")],
+        "DIRS": [
+            os.path.join(BASE_DIR, "profile", "verify", "templates"),
+            os.path.join(BASE_DIR, "utils", "filtering", "templates"),
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
