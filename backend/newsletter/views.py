@@ -11,16 +11,7 @@ class NewsletterEntriesViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = Newsletter.objects.all()
     serializer_class = NewsletterEntrySerializer
-
-    def get_queryset(self):
-        if self.action == "list":
-            active = self.request.query_params.get("active", None)
-            if active:
-                return self.queryset.filter(active=active).all()
-            else:
-                return self.queryset
-
-        return self.queryset
+    filterset_fields = "__all__"
 
     def list(self, request, *args, **kwargs):
         user = request.user

@@ -1,7 +1,10 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.filters import SearchFilter
+from utils.filtering.backends import ComplexFilterBackend
 from review.serializers import ReviewSerializer, BestReviewSerializer
+from review.filters import ReviewFilter
 from review.models import Review
 from purchase.models import Purchase
 from course.models import Lesson
@@ -12,17 +15,11 @@ class ReviewViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-
-    def get_queryset(self):
-        if self.action == "list":
-            course_id = self.request.query_params.get("course_id", None)
-            if course_id:
-                lessons = Lesson.objects.filter(course_id=course_id).all()
-                return self.queryset.filter(lesson__in=lessons).all()
-            else:
-                return self.queryset
-
-        return self.queryset
+    filter_backends = (
+        ComplexFilterBackend,
+        SearchFilter,
+    )
+    filterset_class = ReviewFilter
 
     @staticmethod
     def is_lesson_purchased(user, lesson_id):

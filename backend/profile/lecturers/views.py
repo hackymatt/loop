@@ -7,8 +7,5 @@ from profile.models import Profile
 
 class LecturerViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Profile.objects.all()
+    queryset = Profile.objects.filter(user_type="W").all()
     serializer_class = LecturerSerializer
-
-    def get_queryset(self):
-        return self.queryset.filter(user_type="W").all()
