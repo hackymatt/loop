@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework.filters import SearchFilter
 from utils.filtering.backends import ComplexFilterBackend
 from course.serializers import (
     CourseListSerializer,
@@ -26,7 +26,6 @@ class CourseViewSet(ModelViewSet):
     filter_backends = (
         ComplexFilterBackend,
         SearchFilter,
-        OrderingFilter,
     )
     filterset_class = CourseFilter
     search_fields = [

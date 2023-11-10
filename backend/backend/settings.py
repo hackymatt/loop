@@ -64,8 +64,16 @@ REST_FRAMEWORK = {
         "rest_framework.parsers.JSONParser",
         "rest_framework.parsers.MultiPartParser",
     ),
-    "DEFAULT_FILTER_BACKENDS": ("utils.filtering.backends.ComplexFilterBackend",),
+    "DEFAULT_FILTER_BACKENDS": (
+        "utils.filtering.backends.ComplexFilterBackend",
+        "rest_framework.filters.SearchFilter",
+    ),
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {"anon": "500/hour", "user": "1000/hour"},
 }
 
 ROOT_URLCONF = "backend.urls"
