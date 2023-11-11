@@ -31,6 +31,8 @@ class CourseViewSet(ModelViewSet):
     search_fields = [
         "title",
         "description",
+        "lessons__title",
+        "lessons__description",
     ]
 
     def get_queryset(self):
