@@ -69,6 +69,8 @@ REST_FRAMEWORK = {
         "rest_framework.filters.SearchFilter",
     ),
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
+    "DEFAULT_PAGINATION_CLASS": "utils.pagination.pagination.CustomPagination",
+    "PAGE_SIZE": 10,
     "DEFAULT_THROTTLE_CLASSES": [
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle",

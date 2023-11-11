@@ -28,6 +28,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "db_table": "newsletter",
+                "ordering": ["id"],
             },
         ),
     ]

@@ -67,7 +67,8 @@ class LecturersTest(APITestCase):
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(2, len(data))
+        count = data["records_count"]
+        self.assertEqual(count, 2)
 
     def test_get_lecturers_authenticated(self):
         # login
@@ -77,4 +78,5 @@ class LecturersTest(APITestCase):
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(2, len(data))
+        count = data["records_count"]
+        self.assertEqual(count, 2)

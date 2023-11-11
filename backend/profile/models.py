@@ -45,3 +45,4 @@ class Profile(Model):
 
     class Meta:
         db_table = "profile"
+        ordering = ["id"]

@@ -67,6 +67,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "db_table": "profile",
+                "ordering": ["id"],
             },
         ),
     ]

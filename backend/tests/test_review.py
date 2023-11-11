@@ -164,7 +164,8 @@ class ReviewTest(APITestCase):
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 6)
+        count = data["records_count"]
+        self.assertEqual(count, 6)
 
     def test_get_reviews_authenticated(self):
         # login
@@ -174,7 +175,8 @@ class ReviewTest(APITestCase):
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 6)
+        count = data["records_count"]
+        self.assertEqual(count, 6)
 
     def test_get_course_reviews_unauthenticated(self):
         # no login
@@ -183,7 +185,8 @@ class ReviewTest(APITestCase):
         response = self.client.get(f"{self.endpoint}?course_id={self.course.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 6)
+        count = data["records_count"]
+        self.assertEqual(count, 6)
 
     def test_get_course_reviews_authenticated(self):
         # login
@@ -193,7 +196,8 @@ class ReviewTest(APITestCase):
         response = self.client.get(f"{self.endpoint}?course_id={self.course.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 6)
+        count = data["records_count"]
+        self.assertEqual(count, 6)
 
     def test_create_review_unauthenticated(self):
         # no login
@@ -289,11 +293,11 @@ class ReviewTest(APITestCase):
         }
         response = self.client.put(f"{self.endpoint}/{self.review_1.id}", data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
+        results = json.loads(response.content)
         self.assertEqual(reviews_number(), 6)
-        created_at = data.pop("created_at").replace("T", " ")
-        lesson = data.pop("lesson")
-        self.assertTrue(is_data_match(get_review(self.review_1.id), data))
+        created_at = results.pop("created_at").replace("T", " ")
+        lesson = results.pop("lesson")
+        self.assertTrue(is_data_match(get_review(self.review_1.id), results))
         self.assertEqual(
             created_at[0:26], str(get_review(self.review_1.id).created_at)[0:26]
         )
@@ -453,7 +457,8 @@ class BestReviewTest(APITestCase):
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 2)
+        count = data["records_count"]
+        self.assertEqual(count, 2)
 
     def test_get_best_reviews_authenticated(self):
         # login
@@ -463,4 +468,5 @@ class BestReviewTest(APITestCase):
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 2)
+        count = data["records_count"]
+        self.assertEqual(count, 2)

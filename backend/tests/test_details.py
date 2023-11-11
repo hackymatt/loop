@@ -64,9 +64,9 @@ class DetailsTest(APITestCase):
         # get data
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
-        self.assertFalse("user_type" in data.keys())
-        self.assertFalse("user_title" in data.keys())
+        results = json.loads(response.content)
+        self.assertFalse("user_type" in results.keys())
+        self.assertFalse("user_title" in results.keys())
 
     def test_get_details_other(self):
         # login
@@ -75,9 +75,9 @@ class DetailsTest(APITestCase):
         # get data
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
-        self.assertTrue("user_type" in data.keys())
-        self.assertTrue("user_title" in data.keys())
+        results = json.loads(response.content)
+        self.assertTrue("user_type" in results.keys())
+        self.assertTrue("user_title" in results.keys())
 
     def test_get_details_authenticated(self):
         # login
@@ -86,9 +86,9 @@ class DetailsTest(APITestCase):
         # get data
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
-        user_data = filter_dict(data, self.user_columns)
-        profile_data = filter_dict(data, self.profile_columns)
+        results = json.loads(response.content)
+        user_data = filter_dict(results, self.user_columns)
+        profile_data = filter_dict(results, self.profile_columns)
         self.assertTrue(is_data_match(get_user(self.data["email"]), user_data))
         self.assertTrue(
             is_data_match(get_profile(get_user(self.data["email"])), profile_data)

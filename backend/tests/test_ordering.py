@@ -268,8 +268,10 @@ class CourseFilterTest(APITestCase):
             response = self.client.get(f"{self.endpoint}?sort_by={field}")
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             data = json.loads(response.content)
-            self.assertEqual(len(data), 3)
-            field_values = [course[field] for course in data]
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 3)
+            field_values = [course[field] for course in results]
             if isinstance(field_values[0], dict):
                 self.assertEqual(
                     field_values, sorted(field_values, key=lambda d: d["name"])
@@ -284,8 +286,10 @@ class CourseFilterTest(APITestCase):
             response = self.client.get(f"{self.endpoint}?sort_by=-{field}")
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             data = json.loads(response.content)
-            self.assertEqual(len(data), 3)
-            field_values = [course[field] for course in data]
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 3)
+            field_values = [course[field] for course in results]
             if isinstance(field_values[0], dict):
                 self.assertEqual(
                     field_values,
@@ -541,8 +545,10 @@ class ReviewFilterTest(APITestCase):
             response = self.client.get(f"{self.endpoint}?sort_by={field}")
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             data = json.loads(response.content)
-            self.assertEqual(len(data), 10)
-            field_values = [review[field] for review in data]
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 10)
+            field_values = [course[field] for course in results]
             if isinstance(field_values[0], dict):
                 self.assertEqual(
                     field_values, sorted(field_values, key=lambda d: d["name"])
@@ -557,8 +563,10 @@ class ReviewFilterTest(APITestCase):
             response = self.client.get(f"{self.endpoint}?sort_by=-{field}")
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             data = json.loads(response.content)
-            self.assertEqual(len(data), 10)
-            field_values = [review[field] for review in data]
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 10)
+            field_values = [course[field] for course in results]
             if isinstance(field_values[0], dict):
                 self.assertEqual(
                     field_values,

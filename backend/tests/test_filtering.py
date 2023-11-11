@@ -255,7 +255,8 @@ class CourseFilterTest(APITestCase):
         response = self.client.get(f"{self.endpoint}?search=Advanced")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 1)
+        count = data["records_count"]
+        self.assertEqual(count, 1)
 
     def test_rating_filter(self):
         # no login
@@ -264,7 +265,8 @@ class CourseFilterTest(APITestCase):
         response = self.client.get(f"{self.endpoint}?rating_from=3.5")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 2)
+        count = data["records_count"]
+        self.assertEqual(count, 2)
 
     def test_duration_filter(self):
         # no login
@@ -275,7 +277,8 @@ class CourseFilterTest(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 2)
+        count = data["records_count"]
+        self.assertEqual(count, 2)
 
     def test_technology_filter(self):
         # no login
@@ -284,7 +287,8 @@ class CourseFilterTest(APITestCase):
         response = self.client.get(f"{self.endpoint}?technology_in=Python,VBA")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 2)
+        count = data["records_count"]
+        self.assertEqual(count, 2)
 
     def test_level_filter(self):
         # no login
@@ -293,7 +297,8 @@ class CourseFilterTest(APITestCase):
         response = self.client.get(f"{self.endpoint}?level_in=Podstawowy,Ekspert")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 2)
+        count = data["records_count"]
+        self.assertEqual(count, 2)
 
     def test_price_filter(self):
         # no login
@@ -302,7 +307,8 @@ class CourseFilterTest(APITestCase):
         response = self.client.get(f"{self.endpoint}?price_from=100&price_to=300")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 2)
+        count = data["records_count"]
+        self.assertEqual(count, 2)
 
     def test_active_filter(self):
         # no login
@@ -311,7 +317,8 @@ class CourseFilterTest(APITestCase):
         response = self.client.get(f"{self.endpoint}?active=False")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 0)
+        count = data["records_count"]
+        self.assertEqual(count, 0)
 
 
 class ReviewFilterTest(APITestCase):
@@ -553,7 +560,8 @@ class ReviewFilterTest(APITestCase):
         response = self.client.get(f"{self.endpoint}?course_id={self.course_1.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 3)
+        count = data["records_count"]
+        self.assertEqual(count, 3)
 
     def test_rating_filter(self):
         # no login
@@ -562,7 +570,8 @@ class ReviewFilterTest(APITestCase):
         response = self.client.get(f"{self.endpoint}?rating=4")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 3)
+        count = data["records_count"]
+        self.assertEqual(count, 3)
 
     def test_rating_from_filter(self):
         # no login
@@ -571,7 +580,8 @@ class ReviewFilterTest(APITestCase):
         response = self.client.get(f"{self.endpoint}?rating_from=4.5")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 6)
+        count = data["records_count"]
+        self.assertEqual(count, 6)
 
     def test_rating_to_filter(self):
         # no login
@@ -580,4 +590,5 @@ class ReviewFilterTest(APITestCase):
         response = self.client.get(f"{self.endpoint}?rating_to=4")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 7)
+        count = data["records_count"]
+        self.assertEqual(count, 7)
