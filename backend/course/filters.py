@@ -16,6 +16,7 @@ def get_rating(queryset):
         Review.objects.filter(lesson__in=Subquery(lessons))
         .annotate(dummy_group_by=Value(1))
         .values("dummy_group_by")
+        .order_by("dummy_group_by")
         .annotate(avg_rating=Avg("rating"))
         .values("avg_rating")
     )

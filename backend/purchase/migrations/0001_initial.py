@@ -42,6 +42,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "db_table": "purchase",
+                "ordering": ["id"],
             },
         ),
         migrations.AddConstraint(

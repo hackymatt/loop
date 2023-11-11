@@ -16,6 +16,7 @@ class Purchase(Model):
 
     class Meta:
         db_table = "purchase"
+        ordering = ["id"]
         constraints = [
             UniqueConstraint(
                 fields=["lesson", "profile"],

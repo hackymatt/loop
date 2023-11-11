@@ -55,6 +55,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "db_table": "course",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
@@ -73,6 +74,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "db_table": "skill",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
@@ -91,6 +93,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "db_table": "technology",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
@@ -109,6 +112,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "db_table": "topic",
+                "ordering": ["id"],
             },
         ),
         migrations.CreateModel(
@@ -154,6 +158,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 "db_table": "lesson",
+                "ordering": ["id"],
             },
         ),
         migrations.AddField(

@@ -155,12 +155,13 @@ class CourseTest(APITestCase):
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertFalse(all("lessons" in course.keys() for course in data))
-        self.assertFalse(all("skills" in course.keys() for course in data))
-        self.assertFalse(all("topics" in course.keys() for course in data))
-        self.assertEqual(data[0]["rating"], 4.0)
-        self.assertEqual(data[0]["rating_count"], 3)
-        self.assertEqual(data[0]["students_count"], 2)
+        results = data["results"]
+        self.assertFalse(all("lessons" in course.keys() for course in results))
+        self.assertFalse(all("skills" in course.keys() for course in results))
+        self.assertFalse(all("topics" in course.keys() for course in results))
+        self.assertEqual(results[0]["rating"], 4.0)
+        self.assertEqual(results[0]["rating_count"], 3)
+        self.assertEqual(results[0]["students_count"], 2)
 
     def test_get_courses_authenticated(self):
         # login
@@ -170,12 +171,13 @@ class CourseTest(APITestCase):
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertFalse(all("lessons" in course.keys() for course in data))
-        self.assertFalse(all("skills" in course.keys() for course in data))
-        self.assertFalse(all("topics" in course.keys() for course in data))
-        self.assertEqual(data[0]["rating"], 4.0)
-        self.assertEqual(data[0]["rating_count"], 3)
-        self.assertEqual(data[0]["students_count"], 2)
+        results = data["results"]
+        self.assertFalse(all("lessons" in course.keys() for course in results))
+        self.assertFalse(all("skills" in course.keys() for course in results))
+        self.assertFalse(all("topics" in course.keys() for course in results))
+        self.assertEqual(results[0]["rating"], 4.0)
+        self.assertEqual(results[0]["rating_count"], 3)
+        self.assertEqual(results[0]["students_count"], 2)
 
     def test_get_course_unauthenticated(self):
         # no login

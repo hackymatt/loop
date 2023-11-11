@@ -14,3 +14,4 @@ class Newsletter(Model):
 
     class Meta:
         db_table = "newsletter"
+        ordering = ["id"]

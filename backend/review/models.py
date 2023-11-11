@@ -23,6 +23,7 @@ class Review(Model):
 
     class Meta:
         db_table = "review"
+        ordering = ["id"]
         constraints = [
             UniqueConstraint(
                 fields=["lesson", "profile"],

@@ -65,7 +65,8 @@ class NewsletterEntriesTest(APITestCase):
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 20)
+        count = data["records_count"]
+        self.assertEqual(count, 20)
 
     def test_get_active_newsletter_entries(self):
         # login
@@ -75,7 +76,8 @@ class NewsletterEntriesTest(APITestCase):
         response = self.client.get(f"{self.endpoint}?active=True")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 15)
+        count = data["records_count"]
+        self.assertEqual(count, 15)
 
     def test_get_inactive_newsletter_entries(self):
         # login
@@ -85,7 +87,8 @@ class NewsletterEntriesTest(APITestCase):
         response = self.client.get(f"{self.endpoint}?active=False")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 5)
+        count = data["records_count"]
+        self.assertEqual(count, 5)
 
     def test_get_newsletter_entry_unauthenticated(self):
         # login
