@@ -248,11 +248,11 @@ class CourseFilterTest(APITestCase):
             review="So so lesson.",
         )
 
-    def test_title_description_filter(self):
+    def test_search_filter(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
-        response = self.client.get(f"{self.endpoint}?search=Advanced")
+        response = self.client.get(f"{self.endpoint}?search=JS lesson 1")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
