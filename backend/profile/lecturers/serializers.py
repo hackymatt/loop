@@ -2,14 +2,21 @@ from rest_framework.serializers import (
     ModelSerializer,
     EmailField,
     CharField,
+    SerializerMethodField,
 )
 from profile.models import Profile
+from review.models import Review
+from purchase.models import Purchase
+from django.db.models import Avg
 
 
 class LecturerSerializer(ModelSerializer):
     first_name = CharField(source="user.first_name")
     last_name = CharField(source="user.last_name")
     email = EmailField(source="user.email")
+    students_count = SerializerMethodField("get_students_count")
+    rating = SerializerMethodField("get_rating")
+    rating_count = SerializerMethodField("get_rating_count")
 
     class Meta:
         model = Profile
@@ -19,4 +26,18 @@ class LecturerSerializer(ModelSerializer):
             "email",
             "user_title",
             "image",
+            "students_count",
+            "rating",
+            "rating_count",
         )
+
+    def get_rating(self, lecturer):
+        return Review.objects.filter(lecturer=lecturer).aggregate(Avg("rating"))[
+            "rating__avg"
+        ]
+
+    def get_rating_count(self, lecturer):
+        return Review.objects.filter(lecturer=lecturer).count()
+
+    def get_students_count(self, lecturer):
+        return Purchase.objects.filter(lecturer=lecturer).count()

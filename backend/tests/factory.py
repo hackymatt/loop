@@ -158,14 +158,20 @@ def create_topic_obj(name: str):
     return {"name": name}
 
 
-def create_review(lesson: Lesson, student: Profile, rating: int, review: str = None):
+def create_review(
+    lesson: Lesson, student: Profile, lecturer: Profile, rating: int, review: str = None
+):
     return Review.objects.create(
-        lesson=lesson, student=student, rating=rating, review=review
+        lesson=lesson, student=student, lecturer=lecturer, rating=rating, review=review
     )
 
 
-def create_purchase(lesson: Lesson, student: Profile):
-    return Purchase.objects.create(lesson=lesson, student=student)
+def create_purchase(
+    lesson: Lesson,
+    student: Profile,
+    lecturer: Profile,
+):
+    return Purchase.objects.create(lesson=lesson, student=student, lecturer=lecturer)
 
 
 def create_newsletter(email: str, active: bool = True):

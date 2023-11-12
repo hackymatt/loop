@@ -14,6 +14,8 @@ from .factory import (
 )
 from .helpers import (
     login,
+    get_user,
+    get_profile,
     reviews_number,
     is_data_match,
     get_review,
@@ -118,43 +120,81 @@ class ReviewTest(APITestCase):
             ],
         )
 
-        create_purchase(lesson=self.course.lessons.all()[0], student=self.profile_1)
-        create_purchase(lesson=self.course.lessons.all()[0], student=self.profile_2)
-        create_purchase(lesson=self.course.lessons.all()[0], student=self.profile_3)
-        create_purchase(lesson=self.course.lessons.all()[1], student=self.profile_1)
-        create_purchase(lesson=self.course.lessons.all()[1], student=self.profile_2)
-        create_purchase(lesson=self.course.lessons.all()[1], student=self.profile_3)
-        create_purchase(lesson=self.course.lessons.all()[2], student=self.profile_1)
+        create_purchase(
+            lesson=self.course.lessons.all()[0],
+            student=self.profile_1,
+            lecturer=self.course.lessons.all()[0].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course.lessons.all()[0],
+            student=self.profile_2,
+            lecturer=self.course.lessons.all()[0].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course.lessons.all()[0],
+            student=self.profile_3,
+            lecturer=self.course.lessons.all()[0].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course.lessons.all()[1],
+            student=self.profile_1,
+            lecturer=self.course.lessons.all()[1].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course.lessons.all()[1],
+            student=self.profile_2,
+            lecturer=self.course.lessons.all()[1].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course.lessons.all()[1],
+            student=self.profile_3,
+            lecturer=self.course.lessons.all()[1].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course.lessons.all()[2],
+            student=self.profile_1,
+            lecturer=self.course.lessons.all()[2].lecturers.all()[0],
+        )
 
         self.review_1 = create_review(
             lesson=self.course.lessons.all()[0],
             student=self.profile_1,
+            lecturer=self.course.lessons.all()[0].lecturers.all()[0],
             rating=5,
             review="Great lesson.",
         )
         self.review_2 = create_review(
             lesson=self.course.lessons.all()[0],
             student=self.profile_2,
+            lecturer=self.course.lessons.all()[0].lecturers.all()[0],
             rating=5,
             review="Super helpful.",
         )
         self.review_3 = create_review(
             lesson=self.course.lessons.all()[0],
             student=self.profile_3,
+            lecturer=self.course.lessons.all()[0].lecturers.all()[0],
             rating=4,
             review="Great lesson.",
         )
         self.review_4 = create_review(
-            lesson=self.course.lessons.all()[1], student=self.profile_1, rating=3
+            lesson=self.course.lessons.all()[1],
+            student=self.profile_1,
+            lecturer=self.course.lessons.all()[1].lecturers.all()[0],
+            rating=3,
         )
         self.review_5 = create_review(
             lesson=self.course.lessons.all()[1],
             student=self.profile_2,
+            lecturer=self.course.lessons.all()[1].lecturers.all()[0],
             rating=2,
             review="Terrible.",
         )
         self.review_6 = create_review(
-            lesson=self.course.lessons.all()[1], student=self.profile_3, rating=5
+            lesson=self.course.lessons.all()[1],
+            student=self.profile_3,
+            lecturer=self.course.lessons.all()[1].lecturers.all()[0],
+            rating=5,
         )
 
     def test_get_reviews_unauthenticated(self):
@@ -205,6 +245,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.course.lessons.all()[0].id,
+            "lecturer": self.course.lessons.all()[0].lecturers.all()[0].id,
             "rating": 3,
             "review": "Good lesson.",
         }
@@ -219,6 +260,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.course.lessons.all()[3].id,
+            "lecturer": self.course.lessons.all()[3].lecturers.all()[0].id,
             "rating": 3,
             "review": "Good lesson.",
         }
@@ -233,6 +275,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.course.lessons.all()[0].id,
+            "lecturer": self.course.lessons.all()[0].lecturers.all()[0].id,
             "rating": 3,
             "review": "Good lesson.",
         }
@@ -247,6 +290,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.course.lessons.all()[2].id,
+            "lecturer": self.course.lessons.all()[2].lecturers.all()[0].id,
             "rating": 3,
             "review": "Good lesson.",
         }
@@ -260,6 +304,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.course.lessons.all()[0].id,
+            "lecturer": self.course.lessons.all()[0].lecturers.all()[0].id,
             "rating": 3,
             "review": "Good lesson.",
         }
@@ -274,6 +319,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.course.lessons.all()[2].id,
+            "lecturer": self.course.lessons.all()[2].lecturers.all()[0].id,
             "rating": 4,
             "review": "Good lesson.",
         }
@@ -288,6 +334,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.course.lessons.all()[0].id,
+            "lecturer": self.course.lessons.all()[0].lecturers.all()[0].id,
             "rating": 4,
             "review": "Good lesson.",
         }
@@ -297,11 +344,15 @@ class ReviewTest(APITestCase):
         self.assertEqual(reviews_number(), 6)
         created_at = results.pop("created_at").replace("T", " ")
         lesson = results.pop("lesson")
+        lecturer = results.pop("lecturer")
         self.assertTrue(is_data_match(get_review(self.review_1.id), results))
         self.assertEqual(
             created_at[0:26], str(get_review(self.review_1.id).created_at)[0:26]
         )
         self.assertEqual(lesson, get_review(self.review_1.id).lesson.id)
+        self.assertEqual(
+            lecturer, get_profile(get_user(self.review_1.lecturer.user.email)).id
+        )
 
     def test_delete_review_unauthenticated(self):
         # no login
@@ -422,32 +473,42 @@ class BestReviewTest(APITestCase):
         self.review_1 = create_review(
             lesson=self.course.lessons.all()[0],
             student=self.profile_1,
+            lecturer=self.course.lessons.all()[0].lecturers.all()[0],
             rating=5,
             review="Great lesson.",
         )
         self.review_2 = create_review(
             lesson=self.course.lessons.all()[0],
             student=self.profile_2,
+            lecturer=self.course.lessons.all()[0].lecturers.all()[0],
             rating=5,
             review="Super helpful.",
         )
         self.review_3 = create_review(
             lesson=self.course.lessons.all()[0],
             student=self.profile_3,
+            lecturer=self.course.lessons.all()[0].lecturers.all()[0],
             rating=4,
             review="Great lesson.",
         )
         self.review_4 = create_review(
-            lesson=self.course.lessons.all()[1], student=self.profile_1, rating=3
+            lesson=self.course.lessons.all()[1],
+            student=self.profile_1,
+            lecturer=self.course.lessons.all()[1].lecturers.all()[0],
+            rating=3,
         )
         self.review_5 = create_review(
             lesson=self.course.lessons.all()[1],
             student=self.profile_2,
+            lecturer=self.course.lessons.all()[1].lecturers.all()[0],
             rating=2,
             review="Terrible.",
         )
         self.review_6 = create_review(
-            lesson=self.course.lessons.all()[1], student=self.profile_3, rating=5
+            lesson=self.course.lessons.all()[1],
+            student=self.profile_3,
+            lecturer=self.course.lessons.all()[1].lecturers.all()[0],
+            rating=5,
         )
 
     def test_get_best_reviews_unauthenticated(self):

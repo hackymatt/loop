@@ -38,6 +38,14 @@ class Migration(migrations.Migration):
                 ("review", models.TextField(null=True)),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 (
+                    "lecturer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="review_lecturer",
+                        to="profile.profile",
+                    ),
+                ),
+                (
                     "lesson",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE, to="course.lesson"
@@ -47,6 +55,7 @@ class Migration(migrations.Migration):
                     "student",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
+                        related_name="review_student",
                         to="profile.profile",
                     ),
                 ),
@@ -59,8 +68,8 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="review",
             constraint=models.UniqueConstraint(
-                fields=("lesson", "student"),
-                name="review_lesson_student_unique_together",
+                fields=("lesson", "student", "lecturer"),
+                name="review_lesson_student_lecturer_unique_together",
             ),
         ),
     ]

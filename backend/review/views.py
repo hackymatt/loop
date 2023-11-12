@@ -3,7 +3,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.filters import SearchFilter
 from utils.filtering.backends import ComplexFilterBackend
-from review.serializers import ReviewSerializer, BestReviewSerializer
+from review.serializers import (
+    ReviewSerializer,
+    ReviewGetSerializer,
+    BestReviewSerializer,
+)
 from review.filters import ReviewFilter
 from review.models import Review
 from purchase.models import Purchase
@@ -21,19 +25,30 @@ class ReviewViewSet(ModelViewSet):
     )
     filterset_class = ReviewFilter
 
-    @staticmethod
-    def is_lesson_purchased(user, lesson_id):
-        profile = Profile.objects.get(user=user)
-        lesson = Lesson.objects.get(pk=lesson_id)
-
-        return Purchase.objects.filter(student=profile, lesson=lesson).exists()
+    def get_serializer_class(self, *args, **kwargs):
+        if self.request.method == "GET":
+            return ReviewGetSerializer
+        return self.serializer_class
 
     @staticmethod
-    def is_review_created(user, lesson_id):
+    def is_lesson_purchased(user, lesson_id, lecturer_id):
         profile = Profile.objects.get(user=user)
         lesson = Lesson.objects.get(pk=lesson_id)
+        lecturer = Profile.objects.get(pk=lecturer_id)
 
-        return Review.objects.filter(student=profile, lesson=lesson).exists()
+        return Purchase.objects.filter(
+            student=profile, lesson=lesson, lecturer=lecturer
+        ).exists()
+
+    @staticmethod
+    def is_review_created(user, lesson_id, lecturer_id):
+        student = Profile.objects.get(user=user)
+        lesson = Lesson.objects.get(pk=lesson_id)
+        lecturer = Profile.objects.get(pk=lecturer_id)
+
+        return Review.objects.filter(
+            student=student, lesson=lesson, lecturer=lecturer
+        ).exists()
 
     @staticmethod
     def is_user_review(user, review):
@@ -51,16 +66,20 @@ class ReviewViewSet(ModelViewSet):
                 data={"review": "Użytkownik niezalogowany."},
             )
 
-        if self.is_review_created(user=user, lesson_id=data["lesson"]):
+        if self.is_review_created(
+            user=user, lesson_id=data["lesson"], lecturer_id=data["lecturer"]
+        ):
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
                 data={"review": "Recenzja już istnieje."},
             )
 
-        if not self.is_lesson_purchased(user=user, lesson_id=data["lesson"]):
+        if not self.is_lesson_purchased(
+            user=user, lesson_id=data["lesson"], lecturer_id=data["lecturer"]
+        ):
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
-                data={"review": "Użytkownik nie kupił kursu."},
+                data={"review": "Użytkownik nie kupił lekcji."},
             )
 
         return super().create(request, *args, **kwargs)
