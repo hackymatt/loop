@@ -97,24 +97,35 @@ class CourseFilterTest(APITestCase):
             ],
         )
 
-        create_purchase(lesson=self.course_1.lessons.all()[0], profile=self.profile)
-        create_purchase(lesson=self.course_1.lessons.all()[1], profile=self.profile)
+        create_purchase(
+            lesson=self.course_1.lessons.all()[0],
+            student=self.profile,
+            lecturer=self.course_1.lessons.all()[0].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course_1.lessons.all()[1],
+            student=self.profile,
+            lecturer=self.course_1.lessons.all()[1].lecturers.all()[0],
+        )
 
         self.review_course_1_1 = create_review(
             lesson=self.course_1.lessons.all()[0],
-            profile=self.profile,
+            student=self.profile,
+            lecturer=self.course_1.lessons.all()[0].lecturers.all()[0],
             rating=5,
             review="Great lesson.",
         )
         self.review_course_1_2 = create_review(
             lesson=self.course_1.lessons.all()[0],
-            profile=self.profile_2,
+            student=self.profile_2,
+            lecturer=self.course_1.lessons.all()[0].lecturers.all()[0],
             rating=4,
             review="Good lesson.",
         )
         self.review_course_1_3 = create_review(
             lesson=self.course_1.lessons.all()[1],
-            profile=self.profile,
+            student=self.profile,
+            lecturer=self.course_1.lessons.all()[1].lecturers.all()[0],
             rating=3,
             review="So so lesson.",
         )
@@ -166,39 +177,64 @@ class CourseFilterTest(APITestCase):
             ],
         )
 
-        create_purchase(lesson=self.course_2.lessons.all()[0], profile=self.profile)
-        create_purchase(lesson=self.course_2.lessons.all()[1], profile=self.profile)
-        create_purchase(lesson=self.course_2.lessons.all()[0], profile=self.profile_2)
-        create_purchase(lesson=self.course_2.lessons.all()[1], profile=self.profile_2)
-        create_purchase(lesson=self.course_2.lessons.all()[2], profile=self.profile_2)
+        create_purchase(
+            lesson=self.course_2.lessons.all()[0],
+            student=self.profile,
+            lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course_2.lessons.all()[1],
+            student=self.profile,
+            lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course_2.lessons.all()[0],
+            student=self.profile_2,
+            lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course_2.lessons.all()[1],
+            student=self.profile_2,
+            lecturer=self.course_2.lessons.all()[1].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course_2.lessons.all()[2],
+            student=self.profile_2,
+            lecturer=self.course_2.lessons.all()[2].lecturers.all()[0],
+        )
 
         self.review_course_2_1 = create_review(
             lesson=self.course_2.lessons.all()[0],
-            profile=self.profile,
+            student=self.profile,
+            lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
             rating=5,
             review="Great lesson.",
         )
         self.review_course_2_2 = create_review(
             lesson=self.course_2.lessons.all()[1],
-            profile=self.profile,
+            student=self.profile,
+            lecturer=self.course_2.lessons.all()[1].lecturers.all()[0],
             rating=4,
             review="Good lesson.",
         )
         self.review_course_2_3 = create_review(
             lesson=self.course_2.lessons.all()[0],
-            profile=self.profile_2,
+            student=self.profile_2,
+            lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
             rating=2,
             review="So so lesson.",
         )
         self.review_course_2_4 = create_review(
             lesson=self.course_2.lessons.all()[1],
-            profile=self.profile_2,
+            student=self.profile_2,
+            lecturer=self.course_2.lessons.all()[1].lecturers.all()[0],
             rating=1,
             review="So so lesson.",
         )
         self.review_course_2_5 = create_review(
             lesson=self.course_2.lessons.all()[2],
-            profile=self.profile_2,
+            student=self.profile_2,
+            lecturer=self.course_2.lessons.all()[2].lecturers.all()[0],
             rating=4,
             review="So so lesson.",
         )
@@ -232,18 +268,28 @@ class CourseFilterTest(APITestCase):
             ],
         )
 
-        create_purchase(lesson=self.course_3.lessons.all()[0], profile=self.profile)
-        create_purchase(lesson=self.course_3.lessons.all()[0], profile=self.profile_2)
+        create_purchase(
+            lesson=self.course_3.lessons.all()[0],
+            student=self.profile,
+            lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course_3.lessons.all()[0],
+            student=self.profile_2,
+            lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
+        )
 
         self.review_course_3_1 = create_review(
             lesson=self.course_3.lessons.all()[0],
-            profile=self.profile,
+            student=self.profile,
+            lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
             rating=5,
             review="Great lesson.",
         )
         self.review_course_3_2 = create_review(
             lesson=self.course_3.lessons.all()[0],
-            profile=self.profile_2,
+            student=self.profile_2,
+            lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
             rating=2,
             review="So so lesson.",
         )
@@ -402,24 +448,35 @@ class ReviewFilterTest(APITestCase):
             ],
         )
 
-        create_purchase(lesson=self.course_1.lessons.all()[0], profile=self.profile)
-        create_purchase(lesson=self.course_1.lessons.all()[1], profile=self.profile)
+        create_purchase(
+            lesson=self.course_1.lessons.all()[0],
+            student=self.profile,
+            lecturer=self.course_1.lessons.all()[0].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course_1.lessons.all()[1],
+            student=self.profile,
+            lecturer=self.course_1.lessons.all()[1].lecturers.all()[0],
+        )
 
         self.review_course_1_1 = create_review(
             lesson=self.course_1.lessons.all()[0],
-            profile=self.profile,
+            student=self.profile,
+            lecturer=self.course_1.lessons.all()[0].lecturers.all()[0],
             rating=5,
             review="Great lesson.",
         )
         self.review_course_1_2 = create_review(
             lesson=self.course_1.lessons.all()[0],
-            profile=self.profile_2,
+            student=self.profile_2,
+            lecturer=self.course_1.lessons.all()[0].lecturers.all()[0],
             rating=4,
             review="Good lesson.",
         )
         self.review_course_1_3 = create_review(
             lesson=self.course_1.lessons.all()[1],
-            profile=self.profile,
+            student=self.profile,
+            lecturer=self.course_1.lessons.all()[1].lecturers.all()[0],
             rating=3,
             review="So so lesson.",
         )
@@ -471,39 +528,64 @@ class ReviewFilterTest(APITestCase):
             ],
         )
 
-        create_purchase(lesson=self.course_2.lessons.all()[0], profile=self.profile)
-        create_purchase(lesson=self.course_2.lessons.all()[1], profile=self.profile)
-        create_purchase(lesson=self.course_2.lessons.all()[0], profile=self.profile_2)
-        create_purchase(lesson=self.course_2.lessons.all()[1], profile=self.profile_2)
-        create_purchase(lesson=self.course_2.lessons.all()[2], profile=self.profile_2)
+        create_purchase(
+            lesson=self.course_2.lessons.all()[0],
+            student=self.profile,
+            lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course_2.lessons.all()[1],
+            student=self.profile,
+            lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course_2.lessons.all()[0],
+            student=self.profile_2,
+            lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course_2.lessons.all()[1],
+            student=self.profile_2,
+            lecturer=self.course_2.lessons.all()[1].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course_2.lessons.all()[2],
+            student=self.profile_2,
+            lecturer=self.course_2.lessons.all()[2].lecturers.all()[0],
+        )
 
         self.review_course_2_1 = create_review(
             lesson=self.course_2.lessons.all()[0],
-            profile=self.profile,
+            student=self.profile,
+            lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
             rating=5,
             review="Great lesson.",
         )
         self.review_course_2_2 = create_review(
             lesson=self.course_2.lessons.all()[1],
-            profile=self.profile,
+            student=self.profile,
+            lecturer=self.course_2.lessons.all()[1].lecturers.all()[0],
             rating=4,
             review="Good lesson.",
         )
         self.review_course_2_3 = create_review(
             lesson=self.course_2.lessons.all()[0],
-            profile=self.profile_2,
+            student=self.profile_2,
+            lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
             rating=2,
             review="So so lesson.",
         )
         self.review_course_2_4 = create_review(
             lesson=self.course_2.lessons.all()[1],
-            profile=self.profile_2,
+            student=self.profile_2,
+            lecturer=self.course_2.lessons.all()[1].lecturers.all()[0],
             rating=1,
             review="So so lesson.",
         )
         self.review_course_2_5 = create_review(
             lesson=self.course_2.lessons.all()[2],
-            profile=self.profile_2,
+            student=self.profile_2,
+            lecturer=self.course_2.lessons.all()[2].lecturers.all()[0],
             rating=4,
             review="So so lesson.",
         )
@@ -537,18 +619,28 @@ class ReviewFilterTest(APITestCase):
             ],
         )
 
-        create_purchase(lesson=self.course_3.lessons.all()[0], profile=self.profile)
-        create_purchase(lesson=self.course_3.lessons.all()[0], profile=self.profile_2)
+        create_purchase(
+            lesson=self.course_3.lessons.all()[0],
+            student=self.profile,
+            lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course_3.lessons.all()[0],
+            student=self.profile_2,
+            lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
+        )
 
         self.review_course_3_1 = create_review(
             lesson=self.course_3.lessons.all()[0],
-            profile=self.profile,
+            student=self.profile,
+            lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
             rating=5,
             review="Great lesson.",
         )
         self.review_course_3_2 = create_review(
             lesson=self.course_3.lessons.all()[0],
-            profile=self.profile_2,
+            student=self.profile_2,
+            lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
             rating=2,
             review="So so lesson.",
         )
@@ -562,6 +654,18 @@ class ReviewFilterTest(APITestCase):
         data = json.loads(response.content)
         count = data["records_count"]
         self.assertEqual(count, 3)
+
+    def test_lecturer_id_filter(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(
+            f"{self.endpoint}?lecturer_id={self.course_1.lessons.all()[0].lecturers.all()[0].id}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 6)
 
     def test_rating_filter(self):
         # no login

@@ -27,15 +27,24 @@ class Migration(migrations.Migration):
                 ),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 (
+                    "lecturer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="purchase_lecturer",
+                        to="profile.profile",
+                    ),
+                ),
+                (
                     "lesson",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE, to="course.lesson"
                     ),
                 ),
                 (
-                    "profile",
+                    "student",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
+                        related_name="purchase_student",
                         to="profile.profile",
                     ),
                 ),
@@ -48,8 +57,8 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="purchase",
             constraint=models.UniqueConstraint(
-                fields=("lesson", "profile"),
-                name="purchase_lesson_profile_unique_together",
+                fields=("lesson", "student", "lecturer"),
+                name="purchase_lesson_student_lecturer_unique_together",
             ),
         ),
     ]

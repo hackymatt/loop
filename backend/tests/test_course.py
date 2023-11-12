@@ -123,24 +123,35 @@ class CourseTest(APITestCase):
             ],
         )
 
-        create_purchase(lesson=self.course.lessons.all()[0], profile=self.profile)
-        create_purchase(lesson=self.course.lessons.all()[1], profile=self.profile)
+        create_purchase(
+            lesson=self.course.lessons.all()[0],
+            student=self.profile,
+            lecturer=self.course.lessons.all()[0].lecturers.all()[0],
+        )
+        create_purchase(
+            lesson=self.course.lessons.all()[1],
+            student=self.profile,
+            lecturer=self.course.lessons.all()[1].lecturers.all()[0],
+        )
 
         self.review_1 = create_review(
             lesson=self.course.lessons.all()[0],
-            profile=self.profile,
+            student=self.profile,
+            lecturer=self.course.lessons.all()[0].lecturers.all()[0],
             rating=5,
             review="Great lesson.",
         )
         self.review_2 = create_review(
             lesson=self.course.lessons.all()[0],
-            profile=self.profile_2,
+            student=self.profile_2,
+            lecturer=self.course.lessons.all()[0].lecturers.all()[0],
             rating=4,
             review="Good lesson.",
         )
         self.review_3 = create_review(
             lesson=self.course.lessons.all()[1],
-            profile=self.profile,
+            student=self.profile,
+            lecturer=self.course.lessons.all()[1].lecturers.all()[0],
             rating=3,
             review="So so lesson.",
         )

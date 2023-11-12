@@ -40,24 +40,15 @@ class LecturerSerializer(ModelSerializer):
     rating_count = SerializerMethodField("get_rating_count")
 
     def get_rating(self, lecturer):
-        lessons = Lesson.lecturers.through.objects.filter(profile=lecturer).values(
-            "lesson"
-        )
-        return Review.objects.filter(lesson__in=lessons).aggregate(Avg("rating"))[
+        return Review.objects.filter(lecturer=lecturer).aggregate(Avg("rating"))[
             "rating__avg"
         ]
 
     def get_rating_count(self, lecturer):
-        lessons = Lesson.lecturers.through.objects.filter(profile=lecturer).values(
-            "lesson"
-        )
-        return Review.objects.filter(lesson__in=lessons).count()
+        return Review.objects.filter(lecturer=lecturer).count()
 
     def get_students_count(self, lecturer):
-        lessons = Lesson.lecturers.through.objects.filter(profile=lecturer).values(
-            "lesson"
-        )
-        return Purchase.objects.filter(lesson__in=lessons).count()
+        return Purchase.objects.filter(lecturer=lecturer).count()
 
     class Meta:
         model = Profile
