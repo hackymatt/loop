@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "profile",
+                    "student",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         to="profile.profile",
@@ -48,8 +48,8 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="purchase",
             constraint=models.UniqueConstraint(
-                fields=("lesson", "profile"),
-                name="purchase_lesson_profile_unique_together",
+                fields=("lesson", "student"),
+                name="purchase_lesson_student_unique_together",
             ),
         ),
     ]

@@ -14,7 +14,7 @@ from profile.models import Profile
 
 class Review(Model):
     lesson = ForeignKey(Lesson, on_delete=CASCADE)
-    profile = ForeignKey(Profile, on_delete=CASCADE)
+    student = ForeignKey(Profile, on_delete=CASCADE)
     rating = PositiveIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(5)]
     )
@@ -26,7 +26,7 @@ class Review(Model):
         ordering = ["id"]
         constraints = [
             UniqueConstraint(
-                fields=["lesson", "profile"],
-                name="review_lesson_profile_unique_together",
+                fields=["lesson", "student"],
+                name="review_lesson_student_unique_together",
             )
         ]

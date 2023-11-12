@@ -15,9 +15,9 @@ class BestReviewSerializer(ModelSerializer):
 class ReviewSerializer(ModelSerializer):
     class Meta:
         model = Review
-        exclude = ("profile",)
+        exclude = ("student",)
 
     def create(self, validated_data):
         user = self.context["request"].user
         profile = Profile.objects.get(user=user)
-        return Review.objects.create(**validated_data, profile=profile)
+        return Review.objects.create(**validated_data, student=profile)

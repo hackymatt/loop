@@ -118,43 +118,43 @@ class ReviewTest(APITestCase):
             ],
         )
 
-        create_purchase(lesson=self.course.lessons.all()[0], profile=self.profile_1)
-        create_purchase(lesson=self.course.lessons.all()[0], profile=self.profile_2)
-        create_purchase(lesson=self.course.lessons.all()[0], profile=self.profile_3)
-        create_purchase(lesson=self.course.lessons.all()[1], profile=self.profile_1)
-        create_purchase(lesson=self.course.lessons.all()[1], profile=self.profile_2)
-        create_purchase(lesson=self.course.lessons.all()[1], profile=self.profile_3)
-        create_purchase(lesson=self.course.lessons.all()[2], profile=self.profile_1)
+        create_purchase(lesson=self.course.lessons.all()[0], student=self.profile_1)
+        create_purchase(lesson=self.course.lessons.all()[0], student=self.profile_2)
+        create_purchase(lesson=self.course.lessons.all()[0], student=self.profile_3)
+        create_purchase(lesson=self.course.lessons.all()[1], student=self.profile_1)
+        create_purchase(lesson=self.course.lessons.all()[1], student=self.profile_2)
+        create_purchase(lesson=self.course.lessons.all()[1], student=self.profile_3)
+        create_purchase(lesson=self.course.lessons.all()[2], student=self.profile_1)
 
         self.review_1 = create_review(
             lesson=self.course.lessons.all()[0],
-            profile=self.profile_1,
+            student=self.profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_2 = create_review(
             lesson=self.course.lessons.all()[0],
-            profile=self.profile_2,
+            student=self.profile_2,
             rating=5,
             review="Super helpful.",
         )
         self.review_3 = create_review(
             lesson=self.course.lessons.all()[0],
-            profile=self.profile_3,
+            student=self.profile_3,
             rating=4,
             review="Great lesson.",
         )
         self.review_4 = create_review(
-            lesson=self.course.lessons.all()[1], profile=self.profile_1, rating=3
+            lesson=self.course.lessons.all()[1], student=self.profile_1, rating=3
         )
         self.review_5 = create_review(
             lesson=self.course.lessons.all()[1],
-            profile=self.profile_2,
+            student=self.profile_2,
             rating=2,
             review="Terrible.",
         )
         self.review_6 = create_review(
-            lesson=self.course.lessons.all()[1], profile=self.profile_3, rating=5
+            lesson=self.course.lessons.all()[1], student=self.profile_3, rating=5
         )
 
     def test_get_reviews_unauthenticated(self):
@@ -421,33 +421,33 @@ class BestReviewTest(APITestCase):
 
         self.review_1 = create_review(
             lesson=self.course.lessons.all()[0],
-            profile=self.profile_1,
+            student=self.profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_2 = create_review(
             lesson=self.course.lessons.all()[0],
-            profile=self.profile_2,
+            student=self.profile_2,
             rating=5,
             review="Super helpful.",
         )
         self.review_3 = create_review(
             lesson=self.course.lessons.all()[0],
-            profile=self.profile_3,
+            student=self.profile_3,
             rating=4,
             review="Great lesson.",
         )
         self.review_4 = create_review(
-            lesson=self.course.lessons.all()[1], profile=self.profile_1, rating=3
+            lesson=self.course.lessons.all()[1], student=self.profile_1, rating=3
         )
         self.review_5 = create_review(
             lesson=self.course.lessons.all()[1],
-            profile=self.profile_2,
+            student=self.profile_2,
             rating=2,
             review="Terrible.",
         )
         self.review_6 = create_review(
-            lesson=self.course.lessons.all()[1], profile=self.profile_3, rating=5
+            lesson=self.course.lessons.all()[1], student=self.profile_3, rating=5
         )
 
     def test_get_best_reviews_unauthenticated(self):

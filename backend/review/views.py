@@ -26,20 +26,20 @@ class ReviewViewSet(ModelViewSet):
         profile = Profile.objects.get(user=user)
         lesson = Lesson.objects.get(pk=lesson_id)
 
-        return Purchase.objects.filter(profile=profile, lesson=lesson).exists()
+        return Purchase.objects.filter(student=profile, lesson=lesson).exists()
 
     @staticmethod
     def is_review_created(user, lesson_id):
         profile = Profile.objects.get(user=user)
         lesson = Lesson.objects.get(pk=lesson_id)
 
-        return Review.objects.filter(profile=profile, lesson=lesson).exists()
+        return Review.objects.filter(student=profile, lesson=lesson).exists()
 
     @staticmethod
     def is_user_review(user, review):
         profile = Profile.objects.get(user=user)
 
-        return review.profile == profile
+        return review.student == profile
 
     def create(self, request, *args, **kwargs):
         user = request.user
