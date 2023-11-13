@@ -1,8 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.filters import SearchFilter
-from utils.filtering.backends import ComplexFilterBackend
 from course.serializers import (
     CourseListSerializer,
     CourseSerializer,
@@ -23,10 +21,6 @@ class CourseViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    filter_backends = (
-        ComplexFilterBackend,
-        SearchFilter,
-    )
     filterset_class = CourseFilter
     search_fields = [
         "title",

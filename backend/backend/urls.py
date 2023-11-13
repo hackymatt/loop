@@ -18,6 +18,7 @@ from newsletter.views import (
     NewsletterSubscribeViewSet,
     NewsletterUnsubscribeViewSet,
 )
+from schedule.views import ScheduleViewSet
 from stats.views import StatsViewSet
 
 router = DefaultRouter(trailing_slash=False)
@@ -39,6 +40,7 @@ router.register(r"technologies", TechnologyViewSet, basename="technologies")
 router.register(r"lecturers", LecturerViewSet, basename="lecturers")
 router.register(r"reviews", ReviewViewSet, basename="reviews")
 router.register(r"best-reviews", BestReviewViewSet, basename="best_reviews")
+router.register(r"schedules", ScheduleViewSet, basename="schedules")
 router.register(r"newsletter", NewsletterEntriesViewSet, basename="newsletter")
 router.register(
     r"newsletter-subscribe", NewsletterSubscribeViewSet, basename="newsletter_subscribe"

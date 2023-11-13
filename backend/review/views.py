@@ -1,8 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.filters import SearchFilter
-from utils.filtering.backends import ComplexFilterBackend
 from review.serializers import (
     ReviewSerializer,
     ReviewGetSerializer,
@@ -19,10 +17,6 @@ class ReviewViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    filter_backends = (
-        ComplexFilterBackend,
-        SearchFilter,
-    )
     filterset_class = ReviewFilter
 
     def get_serializer_class(self, *args, **kwargs):
