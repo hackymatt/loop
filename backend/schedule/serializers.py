@@ -1,4 +1,11 @@
-from rest_framework.serializers import ModelSerializer, CharField, EmailField
+from rest_framework.serializers import (
+    ModelSerializer,
+    CharField,
+    EmailField,
+    DateTimeField,
+    ListField,
+)
+from course.models import Lesson
 from schedule.models import Schedule
 from profile.models import Profile
 
@@ -30,11 +37,22 @@ class ScheduleGetSerializer(ModelSerializer):
 
 
 class ScheduleSerializer(ModelSerializer):
+    times = ListField(child=DateTimeField())
+
     class Meta:
         model = Schedule
-        exclude = ("lecturer",)
+        exclude = ("time",)
 
     def create(self, validated_data):
-        user = self.context["request"].user
-        profile = Profile.objects.get(user=user)
-        return Schedule.objects.create(**validated_data, lecturer=profile)
+        lecturer_id = validated_data.pop("lecturer")
+        lecturer = Profile.objects.get(pk=lecturer_id)
+        lesson_id = validated_data.pop("lesson")
+        lesson = Lesson.objects.get(pk=lesson_id)
+        times = validated_data.pop("times")
+
+        Schedule.objects.filter(lesson=lesson, lecturer=lecturer).all().delete()
+        schedules = Schedule.objects.bulk_create(
+            [Schedule(lesson=lesson, lecturer=lecturer, time=time) for time in times]
+        )
+
+        return schedules

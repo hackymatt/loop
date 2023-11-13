@@ -14,7 +14,7 @@ class OrderFilter(OrderingFilter):
 
 
 class ScheduleFilter(FilterSet):
-    lesson_id = NumberFilter(field_name="lesson__course__id", lookup_expr="exact")
+    lesson_id = NumberFilter(field_name="lesson__id", lookup_expr="exact")
     lecturer_id = NumberFilter(field_name="lecturer__id", lookup_expr="exact")
     sort_by = OrderFilter(
         choices=(

@@ -4,6 +4,7 @@ from course.models import Course, Lesson, Technology, Skill, Topic
 from review.models import Review
 from purchase.models import Purchase
 from newsletter.models import Newsletter
+from schedule.models import Schedule
 from datetime import datetime
 from django.utils.timezone import make_aware
 from PIL import Image
@@ -176,3 +177,11 @@ def create_purchase(
 
 def create_newsletter(email: str, active: bool = True):
     return Newsletter.objects.create(email=email, active=active)
+
+
+def create_schedule(
+    lesson: Lesson,
+    lecturer: Profile,
+    time: str,
+):
+    return Schedule.objects.create(lesson=lesson, lecturer=lecturer, time=time)
