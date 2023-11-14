@@ -10,7 +10,19 @@ from course.models import Lesson, Course, Technology, Skill, Topic
 from profile.models import Profile
 from review.models import Review
 from purchase.models import Purchase
+from schedule.models import Schedule
 from django.db.models import Sum, Avg
+
+
+class TechnologyListSerializer(ModelSerializer):
+    courses_count = SerializerMethodField("get_courses_count")
+
+    class Meta:
+        model = Technology
+        fields = "__all__"
+
+    def get_courses_count(self, technology):
+        return Course.objects.filter(technology=technology).count()
 
 
 class TechnologySerializer(ModelSerializer):
@@ -35,20 +47,6 @@ class LecturerSerializer(ModelSerializer):
     first_name = CharField(source="user.first_name")
     last_name = CharField(source="user.last_name")
     email = EmailField(source="user.email")
-    students_count = SerializerMethodField("get_students_count")
-    rating = SerializerMethodField("get_rating")
-    rating_count = SerializerMethodField("get_rating_count")
-
-    def get_rating(self, lecturer):
-        return Review.objects.filter(lecturer=lecturer).aggregate(Avg("rating"))[
-            "rating__avg"
-        ]
-
-    def get_rating_count(self, lecturer):
-        return Review.objects.filter(lecturer=lecturer).count()
-
-    def get_students_count(self, lecturer):
-        return Purchase.objects.filter(lecturer=lecturer).count()
 
     class Meta:
         model = Profile
@@ -57,18 +55,21 @@ class LecturerSerializer(ModelSerializer):
             "first_name",
             "last_name",
             "email",
-            "students_count",
-            "rating",
-            "rating_count",
+            "image",
         )
 
 
 class LessonSerializer(ModelSerializer):
     id = IntegerField()
-    lecturers = LecturerSerializer(many=True)
+    lecturers = SerializerMethodField("get_lecturers")
     students_count = SerializerMethodField("get_students_count")
     rating = SerializerMethodField("get_rating")
     rating_count = SerializerMethodField("get_rating_count")
+
+    def get_lecturers(self, lesson):
+        lecturer_ids = Schedule.objects.filter(lesson=lesson).values("lecturer")
+        lecturers = Profile.objects.filter(id__in=lecturer_ids).order_by("uuid")
+        return LecturerSerializer(lecturers, many=True).data
 
     def get_rating(self, lesson):
         return Review.objects.filter(lesson=lesson).aggregate(Avg("rating"))[
@@ -100,14 +101,10 @@ class CourseListSerializer(ModelSerializer):
         ]
 
     def get_lecturers(self, course):
-        lessons = LessonSerializer(Lesson.objects.filter(course=course), many=True).data
-        lecturers = [lesson["lecturers"] for lesson in lessons]
-        lecturers_joined = sum(lecturers, [])
-        lecturers_unique = [
-            dict(y) for y in set(tuple(x.items()) for x in lecturers_joined)
-        ]
-
-        return lecturers_unique
+        lessons = Lesson.objects.filter(course=course)
+        lecturer_ids = Schedule.objects.filter(lesson__in=lessons).values("lecturer")
+        lecturers = Profile.objects.filter(id__in=lecturer_ids).order_by("uuid")
+        return LecturerSerializer(lecturers, many=True).data
 
     def get_rating(self, course):
         lessons = course.lessons.all()
@@ -145,14 +142,10 @@ class CourseSerializer(ModelSerializer):
         ]
 
     def get_lecturers(self, course):
-        lessons = LessonSerializer(Lesson.objects.filter(course=course), many=True).data
-        lecturers = [lesson["lecturers"] for lesson in lessons]
-        lecturers_joined = sum(lecturers, [])
-        lecturers_unique = [
-            dict(y) for y in set(tuple(x.items()) for x in lecturers_joined)
-        ]
-
-        return lecturers_unique
+        lessons = Lesson.objects.filter(course=course)
+        lecturer_ids = Schedule.objects.filter(lesson__in=lessons).values("lecturer")
+        lecturers = Profile.objects.filter(id__in=lecturer_ids).order_by("uuid")
+        return LecturerSerializer(lecturers, many=True).data
 
     def get_rating(self, course):
         return Review.objects.filter(lesson__in=course.lessons.all()).aggregate(
@@ -216,14 +209,6 @@ class CourseSerializer(ModelSerializer):
 
         return course
 
-    def add_lecturers(self, lesson, lecturers):
-        uuids = [lecturer["uuid"] for lecturer in lecturers]
-        objs = Profile.objects.filter(uuid__in=uuids)
-
-        lesson.lecturers.add(*objs)
-
-        return lesson
-
     @staticmethod
     def is_lesson_in_list(lesson, lessons_list):
         for lesson_obj in lessons_list:
@@ -233,8 +218,8 @@ class CourseSerializer(ModelSerializer):
         return False
 
     def create_lessons(self, course, lessons):
-        for lesson in lessons:
-            obj = Lesson.objects.create(
+        Lesson.objects.bulk_create(
+            Lesson(
                 course=course,
                 title=lesson["title"],
                 description=lesson["description"],
@@ -242,8 +227,8 @@ class CourseSerializer(ModelSerializer):
                 github_branch_link=lesson["github_branch_link"],
                 price=lesson["price"],
             )
-            obj = self.add_lecturers(lesson=obj, lecturers=lesson["lecturers"])
-            obj.save()
+            for lesson in lessons
+        )
 
     def edit_lessons(self, lessons):
         for lesson in lessons:
@@ -256,7 +241,6 @@ class CourseSerializer(ModelSerializer):
                 "github_branch_link", obj.github_branch_link
             )
             obj.price = lesson.get("price", obj.price)
-            obj = self.add_lecturers(lesson=obj, lecturers=lesson["lecturers"])
             obj.save()
 
     def delete_lessons(self, lesson_ids):

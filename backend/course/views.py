@@ -1,12 +1,11 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.filters import SearchFilter
-from utils.filtering.backends import ComplexFilterBackend
 from course.serializers import (
     CourseListSerializer,
     CourseSerializer,
     TechnologySerializer,
+    TechnologyListSerializer,
 )
 from course.filters import CourseFilter
 from course.models import Course, Technology
@@ -16,17 +15,13 @@ from profile.models import Profile
 class TechnologyViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = Technology.objects.all()
-    serializer_class = TechnologySerializer
+    serializer_class = TechnologyListSerializer
 
 
 class CourseViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    filter_backends = (
-        ComplexFilterBackend,
-        SearchFilter,
-    )
     filterset_class = CourseFilter
     search_fields = [
         "title",

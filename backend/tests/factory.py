@@ -4,6 +4,7 @@ from course.models import Course, Lesson, Technology, Skill, Topic
 from review.models import Review
 from purchase.models import Purchase
 from newsletter.models import Newsletter
+from schedule.models import Schedule
 from datetime import datetime
 from django.utils.timezone import make_aware
 from PIL import Image
@@ -65,15 +66,6 @@ def create_fields(values, model):
     return objs
 
 
-def add_lecturers(lesson, lecturers):
-    uuids = [lecturer["uuid"] for lecturer in lecturers]
-    objs = Profile.objects.filter(uuid__in=uuids)
-
-    lesson.lecturers.add(*objs)
-
-    return lesson
-
-
 def create_course(
     title: str,
     description: str,
@@ -98,8 +90,8 @@ def create_course(
     course.topics.add(*create_fields(topics, Topic))
     course.save()
 
-    for lesson in lessons:
-        obj = Lesson.objects.create(
+    Lesson.objects.bulk_create(
+        Lesson(
             course=course,
             title=lesson["title"],
             description=lesson["description"],
@@ -107,8 +99,8 @@ def create_course(
             github_branch_link=lesson["github_branch_link"],
             price=lesson["price"],
         )
-        obj = add_lecturers(lesson=obj, lecturers=lesson["lecturers"])
-        obj.save()
+        for lesson in lessons
+    )
 
     return course
 
@@ -120,7 +112,6 @@ def create_lesson_obj(
     duration: int,
     github_branch_link: str,
     price: str,
-    lecturers,
 ):
     return {
         "id": id,
@@ -129,16 +120,6 @@ def create_lesson_obj(
         "duration": duration,
         "github_branch_link": github_branch_link,
         "price": price,
-        "lecturers": lecturers,
-    }
-
-
-def create_lecturer_obj(lecturer: Profile):
-    return {
-        "uuid": lecturer.uuid,
-        "first_name": lecturer.user.first_name,
-        "last_name": lecturer.user.last_name,
-        "email": lecturer.user.email,
     }
 
 
@@ -170,9 +151,20 @@ def create_purchase(
     lesson: Lesson,
     student: Profile,
     lecturer: Profile,
+    time: Schedule,
 ):
-    return Purchase.objects.create(lesson=lesson, student=student, lecturer=lecturer)
+    return Purchase.objects.create(
+        lesson=lesson, student=student, lecturer=lecturer, time=time
+    )
 
 
 def create_newsletter(email: str, active: bool = True):
     return Newsletter.objects.create(email=email, active=active)
+
+
+def create_schedule(
+    lesson: Lesson,
+    lecturer: Profile,
+    time: str,
+):
+    return Schedule.objects.create(lesson=lesson, lecturer=lecturer, time=time)

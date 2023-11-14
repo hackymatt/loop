@@ -3,10 +3,20 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
+    create_course,
+    create_lesson_obj,
+    create_technology_obj,
+    create_skill_obj,
+    create_topic_obj,
+    create_schedule,
+    create_purchase,
+    create_review,
 )
-from .helpers import login
+from .helpers import login, get_schedules
 from django.contrib import auth
 import json
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
 
 
 class LecturersTest(APITestCase):
@@ -58,6 +68,114 @@ class LecturersTest(APITestCase):
         )
         self.lecturer_profile_2 = create_profile(
             user=self.lecturer_user_2, user_type="W"
+        )
+
+        # course 1
+        self.course = create_course(
+            title="Python Begginer",
+            description="Learn Python today",
+            technology=create_technology_obj(name="Python"),
+            level="Podstawowy",
+            price="99.99",
+            github_repo_link="www.example.com",
+            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            topics=[
+                create_topic_obj(name="You will learn how to code"),
+                create_topic_obj(name="You will learn a new IDE"),
+            ],
+            lessons=[
+                create_lesson_obj(
+                    id=-1,
+                    title="Python lesson 1",
+                    description="bbbb",
+                    duration="90",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="9.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Python lesson 2",
+                    description="bbbb",
+                    duration="30",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="2.99",
+                ),
+            ],
+        )
+
+        for i in range(5):
+            create_schedule(
+                self.course.lessons.all()[0],
+                self.lecturer_profile_1,
+                make_aware(
+                    datetime.now().replace(second=0, microsecond=0)
+                    + timedelta(minutes=30 * i)
+                ),
+            )
+            create_schedule(
+                self.course.lessons.all()[1],
+                self.lecturer_profile_1,
+                make_aware(
+                    datetime.now().replace(second=0, microsecond=0)
+                    + timedelta(minutes=30 * i)
+                ),
+            )
+            create_schedule(
+                self.course.lessons.all()[0],
+                self.lecturer_profile_2,
+                make_aware(
+                    datetime.now().replace(second=0, microsecond=0)
+                    + timedelta(minutes=30 * i)
+                ),
+            )
+            create_schedule(
+                self.course.lessons.all()[1],
+                self.lecturer_profile_2,
+                make_aware(
+                    datetime.now().replace(second=0, microsecond=0)
+                    + timedelta(minutes=30 * i)
+                ),
+            )
+
+        create_purchase(
+            lesson=self.course.lessons.all()[0],
+            student=self.student_profile_1,
+            lecturer=self.lecturer_profile_1,
+            time=get_schedules(
+                lesson=self.course.lessons.all()[0],
+                lecturer=self.lecturer_profile_1,
+            )[0],
+        )
+        create_purchase(
+            lesson=self.course.lessons.all()[1],
+            student=self.student_profile_1,
+            lecturer=self.lecturer_profile_1,
+            time=get_schedules(
+                lesson=self.course.lessons.all()[1],
+                lecturer=self.lecturer_profile_1,
+            )[0],
+        )
+
+        self.review_course_1_1 = create_review(
+            lesson=self.course.lessons.all()[0],
+            student=self.student_profile_1,
+            lecturer=self.lecturer_profile_1,
+            rating=5,
+            review="Great lesson.",
+        )
+        self.review_course_1_2 = create_review(
+            lesson=self.course.lessons.all()[0],
+            student=self.student_profile_2,
+            lecturer=self.lecturer_profile_1,
+            rating=4,
+            review="Good lesson.",
+        )
+        self.review_course_1_3 = create_review(
+            lesson=self.course.lessons.all()[1],
+            student=self.student_profile_1,
+            lecturer=self.lecturer_profile_1,
+            rating=3,
+            review="So so lesson.",
         )
 
     def test_get_lecturers_unauthenticated(self):
