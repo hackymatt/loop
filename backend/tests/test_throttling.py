@@ -8,7 +8,6 @@ from .factory import (
     create_technology_obj,
     create_skill_obj,
     create_topic_obj,
-    create_lecturer_obj,
 )
 from .helpers import login
 from django.contrib import auth
@@ -71,10 +70,6 @@ class ThrottlingTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -83,7 +78,6 @@ class ThrottlingTest(APITestCase):
                     duration="30",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
             ],
         )
@@ -109,10 +103,6 @@ class ThrottlingTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -121,7 +111,6 @@ class ThrottlingTest(APITestCase):
                     duration="30",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -130,7 +119,6 @@ class ThrottlingTest(APITestCase):
                     duration="130",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
             ],
         )
@@ -156,10 +144,6 @@ class ThrottlingTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
             ],
         )

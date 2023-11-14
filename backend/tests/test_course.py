@@ -8,7 +8,6 @@ from .factory import (
     create_technology_obj,
     create_skill_obj,
     create_topic_obj,
-    create_lecturer_obj,
     create_review,
     create_purchase,
     create_schedule,
@@ -110,10 +109,6 @@ class CourseTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -122,7 +117,6 @@ class CourseTest(APITestCase):
                     duration="30",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
             ],
         )
@@ -164,40 +158,40 @@ class CourseTest(APITestCase):
         create_purchase(
             lesson=self.course.lessons.all()[0],
             student=self.profile,
-            lecturer=self.course.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course.lessons.all()[0],
-                lecturer=self.course.lessons.all()[0].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
         create_purchase(
             lesson=self.course.lessons.all()[1],
             student=self.profile,
-            lecturer=self.course.lessons.all()[1].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course.lessons.all()[1],
-                lecturer=self.course.lessons.all()[1].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
 
         self.review_1 = create_review(
             lesson=self.course.lessons.all()[0],
             student=self.profile,
-            lecturer=self.course.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_2 = create_review(
             lesson=self.course.lessons.all()[0],
             student=self.profile_2,
-            lecturer=self.course.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_3 = create_review(
             lesson=self.course.lessons.all()[1],
             student=self.profile,
-            lecturer=self.course.lessons.all()[1].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=3,
             review="So so lesson.",
         )
@@ -261,13 +255,18 @@ class CourseTest(APITestCase):
         )
         self.assertEqual(
             lecturers,
-            [
-                dict(y)
-                for y in set(
-                    tuple(x.items())
-                    for x in sum([lesson["lecturers"] for lesson in lessons_data], [])
-                )
-            ],
+            sorted(
+                [
+                    dict(y)
+                    for y in set(
+                        tuple(x.items())
+                        for x in sum(
+                            [lesson["lecturers"] for lesson in lessons_data], []
+                        )
+                    )
+                ],
+                key=lambda d: d["uuid"],
+            ),
         )
         self.assertEqual(rating, 4.0)
         self.assertEqual(rating_count, 3)
@@ -289,7 +288,7 @@ class CourseTest(APITestCase):
             else:
                 self.assertEqual(rating, None)
                 self.assertEqual(rating_count, 0)
-                self.assertEqual(students_count, 2)
+                self.assertEqual(students_count, 0)
             for lecturer_data in lecturers_data:
                 user_data = filter_dict(lecturer_data, self.user_columns)
                 profile_data = filter_dict(lecturer_data, self.profile_columns)
@@ -332,13 +331,18 @@ class CourseTest(APITestCase):
         )
         self.assertEqual(
             lecturers,
-            [
-                dict(y)
-                for y in set(
-                    tuple(x.items())
-                    for x in sum([lesson["lecturers"] for lesson in lessons_data], [])
-                )
-            ],
+            sorted(
+                [
+                    dict(y)
+                    for y in set(
+                        tuple(x.items())
+                        for x in sum(
+                            [lesson["lecturers"] for lesson in lessons_data], []
+                        )
+                    )
+                ],
+                key=lambda d: d["uuid"],
+            ),
         )
         self.assertEqual(rating, 4.0)
         self.assertEqual(rating_count, 3)
@@ -396,10 +400,6 @@ class CourseTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -408,7 +408,6 @@ class CourseTest(APITestCase):
                     duration="30",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_1)],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -417,7 +416,6 @@ class CourseTest(APITestCase):
                     duration="50",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
             ],
         }
@@ -445,10 +443,6 @@ class CourseTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -457,7 +451,6 @@ class CourseTest(APITestCase):
                     duration="30",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_1)],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -466,7 +459,6 @@ class CourseTest(APITestCase):
                     duration="50",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
             ],
         }
@@ -499,10 +491,6 @@ class CourseTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -511,7 +499,6 @@ class CourseTest(APITestCase):
                     duration="30",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_1)],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -520,7 +507,6 @@ class CourseTest(APITestCase):
                     duration="50",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
             ],
         }
@@ -547,13 +533,18 @@ class CourseTest(APITestCase):
         )
         self.assertEqual(
             lecturers,
-            [
-                dict(y)
-                for y in set(
-                    tuple(x.items())
-                    for x in sum([lesson["lecturers"] for lesson in lessons_data], [])
-                )
-            ],
+            sorted(
+                [
+                    dict(y)
+                    for y in set(
+                        tuple(x.items())
+                        for x in sum(
+                            [lesson["lecturers"] for lesson in lessons_data], []
+                        )
+                    )
+                ],
+                key=lambda d: d["uuid"],
+            ),
         )
         self.assertEqual(rating, None)
         self.assertEqual(rating_count, 0)
@@ -632,10 +623,6 @@ class CourseTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -644,7 +631,6 @@ class CourseTest(APITestCase):
                     duration="30",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_1)],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -653,7 +639,6 @@ class CourseTest(APITestCase):
                     duration="50",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
             ],
         }
@@ -684,10 +669,6 @@ class CourseTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -696,7 +677,6 @@ class CourseTest(APITestCase):
                     duration="30",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_1)],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -705,7 +685,6 @@ class CourseTest(APITestCase):
                     duration="50",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
             ],
         }
@@ -733,10 +712,6 @@ class CourseTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -745,7 +720,6 @@ class CourseTest(APITestCase):
                     duration="30",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_1)],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -754,7 +728,6 @@ class CourseTest(APITestCase):
                     duration="50",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
             ],
         }
@@ -782,10 +755,6 @@ class CourseTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -794,7 +763,6 @@ class CourseTest(APITestCase):
                     duration="30",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_1)],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -803,7 +771,6 @@ class CourseTest(APITestCase):
                     duration="50",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
             ],
         }
@@ -837,10 +804,6 @@ class CourseTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -849,7 +812,6 @@ class CourseTest(APITestCase):
                     duration="30",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_1)],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -858,7 +820,6 @@ class CourseTest(APITestCase):
                     duration="50",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
             ],
         }
@@ -885,13 +846,18 @@ class CourseTest(APITestCase):
         )
         self.assertEqual(
             lecturers,
-            [
-                dict(y)
-                for y in set(
-                    tuple(x.items())
-                    for x in sum([lesson["lecturers"] for lesson in lessons_data], [])
-                )
-            ],
+            sorted(
+                [
+                    dict(y)
+                    for y in set(
+                        tuple(x.items())
+                        for x in sum(
+                            [lesson["lecturers"] for lesson in lessons_data], []
+                        )
+                    )
+                ],
+                key=lambda d: d["uuid"],
+            ),
         )
         self.assertEqual(rating, 4.5)
         self.assertEqual(rating_count, 2)
@@ -975,10 +941,6 @@ class CourseTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -987,7 +949,6 @@ class CourseTest(APITestCase):
                     duration="30",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_1)],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -996,7 +957,6 @@ class CourseTest(APITestCase):
                     duration="50",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
             ],
         }
@@ -1027,10 +987,6 @@ class CourseTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -1039,7 +995,6 @@ class CourseTest(APITestCase):
                     duration="30",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_1)],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -1048,7 +1003,6 @@ class CourseTest(APITestCase):
                     duration="50",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
             ],
         }

@@ -8,7 +8,6 @@ from .factory import (
     create_technology_obj,
     create_skill_obj,
     create_topic_obj,
-    create_lecturer_obj,
     create_review,
     create_purchase,
     create_schedule,
@@ -84,10 +83,6 @@ class CourseFilterTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -96,7 +91,6 @@ class CourseFilterTest(APITestCase):
                     duration="30",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
             ],
         )
@@ -138,40 +132,40 @@ class CourseFilterTest(APITestCase):
         create_purchase(
             lesson=self.course_1.lessons.all()[0],
             student=self.profile,
-            lecturer=self.course_1.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course_1.lessons.all()[0],
-                lecturer=self.course_1.lessons.all()[0].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
         create_purchase(
             lesson=self.course_1.lessons.all()[1],
             student=self.profile,
-            lecturer=self.course_1.lessons.all()[1].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course_1.lessons.all()[1],
-                lecturer=self.course_1.lessons.all()[1].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
 
         self.review_course_1_1 = create_review(
             lesson=self.course_1.lessons.all()[0],
             student=self.profile,
-            lecturer=self.course_1.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_1_2 = create_review(
             lesson=self.course_1.lessons.all()[0],
             student=self.profile_2,
-            lecturer=self.course_1.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_course_1_3 = create_review(
             lesson=self.course_1.lessons.all()[1],
             student=self.profile,
-            lecturer=self.course_1.lessons.all()[1].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=3,
             review="So so lesson.",
         )
@@ -197,10 +191,6 @@ class CourseFilterTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -209,7 +199,6 @@ class CourseFilterTest(APITestCase):
                     duration="30",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -218,7 +207,6 @@ class CourseFilterTest(APITestCase):
                     duration="130",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
             ],
         )
@@ -276,81 +264,81 @@ class CourseFilterTest(APITestCase):
         create_purchase(
             lesson=self.course_2.lessons.all()[0],
             student=self.profile,
-            lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course_2.lessons.all()[0],
-                lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
         create_purchase(
             lesson=self.course_2.lessons.all()[1],
             student=self.profile,
-            lecturer=self.course_2.lessons.all()[1].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course_2.lessons.all()[1],
-                lecturer=self.course_2.lessons.all()[1].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
         create_purchase(
             lesson=self.course_2.lessons.all()[0],
             student=self.profile_2,
-            lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course_2.lessons.all()[0],
-                lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
         create_purchase(
             lesson=self.course_2.lessons.all()[1],
             student=self.profile_2,
-            lecturer=self.course_2.lessons.all()[1].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course_2.lessons.all()[1],
-                lecturer=self.course_2.lessons.all()[1].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
         create_purchase(
             lesson=self.course_2.lessons.all()[2],
             student=self.profile_2,
-            lecturer=self.course_2.lessons.all()[2].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course_2.lessons.all()[2],
-                lecturer=self.course_2.lessons.all()[2].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
 
         self.review_course_2_1 = create_review(
             lesson=self.course_2.lessons.all()[0],
             student=self.profile,
-            lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_2_2 = create_review(
             lesson=self.course_2.lessons.all()[1],
             student=self.profile,
-            lecturer=self.course_2.lessons.all()[1].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_course_2_3 = create_review(
             lesson=self.course_2.lessons.all()[0],
             student=self.profile_2,
-            lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=2,
             review="So so lesson.",
         )
         self.review_course_2_4 = create_review(
             lesson=self.course_2.lessons.all()[1],
             student=self.profile_2,
-            lecturer=self.course_2.lessons.all()[1].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=1,
             review="So so lesson.",
         )
         self.review_course_2_5 = create_review(
             lesson=self.course_2.lessons.all()[2],
             student=self.profile_2,
-            lecturer=self.course_2.lessons.all()[2].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=4,
             review="So so lesson.",
         )
@@ -376,10 +364,6 @@ class CourseFilterTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
             ],
         )
@@ -405,33 +389,33 @@ class CourseFilterTest(APITestCase):
         create_purchase(
             lesson=self.course_3.lessons.all()[0],
             student=self.profile,
-            lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course_3.lessons.all()[0],
-                lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
         create_purchase(
             lesson=self.course_3.lessons.all()[0],
             student=self.profile_2,
-            lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course_3.lessons.all()[0],
-                lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
 
         self.review_course_3_1 = create_review(
             lesson=self.course_3.lessons.all()[0],
             student=self.profile,
-            lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_3_2 = create_review(
             lesson=self.course_3.lessons.all()[0],
             student=self.profile_2,
-            lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=2,
             review="So so lesson.",
         )
@@ -573,10 +557,6 @@ class ReviewFilterTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -585,7 +565,6 @@ class ReviewFilterTest(APITestCase):
                     duration="30",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
             ],
         )
@@ -627,40 +606,40 @@ class ReviewFilterTest(APITestCase):
         create_purchase(
             lesson=self.course_1.lessons.all()[0],
             student=self.profile,
-            lecturer=self.course_1.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course_1.lessons.all()[0],
-                lecturer=self.course_1.lessons.all()[0].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
         create_purchase(
             lesson=self.course_1.lessons.all()[1],
             student=self.profile,
-            lecturer=self.course_1.lessons.all()[1].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course_1.lessons.all()[1],
-                lecturer=self.course_1.lessons.all()[1].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
 
         self.review_course_1_1 = create_review(
             lesson=self.course_1.lessons.all()[0],
             student=self.profile,
-            lecturer=self.course_1.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_1_2 = create_review(
             lesson=self.course_1.lessons.all()[0],
             student=self.profile_2,
-            lecturer=self.course_1.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_course_1_3 = create_review(
             lesson=self.course_1.lessons.all()[1],
             student=self.profile,
-            lecturer=self.course_1.lessons.all()[1].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=3,
             review="So so lesson.",
         )
@@ -686,10 +665,6 @@ class ReviewFilterTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -698,7 +673,6 @@ class ReviewFilterTest(APITestCase):
                     duration="30",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
                 create_lesson_obj(
                     id=-1,
@@ -707,7 +681,6 @@ class ReviewFilterTest(APITestCase):
                     duration="130",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
-                    lecturers=[create_lecturer_obj(self.lecturer_profile_2)],
                 ),
             ],
         )
@@ -765,81 +738,81 @@ class ReviewFilterTest(APITestCase):
         create_purchase(
             lesson=self.course_2.lessons.all()[0],
             student=self.profile,
-            lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course_2.lessons.all()[0],
-                lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
         create_purchase(
             lesson=self.course_2.lessons.all()[1],
             student=self.profile,
-            lecturer=self.course_2.lessons.all()[1].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course_2.lessons.all()[1],
-                lecturer=self.course_2.lessons.all()[1].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
         create_purchase(
             lesson=self.course_2.lessons.all()[0],
             student=self.profile_2,
-            lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course_2.lessons.all()[0],
-                lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
         create_purchase(
             lesson=self.course_2.lessons.all()[1],
             student=self.profile_2,
-            lecturer=self.course_2.lessons.all()[1].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course_2.lessons.all()[1],
-                lecturer=self.course_2.lessons.all()[1].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
         create_purchase(
             lesson=self.course_2.lessons.all()[2],
             student=self.profile_2,
-            lecturer=self.course_2.lessons.all()[2].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course_2.lessons.all()[2],
-                lecturer=self.course_2.lessons.all()[2].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
 
         self.review_course_2_1 = create_review(
             lesson=self.course_2.lessons.all()[0],
             student=self.profile,
-            lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_2_2 = create_review(
             lesson=self.course_2.lessons.all()[1],
             student=self.profile,
-            lecturer=self.course_2.lessons.all()[1].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_course_2_3 = create_review(
             lesson=self.course_2.lessons.all()[0],
             student=self.profile_2,
-            lecturer=self.course_2.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=2,
             review="So so lesson.",
         )
         self.review_course_2_4 = create_review(
             lesson=self.course_2.lessons.all()[1],
             student=self.profile_2,
-            lecturer=self.course_2.lessons.all()[1].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=1,
             review="So so lesson.",
         )
         self.review_course_2_5 = create_review(
             lesson=self.course_2.lessons.all()[2],
             student=self.profile_2,
-            lecturer=self.course_2.lessons.all()[2].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=4,
             review="So so lesson.",
         )
@@ -865,10 +838,6 @@ class ReviewFilterTest(APITestCase):
                     duration="90",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="9.99",
-                    lecturers=[
-                        create_lecturer_obj(self.lecturer_profile_1),
-                        create_lecturer_obj(self.lecturer_profile_2),
-                    ],
                 ),
             ],
         )
@@ -894,33 +863,33 @@ class ReviewFilterTest(APITestCase):
         create_purchase(
             lesson=self.course_3.lessons.all()[0],
             student=self.profile,
-            lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course_3.lessons.all()[0],
-                lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
         create_purchase(
             lesson=self.course_3.lessons.all()[0],
             student=self.profile_2,
-            lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             time=get_schedules(
                 lesson=self.course_3.lessons.all()[0],
-                lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
+                lecturer=self.lecturer_profile_1,
             )[0],
         )
 
         self.review_course_3_1 = create_review(
             lesson=self.course_3.lessons.all()[0],
             student=self.profile,
-            lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_3_2 = create_review(
             lesson=self.course_3.lessons.all()[0],
             student=self.profile_2,
-            lecturer=self.course_3.lessons.all()[0].lecturers.all()[0],
+            lecturer=self.lecturer_profile_1,
             rating=2,
             review="So so lesson.",
         )
@@ -940,12 +909,12 @@ class ReviewFilterTest(APITestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(
-            f"{self.endpoint}?lecturer_id={self.course_1.lessons.all()[0].lecturers.all()[0].id}"
+            f"{self.endpoint}?lecturer_id={self.lecturer_profile_1.id}"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 6)
+        self.assertEqual(count, 10)
 
     def test_rating_filter(self):
         # no login

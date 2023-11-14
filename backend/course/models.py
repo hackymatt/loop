@@ -72,7 +72,6 @@ class Lesson(Model):
     price = DecimalField(
         max_digits=7, decimal_places=2, validators=[MinValueValidator(Decimal("0.00"))]
     )
-    lecturers = ManyToManyField(Profile, related_name="lesson_lecturers")
 
     class Meta:
         db_table = "lesson"
