@@ -10,13 +10,8 @@ from profile.models import Profile
 class ScheduleViewSet(ModelViewSet):
     http_method_names = ["get", "post"]
     queryset = Schedule.objects.all()
-    serializer_class = ScheduleSerializer
+    serializer_class = ScheduleGetSerializer
     filterset_class = ScheduleFilter
-
-    def get_serializer_class(self, *args, **kwargs):
-        if self.request.method == "GET":
-            return ScheduleGetSerializer
-        return self.serializer_class
 
     def create(self, request, *args, **kwargs):
         user = request.user

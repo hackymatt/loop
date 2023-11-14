@@ -3,6 +3,7 @@ from profile.models import Profile
 from course.models import Course, Lesson, Technology, Skill, Topic
 from review.models import Review
 from newsletter.models import Newsletter
+from schedule.models import Schedule
 from django.core import mail
 
 
@@ -117,3 +118,7 @@ def get_skill(id: int):
 
 def get_topic(id: int):
     return Topic.objects.get(pk=id)
+
+
+def get_schedules(lesson: Lesson, lecturer: Profile):
+    return Schedule.objects.filter(lesson=lesson, lecturer=lecturer).all()

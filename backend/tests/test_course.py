@@ -11,6 +11,7 @@ from .factory import (
     create_lecturer_obj,
     create_review,
     create_purchase,
+    create_schedule,
 )
 from .helpers import (
     login,
@@ -26,9 +27,12 @@ from .helpers import (
     is_course_found,
     filter_dict,
     lessons_number,
+    get_schedules,
 )
 from django.contrib import auth
 import json
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
 
 
 class CourseTest(APITestCase):
@@ -123,15 +127,57 @@ class CourseTest(APITestCase):
             ],
         )
 
+        for i in range(5):
+            create_schedule(
+                self.course.lessons.all()[0],
+                self.lecturer_profile_1,
+                make_aware(
+                    datetime.now().replace(second=0, microsecond=0)
+                    + timedelta(minutes=30 * i)
+                ),
+            )
+            create_schedule(
+                self.course.lessons.all()[1],
+                self.lecturer_profile_1,
+                make_aware(
+                    datetime.now().replace(second=0, microsecond=0)
+                    + timedelta(minutes=30 * i)
+                ),
+            )
+            create_schedule(
+                self.course.lessons.all()[0],
+                self.lecturer_profile_2,
+                make_aware(
+                    datetime.now().replace(second=0, microsecond=0)
+                    + timedelta(minutes=30 * i)
+                ),
+            )
+            create_schedule(
+                self.course.lessons.all()[1],
+                self.lecturer_profile_2,
+                make_aware(
+                    datetime.now().replace(second=0, microsecond=0)
+                    + timedelta(minutes=30 * i)
+                ),
+            )
+
         create_purchase(
             lesson=self.course.lessons.all()[0],
             student=self.profile,
             lecturer=self.course.lessons.all()[0].lecturers.all()[0],
+            time=get_schedules(
+                lesson=self.course.lessons.all()[0],
+                lecturer=self.course.lessons.all()[0].lecturers.all()[0],
+            )[0],
         )
         create_purchase(
             lesson=self.course.lessons.all()[1],
             student=self.profile,
             lecturer=self.course.lessons.all()[1].lecturers.all()[0],
+            time=get_schedules(
+                lesson=self.course.lessons.all()[1],
+                lecturer=self.course.lessons.all()[1].lecturers.all()[0],
+            )[0],
         )
 
         self.review_1 = create_review(

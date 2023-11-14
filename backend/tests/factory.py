@@ -171,8 +171,11 @@ def create_purchase(
     lesson: Lesson,
     student: Profile,
     lecturer: Profile,
+    time: Schedule,
 ):
-    return Purchase.objects.create(lesson=lesson, student=student, lecturer=lecturer)
+    return Purchase.objects.create(
+        lesson=lesson, student=student, lecturer=lecturer, time=time
+    )
 
 
 def create_newsletter(email: str, active: bool = True):

@@ -8,8 +8,9 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("profile", "0002_create_superuser"),
         ("course", "0001_initial"),
+        ("schedule", "0001_initial"),
+        ("profile", "0002_create_superuser"),
     ]
 
     operations = [
@@ -46,6 +47,13 @@ class Migration(migrations.Migration):
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="purchase_student",
                         to="profile.profile",
+                    ),
+                ),
+                (
+                    "time",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="schedule.schedule",
                     ),
                 ),
             ],

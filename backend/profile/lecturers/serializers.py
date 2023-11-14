@@ -7,6 +7,7 @@ from rest_framework.serializers import (
 from profile.models import Profile
 from review.models import Review
 from purchase.models import Purchase
+from schedule.models import Schedule
 from django.db.models import Avg
 
 
@@ -17,6 +18,7 @@ class LecturerSerializer(ModelSerializer):
     students_count = SerializerMethodField("get_students_count")
     rating = SerializerMethodField("get_rating")
     rating_count = SerializerMethodField("get_rating_count")
+    lessons_count = SerializerMethodField("get_lessons_count")
 
     class Meta:
         model = Profile
@@ -29,6 +31,7 @@ class LecturerSerializer(ModelSerializer):
             "students_count",
             "rating",
             "rating_count",
+            "lessons_count",
         )
 
     def get_rating(self, lecturer):
@@ -41,3 +44,11 @@ class LecturerSerializer(ModelSerializer):
 
     def get_students_count(self, lecturer):
         return Purchase.objects.filter(lecturer=lecturer).count()
+
+    def get_lessons_count(self, lecturer):
+        return (
+            Schedule.objects.filter(lecturer=lecturer)
+            .values("lesson")
+            .distinct()
+            .count()
+        )

@@ -13,6 +13,17 @@ from purchase.models import Purchase
 from django.db.models import Sum, Avg
 
 
+class TechnologyListSerializer(ModelSerializer):
+    courses_count = SerializerMethodField("get_courses_count")
+
+    class Meta:
+        model = Technology
+        fields = "__all__"
+
+    def get_courses_count(self, technology):
+        return Course.objects.filter(technology=technology).count()
+
+
 class TechnologySerializer(ModelSerializer):
     class Meta:
         model = Technology

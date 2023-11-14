@@ -5,6 +5,7 @@ from course.serializers import (
     CourseListSerializer,
     CourseSerializer,
     TechnologySerializer,
+    TechnologyListSerializer,
 )
 from course.filters import CourseFilter
 from course.models import Course, Technology
@@ -14,7 +15,7 @@ from profile.models import Profile
 class TechnologyViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = Technology.objects.all()
-    serializer_class = TechnologySerializer
+    serializer_class = TechnologyListSerializer
 
 
 class CourseViewSet(ModelViewSet):
