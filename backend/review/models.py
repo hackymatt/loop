@@ -6,6 +6,7 @@ from django.db.models import (
     PositiveIntegerField,
     DateTimeField,
     CASCADE,
+    Index,
 )
 from django.core.validators import MinValueValidator, MaxValueValidator
 from course.models import Lesson
@@ -30,4 +31,32 @@ class Review(Model):
                 fields=["lesson", "student", "lecturer"],
                 name="review_lesson_student_lecturer_unique_together",
             )
+        ]
+        indexes = [
+            Index(
+                fields=[
+                    "id",
+                ]
+            ),
+            Index(
+                fields=[
+                    "lesson",
+                ]
+            ),
+            Index(
+                fields=[
+                    "lecturer",
+                ]
+            ),
+            Index(
+                fields=[
+                    "rating",
+                ]
+            ),
+            Index(
+                fields=[
+                    "rating",
+                    "review",
+                ]
+            ),
         ]

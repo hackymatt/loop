@@ -7,6 +7,7 @@ from django.db.models import (
     UUIDField,
     ImageField,
     CASCADE,
+    Index,
 )
 from django.contrib.auth.models import User
 import uuid
@@ -46,3 +47,20 @@ class Profile(Model):
     class Meta:
         db_table = "profile"
         ordering = ["id"]
+        indexes = [
+            Index(
+                fields=[
+                    "id",
+                ]
+            ),
+            Index(
+                fields=[
+                    "user",
+                ]
+            ),
+            Index(
+                fields=[
+                    "user_type",
+                ]
+            ),
+        ]

@@ -9,6 +9,7 @@ from django.db.models import (
     DecimalField,
     BooleanField,
     CASCADE,
+    Index,
 )
 from django.core.validators import MinValueValidator
 from decimal import Decimal
@@ -21,6 +22,18 @@ class Technology(Model):
     class Meta:
         db_table = "technology"
         ordering = ["id"]
+        indexes = [
+            Index(
+                fields=[
+                    "id",
+                ]
+            ),
+            Index(
+                fields=[
+                    "name",
+                ]
+            ),
+        ]
 
 
 class Skill(Model):
@@ -29,6 +42,18 @@ class Skill(Model):
     class Meta:
         db_table = "skill"
         ordering = ["id"]
+        indexes = [
+            Index(
+                fields=[
+                    "id",
+                ]
+            ),
+            Index(
+                fields=[
+                    "name",
+                ]
+            ),
+        ]
 
 
 class Topic(Model):
@@ -37,6 +62,18 @@ class Topic(Model):
     class Meta:
         db_table = "topic"
         ordering = ["id"]
+        indexes = [
+            Index(
+                fields=[
+                    "id",
+                ]
+            ),
+            Index(
+                fields=[
+                    "name",
+                ]
+            ),
+        ]
 
 
 class Course(Model):
@@ -61,6 +98,53 @@ class Course(Model):
     class Meta:
         db_table = "course"
         ordering = ["id"]
+        indexes = [
+            Index(
+                fields=[
+                    "id",
+                ]
+            ),
+            Index(
+                fields=[
+                    "technology",
+                ]
+            ),
+            Index(
+                fields=[
+                    "level",
+                ]
+            ),
+            Index(
+                fields=[
+                    "price",
+                ]
+            ),
+            Index(
+                fields=[
+                    "technology",
+                    "level",
+                    "price",
+                ]
+            ),
+            Index(
+                fields=[
+                    "technology",
+                    "level",
+                ]
+            ),
+            Index(
+                fields=[
+                    "technology",
+                    "price",
+                ]
+            ),
+            Index(
+                fields=[
+                    "level",
+                    "price",
+                ]
+            ),
+        ]
 
 
 class Lesson(Model):
@@ -76,3 +160,15 @@ class Lesson(Model):
     class Meta:
         db_table = "lesson"
         ordering = ["id"]
+        indexes = [
+            Index(
+                fields=[
+                    "id",
+                ]
+            ),
+            Index(
+                fields=[
+                    "course",
+                ]
+            ),
+        ]
