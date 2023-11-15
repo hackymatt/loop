@@ -3,6 +3,7 @@ from django.db.models import (
     EmailField,
     UUIDField,
     BooleanField,
+    Index,
 )
 import uuid
 
@@ -15,3 +16,15 @@ class Newsletter(Model):
     class Meta:
         db_table = "newsletter"
         ordering = ["id"]
+        indexes = [
+            Index(
+                fields=[
+                    "id",
+                ]
+            ),
+            Index(
+                fields=[
+                    "uuid",
+                ]
+            ),
+        ]

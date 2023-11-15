@@ -4,6 +4,7 @@ from django.db.models import (
     ForeignKey,
     DateTimeField,
     CASCADE,
+    Index,
 )
 from course.models import Lesson
 from profile.models import Profile
@@ -25,4 +26,28 @@ class Purchase(Model):
                 fields=["lesson", "student", "lecturer"],
                 name="purchase_lesson_student_lecturer_unique_together",
             )
+        ]
+        indexes = [
+            Index(
+                fields=[
+                    "id",
+                ]
+            ),
+            Index(
+                fields=[
+                    "lesson",
+                ]
+            ),
+            Index(
+                fields=[
+                    "lecturer",
+                ]
+            ),
+            Index(
+                fields=[
+                    "student",
+                    "lesson",
+                    "lecturer",
+                ]
+            ),
         ]
