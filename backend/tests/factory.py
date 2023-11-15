@@ -1,6 +1,14 @@
 from django.contrib.auth.models import User
 from profile.models import Profile
-from course.models import Course, Lesson, Technology, Skill, Topic
+from course.models import (
+    Course,
+    Lesson,
+    Technology,
+    Skill,
+    Topic,
+    CoursePriceHistory,
+    LessonPriceHistory,
+)
 from review.models import Review
 from purchase.models import Purchase
 from newsletter.models import Newsletter
@@ -168,3 +176,11 @@ def create_schedule(
     time: str,
 ):
     return Schedule.objects.create(lesson=lesson, lecturer=lecturer, time=time)
+
+
+def create_course_price_history(course: Course, price: float):
+    return CoursePriceHistory.objects.create(course=course, price=price)
+
+
+def create_lesson_price_history(lesson: Lesson, price: float):
+    return LessonPriceHistory.objects.create(lesson=lesson, price=price)

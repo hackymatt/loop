@@ -6,7 +6,15 @@ from rest_framework.serializers import (
     IntegerField,
 )
 from rest_framework.serializers import ValidationError
-from course.models import Lesson, Course, Technology, Skill, Topic
+from course.models import (
+    Lesson,
+    Course,
+    Technology,
+    Skill,
+    Topic,
+    LessonPriceHistory,
+    CoursePriceHistory,
+)
 from profile.models import Profile
 from review.models import Review
 from purchase.models import Purchase
@@ -61,10 +69,29 @@ class LecturerSerializer(ModelSerializer):
 
 class LessonSerializer(ModelSerializer):
     id = IntegerField()
+    previous_price = SerializerMethodField("get_previous_price")
     lecturers = SerializerMethodField("get_lecturers")
     students_count = SerializerMethodField("get_students_count")
     rating = SerializerMethodField("get_rating")
     rating_count = SerializerMethodField("get_rating_count")
+
+    def get_previous_price(self, lesson):
+        current_price = lesson.price
+        previous_prices = (
+            LessonPriceHistory.objects.filter(lesson=lesson)
+            .order_by("-created_at")
+            .all()
+        )
+
+        if previous_prices.count() == 0:
+            return None
+
+        previous_price = previous_prices.first().price
+
+        if previous_price <= current_price:
+            return None
+
+        return previous_price
 
     def get_lecturers(self, lesson):
         lecturer_ids = Schedule.objects.filter(lesson=lesson).values("lecturer")
@@ -89,11 +116,30 @@ class LessonSerializer(ModelSerializer):
 
 class CourseListSerializer(ModelSerializer):
     technology = TechnologySerializer()
+    previous_price = SerializerMethodField("get_previous_price")
     duration = SerializerMethodField("get_duration")
     lecturers = SerializerMethodField("get_lecturers")
     students_count = SerializerMethodField("get_students_count")
     rating = SerializerMethodField("get_rating")
     rating_count = SerializerMethodField("get_rating_count")
+
+    def get_previous_price(self, course):
+        current_price = course.price
+        previous_prices = (
+            CoursePriceHistory.objects.filter(course=course)
+            .order_by("-created_at")
+            .all()
+        )
+
+        if previous_prices.count() == 0:
+            return None
+
+        previous_price = previous_prices.first().price
+
+        if previous_price <= current_price:
+            return None
+
+        return previous_price
 
     def get_duration(self, course):
         return Lesson.objects.filter(course=course).aggregate(Sum("duration"))[
@@ -127,6 +173,7 @@ class CourseListSerializer(ModelSerializer):
 
 class CourseSerializer(ModelSerializer):
     duration = SerializerMethodField("get_duration")
+    previous_price = SerializerMethodField("get_previous_price")
     lessons = LessonSerializer(many=True)
     technology = TechnologySerializer()
     skills = SkillSerializer(many=True)
@@ -135,6 +182,24 @@ class CourseSerializer(ModelSerializer):
     students_count = SerializerMethodField("get_students_count")
     rating = SerializerMethodField("get_rating")
     rating_count = SerializerMethodField("get_rating_count")
+
+    def get_previous_price(self, course):
+        current_price = course.price
+        previous_prices = (
+            CoursePriceHistory.objects.filter(course=course)
+            .order_by("-created_at")
+            .all()
+        )
+
+        if previous_prices.count() == 0:
+            return None
+
+        previous_price = previous_prices.first().price
+
+        if previous_price <= current_price:
+            return None
+
+        return previous_price
 
     def get_duration(self, course):
         return Lesson.objects.filter(course=course).aggregate(Sum("duration"))[
@@ -240,7 +305,15 @@ class CourseSerializer(ModelSerializer):
             obj.github_branch_link = lesson.get(
                 "github_branch_link", obj.github_branch_link
             )
-            obj.price = lesson.get("price", obj.price)
+
+            current_price = obj.price
+            new_price = lesson.get("price", obj.price)
+
+            if current_price != new_price:
+                LessonPriceHistory.objects.create(lesson=obj, price=current_price)
+
+            obj.price = new_price
+
             obj.save()
 
     def delete_lessons(self, lesson_ids):
@@ -286,7 +359,14 @@ class CourseSerializer(ModelSerializer):
         instance.title = validated_data.get("title", instance.title)
         instance.description = validated_data.get("description", instance.description)
         instance.level = validated_data.get("level", instance.level)
-        instance.price = validated_data.get("price", instance.price)
+
+        current_price = instance.price
+        new_price = validated_data.get("price", instance.price)
+
+        if current_price != new_price:
+            CoursePriceHistory.objects.create(course=instance, price=current_price)
+
+        instance.price = new_price
         instance.github_repo_link = validated_data.get(
             "github_repo_link", instance.github_repo_link
         )

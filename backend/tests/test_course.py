@@ -11,6 +11,8 @@ from .factory import (
     create_review,
     create_purchase,
     create_schedule,
+    create_course_price_history,
+    create_lesson_price_history,
 )
 from .helpers import (
     login,
@@ -119,7 +121,17 @@ class CourseTest(APITestCase):
                     price="2.99",
                 ),
             ],
-        )
+        )       
+        
+        create_course_price_history(self.course, 80)
+        create_course_price_history(self.course, 100)
+        create_course_price_history(self.course, 120)
+        create_lesson_price_history(self.course.lessons.all()[0], 15)
+        create_lesson_price_history(self.course.lessons.all()[0], 25)
+        create_lesson_price_history(self.course.lessons.all()[0], 5)
+        create_lesson_price_history(self.course.lessons.all()[1], 1)
+        create_lesson_price_history(self.course.lessons.all()[1], 5)
+        create_lesson_price_history(self.course.lessons.all()[1], 3)
 
         for i in range(5):
             create_schedule(
@@ -196,6 +208,90 @@ class CourseTest(APITestCase):
             review="So so lesson.",
         )
 
+        self.course_2 = create_course(
+            title="course_title 2",
+            description="course_description",
+            technology=create_technology_obj(name="JS"),
+            level="Podstawowy",
+            price="99.99",
+            github_repo_link="www.example.com",
+            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            topics=[
+                create_topic_obj(name="You will learn how to code"),
+                create_topic_obj(name="You will learn a new IDE"),
+            ],
+            lessons=[
+                create_lesson_obj(
+                    id=-1,
+                    title="JS lesson 1",
+                    description="bbbb",
+                    duration="90",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="9.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="JS lesson 2",
+                    description="bbbb",
+                    duration="30",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="2.99",
+                ),
+            ],
+        )       
+        
+        create_course_price_history(self.course_2, 120)        
+        create_course_price_history(self.course_2, 100)   
+        create_course_price_history(self.course_2, 80)    
+        create_lesson_price_history(self.course_2.lessons.all()[0], 15)
+        create_lesson_price_history(self.course_2.lessons.all()[0], 25)
+        create_lesson_price_history(self.course_2.lessons.all()[0], 5) 
+        create_lesson_price_history(self.course_2.lessons.all()[1], 1)
+        create_lesson_price_history(self.course_2.lessons.all()[1], 5)
+        create_lesson_price_history(self.course_2.lessons.all()[1], 3)
+
+        self.course_3 = create_course(
+            title="course_title 3",
+            description="course_description",
+            technology=create_technology_obj(name="VBA"),
+            level="Podstawowy",
+            price="99.99",
+            github_repo_link="www.example.com",
+            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            topics=[
+                create_topic_obj(name="You will learn how to code"),
+                create_topic_obj(name="You will learn a new IDE"),
+            ],
+            lessons=[
+                create_lesson_obj(
+                    id=-1,
+                    title="VBA lesson 1",
+                    description="bbbb",
+                    duration="90",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="9.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="VBA lesson 2",
+                    description="bbbb",
+                    duration="30",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="2.99",
+                ),
+            ],
+        )               
+               
+        create_course_price_history(self.course_3, 100)   
+        create_course_price_history(self.course_3, 80) 
+        create_course_price_history(self.course_3, 120)    
+        create_lesson_price_history(self.course_3.lessons.all()[0], 15)
+        create_lesson_price_history(self.course_3.lessons.all()[0], 25)
+        create_lesson_price_history(self.course_3.lessons.all()[0], 5) 
+        create_lesson_price_history(self.course_3.lessons.all()[1], 1)
+        create_lesson_price_history(self.course_3.lessons.all()[1], 5)
+        create_lesson_price_history(self.course_3.lessons.all()[1], 3)
+
         self.user_columns = ["first_name", "last_name", "email"]
         self.profile_columns = ["uuid"]
 
@@ -246,6 +342,7 @@ class CourseTest(APITestCase):
         rating = course_data.pop("rating")
         rating_count = course_data.pop("rating_count")
         students_count = course_data.pop("students_count")
+        previous_price = course_data.pop("previous_price")
         self.assertTrue(is_data_match(get_course(self.course.id), course_data))
         self.assertTrue(
             is_data_match(get_technology(technology_data["id"]), technology_data)
@@ -271,24 +368,29 @@ class CourseTest(APITestCase):
         self.assertEqual(rating, 4.0)
         self.assertEqual(rating_count, 3)
         self.assertEqual(students_count, 2)
+        self.assertEqual(previous_price, 120.0)
         for lesson_data in lessons_data:
             lecturers_data = lesson_data.pop("lecturers")
             rating = lesson_data.pop("rating")
             rating_count = lesson_data.pop("rating_count")
             students_count = lesson_data.pop("students_count")
+            previous_price = lesson_data.pop("previous_price")
             self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
             if lesson_data["id"] == self.review_1.lesson.id:
                 self.assertEqual(rating, 4.5)
                 self.assertEqual(rating_count, 2)
                 self.assertEqual(students_count, 1)
+                self.assertEqual(previous_price, None)
             elif lesson_data["id"] == self.review_3.lesson.id:
                 self.assertEqual(rating, 3.0)
                 self.assertEqual(rating_count, 1)
                 self.assertEqual(students_count, 1)
+                self.assertEqual(previous_price, 3.0)
             else:
                 self.assertEqual(rating, None)
                 self.assertEqual(rating_count, 0)
                 self.assertEqual(students_count, 0)
+                self.assertEqual(previous_price, 1)
             for lecturer_data in lecturers_data:
                 user_data = filter_dict(lecturer_data, self.user_columns)
                 profile_data = filter_dict(lecturer_data, self.profile_columns)
@@ -322,6 +424,7 @@ class CourseTest(APITestCase):
         rating = course_data.pop("rating")
         rating_count = course_data.pop("rating_count")
         students_count = course_data.pop("students_count")
+        previous_price = course_data.pop("previous_price")
         self.assertTrue(is_data_match(get_course(self.course.id), course_data))
         self.assertTrue(
             is_data_match(get_technology(technology_data["id"]), technology_data)
@@ -347,24 +450,29 @@ class CourseTest(APITestCase):
         self.assertEqual(rating, 4.0)
         self.assertEqual(rating_count, 3)
         self.assertEqual(students_count, 2)
+        self.assertEqual(previous_price, 120.0)
         for lesson_data in lessons_data:
             lecturers_data = lesson_data.pop("lecturers")
             rating = lesson_data.pop("rating")
             rating_count = lesson_data.pop("rating_count")
             students_count = lesson_data.pop("students_count")
+            previous_price = lesson_data.pop("previous_price")
             self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
             if lesson_data["id"] == self.review_1.lesson.id:
                 self.assertEqual(rating, 4.5)
                 self.assertEqual(rating_count, 2)
                 self.assertEqual(students_count, 1)
+                self.assertEqual(previous_price, None)
             elif lesson_data["id"] == self.review_3.lesson.id:
                 self.assertEqual(rating, 3.0)
                 self.assertEqual(rating_count, 1)
                 self.assertEqual(students_count, 1)
+                self.assertEqual(previous_price, 3.0)
             else:
                 self.assertEqual(rating, None)
                 self.assertEqual(rating_count, 0)
                 self.assertEqual(students_count, 0)
+                self.assertEqual(previous_price, 2)            
             for lecturer_data in lecturers_data:
                 user_data = filter_dict(lecturer_data, self.user_columns)
                 profile_data = filter_dict(lecturer_data, self.profile_columns)
@@ -421,7 +529,7 @@ class CourseTest(APITestCase):
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(courses_number(), 1)
+        self.assertEqual(courses_number(), 3)
 
     def test_create_course_not_admin(self):
         # login
@@ -464,7 +572,7 @@ class CourseTest(APITestCase):
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(courses_number(), 1)
+        self.assertEqual(courses_number(), 3)
 
     def test_create_course_authenticated(self):
         # login
@@ -513,7 +621,7 @@ class CourseTest(APITestCase):
 
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(courses_number(), 2)
+        self.assertEqual(courses_number(), 4)
         course_data = json.loads(response.content)
         lessons_data = course_data.pop("lessons")
         technology_data = course_data.pop("technology")
@@ -524,6 +632,7 @@ class CourseTest(APITestCase):
         rating = course_data.pop("rating")
         rating_count = course_data.pop("rating_count")
         students_count = course_data.pop("students_count")
+        previous_price = course_data.pop("previous_price")
         self.assertTrue(is_data_match(get_course(course_data["id"]), course_data))
         self.assertTrue(
             is_data_match(get_technology(technology_data["id"]), technology_data)
@@ -549,15 +658,18 @@ class CourseTest(APITestCase):
         self.assertEqual(rating, None)
         self.assertEqual(rating_count, 0)
         self.assertEqual(students_count, 0)
+        self.assertEqual(previous_price, None)
         for lesson_data in lessons_data:
             lecturers_data = lesson_data.pop("lecturers")
             rating = lesson_data.pop("rating")
             rating_count = lesson_data.pop("rating_count")
             students_count = lesson_data.pop("students_count")
+            previous_price = lesson_data.pop("previous_price")
             self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
             self.assertEqual(rating, None)
             self.assertEqual(rating_count, 0)
             self.assertEqual(students_count, 0)
+            self.assertEqual(previous_price, None)
             for lecturer_data in lecturers_data:
                 user_data = filter_dict(lecturer_data, self.user_columns)
                 profile_data = filter_dict(lecturer_data, self.profile_columns)
@@ -596,7 +708,7 @@ class CourseTest(APITestCase):
 
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(courses_number(), 1)
+        self.assertEqual(courses_number(), 3)
 
     def test_create_course_without_skills(self):
         # login
@@ -645,7 +757,7 @@ class CourseTest(APITestCase):
 
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(courses_number(), 1)
+        self.assertEqual(courses_number(), 3)
 
     def test_create_course_without_topics(self):
         # login
@@ -691,7 +803,7 @@ class CourseTest(APITestCase):
 
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(courses_number(), 1)
+        self.assertEqual(courses_number(), 3)
 
     def test_update_course_unauthenticated(self):
         # no login
@@ -733,7 +845,7 @@ class CourseTest(APITestCase):
         }
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(courses_number(), 1)
+        self.assertEqual(courses_number(), 3)
 
     def test_update_course_not_admin(self):
         # login
@@ -776,9 +888,9 @@ class CourseTest(APITestCase):
         }
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(courses_number(), 1)
+        self.assertEqual(courses_number(), 3)
 
-    def test_update_course_authenticated(self):
+    def test_update_course_authenticated_price_change_down(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -788,7 +900,245 @@ class CourseTest(APITestCase):
             "description": "course_description",
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
-            "price": "999.99",
+            "price": "89.99",
+            "active": "False",
+            "github_repo_link": "https://github.com/hackymatt/CodeEdu",
+            "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            "topics": [
+                create_topic_obj(name="You will learn how to code"),
+                create_topic_obj(name="You will learn a new IDE"),
+            ],
+            "lessons": [
+                create_lesson_obj(
+                    id=self.course.lessons.all()[0].id,
+                    title="Javascript lesson 1",
+                    description="bbbb",
+                    duration="90",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="8.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 2",
+                    description="bbbb",
+                    duration="30",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="2.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 3",
+                    description="bbbb",
+                    duration="50",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="29.99",
+                ),
+            ],
+        }
+
+        response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(courses_number(), 3)
+        course_data = json.loads(response.content)
+        lessons_data = course_data.pop("lessons")
+        technology_data = course_data.pop("technology")
+        skills_data = course_data.pop("skills")
+        topics_data = course_data.pop("topics")
+        duration = course_data.pop("duration")
+        lecturers = course_data.pop("lecturers")
+        rating = course_data.pop("rating")
+        rating_count = course_data.pop("rating_count")
+        students_count = course_data.pop("students_count")
+        previous_price = course_data.pop("previous_price")
+        self.assertTrue(is_data_match(get_course(self.course.id), course_data))
+        self.assertTrue(
+            is_data_match(get_technology(technology_data["id"]), technology_data)
+        )
+        self.assertEqual(
+            duration, sum(lesson_data["duration"] for lesson_data in lessons_data)
+        )
+        self.assertEqual(
+            lecturers,
+            sorted(
+                [
+                    dict(y)
+                    for y in set(
+                        tuple(x.items())
+                        for x in sum(
+                            [lesson["lecturers"] for lesson in lessons_data], []
+                        )
+                    )
+                ],
+                key=lambda d: d["uuid"],
+            ),
+        )
+        self.assertEqual(rating, 4.5)
+        self.assertEqual(rating_count, 2)
+        self.assertEqual(students_count, 1)
+        self.assertEqual(previous_price, 99.99)
+        for lesson_data in lessons_data:
+            lecturers_data = lesson_data.pop("lecturers")
+            rating = lesson_data.pop("rating")
+            rating_count = lesson_data.pop("rating_count")
+            students_count = lesson_data.pop("students_count")
+            previous_price = lesson_data.pop("previous_price")
+            self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
+            if lesson_data["id"] == self.review_1.lesson.id:
+                self.assertEqual(rating, 4.5)
+                self.assertEqual(rating_count, 2)
+                self.assertEqual(students_count, 1)
+                self.assertEqual(previous_price, 9.99)
+            else:
+                self.assertEqual(rating, None)
+                self.assertEqual(rating_count, 0)
+                self.assertEqual(students_count, 0)
+                self.assertEqual(previous_price, None)
+            for lecturer_data in lecturers_data:
+                user_data = filter_dict(lecturer_data, self.user_columns)
+                profile_data = filter_dict(lecturer_data, self.profile_columns)
+                self.assertTrue(
+                    is_data_match(get_user(lecturer_data["email"]), user_data)
+                )
+                self.assertTrue(
+                    is_data_match(
+                        get_profile(get_user(lecturer_data["email"])), profile_data
+                    )
+                )
+        for skill_data in skills_data:
+            self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
+        for topic_data in topics_data:
+            self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
+
+    def test_update_course_authenticated_price_change_up(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "title": "Javascript course",
+            "description": "course_description",
+            "technology": create_technology_obj(name="Javascript"),
+            "level": "E",
+            "price": "109.99",
+            "active": "False",
+            "github_repo_link": "https://github.com/hackymatt/CodeEdu",
+            "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            "topics": [
+                create_topic_obj(name="You will learn how to code"),
+                create_topic_obj(name="You will learn a new IDE"),
+            ],
+            "lessons": [
+                create_lesson_obj(
+                    id=self.course.lessons.all()[0].id,
+                    title="Javascript lesson 1",
+                    description="bbbb",
+                    duration="90",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="8.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 2",
+                    description="bbbb",
+                    duration="30",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="2.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 3",
+                    description="bbbb",
+                    duration="50",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="29.99",
+                ),
+            ],
+        }
+
+        response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(courses_number(), 3)
+        course_data = json.loads(response.content)
+        lessons_data = course_data.pop("lessons")
+        technology_data = course_data.pop("technology")
+        skills_data = course_data.pop("skills")
+        topics_data = course_data.pop("topics")
+        duration = course_data.pop("duration")
+        lecturers = course_data.pop("lecturers")
+        rating = course_data.pop("rating")
+        rating_count = course_data.pop("rating_count")
+        students_count = course_data.pop("students_count")
+        previous_price = course_data.pop("previous_price")
+        self.assertTrue(is_data_match(get_course(self.course.id), course_data))
+        self.assertTrue(
+            is_data_match(get_technology(technology_data["id"]), technology_data)
+        )
+        self.assertEqual(
+            duration, sum(lesson_data["duration"] for lesson_data in lessons_data)
+        )
+        self.assertEqual(
+            lecturers,
+            sorted(
+                [
+                    dict(y)
+                    for y in set(
+                        tuple(x.items())
+                        for x in sum(
+                            [lesson["lecturers"] for lesson in lessons_data], []
+                        )
+                    )
+                ],
+                key=lambda d: d["uuid"],
+            ),
+        )
+        self.assertEqual(rating, 4.5)
+        self.assertEqual(rating_count, 2)
+        self.assertEqual(students_count, 1)
+        self.assertEqual(previous_price, None)
+        for lesson_data in lessons_data:
+            lecturers_data = lesson_data.pop("lecturers")
+            rating = lesson_data.pop("rating")
+            rating_count = lesson_data.pop("rating_count")
+            students_count = lesson_data.pop("students_count")
+            previous_price = lesson_data.pop("previous_price")
+            self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
+            if lesson_data["id"] == self.review_1.lesson.id:
+                self.assertEqual(rating, 4.5)
+                self.assertEqual(rating_count, 2)
+                self.assertEqual(students_count, 1)
+                self.assertEqual(previous_price, 9.99)
+            else:
+                self.assertEqual(rating, None)
+                self.assertEqual(rating_count, 0)
+                self.assertEqual(students_count, 0)
+                self.assertEqual(previous_price, None)
+            for lecturer_data in lecturers_data:
+                user_data = filter_dict(lecturer_data, self.user_columns)
+                profile_data = filter_dict(lecturer_data, self.profile_columns)
+                self.assertTrue(
+                    is_data_match(get_user(lecturer_data["email"]), user_data)
+                )
+                self.assertTrue(
+                    is_data_match(
+                        get_profile(get_user(lecturer_data["email"])), profile_data
+                    )
+                )
+        for skill_data in skills_data:
+            self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
+        for topic_data in topics_data:
+            self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
+
+    def test_update_course_authenticated_no_price_change(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "title": "Javascript course",
+            "description": "course_description",
+            "technology": create_technology_obj(name="Javascript"),
+            "level": "E",
+            "price": "99.99",
             "active": "False",
             "github_repo_link": "https://github.com/hackymatt/CodeEdu",
             "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
@@ -826,7 +1176,7 @@ class CourseTest(APITestCase):
 
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(courses_number(), 1)
+        self.assertEqual(courses_number(), 3)
         course_data = json.loads(response.content)
         lessons_data = course_data.pop("lessons")
         technology_data = course_data.pop("technology")
@@ -837,6 +1187,7 @@ class CourseTest(APITestCase):
         rating = course_data.pop("rating")
         rating_count = course_data.pop("rating_count")
         students_count = course_data.pop("students_count")
+        previous_price = course_data.pop("previous_price")
         self.assertTrue(is_data_match(get_course(self.course.id), course_data))
         self.assertTrue(
             is_data_match(get_technology(technology_data["id"]), technology_data)
@@ -862,20 +1213,24 @@ class CourseTest(APITestCase):
         self.assertEqual(rating, 4.5)
         self.assertEqual(rating_count, 2)
         self.assertEqual(students_count, 1)
+        self.assertEqual(previous_price, 120.0)
         for lesson_data in lessons_data:
             lecturers_data = lesson_data.pop("lecturers")
             rating = lesson_data.pop("rating")
             rating_count = lesson_data.pop("rating_count")
             students_count = lesson_data.pop("students_count")
+            previous_price = lesson_data.pop("previous_price")
             self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
             if lesson_data["id"] == self.review_1.lesson.id:
                 self.assertEqual(rating, 4.5)
                 self.assertEqual(rating_count, 2)
                 self.assertEqual(students_count, 1)
+                self.assertEqual(previous_price, None)
             else:
                 self.assertEqual(rating, None)
                 self.assertEqual(rating_count, 0)
                 self.assertEqual(students_count, 0)
+                self.assertEqual(previous_price, None)
             for lecturer_data in lecturers_data:
                 user_data = filter_dict(lecturer_data, self.user_columns)
                 profile_data = filter_dict(lecturer_data, self.profile_columns)
@@ -914,7 +1269,7 @@ class CourseTest(APITestCase):
 
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(courses_number(), 1)
+        self.assertEqual(courses_number(), 3)
 
     def test_update_course_without_skills(self):
         # login
@@ -963,7 +1318,7 @@ class CourseTest(APITestCase):
 
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(courses_number(), 1)
+        self.assertEqual(courses_number(), 3)
 
     def test_update_course_without_topics(self):
         # login
@@ -1009,14 +1364,14 @@ class CourseTest(APITestCase):
 
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(courses_number(), 1)
+        self.assertEqual(courses_number(), 3)
 
     def test_delete_course_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         response = self.client.delete(f"{self.endpoint}/{self.course.id}")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(courses_number(), 1)
+        self.assertEqual(courses_number(), 3)
         self.assertTrue(is_course_found(self.course.id))
 
     def test_delete_course_not_admin(self):
@@ -1025,7 +1380,7 @@ class CourseTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         response = self.client.delete(f"{self.endpoint}/{self.course.id}")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(courses_number(), 1)
+        self.assertEqual(courses_number(), 3)
         self.assertTrue(is_course_found(self.course.id))
 
     def test_delete_course_authenticated_active(self):
@@ -1034,7 +1389,7 @@ class CourseTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         response = self.client.delete(f"{self.endpoint}/{self.course.id}")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(courses_number(), 1)
+        self.assertEqual(courses_number(), 3)
         self.assertTrue(is_course_found(self.course.id))
 
     def test_delete_course_authenticated_inactive(self):
@@ -1045,6 +1400,6 @@ class CourseTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         response = self.client.delete(f"{self.endpoint}/{self.course.id}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(courses_number(), 0)
+        self.assertEqual(courses_number(), 2)
         self.assertFalse(is_course_found(self.course.id))
-        self.assertEqual(lessons_number(), 0)
+        self.assertEqual(lessons_number(), 4)
