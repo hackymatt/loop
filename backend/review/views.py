@@ -13,6 +13,7 @@ from course.models import Lesson
 from profile.models import Profile
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
+from random import sample
 
 
 class ReviewViewSet(ModelViewSet):
@@ -142,3 +143,8 @@ class BestReviewViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = Review.objects.filter(rating=5, review__isnull=False).all()
     serializer_class = BestReviewSerializer
+
+    def get_queryset(self):
+        ids = self.queryset.values_list("id", flat=True)
+        random_ids = sample(list(ids), min(len(ids), 10))
+        return self.queryset.filter(id__in=random_ids)

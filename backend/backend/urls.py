@@ -11,7 +11,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
-from course.views import CourseViewSet, TechnologyViewSet
+from course.views import CourseViewSet, BestCourseViewSet, TechnologyViewSet
 from review.views import ReviewViewSet, BestReviewViewSet
 from newsletter.views import (
     NewsletterEntriesViewSet,
@@ -36,6 +36,7 @@ router.register(
     r"verify-code", ProfileVerificationCodeViewSet, basename="user_verification_code"
 )
 router.register(r"courses", CourseViewSet, basename="courses")
+router.register(r"best-courses", BestCourseViewSet, basename="best_courses")
 router.register(r"technologies", TechnologyViewSet, basename="technologies")
 router.register(r"lecturers", LecturerViewSet, basename="lecturers")
 router.register(r"reviews", ReviewViewSet, basename="reviews")
