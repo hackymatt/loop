@@ -1457,3 +1457,281 @@ class CourseTest(APITestCase):
         self.assertEqual(courses_number(), 2)
         self.assertFalse(is_course_found(self.course.id))
         self.assertEqual(lessons_number(), 4)
+
+
+class BestCourseTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/best-courses"
+        self.admin_data = {
+            "email": "admin_test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.admin_data["email"],
+            password=self.admin_data["password"],
+            is_active=True,
+        )
+        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_profile(user=self.user)
+        self.user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="test2@example.com",
+            password="Test12345",
+            is_active=True,
+        )
+        self.profile_2 = create_profile(user=self.user_2)
+        self.lecturer_user_1 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_1@example.com",
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.lecturer_user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_2@example.com",
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile_1 = create_profile(
+            user=self.lecturer_user_1, user_type="W"
+        )
+        self.lecturer_profile_2 = create_profile(
+            user=self.lecturer_user_2, user_type="W"
+        )
+        self.course = create_course(
+            title="course_title",
+            description="course_description",
+            technology=create_technology_obj(name="Python"),
+            level="Podstawowy",
+            price="99.99",
+            github_repo_link="www.example.com",
+            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            topics=[
+                create_topic_obj(name="You will learn how to code"),
+                create_topic_obj(name="You will learn a new IDE"),
+            ],
+            lessons=[
+                create_lesson_obj(
+                    id=-1,
+                    title="Python lesson 1",
+                    description="bbbb",
+                    duration="90",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="9.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Python lesson 2",
+                    description="bbbb",
+                    duration="30",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="2.99",
+                ),
+            ],
+        )
+
+        create_course_price_history(self.course, 80)
+        create_course_price_history(self.course, 100)
+        create_course_price_history(self.course, 120)
+        create_lesson_price_history(self.course.lessons.all()[0], 15)
+        create_lesson_price_history(self.course.lessons.all()[0], 25)
+        create_lesson_price_history(self.course.lessons.all()[0], 5)
+        create_lesson_price_history(self.course.lessons.all()[1], 1)
+        create_lesson_price_history(self.course.lessons.all()[1], 5)
+        create_lesson_price_history(self.course.lessons.all()[1], 3)
+
+        for i in range(5):
+            create_schedule(
+                self.course.lessons.all()[0],
+                self.lecturer_profile_1,
+                make_aware(
+                    datetime.now().replace(second=0, microsecond=0)
+                    + timedelta(minutes=30 * i)
+                ),
+            )
+            create_schedule(
+                self.course.lessons.all()[1],
+                self.lecturer_profile_1,
+                make_aware(
+                    datetime.now().replace(second=0, microsecond=0)
+                    + timedelta(minutes=30 * i)
+                ),
+            )
+            create_schedule(
+                self.course.lessons.all()[0],
+                self.lecturer_profile_2,
+                make_aware(
+                    datetime.now().replace(second=0, microsecond=0)
+                    + timedelta(minutes=30 * i)
+                ),
+            )
+            create_schedule(
+                self.course.lessons.all()[1],
+                self.lecturer_profile_2,
+                make_aware(
+                    datetime.now().replace(second=0, microsecond=0)
+                    + timedelta(minutes=30 * i)
+                ),
+            )
+
+        create_purchase(
+            lesson=self.course.lessons.all()[0],
+            student=self.profile,
+            lecturer=self.lecturer_profile_1,
+            time=get_schedules(
+                lesson=self.course.lessons.all()[0],
+                lecturer=self.lecturer_profile_1,
+            )[0],
+        )
+        create_purchase(
+            lesson=self.course.lessons.all()[1],
+            student=self.profile,
+            lecturer=self.lecturer_profile_1,
+            time=get_schedules(
+                lesson=self.course.lessons.all()[1],
+                lecturer=self.lecturer_profile_1,
+            )[0],
+        )
+
+        self.review_1 = create_review(
+            lesson=self.course.lessons.all()[0],
+            student=self.profile,
+            lecturer=self.lecturer_profile_1,
+            rating=5,
+            review="Great lesson.",
+        )
+        self.review_2 = create_review(
+            lesson=self.course.lessons.all()[0],
+            student=self.profile_2,
+            lecturer=self.lecturer_profile_1,
+            rating=4,
+            review="Good lesson.",
+        )
+        self.review_3 = create_review(
+            lesson=self.course.lessons.all()[1],
+            student=self.profile,
+            lecturer=self.lecturer_profile_1,
+            rating=3,
+            review="So so lesson.",
+        )
+
+        self.course_2 = create_course(
+            title="course_title 2",
+            description="course_description",
+            technology=create_technology_obj(name="JS"),
+            level="Podstawowy",
+            price="99.99",
+            github_repo_link="www.example.com",
+            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            topics=[
+                create_topic_obj(name="You will learn how to code"),
+                create_topic_obj(name="You will learn a new IDE"),
+            ],
+            lessons=[
+                create_lesson_obj(
+                    id=-1,
+                    title="JS lesson 1",
+                    description="bbbb",
+                    duration="90",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="9.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="JS lesson 2",
+                    description="bbbb",
+                    duration="30",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="2.99",
+                ),
+            ],
+        )
+
+        create_course_price_history(self.course_2, 120)
+        create_course_price_history(self.course_2, 100)
+        create_course_price_history(self.course_2, 80)
+        create_lesson_price_history(self.course_2.lessons.all()[0], 15)
+        create_lesson_price_history(self.course_2.lessons.all()[0], 25)
+        create_lesson_price_history(self.course_2.lessons.all()[0], 5)
+        create_lesson_price_history(self.course_2.lessons.all()[1], 1)
+        create_lesson_price_history(self.course_2.lessons.all()[1], 5)
+        create_lesson_price_history(self.course_2.lessons.all()[1], 3)
+
+        self.course_3 = create_course(
+            title="course_title 3",
+            description="course_description",
+            technology=create_technology_obj(name="VBA"),
+            level="Podstawowy",
+            price="99.99",
+            github_repo_link="www.example.com",
+            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            topics=[
+                create_topic_obj(name="You will learn how to code"),
+                create_topic_obj(name="You will learn a new IDE"),
+            ],
+            lessons=[
+                create_lesson_obj(
+                    id=-1,
+                    title="VBA lesson 1",
+                    description="bbbb",
+                    duration="90",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="9.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="VBA lesson 2",
+                    description="bbbb",
+                    duration="30",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="2.99",
+                ),
+            ],
+        )
+
+        create_course_price_history(self.course_3, 100)
+        create_course_price_history(self.course_3, 80)
+        create_course_price_history(self.course_3, 120)
+        create_lesson_price_history(self.course_3.lessons.all()[0], 15)
+        create_lesson_price_history(self.course_3.lessons.all()[0], 25)
+        create_lesson_price_history(self.course_3.lessons.all()[0], 5)
+        create_lesson_price_history(self.course_3.lessons.all()[1], 1)
+        create_lesson_price_history(self.course_3.lessons.all()[1], 5)
+        create_lesson_price_history(self.course_3.lessons.all()[1], 3)
+
+    def test_get_best_courses_unauthenticated(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(self.endpoint)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 1)
+
+    def test_get_best_courses_authenticated(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(self.endpoint)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 1)

@@ -4,12 +4,12 @@ from rest_framework import status
 from course.serializers import (
     CourseListSerializer,
     CourseSerializer,
-    TechnologySerializer,
     TechnologyListSerializer,
 )
-from course.filters import CourseFilter
+from course.filters import CourseFilter, get_rating, get_students_count
 from course.models import Course, Technology
 from profile.models import Profile
+from random import sample
 
 
 class TechnologyViewSet(ModelViewSet):
@@ -105,3 +105,18 @@ class CourseViewSet(ModelViewSet):
             )
 
         return super().destroy(request, *args, **kwargs)
+
+
+class BestCourseViewSet(ModelViewSet):
+    http_method_names = ["get"]
+    queryset = Course.objects.all()
+    serializer_class = CourseListSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        queryset = get_rating(queryset=queryset).filter(rating__gte=4)
+        queryset = get_students_count(queryset=queryset).order_by("-students_count")
+
+        ids = queryset.values_list("id", flat=True)
+        random_ids = sample(list(ids), min(len(ids), 10))
+        return queryset.filter(id__in=random_ids)
