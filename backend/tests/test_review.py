@@ -123,7 +123,7 @@ class ReviewTest(APITestCase):
                 self.lecturer_profile,
                 make_aware(
                     datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
+                    - timedelta(minutes=30 * i)
                 ),
             )
             create_schedule(
@@ -131,7 +131,7 @@ class ReviewTest(APITestCase):
                 self.lecturer_profile,
                 make_aware(
                     datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
+                    - timedelta(minutes=30 * i)
                 ),
             )
             create_schedule(
@@ -139,7 +139,7 @@ class ReviewTest(APITestCase):
                 self.lecturer_profile,
                 make_aware(
                     datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
+                    - timedelta(minutes=30 * i)
                 ),
             )
 
@@ -168,7 +168,7 @@ class ReviewTest(APITestCase):
             time=get_schedules(
                 lesson=self.course.lessons.all()[2],
                 lecturer=self.lecturer_profile,
-            )[0],
+            )[2],
         )
 
         self.review_1 = create_review(
@@ -194,18 +194,12 @@ class ReviewTest(APITestCase):
         )
         self.review_4 = create_review(
             lesson=self.course.lessons.all()[1],
-            student=self.profile_1,
-            lecturer=self.lecturer_profile,
-            rating=3,
-        )
-        self.review_5 = create_review(
-            lesson=self.course.lessons.all()[1],
             student=self.profile_2,
             lecturer=self.lecturer_profile,
             rating=2,
             review="Terrible.",
         )
-        self.review_6 = create_review(
+        self.review_5 = create_review(
             lesson=self.course.lessons.all()[1],
             student=self.profile_3,
             lecturer=self.lecturer_profile,
@@ -220,7 +214,7 @@ class ReviewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 6)
+        self.assertEqual(count, 5)
 
     def test_get_reviews_authenticated(self):
         # login
@@ -231,7 +225,7 @@ class ReviewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 6)
+        self.assertEqual(count, 5)
 
     def test_get_course_reviews_unauthenticated(self):
         # no login
@@ -241,7 +235,7 @@ class ReviewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 6)
+        self.assertEqual(count, 5)
 
     def test_get_course_reviews_authenticated(self):
         # login
@@ -252,7 +246,7 @@ class ReviewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 6)
+        self.assertEqual(count, 5)
 
     def test_create_review_unauthenticated(self):
         # no login
@@ -266,7 +260,7 @@ class ReviewTest(APITestCase):
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(reviews_number(), 6)
+        self.assertEqual(reviews_number(), 5)
 
     def test_create_review_authenticated_not_purchased(self):
         # login
@@ -281,7 +275,7 @@ class ReviewTest(APITestCase):
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(reviews_number(), 6)
+        self.assertEqual(reviews_number(), 5)
 
     def test_create_review_authenticated_already_created(self):
         # login
@@ -296,7 +290,22 @@ class ReviewTest(APITestCase):
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(reviews_number(), 6)
+        self.assertEqual(reviews_number(), 5)
+
+    def test_create_review_lesson_not_finished(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "lesson": self.course.lessons.all()[1].id,
+            "lecturer": self.lecturer_profile.id,
+            "rating": 3.5,
+            "review": "Good lesson.",
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(reviews_number(), 5)
 
     def test_create_review_authenticated(self):
         # login
@@ -306,12 +315,12 @@ class ReviewTest(APITestCase):
         data = {
             "lesson": self.course.lessons.all()[2].id,
             "lecturer": self.lecturer_profile.id,
-            "rating": 3,
+            "rating": 3.5,
             "review": "Good lesson.",
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(reviews_number(), 7)
+        self.assertEqual(reviews_number(), 6)
 
     def test_update_review_unauthenticated(self):
         # no login
@@ -325,7 +334,7 @@ class ReviewTest(APITestCase):
         }
         response = self.client.put(f"{self.endpoint}/{self.review_1.id}", data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(reviews_number(), 6)
+        self.assertEqual(reviews_number(), 5)
 
     def test_update_review_authenticated_not_owner(self):
         # login
@@ -340,7 +349,7 @@ class ReviewTest(APITestCase):
         }
         response = self.client.put(f"{self.endpoint}/{self.review_2.id}", data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(reviews_number(), 6)
+        self.assertEqual(reviews_number(), 5)
 
     def test_update_review_authenticated(self):
         # login
@@ -356,7 +365,7 @@ class ReviewTest(APITestCase):
         response = self.client.put(f"{self.endpoint}/{self.review_1.id}", data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         results = json.loads(response.content)
-        self.assertEqual(reviews_number(), 6)
+        self.assertEqual(reviews_number(), 5)
         created_at = results.pop("created_at").replace("T", " ")
         lesson = results.pop("lesson")
         lecturer = results.pop("lecturer")
@@ -375,7 +384,7 @@ class ReviewTest(APITestCase):
         # delete data
         response = self.client.delete(f"{self.endpoint}/{self.review_1.id}")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(reviews_number(), 6)
+        self.assertEqual(reviews_number(), 5)
         self.assertTrue(is_review_found(self.review_1.id))
 
     def test_delete_review_authenticated_not_owner(self):
@@ -385,7 +394,7 @@ class ReviewTest(APITestCase):
         # delete data
         response = self.client.delete(f"{self.endpoint}/{self.review_2.id}")
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(reviews_number(), 6)
+        self.assertEqual(reviews_number(), 5)
         self.assertTrue(is_review_found(self.review_1.id))
 
     def test_delete_review_authenticated(self):
@@ -395,7 +404,7 @@ class ReviewTest(APITestCase):
         # delete data
         response = self.client.delete(f"{self.endpoint}/{self.review_1.id}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(reviews_number(), 5)
+        self.assertEqual(reviews_number(), 4)
         self.assertFalse(is_review_found(self.review_1.id))
 
 
