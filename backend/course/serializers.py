@@ -19,7 +19,7 @@ from profile.models import Profile
 from review.models import Review
 from purchase.models import Purchase
 from schedule.models import Schedule
-from django.db.models import Sum, Avg, Min
+from django.db.models import Sum, Avg, Min, Count
 from django.core.exceptions import FieldDoesNotExist
 from datetime import timedelta
 
@@ -119,6 +119,26 @@ def get_duration(course):
     ]
 
 
+def get_is_bestseller(lesson):
+    course = lesson.course
+    lessons = course.lessons.all()
+
+    students_count = (
+        Purchase.objects.filter(lesson__in=lessons)
+        .values("lesson__pk")
+        .annotate(count=Count("student"))
+        .order_by("-count")
+        .values("lesson__pk", "count")[:1]
+    )
+
+    if students_count.count() == 0:
+        return False
+
+    bestseller_id = students_count[0]["lesson__pk"]
+
+    return lesson.id == bestseller_id
+
+
 class TechnologyListSerializer(ModelSerializer):
     courses_count = SerializerMethodField("get_courses_count")
 
@@ -172,6 +192,10 @@ class LessonSerializer(ModelSerializer):
     students_count = SerializerMethodField("get_lesson_students_count")
     rating = SerializerMethodField("get_lesson_rating")
     rating_count = SerializerMethodField("get_lesson_rating_count")
+    is_bestseller = SerializerMethodField("get_lesson_is_bestseller")
+
+    def get_lesson_is_bestseller(self, lesson):
+        return get_is_bestseller(lesson)
 
     def get_lesson_previous_price(self, lesson):
         return get_previous_price(
