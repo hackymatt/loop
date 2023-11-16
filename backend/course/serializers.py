@@ -6,12 +6,117 @@ from rest_framework.serializers import (
     IntegerField,
 )
 from rest_framework.serializers import ValidationError
-from course.models import Lesson, Course, Technology, Skill, Topic
+from course.models import (
+    Lesson,
+    Course,
+    Technology,
+    Skill,
+    Topic,
+    LessonPriceHistory,
+    CoursePriceHistory,
+)
 from profile.models import Profile
 from review.models import Review
 from purchase.models import Purchase
 from schedule.models import Schedule
-from django.db.models import Sum, Avg
+from django.db.models import Sum, Avg, Min
+from django.core.exceptions import FieldDoesNotExist
+from datetime import datetime, timedelta
+
+
+def model_field_exists(obj, field):
+    try:
+        obj._meta.get_field(field)
+        return True
+    except (AttributeError, FieldDoesNotExist):
+        return False
+
+
+def get_previous_prices(price_history_model, instance):
+    if model_field_exists(price_history_model, "course"):
+        previous_prices = (
+            price_history_model.objects.filter(course=instance)
+            .order_by("-created_at")
+            .all()
+        )
+    else:
+        previous_prices = (
+            price_history_model.objects.filter(lesson=instance)
+            .order_by("-created_at")
+            .all()
+        )
+
+    return previous_prices
+
+
+def get_previous_price(price_history_model, instance):
+    current_price = instance.price
+    previous_prices = get_previous_prices(price_history_model, instance)
+
+    if previous_prices.count() == 0:
+        return None
+
+    last_price_change = previous_prices.first()
+
+    previous_price = last_price_change.price
+
+    if previous_price <= current_price:
+        return None
+
+    return previous_price
+
+
+def get_lowest_30_days_price(price_history_model, instance):
+    current_price = instance.price
+    previous_prices = get_previous_prices(price_history_model, instance)
+
+    if previous_prices.count() == 0:
+        return None
+
+    last_price_change = previous_prices.first()
+
+    previous_price = last_price_change.price
+
+    if previous_price <= current_price:
+        return None
+
+    last_price_change_date = last_price_change.created_at
+    last_price_change_date_minus_30_days = last_price_change.created_at - timedelta(
+        days=30
+    )
+
+    prices_in_last_30_days = previous_prices.filter(
+        created_at__lte=last_price_change_date,
+        created_at__gte=last_price_change_date_minus_30_days,
+    )
+
+    return prices_in_last_30_days.aggregate(Min("price"))["price__min"]
+
+
+def get_lecturers(lessons):
+    lecturer_ids = Schedule.objects.filter(lesson__in=lessons).values("lecturer")
+    lecturers = Profile.objects.filter(id__in=lecturer_ids).order_by("uuid")
+    return LecturerSerializer(lecturers, many=True).data
+
+
+def get_rating(lessons):
+    return Review.objects.filter(lesson__in=lessons).aggregate(Avg("rating"))[
+        "rating__avg"
+    ]
+
+
+def get_rating_count(lessons):
+    return Review.objects.filter(lesson__in=lessons).count()
+
+
+def get_students_count(lessons):
+    return Purchase.objects.filter(lesson__in=lessons).count()
+
+
+def get_duration(course):
+    return Lesson.objects.filter(course=course).aggregate(Sum("duration"))[
+        "duration__sum"
+    ]
 
 
 class TechnologyListSerializer(ModelSerializer):
@@ -61,26 +166,34 @@ class LecturerSerializer(ModelSerializer):
 
 class LessonSerializer(ModelSerializer):
     id = IntegerField()
-    lecturers = SerializerMethodField("get_lecturers")
-    students_count = SerializerMethodField("get_students_count")
-    rating = SerializerMethodField("get_rating")
-    rating_count = SerializerMethodField("get_rating_count")
+    previous_price = SerializerMethodField("get_lesson_previous_price")
+    lowest_30_days_price = SerializerMethodField("get_lesson_lowest_30_days_price")
+    lecturers = SerializerMethodField("get_lesson_lecturers")
+    students_count = SerializerMethodField("get_lesson_students_count")
+    rating = SerializerMethodField("get_lesson_rating")
+    rating_count = SerializerMethodField("get_lesson_rating_count")
 
-    def get_lecturers(self, lesson):
-        lecturer_ids = Schedule.objects.filter(lesson=lesson).values("lecturer")
-        lecturers = Profile.objects.filter(id__in=lecturer_ids).order_by("uuid")
-        return LecturerSerializer(lecturers, many=True).data
+    def get_lesson_previous_price(self, lesson):
+        return get_previous_price(
+            price_history_model=LessonPriceHistory, instance=lesson
+        )
 
-    def get_rating(self, lesson):
-        return Review.objects.filter(lesson=lesson).aggregate(Avg("rating"))[
-            "rating__avg"
-        ]
+    def get_lesson_lowest_30_days_price(self, lesson):
+        return get_lowest_30_days_price(
+            price_history_model=LessonPriceHistory, instance=lesson
+        )
 
-    def get_rating_count(self, lesson):
-        return Review.objects.filter(lesson=lesson).count()
+    def get_lesson_lecturers(self, lesson):
+        return get_lecturers(lessons=[lesson])
 
-    def get_students_count(self, lesson):
-        return Purchase.objects.filter(lesson=lesson).count()
+    def get_lesson_rating(self, lesson):
+        return get_rating(lessons=[lesson])
+
+    def get_lesson_rating_count(self, lesson):
+        return get_rating_count(lessons=[lesson])
+
+    def get_lesson_students_count(self, lesson):
+        return get_students_count(lessons=[lesson])
 
     class Meta:
         model = Lesson
@@ -89,36 +202,42 @@ class LessonSerializer(ModelSerializer):
 
 class CourseListSerializer(ModelSerializer):
     technology = TechnologySerializer()
-    duration = SerializerMethodField("get_duration")
-    lecturers = SerializerMethodField("get_lecturers")
-    students_count = SerializerMethodField("get_students_count")
-    rating = SerializerMethodField("get_rating")
-    rating_count = SerializerMethodField("get_rating_count")
+    previous_price = SerializerMethodField("get_course_previous_price")
+    lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
+    duration = SerializerMethodField("get_course_duration")
+    lecturers = SerializerMethodField("get_course_lecturers")
+    students_count = SerializerMethodField("get_course_students_count")
+    rating = SerializerMethodField("get_course_rating")
+    rating_count = SerializerMethodField("get_course_rating_count")
 
-    def get_duration(self, course):
-        return Lesson.objects.filter(course=course).aggregate(Sum("duration"))[
-            "duration__sum"
-        ]
+    def get_course_previous_price(self, course):
+        return get_previous_price(
+            price_history_model=CoursePriceHistory, instance=course
+        )
 
-    def get_lecturers(self, course):
+    def get_course_lowest_30_days_price(self, course):
+        return get_lowest_30_days_price(
+            price_history_model=CoursePriceHistory, instance=course
+        )
+
+    def get_course_duration(self, course):
+        return get_duration(course)
+
+    def get_course_lecturers(self, course):
         lessons = Lesson.objects.filter(course=course)
-        lecturer_ids = Schedule.objects.filter(lesson__in=lessons).values("lecturer")
-        lecturers = Profile.objects.filter(id__in=lecturer_ids).order_by("uuid")
-        return LecturerSerializer(lecturers, many=True).data
+        return get_lecturers(lessons=lessons)
 
-    def get_rating(self, course):
+    def get_course_rating(self, course):
         lessons = course.lessons.all()
-        return Review.objects.filter(lesson__in=lessons).aggregate(Avg("rating"))[
-            "rating__avg"
-        ]
+        return get_rating(lessons=lessons)
 
-    def get_rating_count(self, course):
+    def get_course_rating_count(self, course):
         lessons = course.lessons.all()
-        return Review.objects.filter(lesson__in=lessons).count()
+        return get_rating_count(lessons=lessons)
 
-    def get_students_count(self, course):
+    def get_course_students_count(self, course):
         lessons = course.lessons.all()
-        return Purchase.objects.filter(lesson__in=lessons).count()
+        return get_students_count(lessons=lessons)
 
     class Meta:
         model = Course
@@ -126,37 +245,46 @@ class CourseListSerializer(ModelSerializer):
 
 
 class CourseSerializer(ModelSerializer):
-    duration = SerializerMethodField("get_duration")
+    duration = SerializerMethodField("get_course_duration")
+    previous_price = SerializerMethodField("get_course_previous_price")
+    lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
     lessons = LessonSerializer(many=True)
     technology = TechnologySerializer()
     skills = SkillSerializer(many=True)
     topics = TopicSerializer(many=True)
-    lecturers = SerializerMethodField("get_lecturers")
-    students_count = SerializerMethodField("get_students_count")
-    rating = SerializerMethodField("get_rating")
-    rating_count = SerializerMethodField("get_rating_count")
+    lecturers = SerializerMethodField("get_course_lecturers")
+    students_count = SerializerMethodField("get_course_students_count")
+    rating = SerializerMethodField("get_course_rating")
+    rating_count = SerializerMethodField("get_course_rating_count")
 
-    def get_duration(self, course):
-        return Lesson.objects.filter(course=course).aggregate(Sum("duration"))[
-            "duration__sum"
-        ]
+    def get_course_previous_price(self, course):
+        return get_previous_price(
+            price_history_model=CoursePriceHistory, instance=course
+        )
 
-    def get_lecturers(self, course):
+    def get_course_lowest_30_days_price(self, course):
+        return get_lowest_30_days_price(
+            price_history_model=CoursePriceHistory, instance=course
+        )
+
+    def get_course_duration(self, course):
+        return get_duration(course)
+
+    def get_course_lecturers(self, course):
         lessons = Lesson.objects.filter(course=course)
-        lecturer_ids = Schedule.objects.filter(lesson__in=lessons).values("lecturer")
-        lecturers = Profile.objects.filter(id__in=lecturer_ids).order_by("uuid")
-        return LecturerSerializer(lecturers, many=True).data
+        return get_lecturers(lessons=lessons)
 
-    def get_rating(self, course):
-        return Review.objects.filter(lesson__in=course.lessons.all()).aggregate(
-            Avg("rating")
-        )["rating__avg"]
+    def get_course_rating(self, course):
+        lessons = course.lessons.all()
+        return get_rating(lessons=lessons)
 
-    def get_rating_count(self, course):
-        return Review.objects.filter(lesson__in=course.lessons.all()).count()
+    def get_course_rating_count(self, course):
+        lessons = course.lessons.all()
+        return get_rating_count(lessons=lessons)
 
-    def get_students_count(self, course):
-        return Purchase.objects.filter(lesson__in=course.lessons.all()).count()
+    def get_course_students_count(self, course):
+        lessons = course.lessons.all()
+        return get_students_count(lessons=lessons)
 
     class Meta:
         model = Course
@@ -240,7 +368,15 @@ class CourseSerializer(ModelSerializer):
             obj.github_branch_link = lesson.get(
                 "github_branch_link", obj.github_branch_link
             )
-            obj.price = lesson.get("price", obj.price)
+
+            current_price = obj.price
+            new_price = lesson.get("price", obj.price)
+
+            if current_price != new_price:
+                LessonPriceHistory.objects.create(lesson=obj, price=current_price)
+
+            obj.price = new_price
+
             obj.save()
 
     def delete_lessons(self, lesson_ids):
@@ -286,7 +422,14 @@ class CourseSerializer(ModelSerializer):
         instance.title = validated_data.get("title", instance.title)
         instance.description = validated_data.get("description", instance.description)
         instance.level = validated_data.get("level", instance.level)
-        instance.price = validated_data.get("price", instance.price)
+
+        current_price = instance.price
+        new_price = validated_data.get("price", instance.price)
+
+        if current_price != new_price:
+            CoursePriceHistory.objects.create(course=instance, price=current_price)
+
+        instance.price = new_price
         instance.github_repo_link = validated_data.get(
             "github_repo_link", instance.github_repo_link
         )
