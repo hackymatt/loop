@@ -309,6 +309,8 @@ class CourseTest(APITestCase):
         self.assertEqual(results[0]["rating"], 4.0)
         self.assertEqual(results[0]["rating_count"], 3)
         self.assertEqual(results[0]["students_count"], 2)
+        self.assertEqual(results[0]["previous_price"], 120.0)
+        self.assertEqual(results[0]["lowest_30_days_price"], 80.0)
 
     def test_get_courses_authenticated(self):
         # login
@@ -325,6 +327,8 @@ class CourseTest(APITestCase):
         self.assertEqual(results[0]["rating"], 4.0)
         self.assertEqual(results[0]["rating_count"], 3)
         self.assertEqual(results[0]["students_count"], 2)
+        self.assertEqual(results[0]["previous_price"], 120.0)
+        self.assertEqual(results[0]["lowest_30_days_price"], 80.0)
 
     def test_get_course_unauthenticated(self):
         # no login
@@ -343,6 +347,7 @@ class CourseTest(APITestCase):
         rating_count = course_data.pop("rating_count")
         students_count = course_data.pop("students_count")
         previous_price = course_data.pop("previous_price")
+        lowest_30_days_price = course_data.pop("lowest_30_days_price")
         self.assertTrue(is_data_match(get_course(self.course.id), course_data))
         self.assertTrue(
             is_data_match(get_technology(technology_data["id"]), technology_data)
@@ -369,28 +374,33 @@ class CourseTest(APITestCase):
         self.assertEqual(rating_count, 3)
         self.assertEqual(students_count, 2)
         self.assertEqual(previous_price, 120.0)
+        self.assertEqual(lowest_30_days_price, 80.0)
         for lesson_data in lessons_data:
             lecturers_data = lesson_data.pop("lecturers")
             rating = lesson_data.pop("rating")
             rating_count = lesson_data.pop("rating_count")
             students_count = lesson_data.pop("students_count")
             previous_price = lesson_data.pop("previous_price")
+            lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
             self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
             if lesson_data["id"] == self.review_1.lesson.id:
                 self.assertEqual(rating, 4.5)
                 self.assertEqual(rating_count, 2)
                 self.assertEqual(students_count, 1)
                 self.assertEqual(previous_price, None)
+                self.assertEqual(lowest_30_days_price, None)
             elif lesson_data["id"] == self.review_3.lesson.id:
                 self.assertEqual(rating, 3.0)
                 self.assertEqual(rating_count, 1)
                 self.assertEqual(students_count, 1)
                 self.assertEqual(previous_price, 3.0)
+                self.assertEqual(lowest_30_days_price, 1.0)
             else:
                 self.assertEqual(rating, None)
                 self.assertEqual(rating_count, 0)
                 self.assertEqual(students_count, 0)
                 self.assertEqual(previous_price, 1)
+                self.assertEqual(lowest_30_days_price, 1)
             for lecturer_data in lecturers_data:
                 user_data = filter_dict(lecturer_data, self.user_columns)
                 profile_data = filter_dict(lecturer_data, self.profile_columns)
@@ -425,6 +435,7 @@ class CourseTest(APITestCase):
         rating_count = course_data.pop("rating_count")
         students_count = course_data.pop("students_count")
         previous_price = course_data.pop("previous_price")
+        lowest_30_days_price = course_data.pop("lowest_30_days_price")
         self.assertTrue(is_data_match(get_course(self.course.id), course_data))
         self.assertTrue(
             is_data_match(get_technology(technology_data["id"]), technology_data)
@@ -451,28 +462,33 @@ class CourseTest(APITestCase):
         self.assertEqual(rating_count, 3)
         self.assertEqual(students_count, 2)
         self.assertEqual(previous_price, 120.0)
+        self.assertEqual(lowest_30_days_price, 80.0)
         for lesson_data in lessons_data:
             lecturers_data = lesson_data.pop("lecturers")
             rating = lesson_data.pop("rating")
             rating_count = lesson_data.pop("rating_count")
             students_count = lesson_data.pop("students_count")
             previous_price = lesson_data.pop("previous_price")
+            lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
             self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
             if lesson_data["id"] == self.review_1.lesson.id:
                 self.assertEqual(rating, 4.5)
                 self.assertEqual(rating_count, 2)
                 self.assertEqual(students_count, 1)
                 self.assertEqual(previous_price, None)
+                self.assertEqual(lowest_30_days_price, None)
             elif lesson_data["id"] == self.review_3.lesson.id:
                 self.assertEqual(rating, 3.0)
                 self.assertEqual(rating_count, 1)
                 self.assertEqual(students_count, 1)
                 self.assertEqual(previous_price, 3.0)
+                self.assertEqual(lowest_30_days_price, 1.0)
             else:
                 self.assertEqual(rating, None)
                 self.assertEqual(rating_count, 0)
                 self.assertEqual(students_count, 0)
                 self.assertEqual(previous_price, 2)
+                self.assertEqual(lowest_30_days_price, 2)
             for lecturer_data in lecturers_data:
                 user_data = filter_dict(lecturer_data, self.user_columns)
                 profile_data = filter_dict(lecturer_data, self.profile_columns)
@@ -633,6 +649,7 @@ class CourseTest(APITestCase):
         rating_count = course_data.pop("rating_count")
         students_count = course_data.pop("students_count")
         previous_price = course_data.pop("previous_price")
+        lowest_30_days_price = course_data.pop("lowest_30_days_price")
         self.assertTrue(is_data_match(get_course(course_data["id"]), course_data))
         self.assertTrue(
             is_data_match(get_technology(technology_data["id"]), technology_data)
@@ -659,17 +676,20 @@ class CourseTest(APITestCase):
         self.assertEqual(rating_count, 0)
         self.assertEqual(students_count, 0)
         self.assertEqual(previous_price, None)
+        self.assertEqual(lowest_30_days_price, None)
         for lesson_data in lessons_data:
             lecturers_data = lesson_data.pop("lecturers")
             rating = lesson_data.pop("rating")
             rating_count = lesson_data.pop("rating_count")
             students_count = lesson_data.pop("students_count")
             previous_price = lesson_data.pop("previous_price")
+            lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
             self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
             self.assertEqual(rating, None)
             self.assertEqual(rating_count, 0)
             self.assertEqual(students_count, 0)
             self.assertEqual(previous_price, None)
+            self.assertEqual(lowest_30_days_price, None)
             for lecturer_data in lecturers_data:
                 user_data = filter_dict(lecturer_data, self.user_columns)
                 profile_data = filter_dict(lecturer_data, self.profile_columns)
@@ -950,6 +970,7 @@ class CourseTest(APITestCase):
         rating_count = course_data.pop("rating_count")
         students_count = course_data.pop("students_count")
         previous_price = course_data.pop("previous_price")
+        lowest_30_days_price = course_data.pop("lowest_30_days_price")
         self.assertTrue(is_data_match(get_course(self.course.id), course_data))
         self.assertTrue(
             is_data_match(get_technology(technology_data["id"]), technology_data)
@@ -976,23 +997,27 @@ class CourseTest(APITestCase):
         self.assertEqual(rating_count, 2)
         self.assertEqual(students_count, 1)
         self.assertEqual(previous_price, 99.99)
+        self.assertEqual(lowest_30_days_price, 80.0)
         for lesson_data in lessons_data:
             lecturers_data = lesson_data.pop("lecturers")
             rating = lesson_data.pop("rating")
             rating_count = lesson_data.pop("rating_count")
             students_count = lesson_data.pop("students_count")
             previous_price = lesson_data.pop("previous_price")
+            lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
             self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
             if lesson_data["id"] == self.review_1.lesson.id:
                 self.assertEqual(rating, 4.5)
                 self.assertEqual(rating_count, 2)
                 self.assertEqual(students_count, 1)
                 self.assertEqual(previous_price, 9.99)
+                self.assertEqual(lowest_30_days_price, 5.0)
             else:
                 self.assertEqual(rating, None)
                 self.assertEqual(rating_count, 0)
                 self.assertEqual(students_count, 0)
                 self.assertEqual(previous_price, None)
+                self.assertEqual(lowest_30_days_price, None)
             for lecturer_data in lecturers_data:
                 user_data = filter_dict(lecturer_data, self.user_columns)
                 profile_data = filter_dict(lecturer_data, self.profile_columns)
@@ -1069,6 +1094,7 @@ class CourseTest(APITestCase):
         rating_count = course_data.pop("rating_count")
         students_count = course_data.pop("students_count")
         previous_price = course_data.pop("previous_price")
+        lowest_30_days_price = course_data.pop("lowest_30_days_price")
         self.assertTrue(is_data_match(get_course(self.course.id), course_data))
         self.assertTrue(
             is_data_match(get_technology(technology_data["id"]), technology_data)
@@ -1095,23 +1121,27 @@ class CourseTest(APITestCase):
         self.assertEqual(rating_count, 2)
         self.assertEqual(students_count, 1)
         self.assertEqual(previous_price, None)
+        self.assertEqual(lowest_30_days_price, None)
         for lesson_data in lessons_data:
             lecturers_data = lesson_data.pop("lecturers")
             rating = lesson_data.pop("rating")
             rating_count = lesson_data.pop("rating_count")
             students_count = lesson_data.pop("students_count")
             previous_price = lesson_data.pop("previous_price")
+            lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
             self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
             if lesson_data["id"] == self.review_1.lesson.id:
                 self.assertEqual(rating, 4.5)
                 self.assertEqual(rating_count, 2)
                 self.assertEqual(students_count, 1)
                 self.assertEqual(previous_price, 9.99)
+                self.assertEqual(lowest_30_days_price, 5.0)
             else:
                 self.assertEqual(rating, None)
                 self.assertEqual(rating_count, 0)
                 self.assertEqual(students_count, 0)
                 self.assertEqual(previous_price, None)
+                self.assertEqual(lowest_30_days_price, None)
             for lecturer_data in lecturers_data:
                 user_data = filter_dict(lecturer_data, self.user_columns)
                 profile_data = filter_dict(lecturer_data, self.profile_columns)
@@ -1188,6 +1218,7 @@ class CourseTest(APITestCase):
         rating_count = course_data.pop("rating_count")
         students_count = course_data.pop("students_count")
         previous_price = course_data.pop("previous_price")
+        lowest_30_days_price = course_data.pop("lowest_30_days_price")
         self.assertTrue(is_data_match(get_course(self.course.id), course_data))
         self.assertTrue(
             is_data_match(get_technology(technology_data["id"]), technology_data)
@@ -1214,23 +1245,27 @@ class CourseTest(APITestCase):
         self.assertEqual(rating_count, 2)
         self.assertEqual(students_count, 1)
         self.assertEqual(previous_price, 120.0)
+        self.assertEqual(lowest_30_days_price, 80.0)
         for lesson_data in lessons_data:
             lecturers_data = lesson_data.pop("lecturers")
             rating = lesson_data.pop("rating")
             rating_count = lesson_data.pop("rating_count")
             students_count = lesson_data.pop("students_count")
             previous_price = lesson_data.pop("previous_price")
+            lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
             self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
             if lesson_data["id"] == self.review_1.lesson.id:
                 self.assertEqual(rating, 4.5)
                 self.assertEqual(rating_count, 2)
                 self.assertEqual(students_count, 1)
                 self.assertEqual(previous_price, None)
+                self.assertEqual(lowest_30_days_price, None)
             else:
                 self.assertEqual(rating, None)
                 self.assertEqual(rating_count, 0)
                 self.assertEqual(students_count, 0)
                 self.assertEqual(previous_price, None)
+                self.assertEqual(lowest_30_days_price, None)
             for lecturer_data in lecturers_data:
                 user_data = filter_dict(lecturer_data, self.user_columns)
                 profile_data = filter_dict(lecturer_data, self.profile_columns)

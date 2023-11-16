@@ -19,8 +19,9 @@ from profile.models import Profile
 from review.models import Review
 from purchase.models import Purchase
 from schedule.models import Schedule
-from django.db.models import Sum, Avg
+from django.db.models import Sum, Avg, Min
 from django.core.exceptions import FieldDoesNotExist
+from datetime import datetime, timedelta
 
 
 def model_field_exists(obj, field):
@@ -29,10 +30,9 @@ def model_field_exists(obj, field):
         return True
     except (AttributeError, FieldDoesNotExist):
         return False
-        
-def get_previous_price(price_history_model, instance):
-    current_price = instance.price
 
+
+def get_previous_prices(price_history_model, instance):
     if model_field_exists(price_history_model, "course"):
         previous_prices = (
             price_history_model.objects.filter(course=instance)
@@ -46,15 +46,51 @@ def get_previous_price(price_history_model, instance):
             .all()
         )
 
+    return previous_prices
+
+
+def get_previous_price(price_history_model, instance):
+    current_price = instance.price
+    previous_prices = get_previous_prices(price_history_model, instance)
+
     if previous_prices.count() == 0:
         return None
 
-    previous_price = previous_prices.first().price
+    last_price_change = previous_prices.first()
+
+    previous_price = last_price_change.price
 
     if previous_price <= current_price:
         return None
 
     return previous_price
+
+
+def get_lowest_30_days_price(price_history_model, instance):
+    current_price = instance.price
+    previous_prices = get_previous_prices(price_history_model, instance)
+
+    if previous_prices.count() == 0:
+        return None
+
+    last_price_change = previous_prices.first()
+
+    previous_price = last_price_change.price
+
+    if previous_price <= current_price:
+        return None
+
+    last_price_change_date = last_price_change.created_at
+    last_price_change_date_minus_30_days = last_price_change.created_at - timedelta(
+        days=30
+    )
+
+    prices_in_last_30_days = previous_prices.filter(
+        created_at__lte=last_price_change_date,
+        created_at__gte=last_price_change_date_minus_30_days,
+    )
+
+    return prices_in_last_30_days.aggregate(Min("price"))["price__min"]
 
 
 def get_lecturers(lessons):
@@ -131,6 +167,7 @@ class LecturerSerializer(ModelSerializer):
 class LessonSerializer(ModelSerializer):
     id = IntegerField()
     previous_price = SerializerMethodField("get_lesson_previous_price")
+    lowest_30_days_price = SerializerMethodField("get_lesson_lowest_30_days_price")
     lecturers = SerializerMethodField("get_lesson_lecturers")
     students_count = SerializerMethodField("get_lesson_students_count")
     rating = SerializerMethodField("get_lesson_rating")
@@ -138,6 +175,11 @@ class LessonSerializer(ModelSerializer):
 
     def get_lesson_previous_price(self, lesson):
         return get_previous_price(
+            price_history_model=LessonPriceHistory, instance=lesson
+        )
+
+    def get_lesson_lowest_30_days_price(self, lesson):
+        return get_lowest_30_days_price(
             price_history_model=LessonPriceHistory, instance=lesson
         )
 
@@ -161,6 +203,7 @@ class LessonSerializer(ModelSerializer):
 class CourseListSerializer(ModelSerializer):
     technology = TechnologySerializer()
     previous_price = SerializerMethodField("get_course_previous_price")
+    lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
     duration = SerializerMethodField("get_course_duration")
     lecturers = SerializerMethodField("get_course_lecturers")
     students_count = SerializerMethodField("get_course_students_count")
@@ -169,6 +212,11 @@ class CourseListSerializer(ModelSerializer):
 
     def get_course_previous_price(self, course):
         return get_previous_price(
+            price_history_model=CoursePriceHistory, instance=course
+        )
+
+    def get_course_lowest_30_days_price(self, course):
+        return get_lowest_30_days_price(
             price_history_model=CoursePriceHistory, instance=course
         )
 
@@ -199,6 +247,7 @@ class CourseListSerializer(ModelSerializer):
 class CourseSerializer(ModelSerializer):
     duration = SerializerMethodField("get_course_duration")
     previous_price = SerializerMethodField("get_course_previous_price")
+    lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
     lessons = LessonSerializer(many=True)
     technology = TechnologySerializer()
     skills = SkillSerializer(many=True)
@@ -210,6 +259,11 @@ class CourseSerializer(ModelSerializer):
 
     def get_course_previous_price(self, course):
         return get_previous_price(
+            price_history_model=CoursePriceHistory, instance=course
+        )
+
+    def get_course_lowest_30_days_price(self, course):
+        return get_lowest_30_days_price(
             price_history_model=CoursePriceHistory, instance=course
         )
 
