@@ -904,6 +904,18 @@ class ReviewFilterTest(APITestCase):
         count = data["records_count"]
         self.assertEqual(count, 3)
 
+    def test_lesson_id_filter(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(
+            f"{self.endpoint}?lesson_id={self.course_1.lessons.all()[0].id}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 2)
+
     def test_lecturer_id_filter(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -934,7 +946,7 @@ class ReviewFilterTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 6)
+        self.assertEqual(count, 3)
 
     def test_rating_to_filter(self):
         # no login

@@ -28,11 +28,13 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "rating",
-                    models.PositiveIntegerField(
+                    models.DecimalField(
+                        decimal_places=1,
+                        max_digits=2,
                         validators=[
                             django.core.validators.MinValueValidator(1),
                             django.core.validators.MaxValueValidator(5),
-                        ]
+                        ],
                     ),
                 ),
                 ("review", models.TextField(null=True)),

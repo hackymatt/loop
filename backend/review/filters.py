@@ -15,6 +15,7 @@ class OrderFilter(OrderingFilter):
 
 class ReviewFilter(FilterSet):
     course_id = NumberFilter(field_name="lesson__course__id", lookup_expr="exact")
+    lesson_id = NumberFilter(field_name="lesson__id", lookup_expr="exact")
     lecturer_id = NumberFilter(field_name="lecturer__id", lookup_expr="exact")
     rating = NumberFilter(field_name="rating", lookup_expr="exact")
     rating_from = NumberFilter(field_name="rating", lookup_expr="gte")
@@ -34,6 +35,7 @@ class ReviewFilter(FilterSet):
         model = Review
         fields = (
             "course_id",
+            "lesson_id",
             "lecturer_id",
             "rating",
             "rating_from",

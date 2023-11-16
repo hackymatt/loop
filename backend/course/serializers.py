@@ -21,7 +21,7 @@ from purchase.models import Purchase
 from schedule.models import Schedule
 from django.db.models import Sum, Avg, Min
 from django.core.exceptions import FieldDoesNotExist
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 
 def model_field_exists(obj, field):

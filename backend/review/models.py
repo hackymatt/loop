@@ -3,7 +3,7 @@ from django.db.models import (
     UniqueConstraint,
     ForeignKey,
     TextField,
-    PositiveIntegerField,
+    DecimalField,
     DateTimeField,
     CASCADE,
     Index,
@@ -17,8 +17,10 @@ class Review(Model):
     lesson = ForeignKey(Lesson, on_delete=CASCADE)
     student = ForeignKey(Profile, on_delete=CASCADE, related_name="review_student")
     lecturer = ForeignKey(Profile, on_delete=CASCADE, related_name="review_lecturer")
-    rating = PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(5)]
+    rating = DecimalField(
+        max_digits=2,
+        decimal_places=1,
+        validators=[MinValueValidator(1), MaxValueValidator(5)],
     )
     review = TextField(null=True)
     created_at = DateTimeField(auto_now_add=True)
