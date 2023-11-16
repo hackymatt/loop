@@ -7,7 +7,8 @@ from django_filters import (
 )
 from course.models import Course, Lesson
 from review.models import Review
-from django.db.models import OuterRef, Subquery, Value, Avg, Sum
+from purchase.models import Purchase
+from django.db.models import OuterRef, Subquery, Value, Avg, Sum, Count
 
 
 def get_rating(queryset):
@@ -37,6 +38,21 @@ def get_duration(queryset):
     return courses
 
 
+def get_students_count(queryset):
+    lessons = Lesson.objects.filter(course=OuterRef(OuterRef("pk"))).values("id")
+    total_student_count = (
+        Purchase.objects.filter(lesson__in=Subquery(lessons))
+        .annotate(dummy_group_by=Value(1))
+        .values("dummy_group_by")
+        .order_by("dummy_group_by")
+        .annotate(total_student_count=Count("student"))
+        .values("total_student_count")
+    )
+    courses = queryset.annotate(students_count=Subquery(total_student_count))
+
+    return courses
+
+
 class CharInFilter(BaseInFilter, CharFilter):
     pass
 
@@ -53,6 +69,8 @@ class OrderFilter(OrderingFilter):
                 queryset = get_duration(queryset).order_by(value)
             elif value in ["rating", "-rating"]:
                 queryset = get_rating(queryset).order_by(value)
+            elif value in ["students_count", "-students_count"]:
+                queryset = get_students_count(queryset).order_by(value)
             else:
                 queryset = queryset.order_by(value)
 
@@ -93,6 +111,8 @@ class CourseFilter(FilterSet):
             ("-duration", "Duration DESC"),
             ("rating", "Rating ASC"),
             ("-rating", "Rating DESC"),
+            ("students_count", "Students Count ASC"),
+            ("-students_count", "Students Count DESC"),
         ),
         fields={
             "title": "title",
@@ -107,6 +127,8 @@ class CourseFilter(FilterSet):
             "duration": "-duration",
             "rating": "rating",
             "rating": "-rating",
+            "students_count": "students_count",
+            "students_count": "-students_count",
         },
     )
 

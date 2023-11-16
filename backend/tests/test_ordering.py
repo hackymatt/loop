@@ -430,7 +430,15 @@ class CourseFilterTest(APITestCase):
             review="So so lesson.",
         )
 
-        self.fields = ["title", "technology", "level", "price", "duration", "rating"]
+        self.fields = [
+            "title",
+            "technology",
+            "level",
+            "price",
+            "duration",
+            "rating",
+            "students_count",
+        ]
 
     def test_ordering(self):
         for field in self.fields:
