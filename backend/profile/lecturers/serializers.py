@@ -11,13 +11,17 @@ from schedule.models import Schedule
 from django.db.models import Avg
 
 
+def get_rating(lecturer):
+    return Review.objects.filter(lecturer=lecturer)
+
+
 class LecturerSerializer(ModelSerializer):
     first_name = CharField(source="user.first_name")
     last_name = CharField(source="user.last_name")
     email = EmailField(source="user.email")
     students_count = SerializerMethodField("get_students_count")
-    rating = SerializerMethodField("get_rating")
-    rating_count = SerializerMethodField("get_rating_count")
+    rating = SerializerMethodField("get_lecturer_rating")
+    rating_count = SerializerMethodField("get_lecturer_rating_count")
     lessons_count = SerializerMethodField("get_lessons_count")
 
     class Meta:
@@ -34,13 +38,11 @@ class LecturerSerializer(ModelSerializer):
             "lessons_count",
         )
 
-    def get_rating(self, lecturer):
-        return Review.objects.filter(lecturer=lecturer).aggregate(Avg("rating"))[
-            "rating__avg"
-        ]
+    def get_lecturer_rating(self, lecturer):
+        return get_rating(lecturer=lecturer).aggregate(Avg("rating"))["rating__avg"]
 
-    def get_rating_count(self, lecturer):
-        return Review.objects.filter(lecturer=lecturer).count()
+    def get_lecturer_rating_count(self, lecturer):
+        return get_rating(lecturer=lecturer).count()
 
     def get_students_count(self, lecturer):
         return Purchase.objects.filter(lecturer=lecturer).count()

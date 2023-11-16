@@ -121,8 +121,8 @@ class CourseTest(APITestCase):
                     price="2.99",
                 ),
             ],
-        )       
-        
+        )
+
         create_course_price_history(self.course, 80)
         create_course_price_history(self.course, 100)
         create_course_price_history(self.course, 120)
@@ -238,14 +238,14 @@ class CourseTest(APITestCase):
                     price="2.99",
                 ),
             ],
-        )       
-        
-        create_course_price_history(self.course_2, 120)        
-        create_course_price_history(self.course_2, 100)   
-        create_course_price_history(self.course_2, 80)    
+        )
+
+        create_course_price_history(self.course_2, 120)
+        create_course_price_history(self.course_2, 100)
+        create_course_price_history(self.course_2, 80)
         create_lesson_price_history(self.course_2.lessons.all()[0], 15)
         create_lesson_price_history(self.course_2.lessons.all()[0], 25)
-        create_lesson_price_history(self.course_2.lessons.all()[0], 5) 
+        create_lesson_price_history(self.course_2.lessons.all()[0], 5)
         create_lesson_price_history(self.course_2.lessons.all()[1], 1)
         create_lesson_price_history(self.course_2.lessons.all()[1], 5)
         create_lesson_price_history(self.course_2.lessons.all()[1], 3)
@@ -280,14 +280,14 @@ class CourseTest(APITestCase):
                     price="2.99",
                 ),
             ],
-        )               
-               
-        create_course_price_history(self.course_3, 100)   
-        create_course_price_history(self.course_3, 80) 
-        create_course_price_history(self.course_3, 120)    
+        )
+
+        create_course_price_history(self.course_3, 100)
+        create_course_price_history(self.course_3, 80)
+        create_course_price_history(self.course_3, 120)
         create_lesson_price_history(self.course_3.lessons.all()[0], 15)
         create_lesson_price_history(self.course_3.lessons.all()[0], 25)
-        create_lesson_price_history(self.course_3.lessons.all()[0], 5) 
+        create_lesson_price_history(self.course_3.lessons.all()[0], 5)
         create_lesson_price_history(self.course_3.lessons.all()[1], 1)
         create_lesson_price_history(self.course_3.lessons.all()[1], 5)
         create_lesson_price_history(self.course_3.lessons.all()[1], 3)
@@ -472,7 +472,7 @@ class CourseTest(APITestCase):
                 self.assertEqual(rating, None)
                 self.assertEqual(rating_count, 0)
                 self.assertEqual(students_count, 0)
-                self.assertEqual(previous_price, 2)            
+                self.assertEqual(previous_price, 2)
             for lecturer_data in lecturers_data:
                 user_data = filter_dict(lecturer_data, self.user_columns)
                 profile_data = filter_dict(lecturer_data, self.profile_columns)

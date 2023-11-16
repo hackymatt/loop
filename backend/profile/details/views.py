@@ -7,7 +7,7 @@ from profile.details.serializers import (
 )
 from profile.models import Profile
 from django.contrib.auth.models import User
-from django.core import exceptions
+from django.core.exceptions import FieldDoesNotExist
 
 
 class ProfileDetailsViewSet(ModelViewSet):
@@ -24,7 +24,7 @@ class ProfileDetailsViewSet(ModelViewSet):
         try:
             obj._meta.get_field(field)
             return True
-        except (AttributeError, exceptions.FieldDoesNotExist):
+        except (AttributeError, FieldDoesNotExist):
             return False
 
     def list(self, request, *args, **kwargs):
