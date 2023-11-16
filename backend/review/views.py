@@ -41,9 +41,11 @@ class ReviewViewSet(ModelViewSet):
         profile = Profile.objects.get(user=user)
         lesson = Lesson.objects.get(pk=lesson_id)
         lecturer = Profile.objects.get(pk=lecturer_id)
-        start_time = Purchase.objects.filter(
-            student=profile, lesson=lesson, lecturer=lecturer
-        ).first().time.time
+        start_time = (
+            Purchase.objects.filter(student=profile, lesson=lesson, lecturer=lecturer)
+            .first()
+            .time.time
+        )
         end_time = start_time + timedelta(minutes=lesson.duration)
 
         return make_aware(datetime.now()) >= end_time
