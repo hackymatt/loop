@@ -160,9 +160,10 @@ def create_purchase(
     student: Profile,
     lecturer: Profile,
     time: Schedule,
+    price: float,
 ):
     return Purchase.objects.create(
-        lesson=lesson, student=student, lecturer=lecturer, time=time
+        lesson=lesson, student=student, lecturer=lecturer, time=time, price=price
     )
 
 
