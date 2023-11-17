@@ -3,6 +3,7 @@ from django.db.models import (
     UniqueConstraint,
     ForeignKey,
     DateTimeField,
+    DecimalField,
     CASCADE,
     Index,
 )
@@ -16,6 +17,7 @@ class Purchase(Model):
     student = ForeignKey(Profile, on_delete=CASCADE, related_name="purchase_student")
     lecturer = ForeignKey(Profile, on_delete=CASCADE, related_name="purchase_lecturer")
     time = ForeignKey(Schedule, on_delete=CASCADE)
+    price = DecimalField(max_digits=7, decimal_places=2)
     created_at = DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -141,6 +141,7 @@ class ScheduleTest(APITestCase):
                 lesson=self.course_1.lessons.all()[0],
                 lecturer=self.lecturer_profile_1,
             )[0],
+            price=self.course_1.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course_1.lessons.all()[1],
@@ -150,6 +151,7 @@ class ScheduleTest(APITestCase):
                 lesson=self.course_1.lessons.all()[1],
                 lecturer=self.lecturer_profile_1,
             )[0],
+            price=self.course_1.lessons.all()[1].price,
         )
 
         self.review_course_1_1 = create_review(
@@ -273,6 +275,7 @@ class ScheduleTest(APITestCase):
                 lesson=self.course_2.lessons.all()[0],
                 lecturer=self.lecturer_profile_1,
             )[0],
+            price=self.course_2.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course_2.lessons.all()[1],
@@ -282,6 +285,7 @@ class ScheduleTest(APITestCase):
                 lesson=self.course_2.lessons.all()[1],
                 lecturer=self.lecturer_profile_1,
             )[0],
+            price=self.course_2.lessons.all()[1].price,
         )
         create_purchase(
             lesson=self.course_2.lessons.all()[0],
@@ -291,6 +295,7 @@ class ScheduleTest(APITestCase):
                 lesson=self.course_2.lessons.all()[0],
                 lecturer=self.lecturer_profile_1,
             )[0],
+            price=self.course_2.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course_2.lessons.all()[1],
@@ -300,6 +305,7 @@ class ScheduleTest(APITestCase):
                 lesson=self.course_2.lessons.all()[1],
                 lecturer=self.lecturer_profile_1,
             )[0],
+            price=self.course_2.lessons.all()[1].price,
         )
         create_purchase(
             lesson=self.course_2.lessons.all()[2],
@@ -309,6 +315,7 @@ class ScheduleTest(APITestCase):
                 lesson=self.course_2.lessons.all()[2],
                 lecturer=self.lecturer_profile_1,
             )[0],
+            price=self.course_2.lessons.all()[2].price,
         )
 
         self.review_course_2_1 = create_review(
@@ -398,6 +405,7 @@ class ScheduleTest(APITestCase):
                 lesson=self.course_3.lessons.all()[0],
                 lecturer=self.lecturer_profile_1,
             )[0],
+            price=self.course_3.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course_3.lessons.all()[0],
@@ -407,6 +415,7 @@ class ScheduleTest(APITestCase):
                 lesson=self.course_3.lessons.all()[0],
                 lecturer=self.lecturer_profile_1,
             )[0],
+            price=self.course_3.lessons.all()[0].price,
         )
 
         self.review_course_3_1 = create_review(

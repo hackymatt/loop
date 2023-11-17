@@ -175,6 +175,7 @@ class CourseTest(APITestCase):
                 lesson=self.course.lessons.all()[0],
                 lecturer=self.lecturer_profile_1,
             )[0],
+            price=self.course.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course.lessons.all()[1],
@@ -184,6 +185,7 @@ class CourseTest(APITestCase):
                 lesson=self.course.lessons.all()[1],
                 lecturer=self.lecturer_profile_1,
             )[0],
+            price=self.course.lessons.all()[1].price,
         )
 
         self.review_1 = create_review(
@@ -1598,6 +1600,7 @@ class BestCourseTest(APITestCase):
                 lesson=self.course.lessons.all()[0],
                 lecturer=self.lecturer_profile_1,
             )[0],
+            price=self.course.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course.lessons.all()[1],
@@ -1607,6 +1610,7 @@ class BestCourseTest(APITestCase):
                 lesson=self.course.lessons.all()[1],
                 lecturer=self.lecturer_profile_1,
             )[0],
+            price=self.course.lessons.all()[1].price,
         )
 
         self.review_1 = create_review(
