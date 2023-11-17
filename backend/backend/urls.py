@@ -5,7 +5,7 @@ from profile.logout.views import ProfileLogoutViewSet
 from profile.password_change.views import ProfilePasswordChangeViewSet
 from profile.password_reset.views import ProfilePasswordResetViewSet
 from profile.details.views import ProfileDetailsViewSet
-from profile.lecturers.views import LecturerViewSet
+from profile.lecturers.views import LecturerViewSet, BestLecturerViewSet
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
@@ -38,6 +38,7 @@ router.register(
 router.register(r"courses", CourseViewSet, basename="courses")
 router.register(r"best-courses", BestCourseViewSet, basename="best_courses")
 router.register(r"technologies", TechnologyViewSet, basename="technologies")
+router.register(r"best-lecturers", BestLecturerViewSet, basename="best_lecturers")
 router.register(r"lecturers", LecturerViewSet, basename="lecturers")
 router.register(r"reviews", ReviewViewSet, basename="reviews")
 router.register(r"best-reviews", BestReviewViewSet, basename="best_reviews")

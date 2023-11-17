@@ -6,7 +6,7 @@ from course.serializers import (
     CourseSerializer,
     TechnologyListSerializer,
 )
-from course.filters import CourseFilter, get_rating, get_students_count
+from course.filters import CourseFilter, get_rating
 from course.models import Course, Technology
 from profile.models import Profile
 from random import sample
@@ -115,7 +115,6 @@ class BestCourseViewSet(ModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         queryset = get_rating(queryset=queryset).filter(rating__gte=4)
-        queryset = get_students_count(queryset=queryset).order_by("-students_count")
 
         ids = queryset.values_list("id", flat=True)
         random_ids = sample(list(ids), min(len(ids), 10))
