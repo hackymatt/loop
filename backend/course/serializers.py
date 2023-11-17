@@ -17,7 +17,7 @@ from course.models import (
 )
 from profile.models import Profile
 from review.models import Review
-from purchase.models import Purchase
+from purchase.models import LessonPurchase
 from schedule.models import Schedule
 from django.db.models import Sum, Avg, Min, Count
 from django.core.exceptions import FieldDoesNotExist
@@ -110,7 +110,7 @@ def get_rating_count(lessons):
 
 
 def get_students_count(lessons):
-    return Purchase.objects.filter(lesson__in=lessons).count()
+    return LessonPurchase.objects.filter(lesson__in=lessons).count()
 
 
 def get_duration(course):
@@ -124,7 +124,7 @@ def get_is_bestseller(lesson):
     lessons = course.lessons.all()
 
     students_count = (
-        Purchase.objects.filter(lesson__in=lessons)
+        LessonPurchase.objects.filter(lesson__in=lessons)
         .values("lesson__pk")
         .annotate(count=Count("student"))
         .order_by("-count")

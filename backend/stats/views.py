@@ -4,7 +4,7 @@ from rest_framework import status
 from profile.models import Profile
 from course.models import Course, Lesson, Technology
 from review.models import Review
-from purchase.models import Purchase
+from purchase.models import LessonPurchase
 from django.db.models import Sum, Avg
 
 
@@ -17,7 +17,7 @@ class StatsViewSet(ViewSet):
         lessons_count = Lesson.objects.count()
         technology_count = Technology.objects.count()
         lecturers_count = Profile.objects.filter(user_type="W").count()
-        purchase_count = Purchase.objects.count()
+        purchase_count = LessonPurchase.objects.count()
         hours_sum = Lesson.objects.aggregate(Sum("duration"))["duration__sum"]
         rating = Review.objects.aggregate(Avg("rating"))["rating__avg"]
         rating_count = Review.objects.count()

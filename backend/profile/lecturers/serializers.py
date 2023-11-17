@@ -6,7 +6,7 @@ from rest_framework.serializers import (
 )
 from profile.models import Profile
 from review.models import Review
-from purchase.models import Purchase
+from purchase.models import LessonPurchase
 from schedule.models import Schedule
 from django.db.models import Avg
 
@@ -45,7 +45,7 @@ class LecturerSerializer(ModelSerializer):
         return get_rating(lecturer=lecturer).count()
 
     def get_students_count(self, lecturer):
-        return Purchase.objects.filter(lecturer=lecturer).count()
+        return LessonPurchase.objects.filter(lecturer=lecturer).count()
 
     def get_lessons_count(self, lecturer):
         return (

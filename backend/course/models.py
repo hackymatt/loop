@@ -1,5 +1,5 @@
+from backend.base_model import BaseModel
 from django.db.models import (
-    Model,
     ForeignKey,
     ManyToManyField,
     CharField,
@@ -8,7 +8,6 @@ from django.db.models import (
     URLField,
     DecimalField,
     BooleanField,
-    DateTimeField,
     CASCADE,
     Index,
 )
@@ -17,7 +16,7 @@ from decimal import Decimal
 from profile.models import Profile
 
 
-class Technology(Model):
+class Technology(BaseModel):
     name = CharField()
 
     class Meta:
@@ -37,7 +36,7 @@ class Technology(Model):
         ]
 
 
-class Skill(Model):
+class Skill(BaseModel):
     name = CharField()
 
     class Meta:
@@ -57,7 +56,7 @@ class Skill(Model):
         ]
 
 
-class Topic(Model):
+class Topic(BaseModel):
     name = TextField()
 
     class Meta:
@@ -77,7 +76,7 @@ class Topic(Model):
         ]
 
 
-class Course(Model):
+class Course(BaseModel):
     LEVEL_CHOICES = (
         ("P", "Podstawowy"),
         ("Ś", "Średniozaawansowany"),
@@ -148,7 +147,7 @@ class Course(Model):
         ]
 
 
-class Lesson(Model):
+class Lesson(BaseModel):
     course = ForeignKey(Course, on_delete=CASCADE, related_name="lessons")
     title = CharField()
     description = TextField()
@@ -175,12 +174,11 @@ class Lesson(Model):
         ]
 
 
-class CoursePriceHistory(Model):
+class CoursePriceHistory(BaseModel):
     course = ForeignKey(Course, on_delete=CASCADE)
     price = DecimalField(
         max_digits=7, decimal_places=2, validators=[MinValueValidator(Decimal("0.00"))]
     )
-    created_at = DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "course_price_history"
@@ -199,12 +197,11 @@ class CoursePriceHistory(Model):
         ]
 
 
-class LessonPriceHistory(Model):
+class LessonPriceHistory(BaseModel):
     lesson = ForeignKey(Lesson, on_delete=CASCADE)
     price = DecimalField(
         max_digits=7, decimal_places=2, validators=[MinValueValidator(Decimal("0.00"))]
     )
-    created_at = DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "lesson_price_history"

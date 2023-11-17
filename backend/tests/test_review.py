@@ -369,13 +369,9 @@ class ReviewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         results = json.loads(response.content)
         self.assertEqual(reviews_number(), 5)
-        created_at = results.pop("created_at").replace("T", " ")
         lesson = results.pop("lesson")
         lecturer = results.pop("lecturer")
         self.assertTrue(is_data_match(get_review(self.review_1.id), results))
-        self.assertEqual(
-            created_at[0:26], str(get_review(self.review_1.id).created_at)[0:26]
-        )
         self.assertEqual(lesson, get_review(self.review_1.id).lesson.id)
         self.assertEqual(
             lecturer, get_profile(get_user(self.review_1.lecturer.user.email)).id
