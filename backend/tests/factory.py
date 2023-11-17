@@ -10,7 +10,7 @@ from course.models import (
     LessonPriceHistory,
 )
 from review.models import Review
-from purchase.models import Purchase
+from purchase.models import CoursePurchase, LessonPurchase
 from newsletter.models import Newsletter
 from schedule.models import Schedule
 from datetime import datetime
@@ -162,8 +162,16 @@ def create_purchase(
     time: Schedule,
     price: float,
 ):
-    return Purchase.objects.create(
-        lesson=lesson, student=student, lecturer=lecturer, time=time, price=price
+    course_purchase, created = CoursePurchase.objects.get_or_create(
+        course=lesson.course, price=lesson.course.price, student=student
+    )
+    return LessonPurchase.objects.create(
+        course_purchase=course_purchase,
+        lesson=lesson,
+        student=student,
+        lecturer=lecturer,
+        time=time,
+        price=price,
     )
 
 

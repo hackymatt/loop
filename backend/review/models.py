@@ -1,5 +1,5 @@
+from backend.base_model import BaseModel
 from django.db.models import (
-    Model,
     UniqueConstraint,
     ForeignKey,
     TextField,
@@ -13,7 +13,7 @@ from course.models import Lesson
 from profile.models import Profile
 
 
-class Review(Model):
+class Review(BaseModel):
     lesson = ForeignKey(Lesson, on_delete=CASCADE)
     student = ForeignKey(Profile, on_delete=CASCADE, related_name="review_student")
     lecturer = ForeignKey(Profile, on_delete=CASCADE, related_name="review_lecturer")
@@ -23,7 +23,6 @@ class Review(Model):
         validators=[MinValueValidator(1), MaxValueValidator(5)],
     )
     review = TextField(null=True)
-    created_at = DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "review"

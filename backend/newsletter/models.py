@@ -1,5 +1,5 @@
+from backend.base_model import BaseModel
 from django.db.models import (
-    Model,
     EmailField,
     UUIDField,
     BooleanField,
@@ -8,7 +8,7 @@ from django.db.models import (
 import uuid
 
 
-class Newsletter(Model):
+class Newsletter(BaseModel):
     email = EmailField()
     uuid = UUIDField(default=uuid.uuid4)
     active = BooleanField(default=True)

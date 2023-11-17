@@ -7,7 +7,7 @@ from django_filters import (
 )
 from course.models import Course, Lesson
 from review.models import Review
-from purchase.models import Purchase
+from purchase.models import LessonPurchase
 from django.db.models import OuterRef, Subquery, Value, Avg, Sum, Count
 
 
@@ -41,7 +41,7 @@ def get_duration(queryset):
 def get_students_count(queryset):
     lessons = Lesson.objects.filter(course=OuterRef(OuterRef("pk"))).values("id")
     total_student_count = (
-        Purchase.objects.filter(lesson__in=Subquery(lessons))
+        LessonPurchase.objects.filter(lesson__in=Subquery(lessons))
         .annotate(dummy_group_by=Value(1))
         .values("dummy_group_by")
         .order_by("dummy_group_by")

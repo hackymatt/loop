@@ -1,5 +1,5 @@
+from backend.base_model import BaseModel
 from django.db.models import (
-    Model,
     UniqueConstraint,
     ForeignKey,
     DateTimeField,
@@ -10,7 +10,7 @@ from course.models import Lesson
 from profile.models import Profile
 
 
-class Schedule(Model):
+class Schedule(BaseModel):
     lesson = ForeignKey(Lesson, on_delete=CASCADE)
     lecturer = ForeignKey(Profile, on_delete=CASCADE, related_name="schedule_lecturer")
     time = DateTimeField()

@@ -8,7 +8,7 @@ from review.serializers import (
 )
 from review.filters import ReviewFilter
 from review.models import Review
-from purchase.models import Purchase
+from purchase.models import LessonPurchase
 from course.models import Lesson
 from profile.models import Profile
 from datetime import datetime, timedelta
@@ -33,7 +33,7 @@ class ReviewViewSet(ModelViewSet):
         lesson = Lesson.objects.get(pk=lesson_id)
         lecturer = Profile.objects.get(pk=lecturer_id)
 
-        return Purchase.objects.filter(
+        return LessonPurchase.objects.filter(
             student=profile, lesson=lesson, lecturer=lecturer
         ).exists()
 
@@ -43,7 +43,9 @@ class ReviewViewSet(ModelViewSet):
         lesson = Lesson.objects.get(pk=lesson_id)
         lecturer = Profile.objects.get(pk=lecturer_id)
         start_time = (
-            Purchase.objects.filter(student=profile, lesson=lesson, lecturer=lecturer)
+            LessonPurchase.objects.filter(
+                student=profile, lesson=lesson, lecturer=lecturer
+            )
             .first()
             .time.time
         )

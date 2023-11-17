@@ -1,5 +1,5 @@
+from backend.base_model import BaseModel
 from django.db.models import (
-    Model,
     OneToOneField,
     CharField,
     DateField,
@@ -18,7 +18,7 @@ def user_directory_path(instance, filename):
     return f"profile/{instance.uuid}/{filename}"  # pragma: no cover
 
 
-class Profile(Model):
+class Profile(BaseModel):
     GENDER_CHOICES = (
         ("M", "Mężczyzna"),
         ("K", "Kobieta"),

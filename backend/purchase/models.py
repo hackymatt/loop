@@ -1,5 +1,5 @@
+from backend.base_model import BaseModel
 from django.db.models import (
-    Model,
     UniqueConstraint,
     ForeignKey,
     DateTimeField,
@@ -7,26 +7,57 @@ from django.db.models import (
     CASCADE,
     Index,
 )
-from course.models import Lesson
+from course.models import Course, Lesson
 from profile.models import Profile
 from schedule.models import Schedule
 
 
-class Purchase(Model):
-    lesson = ForeignKey(Lesson, on_delete=CASCADE)
-    student = ForeignKey(Profile, on_delete=CASCADE, related_name="purchase_student")
-    lecturer = ForeignKey(Profile, on_delete=CASCADE, related_name="purchase_lecturer")
-    time = ForeignKey(Schedule, on_delete=CASCADE)
+class CoursePurchase(BaseModel):
+    course = ForeignKey(
+        Course,
+        on_delete=CASCADE,
+    )
+    student = ForeignKey(
+        Profile, on_delete=CASCADE, related_name="course_purchase_student"
+    )
     price = DecimalField(max_digits=7, decimal_places=2)
-    created_at = DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = "purchase"
+        db_table = "course_purchase"
+        ordering = ["id"]
+        indexes = [
+            Index(
+                fields=[
+                    "id",
+                ]
+            ),
+            Index(
+                fields=[
+                    "student",
+                ]
+            ),
+        ]
+
+
+class LessonPurchase(BaseModel):
+    course_purchase = ForeignKey(CoursePurchase, on_delete=CASCADE)
+    lesson = ForeignKey(Lesson, on_delete=CASCADE)
+    student = ForeignKey(
+        Profile, on_delete=CASCADE, related_name="lesson_purchase_student"
+    )
+    lecturer = ForeignKey(
+        Profile, on_delete=CASCADE, related_name="lesson_purchase_lecturer"
+    )
+    time = ForeignKey(Schedule, on_delete=CASCADE)
+    price = DecimalField(max_digits=7, decimal_places=2)
+
+    class Meta:
+        db_table = "lesson_purchase"
         ordering = ["id"]
         constraints = [
             UniqueConstraint(
                 fields=["lesson", "student", "lecturer"],
-                name="purchase_lesson_student_lecturer_unique_together",
+                name="lesson_purchase_lesson_student_lecturer_unique_together",
             )
         ]
         indexes = [

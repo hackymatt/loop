@@ -37,8 +37,16 @@ def get_profile(user: User):
 
 def is_data_match(obj, data):
     for key, value in data.items():
-        if not str(value) == str(getattr(obj, key)):
-            return False
+        data_value = str(value)
+        obj_value = str(getattr(obj, key))
+        if not data_value == obj_value:
+            if key == "modified_at" or key == "created_at":
+                modified_value = data_value.replace("T", " ")
+                if not modified_value[0:26] == obj_value[0:26]:
+                    print(value, key, getattr(obj, key))
+                    return False
+            else:
+                return False
 
     return True
 
