@@ -13,6 +13,7 @@ from review.models import Review
 from purchase.models import CoursePurchase, LessonPurchase
 from newsletter.models import Newsletter
 from schedule.models import Schedule
+from wishlist.models import Wishlist
 from datetime import datetime
 from django.utils.timezone import make_aware
 from PIL import Image
@@ -193,3 +194,7 @@ def create_course_price_history(course: Course, price: float):
 
 def create_lesson_price_history(lesson: Lesson, price: float):
     return LessonPriceHistory.objects.create(lesson=lesson, price=price)
+
+
+def create_wishlist(profile: Profile, lesson: Lesson):
+    return Wishlist.objects.create(profile=profile, lesson=lesson)
