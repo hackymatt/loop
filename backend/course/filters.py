@@ -5,7 +5,7 @@ from django_filters import (
     BaseInFilter,
     NumberFilter,
 )
-from course.models import Course, Lesson
+from course.models import Course, Lesson, CoursePriceHistory, LessonPriceHistory
 from review.models import Review
 from purchase.models import LessonPurchase
 from django.db.models import OuterRef, Subquery, Value, Avg, Sum, Count
@@ -157,3 +157,45 @@ class CourseFilter(FilterSet):
     def filter_duration_to(self, queryset, field_name, value):
         lookup_field_name = f"{field_name}__lte"
         return get_duration(queryset).filter(**{lookup_field_name: value})
+
+
+class CoursePriceHistoryFilter(FilterSet):
+    course_id = NumberFilter(field_name="course__id", lookup_expr="exact")
+    sort_by = OrderFilter(
+        choices=(
+            ("created_at", "Created At ASC"),
+            ("-created_at", "Created At DESC"),
+        ),
+        fields={
+            "created_at": "created_at",
+            "-created_at": "-created_at",
+        },
+    )
+
+    class Meta:
+        model = CoursePriceHistory
+        fields = (
+            "course_id",
+            "sort_by",
+        )
+
+
+class LessonPriceHistoryFilter(FilterSet):
+    lesson_id = NumberFilter(field_name="lesson__id", lookup_expr="exact")
+    sort_by = OrderFilter(
+        choices=(
+            ("created_at", "Created At ASC"),
+            ("-created_at", "Created At DESC"),
+        ),
+        fields={
+            "created_at": "created_at",
+            "-created_at": "-created_at",
+        },
+    )
+
+    class Meta:
+        model = LessonPriceHistory
+        fields = (
+            "lesson_id",
+            "sort_by",
+        )

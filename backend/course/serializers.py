@@ -466,3 +466,15 @@ class CourseSerializer(ModelSerializer):
         instance.save()
 
         return instance
+
+
+class CoursePriceHistorySerializer(ModelSerializer):
+    class Meta:
+        model = CoursePriceHistory
+        fields = "__all__"
+
+
+class LessonPriceHistorySerializer(ModelSerializer):
+    class Meta:
+        model = LessonPriceHistory
+        fields = "__all__"
