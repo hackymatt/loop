@@ -11,7 +11,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
-from course.views import CourseViewSet, BestCourseViewSet, TechnologyViewSet
+from course.views import (
+    CourseViewSet,
+    BestCourseViewSet,
+    TechnologyViewSet,
+    CoursePriceHistoryViewSet,
+    LessonPriceHistoryViewSet,
+)
 from review.views import ReviewViewSet, BestReviewViewSet
 from newsletter.views import (
     NewsletterEntriesViewSet,
@@ -37,6 +43,12 @@ router.register(
 )
 router.register(r"courses", CourseViewSet, basename="courses")
 router.register(r"best-courses", BestCourseViewSet, basename="best_courses")
+router.register(
+    r"course-price-history", CoursePriceHistoryViewSet, basename="course_price_history"
+)
+router.register(
+    r"lesson-price-history", LessonPriceHistoryViewSet, basename="lesson_price_history"
+)
 router.register(r"technologies", TechnologyViewSet, basename="technologies")
 router.register(r"best-lecturers", BestLecturerViewSet, basename="best_lecturers")
 router.register(r"lecturers", LecturerViewSet, basename="lecturers")
