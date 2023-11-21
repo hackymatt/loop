@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
                         ],
                     ),
                 ),
-                ("active", models.BooleanField(default=True)),
+                ("active", models.BooleanField(default=False)),
             ],
             options={
                 "db_table": "course",
@@ -86,6 +86,7 @@ class Migration(migrations.Migration):
                         ],
                     ),
                 ),
+                ("active", models.BooleanField(default=False)),
                 (
                     "course",
                     models.ForeignKey(

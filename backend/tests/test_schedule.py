@@ -133,27 +133,6 @@ class ScheduleTest(APITestCase):
                 ),
             )
 
-        create_purchase(
-            lesson=self.course_1.lessons.all()[0],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course_1.lessons.all()[0],
-                lecturer=self.lecturer_profile_1,
-            )[0],
-            price=self.course_1.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course_1.lessons.all()[1],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course_1.lessons.all()[1],
-                lecturer=self.lecturer_profile_1,
-            )[0],
-            price=self.course_1.lessons.all()[1].price,
-        )
-
         self.review_course_1_1 = create_review(
             lesson=self.course_1.lessons.all()[0],
             student=self.profile,
@@ -531,7 +510,13 @@ class ScheduleTest(APITestCase):
         ]
         data = {
             "lesson": self.course_1.lessons.all()[0].id,
-            "times": available_times,
+            "times": available_times
+            + [
+                get_schedules(
+                    lesson=self.course_1.lessons.all()[0],
+                    lecturer=self.lecturer_profile_1,
+                )[0].time
+            ],
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)

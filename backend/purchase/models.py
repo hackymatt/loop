@@ -2,7 +2,6 @@ from backend.base_model import BaseModel
 from django.db.models import (
     UniqueConstraint,
     ForeignKey,
-    DateTimeField,
     DecimalField,
     CASCADE,
     Index,

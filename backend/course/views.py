@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from course.serializers import (
     CourseListSerializer,
+    CourseGetSerializer,
     CourseSerializer,
     TechnologyListSerializer,
     CoursePriceHistorySerializer,
@@ -50,8 +51,10 @@ class CourseViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return CourseListSerializer
-
-        return self.serializer_class
+        elif self.action == "retrieve":
+            return CourseGetSerializer
+        else:
+            return self.serializer_class
 
     def create(self, request, *args, **kwargs):
         user = request.user

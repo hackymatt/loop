@@ -32,8 +32,8 @@ class WishlistViewSet(ModelViewSet):
                 data={"wishlist": "Użytkownik niezalogowany."},
             )
 
-        profile = Profile.objects.get(user=user)
-        data["profile"] = profile.id
+        student = Profile.objects.get(user=user)
+        data["student"] = student.id
         serializer = WishlistSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         records = serializer.create(serializer.data)
