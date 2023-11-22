@@ -8,8 +8,11 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # install system dependencies
-RUN apt-get update \
-    && apt-get -y install libmemcached-dev gcc python-dev \
+RUN apt-get update && apt-get install -y \
+    libmemcached11 \
+    libmemcachedutil2 \
+    libmemcached-dev \
+    libz-dev \\
     && pip install psycopg2 \
     && pip install pylibmc
 
