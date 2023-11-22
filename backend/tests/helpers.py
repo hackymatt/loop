@@ -43,7 +43,6 @@ def is_data_match(obj, data):
             if key == "modified_at" or key == "created_at":
                 modified_value = data_value.replace("T", " ")
                 if not modified_value[0:26] == obj_value[0:26]:
-                    print(value, key, getattr(obj, key))
                     return False
             else:
                 return False

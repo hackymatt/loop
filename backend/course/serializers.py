@@ -32,6 +32,10 @@ def model_field_exists(obj, field):
         return False
 
 
+def get_course_lessons(course, active=True):
+    return Lesson.objects.filter(course=course, active=active).all()
+
+
 def get_previous_prices(price_history_model, instance):
     if model_field_exists(price_history_model, "course"):
         previous_prices = (
@@ -248,24 +252,74 @@ class CourseListSerializer(ModelSerializer):
         return get_duration(course)
 
     def get_course_lecturers(self, course):
-        lessons = Lesson.objects.filter(course=course)
+        lessons = get_course_lessons(course=course)
         return get_lecturers(lessons=lessons)
 
     def get_course_rating(self, course):
-        lessons = course.lessons.all()
+        lessons = get_course_lessons(course=course)
         return get_rating(lessons=lessons)
 
     def get_course_rating_count(self, course):
-        lessons = course.lessons.all()
+        lessons = get_course_lessons(course=course)
         return get_rating_count(lessons=lessons)
 
     def get_course_students_count(self, course):
-        lessons = course.lessons.all()
+        lessons = get_course_lessons(course=course)
         return get_students_count(lessons=lessons)
 
     class Meta:
         model = Course
         exclude = ("active", "skills", "topics")
+
+
+class CourseGetSerializer(ModelSerializer):
+    duration = SerializerMethodField("get_course_duration")
+    previous_price = SerializerMethodField("get_course_previous_price")
+    lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
+    lessons = SerializerMethodField("get_lessons")
+    technology = TechnologySerializer()
+    skills = SkillSerializer(many=True)
+    topics = TopicSerializer(many=True)
+    lecturers = SerializerMethodField("get_course_lecturers")
+    students_count = SerializerMethodField("get_course_students_count")
+    rating = SerializerMethodField("get_course_rating")
+    rating_count = SerializerMethodField("get_course_rating_count")
+
+    def get_lessons(self, course):
+        return LessonSerializer(get_course_lessons(course=course), many=True).data
+
+    def get_course_previous_price(self, course):
+        return get_previous_price(
+            price_history_model=CoursePriceHistory, instance=course
+        )
+
+    def get_course_lowest_30_days_price(self, course):
+        return get_lowest_30_days_price(
+            price_history_model=CoursePriceHistory, instance=course
+        )
+
+    def get_course_duration(self, course):
+        return get_duration(course)
+
+    def get_course_lecturers(self, course):
+        lessons = get_course_lessons(course=course)
+        return get_lecturers(lessons=lessons)
+
+    def get_course_rating(self, course):
+        lessons = get_course_lessons(course=course)
+        return get_rating(lessons=lessons)
+
+    def get_course_rating_count(self, course):
+        lessons = get_course_lessons(course=course)
+        return get_rating_count(lessons=lessons)
+
+    def get_course_students_count(self, course):
+        lessons = get_course_lessons(course=course)
+        return get_students_count(lessons=lessons)
+
+    class Meta:
+        model = Course
+        exclude = ("active",)
 
 
 class CourseSerializer(ModelSerializer):
@@ -295,19 +349,19 @@ class CourseSerializer(ModelSerializer):
         return get_duration(course)
 
     def get_course_lecturers(self, course):
-        lessons = Lesson.objects.filter(course=course)
+        lessons = get_course_lessons(course=course)
         return get_lecturers(lessons=lessons)
 
     def get_course_rating(self, course):
-        lessons = course.lessons.all()
+        lessons = get_course_lessons(course=course)
         return get_rating(lessons=lessons)
 
     def get_course_rating_count(self, course):
-        lessons = course.lessons.all()
+        lessons = get_course_lessons(course=course)
         return get_rating_count(lessons=lessons)
 
     def get_course_students_count(self, course):
-        lessons = course.lessons.all()
+        lessons = get_course_lessons(course=course)
         return get_students_count(lessons=lessons)
 
     class Meta:
@@ -378,6 +432,7 @@ class CourseSerializer(ModelSerializer):
                 duration=lesson["duration"],
                 github_branch_link=lesson["github_branch_link"],
                 price=lesson["price"],
+                active=lesson["active"],
             )
             for lesson in lessons
         )
@@ -400,23 +455,24 @@ class CourseSerializer(ModelSerializer):
                 LessonPriceHistory.objects.create(lesson=obj, price=current_price)
 
             obj.price = new_price
+            obj.active = lesson.get("active", obj.active)
 
             obj.save()
 
-    def delete_lessons(self, lesson_ids):
-        Lesson.objects.filter(id__in=lesson_ids).delete()
+    def deactivate_lessons(self, lesson_ids):
+        Lesson.objects.filter(id__in=lesson_ids).update(active=False)
 
     def manage_lessons(self, course, lessons):
         current_lessons = Lesson.objects.filter(course=course).all()
         new_lessons = [lesson for lesson in lessons if lesson["id"] == -1]
         edit_lessons = [lesson for lesson in lessons if lesson["id"] != -1]
-        delete_lessons = [
+        inactive_lessons_ids = [
             lesson.id
             for lesson in current_lessons
             if not self.is_lesson_in_list(lesson, lessons)
         ]
         self.create_lessons(course=course, lessons=new_lessons)
-        self.delete_lessons(lesson_ids=delete_lessons)
+        self.deactivate_lessons(lesson_ids=inactive_lessons_ids)
         self.edit_lessons(lessons=edit_lessons)
 
     def create(self, validated_data):

@@ -93,7 +93,7 @@ class Course(BaseModel):
     )
     skills = ManyToManyField(Skill, related_name="course_skills")
     topics = ManyToManyField(Topic, related_name="course_topics")
-    active = BooleanField(default=True)
+    active = BooleanField(default=False)
 
     class Meta:
         db_table = "course"
@@ -156,6 +156,7 @@ class Lesson(BaseModel):
     price = DecimalField(
         max_digits=7, decimal_places=2, validators=[MinValueValidator(Decimal("0.00"))]
     )
+    active = BooleanField(default=False)
 
     class Meta:
         db_table = "lesson"

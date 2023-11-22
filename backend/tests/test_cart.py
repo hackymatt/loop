@@ -9,7 +9,7 @@ from .factory import (
     create_skill_obj,
     create_topic_obj,
     create_schedule,
-    create_wishlist,
+    create_cart,
 )
 from .helpers import login, get_schedules
 from django.contrib import auth
@@ -18,9 +18,9 @@ from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 
 
-class WishlistTest(APITestCase):
+class CartTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/my-wishlist"
+        self.endpoint = "/my-cart"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -132,10 +132,10 @@ class WishlistTest(APITestCase):
                 ),
             )
 
-        self.wishlist = []
+        self.cart = []
         for lesson in self.course_1.lessons.all():
-            self.wishlist.append(
-                create_wishlist(
+            self.cart.append(
+                create_cart(
                     student=self.profile,
                     lesson=lesson,
                     lecturer=self.lecturer_profile_1,
@@ -237,8 +237,8 @@ class WishlistTest(APITestCase):
                 ),
             )
 
-        self.wishlist.append(
-            create_wishlist(
+        self.cart.append(
+            create_cart(
                 student=self.profile,
                 lesson=self.course_2.lessons.all()[1],
                 lecturer=self.lecturer_profile_1,
@@ -291,8 +291,8 @@ class WishlistTest(APITestCase):
                     + timedelta(minutes=30 * i)
                 ),
             )
-        self.wishlist.append(
-            create_wishlist(
+        self.cart.append(
+            create_cart(
                 student=self.profile,
                 lesson=self.course_3.lessons.all()[0],
                 lecturer=self.lecturer_profile_1,
@@ -303,14 +303,14 @@ class WishlistTest(APITestCase):
             )
         )
 
-    def test_get_wishlist_unauthenticated(self):
+    def test_get_cart_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_get_wishlist_authenticated(self):
+    def test_get_cart_authenticated(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -321,12 +321,12 @@ class WishlistTest(APITestCase):
         count = data["records_count"]
         self.assertEqual(count, 4)
 
-    def test_add_to_wishlist_unauthenticated(self):
+    def test_add_to_cart_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         data = {
-            "wishlist": [
+            "cart": [
                 {
                     "lesson": self.course_2.lessons.all()[0].id,
                     "lecturer": self.lecturer_profile_1.id,
@@ -340,13 +340,13 @@ class WishlistTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_add_to_wishlist_single_lesson_authenticated(self):
+    def test_add_to_cart_single_lesson_authenticated(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         data = {
-            "wishlist": [
+            "cart": [
                 {
                     "lesson": self.course_2.lessons.all()[0].id,
                     "lecturer": self.lecturer_profile_1.id,
@@ -362,13 +362,13 @@ class WishlistTest(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(len(data), 5)
 
-    def test_add_to_wishlist_whole_course_authenticated(self):
+    def test_add_to_cart_whole_course_authenticated(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         data = {
-            "wishlist": [
+            "cart": [
                 {
                     "lesson": lesson.id,
                     "lecturer": self.lecturer_profile_1.id,
@@ -386,13 +386,13 @@ class WishlistTest(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(len(data), 6)
 
-    def test_delete_single_lesson_from_wishlist_schedule(self):
+    def test_delete_single_lesson_from_cart_schedule(self):
         # no login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         data = {
-            "wishlist": [
+            "cart": [
                 {
                     "lesson": self.course_1.lessons.all()[0].id,
                     "lecturer": self.lecturer_profile_1.id,
@@ -408,13 +408,13 @@ class WishlistTest(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(len(data), 3)
 
-    def test_delete_whole_course_from_wishlist_schedule(self):
+    def test_delete_whole_course_from_cart_schedule(self):
         # no login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         data = {
-            "wishlist": [
+            "cart": [
                 {
                     "lesson": lesson.id,
                     "lecturer": self.lecturer_profile_1.id,

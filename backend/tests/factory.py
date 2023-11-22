@@ -14,6 +14,7 @@ from purchase.models import CoursePurchase, LessonPurchase
 from newsletter.models import Newsletter
 from schedule.models import Schedule
 from wishlist.models import Wishlist
+from cart.models import Cart
 from datetime import datetime
 from django.utils.timezone import make_aware
 from PIL import Image
@@ -85,6 +86,7 @@ def create_course(
     skills,
     topics,
     lessons,
+    active: bool = True,
 ):
     course = Course.objects.create(
         title=title,
@@ -93,6 +95,7 @@ def create_course(
         level=level,
         price=price,
         github_repo_link=github_repo_link,
+        active=active,
     )
 
     course.skills.add(*create_fields(skills, Skill))
@@ -107,6 +110,7 @@ def create_course(
             duration=lesson["duration"],
             github_branch_link=lesson["github_branch_link"],
             price=lesson["price"],
+            active=lesson["active"],
         )
         for lesson in lessons
     )
@@ -121,6 +125,7 @@ def create_lesson_obj(
     duration: int,
     github_branch_link: str,
     price: str,
+    active: bool = True,
 ):
     return {
         "id": id,
@@ -129,6 +134,7 @@ def create_lesson_obj(
         "duration": duration,
         "github_branch_link": github_branch_link,
         "price": price,
+        "active": active,
     }
 
 
@@ -196,5 +202,13 @@ def create_lesson_price_history(lesson: Lesson, price: float):
     return LessonPriceHistory.objects.create(lesson=lesson, price=price)
 
 
-def create_wishlist(profile: Profile, lesson: Lesson):
-    return Wishlist.objects.create(profile=profile, lesson=lesson)
+def create_wishlist(student: Profile, lesson: Lesson, lecturer: Profile, time: str):
+    return Wishlist.objects.create(
+        student=student, lesson=lesson, lecturer=lecturer, time=time
+    )
+
+
+def create_cart(student: Profile, lesson: Lesson, lecturer: Profile, time: str):
+    return Cart.objects.create(
+        student=student, lesson=lesson, lecturer=lecturer, time=time
+    )

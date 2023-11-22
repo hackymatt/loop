@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from course.serializers import (
     CourseListSerializer,
+    CourseGetSerializer,
     CourseSerializer,
     TechnologyListSerializer,
     CoursePriceHistorySerializer,
@@ -26,7 +27,7 @@ class TechnologyViewSet(ModelViewSet):
 
 
 class CourseViewSet(ModelViewSet):
-    http_method_names = ["get", "post", "put", "delete"]
+    http_method_names = ["get", "post", "put"]
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     filterset_class = CourseFilter
@@ -50,8 +51,10 @@ class CourseViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return CourseListSerializer
-
-        return self.serializer_class
+        elif self.action == "retrieve":
+            return CourseGetSerializer
+        else:
+            return self.serializer_class
 
     def create(self, request, *args, **kwargs):
         user = request.user
@@ -88,30 +91,6 @@ class CourseViewSet(ModelViewSet):
             )
 
         return super().update(request, *args, **kwargs)
-
-    def destroy(self, request, *args, **kwargs):
-        user = request.user
-
-        if not user.is_authenticated:
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"course": "Użytkownik niezalogowany."},
-            )
-
-        profile = Profile.objects.get(user=user)
-        if not profile.user_type == "A":
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"course": "Brak dostępu."},
-            )
-
-        if self.get_object().active:
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST,
-                data={"course": "Kurs jest aktywny."},
-            )
-
-        return super().destroy(request, *args, **kwargs)
 
 
 class BestCourseViewSet(ModelViewSet):
