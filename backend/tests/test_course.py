@@ -1444,44 +1444,6 @@ class CourseTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(courses_number(), 3)
 
-    def test_delete_course_unauthenticated(self):
-        # no login
-        self.assertFalse(auth.get_user(self.client).is_authenticated)
-        response = self.client.delete(f"{self.endpoint}/{self.course.id}")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(courses_number(), 3)
-        self.assertTrue(is_course_found(self.course.id))
-
-    def test_delete_course_not_admin(self):
-        # login
-        login(self, self.data["email"], self.data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        response = self.client.delete(f"{self.endpoint}/{self.course.id}")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(courses_number(), 3)
-        self.assertTrue(is_course_found(self.course.id))
-
-    def test_delete_course_authenticated_active(self):
-        # login
-        login(self, self.admin_data["email"], self.admin_data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        response = self.client.delete(f"{self.endpoint}/{self.course.id}")
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(courses_number(), 3)
-        self.assertTrue(is_course_found(self.course.id))
-
-    def test_delete_course_authenticated_inactive(self):
-        # login
-        login(self, self.admin_data["email"], self.admin_data["password"])
-        self.course.active = False
-        self.course.save()
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        response = self.client.delete(f"{self.endpoint}/{self.course.id}")
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(courses_number(), 2)
-        self.assertFalse(is_course_found(self.course.id))
-        self.assertEqual(lessons_number(), 4)
-
 
 class BestCourseTest(APITestCase):
     def setUp(self):

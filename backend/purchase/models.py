@@ -4,6 +4,7 @@ from django.db.models import (
     ForeignKey,
     DecimalField,
     CASCADE,
+    PROTECT,
     Index,
 )
 from course.models import Course, Lesson
@@ -14,10 +15,10 @@ from schedule.models import Schedule
 class CoursePurchase(BaseModel):
     course = ForeignKey(
         Course,
-        on_delete=CASCADE,
+        on_delete=PROTECT,
     )
     student = ForeignKey(
-        Profile, on_delete=CASCADE, related_name="course_purchase_student"
+        Profile, on_delete=PROTECT, related_name="course_purchase_student"
     )
     price = DecimalField(max_digits=7, decimal_places=2)
 
@@ -39,15 +40,15 @@ class CoursePurchase(BaseModel):
 
 
 class LessonPurchase(BaseModel):
-    course_purchase = ForeignKey(CoursePurchase, on_delete=CASCADE)
-    lesson = ForeignKey(Lesson, on_delete=CASCADE)
+    course_purchase = ForeignKey(CoursePurchase, on_delete=PROTECT)
+    lesson = ForeignKey(Lesson, on_delete=PROTECT)
     student = ForeignKey(
         Profile, on_delete=CASCADE, related_name="lesson_purchase_student"
     )
     lecturer = ForeignKey(
-        Profile, on_delete=CASCADE, related_name="lesson_purchase_lecturer"
+        Profile, on_delete=PROTECT, related_name="lesson_purchase_lecturer"
     )
-    time = ForeignKey(Schedule, on_delete=CASCADE)
+    time = ForeignKey(Schedule, on_delete=PROTECT)
     price = DecimalField(max_digits=7, decimal_places=2)
 
     class Meta:
