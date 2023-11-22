@@ -9,8 +9,9 @@ ENV PYTHONUNBUFFERED 1
 
 # install system dependencies
 RUN apt-get update \
-    && apt-get -y install libpq-dev gcc \
-    && pip install psycopg2
+    && apt-get -y install libmemcached-dev gcc python-dev \
+    && pip install psycopg2 \
+    && pip install pylibmc
 
 # install dependencies
 RUN pip install --upgrade pip
