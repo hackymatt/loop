@@ -37,5 +37,12 @@ services:
       - POSTGRES_USER=codeedu_dev
       - POSTGRES_PASSWORD=codeedu_devpassword
 
+  cache:
+    image: memcached:latest
+    ports:
+      - "11211:11211"
+    command:
+    - '-m 128'
+
 volumes:
   postgres_data:

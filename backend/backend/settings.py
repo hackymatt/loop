@@ -62,6 +62,13 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.memcached.PyLibMCCache",
+        "LOCATION": "cache:11211",
+    }
+}
+
 REST_FRAMEWORK = {
     "DEFAULT_PARSER_CLASSES": (
         "rest_framework.parsers.JSONParser",
