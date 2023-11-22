@@ -10,7 +10,10 @@ ENV PYTHONUNBUFFERED 1
 # install system dependencies
 RUN apt-get update \
     && apt-get -y install libpq-dev memcached gcc \
-    && pip install psycopg2
+    && pip install psycopg2 \
+    && pip install pymemcache \
+    && service memcached start
+
 
 # install dependencies
 RUN pip install --upgrade pip
