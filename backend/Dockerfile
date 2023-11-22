@@ -9,12 +9,16 @@ ENV PYTHONUNBUFFERED 1
 
 # install system dependencies
 RUN apt-get update && apt-get install -y \
-    libmemcached11 \
-    libmemcachedutil2 \
-    libmemcached-dev \
-    libz-dev \\
-    && pip install psycopg2 \
-    && pip install pylibmc
+    gcc \
+    gettext \
+    postgresql-client libpq-dev \
+    python-gdal python-psycopg2 \
+    python-imaging python-lxml \
+    python-dev libgdal-dev \
+    python-ldap \
+    libmemcached-dev libsasl2-dev zlib1g-dev \
+    python-pylibmc \
+    --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
 # install dependencies
 RUN pip install --upgrade pip
