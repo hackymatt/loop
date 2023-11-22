@@ -52,7 +52,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:12.5
+        image: postgres:15
         env:
           POSTGRES_DB: postgres
           POSTGRES_USER: postgres
@@ -61,9 +61,19 @@ jobs:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
+      cache:
+        restart: always
+        image: memcached:latest
+        ports:
+        - "11211:11211"
+        entrypoint:
+          - memcached
+          - -m 64
+
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2  
+      - uses: niden/actions-memcached@v7
       - run: pip install --upgrade pip
       - run: pip install -r requirements_test.txt 
       - run: pip install -r requirements.txt 

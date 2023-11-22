@@ -43,7 +43,7 @@ services:
     restart: always
     image: memcached:latest
     ports:
-     - "11211:11211"
+     - 11211:11211
     entrypoint:
       - memcached
       - -m 64
