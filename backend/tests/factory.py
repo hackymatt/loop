@@ -14,6 +14,7 @@ from purchase.models import CoursePurchase, LessonPurchase
 from newsletter.models import Newsletter
 from schedule.models import Schedule
 from wishlist.models import Wishlist
+from cart.models import Cart
 from datetime import datetime
 from django.utils.timezone import make_aware
 from PIL import Image
@@ -203,5 +204,11 @@ def create_lesson_price_history(lesson: Lesson, price: float):
 
 def create_wishlist(student: Profile, lesson: Lesson, lecturer: Profile, time: str):
     return Wishlist.objects.create(
+        student=student, lesson=lesson, lecturer=lecturer, time=time
+    )
+
+
+def create_cart(student: Profile, lesson: Lesson, lecturer: Profile, time: str):
+    return Cart.objects.create(
         student=student, lesson=lesson, lecturer=lecturer, time=time
     )

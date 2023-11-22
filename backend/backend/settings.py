@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "newsletter",
     "schedule",
     "wishlist",
+    "cart",
 ]
 
 MIDDLEWARE = [
