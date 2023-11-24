@@ -10,7 +10,7 @@ services:
     ports:
       - 8000:8000
     links:
-      - cache
+      - redis
     volumes:
       - ./backend/:/usr/src/app/
     environment:
@@ -29,7 +29,7 @@ services:
       - EMAIL_PORT=587
     depends_on:
       - db
-      - cache
+      - redis
 
 
   db:
@@ -43,7 +43,7 @@ services:
       - POSTGRES_USER=codeedu_dev
       - POSTGRES_PASSWORD=codeedu_devpassword
 
-  cache:
+  redis:
     container_name: codeedu-cache
     image: redis:latest    
     restart: always

@@ -53,7 +53,7 @@ jobs:
       EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
 
     services:
-      cache:
+      redis:
         image: redis:latest
         options: >-
           --health-cmd "redis-cli ping"
