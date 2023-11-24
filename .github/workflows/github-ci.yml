@@ -77,9 +77,8 @@ jobs:
           --health-retries 5
 
     steps:
-      - name: Check out repository code
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3  
+      - uses: actions/setup-python@v2   
 
       - name: Install Dependencies
         run: |
