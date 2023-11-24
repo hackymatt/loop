@@ -19,6 +19,7 @@ services:
       - DB_PASSWORD=codeedu_devpassword
       - DB_HOST=db
       - DB_PORT=5432
+      - REDIS_LOCATION=redis://redis:6379/?db=0
       - ADMIN_EMAIL=matios94@gmail.com
       - ADMIN_PASSWORD=19Mateusz94!
       - EMAIL_USE_TLS=True
