@@ -78,7 +78,8 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3  
 
       - name: Install Dependencies
         run: |
