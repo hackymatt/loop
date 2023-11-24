@@ -2,12 +2,15 @@ version: '3.9'
 
 services:
   backend:
+    container_name: codeedu-backend
     restart: always
     build:
       context: ./backend
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - 8000:8000
+    links:
+      - cache
     volumes:
       - ./backend/:/usr/src/app/
     environment:
@@ -30,6 +33,7 @@ services:
 
 
   db:
+    container_name: codeedu-db
     restart: always
     image: postgres:15
     volumes:
@@ -40,6 +44,7 @@ services:
       - POSTGRES_PASSWORD=codeedu_devpassword
 
   cache:
+    container_name: codeedu-cache
     restart: always
     image: memcached:latest
     ports:
