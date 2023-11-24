@@ -17,8 +17,8 @@ jobs:
         working-directory: ${{ github.workspace }}/backend
     
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2  
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4  
       - run: pip install --upgrade pip
       - run: pip install -r requirements_lint.txt 
       - run: pip install -r requirements.txt 
@@ -52,7 +52,7 @@ jobs:
 
     services:
       redis:
-        image: redis
+        image: redis:latest
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 10s
