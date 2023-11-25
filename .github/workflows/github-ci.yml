@@ -9,6 +9,11 @@ on:
 jobs:
 
   test:
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ github.workspace }}/backend
+        
     runs-on: ubuntu-20.04
 
     container: python:3.8
