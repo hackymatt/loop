@@ -16,11 +16,13 @@ jobs:
 
     runs-on: ubuntu-latest 
 
-    # container: python:3.9-slim
+    container: python:3.9-slim
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2 
+      - run: sudo apt-get update
+      - run: sudo apt-get -y install libpq-dev gcc
+      - run: pip install psycopg2
       - run: pip install --upgrade pip
       - run: pip install -r requirements_lint.txt 
       - run: pip install -r requirements.txt 
@@ -35,7 +37,7 @@ jobs:
 
     runs-on: ubuntu-latest 
 
-    # container: python:3.9-slim
+    container: python:3.9-slim
 
     env:
         DB_NAME: ${{ secrets.DB_NAME }}
@@ -82,10 +84,10 @@ jobs:
           - 6379:6379
 
     steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      
-      - uses: actions/setup-python@v2 
+      - uses: actions/checkout@v2
+      - run: sudo apt-get update
+      - run: sudo apt-get -y install libpq-dev gcc
+      - run: pip install psycopg2
 
       - name: Install Dependencies
         run: |
