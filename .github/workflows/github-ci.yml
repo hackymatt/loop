@@ -20,8 +20,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - run: sudo apt-get update
-      - run: sudo apt-get -y install libpq-dev gcc
+      - run: apt-get update
+      - run: apt-get -y install libpq-dev gcc
       - run: pip install psycopg2
       - run: pip install --upgrade pip
       - run: pip install -r requirements_lint.txt 
@@ -85,8 +85,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - run: sudo apt-get update
-      - run: sudo apt-get -y install libpq-dev gcc
+      - run: apt-get update
+      - run: apt-get -y install libpq-dev gcc
       - run: pip install psycopg2
 
       - name: Install Dependencies
