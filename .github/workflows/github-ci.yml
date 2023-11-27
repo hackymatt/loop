@@ -16,18 +16,21 @@ jobs:
 
     runs-on: ubuntu-latest 
 
-    container: python:3.9-slim
-
     steps:
-      - uses: actions/checkout@v2
-      - run: apt-get update
-      - run: apt-get -y install libpq-dev gcc
-      - run: pip install psycopg2
-      - run: pip install --upgrade pip
-      - run: pip install -r requirements_lint.txt 
-      - run: pip install -r requirements.txt 
-      - run: pylint backend --recursive=true --fail-under=10
-      - run: black . --check
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+      - name: Pull python
+        uses: actions/setup-python@v4
+      - name: Upgrade pip
+        run: pip install --upgrade pip
+      - name: Install lint requirements
+        run: pip install -r requirements_lint.txt 
+      - name: Install requirements
+        run: pip install -r requirements.txt 
+      - name: Test code quality
+        run: pylint backend --recursive=true --fail-under=10
+      - name: Test code formatting
+        run: black . --check
 
   test_backend:
     defaults:
@@ -36,8 +39,6 @@ jobs:
         working-directory: ${{ github.workspace }}/backend
 
     runs-on: ubuntu-latest 
-
-    container: python:3.9-slim
 
     env:
       DB_NAME: ${{ secrets.DB_NAME }}
@@ -55,12 +56,11 @@ jobs:
       EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
       EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
       
-      REDIS_LOCATION: redis://redis:6379/?db=0
-      REDIS_PASSWORD:
+      REDIS_LOCATION: redis://redis:6379
 
     services:
       postgres:
-        image: postgres:12.5
+        image: postgres:15
         env:
           POSTGRES_DB: postgres
           POSTGRES_USER: postgres
@@ -76,6 +76,7 @@ jobs:
       redis:
         image: redis
         options: >-
+          --entrypoint redis-server
           --health-cmd "redis-cli ping"
           --health-interval 10s
           --health-timeout 5s
@@ -84,17 +85,18 @@ jobs:
           - 6379:6379
 
     steps:
-      - uses: actions/checkout@v2
-      - run: apt-get update
-      - run: apt-get -y install libpq-dev gcc
-      - run: pip install psycopg2
-
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Run Tests
-        run: |
-          python manage.py test
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+      - name: Pull python
+        uses: actions/setup-python@v4
+      - name: Upgrade pip
+        run: pip install --upgrade pip
+      - name: Install test requirements
+        run: pip install -r requirements_test.txt 
+      - name: Install requirements
+        run: pip install -r requirements.txt 
+      - name: Run tests
+        run: coverage run manage.py test
+      - name: Print report
+        run: coverage report
        
