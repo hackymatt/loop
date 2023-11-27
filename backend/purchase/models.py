@@ -9,7 +9,6 @@ from django.db.models import (
 )
 from course.models import Course, Lesson
 from profile.models import Profile
-from schedule.models import Schedule
 
 
 class CoursePurchase(BaseModel):
@@ -45,10 +44,6 @@ class LessonPurchase(BaseModel):
     student = ForeignKey(
         Profile, on_delete=CASCADE, related_name="lesson_purchase_student"
     )
-    lecturer = ForeignKey(
-        Profile, on_delete=PROTECT, related_name="lesson_purchase_lecturer"
-    )
-    time = ForeignKey(Schedule, on_delete=PROTECT)
     price = DecimalField(max_digits=7, decimal_places=2)
 
     class Meta:
@@ -56,8 +51,8 @@ class LessonPurchase(BaseModel):
         ordering = ["id"]
         constraints = [
             UniqueConstraint(
-                fields=["lesson", "student", "lecturer"],
-                name="lesson_purchase_lesson_student_lecturer_unique_together",
+                fields=["lesson", "student"],
+                name="lesson_purchase_lesson_student_unique_together",
             )
         ]
         indexes = [
@@ -73,14 +68,8 @@ class LessonPurchase(BaseModel):
             ),
             Index(
                 fields=[
-                    "lecturer",
-                ]
-            ),
-            Index(
-                fields=[
                     "student",
                     "lesson",
-                    "lecturer",
                 ]
             ),
         ]

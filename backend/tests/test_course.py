@@ -25,10 +25,7 @@ from .helpers import (
     get_skill,
     get_topic,
     courses_number,
-    is_course_found,
     filter_dict,
-    lessons_number,
-    get_schedules,
 )
 from django.contrib import auth
 import json
@@ -170,21 +167,11 @@ class CourseTest(APITestCase):
         create_purchase(
             lesson=self.course.lessons.all()[0],
             student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course.lessons.all()[0],
-                lecturer=self.lecturer_profile_1,
-            )[0],
             price=self.course.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course.lessons.all()[1],
             student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course.lessons.all()[1],
-                lecturer=self.lecturer_profile_1,
-            )[0],
             price=self.course.lessons.all()[1].price,
         )
 
@@ -1579,21 +1566,11 @@ class BestCourseTest(APITestCase):
         create_purchase(
             lesson=self.course.lessons.all()[0],
             student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course.lessons.all()[0],
-                lecturer=self.lecturer_profile_1,
-            )[0],
             price=self.course.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course.lessons.all()[1],
             student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course.lessons.all()[1],
-                lecturer=self.lecturer_profile_1,
-            )[0],
             price=self.course.lessons.all()[1].price,
         )
 
@@ -1859,21 +1836,11 @@ class CoursePriceHistoryTest(APITestCase):
         create_purchase(
             lesson=self.course.lessons.all()[0],
             student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course.lessons.all()[0],
-                lecturer=self.lecturer_profile_1,
-            )[0],
             price=self.course.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course.lessons.all()[1],
             student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course.lessons.all()[1],
-                lecturer=self.lecturer_profile_1,
-            )[0],
             price=self.course.lessons.all()[1].price,
         )
 
@@ -2160,21 +2127,11 @@ class LessonPriceHistoryTest(APITestCase):
         create_purchase(
             lesson=self.course.lessons.all()[0],
             student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course.lessons.all()[0],
-                lecturer=self.lecturer_profile_1,
-            )[0],
             price=self.course.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course.lessons.all()[1],
             student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course.lessons.all()[1],
-                lecturer=self.lecturer_profile_1,
-            )[0],
             price=self.course.lessons.all()[1].price,
         )
 

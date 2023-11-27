@@ -1,13 +1,10 @@
 from rest_framework.serializers import (
     ModelSerializer,
-    CharField,
-    EmailField,
-    ListField,
+    IntegerField,
 )
 from course.models import Course, Lesson, Technology
 from cart.models import Cart
 from profile.models import Profile
-from schedule.models import Schedule
 
 
 class TechnologySerializer(ModelSerializer):
@@ -32,31 +29,8 @@ class LessonSerializer(ModelSerializer):
         fields = "__all__"
 
 
-class ProfileSerializer(ModelSerializer):
-    first_name = CharField(source="user.first_name")
-    last_name = CharField(source="user.last_name")
-    email = EmailField(source="user.email")
-
-    class Meta:
-        model = Profile
-        fields = (
-            "first_name",
-            "last_name",
-            "email",
-            "image",
-        )
-
-
-class ScheduleSerializer(ModelSerializer):
-    class Meta:
-        model = Schedule
-        fields = ("time",)
-
-
 class CartGetSerializer(ModelSerializer):
     lesson = LessonSerializer()
-    lecturer = ProfileSerializer()
-    time = ScheduleSerializer()
 
     class Meta:
         model = Cart
@@ -64,37 +38,50 @@ class CartGetSerializer(ModelSerializer):
 
 
 class CartSerializer(ModelSerializer):
-    cart = ListField()
+    course = IntegerField(required=False)
+    lesson = IntegerField(required=False)
 
     class Meta:
         model = Cart
         fields = (
             "student",
-            "cart",
+            "course",
+            "lesson",
         )
 
     def create(self, validated_data):
         student_id = validated_data.pop("student")
         student = Profile.objects.get(pk=student_id)
-        cart = validated_data.pop("cart")
 
-        for cart_item in cart:
-            lesson_id = cart_item["lesson"]
-            lecturer_id = cart_item["lecturer"]
-            time_id = cart_item["time"]
-            lesson = Lesson.objects.get(pk=lesson_id)
-            lecturer = Profile.objects.get(pk=lecturer_id)
-            time = Schedule.objects.get(pk=time_id)
+        course_id = validated_data.get("course", None)
+        lesson_id = validated_data.get("lesson", None)
 
-            current_lesson = Cart.objects.filter(
-                student=student, lesson=lesson, lecturer=lecturer, time=time
-            )
-            if current_lesson.exists():
-                current_lesson.delete()
+        if course_id:
+            # manage whole course
+            course = Course.objects.get(pk=course_id)
+            course_lessons = course.lessons.all()
+            cart_items = Cart.objects.filter(
+                student=student, lesson__in=course_lessons
+            ).all()
+
+            if course_lessons.count() == cart_items.count():
+                # delete whole course
+                cart_items.delete()
             else:
-                Cart.objects.filter(student=student, lesson=lesson).all().delete()
-                Cart.objects.create(
-                    student=student, lesson=lesson, lecturer=lecturer, time=time
-                )
+                # add missing lessons
+                for course_lesson in course_lessons:
+                    Cart.objects.get_or_create(student=student, lesson=course_lesson)
+
+        else:
+            # manage specific lesson
+            lesson = Lesson.objects.get(pk=lesson_id)
+            cart_item = Cart.objects.filter(student=student, lesson=lesson).all()
+
+            if cart_item.exists():
+                # delete lesson
+                cart_item.delete()
+            else:
+                # add lesson
+                Cart.objects.create(student=student, lesson=lesson)
 
         return Cart.objects.filter(student=student).all()

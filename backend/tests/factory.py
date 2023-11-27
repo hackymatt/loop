@@ -165,8 +165,6 @@ def create_review(
 def create_purchase(
     lesson: Lesson,
     student: Profile,
-    lecturer: Profile,
-    time: Schedule,
     price: float,
 ):
     course_purchase, created = CoursePurchase.objects.get_or_create(
@@ -176,8 +174,6 @@ def create_purchase(
         course_purchase=course_purchase,
         lesson=lesson,
         student=student,
-        lecturer=lecturer,
-        time=time,
         price=price,
     )
 
@@ -202,13 +198,9 @@ def create_lesson_price_history(lesson: Lesson, price: float):
     return LessonPriceHistory.objects.create(lesson=lesson, price=price)
 
 
-def create_wishlist(student: Profile, lesson: Lesson, lecturer: Profile, time: str):
-    return Wishlist.objects.create(
-        student=student, lesson=lesson, lecturer=lecturer, time=time
-    )
+def create_wishlist(student: Profile, lesson: Lesson):
+    return Wishlist.objects.create(student=student, lesson=lesson)
 
 
-def create_cart(student: Profile, lesson: Lesson, lecturer: Profile, time: str):
-    return Cart.objects.create(
-        student=student, lesson=lesson, lecturer=lecturer, time=time
-    )
+def create_cart(student: Profile, lesson: Lesson):
+    return Cart.objects.create(student=student, lesson=lesson)

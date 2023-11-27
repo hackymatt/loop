@@ -12,7 +12,6 @@ from .factory import (
     create_purchase,
     create_schedule,
 )
-from .helpers import get_schedules
 import json
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
@@ -140,71 +139,36 @@ class StatsTest(APITestCase):
         create_purchase(
             lesson=self.course.lessons.all()[0],
             student=self.profile_1,
-            lecturer=self.lecturer_profile,
-            time=get_schedules(
-                lesson=self.course.lessons.all()[0],
-                lecturer=self.lecturer_profile,
-            )[0],
             price=self.course.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course.lessons.all()[0],
             student=self.profile_2,
-            lecturer=self.lecturer_profile,
-            time=get_schedules(
-                lesson=self.course.lessons.all()[0],
-                lecturer=self.lecturer_profile,
-            )[0],
             price=self.course.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course.lessons.all()[0],
             student=self.profile_3,
-            lecturer=self.lecturer_profile,
-            time=get_schedules(
-                lesson=self.course.lessons.all()[0],
-                lecturer=self.lecturer_profile,
-            )[0],
             price=self.course.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course.lessons.all()[1],
             student=self.profile_1,
-            lecturer=self.lecturer_profile,
-            time=get_schedules(
-                lesson=self.course.lessons.all()[1],
-                lecturer=self.lecturer_profile,
-            )[0],
             price=self.course.lessons.all()[1].price,
         )
         create_purchase(
             lesson=self.course.lessons.all()[1],
             student=self.profile_2,
-            lecturer=self.lecturer_profile,
-            time=get_schedules(
-                lesson=self.course.lessons.all()[1],
-                lecturer=self.lecturer_profile,
-            )[0],
             price=self.course.lessons.all()[1].price,
         )
         create_purchase(
             lesson=self.course.lessons.all()[1],
             student=self.profile_3,
-            lecturer=self.lecturer_profile,
-            time=get_schedules(
-                lesson=self.course.lessons.all()[1],
-                lecturer=self.lecturer_profile,
-            )[0],
             price=self.course.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course.lessons.all()[2],
             student=self.profile_1,
-            lecturer=self.lecturer_profile,
-            time=get_schedules(
-                lesson=self.course.lessons.all()[2],
-                lecturer=self.lecturer_profile,
-            )[0],
             price=self.course.lessons.all()[2].price,
         )
 

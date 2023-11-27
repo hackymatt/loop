@@ -12,7 +12,6 @@ from .factory import (
     create_purchase,
     create_schedule,
 )
-from .helpers import get_schedules
 from django.contrib import auth
 import json
 from datetime import datetime, timedelta
@@ -132,21 +131,11 @@ class PaginationTest(APITestCase):
         create_purchase(
             lesson=self.course_1.lessons.all()[0],
             student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course_1.lessons.all()[0],
-                lecturer=self.lecturer_profile_1,
-            )[0],
             price=self.course_1.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course_1.lessons.all()[1],
             student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course_1.lessons.all()[1],
-                lecturer=self.lecturer_profile_1,
-            )[0],
             price=self.course_1.lessons.all()[1].price,
         )
 
@@ -266,51 +255,26 @@ class PaginationTest(APITestCase):
         create_purchase(
             lesson=self.course_2.lessons.all()[0],
             student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course_2.lessons.all()[0],
-                lecturer=self.lecturer_profile_1,
-            )[0],
             price=self.course_2.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course_2.lessons.all()[1],
             student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course_2.lessons.all()[1],
-                lecturer=self.lecturer_profile_1,
-            )[0],
             price=self.course_2.lessons.all()[1].price,
         )
         create_purchase(
             lesson=self.course_2.lessons.all()[0],
             student=self.profile_2,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course_2.lessons.all()[0],
-                lecturer=self.lecturer_profile_1,
-            )[0],
             price=self.course_2.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course_2.lessons.all()[1],
             student=self.profile_2,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course_2.lessons.all()[1],
-                lecturer=self.lecturer_profile_1,
-            )[0],
             price=self.course_2.lessons.all()[1].price,
         )
         create_purchase(
             lesson=self.course_2.lessons.all()[2],
             student=self.profile_2,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course_2.lessons.all()[2],
-                lecturer=self.lecturer_profile_1,
-            )[0],
             price=self.course_2.lessons.all()[2].price,
         )
 
@@ -396,21 +360,11 @@ class PaginationTest(APITestCase):
         create_purchase(
             lesson=self.course_3.lessons.all()[0],
             student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course_3.lessons.all()[0],
-                lecturer=self.lecturer_profile_1,
-            )[0],
             price=self.course_3.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course_3.lessons.all()[0],
             student=self.profile_2,
-            lecturer=self.lecturer_profile_1,
-            time=get_schedules(
-                lesson=self.course_3.lessons.all()[0],
-                lecturer=self.lecturer_profile_1,
-            )[0],
             price=self.course_3.lessons.all()[0].price,
         )
 
