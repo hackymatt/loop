@@ -8,14 +8,11 @@ from .factory import (
     create_technology_obj,
     create_skill_obj,
     create_topic_obj,
-    create_schedule,
     create_wishlist,
 )
-from .helpers import login, get_schedules
+from .helpers import login
 from django.contrib import auth
 import json
-from datetime import datetime, timedelta
-from django.utils.timezone import make_aware
 
 
 class WishlistTest(APITestCase):
@@ -33,38 +30,7 @@ class WishlistTest(APITestCase):
             is_active=True,
         )
         self.profile = create_profile(user=self.user)
-        self.user_2 = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email="test2@example.com",
-            password="Test12345",
-            is_active=True,
-        )
-        self.profile_2 = create_profile(user=self.user_2)
-        self.lecturer_data = {
-            "email": "lecturer_1@example.com",
-            "password": "TestPassword123",
-        }
-        self.lecturer_user_1 = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email=self.lecturer_data["email"],
-            password=self.lecturer_data["password"],
-            is_active=True,
-        )
-        self.lecturer_user_2 = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email="lecturer_2@example.com",
-            password=self.data["password"],
-            is_active=True,
-        )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
-        )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
-        )
+
         # course 1
         self.course_1 = create_course(
             title="Python Begginer",
@@ -98,51 +64,12 @@ class WishlistTest(APITestCase):
             ],
         )
 
-        for i in range(5):
-            create_schedule(
-                self.course_1.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_1.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_1.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_1.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-
         self.wishlist = []
         for lesson in self.course_1.lessons.all():
             self.wishlist.append(
                 create_wishlist(
                     student=self.profile,
                     lesson=lesson,
-                    lecturer=self.lecturer_profile_1,
-                    time=get_schedules(
-                        lesson=lesson,
-                        lecturer=self.lecturer_profile_1,
-                    )[0],
                 )
             )
 
@@ -187,65 +114,10 @@ class WishlistTest(APITestCase):
             ],
         )
 
-        for i in range(5):
-            create_schedule(
-                self.course_2.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[2],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[2],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-
         self.wishlist.append(
             create_wishlist(
                 student=self.profile,
                 lesson=self.course_2.lessons.all()[1],
-                lecturer=self.lecturer_profile_1,
-                time=get_schedules(
-                    lesson=self.course_2.lessons.all()[1],
-                    lecturer=self.lecturer_profile_1,
-                )[0],
             )
         )
 
@@ -274,32 +146,10 @@ class WishlistTest(APITestCase):
             ],
         )
 
-        for i in range(5):
-            create_schedule(
-                self.course_3.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_3.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
         self.wishlist.append(
             create_wishlist(
                 student=self.profile,
                 lesson=self.course_3.lessons.all()[0],
-                lecturer=self.lecturer_profile_1,
-                time=get_schedules(
-                    lesson=self.course_3.lessons.all()[0],
-                    lecturer=self.lecturer_profile_1,
-                )[0],
             )
         )
 
@@ -326,16 +176,7 @@ class WishlistTest(APITestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         data = {
-            "wishlist": [
-                {
-                    "lesson": self.course_2.lessons.all()[0].id,
-                    "lecturer": self.lecturer_profile_1.id,
-                    "time": get_schedules(
-                        lesson=self.course_2.lessons.all()[0],
-                        lecturer=self.lecturer_profile_1,
-                    )[0].id,
-                }
-            ]
+            "lesson": self.course_2.lessons.all()[0].id,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -346,16 +187,7 @@ class WishlistTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         data = {
-            "wishlist": [
-                {
-                    "lesson": self.course_2.lessons.all()[0].id,
-                    "lecturer": self.lecturer_profile_1.id,
-                    "time": get_schedules(
-                        lesson=self.course_2.lessons.all()[0],
-                        lecturer=self.lecturer_profile_1,
-                    )[0].id,
-                }
-            ]
+            "lesson": self.course_2.lessons.all()[0].id,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -368,18 +200,7 @@ class WishlistTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         data = {
-            "wishlist": [
-                {
-                    "lesson": lesson.id,
-                    "lecturer": self.lecturer_profile_1.id,
-                    "time": get_schedules(
-                        lesson=lesson,
-                        lecturer=self.lecturer_profile_1,
-                    )[0].id,
-                }
-                for lesson in self.course_2.lessons.all()
-                if lesson != self.course_2.lessons.all()[1]
-            ]
+            "course": self.course_2.id,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -391,18 +212,7 @@ class WishlistTest(APITestCase):
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        data = {
-            "wishlist": [
-                {
-                    "lesson": self.course_1.lessons.all()[0].id,
-                    "lecturer": self.lecturer_profile_1.id,
-                    "time": get_schedules(
-                        lesson=self.course_1.lessons.all()[0],
-                        lecturer=self.lecturer_profile_1,
-                    )[0].id,
-                }
-            ]
-        }
+        data = {"lesson": self.course_1.lessons.all()[0].id}
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         data = json.loads(response.content)
@@ -413,19 +223,7 @@ class WishlistTest(APITestCase):
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        data = {
-            "wishlist": [
-                {
-                    "lesson": lesson.id,
-                    "lecturer": self.lecturer_profile_1.id,
-                    "time": get_schedules(
-                        lesson=lesson,
-                        lecturer=self.lecturer_profile_1,
-                    )[0].id,
-                }
-                for lesson in self.course_1.lessons.all()
-            ]
-        }
+        data = {"course": self.course_1.id}
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         data = json.loads(response.content)

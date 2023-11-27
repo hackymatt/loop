@@ -28,30 +28,11 @@ class ReviewViewSet(ModelViewSet):
         return self.serializer_class
 
     @staticmethod
-    def is_lesson_purchased(user, lesson_id, lecturer_id):
+    def is_lesson_purchased(user, lesson_id):
         profile = Profile.objects.get(user=user)
         lesson = Lesson.objects.get(pk=lesson_id)
-        lecturer = Profile.objects.get(pk=lecturer_id)
 
-        return LessonPurchase.objects.filter(
-            student=profile, lesson=lesson, lecturer=lecturer
-        ).exists()
-
-    @staticmethod
-    def is_lesson_finished(user, lesson_id, lecturer_id):
-        profile = Profile.objects.get(user=user)
-        lesson = Lesson.objects.get(pk=lesson_id)
-        lecturer = Profile.objects.get(pk=lecturer_id)
-        start_time = (
-            LessonPurchase.objects.filter(
-                student=profile, lesson=lesson, lecturer=lecturer
-            )
-            .first()
-            .time.time
-        )
-        end_time = start_time + timedelta(minutes=lesson.duration)
-
-        return make_aware(datetime.now()) >= end_time
+        return LessonPurchase.objects.filter(student=profile, lesson=lesson).exists()
 
     @staticmethod
     def is_review_created(user, lesson_id, lecturer_id):
@@ -87,20 +68,10 @@ class ReviewViewSet(ModelViewSet):
                 data={"review": "Recenzja już istnieje."},
             )
 
-        if not self.is_lesson_purchased(
-            user=user, lesson_id=data["lesson"], lecturer_id=data["lecturer"]
-        ):
+        if not self.is_lesson_purchased(user=user, lesson_id=data["lesson"]):
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
                 data={"review": "Użytkownik nie kupił lekcji."},
-            )
-
-        if not self.is_lesson_finished(
-            user=user, lesson_id=data["lesson"], lecturer_id=data["lecturer"]
-        ):
-            return Response(
-                status=status.HTTP_400_BAD_REQUEST,
-                data={"review": "Lekcja się nie skończyła."},
             )
 
         return super().create(request, *args, **kwargs)

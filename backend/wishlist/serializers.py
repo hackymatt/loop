@@ -1,13 +1,10 @@
 from rest_framework.serializers import (
     ModelSerializer,
-    CharField,
-    EmailField,
-    ListField,
+    IntegerField,
 )
 from course.models import Course, Lesson, Technology
 from wishlist.models import Wishlist
 from profile.models import Profile
-from schedule.models import Schedule
 
 
 class TechnologySerializer(ModelSerializer):
@@ -32,31 +29,8 @@ class LessonSerializer(ModelSerializer):
         fields = "__all__"
 
 
-class ProfileSerializer(ModelSerializer):
-    first_name = CharField(source="user.first_name")
-    last_name = CharField(source="user.last_name")
-    email = EmailField(source="user.email")
-
-    class Meta:
-        model = Profile
-        fields = (
-            "first_name",
-            "last_name",
-            "email",
-            "image",
-        )
-
-
-class ScheduleSerializer(ModelSerializer):
-    class Meta:
-        model = Schedule
-        fields = ("time",)
-
-
 class WishlistGetSerializer(ModelSerializer):
     lesson = LessonSerializer()
-    lecturer = ProfileSerializer()
-    time = ScheduleSerializer()
 
     class Meta:
         model = Wishlist
@@ -64,37 +38,54 @@ class WishlistGetSerializer(ModelSerializer):
 
 
 class WishlistSerializer(ModelSerializer):
-    wishlist = ListField()
+    course = IntegerField(required=False)
+    lesson = IntegerField(required=False)
 
     class Meta:
         model = Wishlist
         fields = (
             "student",
-            "wishlist",
+            "course",
+            "lesson",
         )
 
     def create(self, validated_data):
         student_id = validated_data.pop("student")
         student = Profile.objects.get(pk=student_id)
-        wishlist = validated_data.pop("wishlist")
 
-        for wishlist_item in wishlist:
-            lesson_id = wishlist_item["lesson"]
-            lecturer_id = wishlist_item["lecturer"]
-            time_id = wishlist_item["time"]
-            lesson = Lesson.objects.get(pk=lesson_id)
-            lecturer = Profile.objects.get(pk=lecturer_id)
-            time = Schedule.objects.get(pk=time_id)
+        course_id = validated_data.get("course", None)
+        lesson_id = validated_data.get("lesson", None)
 
-            current_lesson = Wishlist.objects.filter(
-                student=student, lesson=lesson, lecturer=lecturer, time=time
-            )
-            if current_lesson.exists():
-                current_lesson.delete()
+        if course_id:
+            # manage whole course
+            course = Course.objects.get(pk=course_id)
+            course_lessons = course.lessons.all()
+            wishlist_items = Wishlist.objects.filter(
+                student=student, lesson__in=course_lessons
+            ).all()
+
+            if course_lessons.count() == wishlist_items.count():
+                # delete whole course
+                wishlist_items.delete()
             else:
-                Wishlist.objects.filter(student=student, lesson=lesson).all().delete()
-                Wishlist.objects.create(
-                    student=student, lesson=lesson, lecturer=lecturer, time=time
-                )
+                # add missing lessons
+                for course_lesson in course_lessons:
+                    Wishlist.objects.get_or_create(
+                        student=student, lesson=course_lesson
+                    )
+
+        else:
+            # manage specific lesson
+            lesson = Lesson.objects.get(pk=lesson_id)
+            wishlist_item = Wishlist.objects.filter(
+                student=student, lesson=lesson
+            ).all()
+
+            if wishlist_item.exists():
+                # delete lesson
+                wishlist_item.delete()
+            else:
+                # add lesson
+                Wishlist.objects.create(student=student, lesson=lesson)
 
         return Wishlist.objects.filter(student=student).all()

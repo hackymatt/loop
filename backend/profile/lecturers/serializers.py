@@ -19,7 +19,6 @@ class LecturerSerializer(ModelSerializer):
     first_name = CharField(source="user.first_name")
     last_name = CharField(source="user.last_name")
     email = EmailField(source="user.email")
-    students_count = SerializerMethodField("get_students_count")
     rating = SerializerMethodField("get_lecturer_rating")
     rating_count = SerializerMethodField("get_lecturer_rating_count")
     lessons_count = SerializerMethodField("get_lessons_count")
@@ -32,7 +31,6 @@ class LecturerSerializer(ModelSerializer):
             "email",
             "user_title",
             "image",
-            "students_count",
             "rating",
             "rating_count",
             "lessons_count",
@@ -43,9 +41,6 @@ class LecturerSerializer(ModelSerializer):
 
     def get_lecturer_rating_count(self, lecturer):
         return get_rating(lecturer=lecturer).count()
-
-    def get_students_count(self, lecturer):
-        return LessonPurchase.objects.filter(lecturer=lecturer).count()
 
     def get_lessons_count(self, lecturer):
         return (

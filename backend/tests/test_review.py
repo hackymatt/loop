@@ -20,7 +20,6 @@ from .helpers import (
     is_data_match,
     get_review,
     is_review_found,
-    get_schedules,
 )
 from django.contrib import auth
 import json
@@ -146,31 +145,16 @@ class ReviewTest(APITestCase):
         create_purchase(
             lesson=self.course.lessons.all()[0],
             student=self.profile_1,
-            lecturer=self.lecturer_profile,
-            time=get_schedules(
-                lesson=self.course.lessons.all()[0],
-                lecturer=self.lecturer_profile,
-            )[0],
             price=self.course.lessons.all()[0].price,
         )
         create_purchase(
             lesson=self.course.lessons.all()[1],
             student=self.profile_1,
-            lecturer=self.lecturer_profile,
-            time=get_schedules(
-                lesson=self.course.lessons.all()[1],
-                lecturer=self.lecturer_profile,
-            )[0],
             price=self.course.lessons.all()[1].price,
         )
         create_purchase(
             lesson=self.course.lessons.all()[2],
             student=self.profile_1,
-            lecturer=self.lecturer_profile,
-            time=get_schedules(
-                lesson=self.course.lessons.all()[2],
-                lecturer=self.lecturer_profile,
-            )[2],
             price=self.course.lessons.all()[2].price,
         )
 
@@ -289,21 +273,6 @@ class ReviewTest(APITestCase):
             "lesson": self.course.lessons.all()[0].id,
             "lecturer": self.lecturer_profile.id,
             "rating": 3,
-            "review": "Good lesson.",
-        }
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(reviews_number(), 5)
-
-    def test_create_review_lesson_not_finished(self):
-        # login
-        login(self, self.data["email"], self.data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # post data
-        data = {
-            "lesson": self.course.lessons.all()[1].id,
-            "lecturer": self.lecturer_profile.id,
-            "rating": 3.5,
             "review": "Good lesson.",
         }
         response = self.client.post(self.endpoint, data)
