@@ -28,6 +28,7 @@ from schedule.views import ScheduleViewSet
 from stats.views import StatsViewSet
 from wishlist.views import WishlistViewSet
 from cart.views import CartViewSet
+from purchase.views import PurchaseViewSet
 
 router = DefaultRouter(trailing_slash=False)
 router.register(r"register", ProfileRegisterViewSet, basename="user_register")
@@ -63,6 +64,7 @@ router.register(
 )
 router.register(r"my-wishlist", WishlistViewSet, basename="wishlist")
 router.register(r"my-cart", CartViewSet, basename="cart")
+router.register(r"my-purchase", PurchaseViewSet, basename="purchase")
 
 urlpatterns = [
     path("", include(router.urls)),
