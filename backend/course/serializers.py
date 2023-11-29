@@ -372,6 +372,11 @@ class CourseSerializer(ModelSerializer):
         if len(lessons) == 0:
             raise ValidationError({"lessons": "Kurs musi posiadać minimum 1 lekcję."})
 
+        for lesson in lessons:
+            duration = lesson["duration"]
+            if duration % 15 != 0:
+                raise ValidationError({"lessons": "Czas lekcji musi być wielokrotnością 15 minut."})
+
         return lessons
 
     def validate_skills(self, skills):

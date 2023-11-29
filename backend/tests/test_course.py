@@ -535,7 +535,7 @@ class CourseTest(APITestCase):
                     id=-1,
                     title="Javascript lesson 3",
                     description="bbbb",
-                    duration="50",
+                    duration="60",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
                 ),
@@ -578,7 +578,7 @@ class CourseTest(APITestCase):
                     id=-1,
                     title="Javascript lesson 3",
                     description="bbbb",
-                    duration="50",
+                    duration="60",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
                 ),
@@ -626,7 +626,7 @@ class CourseTest(APITestCase):
                     id=-1,
                     title="Javascript lesson 3",
                     description="bbbb",
-                    duration="50",
+                    duration="60",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
                 ),
@@ -730,6 +730,55 @@ class CourseTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(courses_number(), 3)
 
+    def test_create_course_lesson_incorrect_duration(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "title": "Javascript course",
+            "description": "course_description",
+            "technology": create_technology_obj(name="Javascript"),
+            "level": "E",
+            "price": "999.99",
+            "github_repo_link": "https://github.com/hackymatt/CodeEdu",
+            "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            "topics": [
+                create_topic_obj(name="You will learn how to code"),
+                create_topic_obj(name="You will learn a new IDE"),
+            ],
+            "lessons": [
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 1",
+                    description="bbbb",
+                    duration="90",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="9.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 2",
+                    description="bbbb",
+                    duration="40",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="2.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 3",
+                    description="bbbb",
+                    duration="60",
+                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    price="29.99",
+                ),
+            ],
+        }
+
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(courses_number(), 3)
+
     def test_create_course_without_skills(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
@@ -768,7 +817,7 @@ class CourseTest(APITestCase):
                     id=-1,
                     title="Javascript lesson 3",
                     description="bbbb",
-                    duration="50",
+                    duration="60",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
                 ),
@@ -814,7 +863,7 @@ class CourseTest(APITestCase):
                     id=-1,
                     title="Javascript lesson 3",
                     description="bbbb",
-                    duration="50",
+                    duration="60",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
                 ),
@@ -857,7 +906,7 @@ class CourseTest(APITestCase):
                     id=-1,
                     title="Javascript lesson 3",
                     description="bbbb",
-                    duration="50",
+                    duration="60",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
                 ),
@@ -900,7 +949,7 @@ class CourseTest(APITestCase):
                     id=-1,
                     title="Javascript lesson 3",
                     description="bbbb",
-                    duration="50",
+                    duration="60",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
                 ),
@@ -949,7 +998,7 @@ class CourseTest(APITestCase):
                     id=-1,
                     title="Javascript lesson 3",
                     description="bbbb",
-                    duration="50",
+                    duration="60",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
                 ),
@@ -1083,7 +1132,7 @@ class CourseTest(APITestCase):
                     id=-1,
                     title="Javascript lesson 3",
                     description="bbbb",
-                    duration="50",
+                    duration="60",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
                 ),
@@ -1218,7 +1267,7 @@ class CourseTest(APITestCase):
                     id=-1,
                     title="Javascript lesson 3",
                     description="bbbb",
-                    duration="50",
+                    duration="60",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
                 ),
@@ -1375,7 +1424,7 @@ class CourseTest(APITestCase):
                     id=-1,
                     title="Javascript lesson 3",
                     description="bbbb",
-                    duration="50",
+                    duration="60",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
                 ),
@@ -1421,7 +1470,7 @@ class CourseTest(APITestCase):
                     id=-1,
                     title="Javascript lesson 3",
                     description="bbbb",
-                    duration="50",
+                    duration="60",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="29.99",
                 ),
