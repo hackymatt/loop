@@ -1,6 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from course.serializers import (
     CourseListSerializer,
     CourseGetSerializer,
@@ -16,7 +15,6 @@ from course.filters import (
     get_rating,
 )
 from course.models import Course, Technology, CoursePriceHistory, LessonPriceHistory
-from profile.models import Profile
 from random import sample
 
 
@@ -37,6 +35,14 @@ class CourseViewSet(ModelViewSet):
         "lessons__title",
         "lessons__description",
     ]
+    permission_classes = [AllowAny]
+
+    def get_permissions(self):
+        if self.action == "create" or self.action == "update":
+            permission_classes = [IsAuthenticated & IsAdminUser]
+        else:
+            permission_classes = self.permission_classes
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         if self.action == "list":
@@ -55,42 +61,6 @@ class CourseViewSet(ModelViewSet):
             return CourseGetSerializer
         else:
             return self.serializer_class
-
-    def create(self, request, *args, **kwargs):
-        user = request.user
-
-        if not user.is_authenticated:
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"course": "Użytkownik niezalogowany."},
-            )
-
-        profile = Profile.objects.get(user=user)
-        if not profile.user_type == "A":
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"course": "Brak dostępu."},
-            )
-
-        return super().create(request, *args, **kwargs)
-
-    def update(self, request, *args, **kwargs):
-        user = request.user
-
-        if not user.is_authenticated:
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"course": "Użytkownik niezalogowany."},
-            )
-
-        profile = Profile.objects.get(user=user)
-        if not profile.user_type == "A":
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"course": "Brak dostępu."},
-            )
-
-        return super().update(request, *args, **kwargs)
 
 
 class BestCourseViewSet(ModelViewSet):
@@ -112,24 +82,7 @@ class CoursePriceHistoryViewSet(ModelViewSet):
     queryset = CoursePriceHistory.objects.all()
     serializer_class = CoursePriceHistorySerializer
     filterset_class = CoursePriceHistoryFilter
-
-    def list(self, request, *args, **kwargs):
-        user = request.user
-
-        if not user.is_authenticated:
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"course-price-history": "Użytkownik niezalogowany."},
-            )
-
-        profile = Profile.objects.get(user=user)
-        if not profile.user_type == "A":
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"course-price-history": "Brak dostępu."},
-            )
-
-        return super().list(request, *args, **kwargs)
+    permission_classes = [IsAuthenticated & IsAdminUser]
 
 
 class LessonPriceHistoryViewSet(ModelViewSet):
@@ -137,21 +90,4 @@ class LessonPriceHistoryViewSet(ModelViewSet):
     queryset = LessonPriceHistory.objects.all()
     serializer_class = LessonPriceHistorySerializer
     filterset_class = LessonPriceHistoryFilter
-
-    def list(self, request, *args, **kwargs):
-        user = request.user
-
-        if not user.is_authenticated:
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"course-price-history": "Użytkownik niezalogowany."},
-            )
-
-        profile = Profile.objects.get(user=user)
-        if not profile.user_type == "A":
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"course-price-history": "Brak dostępu."},
-            )
-
-        return super().list(request, *args, **kwargs)
+    permission_classes = [IsAuthenticated & IsAdminUser]

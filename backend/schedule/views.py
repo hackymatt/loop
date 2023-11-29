@@ -1,6 +1,8 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from utils.permissions.permissions import IsStudent
 from schedule.serializers import ScheduleSerializer, ScheduleGetSerializer
 from schedule.filters import ScheduleFilter
 from schedule.models import Schedule
@@ -12,23 +14,19 @@ class ScheduleViewSet(ModelViewSet):
     queryset = Schedule.objects.all()
     serializer_class = ScheduleGetSerializer
     filterset_class = ScheduleFilter
+    permission_classes = [AllowAny]
+
+    def get_permissions(self):
+        if self.action == "create":
+            permission_classes = [IsAuthenticated & ~IsStudent]
+        else:
+            permission_classes = self.permission_classes
+        return [permission() for permission in permission_classes]
 
     def create(self, request, *args, **kwargs):
         user = request.user
         data = request.data
-
-        if not user.is_authenticated:
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"schedule": "Użytkownik niezalogowany."},
-            )
-
         profile = Profile.objects.get(user=user)
-        if profile.user_type == "S":
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"schedule": "Brak dostępu."},
-            )
 
         data["lecturer"] = profile.id
         serializer = ScheduleSerializer(data=data)
