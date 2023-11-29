@@ -22,7 +22,12 @@ from io import BytesIO
 
 
 def create_user(
-    first_name: str, last_name: str, email: str, password: str, is_active: bool
+    first_name: str,
+    last_name: str,
+    email: str,
+    password: str,
+    is_active: bool,
+    is_staff: bool = False,
 ):
     user = User.objects.create(
         first_name=first_name,
@@ -30,6 +35,7 @@ def create_user(
         email=email,
         username=email,
         is_active=is_active,
+        is_staff=is_staff,
     )
 
     user.set_password(password)

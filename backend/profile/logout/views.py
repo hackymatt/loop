@@ -11,10 +11,6 @@ class ProfileLogoutViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = ProfileLogoutSerializer
 
-    @staticmethod
-    def logout(request):
+    def create(self, request, *args, **kwargs):
         logout(request)
         return Response(status=status.HTTP_200_OK, data={"logout": "Wylogowany."})
-
-    def create(self, request, *args, **kwargs):
-        return self.logout(request)

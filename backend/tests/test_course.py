@@ -46,6 +46,7 @@ class CourseTest(APITestCase):
             email=self.admin_data["email"],
             password=self.admin_data["password"],
             is_active=True,
+            is_staff=True,
         )
         self.admin_profile = create_profile(user=self.admin_user, user_type="A")
         self.data = {
@@ -1445,6 +1446,7 @@ class BestCourseTest(APITestCase):
             email=self.admin_data["email"],
             password=self.admin_data["password"],
             is_active=True,
+            is_staff=True,
         )
         self.admin_profile = create_profile(user=self.admin_user, user_type="A")
         self.data = {
@@ -1715,6 +1717,7 @@ class CoursePriceHistoryTest(APITestCase):
             email=self.admin_data["email"],
             password=self.admin_data["password"],
             is_active=True,
+            is_staff=True,
         )
         self.admin_profile = create_profile(user=self.admin_user, user_type="A")
         self.data = {
@@ -2006,6 +2009,7 @@ class LessonPriceHistoryTest(APITestCase):
             email=self.admin_data["email"],
             password=self.admin_data["password"],
             is_active=True,
+            is_staff=True,
         )
         self.admin_profile = create_profile(user=self.admin_user, user_type="A")
         self.data = {

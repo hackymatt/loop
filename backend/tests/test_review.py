@@ -261,7 +261,7 @@ class ReviewTest(APITestCase):
             "review": "Good lesson.",
         }
         response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(reviews_number(), 5)
 
     def test_create_review_authenticated_already_created(self):
@@ -276,7 +276,7 @@ class ReviewTest(APITestCase):
             "review": "Good lesson.",
         }
         response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(reviews_number(), 5)
 
     def test_create_review_authenticated(self):
@@ -320,7 +320,7 @@ class ReviewTest(APITestCase):
             "review": "Good lesson.",
         }
         response = self.client.put(f"{self.endpoint}/{self.review_2.id}", data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(reviews_number(), 5)
 
     def test_update_review_authenticated(self):
@@ -361,7 +361,7 @@ class ReviewTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # delete data
         response = self.client.delete(f"{self.endpoint}/{self.review_2.id}")
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(reviews_number(), 5)
         self.assertTrue(is_review_found(self.review_1.id))
 

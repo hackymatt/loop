@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from profile.details.serializers import (
     ProfileDetailsSerializer,
     LecturerDetailsSerializer,
@@ -14,10 +14,7 @@ class ProfileDetailsViewSet(ModelViewSet):
     http_method_names = ["get", "put"]
     queryset = User.objects.all()
     serializer_class = ProfileDetailsSerializer
-
-    @staticmethod
-    def get_profile(user: User):
-        return Profile.objects.get(user=user)
+    permission_classes = [IsAuthenticated]
 
     @staticmethod
     def model_field_exists(obj, field):
@@ -29,14 +26,7 @@ class ProfileDetailsViewSet(ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         user = request.user
-
-        if not user.is_authenticated:
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"details": "Użytkownik niezalogowany."},
-            )
-
-        profile = self.get_profile(user)
+        profile = Profile.objects.get(user=user)
         if profile.user_type == "S":
             serializer = ProfileDetailsSerializer(profile)
         else:
@@ -46,13 +36,7 @@ class ProfileDetailsViewSet(ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         user = request.user
-
-        if not user.is_authenticated:
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"details": "Użytkownik niezalogowany."},
-            )
-        profile = self.get_profile(user)
+        profile = Profile.objects.get(user=user)
 
         for key, value in request.data.items():
             if not key == "email":

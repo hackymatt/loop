@@ -1,6 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from profile.password_change.serializers import ProfilePasswordChangeSerializer
 from django.contrib.auth.models import User
 
@@ -9,18 +10,12 @@ class ProfilePasswordChangeViewSet(ModelViewSet):
     http_method_names = ["post"]
     queryset = User.objects.all()
     serializer_class = ProfilePasswordChangeSerializer
+    permission_classes = [IsAuthenticated]
 
-    @staticmethod
-    def password_change(request):
+    def create(self, request, *args, **kwargs):
         data = request.data
         user = request.user
         ProfilePasswordChangeSerializer.validate_data(data)
-
-        if not user.is_authenticated:
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"password_change": "Użytkownik niezalogowany."},
-            )
 
         old_password = data["old_password"]
         new_password = data["password"]
@@ -35,6 +30,3 @@ class ProfilePasswordChangeViewSet(ModelViewSet):
         user.save()
 
         return Response(status=status.HTTP_200_OK, data={"password_change": "Sukces."})
-
-    def create(self, request, *args, **kwargs):
-        return self.password_change(request)

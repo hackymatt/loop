@@ -1,10 +1,10 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import api_view
 from newsletter.serializers import NewsletterEntrySerializer, NewsletterSerializer
 from newsletter.models import Newsletter
-from profile.models import Profile
 
 
 class NewsletterEntriesViewSet(ModelViewSet):
@@ -12,42 +12,7 @@ class NewsletterEntriesViewSet(ModelViewSet):
     queryset = Newsletter.objects.all()
     serializer_class = NewsletterEntrySerializer
     filterset_fields = "__all__"
-
-    def list(self, request, *args, **kwargs):
-        user = request.user
-
-        if not user.is_authenticated:
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"course": "Użytkownik niezalogowany."},
-            )
-
-        profile = Profile.objects.get(user=user)
-        if not profile.user_type == "A":
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"course": "Brak dostępu."},
-            )
-
-        return super().list(request, *args, **kwargs)
-
-    def retrieve(self, request, *args, **kwargs):
-        user = request.user
-
-        if not user.is_authenticated:
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"course": "Użytkownik niezalogowany."},
-            )
-
-        profile = Profile.objects.get(user=user)
-        if not profile.user_type == "A":
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"course": "Brak dostępu."},
-            )
-
-        return super().retrieve(request, *args, **kwargs)
+    permission_classes = [IsAuthenticated & IsAdminUser]
 
 
 class NewsletterSubscribeViewSet(ModelViewSet):

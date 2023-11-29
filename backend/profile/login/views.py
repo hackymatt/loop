@@ -11,8 +11,7 @@ class ProfileLoginViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = ProfileLoginSerializer
 
-    @staticmethod
-    def login(request):
+    def create(self, request, *args, **kwargs):
         email = request.data["email"]
 
         if not User.objects.filter(email=email).exists():
@@ -38,6 +37,3 @@ class ProfileLoginViewSet(ModelViewSet):
 
         login(request, user)
         return Response(status=status.HTTP_200_OK, data={"login": "Sukces."})
-
-    def create(self, request, *args, **kwargs):
-        return self.login(request)

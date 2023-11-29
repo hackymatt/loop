@@ -1,5 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from wishlist.serializers import WishlistSerializer, WishlistGetSerializer
 from wishlist.models import Wishlist
@@ -10,27 +11,16 @@ class WishlistViewSet(ModelViewSet):
     http_method_names = ["get", "post"]
     queryset = Wishlist.objects.all()
     serializer_class = WishlistGetSerializer
+    permission_classes = [IsAuthenticated]
 
-    def list(self, request, *args, **kwargs):
-        user = request.user
-
-        if not user.is_authenticated:
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"wishlist": "Użytkownik niezalogowany."},
-            )
-
-        return super().list(request, *args, **kwargs)
+    def get_queryset(self):
+        user = self.request.user
+        student = Profile.objects.get(user=user)
+        return self.queryset.filter(student=student)
 
     def create(self, request, *args, **kwargs):
         user = request.user
         data = request.data
-
-        if not user.is_authenticated:
-            return Response(
-                status=status.HTTP_403_FORBIDDEN,
-                data={"wishlist": "Użytkownik niezalogowany."},
-            )
 
         student = Profile.objects.get(user=user)
         data["student"] = student.id

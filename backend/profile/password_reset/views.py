@@ -14,8 +14,7 @@ class ProfilePasswordResetViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = ProfilePasswordResetSerializer
 
-    @staticmethod
-    def password_reset(request):
+    def create(self, request, *args, **kwargs):
         data = request.data
         email = data["email"]
 
@@ -43,6 +42,3 @@ class ProfilePasswordResetViewSet(ModelViewSet):
         return Response(
             status=status.HTTP_200_OK, data={"password_reset": "Hasło zresetowane."}
         )
-
-    def create(self, request, *args, **kwargs):
-        return self.password_reset(request)
