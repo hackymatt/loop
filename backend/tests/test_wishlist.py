@@ -17,7 +17,7 @@ import json
 
 class WishlistTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/my-wishlist"
+        self.endpoint = "/wishlist"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -33,7 +33,7 @@ class WishlistTest(APITestCase):
 
         # course 1
         self.course_1 = create_course(
-            title="Python Begginer",
+            title="Python Beginner",
             description="Learn Python today",
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",

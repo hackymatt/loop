@@ -9,17 +9,17 @@ from course.models import Lesson
 from profile.models import Profile
 
 
-class Cart(BaseModel):
+class Teaching(BaseModel):
     lesson = ForeignKey(Lesson, on_delete=CASCADE)
-    student = ForeignKey(Profile, on_delete=CASCADE, related_name="cart_student")
+    lecturer = ForeignKey(Profile, on_delete=CASCADE, related_name="teaching_lecturer")
 
     class Meta:
-        db_table = "cart"
+        db_table = "teaching"
         ordering = ["id"]
         constraints = [
             UniqueConstraint(
-                fields=["lesson", "student"],
-                name="cart_lesson_student_unique_together",
+                fields=["lesson", "lecturer"],
+                name="teaching_lesson_lecturer_unique_together",
             )
         ]
         indexes = [
@@ -30,12 +30,12 @@ class Cart(BaseModel):
             ),
             Index(
                 fields=[
-                    "student",
+                    "lecturer",
                 ]
             ),
             Index(
                 fields=[
-                    "student",
+                    "lecturer",
                     "lesson",
                 ]
             ),

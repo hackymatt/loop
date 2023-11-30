@@ -8,18 +8,18 @@ from .factory import (
     create_technology_obj,
     create_skill_obj,
     create_topic_obj,
-    create_purchase,
+    create_teaching,
 )
 from .helpers import login
-import json
 from django.contrib import auth
+import json
 
 
-class PurchaseTest(APITestCase):
+class TeachingTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/purchase"
+        self.endpoint = "/teaching"
         self.data = {
-            "email": "user@example.com",
+            "email": "test_email@example.com",
             "password": "TestPassword123",
         }
         self.user = create_user(
@@ -29,7 +29,7 @@ class PurchaseTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_profile(user=self.user, user_type="W")
 
         # course 1
         self.course_1 = create_course(
@@ -64,16 +64,14 @@ class PurchaseTest(APITestCase):
             ],
         )
 
-        create_purchase(
-            lesson=self.course_1.lessons.all()[0],
-            student=self.profile,
-            price=self.course_1.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course_1.lessons.all()[1],
-            student=self.profile,
-            price=self.course_1.lessons.all()[1].price,
-        )
+        self.teaching = []
+        for lesson in self.course_1.lessons.all():
+            self.teaching.append(
+                create_teaching(
+                    lecturer=self.profile,
+                    lesson=lesson,
+                )
+            )
 
         # course 2
         self.course_2 = create_course(
@@ -116,15 +114,11 @@ class PurchaseTest(APITestCase):
             ],
         )
 
-        create_purchase(
-            lesson=self.course_2.lessons.all()[0],
-            student=self.profile,
-            price=self.course_2.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course_2.lessons.all()[1],
-            student=self.profile,
-            price=self.course_2.lessons.all()[1].price,
+        self.teaching.append(
+            create_teaching(
+                lecturer=self.profile,
+                lesson=self.course_2.lessons.all()[1],
+            )
         )
 
         # course 3
@@ -152,20 +146,21 @@ class PurchaseTest(APITestCase):
             ],
         )
 
-        create_purchase(
-            lesson=self.course_3.lessons.all()[0],
-            student=self.profile,
-            price=self.course_3.lessons.all()[0].price,
+        self.teaching.append(
+            create_teaching(
+                lecturer=self.profile,
+                lesson=self.course_3.lessons.all()[0],
+            )
         )
 
-    def test_get_purchase_unauthenticated(self):
-        # login
+    def test_get_teaching_unauthenticated(self):
+        # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_get_purchase_authenticated(self):
+    def test_get_teaching_authenticated(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -173,5 +168,63 @@ class PurchaseTest(APITestCase):
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        records_count = data["records_count"]
-        self.assertEqual(records_count, 5)
+        count = data["records_count"]
+        self.assertEqual(count, 4)
+
+    def test_add_to_teaching_unauthenticated(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        data = {
+            "lesson": self.course_2.lessons.all()[0].id,
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_add_to_teaching_single_lesson_authenticated(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        data = {
+            "lesson": self.course_2.lessons.all()[0].id,
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        data = json.loads(response.content)
+        self.assertEqual(len(data), 5)
+
+    def test_add_to_teaching_whole_course_authenticated(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        data = {
+            "course": self.course_2.id,
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        data = json.loads(response.content)
+        self.assertEqual(len(data), 6)
+
+    def test_delete_single_lesson_from_teaching_schedule(self):
+        # no login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        data = {"lesson": self.course_1.lessons.all()[0].id}
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        data = json.loads(response.content)
+        self.assertEqual(len(data), 3)
+
+    def test_delete_whole_course_from_teaching_schedule(self):
+        # no login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        data = {"course": self.course_1.id}
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        data = json.loads(response.content)
+        self.assertEqual(len(data), 2)

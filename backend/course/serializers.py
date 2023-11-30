@@ -23,6 +23,8 @@ from django.db.models import Sum, Avg, Min, Count
 from django.core.exceptions import FieldDoesNotExist
 from datetime import timedelta
 
+MIN_LESSON_DURATION_MINS = 15
+
 
 def model_field_exists(obj, field):
     try:
@@ -230,6 +232,7 @@ class LessonSerializer(ModelSerializer):
 
 class CourseListSerializer(ModelSerializer):
     technology = TechnologySerializer()
+    lessons_count = SerializerMethodField("get_course_lessons_count")
     previous_price = SerializerMethodField("get_course_previous_price")
     lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
     duration = SerializerMethodField("get_course_duration")
@@ -237,6 +240,9 @@ class CourseListSerializer(ModelSerializer):
     students_count = SerializerMethodField("get_course_students_count")
     rating = SerializerMethodField("get_course_rating")
     rating_count = SerializerMethodField("get_course_rating_count")
+
+    def get_course_lessons_count(self, course):
+        return get_course_lessons(course=course).count()
 
     def get_course_previous_price(self, course):
         return get_previous_price(
@@ -374,8 +380,10 @@ class CourseSerializer(ModelSerializer):
 
         for lesson in lessons:
             duration = lesson["duration"]
-            if duration % 15 != 0:
-                raise ValidationError({"lessons": "Czas lekcji musi być wielokrotnością 15 minut."})
+            if duration % MIN_LESSON_DURATION_MINS != 0:
+                raise ValidationError(
+                    {"lessons": "Czas lekcji musi być wielokrotnością 15 minut."}
+                )
 
         return lessons
 

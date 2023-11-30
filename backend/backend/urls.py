@@ -29,6 +29,8 @@ from stats.views import StatsViewSet
 from wishlist.views import WishlistViewSet
 from cart.views import CartViewSet
 from purchase.views import PurchaseViewSet
+from teaching.views import TeachingViewSet
+
 
 router = DefaultRouter(trailing_slash=False)
 router.register(r"register", ProfileRegisterViewSet, basename="user_register")
@@ -62,9 +64,11 @@ router.register(r"newsletter", NewsletterEntriesViewSet, basename="newsletter")
 router.register(
     r"newsletter-subscribe", NewsletterSubscribeViewSet, basename="newsletter_subscribe"
 )
-router.register(r"my-wishlist", WishlistViewSet, basename="wishlist")
-router.register(r"my-cart", CartViewSet, basename="cart")
-router.register(r"my-purchase", PurchaseViewSet, basename="purchase")
+router.register(r"wishlist", WishlistViewSet, basename="wishlist")
+router.register(r"cart", CartViewSet, basename="cart")
+router.register(r"purchase", PurchaseViewSet, basename="purchase")
+router.register(r"teaching", TeachingViewSet, basename="teaching")
+
 
 urlpatterns = [
     path("", include(router.urls)),
