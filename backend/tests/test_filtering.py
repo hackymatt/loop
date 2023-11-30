@@ -10,6 +10,7 @@ from .factory import (
     create_topic_obj,
     create_review,
     create_purchase,
+    create_teaching,
     create_schedule,
     create_course_price_history,
     create_lesson_price_history,
@@ -66,7 +67,7 @@ class CourseFilterTest(APITestCase):
         )
         # course 1
         self.course_1 = create_course(
-            title="Python Begginer",
+            title="Python Beginner",
             description="Learn Python today",
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",
@@ -97,39 +98,22 @@ class CourseFilterTest(APITestCase):
             ],
         )
 
-        for i in range(5):
-            create_schedule(
-                self.course_1.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_1.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_1.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_1.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
+        create_teaching(
+            lesson=self.course_1.lessons.all()[0],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course_1.lessons.all()[1],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course_1.lessons.all()[0],
+            lecturer=self.lecturer_profile_2,
+        )
+        create_teaching(
+            lesson=self.course_1.lessons.all()[1],
+            lecturer=self.lecturer_profile_2,
+        )
 
         create_purchase(
             lesson=self.course_1.lessons.all()[0],
@@ -198,62 +182,37 @@ class CourseFilterTest(APITestCase):
                     id=-1,
                     title="JS lesson 3",
                     description="bbbb",
-                    duration="130",
+                    duration="120",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
                 ),
             ],
         )
 
-        for i in range(5):
-            create_schedule(
-                self.course_2.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[2],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[2],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
+        create_teaching(
+            lesson=self.course_2.lessons.all()[0],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course_2.lessons.all()[1],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course_2.lessons.all()[2],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course_2.lessons.all()[0],
+            lecturer=self.lecturer_profile_2,
+        )
+        create_teaching(
+            lesson=self.course_2.lessons.all()[1],
+            lecturer=self.lecturer_profile_2,
+        )
+        create_teaching(
+            lesson=self.course_2.lessons.all()[2],
+            lecturer=self.lecturer_profile_2,
+        )
 
         create_purchase(
             lesson=self.course_2.lessons.all()[0],
@@ -342,23 +301,14 @@ class CourseFilterTest(APITestCase):
             ],
         )
 
-        for i in range(5):
-            create_schedule(
-                self.course_3.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_3.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
+        create_teaching(
+            lesson=self.course_3.lessons.all()[0],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course_3.lessons.all()[0],
+            lecturer=self.lecturer_profile_2,
+        )
 
         create_purchase(
             lesson=self.course_3.lessons.all()[0],
@@ -416,7 +366,7 @@ class CourseFilterTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 2)
+        self.assertEqual(count, 1)
 
     def test_technology_filter(self):
         # no login
@@ -504,7 +454,7 @@ class ReviewFilterTest(APITestCase):
         )
         # course 1
         self.course_1 = create_course(
-            title="Python Begginer",
+            title="Python Beginner",
             description="Learn Python today",
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",
@@ -533,51 +483,6 @@ class ReviewFilterTest(APITestCase):
                     price="2.99",
                 ),
             ],
-        )
-
-        for i in range(5):
-            create_schedule(
-                self.course_1.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_1.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_1.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_1.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-
-        create_purchase(
-            lesson=self.course_1.lessons.all()[0],
-            student=self.profile,
-            price=self.course_1.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course_1.lessons.all()[1],
-            student=self.profile,
-            price=self.course_1.lessons.all()[1].price,
         )
 
         self.review_course_1_1 = create_review(
@@ -636,87 +541,11 @@ class ReviewFilterTest(APITestCase):
                     id=-1,
                     title="JS lesson 3",
                     description="bbbb",
-                    duration="130",
+                    duration="120",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
                 ),
             ],
-        )
-
-        for i in range(5):
-            create_schedule(
-                self.course_2.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[2],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[2],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-
-        create_purchase(
-            lesson=self.course_2.lessons.all()[0],
-            student=self.profile,
-            price=self.course_2.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course_2.lessons.all()[1],
-            student=self.profile,
-            price=self.course_2.lessons.all()[1].price,
-        )
-        create_purchase(
-            lesson=self.course_2.lessons.all()[0],
-            student=self.profile_2,
-            price=self.course_2.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course_2.lessons.all()[1],
-            student=self.profile_2,
-            price=self.course_2.lessons.all()[1].price,
-        )
-        create_purchase(
-            lesson=self.course_2.lessons.all()[2],
-            student=self.profile_2,
-            price=self.course_2.lessons.all()[2].price,
         )
 
         self.review_course_2_1 = create_review(
@@ -778,35 +607,6 @@ class ReviewFilterTest(APITestCase):
                     price="9.99",
                 ),
             ],
-        )
-
-        for i in range(5):
-            create_schedule(
-                self.course_3.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_3.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-
-        create_purchase(
-            lesson=self.course_3.lessons.all()[0],
-            student=self.profile,
-            price=self.course_3.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course_3.lessons.all()[0],
-            student=self.profile_2,
-            price=self.course_3.lessons.all()[0].price,
         )
 
         self.review_course_3_1 = create_review(
@@ -938,7 +738,7 @@ class ScheduleFilterTest(APITestCase):
         )
         # course 1
         self.course_1 = create_course(
-            title="Python Begginer",
+            title="Python Beginner",
             description="Learn Python today",
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",
@@ -969,72 +769,9 @@ class ScheduleFilterTest(APITestCase):
             ],
         )
 
-        for i in range(5):
-            create_schedule(
-                self.course_1.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_1.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_1.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_1.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-
-        create_purchase(
-            lesson=self.course_1.lessons.all()[0],
-            student=self.profile,
-            price=self.course_1.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course_1.lessons.all()[1],
-            student=self.profile,
-            price=self.course_1.lessons.all()[1].price,
-        )
-
-        self.review_course_1_1 = create_review(
-            lesson=self.course_1.lessons.all()[0],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            rating=5,
-            review="Great lesson.",
-        )
-        self.review_course_1_2 = create_review(
-            lesson=self.course_1.lessons.all()[0],
-            student=self.profile_2,
-            lecturer=self.lecturer_profile_1,
-            rating=4,
-            review="Good lesson.",
-        )
-        self.review_course_1_3 = create_review(
-            lesson=self.course_1.lessons.all()[1],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            rating=3,
-            review="So so lesson.",
-        )
+        for lesson in self.course_1.lessons.all():
+            create_teaching(lecturer=self.lecturer_profile_1, lesson=lesson)
+            create_teaching(lecturer=self.lecturer_profile_2, lesson=lesson)
 
         # course 2
         self.course_2 = create_course(
@@ -1070,124 +807,16 @@ class ScheduleFilterTest(APITestCase):
                     id=-1,
                     title="JS lesson 3",
                     description="bbbb",
-                    duration="130",
+                    duration="120",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
                 ),
             ],
         )
 
-        for i in range(5):
-            create_schedule(
-                self.course_2.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[2],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[2],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-
-        create_purchase(
-            lesson=self.course_2.lessons.all()[0],
-            student=self.profile,
-            price=self.course_2.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course_2.lessons.all()[1],
-            student=self.profile,
-            price=self.course_2.lessons.all()[1].price,
-        )
-        create_purchase(
-            lesson=self.course_2.lessons.all()[0],
-            student=self.profile_2,
-            price=self.course_2.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course_2.lessons.all()[1],
-            student=self.profile_2,
-            price=self.course_2.lessons.all()[1].price,
-        )
-        create_purchase(
-            lesson=self.course_2.lessons.all()[2],
-            student=self.profile_2,
-            price=self.course_2.lessons.all()[2].price,
-        )
-
-        self.review_course_2_1 = create_review(
-            lesson=self.course_2.lessons.all()[0],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            rating=5,
-            review="Great lesson.",
-        )
-        self.review_course_2_2 = create_review(
-            lesson=self.course_2.lessons.all()[1],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            rating=4,
-            review="Good lesson.",
-        )
-        self.review_course_2_3 = create_review(
-            lesson=self.course_2.lessons.all()[0],
-            student=self.profile_2,
-            lecturer=self.lecturer_profile_1,
-            rating=2,
-            review="So so lesson.",
-        )
-        self.review_course_2_4 = create_review(
-            lesson=self.course_2.lessons.all()[1],
-            student=self.profile_2,
-            lecturer=self.lecturer_profile_1,
-            rating=1,
-            review="So so lesson.",
-        )
-        self.review_course_2_5 = create_review(
-            lesson=self.course_2.lessons.all()[2],
-            student=self.profile_2,
-            lecturer=self.lecturer_profile_1,
-            rating=4,
-            review="So so lesson.",
-        )
+        for lesson in self.course_2.lessons.all():
+            create_teaching(lecturer=self.lecturer_profile_1, lesson=lesson)
+            create_teaching(lecturer=self.lecturer_profile_2, lesson=lesson)
 
         # course 3
         self.course_3 = create_course(
@@ -1214,49 +843,25 @@ class ScheduleFilterTest(APITestCase):
             ],
         )
 
-        for i in range(5):
+        for lesson in self.course_3.lessons.all():
+            create_teaching(lecturer=self.lecturer_profile_1, lesson=lesson)
+            create_teaching(lecturer=self.lecturer_profile_2, lesson=lesson)
+
+        for i in range(10):
             create_schedule(
-                self.course_3.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
+                lecturer=self.lecturer_profile_1,
+                time=make_aware(
+                    datetime.now().replace(minute=15, second=0, microsecond=0)
+                    + timedelta(minutes=15 * i)
                 ),
             )
             create_schedule(
-                self.course_3.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
+                lecturer=self.lecturer_profile_2,
+                time=make_aware(
+                    datetime.now().replace(minute=15, second=0, microsecond=0)
+                    + timedelta(minutes=15 * i)
                 ),
             )
-
-        create_purchase(
-            lesson=self.course_3.lessons.all()[0],
-            student=self.profile,
-            price=self.course_3.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course_3.lessons.all()[0],
-            student=self.profile_2,
-            price=self.course_3.lessons.all()[0].price,
-        )
-
-        self.review_course_3_1 = create_review(
-            lesson=self.course_3.lessons.all()[0],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            rating=5,
-            review="Great lesson.",
-        )
-        self.review_course_3_2 = create_review(
-            lesson=self.course_3.lessons.all()[0],
-            student=self.profile_2,
-            lecturer=self.lecturer_profile_1,
-            rating=2,
-            review="So so lesson.",
-        )
 
     def test_lesson_id_filter(self):
         # no login
@@ -1268,19 +873,7 @@ class ScheduleFilterTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 10)
-
-    def test_lesson_id_filter(self):
-        # no login
-        self.assertFalse(auth.get_user(self.client).is_authenticated)
-        # get data
-        response = self.client.get(
-            f"{self.endpoint}?lesson_id={self.course_1.lessons.all()[0].id}"
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
-        count = data["records_count"]
-        self.assertEqual(count, 10)
+        self.assertEqual(count, 20)
 
     def test_lecturer_id_filter(self):
         # no login
@@ -1292,7 +885,7 @@ class ScheduleFilterTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 30)
+        self.assertEqual(count, 10)
 
 
 class CoursePriceHistoryFilterTest(APITestCase):
@@ -1311,46 +904,7 @@ class CoursePriceHistoryFilterTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_profile(user=self.admin_user, user_type="A")
-        self.data = {
-            "email": "test_email@example.com",
-            "password": "TestPassword123",
-        }
-        self.user = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email=self.data["email"],
-            password=self.data["password"],
-            is_active=True,
-        )
-        self.profile = create_profile(user=self.user)
-        self.user_2 = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email="test2@example.com",
-            password="Test12345",
-            is_active=True,
-        )
-        self.profile_2 = create_profile(user=self.user_2)
-        self.lecturer_user_1 = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email="lecturer_1@example.com",
-            password=self.data["password"],
-            is_active=True,
-        )
-        self.lecturer_user_2 = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email="lecturer_2@example.com",
-            password=self.data["password"],
-            is_active=True,
-        )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
-        )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
-        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -1392,73 +946,6 @@ class CoursePriceHistoryFilterTest(APITestCase):
         create_lesson_price_history(self.course.lessons.all()[1], 1)
         create_lesson_price_history(self.course.lessons.all()[1], 5)
         create_lesson_price_history(self.course.lessons.all()[1], 3)
-
-        for i in range(5):
-            create_schedule(
-                self.course.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-
-        create_purchase(
-            lesson=self.course.lessons.all()[0],
-            student=self.profile,
-            price=self.course.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course.lessons.all()[1],
-            student=self.profile,
-            price=self.course.lessons.all()[1].price,
-        )
-
-        self.review_1 = create_review(
-            lesson=self.course.lessons.all()[0],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            rating=5,
-            review="Great lesson.",
-        )
-        self.review_2 = create_review(
-            lesson=self.course.lessons.all()[0],
-            student=self.profile_2,
-            lecturer=self.lecturer_profile_1,
-            rating=4,
-            review="Good lesson.",
-        )
-        self.review_3 = create_review(
-            lesson=self.course.lessons.all()[1],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            rating=3,
-            review="So so lesson.",
-        )
 
         self.course_2 = create_course(
             title="course_title 2",
@@ -1575,46 +1062,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_profile(user=self.admin_user, user_type="A")
-        self.data = {
-            "email": "test_email@example.com",
-            "password": "TestPassword123",
-        }
-        self.user = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email=self.data["email"],
-            password=self.data["password"],
-            is_active=True,
-        )
-        self.profile = create_profile(user=self.user)
-        self.user_2 = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email="test2@example.com",
-            password="Test12345",
-            is_active=True,
-        )
-        self.profile_2 = create_profile(user=self.user_2)
-        self.lecturer_user_1 = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email="lecturer_1@example.com",
-            password=self.data["password"],
-            is_active=True,
-        )
-        self.lecturer_user_2 = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email="lecturer_2@example.com",
-            password=self.data["password"],
-            is_active=True,
-        )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
-        )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
-        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -1656,73 +1104,6 @@ class LessonPriceHistoryFilterTest(APITestCase):
         create_lesson_price_history(self.course.lessons.all()[1], 1)
         create_lesson_price_history(self.course.lessons.all()[1], 5)
         create_lesson_price_history(self.course.lessons.all()[1], 3)
-
-        for i in range(5):
-            create_schedule(
-                self.course.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-
-        create_purchase(
-            lesson=self.course.lessons.all()[0],
-            student=self.profile,
-            price=self.course.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course.lessons.all()[1],
-            student=self.profile,
-            price=self.course.lessons.all()[1].price,
-        )
-
-        self.review_1 = create_review(
-            lesson=self.course.lessons.all()[0],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            rating=5,
-            review="Great lesson.",
-        )
-        self.review_2 = create_review(
-            lesson=self.course.lessons.all()[0],
-            student=self.profile_2,
-            lecturer=self.lecturer_profile_1,
-            rating=4,
-            review="Good lesson.",
-        )
-        self.review_3 = create_review(
-            lesson=self.course.lessons.all()[1],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            rating=3,
-            review="So so lesson.",
-        )
 
         self.course_2 = create_course(
             title="course_title 2",

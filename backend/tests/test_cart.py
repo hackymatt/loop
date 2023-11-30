@@ -17,7 +17,7 @@ import json
 
 class CartTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/my-cart"
+        self.endpoint = "/cart"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -33,7 +33,7 @@ class CartTest(APITestCase):
 
         # course 1
         self.course_1 = create_course(
-            title="Python Begginer",
+            title="Python Beginner",
             description="Learn Python today",
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",
@@ -107,7 +107,7 @@ class CartTest(APITestCase):
                     id=-1,
                     title="JS lesson 3",
                     description="bbbb",
-                    duration="130",
+                    duration="120",
                     github_branch_link="https://github.com/hackymatt/CodeEdu",
                     price="2.99",
                 ),
@@ -207,7 +207,7 @@ class CartTest(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(len(data), 6)
 
-    def test_delete_single_lesson_from_cart_schedule(self):
+    def test_delete_single_lesson_from_cart(self):
         # no login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -218,7 +218,7 @@ class CartTest(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(len(data), 3)
 
-    def test_delete_whole_course_from_cart_schedule(self):
+    def test_delete_whole_course_from_cart(self):
         # no login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)

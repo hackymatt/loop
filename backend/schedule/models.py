@@ -6,12 +6,10 @@ from django.db.models import (
     CASCADE,
     Index,
 )
-from course.models import Lesson
 from profile.models import Profile
 
 
 class Schedule(BaseModel):
-    lesson = ForeignKey(Lesson, on_delete=CASCADE)
     lecturer = ForeignKey(Profile, on_delete=CASCADE, related_name="schedule_lecturer")
     time = DateTimeField()
 
@@ -20,8 +18,8 @@ class Schedule(BaseModel):
         ordering = ["id"]
         constraints = [
             UniqueConstraint(
-                fields=["lesson", "lecturer", "time"],
-                name="schedule_lesson_lecturer_time_unique_together",
+                fields=["lecturer", "time"],
+                name="schedule_lecturer_time_unique_together",
             )
         ]
         indexes = [
@@ -32,17 +30,6 @@ class Schedule(BaseModel):
             ),
             Index(
                 fields=[
-                    "lesson",
-                ]
-            ),
-            Index(
-                fields=[
-                    "lecturer",
-                ]
-            ),
-            Index(
-                fields=[
-                    "lesson",
                     "lecturer",
                 ]
             ),

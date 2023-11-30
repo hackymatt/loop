@@ -8,3 +8,11 @@ class IsStudent(BasePermission):
         profile = Profile.objects.get(user=user)
 
         return profile.user_type == "S"
+
+
+class IsLecturer(BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+        profile = Profile.objects.get(user=user)
+
+        return profile.user_type == "W"

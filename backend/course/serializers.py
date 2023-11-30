@@ -18,10 +18,12 @@ from course.models import (
 from profile.models import Profile
 from review.models import Review
 from purchase.models import LessonPurchase
-from schedule.models import Schedule
+from teaching.models import Teaching
 from django.db.models import Sum, Avg, Min, Count
 from django.core.exceptions import FieldDoesNotExist
 from datetime import timedelta
+
+MIN_LESSON_DURATION_MINS = 15
 
 
 def model_field_exists(obj, field):
@@ -98,7 +100,7 @@ def get_lowest_30_days_price(price_history_model, instance):
 
 
 def get_lecturers(lessons):
-    lecturer_ids = Schedule.objects.filter(lesson__in=lessons).values("lecturer")
+    lecturer_ids = Teaching.objects.filter(lesson__in=lessons).values("lecturer")
     lecturers = Profile.objects.filter(id__in=lecturer_ids).order_by("uuid")
     return LecturerSerializer(lecturers, many=True).data
 
@@ -230,6 +232,7 @@ class LessonSerializer(ModelSerializer):
 
 class CourseListSerializer(ModelSerializer):
     technology = TechnologySerializer()
+    lessons_count = SerializerMethodField("get_course_lessons_count")
     previous_price = SerializerMethodField("get_course_previous_price")
     lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
     duration = SerializerMethodField("get_course_duration")
@@ -237,6 +240,9 @@ class CourseListSerializer(ModelSerializer):
     students_count = SerializerMethodField("get_course_students_count")
     rating = SerializerMethodField("get_course_rating")
     rating_count = SerializerMethodField("get_course_rating_count")
+
+    def get_course_lessons_count(self, course):
+        return get_course_lessons(course=course).count()
 
     def get_course_previous_price(self, course):
         return get_previous_price(
@@ -371,6 +377,15 @@ class CourseSerializer(ModelSerializer):
     def validate_lessons(self, lessons):
         if len(lessons) == 0:
             raise ValidationError({"lessons": "Kurs musi posiadać minimum 1 lekcję."})
+
+        for lesson in lessons:
+            duration = lesson["duration"]
+            if duration % MIN_LESSON_DURATION_MINS != 0:
+                raise ValidationError(
+                    {
+                        "lessons": f"Czas lekcji musi być wielokrotnością {MIN_LESSON_DURATION_MINS} minut."
+                    }
+                )
 
         return lessons
 

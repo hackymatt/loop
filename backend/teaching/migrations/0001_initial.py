@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Wishlist",
+            name="Teaching",
             fields=[
                 (
                     "id",
@@ -28,39 +28,40 @@ class Migration(migrations.Migration):
                 ("modified_at", models.DateTimeField(auto_now=True)),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 (
+                    "lecturer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="teaching_lecturer",
+                        to="profile.profile",
+                    ),
+                ),
+                (
                     "lesson",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE, to="course.lesson"
                     ),
                 ),
-                (
-                    "student",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="wishlist_student",
-                        to="profile.profile",
-                    ),
-                ),
             ],
             options={
-                "db_table": "wishlist",
+                "db_table": "teaching",
                 "ordering": ["id"],
                 "indexes": [
-                    models.Index(fields=["id"], name="wishlist_id_671a8c_idx"),
+                    models.Index(fields=["id"], name="teaching_id_32616e_idx"),
                     models.Index(
-                        fields=["student"], name="wishlist_student_7e9315_idx"
+                        fields=["lecturer"], name="teaching_lecture_718f11_idx"
                     ),
                     models.Index(
-                        fields=["student", "lesson"], name="wishlist_student_73e0ef_idx"
+                        fields=["lecturer", "lesson"],
+                        name="teaching_lecture_439d3b_idx",
                     ),
                 ],
             },
         ),
         migrations.AddConstraint(
-            model_name="wishlist",
+            model_name="teaching",
             constraint=models.UniqueConstraint(
-                fields=("lesson", "student"),
-                name="wishlist_lesson_student_unique_together",
+                fields=("lesson", "lecturer"),
+                name="teaching_lesson_lecturer_unique_together",
             ),
         ),
     ]

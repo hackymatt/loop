@@ -7,7 +7,6 @@ from django.db.models import (
 )
 from course.models import Lesson
 from profile.models import Profile
-from schedule.models import Schedule
 
 
 class Wishlist(BaseModel):

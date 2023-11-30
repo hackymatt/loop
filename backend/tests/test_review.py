@@ -10,7 +10,6 @@ from .factory import (
     create_topic_obj,
     create_review,
     create_purchase,
-    create_schedule,
 )
 from .helpers import (
     login,
@@ -23,8 +22,6 @@ from .helpers import (
 )
 from django.contrib import auth
 import json
-from datetime import datetime, timedelta
-from django.utils.timezone import make_aware
 
 
 class ReviewTest(APITestCase):
@@ -115,32 +112,6 @@ class ReviewTest(APITestCase):
                 ),
             ],
         )
-
-        for i in range(5):
-            create_schedule(
-                self.course.lessons.all()[0],
-                self.lecturer_profile,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    - timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[1],
-                self.lecturer_profile,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    - timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[2],
-                self.lecturer_profile,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    - timedelta(minutes=30 * i)
-                ),
-            )
 
         create_purchase(
             lesson=self.course.lessons.all()[0],
