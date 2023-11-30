@@ -190,11 +190,10 @@ def create_newsletter(email: str, active: bool = True):
 
 
 def create_schedule(
-    lesson: Lesson,
     lecturer: Profile,
     time: str,
 ):
-    return Schedule.objects.create(lesson=lesson, lecturer=lecturer, time=time)
+    return Schedule.objects.create(lecturer=lecturer, time=time)
 
 
 def create_course_price_history(course: Course, price: float):

@@ -127,5 +127,5 @@ def get_topic(id: int):
     return Topic.objects.get(pk=id)
 
 
-def get_schedules(lesson: Lesson, lecturer: Profile):
-    return Schedule.objects.filter(lesson=lesson, lecturer=lecturer).all()
+def get_schedules(lecturer: Profile):
+    return Schedule.objects.filter(lecturer=lecturer).all()

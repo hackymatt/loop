@@ -207,7 +207,7 @@ class TeachingTest(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(len(data), 6)
 
-    def test_delete_single_lesson_from_teaching_schedule(self):
+    def test_delete_single_lesson_from_teaching(self):
         # no login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -218,7 +218,7 @@ class TeachingTest(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(len(data), 3)
 
-    def test_delete_whole_course_from_teaching_schedule(self):
+    def test_delete_whole_course_from_teaching(self):
         # no login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)

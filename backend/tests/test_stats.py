@@ -10,11 +10,8 @@ from .factory import (
     create_topic_obj,
     create_review,
     create_purchase,
-    create_schedule,
 )
 import json
-from datetime import datetime, timedelta
-from django.utils.timezone import make_aware
 
 
 class StatsTest(APITestCase):
@@ -101,40 +98,6 @@ class StatsTest(APITestCase):
                 ),
             ],
         )
-
-        for i in range(5):
-            create_schedule(
-                self.course.lessons.all()[0],
-                self.lecturer_profile,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[1],
-                self.lecturer_profile,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[2],
-                self.lecturer_profile,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[3],
-                self.lecturer_profile,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
 
         create_purchase(
             lesson=self.course.lessons.all()[0],

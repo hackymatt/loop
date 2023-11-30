@@ -10,12 +10,9 @@ from .factory import (
     create_topic_obj,
     create_review,
     create_purchase,
-    create_schedule,
 )
 from django.contrib import auth
 import json
-from datetime import datetime, timedelta
-from django.utils.timezone import make_aware
 
 
 class PaginationTest(APITestCase):
@@ -94,40 +91,6 @@ class PaginationTest(APITestCase):
             ],
         )
 
-        for i in range(5):
-            create_schedule(
-                self.course_1.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_1.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_1.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_1.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-
         create_purchase(
             lesson=self.course_1.lessons.all()[0],
             student=self.profile,
@@ -201,56 +164,6 @@ class PaginationTest(APITestCase):
                 ),
             ],
         )
-
-        for i in range(5):
-            create_schedule(
-                self.course_2.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[2],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[2],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
 
         create_purchase(
             lesson=self.course_2.lessons.all()[0],
@@ -338,24 +251,6 @@ class PaginationTest(APITestCase):
                 ),
             ],
         )
-
-        for i in range(5):
-            create_schedule(
-                self.course_3.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_3.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
 
         create_purchase(
             lesson=self.course_3.lessons.all()[0],

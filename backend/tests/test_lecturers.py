@@ -8,14 +8,12 @@ from .factory import (
     create_technology_obj,
     create_skill_obj,
     create_topic_obj,
-    create_schedule,
+    create_teaching,
     create_review,
 )
 from .helpers import login
 from django.contrib import auth
 import json
-from datetime import datetime, timedelta
-from django.utils.timezone import make_aware
 
 
 class LecturersTest(APITestCase):
@@ -102,39 +100,22 @@ class LecturersTest(APITestCase):
             ],
         )
 
-        for i in range(5):
-            create_schedule(
-                self.course.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
+        create_teaching(
+            lesson=self.course.lessons.all()[0],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course.lessons.all()[1],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course.lessons.all()[0],
+            lecturer=self.lecturer_profile_2,
+        )
+        create_teaching(
+            lesson=self.course.lessons.all()[1],
+            lecturer=self.lecturer_profile_2,
+        )
 
         self.review_course_1_1 = create_review(
             lesson=self.course.lessons.all()[0],
@@ -264,39 +245,22 @@ class BestLecturersTest(APITestCase):
             ],
         )
 
-        for i in range(5):
-            create_schedule(
-                self.course.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
+        create_teaching(
+            lesson=self.course.lessons.all()[0],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course.lessons.all()[1],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course.lessons.all()[0],
+            lecturer=self.lecturer_profile_2,
+        )
+        create_teaching(
+            lesson=self.course.lessons.all()[1],
+            lecturer=self.lecturer_profile_2,
+        )
 
         self.review_course_1_1 = create_review(
             lesson=self.course.lessons.all()[0],

@@ -10,7 +10,7 @@ from .factory import (
     create_topic_obj,
     create_review,
     create_purchase,
-    create_schedule,
+    create_teaching,
     create_course_price_history,
     create_lesson_price_history,
 )
@@ -29,8 +29,6 @@ from .helpers import (
 )
 from django.contrib import auth
 import json
-from datetime import datetime, timedelta
-from django.utils.timezone import make_aware
 
 
 class CourseTest(APITestCase):
@@ -131,39 +129,22 @@ class CourseTest(APITestCase):
         create_lesson_price_history(self.course.lessons.all()[1], 5)
         create_lesson_price_history(self.course.lessons.all()[1], 3)
 
-        for i in range(5):
-            create_schedule(
-                self.course.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
+        create_teaching(
+            lesson=self.course.lessons.all()[0],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course.lessons.all()[1],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course.lessons.all()[0],
+            lecturer=self.lecturer_profile_2,
+        )
+        create_teaching(
+            lesson=self.course.lessons.all()[1],
+            lecturer=self.lecturer_profile_2,
+        )
 
         create_purchase(
             lesson=self.course.lessons.all()[0],
@@ -1580,39 +1561,22 @@ class BestCourseTest(APITestCase):
         create_lesson_price_history(self.course.lessons.all()[1], 5)
         create_lesson_price_history(self.course.lessons.all()[1], 3)
 
-        for i in range(5):
-            create_schedule(
-                self.course.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
+        create_teaching(
+            lesson=self.course.lessons.all()[0],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course.lessons.all()[1],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course.lessons.all()[0],
+            lecturer=self.lecturer_profile_2,
+        )
+        create_teaching(
+            lesson=self.course.lessons.all()[1],
+            lecturer=self.lecturer_profile_2,
+        )
 
         create_purchase(
             lesson=self.course.lessons.all()[0],
@@ -1851,39 +1815,22 @@ class CoursePriceHistoryTest(APITestCase):
         create_lesson_price_history(self.course.lessons.all()[1], 5)
         create_lesson_price_history(self.course.lessons.all()[1], 3)
 
-        for i in range(5):
-            create_schedule(
-                self.course.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
+        create_teaching(
+            lesson=self.course.lessons.all()[0],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course.lessons.all()[1],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course.lessons.all()[0],
+            lecturer=self.lecturer_profile_2,
+        )
+        create_teaching(
+            lesson=self.course.lessons.all()[1],
+            lecturer=self.lecturer_profile_2,
+        )
 
         create_purchase(
             lesson=self.course.lessons.all()[0],
@@ -2143,39 +2090,22 @@ class LessonPriceHistoryTest(APITestCase):
         create_lesson_price_history(self.course.lessons.all()[1], 5)
         create_lesson_price_history(self.course.lessons.all()[1], 3)
 
-        for i in range(5):
-            create_schedule(
-                self.course.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
+        create_teaching(
+            lesson=self.course.lessons.all()[0],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course.lessons.all()[1],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course.lessons.all()[0],
+            lecturer=self.lecturer_profile_2,
+        )
+        create_teaching(
+            lesson=self.course.lessons.all()[1],
+            lecturer=self.lecturer_profile_2,
+        )
 
         create_purchase(
             lesson=self.course.lessons.all()[0],

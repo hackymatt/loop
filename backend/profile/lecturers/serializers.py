@@ -7,7 +7,7 @@ from rest_framework.serializers import (
 from profile.models import Profile
 from review.models import Review
 from purchase.models import LessonPurchase
-from schedule.models import Schedule
+from teaching.models import Teaching
 from django.db.models import Avg
 
 
@@ -44,7 +44,7 @@ class LecturerSerializer(ModelSerializer):
 
     def get_lessons_count(self, lecturer):
         return (
-            Schedule.objects.filter(lecturer=lecturer)
+            Teaching.objects.filter(lecturer=lecturer)
             .values("lesson")
             .distinct()
             .count()

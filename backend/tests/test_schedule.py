@@ -11,6 +11,7 @@ from .factory import (
     create_review,
     create_purchase,
     create_schedule,
+    create_teaching,
 )
 from .helpers import login, get_schedules
 from django.contrib import auth
@@ -99,39 +100,9 @@ class ScheduleTest(APITestCase):
             ],
         )
 
-        for i in range(5):
-            create_schedule(
-                self.course_1.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_1.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_1.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_1.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
+        for lesson in self.course_1.lessons.all():
+            create_teaching(lecturer=self.lecturer_profile_1, lesson=lesson)
+            create_teaching(lecturer=self.lecturer_profile_2, lesson=lesson)
 
         self.review_course_1_1 = create_review(
             lesson=self.course_1.lessons.all()[0],
@@ -196,55 +167,9 @@ class ScheduleTest(APITestCase):
             ],
         )
 
-        for i in range(5):
-            create_schedule(
-                self.course_2.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[1],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[2],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[1],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_2.lessons.all()[2],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
+        for lesson in self.course_2.lessons.all():
+            create_teaching(lecturer=self.lecturer_profile_1, lesson=lesson)
+            create_teaching(lecturer=self.lecturer_profile_2, lesson=lesson)
 
         create_purchase(
             lesson=self.course_2.lessons.all()[0],
@@ -333,23 +258,9 @@ class ScheduleTest(APITestCase):
             ],
         )
 
-        for i in range(5):
-            create_schedule(
-                self.course_3.lessons.all()[0],
-                self.lecturer_profile_1,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
-            create_schedule(
-                self.course_3.lessons.all()[0],
-                self.lecturer_profile_2,
-                make_aware(
-                    datetime.now().replace(second=0, microsecond=0)
-                    + timedelta(minutes=30 * i)
-                ),
-            )
+        for lesson in self.course_3.lessons.all():
+            create_teaching(lecturer=self.lecturer_profile_1, lesson=lesson)
+            create_teaching(lecturer=self.lecturer_profile_2, lesson=lesson)
 
         create_purchase(
             lesson=self.course_3.lessons.all()[0],
@@ -377,6 +288,22 @@ class ScheduleTest(APITestCase):
             review="So so lesson.",
         )
 
+        for i in range(10):
+            create_schedule(
+                lecturer=self.lecturer_profile_1,
+                time=make_aware(
+                    datetime.now().replace(minute=15, second=0, microsecond=0)
+                    + timedelta(minutes=15 * i)
+                ),
+            )
+            create_schedule(
+                lecturer=self.lecturer_profile_2,
+                time=make_aware(
+                    datetime.now().replace(minute=15, second=0, microsecond=0)
+                    + timedelta(minutes=15 * i)
+                ),
+            )
+
     def test_get_schedule_for_lesson_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -387,7 +314,7 @@ class ScheduleTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 10)
+        self.assertEqual(count, 20)
 
     def test_get_schedule_for_lesson_authenticated(self):
         # login
@@ -400,7 +327,7 @@ class ScheduleTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 10)
+        self.assertEqual(count, 20)
 
     def test_create_schedule_unauthenticated(self):
         # no login
@@ -411,7 +338,6 @@ class ScheduleTest(APITestCase):
             for i in range(5)
         ]
         data = {
-            "lesson": self.course_1.lessons.all()[0].id,
             "times": available_times,
         }
         response = self.client.post(self.endpoint, data)
@@ -427,11 +353,26 @@ class ScheduleTest(APITestCase):
             for i in range(5)
         ]
         data = {
-            "lesson": self.course_1.lessons.all()[0].id,
             "times": available_times,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_create_schedule_incorrect_time(self):
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        available_times = [
+            datetime.now().replace(minute=5 * i, second=0, microsecond=0)
+            + timedelta(hours=i)
+            for i in range(5)
+        ]
+        data = {
+            "times": available_times,
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_schedule(self):
         # login
@@ -439,11 +380,11 @@ class ScheduleTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         available_times = [
-            datetime.now().replace(second=0, microsecond=0) + timedelta(hours=i)
+            datetime.now().replace(minute=15, second=0, microsecond=0)
+            + timedelta(hours=i)
             for i in range(5)
         ]
         data = {
-            "lesson": self.course_1.lessons.all()[0].id,
             "times": available_times,
         }
         response = self.client.post(self.endpoint, data)
@@ -470,15 +411,14 @@ class ScheduleTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         available_times = [
-            datetime.now().replace(second=0, microsecond=0) + timedelta(hours=i)
+            datetime.now().replace(minute=15, second=0, microsecond=0)
+            + timedelta(hours=i)
             for i in range(5)
         ]
         data = {
-            "lesson": self.course_1.lessons.all()[0].id,
             "times": available_times
             + [
                 get_schedules(
-                    lesson=self.course_1.lessons.all()[0],
                     lecturer=self.lecturer_profile_1,
                 )[0].time
             ],
@@ -508,7 +448,6 @@ class ScheduleTest(APITestCase):
         # get data
         available_times = []
         data = {
-            "lesson": self.course_1.lessons.all()[0].id,
             "times": available_times,
         }
         response = self.client.post(self.endpoint, data)

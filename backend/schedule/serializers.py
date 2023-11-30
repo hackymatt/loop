@@ -4,10 +4,13 @@ from rest_framework.serializers import (
     EmailField,
     DateTimeField,
     ListField,
+    ValidationError,
 )
-from course.models import Lesson
 from schedule.models import Schedule
 from profile.models import Profile
+
+
+TIME_DURATION_MINS = 15
 
 
 class ProfileSerializer(ModelSerializer):
@@ -43,6 +46,17 @@ class ScheduleSerializer(ModelSerializer):
         model = Schedule
         exclude = ("time",)
 
+    def validate_times(self, times):
+        for time in times:
+            if time.minute % TIME_DURATION_MINS != 0:
+                raise ValidationError(
+                    {
+                        "times": f"Czas rozpoczęcia lekcji musi być wielokrotnością {TIME_DURATION_MINS} minut."
+                    }
+                )
+
+        return times
+
     @staticmethod
     def is_time_in_list(schedule, times_list):
         schedule_time = schedule.time
@@ -57,11 +71,9 @@ class ScheduleSerializer(ModelSerializer):
     def create(self, validated_data):
         lecturer_id = validated_data.pop("lecturer")
         lecturer = Profile.objects.get(pk=lecturer_id)
-        lesson_id = validated_data.pop("lesson")
-        lesson = Lesson.objects.get(pk=lesson_id)
         times = validated_data.pop("times")
 
-        schedules = Schedule.objects.filter(lesson=lesson, lecturer=lecturer).all()
+        schedules = Schedule.objects.filter(lecturer=lecturer).all()
 
         delete_schedules_ids = [
             schedule.id
@@ -71,6 +83,6 @@ class ScheduleSerializer(ModelSerializer):
         Schedule.objects.filter(id__in=delete_schedules_ids).delete()
 
         for time in times:
-            Schedule.objects.get_or_create(lesson=lesson, lecturer=lecturer, time=time)
+            Schedule.objects.get_or_create(lecturer=lecturer, time=time)
 
-        return Schedule.objects.filter(lesson=lesson, lecturer=lecturer).all()
+        return Schedule.objects.filter(lecturer=lecturer).all()

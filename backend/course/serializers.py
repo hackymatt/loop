@@ -18,7 +18,7 @@ from course.models import (
 from profile.models import Profile
 from review.models import Review
 from purchase.models import LessonPurchase
-from schedule.models import Schedule
+from teaching.models import Teaching
 from django.db.models import Sum, Avg, Min, Count
 from django.core.exceptions import FieldDoesNotExist
 from datetime import timedelta
@@ -100,7 +100,7 @@ def get_lowest_30_days_price(price_history_model, instance):
 
 
 def get_lecturers(lessons):
-    lecturer_ids = Schedule.objects.filter(lesson__in=lessons).values("lecturer")
+    lecturer_ids = Teaching.objects.filter(lesson__in=lessons).values("lecturer")
     lecturers = Profile.objects.filter(id__in=lecturer_ids).order_by("uuid")
     return LecturerSerializer(lecturers, many=True).data
 
@@ -382,7 +382,9 @@ class CourseSerializer(ModelSerializer):
             duration = lesson["duration"]
             if duration % MIN_LESSON_DURATION_MINS != 0:
                 raise ValidationError(
-                    {"lessons": "Czas lekcji musi być wielokrotnością 15 minut."}
+                    {
+                        "lessons": f"Czas lekcji musi być wielokrotnością {MIN_LESSON_DURATION_MINS} minut."
+                    }
                 )
 
         return lessons
