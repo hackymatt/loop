@@ -104,28 +104,6 @@ class ScheduleTest(APITestCase):
             create_teaching(lecturer=self.lecturer_profile_1, lesson=lesson)
             create_teaching(lecturer=self.lecturer_profile_2, lesson=lesson)
 
-        self.review_course_1_1 = create_review(
-            lesson=self.course_1.lessons.all()[0],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            rating=5,
-            review="Great lesson.",
-        )
-        self.review_course_1_2 = create_review(
-            lesson=self.course_1.lessons.all()[0],
-            student=self.profile_2,
-            lecturer=self.lecturer_profile_1,
-            rating=4,
-            review="Good lesson.",
-        )
-        self.review_course_1_3 = create_review(
-            lesson=self.course_1.lessons.all()[1],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            rating=3,
-            review="So so lesson.",
-        )
-
         # course 2
         self.course_2 = create_course(
             title="Javascript course for Advanced",
@@ -171,68 +149,6 @@ class ScheduleTest(APITestCase):
             create_teaching(lecturer=self.lecturer_profile_1, lesson=lesson)
             create_teaching(lecturer=self.lecturer_profile_2, lesson=lesson)
 
-        create_purchase(
-            lesson=self.course_2.lessons.all()[0],
-            student=self.profile,
-            price=self.course_2.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course_2.lessons.all()[1],
-            student=self.profile,
-            price=self.course_2.lessons.all()[1].price,
-        )
-        create_purchase(
-            lesson=self.course_2.lessons.all()[0],
-            student=self.profile_2,
-            price=self.course_2.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course_2.lessons.all()[1],
-            student=self.profile_2,
-            price=self.course_2.lessons.all()[1].price,
-        )
-        create_purchase(
-            lesson=self.course_2.lessons.all()[2],
-            student=self.profile_2,
-            price=self.course_2.lessons.all()[2].price,
-        )
-
-        self.review_course_2_1 = create_review(
-            lesson=self.course_2.lessons.all()[0],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            rating=5,
-            review="Great lesson.",
-        )
-        self.review_course_2_2 = create_review(
-            lesson=self.course_2.lessons.all()[1],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            rating=4,
-            review="Good lesson.",
-        )
-        self.review_course_2_3 = create_review(
-            lesson=self.course_2.lessons.all()[0],
-            student=self.profile_2,
-            lecturer=self.lecturer_profile_1,
-            rating=2,
-            review="So so lesson.",
-        )
-        self.review_course_2_4 = create_review(
-            lesson=self.course_2.lessons.all()[1],
-            student=self.profile_2,
-            lecturer=self.lecturer_profile_1,
-            rating=1,
-            review="So so lesson.",
-        )
-        self.review_course_2_5 = create_review(
-            lesson=self.course_2.lessons.all()[2],
-            student=self.profile_2,
-            lecturer=self.lecturer_profile_1,
-            rating=4,
-            review="So so lesson.",
-        )
-
         # course 3
         self.course_3 = create_course(
             title="VBA course for Expert",
@@ -261,32 +177,6 @@ class ScheduleTest(APITestCase):
         for lesson in self.course_3.lessons.all():
             create_teaching(lecturer=self.lecturer_profile_1, lesson=lesson)
             create_teaching(lecturer=self.lecturer_profile_2, lesson=lesson)
-
-        create_purchase(
-            lesson=self.course_3.lessons.all()[0],
-            student=self.profile,
-            price=self.course_3.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course_3.lessons.all()[0],
-            student=self.profile_2,
-            price=self.course_3.lessons.all()[0].price,
-        )
-
-        self.review_course_3_1 = create_review(
-            lesson=self.course_3.lessons.all()[0],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            rating=5,
-            review="Great lesson.",
-        )
-        self.review_course_3_2 = create_review(
-            lesson=self.course_3.lessons.all()[0],
-            student=self.profile_2,
-            lecturer=self.lecturer_profile_1,
-            rating=2,
-            review="So so lesson.",
-        )
 
         for i in range(10):
             create_schedule(

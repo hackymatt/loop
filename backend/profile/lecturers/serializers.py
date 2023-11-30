@@ -6,7 +6,6 @@ from rest_framework.serializers import (
 )
 from profile.models import Profile
 from review.models import Review
-from purchase.models import LessonPurchase
 from teaching.models import Teaching
 from django.db.models import Avg
 

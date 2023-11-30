@@ -29,26 +29,7 @@ class ThrottlingTest(APITestCase):
             is_active=True,
         )
         self.profile = create_profile(user=self.user)
-        self.lecturer_user_1 = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email="lecturer_1@example.com",
-            password=self.data["password"],
-            is_active=True,
-        )
-        self.lecturer_user_2 = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email="lecturer_2@example.com",
-            password=self.data["password"],
-            is_active=True,
-        )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
-        )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
-        )
+
         # course 1
         self.course_1 = create_course(
             title="Python Beginner",

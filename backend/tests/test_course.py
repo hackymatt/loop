@@ -1466,19 +1466,6 @@ class CourseTest(APITestCase):
 class BestCourseTest(APITestCase):
     def setUp(self):
         self.endpoint = "/best-courses"
-        self.admin_data = {
-            "email": "admin_test_email@example.com",
-            "password": "TestPassword123",
-        }
-        self.admin_user = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email=self.admin_data["email"],
-            password=self.admin_data["password"],
-            is_active=True,
-            is_staff=True,
-        )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -1549,44 +1536,6 @@ class BestCourseTest(APITestCase):
                     price="2.99",
                 ),
             ],
-        )
-
-        create_course_price_history(self.course, 80)
-        create_course_price_history(self.course, 100)
-        create_course_price_history(self.course, 120)
-        create_lesson_price_history(self.course.lessons.all()[0], 15)
-        create_lesson_price_history(self.course.lessons.all()[0], 25)
-        create_lesson_price_history(self.course.lessons.all()[0], 5)
-        create_lesson_price_history(self.course.lessons.all()[1], 1)
-        create_lesson_price_history(self.course.lessons.all()[1], 5)
-        create_lesson_price_history(self.course.lessons.all()[1], 3)
-
-        create_teaching(
-            lesson=self.course.lessons.all()[0],
-            lecturer=self.lecturer_profile_1,
-        )
-        create_teaching(
-            lesson=self.course.lessons.all()[1],
-            lecturer=self.lecturer_profile_1,
-        )
-        create_teaching(
-            lesson=self.course.lessons.all()[0],
-            lecturer=self.lecturer_profile_2,
-        )
-        create_teaching(
-            lesson=self.course.lessons.all()[1],
-            lecturer=self.lecturer_profile_2,
-        )
-
-        create_purchase(
-            lesson=self.course.lessons.all()[0],
-            student=self.profile,
-            price=self.course.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course.lessons.all()[1],
-            student=self.profile,
-            price=self.course.lessons.all()[1].price,
         )
 
         self.review_1 = create_review(
@@ -1643,16 +1592,6 @@ class BestCourseTest(APITestCase):
             ],
         )
 
-        create_course_price_history(self.course_2, 120)
-        create_course_price_history(self.course_2, 100)
-        create_course_price_history(self.course_2, 80)
-        create_lesson_price_history(self.course_2.lessons.all()[0], 15)
-        create_lesson_price_history(self.course_2.lessons.all()[0], 25)
-        create_lesson_price_history(self.course_2.lessons.all()[0], 5)
-        create_lesson_price_history(self.course_2.lessons.all()[1], 1)
-        create_lesson_price_history(self.course_2.lessons.all()[1], 5)
-        create_lesson_price_history(self.course_2.lessons.all()[1], 3)
-
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
@@ -1684,16 +1623,6 @@ class BestCourseTest(APITestCase):
                 ),
             ],
         )
-
-        create_course_price_history(self.course_3, 100)
-        create_course_price_history(self.course_3, 80)
-        create_course_price_history(self.course_3, 120)
-        create_lesson_price_history(self.course_3.lessons.all()[0], 15)
-        create_lesson_price_history(self.course_3.lessons.all()[0], 25)
-        create_lesson_price_history(self.course_3.lessons.all()[0], 5)
-        create_lesson_price_history(self.course_3.lessons.all()[1], 1)
-        create_lesson_price_history(self.course_3.lessons.all()[1], 5)
-        create_lesson_price_history(self.course_3.lessons.all()[1], 3)
 
     def test_get_best_courses_unauthenticated(self):
         # no login
@@ -1745,34 +1674,7 @@ class CoursePriceHistoryTest(APITestCase):
             is_active=True,
         )
         self.profile = create_profile(user=self.user)
-        self.user_2 = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email="test2@example.com",
-            password="Test12345",
-            is_active=True,
-        )
-        self.profile_2 = create_profile(user=self.user_2)
-        self.lecturer_user_1 = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email="lecturer_1@example.com",
-            password=self.data["password"],
-            is_active=True,
-        )
-        self.lecturer_user_2 = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email="lecturer_2@example.com",
-            password=self.data["password"],
-            is_active=True,
-        )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
-        )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
-        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -1804,7 +1706,6 @@ class CoursePriceHistoryTest(APITestCase):
                 ),
             ],
         )
-
         create_course_price_history(self.course, 80)
         create_course_price_history(self.course, 100)
         create_course_price_history(self.course, 120)
@@ -1814,56 +1715,6 @@ class CoursePriceHistoryTest(APITestCase):
         create_lesson_price_history(self.course.lessons.all()[1], 1)
         create_lesson_price_history(self.course.lessons.all()[1], 5)
         create_lesson_price_history(self.course.lessons.all()[1], 3)
-
-        create_teaching(
-            lesson=self.course.lessons.all()[0],
-            lecturer=self.lecturer_profile_1,
-        )
-        create_teaching(
-            lesson=self.course.lessons.all()[1],
-            lecturer=self.lecturer_profile_1,
-        )
-        create_teaching(
-            lesson=self.course.lessons.all()[0],
-            lecturer=self.lecturer_profile_2,
-        )
-        create_teaching(
-            lesson=self.course.lessons.all()[1],
-            lecturer=self.lecturer_profile_2,
-        )
-
-        create_purchase(
-            lesson=self.course.lessons.all()[0],
-            student=self.profile,
-            price=self.course.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course.lessons.all()[1],
-            student=self.profile,
-            price=self.course.lessons.all()[1].price,
-        )
-
-        self.review_1 = create_review(
-            lesson=self.course.lessons.all()[0],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            rating=5,
-            review="Great lesson.",
-        )
-        self.review_2 = create_review(
-            lesson=self.course.lessons.all()[0],
-            student=self.profile_2,
-            lecturer=self.lecturer_profile_1,
-            rating=4,
-            review="Good lesson.",
-        )
-        self.review_3 = create_review(
-            lesson=self.course.lessons.all()[1],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            rating=3,
-            review="So so lesson.",
-        )
 
         self.course_2 = create_course(
             title="course_title 2",
@@ -2020,34 +1871,7 @@ class LessonPriceHistoryTest(APITestCase):
             is_active=True,
         )
         self.profile = create_profile(user=self.user)
-        self.user_2 = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email="test2@example.com",
-            password="Test12345",
-            is_active=True,
-        )
-        self.profile_2 = create_profile(user=self.user_2)
-        self.lecturer_user_1 = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email="lecturer_1@example.com",
-            password=self.data["password"],
-            is_active=True,
-        )
-        self.lecturer_user_2 = create_user(
-            first_name="first_name",
-            last_name="last_name",
-            email="lecturer_2@example.com",
-            password=self.data["password"],
-            is_active=True,
-        )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
-        )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
-        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -2089,56 +1913,6 @@ class LessonPriceHistoryTest(APITestCase):
         create_lesson_price_history(self.course.lessons.all()[1], 1)
         create_lesson_price_history(self.course.lessons.all()[1], 5)
         create_lesson_price_history(self.course.lessons.all()[1], 3)
-
-        create_teaching(
-            lesson=self.course.lessons.all()[0],
-            lecturer=self.lecturer_profile_1,
-        )
-        create_teaching(
-            lesson=self.course.lessons.all()[1],
-            lecturer=self.lecturer_profile_1,
-        )
-        create_teaching(
-            lesson=self.course.lessons.all()[0],
-            lecturer=self.lecturer_profile_2,
-        )
-        create_teaching(
-            lesson=self.course.lessons.all()[1],
-            lecturer=self.lecturer_profile_2,
-        )
-
-        create_purchase(
-            lesson=self.course.lessons.all()[0],
-            student=self.profile,
-            price=self.course.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course.lessons.all()[1],
-            student=self.profile,
-            price=self.course.lessons.all()[1].price,
-        )
-
-        self.review_1 = create_review(
-            lesson=self.course.lessons.all()[0],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            rating=5,
-            review="Great lesson.",
-        )
-        self.review_2 = create_review(
-            lesson=self.course.lessons.all()[0],
-            student=self.profile_2,
-            lecturer=self.lecturer_profile_1,
-            rating=4,
-            review="Good lesson.",
-        )
-        self.review_3 = create_review(
-            lesson=self.course.lessons.all()[1],
-            student=self.profile,
-            lecturer=self.lecturer_profile_1,
-            rating=3,
-            review="So so lesson.",
-        )
 
         self.course_2 = create_course(
             title="course_title 2",

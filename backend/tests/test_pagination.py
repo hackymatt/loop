@@ -9,7 +9,6 @@ from .factory import (
     create_skill_obj,
     create_topic_obj,
     create_review,
-    create_purchase,
 )
 from django.contrib import auth
 import json
@@ -91,17 +90,6 @@ class PaginationTest(APITestCase):
             ],
         )
 
-        create_purchase(
-            lesson=self.course_1.lessons.all()[0],
-            student=self.profile,
-            price=self.course_1.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course_1.lessons.all()[1],
-            student=self.profile,
-            price=self.course_1.lessons.all()[1].price,
-        )
-
         self.review_course_1_1 = create_review(
             lesson=self.course_1.lessons.all()[0],
             student=self.profile,
@@ -165,32 +153,6 @@ class PaginationTest(APITestCase):
             ],
         )
 
-        create_purchase(
-            lesson=self.course_2.lessons.all()[0],
-            student=self.profile,
-            price=self.course_2.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course_2.lessons.all()[1],
-            student=self.profile,
-            price=self.course_2.lessons.all()[1].price,
-        )
-        create_purchase(
-            lesson=self.course_2.lessons.all()[0],
-            student=self.profile_2,
-            price=self.course_2.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course_2.lessons.all()[1],
-            student=self.profile_2,
-            price=self.course_2.lessons.all()[1].price,
-        )
-        create_purchase(
-            lesson=self.course_2.lessons.all()[2],
-            student=self.profile_2,
-            price=self.course_2.lessons.all()[2].price,
-        )
-
         self.review_course_2_1 = create_review(
             lesson=self.course_2.lessons.all()[0],
             student=self.profile,
@@ -250,17 +212,6 @@ class PaginationTest(APITestCase):
                     price="9.99",
                 ),
             ],
-        )
-
-        create_purchase(
-            lesson=self.course_3.lessons.all()[0],
-            student=self.profile,
-            price=self.course_3.lessons.all()[0].price,
-        )
-        create_purchase(
-            lesson=self.course_3.lessons.all()[0],
-            student=self.profile_2,
-            price=self.course_3.lessons.all()[0].price,
         )
 
         self.review_course_3_1 = create_review(

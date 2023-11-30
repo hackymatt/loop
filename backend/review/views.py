@@ -8,9 +8,6 @@ from review.serializers import (
 )
 from review.filters import ReviewFilter
 from review.models import Review
-from purchase.models import LessonPurchase
-from course.models import Lesson
-from profile.models import Profile
 from random import sample
 
 
