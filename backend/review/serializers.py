@@ -58,10 +58,10 @@ class ReviewSerializer(ModelSerializer):
 
     def validate_lesson(self, lesson):
         request_type = self.context["request"].method
-        
+
         if request_type == "PUT":
             return lesson
-        
+
         user = self.context["request"].user
         data = self.context["request"].data
         profile = Profile.objects.get(user=user)
