@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from review.permissions import IsUserReview, IsLessonPurchased, IsReviewExist
+from review.permissions import IsUserReview
 from review.serializers import (
     ReviewSerializer,
     ReviewGetSerializer,
@@ -25,7 +25,7 @@ class ReviewViewSet(ModelViewSet):
 
     def get_permissions(self):
         if self.action == "create":
-            permission_classes = [IsAuthenticated & IsLessonPurchased & ~IsReviewExist]
+            permission_classes = [IsAuthenticated]
         elif self.action == "update" or self.action == "destroy":
             permission_classes = [IsAuthenticated & IsUserReview]
         else:
