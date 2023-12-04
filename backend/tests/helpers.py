@@ -4,6 +4,7 @@ from course.models import Course, Lesson, Technology, Skill, Topic
 from review.models import Review
 from newsletter.models import Newsletter
 from schedule.models import Schedule
+from reservation.models import Reservation
 from django.core import mail
 
 
@@ -129,3 +130,11 @@ def get_topic(id: int):
 
 def get_schedules(lecturer: Profile):
     return Schedule.objects.filter(lecturer=lecturer).all()
+
+
+def reservation_number():
+    return Reservation.objects.count()
+
+
+def is_reservation_found(id: int):
+    return Reservation.objects.filter(id=id).exists()

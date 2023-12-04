@@ -14,6 +14,7 @@ from .factory import (
     create_schedule,
     create_course_price_history,
     create_lesson_price_history,
+    create_reservation,
 )
 from .helpers import login
 from django.contrib import auth
@@ -847,21 +848,37 @@ class ScheduleFilterTest(APITestCase):
             create_teaching(lecturer=self.lecturer_profile_1, lesson=lesson)
             create_teaching(lecturer=self.lecturer_profile_2, lesson=lesson)
 
+        self.schedules = []
         for i in range(10):
-            create_schedule(
-                lecturer=self.lecturer_profile_1,
-                time=make_aware(
-                    datetime.now().replace(minute=15, second=0, microsecond=0)
-                    + timedelta(minutes=15 * i)
-                ),
+            self.schedules.append(
+                create_schedule(
+                    lecturer=self.lecturer_profile_1,
+                    time=make_aware(
+                        datetime.now().replace(minute=15, second=0, microsecond=0)
+                        + timedelta(minutes=15 * i)
+                    ),
+                )
             )
-            create_schedule(
-                lecturer=self.lecturer_profile_2,
-                time=make_aware(
-                    datetime.now().replace(minute=15, second=0, microsecond=0)
-                    + timedelta(minutes=15 * i)
-                ),
+            self.schedules.append(
+                create_schedule(
+                    lecturer=self.lecturer_profile_2,
+                    time=make_aware(
+                        datetime.now().replace(minute=15, second=0, microsecond=0)
+                        + timedelta(minutes=15 * i)
+                    ),
+                )
             )
+
+        create_reservation(
+            student=self.profile,
+            lesson=self.course_1.lessons.all()[0],
+            schedule=self.schedules[0],
+        )
+        create_reservation(
+            student=self.profile,
+            lesson=self.course_1.lessons.all()[1],
+            schedule=self.schedules[1],
+        )
 
     def test_lesson_id_filter(self):
         # no login
@@ -873,7 +890,7 @@ class ScheduleFilterTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 20)
+        self.assertEqual(count, 19)
 
     def test_lecturer_id_filter(self):
         # no login

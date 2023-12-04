@@ -1,6 +1,7 @@
 from django_filters import FilterSet, OrderingFilter, NumberFilter
 from schedule.models import Schedule
 from teaching.models import Teaching
+from reservation.models import Reservation
 
 
 class OrderFilter(OrderingFilter):
@@ -42,4 +43,9 @@ class ScheduleFilter(FilterSet):
 
     def filter_lesson_id(self, queryset, field_name, value):
         lecturers = Teaching.objects.filter(lesson_id=value).values("lecturer")
-        return queryset.filter(lecturer__in=lecturers)
+        not_available_times = Reservation.objects.exclude(lesson_id=value).values(
+            "schedule"
+        )
+        return queryset.filter(lecturer__in=lecturers).exclude(
+            id__in=not_available_times
+        )

@@ -30,6 +30,7 @@ from wishlist.views import WishlistViewSet
 from cart.views import CartViewSet
 from purchase.views import PurchaseViewSet
 from teaching.views import TeachingViewSet
+from reservation.views import ReservationViewSet
 
 
 router = DefaultRouter(trailing_slash=False)
@@ -68,6 +69,7 @@ router.register(r"wishlist", WishlistViewSet, basename="wishlist")
 router.register(r"cart", CartViewSet, basename="cart")
 router.register(r"purchase", PurchaseViewSet, basename="purchase")
 router.register(r"teaching", TeachingViewSet, basename="teaching")
+router.register(r"reservation", ReservationViewSet, basename="reservation")
 
 
 urlpatterns = [
