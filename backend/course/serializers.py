@@ -5,6 +5,7 @@ from rest_framework.serializers import (
     EmailField,
     IntegerField,
 )
+from drf_extra_fields.fields import Base64ImageField, Base64FileField
 from rest_framework.serializers import ValidationError
 from course.models import (
     Lesson,
@@ -23,7 +24,15 @@ from django.db.models import Sum, Avg, Min, Count
 from django.core.exceptions import FieldDoesNotExist
 from datetime import timedelta
 
+
 MIN_LESSON_DURATION_MINS = 15
+
+
+class VideoBase64File(Base64FileField):
+    ALLOWED_TYPES = ["mp4"]
+
+    def get_file_extension(self, filename, decoded_file):
+        return "mp4"
 
 
 def model_field_exists(obj, field):
@@ -178,6 +187,7 @@ class LecturerSerializer(ModelSerializer):
     first_name = CharField(source="user.first_name")
     last_name = CharField(source="user.last_name")
     email = EmailField(source="user.email")
+    image = Base64ImageField(required=True)
 
     class Meta:
         model = Profile
@@ -240,6 +250,8 @@ class CourseListSerializer(ModelSerializer):
     students_count = SerializerMethodField("get_course_students_count")
     rating = SerializerMethodField("get_course_rating")
     rating_count = SerializerMethodField("get_course_rating_count")
+    image = Base64ImageField(required=True)
+    video = VideoBase64File(required=False)
 
     def get_course_lessons_count(self, course):
         return get_course_lessons(course=course).count()
@@ -290,6 +302,8 @@ class CourseGetSerializer(ModelSerializer):
     students_count = SerializerMethodField("get_course_students_count")
     rating = SerializerMethodField("get_course_rating")
     rating_count = SerializerMethodField("get_course_rating_count")
+    image = Base64ImageField(required=True)
+    video = VideoBase64File(required=False)
 
     def get_lessons(self, course):
         return LessonSerializer(get_course_lessons(course=course), many=True).data
@@ -340,6 +354,8 @@ class CourseSerializer(ModelSerializer):
     students_count = SerializerMethodField("get_course_students_count")
     rating = SerializerMethodField("get_course_rating")
     rating_count = SerializerMethodField("get_course_rating_count")
+    image = Base64ImageField(required=True)
+    video = VideoBase64File(required=False)
 
     def get_course_previous_price(self, course):
         return get_previous_price(

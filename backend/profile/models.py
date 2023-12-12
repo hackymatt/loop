@@ -42,7 +42,7 @@ class Profile(BaseModel):
     zip_code = CharField(null=True)
     city = CharField(null=True)
     country = CharField(null=True)
-    image = ImageField(upload_to=user_directory_path, blank=True)
+    image = ImageField(upload_to=user_directory_path, null=True)
 
     class Meta:
         db_table = "profile"

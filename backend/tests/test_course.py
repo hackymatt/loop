@@ -13,6 +13,8 @@ from .factory import (
     create_teaching,
     create_course_price_history,
     create_lesson_price_history,
+    create_image,
+    create_video,
 )
 from .helpers import (
     login,
@@ -29,6 +31,7 @@ from .helpers import (
 )
 from django.contrib import auth
 import json
+from base64 import b64encode
 
 
 class CourseTest(APITestCase):
@@ -521,6 +524,7 @@ class CourseTest(APITestCase):
                     price="29.99",
                 ),
             ],
+            "image": b64encode(create_image().read()),
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -564,6 +568,7 @@ class CourseTest(APITestCase):
                     price="29.99",
                 ),
             ],
+            "image": b64encode(create_image().read()),
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -612,6 +617,8 @@ class CourseTest(APITestCase):
                     price="29.99",
                 ),
             ],
+            "image": b64encode(create_image().read()),
+            "video": b64encode(create_video().read()),
         }
 
         response = self.client.post(self.endpoint, data)
@@ -754,6 +761,7 @@ class CourseTest(APITestCase):
                     price="29.99",
                 ),
             ],
+            "image": b64encode(create_image().read()),
         }
 
         response = self.client.post(self.endpoint, data)
@@ -803,6 +811,7 @@ class CourseTest(APITestCase):
                     price="29.99",
                 ),
             ],
+            "image": b64encode(create_image().read()),
         }
 
         response = self.client.post(self.endpoint, data)
@@ -849,6 +858,7 @@ class CourseTest(APITestCase):
                     price="29.99",
                 ),
             ],
+            "image": b64encode(create_image().read()),
         }
 
         response = self.client.post(self.endpoint, data)
@@ -892,6 +902,7 @@ class CourseTest(APITestCase):
                     price="29.99",
                 ),
             ],
+            "image": b64encode(create_image().read()),
         }
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -935,6 +946,7 @@ class CourseTest(APITestCase):
                     price="29.99",
                 ),
             ],
+            "image": b64encode(create_image().read()),
         }
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -984,6 +996,7 @@ class CourseTest(APITestCase):
                     price="29.99",
                 ),
             ],
+            "image": b64encode(create_image().read()),
         }
 
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
@@ -1118,6 +1131,7 @@ class CourseTest(APITestCase):
                     price="29.99",
                 ),
             ],
+            "image": b64encode(create_image().read()),
         }
 
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
@@ -1253,6 +1267,7 @@ class CourseTest(APITestCase):
                     price="29.99",
                 ),
             ],
+            "image": b64encode(create_image().read()),
         }
 
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
@@ -1410,6 +1425,7 @@ class CourseTest(APITestCase):
                     price="29.99",
                 ),
             ],
+            "image": b64encode(create_image().read()),
         }
 
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
@@ -1456,6 +1472,7 @@ class CourseTest(APITestCase):
                     price="29.99",
                 ),
             ],
+            "image": b64encode(create_image().read()),
         }
 
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)

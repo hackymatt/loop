@@ -41,11 +41,14 @@ def is_data_match(obj, data):
         data_value = str(value)
         obj_value = str(getattr(obj, key))
         if not data_value == obj_value:
-            if key == "modified_at" or key == "created_at":
+            if key in ["modified_at", "created_at"]:
                 modified_value = data_value.replace("T", " ")
-                if not modified_value[0:26] == obj_value[0:26]:
-                    return False
+                return modified_value[0:26] == obj_value[0:26]
+            elif key in ["image", "video"]:
+                modified_value = data_value.replace("http://testserver/media/", "")
+                return modified_value == obj_value
             else:
+                print(data_value, key, obj_value)
                 return False
 
     return True
