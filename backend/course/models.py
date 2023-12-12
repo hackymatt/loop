@@ -8,12 +8,13 @@ from django.db.models import (
     URLField,
     DecimalField,
     BooleanField,
+    ImageField,
+    FileField,
     CASCADE,
     Index,
 )
 from django.core.validators import MinValueValidator
 from decimal import Decimal
-from profile.models import Profile
 
 
 class Technology(BaseModel):
@@ -76,6 +77,11 @@ class Topic(BaseModel):
         ]
 
 
+def course_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT / course / <id> / <filename>
+    return f"course/{instance.id}/{filename}"  # pragma: no cover
+
+
 class Course(BaseModel):
     LEVEL_CHOICES = (
         ("P", "Podstawowy"),
@@ -94,6 +100,8 @@ class Course(BaseModel):
     skills = ManyToManyField(Skill, related_name="course_skills")
     topics = ManyToManyField(Topic, related_name="course_topics")
     active = BooleanField(default=False)
+    image = ImageField(upload_to=course_directory_path)
+    video = FileField(upload_to=course_directory_path, null=True)
 
     class Meta:
         db_table = "course"

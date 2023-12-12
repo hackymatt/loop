@@ -3,6 +3,7 @@ from rest_framework.serializers import (
     EmailField,
     CharField,
 )
+from drf_extra_fields.fields import Base64ImageField
 from profile.models import Profile
 
 
@@ -11,6 +12,7 @@ class ProfileDetailsSerializer(ModelSerializer):
     last_name = CharField(source="user.last_name")
     email = EmailField(source="user.email")
     gender = CharField(source="get_gender_display")
+    image = Base64ImageField(required=True)
 
     class Meta:
         model = Profile
@@ -28,12 +30,31 @@ class ProfileDetailsSerializer(ModelSerializer):
             "image",
         )
 
+    def update(self, instance, validated_data):
+        user = validated_data.pop("user")
+        user.pop("email")
+        first_name = user.pop("first_name", instance.user.first_name)
+        last_name = user.pop("last_name", instance.user.last_name)
+        instance.user.first_name = first_name
+        instance.user.last_name = last_name
+        instance.user.save()
+
+        gender = validated_data.pop("get_gender_display", instance.gender)
+        instance.gender = gender
+        instance.save()
+
+        Profile.objects.filter(pk=instance.pk).update(**validated_data)
+        instance = Profile.objects.get(pk=instance.pk)
+
+        return instance
+
 
 class LecturerDetailsSerializer(ModelSerializer):
     first_name = CharField(source="user.first_name")
     last_name = CharField(source="user.last_name")
     email = EmailField(source="user.email")
     gender = CharField(source="get_gender_display")
+    image = Base64ImageField(required=True)
 
     class Meta:
         model = Profile

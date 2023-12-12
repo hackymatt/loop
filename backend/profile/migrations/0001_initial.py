@@ -56,7 +56,7 @@ class Migration(migrations.Migration):
                 (
                     "image",
                     models.ImageField(
-                        blank=True, upload_to=profile.models.user_directory_path
+                        null=True, upload_to=profile.models.user_directory_path
                     ),
                 ),
                 (

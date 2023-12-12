@@ -4,6 +4,7 @@ from .factory import create_user, create_profile, create_image
 from .helpers import login, is_data_match, filter_dict, get_user, get_profile
 from django.contrib import auth
 import json
+from base64 import b64encode
 
 
 class DetailsTest(APITestCase):
@@ -130,14 +131,14 @@ class DetailsTest(APITestCase):
             "email": "test_email@example.com",
             "phone_number": "999888777",
             "gender": "M",
-            "dob": "",
+            "dob": None,
             "street_address": "abc",
             "zip_code": "30-100",
             "city": "Miasto",
             "country": "Polska",
-            "image": create_image().read(),
+            "image": b64encode(create_image().read()),
         }
-        response = self.client.put(self.endpoint, new_data, format="multipart")
+        response = self.client.put(self.endpoint, new_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         user_data = filter_dict(new_data, self.user_columns)
         profile_columns = self.profile_columns.copy()
@@ -156,7 +157,17 @@ class DetailsTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # new data
         new_data = {
+            "first_name": "Name",
+            "last_name": "LastName",
             "email": "new_email@example.com",
+            "phone_number": "999888777",
+            "dob": "1900-01-01",
+            "gender": "M",
+            "street_address": "abc",
+            "zip_code": "30-100",
+            "city": "Miasto",
+            "country": "Polska",
+            "image": "",
         }
         response = self.client.put(self.endpoint, new_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

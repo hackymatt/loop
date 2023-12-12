@@ -4,6 +4,7 @@ from decimal import Decimal
 import django.core.validators
 from django.db import migrations, models
 import django.db.models.deletion
+import course.models
 
 
 class Migration(migrations.Migration):
@@ -52,6 +53,16 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("active", models.BooleanField(default=False)),
+                (
+                    "image",
+                    models.ImageField(upload_to=course.models.course_directory_path),
+                ),
+                (
+                    "video",
+                    models.FileField(
+                        null=True, upload_to=course.models.course_directory_path
+                    ),
+                ),
             ],
             options={
                 "db_table": "course",

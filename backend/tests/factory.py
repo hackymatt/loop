@@ -19,8 +19,8 @@ from teaching.models import Teaching
 from reservation.models import Reservation
 from datetime import datetime
 from django.utils.timezone import make_aware
-from PIL import Image
-from io import BytesIO
+from django.core.files.uploadedfile import SimpleUploadedFile
+import os
 
 
 def create_user(
@@ -60,13 +60,19 @@ def create_profile(
     )
 
 
-def create_image():
-    image_data = BytesIO()
-    image = Image.new("RGB", (100, 100), "white")
-    image.save(image_data, format="png")
-    image_data.seek(0)
+def _create_file(file_name: str):
+    file_path = os.path.join(os.path.dirname(__file__), "helper_files/" + file_name)
+    with open(file_path, "rb") as file:
+        upload_file = SimpleUploadedFile(file_name, file.read())
+    return upload_file
 
-    return image_data
+
+def create_image():
+    return _create_file("example_image.jpg")
+
+
+def create_video():
+    return _create_file("example_video.mp4")
 
 
 def create_field(value, model):
@@ -108,6 +114,8 @@ def create_course(
 
     course.skills.add(*create_fields(skills, Skill))
     course.topics.add(*create_fields(topics, Topic))
+    course.image = create_image()
+    course.video = create_video()
     course.save()
 
     Lesson.objects.bulk_create(
