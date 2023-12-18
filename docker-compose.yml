@@ -10,9 +10,9 @@ services:
     volumes:
       - ./backend/:/usr/src/app/
     environment:
-      - DB_NAME=codeedu
-      - DB_USER=codeedu_dev
-      - DB_PASSWORD=codeedu_devpassword
+      - DB_NAME=loop
+      - DB_USER=loop_dev
+      - DB_PASSWORD=loop_devpassword
       - DB_HOST=db
       - DB_PORT=5432
       - ADMIN_EMAIL=matios94@gmail.com
@@ -33,9 +33,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=codeedu
-      - POSTGRES_USER=codeedu_dev
-      - POSTGRES_PASSWORD=codeedu_devpassword
+      - POSTGRES_DB=loop
+      - POSTGRES_USER=loop_dev
+      - POSTGRES_PASSWORD=loop_devpassword
 
 volumes:
   postgres_data:

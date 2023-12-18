@@ -112,9 +112,9 @@ WSGI_APPLICATION = "backend.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("DB_NAME", "codeedu"),
-        "USER": os.getenv("DB_USER", "codeedu_dev"),
-        "PASSWORD": os.getenv("DB_PASSWORD", "codeedu_devpassword"),
+        "NAME": os.getenv("DB_NAME", "loop"),
+        "USER": os.getenv("DB_USER", "loop_dev"),
+        "PASSWORD": os.getenv("DB_PASSWORD", "loop_devpassword"),
         "HOST": os.getenv("DB_HOST", "localhost"),
         "PORT": os.environ.get("DB_PORT", "5432"),
     }
