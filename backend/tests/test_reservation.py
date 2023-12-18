@@ -83,7 +83,7 @@ class ReservationTest(APITestCase):
                     title="Python lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    github_branch_link="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -91,7 +91,7 @@ class ReservationTest(APITestCase):
                     title="Python lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    github_branch_link="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -99,7 +99,7 @@ class ReservationTest(APITestCase):
                     title="Python lesson 3",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    github_branch_link="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -107,7 +107,7 @@ class ReservationTest(APITestCase):
                     title="Python lesson 4",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/CodeEdu",
+                    github_branch_link="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
             ],
