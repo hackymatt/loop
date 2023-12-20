@@ -93,7 +93,7 @@ class Course(BaseModel):
     description = TextField()
     technology = ForeignKey(Technology, on_delete=CASCADE, related_name="technology")
     level = CharField(choices=LEVEL_CHOICES, null=True)
-    github_repo_link = URLField()
+    github_url = URLField()
     price = DecimalField(
         max_digits=7, decimal_places=2, validators=[MinValueValidator(Decimal("0.00"))]
     )
@@ -160,7 +160,7 @@ class Lesson(BaseModel):
     title = CharField()
     description = TextField()
     duration = PositiveIntegerField()
-    github_branch_link = URLField()
+    github_url = URLField()
     price = DecimalField(
         max_digits=7, decimal_places=2, validators=[MinValueValidator(Decimal("0.00"))]
     )

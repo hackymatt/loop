@@ -41,6 +41,7 @@ class Migration(migrations.Migration):
                         on_delete=django.db.models.deletion.CASCADE, to="course.lesson"
                     ),
                 ),
+                ("github_url", models.URLField()),
             ],
             options={
                 "db_table": "teaching",

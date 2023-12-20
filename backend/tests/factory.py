@@ -96,7 +96,7 @@ def create_course(
     technology,
     level: str,
     price: str,
-    github_repo_link: str,
+    github_url: str,
     skills,
     topics,
     lessons,
@@ -108,7 +108,7 @@ def create_course(
         technology=create_field(technology, Technology),
         level=level,
         price=price,
-        github_repo_link=github_repo_link,
+        github_url=github_url,
         active=active,
     )
 
@@ -124,7 +124,7 @@ def create_course(
             title=lesson["title"],
             description=lesson["description"],
             duration=lesson["duration"],
-            github_branch_link=lesson["github_branch_link"],
+            github_url=lesson["github_url"],
             price=lesson["price"],
             active=lesson["active"],
         )
@@ -139,7 +139,7 @@ def create_lesson_obj(
     title: str,
     description: str,
     duration: int,
-    github_branch_link: str,
+    github_url: str,
     price: str,
     active: bool = True,
 ):
@@ -148,7 +148,7 @@ def create_lesson_obj(
         "title": title,
         "description": description,
         "duration": duration,
-        "github_branch_link": github_branch_link,
+        "github_url": github_url,
         "price": price,
         "active": active,
     }
@@ -221,8 +221,10 @@ def create_cart(student: Profile, lesson: Lesson):
     return Cart.objects.create(student=student, lesson=lesson)
 
 
-def create_teaching(lecturer: Profile, lesson: Lesson):
-    return Teaching.objects.create(lecturer=lecturer, lesson=lesson)
+def create_teaching(lecturer: Profile, lesson: Lesson, github_url: str):
+    return Teaching.objects.create(
+        lecturer=lecturer, lesson=lesson, github_url=github_url
+    )
 
 
 def create_reservation(student: Profile, lesson: Lesson, schedule: Schedule):

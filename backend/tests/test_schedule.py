@@ -74,7 +74,7 @@ class ScheduleTest(APITestCase):
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",
             price="99.99",
-            github_repo_link="www.example.com",
+            github_url="www.example.com",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -86,7 +86,7 @@ class ScheduleTest(APITestCase):
                     title="Python lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -94,15 +94,23 @@ class ScheduleTest(APITestCase):
                     title="Python lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
             ],
         )
 
         for lesson in self.course_1.lessons.all():
-            create_teaching(lecturer=self.lecturer_profile_1, lesson=lesson)
-            create_teaching(lecturer=self.lecturer_profile_2, lesson=lesson)
+            create_teaching(
+                lecturer=self.lecturer_profile_1,
+                lesson=lesson,
+                github_url="https://github.com/hackymatt/loop",
+            )
+            create_teaching(
+                lecturer=self.lecturer_profile_2,
+                lesson=lesson,
+                github_url="https://github.com/hackymatt/loop",
+            )
 
         # course 2
         self.course_2 = create_course(
@@ -111,7 +119,7 @@ class ScheduleTest(APITestCase):
             technology=create_technology_obj(name="Javascript"),
             level="Zaawansowany",
             price="300",
-            github_repo_link="www.example.com",
+            github_url="www.example.com",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -123,7 +131,7 @@ class ScheduleTest(APITestCase):
                     title="JS lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -131,7 +139,7 @@ class ScheduleTest(APITestCase):
                     title="JS lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -139,15 +147,23 @@ class ScheduleTest(APITestCase):
                     title="JS lesson 3",
                     description="bbbb",
                     duration="120",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
             ],
         )
 
         for lesson in self.course_2.lessons.all():
-            create_teaching(lecturer=self.lecturer_profile_1, lesson=lesson)
-            create_teaching(lecturer=self.lecturer_profile_2, lesson=lesson)
+            create_teaching(
+                lecturer=self.lecturer_profile_1,
+                lesson=lesson,
+                github_url="https://github.com/hackymatt/loop",
+            )
+            create_teaching(
+                lecturer=self.lecturer_profile_2,
+                lesson=lesson,
+                github_url="https://github.com/hackymatt/loop",
+            )
 
         # course 3
         self.course_3 = create_course(
@@ -156,7 +172,7 @@ class ScheduleTest(APITestCase):
             technology=create_technology_obj(name="VBA"),
             level="Ekspert",
             price="220",
-            github_repo_link="www.example.com",
+            github_url="www.example.com",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -168,15 +184,23 @@ class ScheduleTest(APITestCase):
                     title="VBA lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
             ],
         )
 
         for lesson in self.course_3.lessons.all():
-            create_teaching(lecturer=self.lecturer_profile_1, lesson=lesson)
-            create_teaching(lecturer=self.lecturer_profile_2, lesson=lesson)
+            create_teaching(
+                lecturer=self.lecturer_profile_1,
+                lesson=lesson,
+                github_url="https://github.com/hackymatt/loop",
+            )
+            create_teaching(
+                lecturer=self.lecturer_profile_2,
+                lesson=lesson,
+                github_url="https://github.com/hackymatt/loop",
+            )
 
         for i in range(10):
             create_schedule(

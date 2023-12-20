@@ -16,7 +16,7 @@ class CourseSerializer(ModelSerializer):
         model = Course
         exclude = (
             "description",
-            "github_repo_link",
+            "github_url",
             "price",
             "active",
             "skills",
@@ -31,7 +31,7 @@ class LessonSerializer(ModelSerializer):
             "course",
             "description",
             "duration",
-            "github_branch_link",
+            "github_url",
             "price",
             "active",
         )
