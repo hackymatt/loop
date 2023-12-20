@@ -461,7 +461,7 @@ class CourseSerializer(ModelSerializer):
                 title=lesson["title"],
                 description=lesson["description"],
                 duration=lesson["duration"],
-                github_branch_link=lesson["github_branch_link"],
+                github_url=lesson["github_url"],
                 price=lesson["price"],
                 active=lesson["active"],
             )
@@ -475,9 +475,7 @@ class CourseSerializer(ModelSerializer):
             obj.title = lesson.get("title", obj.title)
             obj.description = lesson.get("description", obj.description)
             obj.duration = lesson.get("duration", obj.duration)
-            obj.github_branch_link = lesson.get(
-                "github_branch_link", obj.github_branch_link
-            )
+            obj.github_url = lesson.get("github_url", obj.github_url)
 
             current_price = obj.price
             new_price = lesson.get("price", obj.price)
@@ -541,9 +539,7 @@ class CourseSerializer(ModelSerializer):
             CoursePriceHistory.objects.create(course=instance, price=current_price)
 
         instance.price = new_price
-        instance.github_repo_link = validated_data.get(
-            "github_repo_link", instance.github_repo_link
-        )
+        instance.github_url = validated_data.get("github_url", instance.github_url)
         instance.technology = self.add_technology(technology=technology)
         instance.skills.clear()
         instance = self.add_skills(course=instance, skills=skills)

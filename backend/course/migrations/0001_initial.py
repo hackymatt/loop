@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
                         null=True,
                     ),
                 ),
-                ("github_repo_link", models.URLField()),
+                ("github_url", models.URLField()),
                 (
                     "price",
                     models.DecimalField(
@@ -86,7 +86,7 @@ class Migration(migrations.Migration):
                 ("title", models.CharField()),
                 ("description", models.TextField()),
                 ("duration", models.PositiveIntegerField()),
-                ("github_branch_link", models.URLField()),
+                ("github_url", models.URLField()),
                 (
                     "price",
                     models.DecimalField(

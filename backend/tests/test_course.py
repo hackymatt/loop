@@ -96,7 +96,7 @@ class CourseTest(APITestCase):
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",
             price="99.99",
-            github_repo_link="www.example.com",
+            github_url="www.example.com",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -108,7 +108,7 @@ class CourseTest(APITestCase):
                     title="Python lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -116,7 +116,7 @@ class CourseTest(APITestCase):
                     title="Python lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
             ],
@@ -135,18 +135,22 @@ class CourseTest(APITestCase):
         create_teaching(
             lesson=self.course.lessons.all()[0],
             lecturer=self.lecturer_profile_1,
+            github_url="https://github.com/hackymatt/loop",
         )
         create_teaching(
             lesson=self.course.lessons.all()[1],
             lecturer=self.lecturer_profile_1,
+            github_url="https://github.com/hackymatt/loop",
         )
         create_teaching(
             lesson=self.course.lessons.all()[0],
             lecturer=self.lecturer_profile_2,
+            github_url="https://github.com/hackymatt/loop",
         )
         create_teaching(
             lesson=self.course.lessons.all()[1],
             lecturer=self.lecturer_profile_2,
+            github_url="https://github.com/hackymatt/loop",
         )
 
         create_purchase(
@@ -188,7 +192,7 @@ class CourseTest(APITestCase):
             technology=create_technology_obj(name="JS"),
             level="Podstawowy",
             price="99.99",
-            github_repo_link="www.example.com",
+            github_url="www.example.com",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -200,7 +204,7 @@ class CourseTest(APITestCase):
                     title="JS lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -208,7 +212,7 @@ class CourseTest(APITestCase):
                     title="JS lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
             ],
@@ -230,7 +234,7 @@ class CourseTest(APITestCase):
             technology=create_technology_obj(name="VBA"),
             level="Podstawowy",
             price="99.99",
-            github_repo_link="www.example.com",
+            github_url="www.example.com",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -242,7 +246,7 @@ class CourseTest(APITestCase):
                     title="VBA lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -250,7 +254,7 @@ class CourseTest(APITestCase):
                     title="VBA lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
             ],
@@ -497,14 +501,14 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_repo_link": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/loop",
             "lessons": [
                 create_lesson_obj(
                     id=-1,
                     title="Javascript lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -512,7 +516,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -520,7 +524,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 3",
                     description="bbbb",
                     duration="60",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="29.99",
                 ),
             ],
@@ -541,14 +545,14 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_repo_link": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/loop",
             "lessons": [
                 create_lesson_obj(
                     id=-1,
                     title="Javascript lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -556,7 +560,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -564,7 +568,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 3",
                     description="bbbb",
                     duration="60",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="29.99",
                 ),
             ],
@@ -585,7 +589,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_repo_link": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/loop",
             "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             "topics": [
                 create_topic_obj(name="You will learn how to code"),
@@ -597,7 +601,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -605,7 +609,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -613,7 +617,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 3",
                     description="bbbb",
                     duration="60",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="29.99",
                 ),
             ],
@@ -705,7 +709,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_repo_link": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/loop",
             "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             "topics": [
                 create_topic_obj(name="You will learn how to code"),
@@ -729,7 +733,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_repo_link": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/loop",
             "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             "topics": [
                 create_topic_obj(name="You will learn how to code"),
@@ -741,7 +745,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -749,7 +753,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 2",
                     description="bbbb",
                     duration="40",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -757,7 +761,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 3",
                     description="bbbb",
                     duration="60",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="29.99",
                 ),
             ],
@@ -779,7 +783,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_repo_link": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/loop",
             "skills": [],
             "topics": [
                 create_topic_obj(name="You will learn how to code"),
@@ -791,7 +795,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -799,7 +803,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -807,7 +811,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 3",
                     description="bbbb",
                     duration="60",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="29.99",
                 ),
             ],
@@ -829,7 +833,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_repo_link": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/loop",
             "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             "topics": [],
             "lessons": [
@@ -838,7 +842,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -846,7 +850,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -854,7 +858,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 3",
                     description="bbbb",
                     duration="60",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="29.99",
                 ),
             ],
@@ -875,14 +879,14 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_repo_link": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/loop",
             "lessons": [
                 create_lesson_obj(
                     id=-1,
                     title="Javascript lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -890,7 +894,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -898,7 +902,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 3",
                     description="bbbb",
                     duration="60",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="29.99",
                 ),
             ],
@@ -919,14 +923,14 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_repo_link": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/loop",
             "lessons": [
                 create_lesson_obj(
                     id=-1,
                     title="Javascript lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -934,7 +938,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -942,7 +946,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 3",
                     description="bbbb",
                     duration="60",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="29.99",
                 ),
             ],
@@ -964,7 +968,7 @@ class CourseTest(APITestCase):
             "level": "E",
             "price": "89.99",
             "active": "False",
-            "github_repo_link": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/loop",
             "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             "topics": [
                 create_topic_obj(name="You will learn how to code"),
@@ -976,7 +980,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="8.99",
                 ),
                 create_lesson_obj(
@@ -984,7 +988,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -992,7 +996,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 3",
                     description="bbbb",
                     duration="60",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="29.99",
                 ),
             ],
@@ -1099,7 +1103,7 @@ class CourseTest(APITestCase):
             "level": "E",
             "price": "109.99",
             "active": "False",
-            "github_repo_link": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/loop",
             "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             "topics": [
                 create_topic_obj(name="You will learn how to code"),
@@ -1111,7 +1115,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="8.99",
                 ),
                 create_lesson_obj(
@@ -1119,7 +1123,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -1127,7 +1131,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 3",
                     description="bbbb",
                     duration="60",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="29.99",
                 ),
             ],
@@ -1235,7 +1239,7 @@ class CourseTest(APITestCase):
             "level": "E",
             "price": "99.99",
             "active": "False",
-            "github_repo_link": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/loop",
             "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             "topics": [
                 create_topic_obj(name="You will learn how to code"),
@@ -1247,7 +1251,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -1255,7 +1259,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -1263,7 +1267,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 3",
                     description="bbbb",
                     duration="60",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="29.99",
                 ),
             ],
@@ -1369,7 +1373,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_repo_link": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/loop",
             "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             "topics": [
                 create_topic_obj(name="You will learn how to code"),
@@ -1393,7 +1397,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_repo_link": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/loop",
             "skills": [],
             "topics": [
                 create_topic_obj(name="You will learn how to code"),
@@ -1405,7 +1409,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -1413,7 +1417,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -1421,7 +1425,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 3",
                     description="bbbb",
                     duration="60",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="29.99",
                 ),
             ],
@@ -1443,7 +1447,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_repo_link": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/loop",
             "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             "topics": [],
             "lessons": [
@@ -1452,7 +1456,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -1460,7 +1464,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -1468,7 +1472,7 @@ class CourseTest(APITestCase):
                     title="Javascript lesson 3",
                     description="bbbb",
                     duration="60",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="29.99",
                 ),
             ],
@@ -1529,7 +1533,7 @@ class BestCourseTest(APITestCase):
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",
             price="99.99",
-            github_repo_link="www.example.com",
+            github_url="www.example.com",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -1541,7 +1545,7 @@ class BestCourseTest(APITestCase):
                     title="Python lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -1549,7 +1553,7 @@ class BestCourseTest(APITestCase):
                     title="Python lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
             ],
@@ -1583,7 +1587,7 @@ class BestCourseTest(APITestCase):
             technology=create_technology_obj(name="JS"),
             level="Podstawowy",
             price="99.99",
-            github_repo_link="www.example.com",
+            github_url="www.example.com",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -1595,7 +1599,7 @@ class BestCourseTest(APITestCase):
                     title="JS lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -1603,7 +1607,7 @@ class BestCourseTest(APITestCase):
                     title="JS lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
             ],
@@ -1615,7 +1619,7 @@ class BestCourseTest(APITestCase):
             technology=create_technology_obj(name="VBA"),
             level="Podstawowy",
             price="99.99",
-            github_repo_link="www.example.com",
+            github_url="www.example.com",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -1627,7 +1631,7 @@ class BestCourseTest(APITestCase):
                     title="VBA lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -1635,7 +1639,7 @@ class BestCourseTest(APITestCase):
                     title="VBA lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
             ],
@@ -1698,7 +1702,7 @@ class CoursePriceHistoryTest(APITestCase):
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",
             price="99.99",
-            github_repo_link="www.example.com",
+            github_url="www.example.com",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -1710,7 +1714,7 @@ class CoursePriceHistoryTest(APITestCase):
                     title="Python lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -1718,7 +1722,7 @@ class CoursePriceHistoryTest(APITestCase):
                     title="Python lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
             ],
@@ -1739,7 +1743,7 @@ class CoursePriceHistoryTest(APITestCase):
             technology=create_technology_obj(name="JS"),
             level="Podstawowy",
             price="99.99",
-            github_repo_link="www.example.com",
+            github_url="www.example.com",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -1751,7 +1755,7 @@ class CoursePriceHistoryTest(APITestCase):
                     title="JS lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -1759,7 +1763,7 @@ class CoursePriceHistoryTest(APITestCase):
                     title="JS lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
             ],
@@ -1781,7 +1785,7 @@ class CoursePriceHistoryTest(APITestCase):
             technology=create_technology_obj(name="VBA"),
             level="Podstawowy",
             price="99.99",
-            github_repo_link="www.example.com",
+            github_url="www.example.com",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -1793,7 +1797,7 @@ class CoursePriceHistoryTest(APITestCase):
                     title="VBA lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -1801,7 +1805,7 @@ class CoursePriceHistoryTest(APITestCase):
                     title="VBA lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
             ],
@@ -1895,7 +1899,7 @@ class LessonPriceHistoryTest(APITestCase):
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",
             price="99.99",
-            github_repo_link="www.example.com",
+            github_url="www.example.com",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -1907,7 +1911,7 @@ class LessonPriceHistoryTest(APITestCase):
                     title="Python lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -1915,7 +1919,7 @@ class LessonPriceHistoryTest(APITestCase):
                     title="Python lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
             ],
@@ -1937,7 +1941,7 @@ class LessonPriceHistoryTest(APITestCase):
             technology=create_technology_obj(name="JS"),
             level="Podstawowy",
             price="99.99",
-            github_repo_link="www.example.com",
+            github_url="www.example.com",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -1949,7 +1953,7 @@ class LessonPriceHistoryTest(APITestCase):
                     title="JS lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -1957,7 +1961,7 @@ class LessonPriceHistoryTest(APITestCase):
                     title="JS lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
             ],
@@ -1979,7 +1983,7 @@ class LessonPriceHistoryTest(APITestCase):
             technology=create_technology_obj(name="VBA"),
             level="Podstawowy",
             price="99.99",
-            github_repo_link="www.example.com",
+            github_url="www.example.com",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -1991,7 +1995,7 @@ class LessonPriceHistoryTest(APITestCase):
                     title="VBA lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -1999,7 +2003,7 @@ class LessonPriceHistoryTest(APITestCase):
                     title="VBA lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_branch_link="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/loop",
                     price="2.99",
                 ),
             ],
