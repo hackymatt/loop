@@ -497,7 +497,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_url": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/course",
             "lessons": [
                 create_lesson_obj(
                     id=-1,
@@ -541,7 +541,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_url": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/course",
             "lessons": [
                 create_lesson_obj(
                     id=-1,
@@ -705,7 +705,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_url": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/course",
             "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             "topics": [
                 create_topic_obj(name="You will learn how to code"),
@@ -729,7 +729,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_url": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/course",
             "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             "topics": [
                 create_topic_obj(name="You will learn how to code"),
@@ -768,6 +768,56 @@ class CourseTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(courses_number(), 3)
 
+    def test_create_course_lesson_incorrect_github_url(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "title": "Javascript course",
+            "description": "course_description",
+            "technology": create_technology_obj(name="Javascript"),
+            "level": "E",
+            "price": "999.99",
+            "github_url": "https://github.com/hackymatt/course",
+            "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            "topics": [
+                create_topic_obj(name="You will learn how to code"),
+                create_topic_obj(name="You will learn a new IDE"),
+            ],
+            "lessons": [
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 1",
+                    description="bbbb",
+                    duration="90",
+                    github_url="https://github.com/hackymatt/other_course/lesson",
+                    price="9.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 2",
+                    description="bbbb",
+                    duration="30",
+                    github_url="https://github.com/hackymatt/course/lesson",
+                    price="2.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 3",
+                    description="bbbb",
+                    duration="60",
+                    github_url="https://github.com/hackymatt/course/lesson",
+                    price="29.99",
+                ),
+            ],
+            "image": b64encode(create_image().read()),
+        }
+
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(courses_number(), 4)
+
     def test_create_course_without_skills(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
@@ -779,7 +829,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_url": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/course",
             "skills": [],
             "topics": [
                 create_topic_obj(name="You will learn how to code"),
@@ -829,7 +879,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_url": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/course",
             "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             "topics": [],
             "lessons": [
@@ -875,7 +925,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_url": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/course",
             "lessons": [
                 create_lesson_obj(
                     id=-1,
@@ -919,7 +969,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_url": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/course",
             "lessons": [
                 create_lesson_obj(
                     id=-1,
@@ -964,7 +1014,7 @@ class CourseTest(APITestCase):
             "level": "E",
             "price": "89.99",
             "active": "False",
-            "github_url": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/course",
             "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             "topics": [
                 create_topic_obj(name="You will learn how to code"),
@@ -1099,7 +1149,7 @@ class CourseTest(APITestCase):
             "level": "E",
             "price": "109.99",
             "active": "False",
-            "github_url": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/course",
             "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             "topics": [
                 create_topic_obj(name="You will learn how to code"),
@@ -1235,7 +1285,7 @@ class CourseTest(APITestCase):
             "level": "E",
             "price": "99.99",
             "active": "False",
-            "github_url": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/course",
             "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             "topics": [
                 create_topic_obj(name="You will learn how to code"),
@@ -1369,7 +1419,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_url": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/course",
             "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             "topics": [
                 create_topic_obj(name="You will learn how to code"),
@@ -1378,6 +1428,50 @@ class CourseTest(APITestCase):
             "lessons": [],
         }
 
+        response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(courses_number(), 3)
+
+    def test_update_course_incorrect_github_url(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "title": "Javascript course",
+            "description": "course_description",
+            "technology": create_technology_obj(name="Javascript"),
+            "level": "E",
+            "price": "999.99",
+            "github_url": "https://github.com/hackymatt/course",
+            "lessons": [
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 1",
+                    description="bbbb",
+                    duration="90",
+                    github_url="https://github.com/hackymatt/other_course/lesson",
+                    price="9.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 2",
+                    description="bbbb",
+                    duration="30",
+                    github_url="https://github.com/hackymatt/course/lesson",
+                    price="2.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Javascript lesson 3",
+                    description="bbbb",
+                    duration="60",
+                    github_url="https://github.com/hackymatt/course/lesson",
+                    price="29.99",
+                ),
+            ],
+            "image": b64encode(create_image().read()),
+        }
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(courses_number(), 3)
@@ -1393,7 +1487,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_url": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/course",
             "skills": [],
             "topics": [
                 create_topic_obj(name="You will learn how to code"),
@@ -1443,7 +1537,7 @@ class CourseTest(APITestCase):
             "technology": create_technology_obj(name="Javascript"),
             "level": "E",
             "price": "999.99",
-            "github_url": "https://github.com/hackymatt/loop",
+            "github_url": "https://github.com/hackymatt/course",
             "skills": [create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             "topics": [],
             "lessons": [
