@@ -74,7 +74,7 @@ class LecturersTest(APITestCase):
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",
             price="99.99",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -86,7 +86,7 @@ class LecturersTest(APITestCase):
                     title="Python lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -94,7 +94,7 @@ class LecturersTest(APITestCase):
                     title="Python lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
             ],
@@ -103,22 +103,18 @@ class LecturersTest(APITestCase):
         create_teaching(
             lesson=self.course.lessons.all()[0],
             lecturer=self.lecturer_profile_1,
-            github_url="https://github.com/hackymatt/loop",
         )
         create_teaching(
             lesson=self.course.lessons.all()[1],
             lecturer=self.lecturer_profile_1,
-            github_url="https://github.com/hackymatt/loop",
         )
         create_teaching(
             lesson=self.course.lessons.all()[0],
             lecturer=self.lecturer_profile_2,
-            github_url="https://github.com/hackymatt/loop",
         )
         create_teaching(
             lesson=self.course.lessons.all()[1],
             lecturer=self.lecturer_profile_2,
-            github_url="https://github.com/hackymatt/loop",
         )
 
         self.review_course_1_1 = create_review(
@@ -223,7 +219,7 @@ class BestLecturersTest(APITestCase):
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",
             price="99.99",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -235,7 +231,7 @@ class BestLecturersTest(APITestCase):
                     title="Python lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -243,7 +239,7 @@ class BestLecturersTest(APITestCase):
                     title="Python lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
             ],
@@ -252,22 +248,18 @@ class BestLecturersTest(APITestCase):
         create_teaching(
             lesson=self.course.lessons.all()[0],
             lecturer=self.lecturer_profile_1,
-            github_url="https://github.com/hackymatt/loop",
         )
         create_teaching(
             lesson=self.course.lessons.all()[1],
             lecturer=self.lecturer_profile_1,
-            github_url="https://github.com/hackymatt/loop",
         )
         create_teaching(
             lesson=self.course.lessons.all()[0],
             lecturer=self.lecturer_profile_2,
-            github_url="https://github.com/hackymatt/loop",
         )
         create_teaching(
             lesson=self.course.lessons.all()[1],
             lecturer=self.lecturer_profile_2,
-            github_url="https://github.com/hackymatt/loop",
         )
 
         self.review_course_1_1 = create_review(

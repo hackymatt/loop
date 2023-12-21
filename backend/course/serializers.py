@@ -421,6 +421,15 @@ class CourseSerializer(ModelSerializer):
 
         return topic
 
+    def validate_lessons_github_url(self, course, lessons):
+        course_github_url = course.github_url
+        for lesson in lessons:
+            github_url = lesson["github_url"]
+            if course_github_url not in github_url:
+                raise ValidationError(
+                    {"lessons": f"Github url musi być podfolderem kursu."}
+                )
+
     def add_technology(self, technology):
         obj, created = Technology.objects.get_or_create(name=technology["name"])
 
@@ -513,6 +522,7 @@ class CourseSerializer(ModelSerializer):
         course = Course.objects.create(
             **validated_data, technology=self.add_technology(technology=technology)
         )
+        self.validate_lessons_github_url(course=course, lessons=lessons)
         self.create_lessons(course=course, lessons=lessons)
         course = self.add_skills(course=course, skills=skills)
         course = self.add_topics(course=course, topics=topics)
@@ -526,6 +536,7 @@ class CourseSerializer(ModelSerializer):
         skills = validated_data.pop("skills")
         topics = validated_data.pop("topics")
 
+        self.validate_lessons_github_url(course=instance, lessons=lessons)
         self.manage_lessons(course=instance, lessons=lessons)
 
         instance.title = validated_data.get("title", instance.title)

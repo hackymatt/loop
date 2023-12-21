@@ -73,7 +73,7 @@ class CourseFilterTest(APITestCase):
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",
             price="99.99",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -85,7 +85,7 @@ class CourseFilterTest(APITestCase):
                     title="Python lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -93,7 +93,7 @@ class CourseFilterTest(APITestCase):
                     title="Python lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
             ],
@@ -102,22 +102,18 @@ class CourseFilterTest(APITestCase):
         create_teaching(
             lesson=self.course_1.lessons.all()[0],
             lecturer=self.lecturer_profile_1,
-            github_url="https://github.com/hackymatt/loop",
         )
         create_teaching(
             lesson=self.course_1.lessons.all()[1],
             lecturer=self.lecturer_profile_1,
-            github_url="https://github.com/hackymatt/loop",
         )
         create_teaching(
             lesson=self.course_1.lessons.all()[0],
             lecturer=self.lecturer_profile_2,
-            github_url="https://github.com/hackymatt/loop",
         )
         create_teaching(
             lesson=self.course_1.lessons.all()[1],
             lecturer=self.lecturer_profile_2,
-            github_url="https://github.com/hackymatt/loop",
         )
 
         create_purchase(
@@ -160,7 +156,7 @@ class CourseFilterTest(APITestCase):
             technology=create_technology_obj(name="Javascript"),
             level="Zaawansowany",
             price="300",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -172,7 +168,7 @@ class CourseFilterTest(APITestCase):
                     title="JS lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -180,7 +176,7 @@ class CourseFilterTest(APITestCase):
                     title="JS lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -188,7 +184,7 @@ class CourseFilterTest(APITestCase):
                     title="JS lesson 3",
                     description="bbbb",
                     duration="120",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
             ],
@@ -197,32 +193,26 @@ class CourseFilterTest(APITestCase):
         create_teaching(
             lesson=self.course_2.lessons.all()[0],
             lecturer=self.lecturer_profile_1,
-            github_url="https://github.com/hackymatt/loop",
         )
         create_teaching(
             lesson=self.course_2.lessons.all()[1],
             lecturer=self.lecturer_profile_1,
-            github_url="https://github.com/hackymatt/loop",
         )
         create_teaching(
             lesson=self.course_2.lessons.all()[2],
             lecturer=self.lecturer_profile_1,
-            github_url="https://github.com/hackymatt/loop",
         )
         create_teaching(
             lesson=self.course_2.lessons.all()[0],
             lecturer=self.lecturer_profile_2,
-            github_url="https://github.com/hackymatt/loop",
         )
         create_teaching(
             lesson=self.course_2.lessons.all()[1],
             lecturer=self.lecturer_profile_2,
-            github_url="https://github.com/hackymatt/loop",
         )
         create_teaching(
             lesson=self.course_2.lessons.all()[2],
             lecturer=self.lecturer_profile_2,
-            github_url="https://github.com/hackymatt/loop",
         )
 
         create_purchase(
@@ -294,7 +284,7 @@ class CourseFilterTest(APITestCase):
             technology=create_technology_obj(name="VBA"),
             level="Ekspert",
             price="220",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -306,7 +296,7 @@ class CourseFilterTest(APITestCase):
                     title="VBA lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
             ],
@@ -315,12 +305,10 @@ class CourseFilterTest(APITestCase):
         create_teaching(
             lesson=self.course_3.lessons.all()[0],
             lecturer=self.lecturer_profile_1,
-            github_url="https://github.com/hackymatt/loop",
         )
         create_teaching(
             lesson=self.course_3.lessons.all()[0],
             lecturer=self.lecturer_profile_2,
-            github_url="https://github.com/hackymatt/loop",
         )
 
         create_purchase(
@@ -472,7 +460,7 @@ class ReviewFilterTest(APITestCase):
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",
             price="99.99",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -484,7 +472,7 @@ class ReviewFilterTest(APITestCase):
                     title="Python lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -492,7 +480,7 @@ class ReviewFilterTest(APITestCase):
                     title="Python lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
             ],
@@ -527,7 +515,7 @@ class ReviewFilterTest(APITestCase):
             technology=create_technology_obj(name="Javascript"),
             level="Zaawansowany",
             price="300",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -539,7 +527,7 @@ class ReviewFilterTest(APITestCase):
                     title="JS lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -547,7 +535,7 @@ class ReviewFilterTest(APITestCase):
                     title="JS lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -555,7 +543,7 @@ class ReviewFilterTest(APITestCase):
                     title="JS lesson 3",
                     description="bbbb",
                     duration="120",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
             ],
@@ -604,7 +592,7 @@ class ReviewFilterTest(APITestCase):
             technology=create_technology_obj(name="VBA"),
             level="Ekspert",
             price="220",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -616,7 +604,7 @@ class ReviewFilterTest(APITestCase):
                     title="VBA lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
             ],
@@ -756,7 +744,7 @@ class ScheduleFilterTest(APITestCase):
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",
             price="99.99",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -768,7 +756,7 @@ class ScheduleFilterTest(APITestCase):
                     title="Python lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -776,7 +764,7 @@ class ScheduleFilterTest(APITestCase):
                     title="Python lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
             ],
@@ -786,12 +774,10 @@ class ScheduleFilterTest(APITestCase):
             create_teaching(
                 lecturer=self.lecturer_profile_1,
                 lesson=lesson,
-                github_url="https://github.com/hackymatt/loop",
             )
             create_teaching(
                 lecturer=self.lecturer_profile_2,
                 lesson=lesson,
-                github_url="https://github.com/hackymatt/loop",
             )
 
         # course 2
@@ -801,7 +787,7 @@ class ScheduleFilterTest(APITestCase):
             technology=create_technology_obj(name="Javascript"),
             level="Zaawansowany",
             price="300",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -813,7 +799,7 @@ class ScheduleFilterTest(APITestCase):
                     title="JS lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -821,7 +807,7 @@ class ScheduleFilterTest(APITestCase):
                     title="JS lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -829,7 +815,7 @@ class ScheduleFilterTest(APITestCase):
                     title="JS lesson 3",
                     description="bbbb",
                     duration="120",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
             ],
@@ -839,12 +825,10 @@ class ScheduleFilterTest(APITestCase):
             create_teaching(
                 lecturer=self.lecturer_profile_1,
                 lesson=lesson,
-                github_url="https://github.com/hackymatt/loop",
             )
             create_teaching(
                 lecturer=self.lecturer_profile_2,
                 lesson=lesson,
-                github_url="https://github.com/hackymatt/loop",
             )
 
         # course 3
@@ -854,7 +838,7 @@ class ScheduleFilterTest(APITestCase):
             technology=create_technology_obj(name="VBA"),
             level="Ekspert",
             price="220",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -866,7 +850,7 @@ class ScheduleFilterTest(APITestCase):
                     title="VBA lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
             ],
@@ -876,12 +860,10 @@ class ScheduleFilterTest(APITestCase):
             create_teaching(
                 lecturer=self.lecturer_profile_1,
                 lesson=lesson,
-                github_url="https://github.com/hackymatt/loop",
             )
             create_teaching(
                 lecturer=self.lecturer_profile_2,
                 lesson=lesson,
-                github_url="https://github.com/hackymatt/loop",
             )
 
         self.schedules = []
@@ -964,7 +946,7 @@ class CoursePriceHistoryFilterTest(APITestCase):
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",
             price="99.99",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -976,7 +958,7 @@ class CoursePriceHistoryFilterTest(APITestCase):
                     title="Python lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -984,7 +966,7 @@ class CoursePriceHistoryFilterTest(APITestCase):
                     title="Python lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
             ],
@@ -1006,7 +988,7 @@ class CoursePriceHistoryFilterTest(APITestCase):
             technology=create_technology_obj(name="JS"),
             level="Podstawowy",
             price="99.99",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -1018,7 +1000,7 @@ class CoursePriceHistoryFilterTest(APITestCase):
                     title="JS lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -1026,7 +1008,7 @@ class CoursePriceHistoryFilterTest(APITestCase):
                     title="JS lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
             ],
@@ -1048,7 +1030,7 @@ class CoursePriceHistoryFilterTest(APITestCase):
             technology=create_technology_obj(name="VBA"),
             level="Podstawowy",
             price="99.99",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -1060,7 +1042,7 @@ class CoursePriceHistoryFilterTest(APITestCase):
                     title="VBA lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -1068,7 +1050,7 @@ class CoursePriceHistoryFilterTest(APITestCase):
                     title="VBA lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
             ],
@@ -1122,7 +1104,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",
             price="99.99",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -1134,7 +1116,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
                     title="Python lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -1142,7 +1124,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
                     title="Python lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
             ],
@@ -1164,7 +1146,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             technology=create_technology_obj(name="JS"),
             level="Podstawowy",
             price="99.99",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -1176,7 +1158,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
                     title="JS lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -1184,7 +1166,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
                     title="JS lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
             ],
@@ -1206,7 +1188,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             technology=create_technology_obj(name="VBA"),
             level="Podstawowy",
             price="99.99",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -1218,7 +1200,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
                     title="VBA lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -1226,7 +1208,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
                     title="VBA lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
             ],
