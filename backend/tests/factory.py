@@ -221,10 +221,8 @@ def create_cart(student: Profile, lesson: Lesson):
     return Cart.objects.create(student=student, lesson=lesson)
 
 
-def create_teaching(lecturer: Profile, lesson: Lesson, github_url: str):
-    return Teaching.objects.create(
-        lecturer=lecturer, lesson=lesson, github_url=github_url
-    )
+def create_teaching(lecturer: Profile, lesson: Lesson):
+    return Teaching.objects.create(lecturer=lecturer, lesson=lesson)
 
 
 def create_reservation(student: Profile, lesson: Lesson, schedule: Schedule):

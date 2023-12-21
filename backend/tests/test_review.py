@@ -71,7 +71,7 @@ class ReviewTest(APITestCase):
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",
             price="99.99",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -83,7 +83,7 @@ class ReviewTest(APITestCase):
                     title="Python lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -91,7 +91,7 @@ class ReviewTest(APITestCase):
                     title="Python lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -99,7 +99,7 @@ class ReviewTest(APITestCase):
                     title="Python lesson 3",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -107,7 +107,7 @@ class ReviewTest(APITestCase):
                     title="Python lesson 4",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
             ],
@@ -394,7 +394,7 @@ class BestReviewTest(APITestCase):
             technology=create_technology_obj(name="Python"),
             level="Podstawowy",
             price="99.99",
-            github_url="www.example.com",
+            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
@@ -406,7 +406,7 @@ class BestReviewTest(APITestCase):
                     title="Python lesson 1",
                     description="bbbb",
                     duration="90",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="9.99",
                 ),
                 create_lesson_obj(
@@ -414,7 +414,7 @@ class BestReviewTest(APITestCase):
                     title="Python lesson 2",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
                 create_lesson_obj(
@@ -422,7 +422,7 @@ class BestReviewTest(APITestCase):
                     title="Python lesson 3",
                     description="bbbb",
                     duration="30",
-                    github_url="https://github.com/hackymatt/loop",
+                    github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
             ],
