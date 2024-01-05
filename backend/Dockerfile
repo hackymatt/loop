@@ -1,7 +1,7 @@
 FROM python:3.9-slim
 
 # set work directory
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/backend
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -19,11 +19,11 @@ RUN pip install -r requirements.txt
 
 # copy main.sh
 COPY ./main.sh .
-RUN sed -i 's/\r$//g' /usr/src/app/main.sh
-RUN chmod +x /usr/src/app/main.sh
+RUN sed -i 's/\r$//g' /usr/src/app/backend/main.sh
+RUN chmod +x /usr/src/app/backend/main.sh
 
 # copy project
 COPY . .
 
 # run main.sh
-ENTRYPOINT ["/usr/src/app/main.sh"]
+ENTRYPOINT ["/usr/src/app/backend/main.sh"]

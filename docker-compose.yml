@@ -5,11 +5,12 @@ services:
     hostname: backend
     build:
       context: ./backend
+    restart: always
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - 8000:8000
     volumes:
-      - ./backend/:/usr/src/app/
+      - ./backend/:/usr/src/app/backend
     environment:
       - DB_NAME=loop
       - DB_USER=loop_dev
@@ -28,16 +29,21 @@ services:
       - db
 
   frontend:
-    hostname: frontend
+    container_name: frontend
     build:
       context: ./frontend
       target: dev
+    restart: always
+    command: yarn dev
+    environment:
+      - NODE_ENV=development
+      - WATCHPACK_POLLING=true
+    volumes:
+      - ./frontend:/usr/src/app/frontend
+      - /usr/src/app/frontend/node_modules
+      - /usr/src/app/frontend/.next
     ports:
       - 8002:8002
-    volumes:
-      - ./frontend/:/usr/src/app/
-      - /usr/src/app/node_modules
-      - /usr/src/app/.next
 
 
   db:
