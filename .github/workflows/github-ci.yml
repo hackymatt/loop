@@ -17,13 +17,20 @@ jobs:
         working-directory: ${{ github.workspace }}/backend
     
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2  
-      - run: pip install --upgrade pip
-      - run: pip install -r requirements_lint.txt 
-      - run: pip install -r requirements.txt 
-      - run: pylint backend --recursive=true --fail-under=10
-      - run: black . --check
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+      - name: Pull python
+        uses: actions/setup-python@v4
+      - name: Upgrade pip
+        run: pip install --upgrade pip
+      - name: Install lint requirements
+        run: pip install -r requirements_lint.txt 
+      - name: Install requirements
+        run: pip install -r requirements.txt 
+      - name: Test code quality
+        run: pylint backend --recursive=true --fail-under=10
+      - name: Test code formatting
+        run: black . --check
       
 
   test_backend:
@@ -62,11 +69,18 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2  
-      - run: pip install --upgrade pip
-      - run: pip install -r requirements_test.txt 
-      - run: pip install -r requirements.txt 
-      - run: coverage run manage.py test
-      - run: coverage report
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+      - name: Pull python
+        uses: actions/setup-python@v4
+      - name: Upgrade pip
+        run: pip install --upgrade pip
+      - name: Install test requirements
+        run: pip install -r requirements_test.txt 
+      - name: Install requirements
+        run: pip install -r requirements.txt 
+      - name: Run tests
+        run: coverage run manage.py test
+      - name: Print report
+        run: coverage report
       
