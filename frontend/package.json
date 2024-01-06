@@ -8,6 +8,8 @@
     "dev": "next dev -p 8002",
     "start": "next start -p 8002",
     "build": "next build",
+    "test": "jest --passWithNoTests",
+    "test:coverage": "jest --coverage --passWithNoTests",
     "lint:check": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
     "prettier:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
@@ -54,6 +56,8 @@
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
+    "@testing-library/jest-dom": "^6.2.0",
+    "@testing-library/react": "^14.1.2",
     "@types/google-map-react": "^2.1.10",
     "@types/lodash.isequal": "^4.5.8",
     "@types/lodash.merge": "^4.6.9",
@@ -77,6 +81,8 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-unused-imports": "^3.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "prettier": "^3.1.1",
     "typescript": "^5.3.3"
   }

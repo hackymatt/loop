@@ -104,4 +104,22 @@ jobs:
         run: coverage run manage.py test
       - name: Print report
         run: coverage report
+
+  test_frontend:
+    runs-on: ubuntu-latest 
+    
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ github.workspace }}/frontend
+    
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+      - name: Pull nodejs
+        uses: actions/setup-node@v4
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm run test:coverage
       
