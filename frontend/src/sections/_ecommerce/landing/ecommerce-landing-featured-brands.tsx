@@ -1,18 +1,18 @@
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import { alpha } from '@mui/material/styles';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
-import Stack, { StackProps } from '@mui/material/Stack';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import { alpha } from "@mui/material/styles";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
+import Stack, { StackProps } from "@mui/material/Stack";
 
-import { RouterLink } from 'src/routes/components';
+import { RouterLink } from "src/routes/components";
 
-import { _products } from 'src/_mock';
+import { _products } from "src/_mock";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import EcommerceProductItemFeaturedByBrand from '../product/item/ecommerce-product-item-featured-by-brand';
+import EcommerceProductItemFeaturedByBrand from "../product/item/ecommerce-product-item-featured-by-brand";
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ export default function EcommerceLandingFeaturedBrands() {
         variant="h3"
         sx={{
           mb: 8,
-          textAlign: { xs: 'center', md: 'unset' },
+          textAlign: { xs: "center", md: "unset" },
         }}
       >
         Featured Brands
@@ -49,8 +49,8 @@ export default function EcommerceLandingFeaturedBrands() {
             gap={3}
             display="grid"
             gridTemplateColumns={{
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
+              xs: "repeat(1, 1fr)",
+              sm: "repeat(2, 1fr)",
             }}
           >
             {_products.slice(4, 8).map((product) => (
@@ -80,7 +80,7 @@ function BrandInfo({ logo, name, description, path, sx, ...other }: BrandInfoPro
       sx={{
         p: 5,
         borderRadius: 2,
-        textAlign: 'center',
+        textAlign: "center",
         border: (theme) => `solid 1px ${alpha(theme.palette.grey[500], 0.24)}`,
         ...sx,
       }}
@@ -92,7 +92,7 @@ function BrandInfo({ logo, name, description, path, sx, ...other }: BrandInfoPro
         {name}
       </Typography>
 
-      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+      <Typography variant="body2" sx={{ color: "text.secondary" }}>
         {description}
       </Typography>
 

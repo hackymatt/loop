@@ -1,21 +1,21 @@
-import { m } from 'framer-motion';
+import { m } from "framer-motion";
 
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import { alpha, useTheme } from '@mui/material/styles';
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { fDate } from 'src/utils/format-time';
+import { fDate } from "src/utils/format-time";
 
-import Image from 'src/components/image';
-import { varHover, varTranHover } from 'src/components/animate';
+import Image from "src/components/image";
+import { varHover, varTranHover } from "src/components/animate";
 
-import { IBlogPostProps } from 'src/types/blog';
+import { IBlogPostProps } from "src/types/blog";
 
-import PostTimeBlock from '../common/post-time-block';
+import PostTimeBlock from "../common/post-time-block";
 
 // ----------------------------------------------------------------------
 
@@ -32,8 +32,8 @@ export default function MarketingLatestPostItem({ post }: Props) {
       whileHover="hover"
       sx={{
         borderRadius: 2,
-        overflow: 'hidden',
-        position: 'relative',
+        overflow: "hidden",
+        position: "relative",
         boxShadow: theme.customShadows.z12,
       }}
     >
@@ -55,15 +55,15 @@ export default function MarketingLatestPostItem({ post }: Props) {
           width: 1,
           height: 1,
           zIndex: 9,
-          position: 'absolute',
-          color: 'common.white',
+          position: "absolute",
+          color: "common.white",
         }}
       >
         <Stack spacing={2}>
           <PostTimeBlock
             createdAt={fDate(post.createdAt)}
             duration={post.duration}
-            sx={{ color: 'inherit', opacity: 0.72 }}
+            sx={{ color: "inherit", opacity: 0.72 }}
           />
 
           <Link
@@ -77,7 +77,7 @@ export default function MarketingLatestPostItem({ post }: Props) {
           </Link>
         </Stack>
 
-        <Stack direction="row" alignItems="center" sx={{ typography: 'body2' }}>
+        <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
           <Avatar src={post.author.avatarUrl} sx={{ mr: 1 }} />
           {post.author.name}
         </Stack>

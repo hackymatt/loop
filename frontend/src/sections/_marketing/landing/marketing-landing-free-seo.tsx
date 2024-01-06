@@ -1,18 +1,18 @@
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Unstable_Grid2';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import { inputBaseClasses } from '@mui/material/InputBase';
-import { inputLabelClasses } from '@mui/material/InputLabel';
-import { alpha, styled, useTheme } from '@mui/material/styles';
-import TextField, { TextFieldProps } from '@mui/material/TextField';
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Unstable_Grid2";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import { inputBaseClasses } from "@mui/material/InputBase";
+import { inputLabelClasses } from "@mui/material/InputLabel";
+import { alpha, styled, useTheme } from "@mui/material/styles";
+import TextField, { TextFieldProps } from "@mui/material/TextField";
 
-import { bgGradient } from 'src/theme/css';
+import { bgGradient } from "src/theme/css";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
@@ -40,9 +40,9 @@ export default function MarketingLandingFreeSEO() {
       sx={{
         ...bgGradient({
           color: alpha(theme.palette.grey[900], 0),
-          imgUrl: '/assets/images/marketing/marketing_get_free_seo.jpg',
+          imgUrl: "/assets/images/marketing/marketing_get_free_seo.jpg",
         }),
-        overflow: 'hidden',
+        overflow: "hidden",
         py: { xs: 10, md: 15 },
       }}
     >
@@ -60,9 +60,9 @@ export default function MarketingLandingFreeSEO() {
               variant="h1"
               component="h2"
               sx={{
-                color: 'primary.main',
+                color: "primary.main",
                 mb: { xs: 3, md: 8 },
-                textAlign: { xs: 'center', md: 'left' },
+                textAlign: { xs: "center", md: "left" },
               }}
             >
               Get Free
@@ -72,8 +72,8 @@ export default function MarketingLandingFreeSEO() {
             <Stack
               direction="row"
               alignItems="center"
-              justifyContent={{ xs: 'center', md: 'flex-start' }}
-              sx={{ color: 'common.white', mb: 2 }}
+              justifyContent={{ xs: "center", md: "flex-start" }}
+              sx={{ color: "common.white", mb: 2 }}
             >
               <Iconify icon="carbon:email" width={24} sx={{ mr: 2 }} />
 
@@ -85,8 +85,8 @@ export default function MarketingLandingFreeSEO() {
             <Stack
               direction="row"
               alignItems="center"
-              justifyContent={{ xs: 'center', md: 'flex-start' }}
-              sx={{ color: 'common.white' }}
+              justifyContent={{ xs: "center", md: "flex-start" }}
+              sx={{ color: "common.white" }}
             >
               <Iconify icon="carbon:location" width={24} sx={{ mr: 2 }} />
               508 Bridle Avenue Newnan, GA 30263
@@ -94,7 +94,7 @@ export default function MarketingLandingFreeSEO() {
           </Grid>
 
           <Grid xs={12} md={5}>
-            <Stack alignItems={{ xs: 'center', md: 'flex-start' }}>
+            <Stack alignItems={{ xs: "center", md: "flex-start" }}>
               <StyledInput label="Name" sx={{ mb: 2.5 }} />
 
               <StyledInput label="Email" sx={{ mb: 2.5 }} />

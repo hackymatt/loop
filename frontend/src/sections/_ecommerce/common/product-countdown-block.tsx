@@ -1,7 +1,7 @@
-import Typography from '@mui/material/Typography';
-import Stack, { StackProps } from '@mui/material/Stack';
+import Typography from "@mui/material/Typography";
+import Stack, { StackProps } from "@mui/material/Stack";
 
-import { useCountdown } from 'src/hooks/use-countdown';
+import { useCountdown } from "src/hooks/use-countdown";
 
 // ----------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ export default function ProductCountdownBlock({
       alignItems="center"
       justifyContent="center"
       sx={{
-        typography: 'subtitle1',
+        typography: "subtitle1",
         ...sx,
       }}
       {...other}
@@ -70,8 +70,8 @@ function TimeBlock({ label, value, hiddenLabel }: TimeBlockProps) {
           width: 56,
           height: 44,
           borderRadius: 1,
-          bgcolor: 'grey.800',
-          color: 'common.white',
+          bgcolor: "grey.800",
+          color: "common.white",
         }}
       >
         {value}
@@ -81,7 +81,7 @@ function TimeBlock({ label, value, hiddenLabel }: TimeBlockProps) {
         <Typography
           className="label"
           variant="caption"
-          sx={{ color: 'grey.600', textAlign: 'center' }}
+          sx={{ color: "grey.600", textAlign: "center" }}
         >
           {label}
         </Typography>
@@ -97,7 +97,7 @@ type SeparatorProps = {
 
 function Separator({ hiddenLabel }: SeparatorProps) {
   return (
-    <Stack spacing={1} flexShrink={0} className="separator" sx={{ color: 'grey.800' }}>
+    <Stack spacing={1} flexShrink={0} className="separator" sx={{ color: "grey.800" }}>
       <Stack alignItems="center" justifyContent="center" flexGrow={1}>
         :
       </Stack>

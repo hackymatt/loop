@@ -1,10 +1,10 @@
-import Box from '@mui/material/Box';
-import Pagination, { paginationClasses } from '@mui/material/Pagination';
+import Box from "@mui/material/Box";
+import Pagination, { paginationClasses } from "@mui/material/Pagination";
 
-import { ITourProps } from 'src/types/tour';
+import { ITourProps } from "src/types/tour";
 
-import TravelTourItem from './travel-tour-item';
-import TravelTourItemSkeleton from './travel-tour-item-skeleton';
+import TravelTourItem from "./travel-tour-item";
+import TravelTourItemSkeleton from "./travel-tour-item-skeleton";
 
 // ----------------------------------------------------------------------
 
@@ -19,12 +19,12 @@ export default function TravelTourList({ tours, loading }: Props) {
       <Box
         sx={{
           columnGap: 3,
-          display: 'grid',
+          display: "grid",
           rowGap: { xs: 4, md: 5 },
           gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(2, 1fr)',
-            md: 'repeat(4, 1fr)',
+            xs: "repeat(1, 1fr)",
+            sm: "repeat(2, 1fr)",
+            md: "repeat(4, 1fr)",
           },
         }}
       >
@@ -43,7 +43,7 @@ export default function TravelTourList({ tours, loading }: Props) {
         sx={{
           my: 10,
           [`& .${paginationClasses.ul}`]: {
-            justifyContent: 'center',
+            justifyContent: "center",
           },
         }}
       />

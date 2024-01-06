@@ -1,25 +1,25 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Stack from '@mui/material/Stack';
-import Drawer from '@mui/material/Drawer';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import { SelectChangeEvent } from '@mui/material/Select';
-import InputAdornment from '@mui/material/InputAdornment';
+import Stack from "@mui/material/Stack";
+import Drawer from "@mui/material/Drawer";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { SelectChangeEvent } from "@mui/material/Select";
+import InputAdornment from "@mui/material/InputAdornment";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { ICountriesProps } from 'src/types/contact';
-import { ICourseFiltersProps } from 'src/types/course';
+import { ICountriesProps } from "src/types/contact";
+import { ICourseFiltersProps } from "src/types/course";
 
-import FilterFee from './filter-fee';
-import FilterLevel from './filter-level';
-import FilterRating from './filter-rating';
-import FilterLanguage from './filter-language';
-import FilterDuration from './filter-duration';
-import FilterCategories from './filter-categories';
+import FilterFee from "./filter-fee";
+import FilterLevel from "./filter-level";
+import FilterRating from "./filter-rating";
+import FilterLanguage from "./filter-language";
+import FilterDuration from "./filter-duration";
+import FilterCategories from "./filter-categories";
 
 // ----------------------------------------------------------------------
 
@@ -38,7 +38,7 @@ type Props = {
 };
 
 export default function ElearningFilters({ open, onClose }: Props) {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const [filters, setFilters] = useState<ICourseFiltersProps>(defaultValues);
 
@@ -69,7 +69,7 @@ export default function ElearningFilters({ open, onClose }: Props) {
       } = event;
       setFilters({
         ...filters,
-        filterLevel: typeof value === 'string' ? value.split(',') : value,
+        filterLevel: typeof value === "string" ? value.split(",") : value,
       });
     },
     [filters]
@@ -82,7 +82,7 @@ export default function ElearningFilters({ open, onClose }: Props) {
       } = event;
       setFilters({
         ...filters,
-        filterFee: typeof value === 'string' ? value.split(',') : value,
+        filterFee: typeof value === "string" ? value.split(",") : value,
       });
     },
     [filters]
@@ -95,7 +95,7 @@ export default function ElearningFilters({ open, onClose }: Props) {
       } = event;
       setFilters({
         ...filters,
-        filterDuration: typeof value === 'string' ? value.split(',') : value,
+        filterDuration: typeof value === "string" ? value.split(",") : value,
       });
     },
     [filters]
@@ -126,7 +126,7 @@ export default function ElearningFilters({ open, onClose }: Props) {
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <Iconify icon="carbon:search" width={24} sx={{ color: 'text.disabled' }} />
+              <Iconify icon="carbon:search" width={24} sx={{ color: "text.disabled" }} />
             </InputAdornment>
           ),
         }}
@@ -201,7 +201,7 @@ type BlockProps = {
 function Block({ title, children }: BlockProps) {
   return (
     <Stack spacing={1.5}>
-      <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+      <Typography variant="overline" sx={{ color: "text.disabled" }}>
         {title}
       </Typography>
 

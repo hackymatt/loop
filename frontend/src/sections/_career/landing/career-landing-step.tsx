@@ -1,28 +1,28 @@
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import Iconify from 'src/components/iconify';
-import SvgColor from 'src/components/svg-color';
+import Iconify from "src/components/iconify";
+import SvgColor from "src/components/svg-color";
 
 // ----------------------------------------------------------------------
 
 const STEPS = [
   {
-    title: 'Create an account',
-    description: 'Nunc nonummy metus. Donec elit libero.',
-    icon: '/assets/icons/ic_resume_job.svg',
+    title: "Create an account",
+    description: "Nunc nonummy metus. Donec elit libero.",
+    icon: "/assets/icons/ic_resume_job.svg",
   },
   {
-    title: 'Complete your profile',
-    description: 'Nunc nonummy metus. Donec elit libero.',
-    icon: '/assets/icons/ic_resume_job.svg',
+    title: "Complete your profile",
+    description: "Nunc nonummy metus. Donec elit libero.",
+    icon: "/assets/icons/ic_resume_job.svg",
   },
   {
-    title: 'Search your job',
-    description: 'Nunc nonummy metus. Donec elit libero.',
-    icon: '/assets/icons/ic_search_job.svg',
+    title: "Search your job",
+    description: "Nunc nonummy metus. Donec elit libero.",
+    icon: "/assets/icons/ic_search_job.svg",
   },
 ];
 
@@ -32,13 +32,13 @@ export default function CareerLandingStep() {
   return (
     <Box
       sx={{
-        textAlign: 'center',
+        textAlign: "center",
         pt: { xs: 10, md: 15 },
         pb: { xs: 5, md: 10 },
       }}
     >
       <Container>
-        <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+        <Typography variant="overline" sx={{ color: "text.disabled" }}>
           For Candidates
         </Typography>
 
@@ -46,19 +46,19 @@ export default function CareerLandingStep() {
           Explore Thousands of Jobs
         </Typography>
 
-        <Typography sx={{ color: 'text.secondary', maxWidth: 480, mx: 'auto' }}>
+        <Typography sx={{ color: "text.secondary", maxWidth: 480, mx: "auto" }}>
           Donec mi odio, faucibus at, scelerisque quis, convallis in, nisi. Morbi mattis ullamcorper
           velit.
         </Typography>
 
         <Box
           sx={{
-            display: 'grid',
+            display: "grid",
             my: { xs: 8, md: 10 },
             gap: { xs: 8, md: 5 },
             gridTemplateColumns: {
-              xs: 'repeat(1, 1fr)',
-              md: 'repeat(3, 1fr)',
+              xs: "repeat(1, 1fr)",
+              md: "repeat(3, 1fr)",
             },
           }}
         >
@@ -69,13 +69,13 @@ export default function CareerLandingStep() {
                 sx={{
                   width: 80,
                   height: 80,
-                  mx: 'auto',
-                  color: 'primary.main',
+                  mx: "auto",
+                  color: "primary.main",
                 }}
               />
               <Typography
                 variant="overline"
-                sx={{ mt: 4, display: 'block', color: 'text.disabled' }}
+                sx={{ mt: 4, display: "block", color: "text.disabled" }}
               >
                 Step {index + 1}
               </Typography>
@@ -84,7 +84,7 @@ export default function CareerLandingStep() {
                 {value.title}
               </Typography>
 
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
                 {value.description}
               </Typography>
             </div>

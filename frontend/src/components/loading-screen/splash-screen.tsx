@@ -1,11 +1,11 @@
-import { m } from 'framer-motion';
+import { m } from "framer-motion";
 
-import { useTheme } from '@mui/material/styles';
-import Box, { BoxProps } from '@mui/material/Box';
+import { useTheme } from "@mui/material/styles";
+import Box, { BoxProps } from "@mui/material/Box";
 
-import { bgBlur } from 'src/theme/css';
+import { bgBlur } from "src/theme/css";
 
-import Logo from '../logo';
+import Logo from "../logo";
 
 // ----------------------------------------------------------------------
 
@@ -26,10 +26,10 @@ export default function SplashScreen({ sx, ...other }: BoxProps) {
           width: 1,
           height: 1,
           zIndex: 9999,
-          display: 'flex',
-          position: 'absolute',
-          alignItems: 'center',
-          justifyContent: 'center',
+          display: "flex",
+          position: "absolute",
+          alignItems: "center",
+          justifyContent: "center",
           ...sx,
         }}
         {...other}
@@ -41,7 +41,7 @@ export default function SplashScreen({ sx, ...other }: BoxProps) {
           }}
           transition={{
             duration: 2,
-            ease: 'easeInOut',
+            ease: "easeInOut",
             repeatDelay: 1,
             repeat: Infinity,
           }}
@@ -50,7 +50,7 @@ export default function SplashScreen({ sx, ...other }: BoxProps) {
         </m.div>
       </Box>
 
-      <Box sx={{ width: 1, height: '100vh' }} />
+      <Box sx={{ width: 1, height: "100vh" }} />
     </>
   );
 }

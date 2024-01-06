@@ -1,38 +1,38 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import { alpha } from '@mui/material/styles';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import { alpha } from "@mui/material/styles";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
 
-import { useBoolean } from 'src/hooks/use-boolean';
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useBoolean } from "src/hooks/use-boolean";
+import { useResponsive } from "src/hooks/use-responsive";
 
-import { _jobs, _mock, _socials } from 'src/_mock';
+import { _jobs, _mock, _socials } from "src/_mock";
 
-import Iconify from 'src/components/iconify';
-import { SplashScreen } from 'src/components/loading-screen';
+import Iconify from "src/components/iconify";
+import { SplashScreen } from "src/components/loading-screen";
 
-import Advertisement from '../../advertisement';
-import CareerNewsletter from '../career-newsletter';
-import CareerJobListSimilar from '../list/career-job-list-similar';
-import CareerJobDetailsInfo from '../details/career-job-details-info';
-import CareerJobDetailsHero from '../details/career-job-details-hero';
-import CareerJobDetailsSummary from '../details/career-job-details-summary';
-import CareerJobDetailsCompanyInfo from '../details/career-job-details-company-info';
-import CareerJobDetailsCompanySimilar from '../details/career-job-details-company-similar';
+import Advertisement from "../../advertisement";
+import CareerNewsletter from "../career-newsletter";
+import CareerJobListSimilar from "../list/career-job-list-similar";
+import CareerJobDetailsInfo from "../details/career-job-details-info";
+import CareerJobDetailsHero from "../details/career-job-details-hero";
+import CareerJobDetailsSummary from "../details/career-job-details-summary";
+import CareerJobDetailsCompanyInfo from "../details/career-job-details-company-info";
+import CareerJobDetailsCompanySimilar from "../details/career-job-details-company-similar";
 
 // ----------------------------------------------------------------------
 
 const _mockJob = _jobs[0];
 
 export default function CareerJobView() {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const loading = useBoolean(true);
 
@@ -54,7 +54,7 @@ export default function CareerJobView() {
 
       <Container
         sx={{
-          overflow: 'hidden',
+          overflow: "hidden",
           pt: { xs: 5, md: 10 },
           pb: 10,
         }}
@@ -88,7 +88,7 @@ export default function CareerJobView() {
                       flexShrink: 0,
                       color: social.color,
                       borderColor: social.color,
-                      '&:hover': {
+                      "&:hover": {
                         borderColor: social.color,
                         bgcolor: alpha(social.color, 0.08),
                       },
@@ -111,10 +111,10 @@ export default function CareerJobView() {
 
               <Advertisement
                 advertisement={{
-                  title: 'Advertisement',
-                  description: 'Duis leo. Donec orci lectus, aliquam ut, faucibus non',
+                  title: "Advertisement",
+                  description: "Duis leo. Donec orci lectus, aliquam ut, faucibus non",
                   imageUrl: _mock.image.career(2),
-                  path: '',
+                  path: "",
                 }}
               />
             </Stack>

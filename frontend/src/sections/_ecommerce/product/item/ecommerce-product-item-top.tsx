@@ -1,34 +1,34 @@
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import { Theme, SxProps } from '@mui/material/styles';
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import { Theme, SxProps } from "@mui/material/styles";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
-import TextMaxLine from 'src/components/text-max-line';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
+import TextMaxLine from "src/components/text-max-line";
 
-import { IProductItemProps } from 'src/types/product';
+import { IProductItemProps } from "src/types/product";
 
-import ProductPrice from '../../common/product-price';
+import ProductPrice from "../../common/product-price";
 
 // ----------------------------------------------------------------------
 
 type Props = {
   product: IProductItemProps;
   sx?: SxProps<Theme>;
-  variant?: 'small' | 'large';
+  variant?: "small" | "large";
 };
 
-export default function EcommerceProductItemTop({ product, variant = 'small', sx }: Props) {
-  const mdUp = useResponsive('up', 'md');
+export default function EcommerceProductItemTop({ product, variant = "small", sx }: Props) {
+  const mdUp = useResponsive("up", "md");
 
-  const isLarge = mdUp && variant === 'large';
+  const isLarge = mdUp && variant === "large";
 
   const coverUrl = <Image src={product.coverUrl} />;
 
@@ -39,7 +39,7 @@ export default function EcommerceProductItemTop({ product, variant = 'small', sx
   );
 
   const priceText = (
-    <ProductPrice price={product.price} sx={{ typography: 'h5', color: 'text.disabled' }} />
+    <ProductPrice price={product.price} sx={{ typography: "h5", color: "text.disabled" }} />
   );
 
   const moreBtn = (
@@ -73,7 +73,7 @@ export default function EcommerceProductItemTop({ product, variant = 'small', sx
     <Box
       gap={3}
       display="grid"
-      gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+      gridTemplateColumns={{ xs: "repeat(1, 1fr)", sm: "repeat(2, 1fr)" }}
       sx={{ height: 1 }}
     >
       <Box
@@ -90,7 +90,7 @@ export default function EcommerceProductItemTop({ product, variant = 'small', sx
 
         <Stack
           flexGrow={1}
-          alignItems={{ xs: 'flex-end', sm: 'flex-start' }}
+          alignItems={{ xs: "flex-end", sm: "flex-start" }}
           justifyContent="flex-end"
           sx={{ pt: 5 }}
         >
@@ -105,7 +105,7 @@ export default function EcommerceProductItemTop({ product, variant = 'small', sx
       sx={{
         p: 5,
         borderRadius: 2,
-        bgcolor: 'background.neutral',
+        bgcolor: "background.neutral",
         ...sx,
       }}
     >

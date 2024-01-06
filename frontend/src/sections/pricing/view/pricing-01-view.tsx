@@ -1,23 +1,23 @@
-'use client';
+"use client";
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import { alpha } from '@mui/material/styles';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import ToggleButton, { toggleButtonClasses } from '@mui/material/ToggleButton';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import { alpha } from "@mui/material/styles";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import ToggleButton, { toggleButtonClasses } from "@mui/material/ToggleButton";
 
-import { _pricing01 } from 'src/_mock';
+import { _pricing01 } from "src/_mock";
 
-import PlanCard from '../01/pricing-01-card';
+import PlanCard from "../01/pricing-01-card";
 
 // ----------------------------------------------------------------------
 
 export default function Pricing01View() {
-  const [subscription, setSubscription] = useState('monthly');
+  const [subscription, setSubscription] = useState("monthly");
 
   const handleChangeSubscription = useCallback(
     (event: React.MouseEvent<HTMLElement>, newValue: string) => {
@@ -41,7 +41,7 @@ export default function Pricing01View() {
         <br /> community&apos;s size and needs
       </Typography>
 
-      <Typography align="center" sx={{ color: 'text.secondary' }}>
+      <Typography align="center" sx={{ color: "text.secondary" }}>
         Choose your plan and make modern online conversation magic
       </Typography>
 
@@ -52,21 +52,21 @@ export default function Pricing01View() {
           value={subscription}
           onChange={handleChangeSubscription}
           sx={{
-            mx: 'auto',
+            mx: "auto",
             border: 0,
             bgcolor: (theme) => alpha(theme.palette.grey[500], 0.08),
             [`& .${toggleButtonClasses.root}`]: {
               m: 0,
-              typography: 'overline',
-              color: 'text.secondary',
-              '&:hover': {
-                bgcolor: 'transparent',
+              typography: "overline",
+              color: "text.secondary",
+              "&:hover": {
+                bgcolor: "transparent",
               },
               [`&.${toggleButtonClasses.selected}`]: {
-                bgcolor: 'text.primary',
-                color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
-                '&:hover': {
-                  bgcolor: 'text.primary',
+                bgcolor: "text.primary",
+                color: (theme) => (theme.palette.mode === "light" ? "common.white" : "grey.800"),
+                "&:hover": {
+                  bgcolor: "text.primary",
                 },
               },
             },
@@ -80,11 +80,11 @@ export default function Pricing01View() {
       <Box
         sx={{
           gap: 4,
-          display: 'grid',
-          alignItems: 'center',
+          display: "grid",
+          alignItems: "center",
           gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            md: 'repeat(3, 1fr)',
+            xs: "repeat(1, 1fr)",
+            md: "repeat(3, 1fr)",
           },
         }}
       >

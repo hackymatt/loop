@@ -1,8 +1,8 @@
-import { filledInputClasses } from '@mui/material/FilledInput';
+import { filledInputClasses } from "@mui/material/FilledInput";
 
-import { countries } from 'src/assets/data';
+import { countries } from "src/assets/data";
 
-import CountrySelect from 'src/components/country-select';
+import CountrySelect from "src/components/country-select";
 
 // ----------------------------------------------------------------------
 
@@ -17,16 +17,16 @@ export default function FilterLocation() {
       getOptionLabel={(option) => option}
       sx={{
         [`& .${filledInputClasses.root}`]: {
-          bgcolor: 'transparent',
-          '&:hover': {
-            bgcolor: 'transparent',
+          bgcolor: "transparent",
+          "&:hover": {
+            bgcolor: "transparent",
           },
           [`&.${filledInputClasses.focused}`]: {
-            bgcolor: 'transparent',
+            bgcolor: "transparent",
           },
         },
         [`& .${filledInputClasses.input}`]: {
-          typography: 'subtitle1',
+          typography: "subtitle1",
         },
       }}
     />

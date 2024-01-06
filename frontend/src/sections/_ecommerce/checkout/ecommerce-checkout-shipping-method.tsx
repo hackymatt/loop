@@ -1,13 +1,13 @@
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from "react-hook-form";
 
-import Box from '@mui/material/Box';
-import Radio from '@mui/material/Radio';
-import Stack from '@mui/material/Stack';
-import { alpha } from '@mui/material/styles';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
+import Box from "@mui/material/Box";
+import Radio from "@mui/material/Radio";
+import Stack from "@mui/material/Stack";
+import { alpha } from "@mui/material/styles";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel, { formControlLabelClasses } from "@mui/material/FormControlLabel";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
@@ -35,8 +35,8 @@ export default function EcommerceCheckoutShippingMethod({ options }: Props) {
           sx={{
             rowGap: 2.5,
             columnGap: 2,
-            display: 'grid',
-            gridTemplateColumns: { xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' },
+            display: "grid",
+            gridTemplateColumns: { xs: "repeat(1, 1fr)", md: "repeat(2, 1fr)" },
           }}
         >
           {options.map((option) => (
@@ -67,23 +67,23 @@ function OptionItem({ option, selected }: OptionItemProps) {
       <Stack direction="row" alignItems="center">
         <Iconify
           icon={
-            (value === 'standard' && 'carbon:delivery') ||
-            (value === 'express' && 'carbon:rocket') ||
-            'carbon:bicycle'
+            (value === "standard" && "carbon:delivery") ||
+            (value === "express" && "carbon:rocket") ||
+            "carbon:bicycle"
           }
           width={24}
         />
 
-        <Box component="span" sx={{ typography: 'subtitle1', flexGrow: 1, ml: 1 }}>
+        <Box component="span" sx={{ typography: "subtitle1", flexGrow: 1, ml: 1 }}>
           {label}
         </Box>
 
-        <Box component="span" sx={{ typography: 'h6' }}>
+        <Box component="span" sx={{ typography: "h6" }}>
           {`$${price}`}
         </Box>
       </Stack>
 
-      <Box component="span" sx={{ typography: 'body2', color: 'text.secondary' }}>
+      <Box component="span" sx={{ typography: "body2", color: "text.secondary" }}>
         {description}
       </Box>
     </Stack>

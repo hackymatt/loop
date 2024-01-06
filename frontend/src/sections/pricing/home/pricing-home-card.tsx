@@ -1,17 +1,17 @@
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import Card from "@mui/material/Card";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
+import { paths } from "src/routes/paths";
 
-import Label from 'src/components/label';
-import Iconify from 'src/components/iconify';
+import Label from "src/components/label";
+import Iconify from "src/components/iconify";
 
-import { IPricingHomeProps } from 'src/types/pricing';
+import { IPricingHomeProps } from "src/types/pricing";
 
 // ----------------------------------------------------------------------
 
@@ -20,11 +20,11 @@ type Props = {
 };
 
 export default function PricingHomeCard({ plan }: Props) {
-  const standardLicense = plan.license === 'Standard';
+  const standardLicense = plan.license === "Standard";
 
-  const plusLicense = plan.license === 'Plus';
+  const plusLicense = plan.license === "Plus";
 
-  const extendedLicense = plan.license === 'Extended';
+  const extendedLicense = plan.license === "Extended";
 
   return (
     <Card
@@ -38,14 +38,14 @@ export default function PricingHomeCard({ plan }: Props) {
       }}
     >
       {plusLicense && (
-        <Label color="info" sx={{ position: 'absolute', top: 40, left: 40 }}>
+        <Label color="info" sx={{ position: "absolute", top: 40, left: 40 }}>
           POPULAR
         </Label>
       )}
 
       <Stack spacing={5}>
         <Stack direction="row" justifyContent="space-between">
-          <Typography variant="h5" component="div" sx={{ textTransform: 'uppercase' }}>
+          <Typography variant="h5" component="div" sx={{ textTransform: "uppercase" }}>
             {plan.license}
           </Typography>
 
@@ -85,13 +85,13 @@ export default function PricingHomeCard({ plan }: Props) {
             <Stack key={option} spacing={1.5} direction="row" alignItems="center">
               <Iconify
                 icon="carbon:checkmark-outline"
-                sx={{ color: 'primary.main', width: 20, height: 20 }}
+                sx={{ color: "primary.main", width: 20, height: 20 }}
               />
               <Typography variant="body2">{option}</Typography>
             </Stack>
           ))}
 
-          <Divider sx={{ borderStyle: 'dashed' }} />
+          <Divider sx={{ borderStyle: "dashed" }} />
 
           {plan.options.map((option) => (
             <Stack
@@ -99,16 +99,16 @@ export default function PricingHomeCard({ plan }: Props) {
               direction="row"
               alignItems="center"
               sx={{
-                typography: 'body2',
-                ...(option.disabled && { color: 'text.disabled' }),
+                typography: "body2",
+                ...(option.disabled && { color: "text.disabled" }),
               }}
             >
               <Iconify
-                icon={option.disabled ? 'carbon:close-outline' : 'carbon:checkmark-outline'}
+                icon={option.disabled ? "carbon:close-outline" : "carbon:checkmark-outline"}
                 sx={{
                   mr: 2,
-                  color: 'primary.main',
-                  ...(option.disabled && { color: 'currentColor' }),
+                  color: "primary.main",
+                  ...(option.disabled && { color: "currentColor" }),
                 }}
               />
               {option.title}
@@ -120,8 +120,8 @@ export default function PricingHomeCard({ plan }: Props) {
           <Button
             size="large"
             fullWidth
-            variant={standardLicense ? 'outlined' : 'contained'}
-            color={extendedLicense ? 'primary' : 'inherit'}
+            variant={standardLicense ? "outlined" : "contained"}
+            color={extendedLicense ? "primary" : "inherit"}
             target="_blank"
             rel="noopener"
             href={paths.zoneStore}
@@ -135,7 +135,7 @@ export default function PricingHomeCard({ plan }: Props) {
             rel="noopener"
             variant="body2"
             href={paths.license}
-            sx={{ display: 'flex', alignItems: 'center' }}
+            sx={{ display: "flex", alignItems: "center" }}
           >
             Read license
             <Iconify icon="carbon:chevron-right" width={16} sx={{ ml: 1 }} />

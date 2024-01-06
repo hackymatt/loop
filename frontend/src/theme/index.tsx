@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
-import CssBaseline from '@mui/material/CssBaseline';
-import { createTheme, ThemeOptions, ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
+import CssBaseline from "@mui/material/CssBaseline";
+import { createTheme, ThemeOptions, ThemeProvider as MuiThemeProvider } from "@mui/material/styles";
 
-import { useSettingsContext } from 'src/components/settings';
+import { useSettingsContext } from "src/components/settings";
 
-import { palette } from './palette';
-import { shadows } from './shadows';
-import { typography } from './typography';
-import RTL from './options/right-to-left';
-import { customShadows } from './custom-shadows';
-import { componentsOverrides } from './overrides';
-import { createPresets } from './options/presets';
-import NextAppDirEmotionCacheProvider from './next-emotion-cache';
+import { palette } from "./palette";
+import { shadows } from "./shadows";
+import { typography } from "./typography";
+import RTL from "./options/right-to-left";
+import { customShadows } from "./custom-shadows";
+import { componentsOverrides } from "./overrides";
+import { createPresets } from "./options/presets";
+import NextAppDirEmotionCacheProvider from "./next-emotion-cache";
 
 // ----------------------------------------------------------------------
 
@@ -50,7 +50,7 @@ export default function ThemeProvider({ children }: Props) {
   theme.components = componentsOverrides(theme);
 
   return (
-    <NextAppDirEmotionCacheProvider options={{ key: 'css' }}>
+    <NextAppDirEmotionCacheProvider options={{ key: "css" }}>
       <MuiThemeProvider theme={theme}>
         <RTL themeDirection={settings.themeDirection}>
           <CssBaseline />

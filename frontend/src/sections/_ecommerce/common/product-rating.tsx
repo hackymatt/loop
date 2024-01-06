@@ -1,6 +1,6 @@
-import Typography from '@mui/material/Typography';
-import Stack, { StackProps } from '@mui/material/Stack';
-import Rating, { ratingClasses } from '@mui/material/Rating';
+import Typography from "@mui/material/Typography";
+import Stack, { StackProps } from "@mui/material/Stack";
+import Rating, { ratingClasses } from "@mui/material/Rating";
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ export default function ProductRating({ ratingNumber, label, ...other }: Props) 
         precision={0.5}
         sx={{
           [`&.${ratingClasses.root}`]: {
-            '& svg': {
+            "& svg": {
               height: 12,
               width: 12,
             },
@@ -28,7 +28,7 @@ export default function ProductRating({ ratingNumber, label, ...other }: Props) 
       />
 
       {label && (
-        <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+        <Typography variant="caption" sx={{ color: "text.disabled" }}>
           {label}
         </Typography>
       )}

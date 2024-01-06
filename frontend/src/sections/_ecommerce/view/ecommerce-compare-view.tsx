@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Stack from "@mui/material/Stack";
+import Switch from "@mui/material/Switch";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
-import { _productsCompare } from 'src/_mock';
+import { _productsCompare } from "src/_mock";
 
-import EcommerceCompareList from '../compare/ecommerce-compare-list';
+import EcommerceCompareList from "../compare/ecommerce-compare-list";
 
 // ----------------------------------------------------------------------
 
@@ -16,7 +16,7 @@ export default function EcommerceCompareView() {
   return (
     <Container
       sx={{
-        overflow: 'hidden',
+        overflow: "hidden",
         pt: 5,
         pb: { xs: 5, md: 10 },
       }}

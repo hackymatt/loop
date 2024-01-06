@@ -1,10 +1,10 @@
-import Container from '@mui/material/Container';
-import { useTheme } from '@mui/material/styles';
+import Container from "@mui/material/Container";
+import { useTheme } from "@mui/material/styles";
 
-import SvgColor from 'src/components/svg-color';
-import Carousel, { useCarousel } from 'src/components/carousel';
+import SvgColor from "src/components/svg-color";
+import Carousel, { useCarousel } from "src/components/carousel";
 
-import { IBrandProps } from 'src/types/brand';
+import { IBrandProps } from "src/types/brand";
 
 // ----------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ export default function MarketingOurClients({ brands }: Props) {
     autoplay: true,
     slidesToShow: 6,
     slidesToScroll: 1,
-    cssEase: 'linear',
+    cssEase: "linear",
     autoplaySpeed: 5000,
     responsive: [
       {
@@ -48,7 +48,7 @@ export default function MarketingOurClients({ brands }: Props) {
             sx={{
               width: 106,
               height: 32,
-              color: 'text.disabled',
+              color: "text.disabled",
             }}
           />
         ))}

@@ -1,10 +1,10 @@
-import { memo } from 'react';
+import { memo } from "react";
 
-import Link from '@mui/material/Link';
-import { useTheme } from '@mui/material/styles';
-import Box, { BoxProps } from '@mui/material/Box';
+import Link from "@mui/material/Link";
+import { useTheme } from "@mui/material/styles";
+import Box, { BoxProps } from "@mui/material/Box";
 
-import { RouterLink } from 'src/routes/components';
+import { RouterLink } from "src/routes/components";
 
 // ----------------------------------------------------------------------
 
@@ -61,8 +61,8 @@ function Logo({ single = false, sx }: LogoProps) {
         sx={{
           width: single ? 64 : 75,
           lineHeight: 0,
-          cursor: 'pointer',
-          display: 'inline-flex',
+          cursor: "pointer",
+          display: "inline-flex",
           ...sx,
         }}
       >

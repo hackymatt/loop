@@ -1,34 +1,34 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
 
-import { fShortenNumber } from 'src/utils/format-number';
+import { fShortenNumber } from "src/utils/format-number";
 
-import Image from 'src/components/image';
-import CountUp from 'src/components/count-up';
+import Image from "src/components/image";
+import CountUp from "src/components/count-up";
 
 // ----------------------------------------------------------------------
 
 const SUMMARY = [
   {
-    name: 'Learners',
+    name: "Learners",
     number: 14000,
     description:
-      'Ut varius tincidunt libero. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem.',
+      "Ut varius tincidunt libero. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem.",
   },
   {
-    name: 'Courses',
+    name: "Courses",
     number: 1050,
     description:
-      'Ut varius tincidunt libero. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem.',
+      "Ut varius tincidunt libero. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem.",
   },
   {
-    name: 'Graduates',
+    name: "Graduates",
     number: 52000,
     description:
-      'Ut varius tincidunt libero. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem.',
+      "Ut varius tincidunt libero. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem.",
   },
 ];
 
@@ -38,7 +38,7 @@ export default function ElearningAbout() {
   return (
     <Container
       sx={{
-        overflow: 'hidden',
+        overflow: "hidden",
         py: 10,
       }}
     >
@@ -46,11 +46,11 @@ export default function ElearningAbout() {
         container
         spacing={{ xs: 2, md: 8 }}
         sx={{
-          textAlign: { xs: 'center', md: 'left' },
+          textAlign: { xs: "center", md: "left" },
         }}
       >
         <Grid xs={12} md={6}>
-          <Typography variant="overline" sx={{ color: 'primary.main' }}>
+          <Typography variant="overline" sx={{ color: "primary.main" }}>
             Nullam accumsan lorem in dui.
           </Typography>
         </Grid>
@@ -60,7 +60,7 @@ export default function ElearningAbout() {
             Effective Forms Advertising Internet Web Site
           </Typography>
 
-          <Typography sx={{ color: 'text.secondary' }}>
+          <Typography sx={{ color: "text.secondary" }}>
             Over 92% of computers are infected with Adware and spyware. Such software is rarely
             accompanied by uninstall utility and even when it is it almost always leaves broken
             Windows
@@ -71,8 +71,8 @@ export default function ElearningAbout() {
       <Grid
         container
         spacing={8}
-        direction={{ md: 'row-reverse' }}
-        justifyContent={{ md: 'space-between' }}
+        direction={{ md: "row-reverse" }}
+        justifyContent={{ md: "space-between" }}
         sx={{
           pt: { xs: 8, md: 10 },
         }}
@@ -91,13 +91,13 @@ export default function ElearningAbout() {
           md={6}
           lg={5}
           sx={{
-            textAlign: { xs: 'center', md: 'left' },
+            textAlign: { xs: "center", md: "left" },
           }}
         >
           <Stack spacing={{ xs: 5, md: 10 }}>
             {SUMMARY.map((value) => (
               <Box key={value.name}>
-                <Typography variant="h4" sx={{ color: 'text.disabled', opacity: 0.48 }}>
+                <Typography variant="h4" sx={{ color: "text.disabled", opacity: 0.48 }}>
                   {value.name}
                 </Typography>
 
@@ -110,7 +110,7 @@ export default function ElearningAbout() {
                   +
                 </Typography>
 
-                <Typography sx={{ color: 'text.secondary' }}>{value.description}</Typography>
+                <Typography sx={{ color: "text.secondary" }}>{value.description}</Typography>
               </Box>
             ))}
           </Stack>

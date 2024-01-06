@@ -1,34 +1,34 @@
-'use client';
+"use client";
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
-import Popover from '@mui/material/Popover';
-import MenuItem from '@mui/material/MenuItem';
-import Checkbox from '@mui/material/Checkbox';
-import Grid from '@mui/material/Unstable_Grid2';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
+import Popover from "@mui/material/Popover";
+import MenuItem from "@mui/material/MenuItem";
+import Checkbox from "@mui/material/Checkbox";
+import Grid from "@mui/material/Unstable_Grid2";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 
-import { paths } from 'src/routes/paths';
+import { paths } from "src/routes/paths";
 
-import { fDate } from 'src/utils/format-time';
+import { fDate } from "src/utils/format-time";
 
-import { _socials, _careerPosts } from 'src/_mock';
+import { _socials, _careerPosts } from "src/_mock";
 
-import Iconify from 'src/components/iconify';
-import Markdown from 'src/components/markdown';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+import Iconify from "src/components/iconify";
+import Markdown from "src/components/markdown";
+import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
-import PostTags from '../../blog/common/post-tags';
-import CareerNewsletter from '../career-newsletter';
-import PostAuthor from '../../blog/common/post-author';
-import PostTimeBlock from '../../blog/common/post-time-block';
-import PostSocialsShare from '../../blog/common/post-socials-share';
-import CareerLatestPosts from '../../blog/career/career-latest-posts';
+import PostTags from "../../blog/common/post-tags";
+import CareerNewsletter from "../career-newsletter";
+import PostAuthor from "../../blog/common/post-author";
+import PostTimeBlock from "../../blog/common/post-time-block";
+import PostSocialsShare from "../../blog/common/post-socials-share";
+import CareerLatestPosts from "../../blog/career/career-latest-posts";
 
 // ----------------------------------------------------------------------
 
@@ -56,13 +56,13 @@ export default function CareerPostView() {
     <>
       <Divider />
 
-      <Container sx={{ overflow: 'hidden' }}>
-        <Grid container spacing={3} justifyContent={{ md: 'center' }}>
+      <Container sx={{ overflow: "hidden" }}>
+        <Grid container spacing={3} justifyContent={{ md: "center" }}>
           <Grid xs={12} md={8}>
             <CustomBreadcrumbs
               links={[
-                { name: 'Home', href: '/' },
-                { name: 'Blog', href: paths.career.posts },
+                { name: "Home", href: "/" },
+                { name: "Blog", href: paths.career.posts },
                 { name: title },
               ]}
               sx={{ my: 5 }}
@@ -82,7 +82,7 @@ export default function CareerPostView() {
               </Stack>
 
               <Stack direction="row" alignItems="center">
-                <IconButton onClick={handleOpen} color={open ? 'primary' : 'default'}>
+                <IconButton onClick={handleOpen} color={open ? "primary" : "default"}>
                   <Iconify icon="carbon:share" />
                 </IconButton>
 
@@ -123,8 +123,8 @@ export default function CareerPostView() {
         open={!!open}
         onClose={handleClose}
         anchorEl={open}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        transformOrigin={{ vertical: "top", horizontal: "center" }}
         slotProps={{
           paper: {
             sx: { width: 220 },

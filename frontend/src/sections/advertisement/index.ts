@@ -1,2 +1,2 @@
-export * from './types';
-export { default } from './advertisement';
+export * from "./types";
+export { default } from "./advertisement";

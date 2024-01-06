@@ -1,22 +1,22 @@
-import { m } from 'framer-motion';
-import { useState, useCallback } from 'react';
+import { m } from "framer-motion";
+import { useState, useCallback } from "react";
 
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import { alpha } from '@mui/material/styles';
-import Container from '@mui/material/Container';
-import Accordion from '@mui/material/Accordion';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary, { accordionSummaryClasses } from '@mui/material/AccordionSummary';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import { alpha } from "@mui/material/styles";
+import Container from "@mui/material/Container";
+import Accordion from "@mui/material/Accordion";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary, { accordionSummaryClasses } from "@mui/material/AccordionSummary";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Pattern01 from 'src/assets/illustrations/pattern/pattern-01';
+import Pattern01 from "src/assets/illustrations/pattern/pattern-01";
 
-import Iconify from 'src/components/iconify';
-import { varFade, MotionViewport } from 'src/components/animate';
+import Iconify from "src/components/iconify";
+import { varFade, MotionViewport } from "src/components/animate";
 
 // ----------------------------------------------------------------------
 
@@ -26,23 +26,23 @@ const CONTENTS = [
     answer: `Curabitur nisi. Phasellus blandit leo ut odio. Donec posuere vulputate arcu. Donec mi odio, faucibus at, scelerisque quis, convallis in,`,
   },
   {
-    question: 'How can I upgrade my product plan?',
+    question: "How can I upgrade my product plan?",
     answer: `Curabitur nisi. Phasellus blandit leo ut odio. Donec posuere vulputate arcu. Donec mi odio, faucibus at, scelerisque quis, convallis in,`,
   },
   {
-    question: 'Are design assets (Figma, Sketch, Adobe XD) included?',
+    question: "Are design assets (Figma, Sketch, Adobe XD) included?",
     answer: `Curabitur nisi. Phasellus blandit leo ut odio. Donec posuere vulputate arcu. Donec mi odio, faucibus at, scelerisque quis, convallis in,`,
   },
   {
-    question: 'Does this product support TypeScript?',
+    question: "Does this product support TypeScript?",
     answer: `Curabitur nisi. Phasellus blandit leo ut odio. Donec posuere vulputate arcu. Donec mi odio, faucibus at, scelerisque quis, convallis in,`,
   },
   {
-    question: 'Can I use this template in commercial projects like a SaaS?',
+    question: "Can I use this template in commercial projects like a SaaS?",
     answer: `Curabitur nisi. Phasellus blandit leo ut odio. Donec posuere vulputate arcu. Donec mi odio, faucibus at, scelerisque quis, convallis in,`,
   },
   {
-    question: 'How can I request support?',
+    question: "How can I request support?",
     answer: `Curabitur nisi. Phasellus blandit leo ut odio. Donec posuere vulputate arcu. Donec mi odio, faucibus at, scelerisque quis, convallis in,`,
   },
 ];
@@ -50,7 +50,7 @@ const CONTENTS = [
 // ----------------------------------------------------------------------
 
 export default function HomeFAQs() {
-  const smUp = useResponsive('up', 'sm');
+  const smUp = useResponsive("up", "sm");
 
   const [expanded, setExpanded] = useState<string | false>(false);
 
@@ -65,14 +65,14 @@ export default function HomeFAQs() {
     <Container
       component={MotionViewport}
       sx={{
-        position: 'relative',
+        position: "relative",
         py: { xs: 5, md: 10 },
       }}
     >
       <Grid container spacing={{ md: 3 }} justifyContent="center">
         <Grid xs={12} md={8}>
           <m.div variants={varFade().in}>
-            <Typography variant="h2" sx={{ textAlign: 'center' }}>
+            <Typography variant="h2" sx={{ textAlign: "center" }}>
               Frequently Asked Questions
             </Typography>
           </m.div>
@@ -97,7 +97,7 @@ export default function HomeFAQs() {
                         m: 0,
                       },
                       [`&.${accordionSummaryClasses.expanded}`]: {
-                        bgcolor: 'action.selected',
+                        bgcolor: "action.selected",
                       },
                     }}
                   >
@@ -107,7 +107,7 @@ export default function HomeFAQs() {
 
                     <Iconify
                       width={24}
-                      icon={expanded === faq.question ? 'carbon:subtract' : 'carbon:add'}
+                      icon={expanded === faq.question ? "carbon:subtract" : "carbon:add"}
                     />
                   </AccordionSummary>
 
@@ -121,8 +121,8 @@ export default function HomeFAQs() {
             sx={{
               borderWidth: 1,
               borderRadius: 3,
-              textAlign: 'center',
-              borderStyle: 'dashed',
+              textAlign: "center",
+              borderStyle: "dashed",
               borderColor: (theme) => alpha(theme.palette.grey[500], 0.32),
               px: { xs: 3, md: 8 },
               py: { xs: 6, md: 8 },
@@ -133,7 +133,7 @@ export default function HomeFAQs() {
             </m.div>
 
             <m.div variants={varFade().inUp}>
-              <Typography sx={{ mt: 3, mb: 5, color: 'text.secondary' }}>
+              <Typography sx={{ mt: 3, mb: 5, color: "text.secondary" }}>
                 Please describe your case to receive the most accurate advice.
               </Typography>
             </m.div>
@@ -159,7 +159,7 @@ export default function HomeFAQs() {
             left: 0,
             right: 0,
             zIndex: -1,
-            mx: 'auto',
+            mx: "auto",
             maxWidth: 600,
             maxHeight: 600,
           }}

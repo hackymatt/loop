@@ -1,6 +1,6 @@
-import { Theme, SxProps } from '@mui/material/styles';
+import { Theme, SxProps } from "@mui/material/styles";
 
-import StyledMarkdown from './styles';
+import StyledMarkdown from "./styles";
 
 // ----------------------------------------------------------------------
 

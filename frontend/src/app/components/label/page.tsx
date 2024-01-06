@@ -1,9 +1,9 @@
-import LabelView from 'src/sections/examples/label-view';
+import LabelView from "src/sections/examples/label-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Components: Label',
+  title: "Components: Label",
 };
 
 export default function LabelPage() {

@@ -1,29 +1,29 @@
-import { useRef } from 'react';
-import { m } from 'framer-motion';
+import { useRef } from "react";
+import { m } from "framer-motion";
 
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme } from '@mui/material/styles';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import Card from "@mui/material/Card";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Unstable_Grid2";
+import { useTheme } from "@mui/material/styles";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { useResponsive } from 'src/hooks/use-responsive';
-import { useBoundingClientRect } from 'src/hooks/use-bounding-client-rect';
+import { useResponsive } from "src/hooks/use-responsive";
+import { useBoundingClientRect } from "src/hooks/use-bounding-client-rect";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
-import SvgColor from 'src/components/svg-color';
-import { varHover, varTranHover } from 'src/components/animate';
-import Carousel, { useCarousel, CarouselArrows } from 'src/components/carousel';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
+import SvgColor from "src/components/svg-color";
+import { varHover, varTranHover } from "src/components/animate";
+import Carousel, { useCarousel, CarouselArrows } from "src/components/carousel";
 
-import { IJobByCountryProps } from 'src/types/job';
+import { IJobByCountryProps } from "src/types/job";
 
 // ----------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ type Props = {
 export default function CareerLandingConnections({ countries }: Props) {
   const theme = useTheme();
 
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -64,8 +64,8 @@ export default function CareerLandingConnections({ countries }: Props) {
   return (
     <Box
       sx={{
-        overflow: 'hidden',
-        position: 'relative',
+        overflow: "hidden",
+        position: "relative",
         py: { xs: 8, md: 15 },
       }}
     >
@@ -74,8 +74,8 @@ export default function CareerLandingConnections({ countries }: Props) {
           mb: { md: 0 },
           left: { md: 0 },
           right: { md: 0 },
-          position: { md: 'absolute' },
-          height: { md: 'calc(100% - 320px)' },
+          position: { md: "absolute" },
+          height: { md: "calc(100% - 320px)" },
         }}
       >
         {mdUp && (
@@ -87,8 +87,8 @@ export default function CareerLandingConnections({ countries }: Props) {
               width: 780,
               height: 646,
               opacity: 0.64,
-              position: 'absolute',
-              color: 'text.disabled',
+              position: "absolute",
+              color: "text.disabled",
             }}
           />
         )}
@@ -96,15 +96,15 @@ export default function CareerLandingConnections({ countries }: Props) {
         <Grid container spacing={3} justifyContent="space-between">
           <Grid xs={12} md={4}>
             <Stack
-              alignItems={{ xs: 'center', md: 'flex-start' }}
+              alignItems={{ xs: "center", md: "flex-start" }}
               sx={{
                 pt: { md: 8 },
-                textAlign: { xs: 'center', md: 'unset' },
+                textAlign: { xs: "center", md: "unset" },
               }}
             >
               <Typography variant="h2">Global Connections</Typography>
 
-              <Typography sx={{ mt: 3, mb: 5, color: 'text.secondary' }}>
+              <Typography sx={{ mt: 3, mb: 5, color: "text.secondary" }}>
                 Vestibulum fringilla pede sit amet augue. Nam adipiscing. Nulla neque dolor,
                 sagittis eget, iaculis quis.
               </Typography>
@@ -139,11 +139,11 @@ export default function CareerLandingConnections({ countries }: Props) {
             <Box
               key={country.id}
               sx={{
-                ml: '-1px',
+                ml: "-1px",
                 py: 8,
                 pr: { xs: 2, md: 4 },
                 pl: { xs: 2, md: 0 },
-                color: 'common.white',
+                color: "common.white",
               }}
             >
               <JobByCountryItem key={country.id} country={country} />
@@ -178,21 +178,21 @@ function JobByCountryItem({ country }: JobByCountryItemProp) {
         component={m.div}
         whileHover="hover"
         sx={{
-          cursor: 'pointer',
-          '&:hover': {
+          cursor: "pointer",
+          "&:hover": {
             boxShadow: (theme) => theme.customShadows.z24,
           },
         }}
       >
-        <Box sx={{ overflow: 'hidden' }}>
+        <Box sx={{ overflow: "hidden" }}>
           <m.div variants={varHover(1.1)} transition={varTranHover()}>
             <Image src={coverUrl} alt="cover" ratio="3/4" />
           </m.div>
         </Box>
 
-        <Stack spacing={1} sx={{ textAlign: 'center', p: 2.5 }}>
+        <Stack spacing={1} sx={{ textAlign: "center", p: 2.5 }}>
           <Typography variant="h6">{location}</Typography>
-          <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+          <Typography variant="body2" sx={{ color: "text.disabled" }}>
             {totalJobs} Jobs
           </Typography>
         </Stack>

@@ -1,15 +1,15 @@
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Image from 'src/components/image';
-import Carousel, { useCarousel, CarouselDots, CarouselArrows } from 'src/components/carousel';
+import Image from "src/components/image";
+import Carousel, { useCarousel, CarouselDots, CarouselArrows } from "src/components/carousel";
 
-import { ITestimonialProps } from 'src/types/testimonial';
+import { ITestimonialProps } from "src/types/testimonial";
 
-import TestimonialItem from './travel-testimonial-item';
+import TestimonialItem from "./travel-testimonial-item";
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ type Props = {
 };
 
 export default function TravelTestimonial({ testimonials }: Props) {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const carousel = useCarousel({
     dots: !mdUp,
@@ -43,7 +43,7 @@ export default function TravelTestimonial({ testimonials }: Props) {
             variant="h2"
             sx={{
               mb: 5,
-              textAlign: { xs: 'center', md: 'left' },
+              textAlign: { xs: "center", md: "left" },
             }}
           >
             What Our Customer Say
@@ -61,7 +61,7 @@ export default function TravelTestimonial({ testimonials }: Props) {
             <Image
               alt="travel testimonial"
               src="/assets/images/travel/travel_testimonial.png"
-              sx={{ maxWidth: 296, ml: 'auto' }}
+              sx={{ maxWidth: 296, ml: "auto" }}
             />
           </Grid>
         )}
@@ -70,7 +70,7 @@ export default function TravelTestimonial({ testimonials }: Props) {
       {mdUp && (
         <CarouselArrows
           spacing={2}
-          justifyContent={{ xs: 'center', md: 'unset' }}
+          justifyContent={{ xs: "center", md: "unset" }}
           onNext={carousel.onNext}
           onPrev={carousel.onPrev}
           sx={{ mt: 10 }}

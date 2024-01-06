@@ -1,12 +1,12 @@
-import MenuItem from '@mui/material/MenuItem';
-import Typography from '@mui/material/Typography';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import Checkbox, { checkboxClasses } from '@mui/material/Checkbox';
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Checkbox, { checkboxClasses } from "@mui/material/Checkbox";
 
 // ----------------------------------------------------------------------
 
-const DURATIONS = ['0 - 1 Hour', '1 - 3 Hours', '3 - 6 Hours', '6 - 18 Hours', '18+ Hours'];
+const DURATIONS = ["0 - 1 Hour", "1 - 3 Hours", "3 - 6 Hours", "6 - 18 Hours", "18+ Hours"];
 
 // ----------------------------------------------------------------------
 
@@ -26,14 +26,14 @@ export default function FilterDuration({ filterDuration, onChangeDuration }: Pro
         renderValue={(selected) => {
           if (!selected.length) {
             return (
-              <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+              <Typography variant="body2" sx={{ color: "text.disabled" }}>
                 All Duration
               </Typography>
             );
           }
           return (
             <Typography variant="subtitle2" component="span">
-              {selected.join(', ')}
+              {selected.join(", ")}
             </Typography>
           );
         }}

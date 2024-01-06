@@ -1,73 +1,73 @@
-'use client';
+"use client";
 
-import * as Yup from 'yup';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import Collapse from '@mui/material/Collapse';
-import Grid from '@mui/material/Unstable_Grid2';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import Collapse from "@mui/material/Collapse";
+import Grid from "@mui/material/Unstable_Grid2";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
+import { paths } from "src/routes/paths";
+import { useRouter } from "src/routes/hooks";
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from "src/hooks/use-boolean";
 
-import { _products } from 'src/_mock';
+import { _products } from "src/_mock";
 
-import Iconify from 'src/components/iconify';
-import FormProvider from 'src/components/hook-form';
+import Iconify from "src/components/iconify";
+import FormProvider from "src/components/hook-form";
 
-import EcommerceCheckoutNewCardForm from '../checkout/ecommerce-checkout-new-card-form';
-import EcommerceCheckoutOrderSummary from '../checkout/ecommerce-checkout-order-summary';
-import EcommerceCheckoutPaymentMethod from '../checkout/ecommerce-checkout-payment-method';
-import EcommerceCheckoutShippingMethod from '../checkout/ecommerce-checkout-shipping-method';
-import EcommerceCheckoutShippingDetails from '../checkout/ecommerce-checkout-shipping-details';
-import EcommerceCheckoutPersonalDetails from '../checkout/ecommerce-checkout-personal-details';
+import EcommerceCheckoutNewCardForm from "../checkout/ecommerce-checkout-new-card-form";
+import EcommerceCheckoutOrderSummary from "../checkout/ecommerce-checkout-order-summary";
+import EcommerceCheckoutPaymentMethod from "../checkout/ecommerce-checkout-payment-method";
+import EcommerceCheckoutShippingMethod from "../checkout/ecommerce-checkout-shipping-method";
+import EcommerceCheckoutShippingDetails from "../checkout/ecommerce-checkout-shipping-details";
+import EcommerceCheckoutPersonalDetails from "../checkout/ecommerce-checkout-personal-details";
 
 // ----------------------------------------------------------------------
 
 const SHIPPING_OPTIONS = [
   {
-    label: 'Free',
-    value: 'free',
-    description: '5-7 Days delivery',
+    label: "Free",
+    value: "free",
+    description: "5-7 Days delivery",
     price: 0,
   },
   {
-    label: 'Standard',
-    value: 'standard',
-    description: '3-5 Days delivery',
+    label: "Standard",
+    value: "standard",
+    description: "3-5 Days delivery",
     price: 10,
   },
   {
-    label: 'Express',
-    value: 'express',
-    description: '2-3 Days delivery',
+    label: "Express",
+    value: "express",
+    description: "2-3 Days delivery",
     price: 20,
   },
 ];
 
 const PAYMENT_OPTIONS = [
   {
-    label: 'Paypal',
-    value: 'paypal',
-    description: '**** **** **** 1234',
+    label: "Paypal",
+    value: "paypal",
+    description: "**** **** **** 1234",
   },
   {
-    label: 'MasterCard',
-    value: 'mastercard',
-    description: '**** **** **** 3456',
+    label: "MasterCard",
+    value: "mastercard",
+    description: "**** **** **** 3456",
   },
   {
-    label: 'Visa',
-    value: 'visa',
-    description: '**** **** **** 6789',
+    label: "Visa",
+    value: "visa",
+    description: "**** **** **** 6789",
   },
 ];
 
@@ -79,33 +79,33 @@ export default function EcommerceCheckoutView() {
   const formOpen = useBoolean();
 
   const EcommerceCheckoutSchema = Yup.object().shape({
-    firstName: Yup.string().required('First name is required'),
-    lastName: Yup.string().required('Last name is required'),
-    emailAddress: Yup.string().required('Email address is required'),
-    phoneNumber: Yup.string().required('Phone number is required'),
-    streetAddress: Yup.string().required('Street address is required'),
-    city: Yup.string().required('City is required'),
-    zipCode: Yup.string().required('Zip code is required'),
+    firstName: Yup.string().required("First name is required"),
+    lastName: Yup.string().required("Last name is required"),
+    emailAddress: Yup.string().required("Email address is required"),
+    phoneNumber: Yup.string().required("Phone number is required"),
+    streetAddress: Yup.string().required("Street address is required"),
+    city: Yup.string().required("City is required"),
+    zipCode: Yup.string().required("Zip code is required"),
   });
 
   const defaultValues = {
-    firstName: 'Jayvion',
-    lastName: 'Simon',
-    emailAddress: 'nannie_abernathy70@yahoo.com',
-    phoneNumber: '365-374-4961',
-    password: '',
-    confirmPassword: '',
-    streetAddress: '',
-    city: '',
-    country: 'United States',
-    zipCode: '',
-    shipping: 'free',
-    paymentMethods: 'mastercard',
+    firstName: "Jayvion",
+    lastName: "Simon",
+    emailAddress: "nannie_abernathy70@yahoo.com",
+    phoneNumber: "365-374-4961",
+    password: "",
+    confirmPassword: "",
+    streetAddress: "",
+    city: "",
+    country: "United States",
+    zipCode: "",
+    shipping: "free",
+    paymentMethods: "mastercard",
     newCard: {
-      cardNumber: '',
-      cardHolder: '',
-      expirationDate: '',
-      ccv: '',
+      cardNumber: "",
+      cardHolder: "",
+      expirationDate: "",
+      ccv: "",
     },
   };
 
@@ -125,7 +125,7 @@ export default function EcommerceCheckoutView() {
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       router.push(paths.eCommerce.orderCompleted);
-      console.log('DATA', data);
+      console.log("DATA", data);
     } catch (error) {
       console.error(error);
     }
@@ -134,7 +134,7 @@ export default function EcommerceCheckoutView() {
   return (
     <Container
       sx={{
-        overflow: 'hidden',
+        overflow: "hidden",
         pt: 5,
         pb: { xs: 5, md: 10 },
       }}
@@ -146,7 +146,7 @@ export default function EcommerceCheckoutView() {
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Grid container spacing={{ xs: 5, md: 8 }}>
           <Grid xs={12} md={8}>
-            <Stack spacing={5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
+            <Stack spacing={5} divider={<Divider sx={{ borderStyle: "dashed" }} />}>
               <div>
                 <StepLabel title="Personal Details" step="1" />
                 <EcommerceCheckoutPersonalDetails />
@@ -171,13 +171,13 @@ export default function EcommerceCheckoutView() {
 
                 <Stack alignItems="flex-end">
                   <Button
-                    color={formOpen.value ? 'error' : 'inherit'}
+                    color={formOpen.value ? "error" : "inherit"}
                     startIcon={
-                      <Iconify icon={formOpen.value ? 'carbon:close' : 'carbon:add'} width={24} />
+                      <Iconify icon={formOpen.value ? "carbon:close" : "carbon:add"} width={24} />
                     }
                     onClick={formOpen.onToggle}
                   >
-                    {formOpen.value ? 'Cancel' : 'Add New Card'}
+                    {formOpen.value ? "Cancel" : "Add New Card"}
                   </Button>
                 </Stack>
 
@@ -214,20 +214,20 @@ type StepLabelProps = {
 
 function StepLabel({ step, title }: StepLabelProps) {
   return (
-    <Stack direction="row" alignItems="center" sx={{ mb: 3, typography: 'h6' }}>
+    <Stack direction="row" alignItems="center" sx={{ mb: 3, typography: "h6" }}>
       <Box
         sx={{
           mr: 1.5,
           width: 28,
           height: 28,
           flexShrink: 0,
-          display: 'flex',
-          typography: 'h6',
-          borderRadius: '50%',
-          alignItems: 'center',
-          bgcolor: 'primary.main',
-          justifyContent: 'center',
-          color: 'primary.contrastText',
+          display: "flex",
+          typography: "h6",
+          borderRadius: "50%",
+          alignItems: "center",
+          bgcolor: "primary.main",
+          justifyContent: "center",
+          color: "primary.contrastText",
         }}
       >
         {step}

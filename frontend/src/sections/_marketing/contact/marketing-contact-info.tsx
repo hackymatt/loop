@@ -1,16 +1,16 @@
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
 export default function MarketingContactInfo() {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   return (
     <Stack spacing={3}>

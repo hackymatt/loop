@@ -1,4 +1,4 @@
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 
 // ----------------------------------------------------------------------
 
@@ -6,8 +6,8 @@ type StyledMarkdownProps = {
   firstLetter?: boolean;
 };
 
-const StyledMarkdown = styled('div', {
-  shouldForwardProp: (prop) => prop !== 'firstLetter',
+const StyledMarkdown = styled("div", {
+  shouldForwardProp: (prop) => prop !== "firstLetter",
 })<StyledMarkdownProps>(({ firstLetter, theme }) => ({
   // Text
   h1: { margin: 0, ...theme.typography.h1 },
@@ -19,24 +19,24 @@ const StyledMarkdown = styled('div', {
   p: { margin: 0, ...theme.typography.body1 },
 
   br: {
-    display: 'grid',
+    display: "grid",
     content: '""',
-    marginTop: '0.75em',
+    marginTop: "0.75em",
   },
 
   // Link
   a: {
     color: theme.palette.primary.main,
-    textDecoration: 'none',
-    '&:hover': {
-      textDecoration: 'underline',
+    textDecoration: "none",
+    "&:hover": {
+      textDecoration: "underline",
     },
   },
 
   // List
-  '& ul, & ol': {
+  "& ul, & ol": {
     margin: 0,
-    '& li': {
+    "& li": {
       lineHeight: 2,
     },
   },
@@ -48,91 +48,91 @@ const StyledMarkdown = styled('div', {
     borderWidth: 0,
     msFlexNegative: 0,
     WebkitFlexShrink: 0,
-    borderStyle: 'solid',
-    borderBottomWidth: 'thin',
+    borderStyle: "solid",
+    borderBottomWidth: "thin",
     borderColor: theme.palette.divider,
   },
 
   // Blockquote
-  '& blockquote': {
+  "& blockquote": {
     lineHeight: 1.5,
-    fontSize: '1.5em',
-    margin: '40px auto',
-    position: 'relative',
-    fontFamily: 'Georgia, serif',
+    fontSize: "1.5em",
+    margin: "40px auto",
+    position: "relative",
+    fontFamily: "Georgia, serif",
     padding: theme.spacing(3, 3, 3, 8),
     color: theme.palette.text.secondary,
     borderRadius: theme.shape.borderRadius * 2,
     backgroundColor: theme.palette.background.neutral,
-    [theme.breakpoints.up('md')]: {
-      width: '80%',
+    [theme.breakpoints.up("md")]: {
+      width: "80%",
     },
-    '& p, & span': {
+    "& p, & span": {
       marginBottom: 0,
-      fontSize: 'inherit',
-      fontFamily: 'inherit',
+      fontSize: "inherit",
+      fontFamily: "inherit",
     },
-    '&:before': {
+    "&:before": {
       left: 16,
       top: -8,
-      display: 'block',
-      fontSize: '3em',
+      display: "block",
+      fontSize: "3em",
       content: '"\\201C"',
-      position: 'absolute',
+      position: "absolute",
       color: theme.palette.text.disabled,
     },
   },
 
   // Image
-  '& img': {
+  "& img": {
     borderRadius: theme.spacing(1),
   },
 
   // Table
   table: {
-    width: '100%',
-    borderCollapse: 'collapse',
+    width: "100%",
+    borderCollapse: "collapse",
     border: `1px solid ${theme.palette.divider}`,
-    'th, td': {
+    "th, td": {
       padding: theme.spacing(1),
       border: `1px solid ${theme.palette.divider}`,
     },
-    'tbody tr:nth-of-type(odd)': {
+    "tbody tr:nth-of-type(odd)": {
       backgroundColor: theme.palette.background.neutral,
     },
   },
 
   // Checkbox
   input: {
-    '&[type=checkbox]': {
-      position: 'relative',
-      cursor: 'pointer',
-      '&:before': {
+    "&[type=checkbox]": {
+      position: "relative",
+      cursor: "pointer",
+      "&:before": {
         content: '""',
         top: -2,
         left: -2,
         width: 17,
         height: 17,
         borderRadius: 3,
-        position: 'absolute',
-        backgroundColor: theme.palette.grey[theme.palette.mode === 'light' ? 300 : 700],
+        position: "absolute",
+        backgroundColor: theme.palette.grey[theme.palette.mode === "light" ? 300 : 700],
       },
-      '&:checked': {
-        '&:before': {
+      "&:checked": {
+        "&:before": {
           backgroundColor: theme.palette.primary.main,
         },
-        '&:after': {
+        "&:after": {
           content: '""',
           top: 1,
           left: 5,
           width: 4,
           height: 9,
-          position: 'absolute',
-          transform: 'rotate(45deg)',
-          msTransform: 'rotate(45deg)',
-          WebkitTransform: 'rotate(45deg)',
+          position: "absolute",
+          transform: "rotate(45deg)",
+          msTransform: "rotate(45deg)",
+          WebkitTransform: "rotate(45deg)",
           border: `solid ${theme.palette.common.white}`,
-          borderWidth: '0 2px 2px 0',
+          borderWidth: "0 2px 2px 0",
         },
       },
     },
@@ -140,9 +140,9 @@ const StyledMarkdown = styled('div', {
 
   // First Letter
   ...(firstLetter && {
-    '& > p:first-of-type': {
-      '&:first-letter': {
-        float: 'left',
+    "& > p:first-of-type": {
+      "&:first-letter": {
+        float: "left",
         fontSize: 80,
         lineHeight: 1,
         paddingRight: theme.spacing(2),

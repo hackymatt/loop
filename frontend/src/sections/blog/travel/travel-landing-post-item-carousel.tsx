@@ -1,18 +1,18 @@
-import Box from '@mui/material/Box';
-import Fab from '@mui/material/Fab';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { alpha, useTheme } from '@mui/material/styles';
+import Box from "@mui/material/Box";
+import Fab from "@mui/material/Fab";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { fDate } from 'src/utils/format-time';
+import { fDate } from "src/utils/format-time";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
 
-import { IBlogPostProps } from 'src/types/blog';
+import { IBlogPostProps } from "src/types/blog";
 
 // ----------------------------------------------------------------------
 
@@ -24,22 +24,22 @@ export default function TravelLandingPostItemCarousel({ post }: Props) {
   const theme = useTheme();
 
   return (
-    <Stack sx={{ position: 'relative' }}>
+    <Stack sx={{ position: "relative" }}>
       <Stack
         sx={{
           width: 1,
           height: 1,
           zIndex: 9,
-          textAlign: 'center',
-          position: 'absolute',
-          color: 'common.white',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          textAlign: "center",
+          position: "absolute",
+          color: "common.white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <Box sx={{ mx: 'auto', maxWidth: 400 }}>
-          <Typography variant="body2" sx={{ color: 'primary.main' }}>
+        <Box sx={{ mx: "auto", maxWidth: 400 }}>
+          <Typography variant="body2" sx={{ color: "primary.main" }}>
             {fDate(post.createdAt)}
           </Typography>
 

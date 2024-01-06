@@ -1,14 +1,14 @@
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
-import { alpha } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import { alpha } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { ICourseProps } from 'src/types/course';
+import { ICourseProps } from "src/types/course";
 
-import ElearningCourseDetailsLessonList from './elearning-course-details-lesson-list';
+import ElearningCourseDetailsLessonList from "./elearning-course-details-lesson-list";
 
 // ----------------------------------------------------------------------
 
@@ -32,16 +32,16 @@ export default function ElearningCourseDetailsSummary({ course }: Props) {
                   mr: 1.5,
                   width: 20,
                   height: 20,
-                  display: 'flex',
-                  borderRadius: '50%',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  display: "flex",
+                  borderRadius: "50%",
+                  alignItems: "center",
+                  justifyContent: "center",
                   bgcolor: (theme) => alpha(theme?.palette?.primary?.main, 0.08),
                 }}
               >
                 <Iconify
                   icon="carbon:checkmark"
-                  sx={{ width: 16, height: 16, color: 'primary.main' }}
+                  sx={{ width: 16, height: 16, color: "primary.main" }}
                 />
               </Box>
               {learn}

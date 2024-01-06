@@ -1,6 +1,6 @@
-import Stack, { StackProps } from '@mui/material/Stack';
+import Stack, { StackProps } from "@mui/material/Stack";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
@@ -25,10 +25,10 @@ export default function FilterCategory({
           alignItems="center"
           onClick={() => onChangeCategories(option)}
           sx={{
-            typography: 'body2',
-            cursor: 'pointer',
+            typography: "body2",
+            cursor: "pointer",
             ...(filterCategories === option && {
-              fontWeight: 'fontWeightBold',
+              fontWeight: "fontWeightBold",
             }),
           }}
         >

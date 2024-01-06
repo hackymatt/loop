@@ -1,8 +1,8 @@
-import Rating from '@mui/material/Rating';
-import Typography from '@mui/material/Typography';
-import Stack, { StackProps } from '@mui/material/Stack';
+import Rating from "@mui/material/Rating";
+import Typography from "@mui/material/Typography";
+import Stack, { StackProps } from "@mui/material/Stack";
 
-import { ITestimonialProps } from 'src/types/testimonial';
+import { ITestimonialProps } from "src/types/testimonial";
 
 // ----------------------------------------------------------------------
 
@@ -15,7 +15,7 @@ export default function TestimonialItem({ testimonial, sx, ...other }: Props) {
     <Stack
       alignItems="center"
       sx={{
-        textAlign: 'center',
+        textAlign: "center",
         ...sx,
       }}
       {...other}
@@ -34,7 +34,7 @@ export default function TestimonialItem({ testimonial, sx, ...other }: Props) {
 
       <Typography variant="h6">{testimonial.name}</Typography>
 
-      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+      <Typography variant="body2" sx={{ color: "text.secondary" }}>
         {testimonial.role}
       </Typography>
     </Stack>

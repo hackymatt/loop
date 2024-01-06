@@ -1,14 +1,14 @@
-import { useRef } from 'react';
-import { m } from 'framer-motion';
+import { useRef } from "react";
+import { m } from "framer-motion";
 
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 
-import Scrollbar from 'src/components/scrollbar';
-import { varContainer, MotionViewport } from 'src/components/animate';
+import Scrollbar from "src/components/scrollbar";
+import { varContainer, MotionViewport } from "src/components/animate";
 
-import getVariant from '../get-variant';
+import getVariant from "../get-variant";
 
 // ----------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ export default function ContainerView({ selectVariant, ...other }: ContainerView
       variants={varContainer()}
       sx={{
         height: 480,
-        bgcolor: 'background.neutral',
+        bgcolor: "background.neutral",
       }}
       {...other}
     >
@@ -39,14 +39,14 @@ export default function ContainerView({ selectVariant, ...other }: ContainerView
             viewport={{ root: scrollRef, once: true, amount: 0.1 }}
             sx={{
               my: 2,
-              mx: 'auto',
+              mx: "auto",
               height: 72,
               maxWidth: 480,
-              display: 'flex',
+              display: "flex",
               borderRadius: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              bgcolor: 'background.paper',
+              alignItems: "center",
+              justifyContent: "center",
+              bgcolor: "background.paper",
               boxShadow: (theme) => theme.customShadows.z8,
             }}
           >

@@ -1,9 +1,9 @@
-import VerifyView from 'src/sections/auth/verify-view';
+import VerifyView from "src/sections/auth/verify-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Verify',
+  title: "Verify",
 };
 
 export default function VerifyPage() {

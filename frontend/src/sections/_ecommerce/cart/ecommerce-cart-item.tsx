@@ -1,14 +1,14 @@
-import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 
-import { fCurrency } from 'src/utils/format-number';
+import { fCurrency } from "src/utils/format-number";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
 
-import { IProductItemProps } from 'src/types/product';
+import { IProductItemProps } from "src/types/product";
 
 // ----------------------------------------------------------------------
 
@@ -36,13 +36,13 @@ export default function EcommerceCartItem({ product, wishlist }: Props) {
             height: 80,
             flexShrink: 0,
             borderRadius: 1.5,
-            bgcolor: 'background.neutral',
+            bgcolor: "background.neutral",
           }}
         />
 
         <Stack spacing={0.5} sx={{ p: 2 }}>
           <Typography variant="subtitle2">{product.name}</Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
             Color: Grey Space
           </Typography>
         </Stack>
@@ -66,7 +66,7 @@ export default function EcommerceCartItem({ product, wishlist }: Props) {
         </TextField>
       </Stack>
 
-      <Stack sx={{ width: 120, typography: 'subtitle2' }}> {fCurrency(product.price)} </Stack>
+      <Stack sx={{ width: 120, typography: "subtitle2" }}> {fCurrency(product.price)} </Stack>
 
       <IconButton>
         <Iconify icon="carbon:trash-can" />

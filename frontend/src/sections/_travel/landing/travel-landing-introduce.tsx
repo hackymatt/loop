@@ -1,42 +1,42 @@
-import { useRef } from 'react';
+import { useRef } from "react";
 
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import { useResponsive } from 'src/hooks/use-responsive';
-import { useBoundingClientRect } from 'src/hooks/use-bounding-client-rect';
+import { useResponsive } from "src/hooks/use-responsive";
+import { useBoundingClientRect } from "src/hooks/use-bounding-client-rect";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
-import SvgColor from 'src/components/svg-color';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
+import SvgColor from "src/components/svg-color";
 
 // ----------------------------------------------------------------------
 
 const SUMMARY = [
   {
-    title: 'Professional Tour Guides',
-    description: 'Nunc nonummy metus. Donec elit libero',
-    icon: '/assets/icons/ic_popularity.svg',
+    title: "Professional Tour Guides",
+    description: "Nunc nonummy metus. Donec elit libero",
+    icon: "/assets/icons/ic_popularity.svg",
   },
   {
-    title: 'Customer Satisfaction',
-    description: 'Nunc nonummy metus. Donec elit libero',
-    icon: '/assets/icons/ic_reputation.svg',
+    title: "Customer Satisfaction",
+    description: "Nunc nonummy metus. Donec elit libero",
+    icon: "/assets/icons/ic_reputation.svg",
   },
   {
-    title: 'Secure Payment',
-    description: 'Nunc nonummy metus. Donec elit libero',
-    icon: '/assets/icons/ic_secure_payment.svg',
+    title: "Secure Payment",
+    description: "Nunc nonummy metus. Donec elit libero",
+    icon: "/assets/icons/ic_secure_payment.svg",
   },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function TravelLandingIntroduce() {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -56,13 +56,13 @@ export default function TravelLandingIntroduce() {
           spacing={3}
           sx={{
             maxWidth: 480,
-            mx: { xs: 'auto', md: 'unset' },
-            textAlign: { xs: 'center', md: 'unset' },
+            mx: { xs: "auto", md: "unset" },
+            textAlign: { xs: "center", md: "unset" },
           }}
         >
           <Typography variant="h2">Explore A Different Way To Travel</Typography>
 
-          <Typography sx={{ color: 'text.secondary' }}>
+          <Typography sx={{ color: "text.secondary" }}>
             Cras ultricies mi eu turpis hendrerit fringilla. Nulla consequat massa quis enim.
           </Typography>
         </Stack>
@@ -70,7 +70,7 @@ export default function TravelLandingIntroduce() {
 
       <Box
         sx={{
-          position: 'relative',
+          position: "relative",
           my: { xs: 8, md: 10 },
           ml: { md: `${offsetLeft}px` },
         }}
@@ -82,18 +82,18 @@ export default function TravelLandingIntroduce() {
             left: 0,
             zIndex: 9,
             m: { xs: 2, md: 5 },
-            position: 'absolute',
+            position: "absolute",
             maxWidth: { sm: 360 },
-            right: { xs: 0, sm: 'unset' },
-            bottom: { xs: 0, sm: 'unset' },
-            textAlign: { xs: 'center', sm: 'unset' },
-            display: 'flex',
-            alignItems: { xs: 'center', sm: 'unset' },
-            justifyContent: 'center',
-            flexDirection: 'column',
+            right: { xs: 0, sm: "unset" },
+            bottom: { xs: 0, sm: "unset" },
+            textAlign: { xs: "center", sm: "unset" },
+            display: "flex",
+            alignItems: { xs: "center", sm: "unset" },
+            justifyContent: "center",
+            flexDirection: "column",
           }}
         >
-          <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+          <Typography variant="overline" sx={{ color: "text.disabled" }}>
             Device
           </Typography>
 
@@ -104,12 +104,12 @@ export default function TravelLandingIntroduce() {
           <Stack
             direction="row"
             alignItems="center"
-            justifyContent={{ xs: 'center', sm: 'unset' }}
+            justifyContent={{ xs: "center", sm: "unset" }}
             sx={{
-              cursor: 'pointer',
-              color: 'primary.main',
-              typography: 'subtitle1',
-              '&:hover': { opacity: 0.72 },
+              cursor: "pointer",
+              color: "primary.main",
+              typography: "subtitle1",
+              "&:hover": { opacity: 0.72 },
             }}
           >
             <Iconify icon="carbon:play" width={24} sx={{ mr: 1 }} /> Watch Video
@@ -121,18 +121,18 @@ export default function TravelLandingIntroduce() {
           src="/assets/images/travel/travel_post_hero.jpg"
           width={1600}
           height={mdUp ? 900 : 1600}
-          ratio={mdUp ? '16/9' : '1/1'}
+          ratio={mdUp ? "16/9" : "1/1"}
         />
       </Box>
 
-      <Container sx={{ textAlign: 'center' }}>
+      <Container sx={{ textAlign: "center" }}>
         <Box
           sx={{
-            display: 'grid',
+            display: "grid",
             gap: { xs: 8, md: 3 },
             gridTemplateColumns: {
-              xs: 'repeat(1, 1fr)',
-              md: 'repeat(3, 1fr)',
+              xs: "repeat(1, 1fr)",
+              md: "repeat(3, 1fr)",
             },
           }}
         >
@@ -144,14 +144,14 @@ export default function TravelLandingIntroduce() {
                   mb: 3,
                   width: 64,
                   height: 64,
-                  mx: 'auto',
-                  color: 'primary.main',
+                  mx: "auto",
+                  color: "primary.main",
                 }}
               />
 
               <Typography variant="h5">{value.title}</Typography>
 
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
                 {value.description}
               </Typography>
             </Stack>

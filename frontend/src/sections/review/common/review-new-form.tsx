@@ -1,19 +1,19 @@
-import * as Yup from 'yup';
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from "yup";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import Stack from '@mui/material/Stack';
-import Rating from '@mui/material/Rating';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import LoadingButton from '@mui/lab/LoadingButton';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import FormHelperText from '@mui/material/FormHelperText';
-import Dialog, { DialogProps } from '@mui/material/Dialog';
+import Stack from "@mui/material/Stack";
+import Rating from "@mui/material/Rating";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import LoadingButton from "@mui/lab/LoadingButton";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import FormHelperText from "@mui/material/FormHelperText";
+import Dialog, { DialogProps } from "@mui/material/Dialog";
 
-import FormProvider, { RHFTextField } from 'src/components/hook-form';
+import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
@@ -26,16 +26,16 @@ interface Props extends DialogProps {
 export default function ReviewNewForm({ onClose, ...other }: Props) {
   const defaultValues = {
     rating: 0,
-    review: '',
-    name: '',
-    email: '',
+    review: "",
+    name: "",
+    email: "",
   };
 
   const NewReviewSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
-    rating: Yup.number().min(1, 'Rating must be greater than or equal to 1'),
-    review: Yup.string().required('Review is required'),
-    email: Yup.string().required('Email is required').email('That is not an email'),
+    name: Yup.string().required("Name is required"),
+    rating: Yup.number().min(1, "Rating must be greater than or equal to 1"),
+    review: Yup.string().required("Review is required"),
+    email: Yup.string().required("Email is required").email("That is not an email"),
   });
 
   const methods = useForm({
@@ -55,7 +55,7 @@ export default function ReviewNewForm({ onClose, ...other }: Props) {
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       onClose();
-      console.log('DATA', data);
+      console.log("DATA", data);
     } catch (error) {
       console.error(error);
     }
@@ -64,7 +64,7 @@ export default function ReviewNewForm({ onClose, ...other }: Props) {
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: 'h3', pb: 3 }}>Review</DialogTitle>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Review</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
           <Stack spacing={2.5}>

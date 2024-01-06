@@ -1,6 +1,6 @@
-import Checkbox from '@mui/material/Checkbox';
-import Stack, { StackProps } from '@mui/material/Stack';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from "@mui/material/Checkbox";
+import Stack, { StackProps } from "@mui/material/Stack";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 // ----------------------------------------------------------------------
 

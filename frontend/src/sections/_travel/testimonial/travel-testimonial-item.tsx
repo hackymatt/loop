@@ -1,10 +1,10 @@
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Stack, { StackProps } from '@mui/material/Stack';
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Stack, { StackProps } from "@mui/material/Stack";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { ITestimonialProps } from 'src/types/testimonial';
+import { ITestimonialProps } from "src/types/testimonial";
 
 // ----------------------------------------------------------------------
 
@@ -16,19 +16,19 @@ export default function TestimonialItem({ testimonial, sx, ...other }: Props) {
   return (
     <Stack
       alignItems={{
-        xs: 'center',
-        md: 'flex-start',
+        xs: "center",
+        md: "flex-start",
       }}
       sx={{
         textAlign: {
-          xs: 'center',
-          md: 'left',
+          xs: "center",
+          md: "left",
         },
         ...sx,
       }}
       {...other}
     >
-      <Iconify width={48} icon="carbon:quotes" sx={{ opacity: 0.48, color: 'primary.main' }} />
+      <Iconify width={48} icon="carbon:quotes" sx={{ opacity: 0.48, color: "primary.main" }} />
 
       <Typography
         sx={{
@@ -46,8 +46,8 @@ export default function TestimonialItem({ testimonial, sx, ...other }: Props) {
           sx={{
             width: 8,
             height: 9,
-            bgcolor: 'primary.main',
-            borderRadius: '50%',
+            bgcolor: "primary.main",
+            borderRadius: "50%",
           }}
         />
         <Typography variant="h6">{testimonial.name}</Typography>

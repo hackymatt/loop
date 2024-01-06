@@ -1,55 +1,55 @@
-'use client';
+"use client";
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import Stack from '@mui/material/Stack';
-import Table from '@mui/material/Table';
-import Switch from '@mui/material/Switch';
-import TableRow from '@mui/material/TableRow';
-import TableBody from '@mui/material/TableBody';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import InputAdornment from '@mui/material/InputAdornment';
-import TableContainer from '@mui/material/TableContainer';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import TablePagination from '@mui/material/TablePagination';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import Box from "@mui/material/Box";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import Stack from "@mui/material/Stack";
+import Table from "@mui/material/Table";
+import Switch from "@mui/material/Switch";
+import TableRow from "@mui/material/TableRow";
+import TableBody from "@mui/material/TableBody";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import InputAdornment from "@mui/material/InputAdornment";
+import TableContainer from "@mui/material/TableContainer";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import TablePagination from "@mui/material/TablePagination";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 
-import { _productsTable } from 'src/_mock';
+import { _productsTable } from "src/_mock";
 
-import Iconify from 'src/components/iconify';
-import Scrollbar from 'src/components/scrollbar';
+import Iconify from "src/components/iconify";
+import Scrollbar from "src/components/scrollbar";
 
-import { stableSort, getComparator } from '../account/utils';
-import EcommerceAccountOrdersTableRow from '../account/ecommerce-account-orders-table-row';
-import EcommerceAccountOrdersTableHead from '../account/ecommerce-account-orders-table-head';
-import EcommerceAccountOrdersTableToolbar from '../account/ecommerce-account-orders-table-toolbar';
+import { stableSort, getComparator } from "../account/utils";
+import EcommerceAccountOrdersTableRow from "../account/ecommerce-account-orders-table-row";
+import EcommerceAccountOrdersTableHead from "../account/ecommerce-account-orders-table-head";
+import EcommerceAccountOrdersTableToolbar from "../account/ecommerce-account-orders-table-toolbar";
 
 // ----------------------------------------------------------------------
 
-const TABS = ['All Orders', 'Completed', 'To Process', 'Cancelled', 'Return & Refund'];
+const TABS = ["All Orders", "Completed", "To Process", "Cancelled", "Return & Refund"];
 
 export const TABLE_HEAD = [
-  { id: 'orderId', label: 'Order ID' },
-  { id: 'item', label: 'Item' },
-  { id: 'deliveryDate', label: 'Delivery date', width: 160 },
-  { id: 'price', label: 'Price', width: 100 },
-  { id: 'status', label: 'Status', width: 100 },
-  { id: '' },
+  { id: "orderId", label: "Order ID" },
+  { id: "item", label: "Item" },
+  { id: "deliveryDate", label: "Delivery date", width: 160 },
+  { id: "price", label: "Price", width: 100 },
+  { id: "status", label: "Status", width: 100 },
+  { id: "" },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function EcommerceAccountOrdersPage() {
-  const [tab, setTab] = useState('All Orders');
+  const [tab, setTab] = useState("All Orders");
 
-  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+  const [order, setOrder] = useState<"asc" | "desc">("asc");
 
-  const [orderBy, setOrderBy] = useState('orderId');
+  const [orderBy, setOrderBy] = useState("orderId");
 
   const [selected, setSelected] = useState<string[]>([]);
 
@@ -65,9 +65,9 @@ export default function EcommerceAccountOrdersPage() {
 
   const handleSort = useCallback(
     (id: string) => {
-      const isAsc = orderBy === id && order === 'asc';
-      if (id !== '') {
-        setOrder(isAsc ? 'desc' : 'asc');
+      const isAsc = orderBy === id && order === "asc";
+      if (id !== "") {
+        setOrder(isAsc ? "desc" : "asc");
         setOrderBy(id);
       }
     },
@@ -139,7 +139,7 @@ export default function EcommerceAccountOrdersPage() {
         ))}
       </Tabs>
 
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ mt: 5, mb: 3 }}>
+      <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 5, mb: 3 }}>
         <TextField
           fullWidth
           hiddenLabel
@@ -147,12 +147,12 @@ export default function EcommerceAccountOrdersPage() {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <Iconify icon="carbon:search" width={24} sx={{ color: 'text.disabled' }} />
+                <Iconify icon="carbon:search" width={24} sx={{ color: "text.disabled" }} />
               </InputAdornment>
             ),
           }}
         />
-        <Stack spacing={2} direction={{ xs: 'column', md: 'row' }} alignItems="center">
+        <Stack spacing={2} direction={{ xs: "column", md: "row" }} alignItems="center">
           <DatePicker label="Start Date" sx={{ width: 1, minWidth: 180 }} />
           <DatePicker label="End Date" sx={{ width: 1, minWidth: 180 }} />
         </Stack>
@@ -160,12 +160,12 @@ export default function EcommerceAccountOrdersPage() {
 
       <TableContainer
         sx={{
-          overflow: 'unset',
+          overflow: "unset",
           [`& .${tableCellClasses.head}`]: {
-            color: 'text.primary',
+            color: "text.primary",
           },
           [`& .${tableCellClasses.root}`]: {
-            bgcolor: 'background.default',
+            bgcolor: "background.default",
             borderBottomColor: (theme) => theme.palette.divider,
           },
         }}
@@ -181,7 +181,7 @@ export default function EcommerceAccountOrdersPage() {
             sx={{
               minWidth: 720,
             }}
-            size={dense ? 'small' : 'medium'}
+            size={dense ? "small" : "medium"}
           >
             <EcommerceAccountOrdersTableHead
               order={order}
@@ -219,7 +219,7 @@ export default function EcommerceAccountOrdersPage() {
         </Scrollbar>
       </TableContainer>
 
-      <Box sx={{ position: 'relative' }}>
+      <Box sx={{ position: "relative" }}>
         <TablePagination
           page={page}
           component="div"
@@ -238,7 +238,7 @@ export default function EcommerceAccountOrdersPage() {
             py: 1.5,
             top: 0,
             position: {
-              sm: 'absolute',
+              sm: "absolute",
             },
           }}
         />

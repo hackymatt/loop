@@ -1,17 +1,17 @@
-import Box from '@mui/material/Box';
-import Tabs from '@mui/material/Tabs';
-import Drawer from '@mui/material/Drawer';
-import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
-import Tab, { tabClasses } from '@mui/material/Tab';
-import Stack, { StackProps } from '@mui/material/Stack';
-import CardActionArea from '@mui/material/CardActionArea';
+import Box from "@mui/material/Box";
+import Tabs from "@mui/material/Tabs";
+import Drawer from "@mui/material/Drawer";
+import { styled } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import Tab, { tabClasses } from "@mui/material/Tab";
+import Stack, { StackProps } from "@mui/material/Stack";
+import CardActionArea from "@mui/material/CardActionArea";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
-import Scrollbar from 'src/components/scrollbar';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
+import Scrollbar from "src/components/scrollbar";
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +44,7 @@ type Props = {
 };
 
 export default function SupportNav({ topic, data, onChangeTopic, open, onClose }: Props) {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const renderContent = (
     <Scrollbar
@@ -75,10 +75,10 @@ export default function SupportNav({ topic, data, onChangeTopic, open, onClose }
             }
             sx={{
               height: 56,
-              typography: 'body2',
-              justifyContent: 'flex-start',
+              typography: "body2",
+              justifyContent: "flex-start",
               [`& .${tabClasses.selected}`]: {
-                typography: 'subtitle2',
+                typography: "subtitle2",
               },
             }}
           />
@@ -96,7 +96,7 @@ export default function SupportNav({ topic, data, onChangeTopic, open, onClose }
           Do you still need help?
         </Typography>
 
-        <Typography variant="body2" sx={{ color: 'text.secondary', mb: 4 }}>
+        <Typography variant="body2" sx={{ color: "text.secondary", mb: 4 }}>
           Always support whenever you need (24/7).
         </Typography>
 
@@ -115,7 +115,7 @@ export default function SupportNav({ topic, data, onChangeTopic, open, onClose }
             <Iconify icon="carbon:mobile" width={24} />
             <Typography variant="subtitle2">
               {`Call `}
-              <Box component="span" sx={{ color: 'primary.main' }}>
+              <Box component="span" sx={{ color: "primary.main" }}>
                 552-917-1454
               </Box>
             </Typography>
@@ -131,8 +131,8 @@ export default function SupportNav({ topic, data, onChangeTopic, open, onClose }
       PaperProps={{
         sx: {
           width: 280,
-          position: 'unset',
-          bgcolor: 'background.default',
+          position: "unset",
+          bgcolor: "background.default",
         },
       }}
     >

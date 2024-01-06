@@ -1,24 +1,24 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { alpha, useTheme } from '@mui/material/styles';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import { fCurrency } from 'src/utils/format-number';
+import { fCurrency } from "src/utils/format-number";
 
-import { bgBlur, bgGradient } from 'src/theme/css';
+import { bgBlur, bgGradient } from "src/theme/css";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
-import TextMaxLine from 'src/components/text-max-line';
-import Carousel, { useCarousel, CarouselDots } from 'src/components/carousel';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
+import TextMaxLine from "src/components/text-max-line";
+import Carousel, { useCarousel, CarouselDots } from "src/components/carousel";
 
-import { ITourProps } from 'src/types/tour';
+import { ITourProps } from "src/types/tour";
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ type Props = {
 };
 
 export default function TravelLandingHero({ tours }: Props) {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const carouselLarge = useCarousel({
     speed: 500,
@@ -42,8 +42,8 @@ export default function TravelLandingHero({ tours }: Props) {
         right: 0,
         zIndex: 9,
         bottom: 64,
-        position: 'absolute',
-        display: { md: 'none' },
+        position: "absolute",
+        display: { md: "none" },
       },
     }),
   });
@@ -55,7 +55,7 @@ export default function TravelLandingHero({ tours }: Props) {
     slidesToScroll: 1,
     swipeToSlide: true,
     focusOnSelect: true,
-    centerPadding: '0px',
+    centerPadding: "0px",
     verticalSwiping: true,
   });
 
@@ -65,7 +65,7 @@ export default function TravelLandingHero({ tours }: Props) {
   }, [carouselLarge, carouselThumb]);
 
   return (
-    <Box sx={{ minHeight: { md: '100vh' }, position: 'relative' }}>
+    <Box sx={{ minHeight: { md: "100vh" }, position: "relative" }}>
       {!!tours.length && (
         <Carousel
           {...carouselLarge.carouselSettings}
@@ -86,8 +86,8 @@ export default function TravelLandingHero({ tours }: Props) {
             top: 0,
             height: 1,
             maxWidth: 220,
-            position: 'absolute',
-            right: { xs: 20, lg: '6%', xl: '10%' },
+            position: "absolute",
+            right: { xs: 20, lg: "6%", xl: "10%" },
           }}
         >
           {!!tours.length && (
@@ -133,7 +133,7 @@ function CarouselItem({ tour }: CarouselItemProps) {
         zIndex: 8,
         width: 1,
         height: 1,
-        position: 'absolute',
+        position: "absolute",
       }}
     />
   );
@@ -141,12 +141,12 @@ function CarouselItem({ tour }: CarouselItemProps) {
   return (
     <Box
       sx={{
-        display: 'flex',
-        textAlign: 'center',
-        alignItems: 'center',
-        position: 'relative',
-        color: 'common.white',
-        justifyContent: 'center',
+        display: "flex",
+        textAlign: "center",
+        alignItems: "center",
+        position: "relative",
+        color: "common.white",
+        justifyContent: "center",
       }}
     >
       <Stack
@@ -154,10 +154,10 @@ function CarouselItem({ tour }: CarouselItemProps) {
         sx={{
           zIndex: 9,
           py: { xs: 20, md: 0 },
-          position: { md: 'absolute' },
+          position: { md: "absolute" },
         }}
       >
-        <Typography variant="overline" sx={{ color: 'info.main', mb: 5 }}>
+        <Typography variant="overline" sx={{ color: "info.main", mb: 5 }}>
           {tour.location}
         </Typography>
 
@@ -168,21 +168,21 @@ function CarouselItem({ tour }: CarouselItemProps) {
         <Stack
           alignItems="center"
           spacing={{ xs: 2.5, md: 5 }}
-          direction={{ xs: 'column', md: 'row' }}
+          direction={{ xs: "column", md: "row" }}
           sx={{ my: 5 }}
         >
-          <Stack direction="row" alignItems="center" sx={{ typography: 'subtitle2' }}>
-            <Iconify icon="carbon:time" width={24} sx={{ mr: 1, color: 'primary.main' }} />
+          <Stack direction="row" alignItems="center" sx={{ typography: "subtitle2" }}>
+            <Iconify icon="carbon:time" width={24} sx={{ mr: 1, color: "primary.main" }} />
             {tour.duration}
           </Stack>
 
-          <Stack direction="row" alignItems="center" sx={{ typography: 'subtitle2' }}>
-            <Iconify icon="carbon:star" width={24} sx={{ mr: 1, color: 'primary.main' }} />
+          <Stack direction="row" alignItems="center" sx={{ typography: "subtitle2" }}>
+            <Iconify icon="carbon:star" width={24} sx={{ mr: 1, color: "primary.main" }} />
             {`${tour.ratingNumber} reviews`}
           </Stack>
 
-          <Stack direction="row" alignItems="center" sx={{ typography: 'subtitle2' }}>
-            <Iconify icon="carbon:currency" width={24} sx={{ mr: 1, color: 'primary.main' }} />
+          <Stack direction="row" alignItems="center" sx={{ typography: "subtitle2" }}>
+            <Iconify icon="carbon:currency" width={24} sx={{ mr: 1, color: "primary.main" }} />
             {`Starting at ${fCurrency(tour.price)}`}
           </Stack>
         </Stack>
@@ -197,8 +197,8 @@ function CarouselItem({ tour }: CarouselItemProps) {
           width: 1,
           height: 1,
           position: {
-            xs: 'absolute',
-            md: 'relative',
+            xs: "absolute",
+            md: "relative",
           },
         }}
       >
@@ -209,7 +209,7 @@ function CarouselItem({ tour }: CarouselItemProps) {
           src={tour.heroUrl}
           sx={{
             width: 1,
-            height: { xs: 1, md: '100vh' },
+            height: { xs: 1, md: "100vh" },
           }}
         />
       </Box>
@@ -235,8 +235,8 @@ function ThumbnailItem({ tour, selected }: ThumbnailItemProps) {
       sx={{
         px: 2,
         py: 1.5,
-        cursor: 'pointer',
-        color: 'common.white',
+        cursor: "pointer",
+        color: "common.white",
         ...(selected && {
           borderRadius: 2,
           ...bgBlur({
@@ -254,7 +254,7 @@ function ThumbnailItem({ tour, selected }: ThumbnailItemProps) {
         </TextMaxLine>
 
         <Stack direction="row" alignItems="center">
-          <Iconify icon="carbon:location" sx={{ mr: 1, color: 'primary.main' }} />
+          <Iconify icon="carbon:location" sx={{ mr: 1, color: "primary.main" }} />
           <TextMaxLine variant="caption" line={1} sx={{ opacity: 0.48 }}>
             {tour.continent}
           </TextMaxLine>

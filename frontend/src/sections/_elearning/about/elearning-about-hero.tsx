@@ -1,10 +1,10 @@
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
 
-import Image from 'src/components/image';
+import Image from "src/components/image";
 
 // ----------------------------------------------------------------------
 
@@ -13,8 +13,8 @@ export default function ElearningAboutHero() {
     <Box
       sx={{
         py: { xs: 10, md: 20 },
-        overflow: 'hidden',
-        bgcolor: 'primary.lighter',
+        overflow: "hidden",
+        bgcolor: "primary.lighter",
       }}
     >
       <Container>
@@ -24,8 +24,8 @@ export default function ElearningAboutHero() {
             md={6}
             lg={5}
             sx={{
-              color: 'grey.800',
-              textAlign: { xs: 'center', md: 'left' },
+              color: "grey.800",
+              textAlign: { xs: "center", md: "left" },
             }}
           >
             <Typography variant="h1">Online Courses</Typography>

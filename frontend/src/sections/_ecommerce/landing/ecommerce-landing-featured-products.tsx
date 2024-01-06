@@ -1,12 +1,12 @@
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
 
-import { _products } from 'src/_mock';
+import { _products } from "src/_mock";
 
-import EcommerceProductItemHot from '../product/item/ecommerce-product-item-hot';
-import EcommerceProductItemCountDown from '../product/item/ecommerce-product-item-count-down';
+import EcommerceProductItemHot from "../product/item/ecommerce-product-item-hot";
+import EcommerceProductItemCountDown from "../product/item/ecommerce-product-item-count-down";
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +21,7 @@ export default function EcommerceLandingFeaturedProducts() {
         variant="h3"
         sx={{
           mb: 8,
-          textAlign: { xs: 'center', md: 'unset' },
+          textAlign: { xs: "center", md: "unset" },
         }}
       >
         Featured Products
@@ -32,13 +32,13 @@ export default function EcommerceLandingFeaturedProducts() {
           <Box
             gap={3}
             display="grid"
-            gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+            gridTemplateColumns={{ xs: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
           >
             {_products.slice(1, 3).map((product, index) => (
               <EcommerceProductItemCountDown
                 key={product.id}
                 product={product}
-                color={index === 0 ? 'primary' : 'secondary'}
+                color={index === 0 ? "primary" : "secondary"}
               />
             ))}
           </Box>
@@ -49,9 +49,9 @@ export default function EcommerceLandingFeaturedProducts() {
             gap={3}
             display="grid"
             gridTemplateColumns={{
-              xs: 'repeat(2, 1fr)',
-              md: 'repeat(4, 1fr)',
-              lg: 'repeat(2, 1fr)',
+              xs: "repeat(2, 1fr)",
+              md: "repeat(4, 1fr)",
+              lg: "repeat(2, 1fr)",
             }}
           >
             {_products.slice(4, 8).map((product) => (

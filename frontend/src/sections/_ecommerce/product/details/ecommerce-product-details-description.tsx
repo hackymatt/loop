@@ -1,8 +1,8 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
-import Markdown from 'src/components/markdown';
+import Markdown from "src/components/markdown";
 
 // ----------------------------------------------------------------------
 
@@ -29,11 +29,11 @@ export default function EcommerceProductDetailsDescription({ description, specif
           <Stack
             key={row.label}
             spacing={0.5}
-            direction={{ xs: 'column', sm: 'row' }}
-            alignItems={{ sm: 'center' }}
-            sx={{ typography: 'body2' }}
+            direction={{ xs: "column", sm: "row" }}
+            alignItems={{ sm: "center" }}
+            sx={{ typography: "body2" }}
           >
-            <Box component="span" sx={{ width: 160, color: 'text.secondary' }}>
+            <Box component="span" sx={{ width: 160, color: "text.secondary" }}>
               {row.label}
             </Box>
             <Box component="span">{row.value}</Box>

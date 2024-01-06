@@ -1,11 +1,11 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import SvgColor from 'src/components/svg-color';
+import SvgColor from "src/components/svg-color";
 
-import { IBrandProps } from 'src/types/brand';
+import { IBrandProps } from "src/types/brand";
 
 // ----------------------------------------------------------------------
 
@@ -24,11 +24,11 @@ export default function TravelOurClients({ brands }: Props) {
       <Box
         sx={{
           gap: 3,
-          display: 'grid',
-          textAlign: { xs: 'center', md: 'left' },
+          display: "grid",
+          textAlign: { xs: "center", md: "left" },
           gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            md: 'repeat(2, 1fr)',
+            xs: "repeat(1, 1fr)",
+            md: "repeat(2, 1fr)",
           },
         }}
       >
@@ -39,7 +39,7 @@ export default function TravelOurClients({ brands }: Props) {
             Enhance Your Life By Having A Sense Of Purpose
           </Typography>
 
-          <Typography sx={{ color: 'text.secondary' }}>
+          <Typography sx={{ color: "text.secondary" }}>
             Around the world, food-borne illnesses have become increasingly common. In the United
             States alone, millions of people get a food-related illness each year.
           </Typography>
@@ -49,13 +49,13 @@ export default function TravelOurClients({ brands }: Props) {
       <Box
         sx={{
           columnGap: 3,
-          display: 'grid',
+          display: "grid",
           mt: { xs: 8, md: 15 },
           rowGap: { xs: 4, md: 5 },
           gridTemplateColumns: {
-            xs: 'repeat(2, 1fr)',
-            sm: 'repeat(3, 1fr)',
-            md: 'repeat(4, 1fr)',
+            xs: "repeat(2, 1fr)",
+            sm: "repeat(3, 1fr)",
+            md: "repeat(4, 1fr)",
           },
         }}
       >
@@ -66,9 +66,9 @@ export default function TravelOurClients({ brands }: Props) {
             sx={{
               width: 106,
               height: 32,
-              color: 'text.secondary',
-              mr: { xs: 'auto' },
-              ml: { xs: 'auto', md: 'unset' },
+              color: "text.secondary",
+              mr: { xs: "auto" },
+              ml: { xs: "auto", md: "unset" },
             }}
           />
         ))}

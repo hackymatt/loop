@@ -1,16 +1,16 @@
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import { alpha } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import Stack, { StackProps } from '@mui/material/Stack';
-import InputAdornment from '@mui/material/InputAdornment';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import { alpha } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Stack, { StackProps } from "@mui/material/Stack";
+import InputAdornment from "@mui/material/InputAdornment";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { fPercent, fCurrency } from 'src/utils/format-number';
+import { fPercent, fCurrency } from "src/utils/format-number";
 
 // ----------------------------------------------------------------------
 
@@ -56,14 +56,14 @@ export default function EcommerceCartSummary({ tax, total, subtotal, shipping, d
         }}
       />
 
-      <Divider sx={{ borderStyle: 'dashed' }} />
+      <Divider sx={{ borderStyle: "dashed" }} />
 
       <Row
         label="Total"
         value={fCurrency(total)}
         sx={{
-          typography: 'h6',
-          '& span': { typography: 'h6' },
+          typography: "h6",
+          "& span": { typography: "h6" },
         }}
       />
 
@@ -93,10 +93,10 @@ function Row({ label, value, sx, ...other }: RowProps) {
       direction="row"
       alignItems="center"
       justifyContent="space-between"
-      sx={{ typography: 'subtitle2', ...sx }}
+      sx={{ typography: "subtitle2", ...sx }}
       {...other}
     >
-      <Box component="span" sx={{ typography: 'body2' }}>
+      <Box component="span" sx={{ typography: "body2" }}>
         {label}
       </Box>
       {value}

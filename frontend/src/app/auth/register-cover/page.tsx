@@ -1,9 +1,9 @@
-import RegisterCoverView from 'src/sections/auth/register-cover-view';
+import RegisterCoverView from "src/sections/auth/register-cover-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Register: Cover',
+  title: "Register: Cover",
 };
 
 export default function RegisterCoverPage() {

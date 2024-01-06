@@ -1,47 +1,47 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
-import Collapse from '@mui/material/Collapse';
-import Typography from '@mui/material/Typography';
-import Stack, { StackProps } from '@mui/material/Stack';
+import Drawer from "@mui/material/Drawer";
+import Button from "@mui/material/Button";
+import Collapse from "@mui/material/Collapse";
+import Typography from "@mui/material/Typography";
+import Stack, { StackProps } from "@mui/material/Stack";
 
-import { useBoolean } from 'src/hooks/use-boolean';
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useBoolean } from "src/hooks/use-boolean";
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { IProductFiltersProps } from 'src/types/product';
+import { IProductFiltersProps } from "src/types/product";
 
-import FilterTag from './filter-tag';
-import FilterPrice from './filter-price';
-import FilterBrand from './filter-brand';
-import FilterStock from './filter-stock';
-import FilterRating from './filter-rating';
-import FilterShipping from './filter-shipping';
-import FilterCategory from './filter-category';
+import FilterTag from "./filter-tag";
+import FilterPrice from "./filter-price";
+import FilterBrand from "./filter-brand";
+import FilterStock from "./filter-stock";
+import FilterRating from "./filter-rating";
+import FilterShipping from "./filter-shipping";
+import FilterCategory from "./filter-category";
 
 // ----------------------------------------------------------------------
 
-const BRAND_OPTIONS = ['Apple', 'Samsung', 'Xiaomi', 'Honor'];
+const BRAND_OPTIONS = ["Apple", "Samsung", "Xiaomi", "Honor"];
 
 const CATEGORY_OPTIONS = [
-  'Apple iPhone',
-  'Samsung Galaxy',
-  'Nike Air Max',
-  'Adidas Ultraboost',
-  'Sony PlayStation',
+  "Apple iPhone",
+  "Samsung Galaxy",
+  "Nike Air Max",
+  "Adidas Ultraboost",
+  "Sony PlayStation",
 ];
 
-const SHIPPING_OPTIONS = ['Fast', 'Saving', 'Free'];
+const SHIPPING_OPTIONS = ["Fast", "Saving", "Free"];
 
-const TAG_OPTIONS = ['Books and Media', 'Pet', 'Electronics', 'Food', 'Automotive and Industrial'];
+const TAG_OPTIONS = ["Books and Media", "Pet", "Electronics", "Food", "Automotive and Industrial"];
 
 // ----------------------------------------------------------------------
 
 const defaultValues = {
   filterBrand: [BRAND_OPTIONS[1]],
-  filterCategories: '',
+  filterCategories: "",
   filterRating: null,
   filterStock: false,
   filterShipping: [],
@@ -58,7 +58,7 @@ type Props = {
 };
 
 export default function EcommerceFilters({ open, onClose }: Props) {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const [filters, setFilters] = useState<IProductFiltersProps>(defaultValues);
 
@@ -275,13 +275,13 @@ function Block({ title, children, ...other }: BlockProps) {
         alignItems="center"
         justifyContent="space-between"
         onClick={contentOpen.onToggle}
-        sx={{ width: 1, cursor: 'pointer' }}
+        sx={{ width: 1, cursor: "pointer" }}
       >
         <Typography variant="h6">{title}</Typography>
 
         <Iconify
-          icon={contentOpen.value ? 'carbon:subtract' : 'carbon:add'}
-          sx={{ color: 'text.secondary' }}
+          icon={contentOpen.value ? "carbon:subtract" : "carbon:add"}
+          sx={{ color: "text.secondary" }}
         />
       </Stack>
 

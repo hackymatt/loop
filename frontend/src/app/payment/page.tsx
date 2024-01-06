@@ -1,9 +1,9 @@
-import PaymentView from 'src/sections/payment/view/payment-view';
+import PaymentView from "src/sections/payment/view/payment-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Payment',
+  title: "Payment",
 };
 
 export default function PaymentPage() {

@@ -1,17 +1,17 @@
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Container from '@mui/material/Container';
-import { useTheme } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import Container from "@mui/material/Container";
+import { useTheme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import Image from 'src/components/image';
-import TextMaxLine from 'src/components/text-max-line';
-import Carousel, { useCarousel, CarouselArrows } from 'src/components/carousel';
+import Image from "src/components/image";
+import TextMaxLine from "src/components/text-max-line";
+import Carousel, { useCarousel, CarouselArrows } from "src/components/carousel";
 
-import { IJobByCompanyProps } from 'src/types/job';
+import { IJobByCompanyProps } from "src/types/job";
 
 // ----------------------------------------------------------------------
 
@@ -45,16 +45,16 @@ export default function CareerLandingTopCompanies({ companies }: Props) {
     <Box
       sx={{
         pt: { xs: 10, md: 15 },
-        overflow: 'hidden',
-        bgcolor: 'background.neutral',
+        overflow: "hidden",
+        bgcolor: "background.neutral",
       }}
     >
       <Container>
-        <Typography variant="h2" sx={{ textAlign: 'center' }}>
+        <Typography variant="h2" sx={{ textAlign: "center" }}>
           Top Companies
         </Typography>
 
-        <Box sx={{ position: 'relative' }}>
+        <Box sx={{ position: "relative" }}>
           <CarouselArrows
             onNext={carousel.onNext}
             onPrev={carousel.onPrev}
@@ -95,15 +95,15 @@ function CompanyItem({ company }: CompanyItemProps) {
           py: 5,
           px: 3,
           borderRadius: 2,
-          cursor: 'pointer',
-          textAlign: 'center',
-          position: 'relative',
+          cursor: "pointer",
+          textAlign: "center",
+          position: "relative",
           transition: (theme) =>
-            theme.transitions.create('all', {
+            theme.transitions.create("all", {
               duration: theme.transitions.duration.enteringScreen,
             }),
-          '&:hover': {
-            bgcolor: 'background.paper',
+          "&:hover": {
+            bgcolor: "background.paper",
             boxShadow: (theme) => theme.customShadows.z24,
           },
         }}
@@ -112,13 +112,13 @@ function CompanyItem({ company }: CompanyItemProps) {
           alt={company.name}
           src={company.logo}
           sx={{
-            mx: 'auto',
+            mx: "auto",
             width: 56,
             height: 56,
             borderRadius: 1,
           }}
         />
-        <Typography variant="body2" sx={{ color: 'text.disabled', mt: 2.5, mb: 0.5 }}>
+        <Typography variant="body2" sx={{ color: "text.disabled", mt: 2.5, mb: 0.5 }}>
           {company.totalJobs} jobs
         </Typography>
 

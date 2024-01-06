@@ -1,9 +1,9 @@
-import SupportView from 'src/sections/support/view/support-view';
+import SupportView from "src/sections/support/view/support-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Support',
+  title: "Support",
 };
 
 export default function SupportPage() {

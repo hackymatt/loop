@@ -1,8 +1,8 @@
-import Box from '@mui/material/Box';
-import { useTheme } from '@mui/material/styles';
+import Box from "@mui/material/Box";
+import { useTheme } from "@mui/material/styles";
 
-import Image from 'src/components/image';
-import Carousel, { useCarousel, CarouselDots, CarouselArrows } from 'src/components/carousel';
+import Image from "src/components/image";
+import Carousel, { useCarousel, CarouselDots, CarouselArrows } from "src/components/carousel";
 
 // ----------------------------------------------------------------------
 
@@ -29,8 +29,8 @@ export default function CarouselBasic3({ data }: Props) {
   return (
     <Box
       sx={{
-        position: 'relative',
-        '& .slick-list': {
+        position: "relative",
+        "& .slick-list": {
           borderRadius: 2,
           boxShadow: theme.customShadows.z16,
         },

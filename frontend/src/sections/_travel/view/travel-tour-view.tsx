@@ -1,32 +1,32 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import { alpha } from '@mui/material/styles';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import { alpha } from "@mui/material/styles";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
+import { paths } from "src/routes/paths";
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from "src/hooks/use-boolean";
 
-import { _tours, _socials } from 'src/_mock';
+import { _tours, _socials } from "src/_mock";
 
-import Iconify from 'src/components/iconify';
-import { SplashScreen } from 'src/components/loading-screen';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+import Iconify from "src/components/iconify";
+import { SplashScreen } from "src/components/loading-screen";
+import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
-import TravelNewsletter from '../travel-newsletter';
-import ReviewTravel from '../../review/travel/review-travel';
-import TravelTourListSimilar from '../list/travel-tour-list-similar';
-import TravelTourDetailsHeader from '../details/travel-tour-details-header';
-import TravelTourDetailsSummary from '../details/travel-tour-details-summary';
-import TravelTourDetailsGallery from '../details/travel-tour-details-gallery';
-import TravelTourDetailsReserveForm from '../details/travel-tour-details-reserve-form';
+import TravelNewsletter from "../travel-newsletter";
+import ReviewTravel from "../../review/travel/review-travel";
+import TravelTourListSimilar from "../list/travel-tour-list-similar";
+import TravelTourDetailsHeader from "../details/travel-tour-details-header";
+import TravelTourDetailsSummary from "../details/travel-tour-details-summary";
+import TravelTourDetailsGallery from "../details/travel-tour-details-gallery";
+import TravelTourDetailsReserveForm from "../details/travel-tour-details-reserve-form";
 
 // ----------------------------------------------------------------------
 
@@ -49,11 +49,11 @@ export default function TravelTourView() {
 
   return (
     <>
-      <Container sx={{ overflow: 'hidden' }}>
+      <Container sx={{ overflow: "hidden" }}>
         <CustomBreadcrumbs
           links={[
-            { name: 'Home', href: '/' },
-            { name: 'Tours', href: paths.travel.tours },
+            { name: "Home", href: "/" },
+            { name: "Tours", href: paths.travel.tours },
             { name: _mockTour.slug },
           ]}
           sx={{ mt: 3, mb: 5 }}
@@ -69,7 +69,7 @@ export default function TravelTourView() {
           <Grid xs={12} md={7} lg={8}>
             <TravelTourDetailsHeader tour={_mockTour} />
 
-            <Divider sx={{ borderStyle: 'dashed', my: 5 }} />
+            <Divider sx={{ borderStyle: "dashed", my: 5 }} />
 
             <TravelTourDetailsSummary tour={_mockTour} />
 
@@ -90,7 +90,7 @@ export default function TravelTourView() {
                       flexShrink: 0,
                       color: social.color,
                       borderColor: social.color,
-                      '&:hover': {
+                      "&:hover": {
                         borderColor: social.color,
                         bgcolor: alpha(social.color, 0.08),
                       },

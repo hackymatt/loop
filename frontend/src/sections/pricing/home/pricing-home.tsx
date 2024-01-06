@@ -1,14 +1,14 @@
-import { m } from 'framer-motion';
+import { m } from "framer-motion";
 
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import { varFade, MotionViewport } from 'src/components/animate';
+import { varFade, MotionViewport } from "src/components/animate";
 
-import { IPricingHomeProps } from 'src/types/pricing';
+import { IPricingHomeProps } from "src/types/pricing";
 
-import PricingHomeCard from './pricing-home-card';
+import PricingHomeCard from "./pricing-home-card";
 
 // ----------------------------------------------------------------------
 
@@ -28,11 +28,11 @@ export default function PricingHome({ plans }: Props) {
       <Box
         sx={{
           mb: { xs: 8, md: 10 },
-          textAlign: 'center',
+          textAlign: "center",
         }}
       >
         <m.div variants={varFade().inDown}>
-          <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+          <Typography variant="overline" sx={{ color: "text.disabled" }}>
             pricing plans
           </Typography>
         </m.div>
@@ -45,7 +45,7 @@ export default function PricingHome({ plans }: Props) {
         </m.div>
 
         <m.div variants={varFade().inDown}>
-          <Typography sx={{ color: 'text.secondary' }}>
+          <Typography sx={{ color: "text.secondary" }}>
             Choose the perfect plan for your needs. Always flexible to grow
           </Typography>
         </m.div>
@@ -54,11 +54,11 @@ export default function PricingHome({ plans }: Props) {
       <Box
         sx={{
           gap: 4,
-          display: 'grid',
-          alignItems: 'center',
+          display: "grid",
+          alignItems: "center",
           gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            md: 'repeat(3, 1fr)',
+            xs: "repeat(1, 1fr)",
+            md: "repeat(3, 1fr)",
           },
         }}
       >

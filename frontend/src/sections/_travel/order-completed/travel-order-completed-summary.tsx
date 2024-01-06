@@ -1,11 +1,11 @@
-import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
+import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
 
-import { fDate } from 'src/utils/format-time';
-import { fCurrency } from 'src/utils/format-number';
+import { fDate } from "src/utils/format-time";
+import { fCurrency } from "src/utils/format-number";
 
-import Iconify, { IconifyProps } from 'src/components/iconify';
+import Iconify, { IconifyProps } from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ export default function TravelOrderCompletedSummary() {
 
       <LineItem icon="carbon:events" label="Guests" value="2 guest" />
 
-      <Divider sx={{ borderStyle: 'dashed' }} />
+      <Divider sx={{ borderStyle: "dashed" }} />
 
       <LineItem icon="carbon:cube" label="Booking code" value="KU_H8SDM" />
 
@@ -51,12 +51,12 @@ function LineItem({ icon, label, value }: LineItemProps) {
     <Stack
       direction="row"
       alignItems="center"
-      sx={{ typography: 'body2', color: 'text.secondary' }}
+      sx={{ typography: "body2", color: "text.secondary" }}
     >
       <Iconify icon={icon} width={24} sx={{ mr: 1 }} /> {label}
       <Typography
         variant="subtitle2"
-        sx={{ color: 'text.primary', flexGrow: 1, textAlign: 'right' }}
+        sx={{ color: "text.primary", flexGrow: 1, textAlign: "right" }}
       >
         {value}
       </Typography>

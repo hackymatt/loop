@@ -1,16 +1,16 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Rating from '@mui/material/Rating';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Rating from "@mui/material/Rating";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
 
-import { fShortenNumber } from 'src/utils/format-number';
+import { fShortenNumber } from "src/utils/format-number";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import ReviewProgress from '../common/review-progress';
+import ReviewProgress from "../common/review-progress";
 
 // ----------------------------------------------------------------------
 
@@ -24,8 +24,8 @@ export default function ReviewSummary({ reviewNumber, ratingNumber, onOpenForm }
   return (
     <Box
       sx={{
-        overflow: 'hidden',
-        bgcolor: 'background.neutral',
+        overflow: "hidden",
+        bgcolor: "background.neutral",
         py: { xs: 8, md: 10 },
       }}
     >
@@ -43,8 +43,8 @@ export default function ReviewSummary({ reviewNumber, ratingNumber, onOpenForm }
                   readOnly
                   precision={0.1}
                   sx={{
-                    '& svg': {
-                      color: 'text.primary',
+                    "& svg": {
+                      color: "text.primary",
                     },
                   }}
                 />

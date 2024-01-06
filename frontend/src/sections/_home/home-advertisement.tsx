@@ -1,12 +1,12 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { alpha, useTheme } from '@mui/material/styles';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import { paths } from 'src/routes/paths';
+import { paths } from "src/routes/paths";
 
-import { bgGradient } from 'src/theme/css';
+import { bgGradient } from "src/theme/css";
 
 // ----------------------------------------------------------------------
 
@@ -17,7 +17,7 @@ export default function HomeAdvertisement() {
     <Box
       sx={{
         ...bgGradient({
-          imgUrl: '/assets/images/home/advertisement.jpg',
+          imgUrl: "/assets/images/home/advertisement.jpg",
           color: alpha(theme.palette.grey[900], 0.8),
         }),
         py: { xs: 10, md: 35 },
@@ -29,9 +29,9 @@ export default function HomeAdvertisement() {
         sx={{
           p: 2.5,
           zIndex: 9,
-          textAlign: 'center',
-          position: 'relative',
-          color: 'common.white',
+          textAlign: "center",
+          position: "relative",
+          color: "common.white",
         }}
       >
         <Typography variant="h1" component="h2" sx={{ opacity: 0.48 }}>

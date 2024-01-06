@@ -1,25 +1,25 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
-import { SelectChangeEvent } from '@mui/material/Select';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Drawer from "@mui/material/Drawer";
+import Button from "@mui/material/Button";
+import { SelectChangeEvent } from "@mui/material/Select";
 
-import { useBoolean } from 'src/hooks/use-boolean';
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useBoolean } from "src/hooks/use-boolean";
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { IJobFiltersProps } from 'src/types/job';
+import { IJobFiltersProps } from "src/types/job";
 
-import FilterType from './filter-type';
-import FilterLevel from './filter-level';
-import FilterSalary from './filter-salary';
-import FilterKeyword from './filter-keyword';
-import FilterBenefits from './filter-benefits';
-import FilterLocation from './filter-location';
-import FilterCategories from './filter-categories';
+import FilterType from "./filter-type";
+import FilterLevel from "./filter-level";
+import FilterSalary from "./filter-salary";
+import FilterKeyword from "./filter-keyword";
+import FilterBenefits from "./filter-benefits";
+import FilterLocation from "./filter-location";
+import FilterCategories from "./filter-categories";
 
 // ----------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ const defaultValues = {
 };
 
 export default function CareerFilters() {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const mobileOpen = useBoolean();
 
@@ -77,7 +77,7 @@ export default function CareerFilters() {
       } = event;
       setFilters({
         ...filters,
-        filterType: typeof value === 'string' ? value.split(',') : value,
+        filterType: typeof value === "string" ? value.split(",") : value,
       });
     },
     [filters]
@@ -90,7 +90,7 @@ export default function CareerFilters() {
       } = event;
       setFilters({
         ...filters,
-        filterLevel: typeof value === 'string' ? value.split(',') : value,
+        filterLevel: typeof value === "string" ? value.split(",") : value,
       });
     },
     [filters]
@@ -103,7 +103,7 @@ export default function CareerFilters() {
       } = event;
       setFilters({
         ...filters,
-        filterBenefits: typeof value === 'string' ? value.split(',') : value,
+        filterBenefits: typeof value === "string" ? value.split(",") : value,
       });
     },
     [filters]
@@ -131,7 +131,7 @@ export default function CareerFilters() {
 
   const renderFilters = (
     <>
-      <Stack spacing={2.5} direction={{ xs: 'column', md: 'row' }} alignItems="center">
+      <Stack spacing={2.5} direction={{ xs: "column", md: "row" }} alignItems="center">
         <FilterKeyword
           filterKeyword={filters.filterKeyword}
           onChangeKeyword={handleChangeKeyword}
@@ -160,7 +160,7 @@ export default function CareerFilters() {
         )}
       </Stack>
 
-      <Stack direction={{ xs: 'column', md: 'row' }} spacing={{ xs: 2.5, md: 1 }} sx={{ mt: 2.5 }}>
+      <Stack direction={{ xs: "column", md: "row" }} spacing={{ xs: 2.5, md: 1 }} sx={{ mt: 2.5 }}>
         <FilterType filterType={filters.filterType} onChangeJobType={handleChangeJobType} />
 
         <FilterLevel filterLevel={filters.filterLevel} onChangeJobType={handleChangeJobLevel} />

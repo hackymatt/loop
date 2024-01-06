@@ -1,13 +1,13 @@
-import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 
-import { _socials } from 'src/_mock';
+import { _socials } from "src/_mock";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { IAuthorProps } from 'src/types/author';
+import { IAuthorProps } from "src/types/author";
 
 // ----------------------------------------------------------------------
 
@@ -31,14 +31,14 @@ export default function PostAuthor({ author }: Props) {
       <Stack spacing={2}>
         <Stack
           spacing={2}
-          alignItems={{ md: 'center' }}
-          direction={{ xs: 'column', md: 'row' }}
-          justifyContent={{ md: 'space-between' }}
+          alignItems={{ md: "center" }}
+          direction={{ xs: "column", md: "row" }}
+          justifyContent={{ md: "space-between" }}
         >
           <Stack spacing={0.5}>
             <Typography variant="h5">{name}</Typography>
 
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
               {role}
             </Typography>
           </Stack>
@@ -52,11 +52,11 @@ export default function PostAuthor({ author }: Props) {
           </Stack>
         </Stack>
 
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
           {about}
         </Typography>
 
-        <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+        <Typography variant="caption" sx={{ color: "text.disabled" }}>
           {quotes}
         </Typography>
       </Stack>

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import TravelNewsletter from '../travel-newsletter';
-import TravelContactInfo from '../contact/travel-contact-info';
-import TravelContactForm from '../contact/travel-contact-form';
+import TravelNewsletter from "../travel-newsletter";
+import TravelContactInfo from "../contact/travel-contact-info";
+import TravelContactForm from "../contact/travel-contact-form";
 
 // ----------------------------------------------------------------------
 

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import AccountLayout from 'src/layouts/account';
+import AccountLayout from "src/layouts/account";
 
 // ----------------------------------------------------------------------
 

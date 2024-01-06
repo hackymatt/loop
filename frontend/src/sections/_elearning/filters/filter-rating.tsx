@@ -1,12 +1,12 @@
-import Stack from '@mui/material/Stack';
-import Radio from '@mui/material/Radio';
-import Rating from '@mui/material/Rating';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Stack from "@mui/material/Stack";
+import Radio from "@mui/material/Radio";
+import Rating from "@mui/material/Rating";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 // ----------------------------------------------------------------------
 
-const RATINGS = ['up_4_stars', 'up_3_stars', 'up_2_stars'];
+const RATINGS = ["up_4_stars", "up_3_stars", "up_2_stars"];
 
 type Props = {
   filterRating: string | null;
@@ -21,14 +21,14 @@ export default function FilterRating({ filterRating, onChangeRating }: Props) {
           <FormControlLabel
             key={rating}
             value={rating}
-            control={<Radio sx={{ display: 'none' }} />}
+            control={<Radio sx={{ display: "none" }} />}
             label={
               <Stack
                 direction="row"
                 alignItems="center"
                 sx={{
                   ...(filterRating === rating && {
-                    fontWeight: 'fontWeightSemiBold',
+                    fontWeight: "fontWeightSemiBold",
                   }),
                 }}
               >
@@ -48,7 +48,7 @@ export default function FilterRating({ filterRating, onChangeRating }: Props) {
             }
             sx={{
               m: 0,
-              '&:hover': { opacity: 0.48 },
+              "&:hover": { opacity: 0.48 },
             }}
           />
         ))}

@@ -1,11 +1,11 @@
-import TextField from '@mui/material/TextField';
-import { Theme, SxProps } from '@mui/material/styles';
-import Autocomplete from '@mui/material/Autocomplete';
-import InputAdornment from '@mui/material/InputAdornment';
+import TextField from "@mui/material/TextField";
+import { Theme, SxProps } from "@mui/material/styles";
+import Autocomplete from "@mui/material/Autocomplete";
+import InputAdornment from "@mui/material/InputAdornment";
 
-import { _jobTitles } from 'src/_mock';
+import { _jobTitles } from "src/_mock";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
@@ -30,10 +30,10 @@ export default function FilterKeyword({ filterKeyword, onChangeKeyword, sx }: Pr
           placeholder="Job title, keywords..."
           InputProps={{
             ...params.InputProps,
-            autoComplete: 'search',
+            autoComplete: "search",
             startAdornment: (
               <InputAdornment position="start">
-                <Iconify width={24} icon="carbon:search" sx={{ color: 'text.disabled', mr: 1 }} />
+                <Iconify width={24} icon="carbon:search" sx={{ color: "text.disabled", mr: 1 }} />
               </InputAdornment>
             ),
             sx: { pb: 1, ...sx },

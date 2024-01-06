@@ -1,5 +1,5 @@
-import TextField from '@mui/material/TextField';
-import Stack, { StackProps } from '@mui/material/Stack';
+import TextField from "@mui/material/TextField";
+import Stack, { StackProps } from "@mui/material/Stack";
 
 // ----------------------------------------------------------------------
 
@@ -26,14 +26,14 @@ export default function FilterPrice({
         size="small"
         label="$ Min"
         type="number"
-        value={filterPrice.start === 0 ? '' : filterPrice.start}
+        value={filterPrice.start === 0 ? "" : filterPrice.start}
         onChange={onChangeStartPrice}
       />
       <TextField
         size="small"
         label="$ Max"
         type="number"
-        value={filterPrice.end === 0 ? '' : filterPrice.end}
+        value={filterPrice.end === 0 ? "" : filterPrice.end}
         onChange={onChangeEndPrice}
       />
     </Stack>

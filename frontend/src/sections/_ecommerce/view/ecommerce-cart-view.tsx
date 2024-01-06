@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Unstable_Grid2';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Unstable_Grid2";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { _products } from 'src/_mock';
+import { _products } from "src/_mock";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import EcommerceCartList from '../cart/ecommerce-cart-list';
-import EcommerceCartSummary from '../cart/ecommerce-cart-summary';
+import EcommerceCartList from "../cart/ecommerce-cart-list";
+import EcommerceCartSummary from "../cart/ecommerce-cart-summary";
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +21,7 @@ export default function EcommerceCartView() {
   return (
     <Container
       sx={{
-        overflow: 'hidden',
+        overflow: "hidden",
         pt: 5,
         pb: { xs: 5, md: 10 },
       }}

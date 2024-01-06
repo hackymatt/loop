@@ -1,12 +1,12 @@
-import Stack from '@mui/material/Stack';
-import { useTheme } from '@mui/material/styles';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Stack from "@mui/material/Stack";
+import { useTheme } from "@mui/material/styles";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import SvgColor from 'src/components/svg-color';
-import Carousel, { useCarousel } from 'src/components/carousel';
+import SvgColor from "src/components/svg-color";
+import Carousel, { useCarousel } from "src/components/carousel";
 
-import { IBrandProps } from 'src/types/brand';
+import { IBrandProps } from "src/types/brand";
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ export default function ElearningOurClients({ brands }: Props) {
     autoplay: true,
     speed: 5000,
     autoplaySpeed: 5000,
-    cssEase: 'linear',
+    cssEase: "linear",
     responsive: [
       {
         breakpoint: theme.breakpoints.values.md,
@@ -46,13 +46,13 @@ export default function ElearningOurClients({ brands }: Props) {
       <Stack
         spacing={3}
         sx={{
-          textAlign: 'center',
+          textAlign: "center",
           mb: { xs: 8, md: 10 },
         }}
       >
         <Typography variant="h2">We Work With</Typography>
 
-        <Typography sx={{ color: 'text.secondary' }}>
+        <Typography sx={{ color: "text.secondary" }}>
           Quisque aliquet, libero consequat elementum convallis.
         </Typography>
       </Stack>

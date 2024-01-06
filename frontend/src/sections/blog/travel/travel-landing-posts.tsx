@@ -1,20 +1,20 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Iconify from 'src/components/iconify';
-import Carousel, { useCarousel, CarouselDots, CarouselArrows } from 'src/components/carousel';
+import Iconify from "src/components/iconify";
+import Carousel, { useCarousel, CarouselDots, CarouselArrows } from "src/components/carousel";
 
-import { IBlogPostProps } from 'src/types/blog';
+import { IBlogPostProps } from "src/types/blog";
 
-import PostItem from './travel-landing-post-item';
-import PostItemCarousel from './travel-landing-post-item-carousel';
+import PostItem from "./travel-landing-post-item";
+import PostItemCarousel from "./travel-landing-post-item-carousel";
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ type Props = {
 };
 
 export default function TravelLandingPosts({ posts }: Props) {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const carousel = useCarousel({
     slidesToShow: 1,
@@ -31,14 +31,14 @@ export default function TravelLandingPosts({ posts }: Props) {
     ...CarouselDots({
       width: 1,
       bottom: 80,
-      position: 'absolute',
+      position: "absolute",
     }),
   });
 
   return (
-    <Box sx={{ bgcolor: 'grey.900' }}>
+    <Box sx={{ bgcolor: "grey.900" }}>
       {!mdUp && (
-        <Typography variant="h2" sx={{ pt: 10, pb: 8, color: 'common.white', textAlign: 'center' }}>
+        <Typography variant="h2" sx={{ pt: 10, pb: 8, color: "common.white", textAlign: "center" }}>
           Latest Posts
         </Typography>
       )}
@@ -47,16 +47,16 @@ export default function TravelLandingPosts({ posts }: Props) {
         gap={{ xs: 8, md: 0 }}
         display="grid"
         gridTemplateColumns={{
-          xs: 'repeat(1, 1fr)',
-          md: 'repeat(2, 1fr)',
+          xs: "repeat(1, 1fr)",
+          md: "repeat(2, 1fr)",
         }}
       >
-        <Box sx={{ overflow: 'hidden', position: 'relative' }}>
+        <Box sx={{ overflow: "hidden", position: "relative" }}>
           <CarouselArrows
             onNext={carousel.onNext}
             onPrev={carousel.onPrev}
-            leftButtonProps={{ sx: { color: 'common.white' } }}
-            rightButtonProps={{ sx: { color: 'common.white' } }}
+            leftButtonProps={{ sx: { color: "common.white" } }}
+            rightButtonProps={{ sx: { color: "common.white" } }}
           >
             <Carousel ref={carousel.carouselRef} {...carousel.carouselSettings}>
               {posts.map((post) => (
@@ -72,7 +72,7 @@ export default function TravelLandingPosts({ posts }: Props) {
           }}
         >
           {mdUp && (
-            <Typography variant="h2" sx={{ color: 'common.white', py: 10 }}>
+            <Typography variant="h2" sx={{ color: "common.white", py: 10 }}>
               Latest Posts
             </Typography>
           )}
@@ -87,7 +87,7 @@ export default function TravelLandingPosts({ posts }: Props) {
             sx={{
               mt: { xs: 8, md: 5 },
               mb: 10,
-              textAlign: { xs: 'center', md: 'right' },
+              textAlign: { xs: "center", md: "right" },
             }}
           >
             <Button

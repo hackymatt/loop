@@ -1,25 +1,25 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
-import { alpha, useTheme } from '@mui/material/styles';
-import InputAdornment from '@mui/material/InputAdornment';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import TextField from "@mui/material/TextField";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
+import { alpha, useTheme } from "@mui/material/styles";
+import InputAdornment from "@mui/material/InputAdornment";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import { bgGradient } from 'src/theme/css';
+import { bgGradient } from "src/theme/css";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
 export default function TravelNewsletter() {
   const theme = useTheme();
 
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   return (
     <Box
@@ -27,17 +27,17 @@ export default function TravelNewsletter() {
         ...bgGradient({
           startColor: `${alpha(theme.palette.grey[900], 0.88)}`,
           endColor: `${alpha(theme.palette.grey[900], 0.88)}`,
-          imgUrl: '/assets/images/travel/travel_newsletter.jpg',
+          imgUrl: "/assets/images/travel/travel_newsletter.jpg",
           ...(mdUp && {
-            direction: 'to right',
+            direction: "to right",
             startColor: `${alpha(theme.palette.grey[900], 0)} 0%`,
             endColor: `${alpha(theme.palette.grey[900], 1)} 50%`,
-            imgUrl: '/assets/images/travel/travel_newsletter.jpg',
+            imgUrl: "/assets/images/travel/travel_newsletter.jpg",
           }),
         }),
         py: 10,
-        backgroundSize: 'cover, auto 100%',
-        backgroundPosition: { xs: 'center', md: 'center, left' },
+        backgroundSize: "cover, auto 100%",
+        backgroundPosition: { xs: "center", md: "center, left" },
       }}
     >
       <Container>
@@ -46,8 +46,8 @@ export default function TravelNewsletter() {
             <Stack
               spacing={3}
               sx={{
-                color: 'common.white',
-                textAlign: { xs: 'center', md: 'left' },
+                color: "common.white",
+                textAlign: { xs: "center", md: "left" },
               }}
             >
               <Typography variant="h2">Newsletter</Typography>
@@ -74,7 +74,7 @@ export default function TravelNewsletter() {
                       </Button>
                     </InputAdornment>
                   ),
-                  sx: { pr: 0.5, color: 'common.white' },
+                  sx: { pr: 0.5, color: "common.white" },
                 }}
                 sx={{ my: 5 }}
               />

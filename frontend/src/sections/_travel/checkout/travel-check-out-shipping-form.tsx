@@ -1,10 +1,10 @@
-import Stack from '@mui/material/Stack';
-import Switch from '@mui/material/Switch';
-import Collapse from '@mui/material/Collapse';
-import Typography from '@mui/material/Typography';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Stack from "@mui/material/Stack";
+import Switch from "@mui/material/Switch";
+import Collapse from "@mui/material/Collapse";
+import Typography from "@mui/material/Typography";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
-import { RHFTextField } from 'src/components/hook-form';
+import { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
@@ -17,12 +17,12 @@ export default function TravelCheckOutShippingForm({ sameBilling, onChangeSameBi
   return (
     <Stack spacing={5}>
       <div>
-        <Typography variant="overline" sx={{ color: 'text.secondary', mb: 3, display: 'block' }}>
+        <Typography variant="overline" sx={{ color: "text.secondary", mb: 3, display: "block" }}>
           Billing Address
         </Typography>
 
         <Stack spacing={2.5}>
-          <Stack spacing={{ xs: 2.5, md: 2 }} direction={{ xs: 'column', md: 'row' }}>
+          <Stack spacing={{ xs: 2.5, md: 2 }} direction={{ xs: "column", md: "row" }}>
             <RHFTextField name="billingAddress.firstName" label="First Name" />
             <RHFTextField name="billingAddress.lastName" label="Last Name" />
           </Stack>
@@ -34,11 +34,11 @@ export default function TravelCheckOutShippingForm({ sameBilling, onChangeSameBi
       <div>
         <Stack
           spacing={3}
-          direction={{ xs: 'column', md: 'row' }}
-          justifyContent={{ md: 'space-between' }}
-          alignItems={{ xs: 'flex-start', md: 'center' }}
+          direction={{ xs: "column", md: "row" }}
+          justifyContent={{ md: "space-between" }}
+          alignItems={{ xs: "flex-start", md: "center" }}
         >
-          <Typography variant="overline" sx={{ color: 'text.secondary' }}>
+          <Typography variant="overline" sx={{ color: "text.secondary" }}>
             Shipping Address
           </Typography>
           <FormControlLabel
@@ -56,7 +56,7 @@ export default function TravelCheckOutShippingForm({ sameBilling, onChangeSameBi
           }}
         >
           <Stack spacing={2.5}>
-            <Stack spacing={{ xs: 2.5, md: 2 }} direction={{ xs: 'column', md: 'row' }}>
+            <Stack spacing={{ xs: 2.5, md: 2 }} direction={{ xs: "column", md: "row" }}>
               <RHFTextField name="shippingAddress.firstName" label="First Name" />
               <RHFTextField name="shippingAddress.lastName" label="Last Name" />
             </Stack>

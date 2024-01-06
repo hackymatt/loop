@@ -1,26 +1,26 @@
-import { add } from 'date-fns';
+import { add } from "date-fns";
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import { useTheme } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import { useTheme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import { _products } from 'src/_mock';
+import { _products } from "src/_mock";
 
-import Carousel, { useCarousel, CarouselDots, CarouselArrows } from 'src/components/carousel';
+import Carousel, { useCarousel, CarouselDots, CarouselArrows } from "src/components/carousel";
 
-import ProductCountdownBlock from '../common/product-countdown-block';
-import EcommerceProductItemHot from '../product/item/ecommerce-product-item-hot';
+import ProductCountdownBlock from "../common/product-countdown-block";
+import EcommerceProductItemHot from "../product/item/ecommerce-product-item-hot";
 
 // ----------------------------------------------------------------------
 
 export default function EcommerceLandingHotDealToday() {
   const theme = useTheme();
 
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const carousel = useCarousel({
     dots: !mdUp,
@@ -52,7 +52,7 @@ export default function EcommerceLandingHotDealToday() {
       }}
     >
       <Stack
-        direction={{ xs: 'column', md: 'row' }}
+        direction={{ xs: "column", md: "row" }}
         alignItems="center"
         spacing={3}
         sx={{
@@ -62,7 +62,7 @@ export default function EcommerceLandingHotDealToday() {
         <Typography
           variant="h3"
           sx={{
-            textAlign: { xs: 'center', md: 'unset' },
+            textAlign: { xs: "center", md: "unset" },
           }}
         >
           🔥 Hot Deal Today
@@ -72,16 +72,16 @@ export default function EcommerceLandingHotDealToday() {
           hiddenLabel
           expired={add(new Date(), { hours: 1, minutes: 30 })}
           sx={{
-            '& .value': {
+            "& .value": {
               width: 36,
               height: 32,
-              color: 'grey.800',
-              bgcolor: 'text.primary',
-              ...(theme.palette.mode === 'light' && {
-                color: 'common.white',
+              color: "grey.800",
+              bgcolor: "text.primary",
+              ...(theme.palette.mode === "light" && {
+                color: "common.white",
               }),
             },
-            '& .separator': { color: 'text.primary' },
+            "& .separator": { color: "text.primary" },
           }}
         />
 

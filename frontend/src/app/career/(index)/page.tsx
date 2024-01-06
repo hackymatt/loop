@@ -1,9 +1,9 @@
-import CareerLandingView from 'src/sections/_career/view/career-landing-view';
+import CareerLandingView from "src/sections/_career/view/career-landing-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Career: Home',
+  title: "Career: Home",
 };
 
 export default function CareerLandingPage() {

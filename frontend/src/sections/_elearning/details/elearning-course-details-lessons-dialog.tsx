@@ -1,13 +1,13 @@
-import Stack from '@mui/material/Stack';
-import Dialog from '@mui/material/Dialog';
-import IconButton from '@mui/material/IconButton';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemButton from '@mui/material/ListItemButton';
+import Stack from "@mui/material/Stack";
+import Dialog from "@mui/material/Dialog";
+import IconButton from "@mui/material/IconButton";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemButton from "@mui/material/ListItemButton";
 
-import Player from 'src/components/player';
-import Iconify from 'src/components/iconify';
+import Player from "src/components/player";
+import Iconify from "src/components/iconify";
 
-import { ICourseLessonProp } from 'src/types/course';
+import { ICourseLessonProp } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -62,9 +62,9 @@ export default function ElearningCourseDetailsLessonsDialog({
           sx={{
             width: 1,
             height: 1,
-            typography: 'h6',
-            color: 'text.disabled',
-            bgcolor: 'background.neutral',
+            typography: "h6",
+            color: "text.disabled",
+            bgcolor: "background.neutral",
           }}
         >
           No Data
@@ -78,7 +78,7 @@ export default function ElearningCourseDetailsLessonsDialog({
       spacing={0.5}
       sx={{
         p: 1,
-        overflowY: 'scroll',
+        overflowY: "scroll",
         width: { xs: 1, md: 0.5 },
         height: { xs: 320, md: 640 },
       }}
@@ -86,7 +86,7 @@ export default function ElearningCourseDetailsLessonsDialog({
       {lessons?.map((lesson) => {
         const selected = selectedLesson?.id === lesson.id;
 
-        const playIcon = selected ? 'carbon:pause-outline' : 'carbon:play';
+        const playIcon = selected ? "carbon:pause-outline" : "carbon:play";
 
         return (
           <ListItemButton
@@ -98,14 +98,14 @@ export default function ElearningCourseDetailsLessonsDialog({
           >
             <Iconify
               width={24}
-              icon={!lesson.unLocked ? 'carbon:locked' : playIcon}
+              icon={!lesson.unLocked ? "carbon:locked" : playIcon}
               sx={{
                 mr: 2,
                 ...(selected && {
-                  color: 'primary.main',
+                  color: "primary.main",
                 }),
                 ...(!lesson.unLocked && {
-                  color: 'text.disabled',
+                  color: "text.disabled",
                 }),
               }}
             />
@@ -114,16 +114,16 @@ export default function ElearningCourseDetailsLessonsDialog({
               primary={lesson.title}
               secondary={lesson.description}
               primaryTypographyProps={{
-                typography: 'subtitle1',
+                typography: "subtitle1",
                 sx: {
                   ...(selected && {
-                    color: 'primary.main',
+                    color: "primary.main",
                   }),
                 },
               }}
               secondaryTypographyProps={{
                 noWrap: true,
-                component: 'span',
+                component: "span",
               }}
             />
           </ListItemButton>
@@ -140,15 +140,15 @@ export default function ElearningCourseDetailsLessonsDialog({
       onClose={onClose}
       PaperProps={{
         sx: {
-          overflow: 'hidden',
+          overflow: "hidden",
         },
       }}
     >
-      <IconButton onClick={onClose} sx={{ top: 8, left: 8, zIndex: 9, position: 'absolute' }}>
+      <IconButton onClick={onClose} sx={{ top: 8, left: 8, zIndex: 9, position: "absolute" }}>
         <Iconify icon="carbon:close" />
       </IconButton>
 
-      <Stack direction={{ xs: 'column', md: 'row' }} sx={{ height: 1 }}>
+      <Stack direction={{ xs: "column", md: "row" }} sx={{ height: 1 }}>
         {renderVideo}
 
         {renderList}

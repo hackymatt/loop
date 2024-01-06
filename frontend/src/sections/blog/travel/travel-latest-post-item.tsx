@@ -1,19 +1,19 @@
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { fDate } from 'src/utils/format-time';
+import { fDate } from "src/utils/format-time";
 
-import Image from 'src/components/image';
-import TextMaxLine from 'src/components/text-max-line';
+import Image from "src/components/image";
+import TextMaxLine from "src/components/text-max-line";
 
-import { IBlogPostProps } from 'src/types/blog';
+import { IBlogPostProps } from "src/types/blog";
 
-import PostTimeBlock from '../common/post-time-block';
+import PostTimeBlock from "../common/post-time-block";
 
 // ----------------------------------------------------------------------
 

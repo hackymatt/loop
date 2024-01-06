@@ -1,22 +1,22 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Divider from '@mui/material/Divider';
-import Popover from '@mui/material/Popover';
-import MenuItem from '@mui/material/MenuItem';
-import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
-import TableCell from '@mui/material/TableCell';
-import IconButton from '@mui/material/IconButton';
-import InputBase, { inputBaseClasses } from '@mui/material/InputBase';
+import Divider from "@mui/material/Divider";
+import Popover from "@mui/material/Popover";
+import MenuItem from "@mui/material/MenuItem";
+import TableRow from "@mui/material/TableRow";
+import Checkbox from "@mui/material/Checkbox";
+import TableCell from "@mui/material/TableCell";
+import IconButton from "@mui/material/IconButton";
+import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
 //  utils
-import { fDate } from 'src/utils/format-time';
-import { fCurrency } from 'src/utils/format-number';
+import { fDate } from "src/utils/format-time";
+import { fCurrency } from "src/utils/format-number";
 
-import Label from 'src/components/label';
-import Iconify from 'src/components/iconify';
+import Label from "src/components/label";
+import Iconify from "src/components/iconify";
 
-import { IProductOrderProps } from 'src/types/product';
+import { IProductOrderProps } from "src/types/product";
 
 // ----------------------------------------------------------------------
 
@@ -40,7 +40,7 @@ export default function EcommerceAccountOrdersTableRow({ row, onSelectRow, selec
   const inputStyles = {
     pl: 1,
     [`&.${inputBaseClasses.focused}`]: {
-      bgcolor: 'action.selected',
+      bgcolor: "action.selected",
     },
   };
 
@@ -68,10 +68,10 @@ export default function EcommerceAccountOrdersTableRow({ row, onSelectRow, selec
         <TableCell>
           <Label
             color={
-              (row.status === 'Completed' && 'success') ||
-              (row.status === 'To Process' && 'warning') ||
-              (row.status === 'Cancelled' && 'error') ||
-              'default'
+              (row.status === "Completed" && "success") ||
+              (row.status === "To Process" && "warning") ||
+              (row.status === "Cancelled" && "error") ||
+              "default"
             }
           >
             {row.status}
@@ -89,8 +89,8 @@ export default function EcommerceAccountOrdersTableRow({ row, onSelectRow, selec
         open={Boolean(open)}
         anchorEl={open}
         onClose={handleClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
         slotProps={{
           paper: {
             sx: { width: 160 },
@@ -105,9 +105,9 @@ export default function EcommerceAccountOrdersTableRow({ row, onSelectRow, selec
           <Iconify icon="carbon:edit" sx={{ mr: 1 }} /> Edit
         </MenuItem>
 
-        <Divider sx={{ borderStyle: 'dashed', mt: 0.5 }} />
+        <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
 
-        <MenuItem onClick={handleClose} sx={{ color: 'error.main' }}>
+        <MenuItem onClick={handleClose} sx={{ color: "error.main" }}>
           <Iconify icon="carbon:trash-can" sx={{ mr: 1 }} /> Delete
         </MenuItem>
       </Popover>

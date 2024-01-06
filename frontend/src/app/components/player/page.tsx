@@ -1,9 +1,9 @@
-import PlayerView from 'src/sections/examples/player-view';
+import PlayerView from "src/sections/examples/player-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Components: Player',
+  title: "Components: Player",
 };
 
 export default function PlayerPage() {

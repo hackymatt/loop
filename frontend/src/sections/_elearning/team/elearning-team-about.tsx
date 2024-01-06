@@ -1,10 +1,10 @@
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import { ITeamMemberProps } from 'src/types/team';
+import { ITeamMemberProps } from "src/types/team";
 
-import ElearningTeamItem from './elearning-team-item';
+import ElearningTeamItem from "./elearning-team-item";
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ export default function ElearningTeamAbout({ members }: Props) {
       <Typography
         variant="h2"
         sx={{
-          textAlign: 'center',
+          textAlign: "center",
           mb: { xs: 8, md: 10 },
         }}
       >
@@ -28,12 +28,12 @@ export default function ElearningTeamAbout({ members }: Props) {
       <Box
         sx={{
           columnGap: 3,
-          display: 'grid',
+          display: "grid",
           rowGap: { xs: 4, md: 5 },
           gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(2, 1fr)',
-            md: 'repeat(4, 1fr)',
+            xs: "repeat(1, 1fr)",
+            sm: "repeat(2, 1fr)",
+            md: "repeat(4, 1fr)",
           },
         }}
       >

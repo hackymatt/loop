@@ -1,14 +1,14 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Select from '@mui/material/Select';
-import Slider from '@mui/material/Slider';
-import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
-import FormControl from '@mui/material/FormControl';
+import Select from "@mui/material/Select";
+import Slider from "@mui/material/Slider";
+import Popover from "@mui/material/Popover";
+import Typography from "@mui/material/Typography";
+import FormControl from "@mui/material/FormControl";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import { fCurrency } from 'src/utils/format-number';
+import { fCurrency } from "src/utils/format-number";
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ type Props = {
 };
 
 export default function FilterSalary({ filterSalary, onChangeSalary }: Props) {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const [open, setOpen] = useState<HTMLElement | null>(null);
 
@@ -40,7 +40,7 @@ export default function FilterSalary({ filterSalary, onChangeSalary }: Props) {
         fullWidth
         hiddenLabel
         onClick={handleOpen}
-        size={mdUp ? 'small' : 'medium'}
+        size={mdUp ? "small" : "medium"}
         sx={{ maxWidth: { md: 180 } }}
       >
         <Select
@@ -50,7 +50,7 @@ export default function FilterSalary({ filterSalary, onChangeSalary }: Props) {
           renderValue={() => {
             if (minSalary === 0 && maxSalary === 20000) {
               return (
-                <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+                <Typography variant="body2" sx={{ color: "text.disabled" }}>
                   All salary ranges
                 </Typography>
               );
@@ -68,8 +68,8 @@ export default function FilterSalary({ filterSalary, onChangeSalary }: Props) {
         open={!!open}
         onClose={handleClose}
         anchorEl={open}
-        anchorOrigin={{ vertical: 'center', horizontal: 'center' }}
-        transformOrigin={{ vertical: 'center', horizontal: 'center' }}
+        anchorOrigin={{ vertical: "center", horizontal: "center" }}
+        transformOrigin={{ vertical: "center", horizontal: "center" }}
         slotProps={{
           paper: {
             sx: {
@@ -78,12 +78,12 @@ export default function FilterSalary({ filterSalary, onChangeSalary }: Props) {
               px: 5,
               width: 1,
               maxWidth: 360,
-              overflow: 'unset',
+              overflow: "unset",
             },
           },
         }}
       >
-        <Typography variant="overline" sx={{ mb: 8, display: 'block', color: 'text.disabled' }}>
+        <Typography variant="overline" sx={{ mb: 8, display: "block", color: "text.disabled" }}>
           Value based on 1 month
         </Typography>
 

@@ -1,11 +1,11 @@
-import { forwardRef } from 'react';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { forwardRef } from "react";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
-import Box from '@mui/material/Box';
-import { alpha, useTheme } from '@mui/material/styles';
+import Box from "@mui/material/Box";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import { getRatio } from './utils';
-import { ImageProps } from './types';
+import { getRatio } from "./utils";
+import { ImageProps } from "./types";
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ const Image = forwardRef<HTMLSpanElement, ImageProps>(
       placeholder,
       wrapperProps,
       scrollPosition,
-      effect = 'blur',
+      effect = "blur",
       visibleByDefault,
       wrapperClassName,
       useIntersectionObserver,
@@ -37,14 +37,14 @@ const Image = forwardRef<HTMLSpanElement, ImageProps>(
     const theme = useTheme();
 
     const overlayStyles = !!overlay && {
-      '&:before': {
+      "&:before": {
         content: "''",
         top: 0,
         left: 0,
         width: 1,
         height: 1,
         zIndex: 1,
-        position: 'absolute',
+        position: "absolute",
         background: overlay || alpha(theme.palette.grey[900], 0.48),
       },
     };
@@ -65,17 +65,17 @@ const Image = forwardRef<HTMLSpanElement, ImageProps>(
         visibleByDefault={visibleByDefault}
         effect={disabledEffect ? undefined : effect}
         useIntersectionObserver={useIntersectionObserver}
-        wrapperClassName={wrapperClassName || 'component-image-wrapper'}
-        placeholderSrc={disabledEffect ? '/assets/transparent.png' : '/assets/placeholder.svg'}
+        wrapperClassName={wrapperClassName || "component-image-wrapper"}
+        placeholderSrc={disabledEffect ? "/assets/transparent.png" : "/assets/placeholder.svg"}
         sx={{
           width: 1,
           height: 1,
-          objectFit: 'cover',
-          verticalAlign: 'bottom',
+          objectFit: "cover",
+          verticalAlign: "bottom",
           ...(!!ratio && {
             top: 0,
             left: 0,
-            position: 'absolute',
+            position: "absolute",
           }),
         }}
       />
@@ -87,18 +87,18 @@ const Image = forwardRef<HTMLSpanElement, ImageProps>(
         component="span"
         className="component-image"
         sx={{
-          overflow: 'hidden',
-          position: 'relative',
-          verticalAlign: 'bottom',
-          display: 'inline-block',
+          overflow: "hidden",
+          position: "relative",
+          verticalAlign: "bottom",
+          display: "inline-block",
           ...(!!ratio && {
             width: 1,
           }),
-          '& span.component-image-wrapper': {
+          "& span.component-image-wrapper": {
             width: 1,
             height: 1,
-            verticalAlign: 'bottom',
-            backgroundSize: 'cover !important',
+            verticalAlign: "bottom",
+            backgroundSize: "cover !important",
             ...(!!ratio && {
               pt: getRatio(ratio),
             }),

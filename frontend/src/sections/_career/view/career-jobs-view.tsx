@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-import Container from '@mui/material/Container';
+import Container from "@mui/material/Container";
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from "src/hooks/use-boolean";
 
-import { _jobs } from 'src/_mock';
+import { _jobs } from "src/_mock";
 
-import CareerJobList from '../list/career-job-list';
-import CareerNewsletter from '../career-newsletter';
-import CareerFilters from '../filters/career-filters';
+import CareerJobList from "../list/career-job-list";
+import CareerNewsletter from "../career-newsletter";
+import CareerFilters from "../filters/career-filters";
 
 // ----------------------------------------------------------------------
 

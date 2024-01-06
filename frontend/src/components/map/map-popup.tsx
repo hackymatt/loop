@@ -1,15 +1,15 @@
-import { useCallback } from 'react';
+import { useCallback } from "react";
 
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
 
-import { MapOfficeProps } from './types';
+import { MapOfficeProps } from "./types";
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ export default function MapPopup({ office, onClose, lat, lng }: Props) {
     (event: React.MouseEvent<HTMLElement>) => {
       event.stopPropagation();
       onClose();
-      console.log('lat-lng', lat, lng);
+      console.log("lat-lng", lat, lng);
     },
     [lat, lng, onClose]
   );
@@ -34,25 +34,25 @@ export default function MapPopup({ office, onClose, lat, lng }: Props) {
     <Paper
       sx={{
         width: 220,
-        overflow: 'hidden',
+        overflow: "hidden",
         borderRadius: 1.5,
         mt: 2,
         ml: 2,
-        position: 'relative',
+        position: "relative",
       }}
     >
-      <Box sx={{ position: 'absolute', right: 4, top: 4, zIndex: 9 }}>
+      <Box sx={{ position: "absolute", right: 4, top: 4, zIndex: 9 }}>
         <IconButton size="small" onClick={handleClose}>
           <Iconify
             icon="carbon:close-filled"
             sx={{
               opacity: 0.48,
-              color: 'common.white',
-              '&:hover': {
+              color: "common.white",
+              "&:hover": {
                 opacity: 1,
               },
               ...(!office.photo && {
-                color: 'text.disabled',
+                color: "text.disabled",
               }),
             }}
           />
@@ -65,7 +65,7 @@ export default function MapPopup({ office, onClose, lat, lng }: Props) {
         spacing={1}
         sx={{
           p: 1.5,
-          wordBreak: 'break-all',
+          wordBreak: "break-all",
           ...(!office.photo && {
             p: 2,
             pr: 3.5,
@@ -81,14 +81,14 @@ export default function MapPopup({ office, onClose, lat, lng }: Props) {
         )}
 
         {office.email && (
-          <Stack direction="row" alignItems="flex-start" sx={{ typography: 'caption' }}>
+          <Stack direction="row" alignItems="flex-start" sx={{ typography: "caption" }}>
             <Iconify icon="carbon:email" width={18} sx={{ mr: 0.5 }} />
             {office.email}
           </Stack>
         )}
 
         {office.phoneNumber && (
-          <Stack direction="row" alignItems="flex-start" sx={{ typography: 'caption' }}>
+          <Stack direction="row" alignItems="flex-start" sx={{ typography: "caption" }}>
             <Iconify icon="carbon:phone" width={18} sx={{ mr: 0.5 }} />
             {office.phoneNumber}
           </Stack>

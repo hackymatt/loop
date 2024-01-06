@@ -1,11 +1,11 @@
-import Typography from '@mui/material/Typography';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import Accordion, { accordionClasses } from '@mui/material/Accordion';
-import AccordionSummary, { accordionSummaryClasses } from '@mui/material/AccordionSummary';
+import Typography from "@mui/material/Typography";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Accordion, { accordionClasses } from "@mui/material/Accordion";
+import AccordionSummary, { accordionSummaryClasses } from "@mui/material/AccordionSummary";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { ICourseLessonProp } from 'src/types/course';
+import { ICourseLessonProp } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +24,7 @@ export default function ElearningCourseDetailsLessonItem({
   onSelected,
   onExpanded,
 }: LessonItemProps) {
-  const playIcon = selected ? 'carbon:pause-outline' : 'carbon:play';
+  const playIcon = selected ? "carbon:pause-outline" : "carbon:play";
 
   return (
     <Accordion
@@ -46,13 +46,13 @@ export default function ElearningCourseDetailsLessonItem({
             m: 0,
           },
           [`&.${accordionSummaryClasses.expanded}`]: {
-            bgcolor: 'action.selected',
+            bgcolor: "action.selected",
           },
         }}
       >
         <Iconify
           width={24}
-          icon={!lesson.unLocked ? 'carbon:locked' : playIcon}
+          icon={!lesson.unLocked ? "carbon:locked" : playIcon}
           onClick={onSelected}
         />
 
@@ -68,14 +68,14 @@ export default function ElearningCourseDetailsLessonItem({
 
         <Typography variant="body2">{lesson.duration} m</Typography>
 
-        <Iconify icon={expanded ? 'carbon:chevron-down' : 'carbon:chevron-right'} sx={{ ml: 2 }} />
+        <Iconify icon={expanded ? "carbon:chevron-down" : "carbon:chevron-right"} sx={{ ml: 2 }} />
       </AccordionSummary>
 
       <AccordionDetails
         sx={{
           p: 2,
-          typography: 'body',
-          color: 'text.secondary',
+          typography: "body",
+          color: "text.secondary",
         }}
       >
         {lesson.description}

@@ -1,16 +1,16 @@
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Rating, { ratingClasses } from '@mui/material/Rating';
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Rating, { ratingClasses } from "@mui/material/Rating";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { fCurrency } from 'src/utils/format-number';
+import { fCurrency } from "src/utils/format-number";
 
-import Image from 'src/components/image';
+import Image from "src/components/image";
 
-import { IProductItemCompareProps } from 'src/types/product';
+import { IProductItemCompareProps } from "src/types/product";
 
 // ----------------------------------------------------------------------
 
@@ -20,13 +20,13 @@ type Props = {
 
 export default function EcommerceCompareItem({ product }: Props) {
   return (
-    <Stack spacing={3} alignItems="center" sx={{ textAlign: 'center' }}>
+    <Stack spacing={3} alignItems="center" sx={{ textAlign: "center" }}>
       <Image
         src={product.coverUrl}
         sx={{
           flexShrink: 0,
           borderRadius: 1.5,
-          bgcolor: 'background.neutral',
+          bgcolor: "background.neutral",
         }}
       />
 
@@ -40,7 +40,7 @@ export default function EcommerceCompareItem({ product }: Props) {
           precision={0.5}
           sx={{
             [`&.${ratingClasses.root}`]: {
-              '& svg': {
+              "& svg": {
                 width: { xs: 12, md: 20 },
                 height: { xs: 12, md: 20 },
               },
@@ -65,10 +65,10 @@ export default function EcommerceCompareItem({ product }: Props) {
         <Typography
           key={index}
           sx={{
-            typography: { xs: 'caption', md: 'body2' },
+            typography: { xs: "caption", md: "body2" },
           }}
         >
-          {row || '-'}
+          {row || "-"}
         </Typography>
       ))}
     </Stack>

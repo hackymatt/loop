@@ -1,20 +1,20 @@
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Unstable_Grid2';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import { alpha, styled } from '@mui/material/styles';
-import Stack, { StackProps } from '@mui/material/Stack';
-import Button, { buttonClasses } from '@mui/material/Button';
+import Divider from "@mui/material/Divider";
+import Grid from "@mui/material/Unstable_Grid2";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import { alpha, styled } from "@mui/material/styles";
+import Stack, { StackProps } from "@mui/material/Stack";
+import Button, { buttonClasses } from "@mui/material/Button";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
-import SvgColor from 'src/components/svg-color';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
+import SvgColor from "src/components/svg-color";
 
 // ----------------------------------------------------------------------
 
 const StyledAppStoreButton = styled(Button)(({ theme }) => ({
   flexShrink: 0,
-  padding: '5px 12px',
+  padding: "5px 12px",
   color: theme.palette.common.white,
   border: `solid 1px ${alpha(theme.palette.common.black, 0.24)}`,
   background: `linear-gradient(180deg, ${theme.palette.grey[900]} 0%, ${theme.palette.common.black} 100%)`,
@@ -28,16 +28,16 @@ const StyledAppStoreButton = styled(Button)(({ theme }) => ({
 export default function ElearningDownloadApp() {
   return (
     <Container sx={{ py: { xs: 8, md: 15 } }}>
-      <Grid container spacing={3} justifyContent={{ lg: 'space-between' }}>
+      <Grid container spacing={3} justifyContent={{ lg: "space-between" }}>
         <Grid xs={12} md={6} lg={5}>
           <Stack
             sx={{
-              textAlign: { xs: 'center', md: 'unset' },
+              textAlign: { xs: "center", md: "unset" },
             }}
           >
             <Typography variant="h2"> Download App </Typography>
 
-            <Typography sx={{ color: 'text.secondary', mt: 3, mb: 8 }}>
+            <Typography sx={{ color: "text.secondary", mt: 3, mb: 8 }}>
               Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
               Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi.
             </Typography>
@@ -56,7 +56,7 @@ export default function ElearningDownloadApp() {
             <Stack spacing={3} direction="row" alignItems="center">
               <SvgColor
                 src="/assets/icons/ic_qrcode.svg"
-                sx={{ width: 120, height: 120, color: 'grey.900' }}
+                sx={{ width: 120, height: 120, color: "grey.900" }}
               />
               <Typography variant="h6">
                 Scan QR code to
@@ -64,9 +64,9 @@ export default function ElearningDownloadApp() {
               </Typography>
             </Stack>
 
-            <Divider sx={{ my: 5, width: 1, borderStyle: 'dashed' }} />
+            <Divider sx={{ my: 5, width: 1, borderStyle: "dashed" }} />
 
-            <AppStoreButton direction={{ xs: 'column', sm: 'row' }} />
+            <AppStoreButton direction={{ xs: "column", sm: "row" }} />
           </Stack>
         </Grid>
 

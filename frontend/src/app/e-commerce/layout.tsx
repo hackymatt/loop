@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import MainLayout from 'src/layouts/main';
-import EcommerceLayout from 'src/layouts/ecommerce';
+import MainLayout from "src/layouts/main";
+import EcommerceLayout from "src/layouts/ecommerce";
 
 // ----------------------------------------------------------------------
 

@@ -1,12 +1,12 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Box from '@mui/material/Box';
-import Accordion from '@mui/material/Accordion';
-import Typography from '@mui/material/Typography';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary, { accordionSummaryClasses } from '@mui/material/AccordionSummary';
+import Box from "@mui/material/Box";
+import Accordion from "@mui/material/Accordion";
+import Typography from "@mui/material/Typography";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary, { accordionSummaryClasses } from "@mui/material/AccordionSummary";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
@@ -45,7 +45,7 @@ export default function SupportContent({ contents }: Props) {
                 m: 0,
               },
               [`&.${accordionSummaryClasses.expanded}`]: {
-                bgcolor: 'action.selected',
+                bgcolor: "action.selected",
               },
             }}
           >
@@ -54,11 +54,11 @@ export default function SupportContent({ contents }: Props) {
             </Typography>
 
             <Iconify
-              icon={expanded === faq.question ? 'carbon:chevron-down' : 'carbon:chevron-right'}
+              icon={expanded === faq.question ? "carbon:chevron-down" : "carbon:chevron-right"}
             />
           </AccordionSummary>
 
-          <AccordionDetails sx={{ color: 'text.secondary' }}>{faq.answer}</AccordionDetails>
+          <AccordionDetails sx={{ color: "text.secondary" }}>{faq.answer}</AccordionDetails>
         </Accordion>
       ))}
     </Box>

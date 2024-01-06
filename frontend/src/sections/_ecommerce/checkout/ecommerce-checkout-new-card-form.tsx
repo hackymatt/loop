@@ -1,7 +1,7 @@
-import Stack from '@mui/material/Stack';
+import Stack from "@mui/material/Stack";
 
-import Iconify from 'src/components/iconify';
-import { RHFTextField } from 'src/components/hook-form';
+import Iconify from "src/components/iconify";
+import { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
@@ -40,7 +40,7 @@ export default function EcommerceCheckoutNewCardForm() {
       <Stack
         direction="row"
         alignItems="center"
-        sx={{ typography: 'caption', color: 'text.disabled' }}
+        sx={{ typography: "caption", color: "text.disabled" }}
       >
         <Iconify icon="carbon:locked" sx={{ mr: 0.5 }} />
         Your transaction is secured with SSL encryption

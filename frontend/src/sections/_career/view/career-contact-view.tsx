@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { _offices } from 'src/_mock';
+import { _offices } from "src/_mock";
 
-import ContactMap from 'src/components/map';
+import ContactMap from "src/components/map";
 
-import CareerNewsletter from '../career-newsletter';
-import CareerContactForm from '../contact/career-contact-form';
-import CareerContactInfo from '../contact/career-contact-info';
+import CareerNewsletter from "../career-newsletter";
+import CareerContactForm from "../contact/career-contact-form";
+import CareerContactInfo from "../contact/career-contact-info";
 
 // ----------------------------------------------------------------------
 

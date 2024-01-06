@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { useRef } from 'react';
-import { useScroll } from 'framer-motion';
+import { useRef } from "react";
+import { useScroll } from "framer-motion";
 
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Container from '@mui/material/Container';
-import CardHeader from '@mui/material/CardHeader';
-import CardContent from '@mui/material/CardContent';
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import Container from "@mui/material/Container";
+import CardHeader from "@mui/material/CardHeader";
+import CardContent from "@mui/material/CardContent";
 
-import { paths } from 'src/routes/paths';
+import { paths } from "src/routes/paths";
 
-import ScrollProgress from 'src/components/scroll-progress';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+import ScrollProgress from "src/components/scroll-progress";
+import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ export default function ScrollProgressView() {
       <Box
         sx={{
           py: 5,
-          bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.200' : 'grey.800'),
+          bgcolor: (theme) => (theme.palette.mode === "light" ? "grey.200" : "grey.800"),
         }}
       >
         <Container>
@@ -38,10 +38,10 @@ export default function ScrollProgressView() {
             heading="Scroll Progress"
             links={[
               {
-                name: 'Components',
+                name: "Components",
                 href: paths.components.root,
               },
-              { name: 'Scroll Progress' },
+              { name: "Scroll Progress" },
             ]}
           />
         </Container>
@@ -53,10 +53,10 @@ export default function ScrollProgressView() {
           <ScrollProgress
             scrollYProgress={scrollContainer.scrollYProgress}
             color="error"
-            sx={{ position: 'unset', height: 6 }}
+            sx={{ position: "unset", height: 6 }}
           />
 
-          <CardContent ref={containerRef} sx={{ height: 320, overflow: 'auto' }}>
+          <CardContent ref={containerRef} sx={{ height: 320, overflow: "auto" }}>
             Donec mi odio, faucibus at, scelerisque quis, convallis in, nisi. Quisque ut nisi.
             Suspendisse nisl elit, rhoncus eget, elementum ac, condimentum eget, diam. Vestibulum eu
             odio. Proin sapien ipsum, porta a, auctor quis, euismod ut, mi. Cras ultricies mi eu
@@ -125,8 +125,8 @@ export default function ScrollProgressView() {
         <Box
           sx={{
             minHeight: 2000,
-            textAlign: 'center',
-            typography: 'h6',
+            textAlign: "center",
+            typography: "h6",
             my: 10,
           }}
         >

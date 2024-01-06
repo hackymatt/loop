@@ -1,17 +1,17 @@
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Unstable_Grid2';
-import { alpha, useTheme } from '@mui/material/styles';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Unstable_Grid2";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import Image from 'src/components/image';
-import Label from 'src/components/label';
-import Iconify from 'src/components/iconify';
-import TextMaxLine from 'src/components/text-max-line';
+import Image from "src/components/image";
+import Label from "src/components/label";
+import Iconify from "src/components/iconify";
+import TextMaxLine from "src/components/text-max-line";
 
-import { IProductItemHeroProps } from 'src/types/product';
+import { IProductItemHeroProps } from "src/types/product";
 
 // ----------------------------------------------------------------------
 
@@ -40,7 +40,7 @@ export default function EcommerceProductItemHero({ product }: Props) {
         <Box
           sx={{
             maxWidth: { md: 440 },
-            textAlign: { xs: 'center', md: 'unset' },
+            textAlign: { xs: "center", md: "unset" },
           }}
         >
           <Label color="warning" sx={{ mb: 2 }}>
@@ -51,7 +51,7 @@ export default function EcommerceProductItemHero({ product }: Props) {
             {title}
           </TextMaxLine>
 
-          <TextMaxLine variant="body2" sx={{ mb: 5, color: 'text.secondary' }}>
+          <TextMaxLine variant="body2" sx={{ mb: 5, color: "text.secondary" }}>
             {caption}
           </TextMaxLine>
 
@@ -74,8 +74,8 @@ export default function EcommerceProductItemHero({ product }: Props) {
           sx={{
             filter: `drop-shadow(20px 20px 24px ${alpha(theme.palette.common.black, 0.16)})`,
             maxWidth: 400,
-            ml: 'auto',
-            mr: { xs: 'auto', md: 'unset' },
+            ml: "auto",
+            mr: { xs: "auto", md: "unset" },
           }}
         />
       </Grid>

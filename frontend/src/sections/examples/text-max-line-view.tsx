@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Masonry from '@mui/lab/Masonry';
-import Container from '@mui/material/Container';
-import CardHeader from '@mui/material/CardHeader';
-import CardContent from '@mui/material/CardContent';
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import Masonry from "@mui/lab/Masonry";
+import Container from "@mui/material/Container";
+import CardHeader from "@mui/material/CardHeader";
+import CardContent from "@mui/material/CardContent";
 
-import { paths } from 'src/routes/paths';
+import { paths } from "src/routes/paths";
 
-import TextMaxLine from 'src/components/text-max-line';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+import TextMaxLine from "src/components/text-max-line";
+import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
 // ----------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ export default function TextMaxLineView() {
       <Box
         sx={{
           py: 5,
-          bgcolor: (theme) => (theme.palette.mode === 'light' ? 'grey.200' : 'grey.800'),
+          bgcolor: (theme) => (theme.palette.mode === "light" ? "grey.200" : "grey.800"),
         }}
       >
         <Container>
@@ -28,10 +28,10 @@ export default function TextMaxLineView() {
             heading="TextMaxLine"
             links={[
               {
-                name: 'Components',
+                name: "Components",
                 href: paths.components.root,
               },
-              { name: 'TextMaxLine' },
+              { name: "TextMaxLine" },
             ]}
           />
         </Container>
@@ -102,7 +102,7 @@ export default function TextMaxLineView() {
           <Card>
             <CardHeader title="Persistent" />
             <CardContent>
-              <TextMaxLine persistent line={3} href="#" sx={{ bgcolor: 'background.neutral' }}>
+              <TextMaxLine persistent line={3} href="#" sx={{ bgcolor: "background.neutral" }}>
                 Donec posuere vulputate arcu.
               </TextMaxLine>
             </CardContent>

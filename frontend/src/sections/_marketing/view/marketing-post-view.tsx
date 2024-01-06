@@ -1,35 +1,35 @@
-'use client';
+"use client";
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
-import Popover from '@mui/material/Popover';
-import Checkbox from '@mui/material/Checkbox';
-import MenuItem from '@mui/material/MenuItem';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
+import Popover from "@mui/material/Popover";
+import Checkbox from "@mui/material/Checkbox";
+import MenuItem from "@mui/material/MenuItem";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 
-import { paths } from 'src/routes/paths';
+import { paths } from "src/routes/paths";
 
-import { fDate } from 'src/utils/format-time';
+import { fDate } from "src/utils/format-time";
 
-import { _socials, _marketingPosts } from 'src/_mock';
+import { _socials, _marketingPosts } from "src/_mock";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
-import Markdown from 'src/components/markdown';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
+import Markdown from "src/components/markdown";
+import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
-import PostTags from '../../blog/common/post-tags';
-import PostAuthor from '../../blog/common/post-author';
-import MarketingNewsletter from '../marketing-newsletter';
-import PostSocialsShare from '../../blog/common/post-socials-share';
-import MarketingLandingFreeSEO from '../landing/marketing-landing-free-seo';
-import BlogMarketingLatestPosts from '../../blog/marketing/marketing-latest-posts';
+import PostTags from "../../blog/common/post-tags";
+import PostAuthor from "../../blog/common/post-author";
+import MarketingNewsletter from "../marketing-newsletter";
+import PostSocialsShare from "../../blog/common/post-socials-share";
+import MarketingLandingFreeSEO from "../landing/marketing-landing-free-seo";
+import BlogMarketingLatestPosts from "../../blog/marketing/marketing-latest-posts";
 
 // ----------------------------------------------------------------------
 
@@ -61,8 +61,8 @@ export default function MarketingPostView() {
         <CustomBreadcrumbs
           sx={{ my: 3 }}
           links={[
-            { name: 'Home', href: '/' },
-            { name: 'Blog', href: paths.marketing.posts },
+            { name: "Home", href: "/" },
+            { name: "Blog", href: paths.marketing.posts },
             { name: title },
           ]}
         />
@@ -71,17 +71,17 @@ export default function MarketingPostView() {
       <Divider />
 
       <Container>
-        <Grid container spacing={3} justifyContent={{ md: 'center' }}>
+        <Grid container spacing={3} justifyContent={{ md: "center" }}>
           <Grid xs={12} md={8}>
             <Stack
               spacing={3}
               sx={{
-                textAlign: 'center',
+                textAlign: "center",
                 pt: { xs: 5, md: 10 },
                 pb: 5,
               }}
             >
-              <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+              <Typography variant="body2" sx={{ color: "text.disabled" }}>
                 {duration}
               </Typography>
 
@@ -97,13 +97,13 @@ export default function MarketingPostView() {
 
               <Stack spacing={0.5} flexGrow={1}>
                 <Typography variant="subtitle2">{author.name}</Typography>
-                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                  {fDate(createdAt, 'dd/MM/yyyy p')}
+                <Typography variant="caption" sx={{ color: "text.secondary" }}>
+                  {fDate(createdAt, "dd/MM/yyyy p")}
                 </Typography>
               </Stack>
 
               <Stack direction="row" alignItems="center">
-                <IconButton onClick={handleOpen} color={open ? 'primary' : 'default'}>
+                <IconButton onClick={handleOpen} color={open ? "primary" : "default"}>
                   <Iconify icon="carbon:share" />
                 </IconButton>
 
@@ -144,8 +144,8 @@ export default function MarketingPostView() {
         open={!!open}
         onClose={handleClose}
         anchorEl={open}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        transformOrigin={{ vertical: "top", horizontal: "center" }}
         slotProps={{
           paper: {
             sx: { width: 220 },

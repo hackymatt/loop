@@ -1,6 +1,6 @@
-import Switch from '@mui/material/Switch';
-import { StackProps } from '@mui/material/Stack';
-import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
+import Switch from "@mui/material/Switch";
+import { StackProps } from "@mui/material/Stack";
+import FormControlLabel, { formControlLabelClasses } from "@mui/material/FormControlLabel";
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ export default function FilterStock({ filterStock, onChangeStock }: Props) {
       sx={{
         m: 0,
         [`& .${formControlLabelClasses.label}`]: {
-          typography: 'h6',
+          typography: "h6",
         },
       }}
     />

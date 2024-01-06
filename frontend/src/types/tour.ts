@@ -1,5 +1,5 @@
-import { IAuthorProps } from './author';
-import { ISocialLinks } from './socials';
+import { IAuthorProps } from "./author";
+import { ISocialLinks } from "./socials";
 
 // ----------------------------------------------------------------------
 

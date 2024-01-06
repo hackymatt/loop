@@ -1,20 +1,20 @@
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Image from 'src/components/image';
+import Image from "src/components/image";
 
 // ----------------------------------------------------------------------
 
 export default function CareerAboutOurVision() {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   return (
     <Container
       sx={{
-        overflow: 'hidden',
+        overflow: "hidden",
         py: { xs: 5, md: 10 },
       }}
     >
@@ -31,7 +31,7 @@ export default function CareerAboutOurVision() {
             Fusce convallis metus id felis luctus
           </Typography>
 
-          <Typography sx={{ color: 'text.secondary', mt: 3 }}>
+          <Typography sx={{ color: "text.secondary", mt: 3 }}>
             Fusce convallis metus id felis luctus adipiscing. Etiam imperdiet imperdiet orci.
             Vestibulum eu odio. Phasellus nec sem in justo pellentesque facilisis.
           </Typography>
@@ -53,7 +53,7 @@ export default function CareerAboutOurVision() {
             Fusce convallis metus id felis luctus
           </Typography>
 
-          <Typography sx={{ color: 'text.secondary', mt: 3 }}>
+          <Typography sx={{ color: "text.secondary", mt: 3 }}>
             Fusce convallis metus id felis luctus adipiscing. Etiam imperdiet imperdiet orci.
             Vestibulum eu odio. Phasellus nec sem in justo pellentesque facilisis.
           </Typography>

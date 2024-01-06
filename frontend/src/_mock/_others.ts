@@ -1,13 +1,13 @@
-import { _mock } from './_mock';
+import { _mock } from "./_mock";
 
 // ----------------------------------------------------------------------
 
 export const _categories = [
-  { label: 'Marketing', path: '' },
-  { label: 'Community', path: '' },
-  { label: 'Tutorials', path: '' },
-  { label: 'Business', path: '' },
-  { label: 'Management', path: '' },
+  { label: "Marketing", path: "" },
+  { label: "Community", path: "" },
+  { label: "Tutorials", path: "" },
+  { label: "Business", path: "" },
+  { label: "Management", path: "" },
 ];
 
 // ----------------------------------------------------------------------
@@ -20,35 +20,35 @@ export const _testimonials = [...Array(8)].map((_, index) => ({
   createdAt: _mock.time(index),
   ratingNumber: 5,
   review:
-    'Amazing experience i love it a lot. Thanks to the team that dreams come true, great! I appreciate there attitude and approach.',
+    "Amazing experience i love it a lot. Thanks to the team that dreams come true, great! I appreciate there attitude and approach.",
 }));
 
 // ----------------------------------------------------------------------
 
 export const _socials = [
   {
-    value: 'facebook',
-    label: 'FaceBook',
-    icon: 'carbon:logo-facebook',
-    color: '#1877F2',
+    value: "facebook",
+    label: "FaceBook",
+    icon: "carbon:logo-facebook",
+    color: "#1877F2",
   },
   {
-    value: 'instagram',
-    label: 'Instagram',
-    icon: 'carbon:logo-instagram',
-    color: '#E02D69',
+    value: "instagram",
+    label: "Instagram",
+    icon: "carbon:logo-instagram",
+    color: "#E02D69",
   },
   {
-    value: 'linkedin',
-    label: 'Linkedin',
-    icon: 'carbon:logo-linkedin',
-    color: '#007EBB',
+    value: "linkedin",
+    label: "Linkedin",
+    icon: "carbon:logo-linkedin",
+    color: "#007EBB",
   },
   {
-    value: 'twitter',
-    label: 'Twitter',
-    icon: 'carbon:logo-twitter',
-    color: '#00AAEC',
+    value: "twitter",
+    label: "Twitter",
+    icon: "carbon:logo-twitter",
+    color: "#00AAEC",
   },
 ];
 
@@ -60,7 +60,7 @@ const LAT_LONG = [
   [20.96, 26.27],
 ];
 
-export const _offices = ['Jordan', 'Canada', 'Portugal'].map((office, index) => ({
+export const _offices = ["Jordan", "Canada", "Portugal"].map((office, index) => ({
   id: _mock.id(index),
   country: office,
   address: _mock.fullAddress(index),
@@ -73,18 +73,18 @@ export const _offices = ['Jordan', 'Canada', 'Portugal'].map((office, index) => 
 // ----------------------------------------------------------------------
 
 const BRANDS_NAME = [
-  'airbnb',
-  'dropbox',
-  'facebook',
-  'google',
-  'heroku',
-  'lenovo',
-  'microsoft',
-  'netflix',
-  'slack',
-  'spotify',
-  'tripadvisor',
-  'vimeo',
+  "airbnb",
+  "dropbox",
+  "facebook",
+  "google",
+  "heroku",
+  "lenovo",
+  "microsoft",
+  "netflix",
+  "slack",
+  "spotify",
+  "tripadvisor",
+  "vimeo",
 ];
 
 export const _brands = BRANDS_NAME.map((brand, index) => ({
@@ -102,26 +102,26 @@ export const _brandsColor = BRANDS_NAME.map((brand, index) => ({
 // ----------------------------------------------------------------------
 
 export const _faqs = [
-  'Sed augue ipsum, egestas nec, vestibulum et',
-  'alesuada adipiscing, dui vestibulum suscipit nulla quis orci.',
-  'Ut varius tincidunt libero',
-  'In ut quam vitae odio lacinia tincidunt.',
-  'Fusce vel dui Morbi nec metus.',
+  "Sed augue ipsum, egestas nec, vestibulum et",
+  "alesuada adipiscing, dui vestibulum suscipit nulla quis orci.",
+  "Ut varius tincidunt libero",
+  "In ut quam vitae odio lacinia tincidunt.",
+  "Fusce vel dui Morbi nec metus.",
 ].map((question, index) => ({
   id: _mock.id(index),
   question,
   answer:
-    'Amazing experience i love it a lot. Thanks to the team that dreams come true, great! I appreciate there attitude and approach.',
+    "Amazing experience i love it a lot. Thanks to the team that dreams come true, great! I appreciate there attitude and approach.",
 }));
 
 export const _faqsSupport = [
   `[Covid] Seasonal Shopping Guide`,
-  'I Want To Check Where My Order Is Delivered',
-  '[Shipping Information] How To Contact The Shipping Unit/Look Up Shipping Information/Delivery Exchange?',
-  '[Seller] Start Selling With Shopee',
-  'Why Is My Account Locked/Limited?',
-  'Free Shipping Code User Guide (Freeship Code)',
-  'How To Buy / Order On Shopee App',
+  "I Want To Check Where My Order Is Delivered",
+  "[Shipping Information] How To Contact The Shipping Unit/Look Up Shipping Information/Delivery Exchange?",
+  "[Seller] Start Selling With Shopee",
+  "Why Is My Account Locked/Limited?",
+  "Free Shipping Code User Guide (Freeship Code)",
+  "How To Buy / Order On Shopee App",
   `Why I Didn't Receive the Verification Code (OTP)?`,
   `Frequently Asked Questions About Product Reviews / Comments`,
   `How to Login Shopee Account When Forgot/Lost Password`,
@@ -129,5 +129,5 @@ export const _faqsSupport = [
   id: _mock.id(index),
   question,
   answer:
-    'Amazing experience i love it a lot. Thanks to the team that dreams come true, great! I appreciate there attitude and approach.',
+    "Amazing experience i love it a lot. Thanks to the team that dreams come true, great! I appreciate there attitude and approach.",
 }));

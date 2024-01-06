@@ -1,8 +1,8 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
-import Skeleton from '@mui/material/Skeleton';
-import Card, { CardProps } from '@mui/material/Card';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
+import Skeleton from "@mui/material/Skeleton";
+import Card, { CardProps } from "@mui/material/Card";
 
 // ----------------------------------------------------------------------
 
@@ -24,14 +24,14 @@ export default function CareerJobItemSkeleton({ ...other }: CardProps) {
         ))}
       </Stack>
 
-      <Divider sx={{ borderStyle: 'dashed' }} />
+      <Divider sx={{ borderStyle: "dashed" }} />
 
       <Box
         sx={{
           p: 3,
           gap: 3,
-          display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
         }}
       >
         {[...Array(4)].map((_, index) => (

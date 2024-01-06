@@ -1,9 +1,9 @@
-import ForgotPasswordView from 'src/sections/auth/forgot-password-view';
+import ForgotPasswordView from "src/sections/auth/forgot-password-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Forgot Password',
+  title: "Forgot Password",
 };
 
 export default function ForgotPasswordPage() {

@@ -1,9 +1,9 @@
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
 
-import { IBlogPostProps } from 'src/types/blog';
+import { IBlogPostProps } from "src/types/blog";
 
-import PostItem from './travel-featured-post-item';
+import PostItem from "./travel-featured-post-item";
 
 // ----------------------------------------------------------------------
 
@@ -24,10 +24,10 @@ export default function TravelFeaturedPosts({ posts }: Props) {
       <Box
         sx={{
           gap: 3,
-          display: 'grid',
+          display: "grid",
           gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            md: 'repeat(2, 1fr)',
+            xs: "repeat(1, 1fr)",
+            md: "repeat(2, 1fr)",
           },
         }}
       >
@@ -36,10 +36,10 @@ export default function TravelFeaturedPosts({ posts }: Props) {
         <Box
           sx={{
             gap: 3,
-            display: 'grid',
+            display: "grid",
             gridTemplateColumns: {
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
+              xs: "repeat(1, 1fr)",
+              sm: "repeat(2, 1fr)",
             },
           }}
         >

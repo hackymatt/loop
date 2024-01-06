@@ -1,9 +1,9 @@
-import LightboxView from 'src/sections/examples/lightbox-view';
+import LightboxView from "src/sections/examples/lightbox-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Components: Lightbox',
+  title: "Components: Lightbox",
 };
 
 export default function LightboxPage() {

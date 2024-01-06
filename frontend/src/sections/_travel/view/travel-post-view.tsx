@@ -1,24 +1,24 @@
-'use client';
+"use client";
 
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Unstable_Grid2';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Divider from "@mui/material/Divider";
+import Grid from "@mui/material/Unstable_Grid2";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
+import { paths } from "src/routes/paths";
 
-import { _tags, _mock, _categories, _travelPosts } from 'src/_mock';
+import { _tags, _mock, _categories, _travelPosts } from "src/_mock";
 
-import Markdown from 'src/components/markdown';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+import Markdown from "src/components/markdown";
+import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
-import PostTags from '../../blog/common/post-tags';
-import TravelNewsletter from '../travel-newsletter';
-import PostAuthor from '../../blog/common/post-author';
-import PostSidebar from '../../blog/common/post-sidebar';
-import TravelPostHero from '../../blog/travel/travel-post-hero';
-import PostSocialsShare from '../../blog/common/post-socials-share';
-import TravelLatestPosts from '../../blog/travel/travel-latest-posts';
+import PostTags from "../../blog/common/post-tags";
+import TravelNewsletter from "../travel-newsletter";
+import PostAuthor from "../../blog/common/post-author";
+import PostSidebar from "../../blog/common/post-sidebar";
+import TravelPostHero from "../../blog/travel/travel-post-hero";
+import PostSocialsShare from "../../blog/common/post-socials-share";
+import TravelLatestPosts from "../../blog/travel/travel-latest-posts";
 
 // ----------------------------------------------------------------------
 
@@ -33,8 +33,8 @@ export default function TravelPostView() {
         <CustomBreadcrumbs
           sx={{ my: 3 }}
           links={[
-            { name: 'Home', href: '/' },
-            { name: 'Blog', href: paths.travel.posts },
+            { name: "Home", href: "/" },
+            { name: "Blog", href: paths.travel.posts },
             { name: title },
           ]}
         />
@@ -67,10 +67,10 @@ export default function TravelPostView() {
               categories={_categories}
               recentPosts={{ list: _travelPosts.slice(-4) }}
               advertisement={{
-                title: 'Advertisement',
-                description: 'Duis leo. Donec orci lectus, aliquam ut, faucibus non',
+                title: "Advertisement",
+                description: "Duis leo. Donec orci lectus, aliquam ut, faucibus non",
                 imageUrl: _mock.image.travel(9),
-                path: '',
+                path: "",
               }}
             />
           </Grid>

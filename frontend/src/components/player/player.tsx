@@ -1,6 +1,6 @@
-import { ReactPlayerProps } from 'react-player';
+import { ReactPlayerProps } from "react-player";
 
-import { StyledReactPlayer } from './styles';
+import { StyledReactPlayer } from "./styles";
 
 // ----------------------------------------------------------------------
 

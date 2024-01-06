@@ -1,15 +1,15 @@
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Carousel, { useCarousel, CarouselDots, CarouselArrows } from 'src/components/carousel';
+import Carousel, { useCarousel, CarouselDots, CarouselArrows } from "src/components/carousel";
 
-import { ITestimonialProps } from 'src/types/testimonial';
+import { ITestimonialProps } from "src/types/testimonial";
 
-import TestimonialItem from './career-testimonial-item';
+import TestimonialItem from "./career-testimonial-item";
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ type Props = {
 };
 
 export default function CareerTestimonial({ testimonials }: Props) {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const carousel = useCarousel({
     dots: !mdUp,
@@ -34,14 +34,14 @@ export default function CareerTestimonial({ testimonials }: Props) {
   return (
     <Box
       sx={{
-        bgcolor: 'background.neutral',
+        bgcolor: "background.neutral",
         py: { xs: 10, md: 15 },
       }}
     >
       <Container>
         <Grid container spacing={3} justifyContent="center">
           <Grid xs={12} md={6}>
-            <Typography variant="h2" sx={{ mb: 5, textAlign: 'center' }}>
+            <Typography variant="h2" sx={{ mb: 5, textAlign: "center" }}>
               What Our Customer Say
             </Typography>
 

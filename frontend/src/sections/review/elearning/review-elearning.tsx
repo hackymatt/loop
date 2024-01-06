@@ -1,22 +1,22 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import { SelectChangeEvent } from '@mui/material/Select';
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import { SelectChangeEvent } from "@mui/material/Select";
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from "src/hooks/use-boolean";
 
-import { _reviews } from 'src/_mock';
+import { _reviews } from "src/_mock";
 
-import ReviewList from './review-list';
-import ReviewSummary from './review-summary';
-import ReviewToolbar from './review-toolbar';
-import ReviewNewForm from '../common/review-new-form';
+import ReviewList from "./review-list";
+import ReviewSummary from "./review-summary";
+import ReviewToolbar from "./review-toolbar";
+import ReviewNewForm from "../common/review-new-form";
 
 // ----------------------------------------------------------------------
 
 export default function ReviewElearning() {
-  const [sort, setSort] = useState('latest');
+  const [sort, setSort] = useState("latest");
 
   const formOpen = useBoolean();
 
@@ -26,7 +26,7 @@ export default function ReviewElearning() {
 
   return (
     <>
-      <Container sx={{ overflow: 'hidden', pt: 10 }}>
+      <Container sx={{ overflow: "hidden", pt: 10 }}>
         <Grid xs={12} md={7} lg={8}>
           <ReviewToolbar sort={sort} onChangeSort={handleChangeSort} />
         </Grid>

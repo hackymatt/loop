@@ -1,14 +1,14 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import Stack, { StackProps } from '@mui/material/Stack';
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import Stack, { StackProps } from "@mui/material/Stack";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import FilterTime from './filter-time';
-import FilterGuests from './filter-guests';
-import FilterLocation from './filter-location';
+import FilterTime from "./filter-time";
+import FilterGuests from "./filter-guests";
+import FilterLocation from "./filter-location";
 
 // ----------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ export default function TravelFilters({ sx, ...other }: StackProps) {
 
   const handleIncrementGuests = useCallback(
     (guest?: string) => {
-      if (guest === 'children') {
+      if (guest === "children") {
         setGuests({ ...guests, children: guests.children + 1 });
       } else {
         setGuests({ ...guests, adults: guests.adults + 1 });
@@ -37,7 +37,7 @@ export default function TravelFilters({ sx, ...other }: StackProps) {
 
   const handleDecreaseGuests = useCallback(
     (guest?: string) => {
-      if (guest === 'children') {
+      if (guest === "children") {
         setGuests({ ...guests, children: guests.children - 1 });
       } else {
         setGuests({ ...guests, adults: guests.adults - 1 });
@@ -49,9 +49,9 @@ export default function TravelFilters({ sx, ...other }: StackProps) {
   return (
     <Stack
       spacing={2.5}
-      alignItems={{ md: 'center' }}
-      direction={{ xs: 'column', md: 'row' }}
-      sx={{ p: 4, borderRadius: 2, bgcolor: 'background.neutral', ...sx }}
+      alignItems={{ md: "center" }}
+      direction={{ xs: "column", md: "row" }}
+      sx={{ p: 4, borderRadius: 2, bgcolor: "background.neutral", ...sx }}
       {...other}
     >
       <FilterLocation />

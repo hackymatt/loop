@@ -1,21 +1,21 @@
-import Box from '@mui/material/Box';
-import Masonry from '@mui/lab/Masonry';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Masonry from "@mui/lab/Masonry";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { IBlogPostProps } from 'src/types/blog';
+import { IBlogPostProps } from "src/types/blog";
 
-import PostItemMobile from '../common/post-item-mobile';
-import CareerLatestPostItem from './career-latest-post-item';
+import PostItemMobile from "../common/post-item-mobile";
+import CareerLatestPostItem from "./career-latest-post-item";
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +24,7 @@ type Props = {
 };
 
 export default function CareerLatestPosts({ posts }: Props) {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const latestPost = posts[0];
 
@@ -49,10 +49,10 @@ export default function CareerLatestPosts({ posts }: Props) {
       <Stack
         direction="row"
         alignItems="center"
-        justifyContent={{ xs: 'center', md: 'space-between' }}
+        justifyContent={{ xs: "center", md: "space-between" }}
         sx={{
           mb: { xs: 8, md: 10 },
-          textAlign: { xs: 'center', md: 'left' },
+          textAlign: { xs: "center", md: "left" },
         }}
       >
         <Stack
@@ -60,7 +60,7 @@ export default function CareerLatestPosts({ posts }: Props) {
             maxWidth: { md: 460 },
           }}
         >
-          <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+          <Typography variant="overline" sx={{ color: "text.disabled" }}>
             BLOG
           </Typography>
 
@@ -68,7 +68,7 @@ export default function CareerLatestPosts({ posts }: Props) {
             Read Our Lates News
           </Typography>
 
-          <Typography sx={{ color: 'text.secondary' }}>
+          <Typography sx={{ color: "text.secondary" }}>
             Aenean vulputate eleifend tellus. Mauris turpis nunc, blandit et, volutpat molestie,
             porta ut, ligula.
           </Typography>
@@ -79,11 +79,11 @@ export default function CareerLatestPosts({ posts }: Props) {
 
       <Box
         sx={{
-          display: 'grid',
+          display: "grid",
           gap: { xs: 3, md: 4 },
           gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(2, 1fr)',
+            xs: "repeat(1, 1fr)",
+            sm: "repeat(2, 1fr)",
           },
         }}
       >

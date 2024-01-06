@@ -1,5 +1,5 @@
-import { ISocialLinks } from './socials';
-import { ICountriesProps } from './contact';
+import { ISocialLinks } from "./socials";
+import { ICountriesProps } from "./contact";
 
 // ----------------------------------------------------------------------
 

@@ -1,8 +1,8 @@
-import { Theme, SxProps } from '@mui/material/styles';
+import { Theme, SxProps } from "@mui/material/styles";
 
-import { countries } from 'src/assets/data';
+import { countries } from "src/assets/data";
 
-import CountrySelect from 'src/components/country-select';
+import CountrySelect from "src/components/country-select";
 
 // ----------------------------------------------------------------------
 

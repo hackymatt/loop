@@ -1,7 +1,7 @@
-import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
-import Skeleton from '@mui/material/Skeleton';
-import Card, { CardProps } from '@mui/material/Card';
+import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
+import Skeleton from "@mui/material/Skeleton";
+import Card, { CardProps } from "@mui/material/Card";
 
 // ----------------------------------------------------------------------
 
@@ -15,7 +15,7 @@ export default function TravelTourItemSkeleton({ ...other }: CardProps) {
         <Skeleton variant="text" sx={{ height: 20, width: 1 }} />
       </Stack>
 
-      <Divider sx={{ borderStyle: 'dashed' }} />
+      <Divider sx={{ borderStyle: "dashed" }} />
 
       <Stack direction="row" justifyContent="space-between" sx={{ p: 3 }}>
         <Skeleton variant="text" sx={{ height: 20, width: 100 }} />

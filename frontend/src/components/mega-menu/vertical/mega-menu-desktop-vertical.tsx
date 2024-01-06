@@ -1,7 +1,7 @@
-import Stack from '@mui/material/Stack';
+import Stack from "@mui/material/Stack";
 
-import NavList from './nav-list';
-import { NavProps } from '../types';
+import NavList from "./nav-list";
+import { NavProps } from "../types";
 
 // ----------------------------------------------------------------------
 
@@ -11,7 +11,7 @@ export default function MegaMenuDesktopVertical({ data, sx, slotProps, ...other 
       component="nav"
       id="mega-menu-desktop-vertical"
       sx={{
-        position: 'relative',
+        position: "relative",
         ...sx,
       }}
       {...other}

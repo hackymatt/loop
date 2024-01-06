@@ -1,10 +1,10 @@
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import InputAdornment from '@mui/material/InputAdornment';
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+import InputAdornment from "@mui/material/InputAdornment";
 
-import { _tags } from 'src/_mock';
+import { _tags } from "src/_mock";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
@@ -28,13 +28,13 @@ export default function FilterCategories({ filterCategories, onChangeCategory }:
           placeholder="Categories"
           InputProps={{
             ...params.InputProps,
-            autoComplete: 'search',
+            autoComplete: "search",
             startAdornment: (
               <InputAdornment position="start">
                 <Iconify
                   width={24}
                   icon="carbon:inventory-management"
-                  sx={{ color: 'text.disabled', mr: 1 }}
+                  sx={{ color: "text.disabled", mr: 1 }}
                 />
               </InputAdornment>
             ),

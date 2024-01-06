@@ -1,63 +1,63 @@
-import { m } from 'framer-motion';
-import { useState, useEffect, useCallback } from 'react';
+import { m } from "framer-motion";
+import { useState, useEffect, useCallback } from "react";
 
-import Tab from '@mui/material/Tab';
-import Fab from '@mui/material/Fab';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Tabs from '@mui/material/Tabs';
-import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
-import Alert from '@mui/material/Alert';
-import Radio from '@mui/material/Radio';
-import Paper from '@mui/material/Paper';
-import Badge from '@mui/material/Badge';
-import Slider from '@mui/material/Slider';
-import Switch from '@mui/material/Switch';
-import Rating from '@mui/material/Rating';
-import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import Checkbox from '@mui/material/Checkbox';
-import TextField from '@mui/material/TextField';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import CardHeader from '@mui/material/CardHeader';
-import AvatarGroup from '@mui/material/AvatarGroup';
-import ToggleButton from '@mui/material/ToggleButton';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import CircularProgress from '@mui/material/CircularProgress';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Tab from "@mui/material/Tab";
+import Fab from "@mui/material/Fab";
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import Tabs from "@mui/material/Tabs";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import Alert from "@mui/material/Alert";
+import Radio from "@mui/material/Radio";
+import Paper from "@mui/material/Paper";
+import Badge from "@mui/material/Badge";
+import Slider from "@mui/material/Slider";
+import Switch from "@mui/material/Switch";
+import Rating from "@mui/material/Rating";
+import Button from "@mui/material/Button";
+import Avatar from "@mui/material/Avatar";
+import Tooltip from "@mui/material/Tooltip";
+import Checkbox from "@mui/material/Checkbox";
+import TextField from "@mui/material/TextField";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import CardHeader from "@mui/material/CardHeader";
+import AvatarGroup from "@mui/material/AvatarGroup";
+import ToggleButton from "@mui/material/ToggleButton";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import CircularProgress from "@mui/material/CircularProgress";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { _mock } from 'src/_mock';
+import { _mock } from "src/_mock";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
-import { varFade, MotionViewport } from 'src/components/animate';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
+import { varFade, MotionViewport } from "src/components/animate";
 
 // ----------------------------------------------------------------------
 
 const FASHION_CATEGORY = [
-  { value: 'clothes', label: 'Clothes' },
-  { value: 'footwear', label: 'Footwear' },
-  { value: 'jean', label: 'Jean' },
+  { value: "clothes", label: "Clothes" },
+  { value: "footwear", label: "Footwear" },
+  { value: "jean", label: "Jean" },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function HomeFlexibleComponents() {
-  const [tab, setTab] = useState('angular');
+  const [tab, setTab] = useState("angular");
 
   const [progress, setProgress] = useState(0);
 
-  const [alignment, setAlignment] = useState('left');
+  const [alignment, setAlignment] = useState("left");
 
-  const [category, setCategory] = useState('clothes');
+  const [category, setCategory] = useState("clothes");
 
   const [rating, setRating] = useState<number | null>(5);
 
@@ -91,20 +91,20 @@ export default function HomeFlexibleComponents() {
   return (
     <Container
       sx={{
-        overflow: 'hidden',
+        overflow: "hidden",
         py: { xs: 5, md: 10 },
       }}
     >
-      <Grid container spacing={{ xs: 6, md: 3 }} justifyContent={{ md: 'space-between' }}>
+      <Grid container spacing={{ xs: 6, md: 3 }} justifyContent={{ md: "space-between" }}>
         <Grid xs={12} md={4}>
           <MotionViewport
             sx={{
               pt: { md: 10 },
-              textAlign: { xs: 'center', md: 'left' },
+              textAlign: { xs: "center", md: "left" },
             }}
           >
             <m.div variants={varFade().inUp}>
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              <Typography variant="overline" sx={{ color: "text.disabled" }}>
                 Interface Starter Kit
               </Typography>
             </m.div>
@@ -116,7 +116,7 @@ export default function HomeFlexibleComponents() {
             </m.div>
 
             <m.div variants={varFade().inUp}>
-              <Typography sx={{ color: 'text.secondary', mb: 5 }}>
+              <Typography sx={{ color: "text.secondary", mb: 5 }}>
                 Pre-set components are easy to customize and use. We collected most popular
                 elements. Menu, sliders, buttons, inputs etc. are all here. Just dive in!
               </Typography>
@@ -302,7 +302,7 @@ export default function HomeFlexibleComponents() {
                     avatar={
                       <Badge
                         variant="online"
-                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                       >
                         <Avatar
                           alt={_mock.fullName(0)}
@@ -315,10 +315,10 @@ export default function HomeFlexibleComponents() {
                       </Badge>
                     }
                     titleTypographyProps={{
-                      typography: 'subtitle2',
+                      typography: "subtitle2",
                       sx: { mb: 0.25 },
                     }}
-                    subheaderTypographyProps={{ typography: 'caption' }}
+                    subheaderTypographyProps={{ typography: "caption" }}
                     sx={{ p: 2 }}
                   />
                   <Box sx={{ px: 1 }}>
@@ -332,7 +332,7 @@ export default function HomeFlexibleComponents() {
                     />
                   </Box>
 
-                  <Typography variant="body2" sx={{ color: 'text.secondary', pt: 2, px: 2 }}>
+                  <Typography variant="body2" sx={{ color: "text.secondary", pt: 2, px: 2 }}>
                     Phasellus dolor. Fusce egestas elit eget lorem. Quisque id odio.
                   </Typography>
 

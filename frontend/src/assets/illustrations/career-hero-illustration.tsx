@@ -1,26 +1,26 @@
-import { memo } from 'react';
-import { m } from 'framer-motion';
+import { memo } from "react";
+import { m } from "framer-motion";
 
-import { useTheme } from '@mui/material/styles';
-import Box, { BoxProps } from '@mui/material/Box';
+import { useTheme } from "@mui/material/styles";
+import Box, { BoxProps } from "@mui/material/Box";
 
-import { useHoverParallax } from 'src/hooks/use-hover-parallax';
+import { useHoverParallax } from "src/hooks/use-hover-parallax";
 
-import Image from 'src/components/image';
-import SvgColor from 'src/components/svg-color';
+import Image from "src/components/image";
+import SvgColor from "src/components/svg-color";
 
-import Icon from './pattern/icon';
-import Label from './pattern/label';
-import Character from './pattern/character';
-import Pattern02 from './pattern/pattern-02';
-import Pattern01 from './pattern/pattern-01';
+import Icon from "./pattern/icon";
+import Label from "./pattern/label";
+import Character from "./pattern/character";
+import Pattern02 from "./pattern/pattern-02";
+import Pattern01 from "./pattern/pattern-01";
 
 // ----------------------------------------------------------------------
 
 const stylesIcon = {
   width: 40,
   height: 40,
-  color: 'common.black',
+  color: "common.black",
 };
 
 // ----------------------------------------------------------------------
@@ -44,23 +44,23 @@ function CareerHeroIllustration({ sx, ...other }: BoxProps) {
       sx={{
         width: 564,
         height: 564,
-        display: 'flex',
-        alignItems: 'center',
-        position: 'relative',
-        justifyContent: 'center',
+        display: "flex",
+        alignItems: "center",
+        position: "relative",
+        justifyContent: "center",
         ...sx,
       }}
       {...other}
     >
       <>
-        <Character front sx={{ position: 'absolute', bottom: 16, zIndex: 10, width: 300 }} />
+        <Character front sx={{ position: "absolute", bottom: 16, zIndex: 10, width: 300 }} />
         {/* Accounting */}
         <Box
           sx={{
             top: 170,
             zIndex: 9,
-            position: 'absolute',
-            transform: 'translateX(-125px) rotate(-15deg)',
+            position: "absolute",
+            transform: "translateX(-125px) rotate(-15deg)",
           }}
         >
           <m.div style={{ y: offsetY(-50) }}>
@@ -76,14 +76,14 @@ function CareerHeroIllustration({ sx, ...other }: BoxProps) {
             />
           </m.div>
         </Box>
-        <Character sx={{ position: 'absolute', bottom: 16, zIndex: 8, width: 300 }} />
+        <Character sx={{ position: "absolute", bottom: 16, zIndex: 8, width: 300 }} />
       </>
 
       {/* Banking */}
       <Box
         sx={{
-          position: 'absolute',
-          transform: 'translate(175px, 90px) rotate(15deg)',
+          position: "absolute",
+          transform: "translate(175px, 90px) rotate(15deg)",
         }}
       >
         <m.div style={{ x: offsetX(80), y: offsetY(80) }}>
@@ -103,8 +103,8 @@ function CareerHeroIllustration({ sx, ...other }: BoxProps) {
       {/* Health Care */}
       <Box
         sx={{
-          position: 'absolute',
-          transform: 'translate(170px, -110px) rotate(15deg)',
+          position: "absolute",
+          transform: "translate(170px, -110px) rotate(15deg)",
         }}
       >
         <m.div style={{ y: offsetY(80) }}>
@@ -126,8 +126,8 @@ function CareerHeroIllustration({ sx, ...other }: BoxProps) {
         sx={{
           zIndex: 10,
           bottom: 160,
-          position: 'absolute',
-          transform: 'translateX(-110px)',
+          position: "absolute",
+          transform: "translateX(-110px)",
         }}
       >
         <m.div style={{ y: offsetY(-60) }}>
@@ -145,7 +145,7 @@ function CareerHeroIllustration({ sx, ...other }: BoxProps) {
       </Box>
 
       {/* Icon */}
-      <Box sx={{ position: 'absolute', top: 16, transform: 'translateX(20px)' }}>
+      <Box sx={{ position: "absolute", top: 16, transform: "translateX(20px)" }}>
         <m.div style={{ x: offsetX(50), y: offsetY(50) }}>
           <Icon
             color={YELLOW}
@@ -155,7 +155,7 @@ function CareerHeroIllustration({ sx, ...other }: BoxProps) {
       </Box>
 
       {/* Icon */}
-      <Box sx={{ position: 'absolute', bottom: 16, transform: 'translateX(40px)' }}>
+      <Box sx={{ position: "absolute", bottom: 16, transform: "translateX(40px)" }}>
         <m.div style={{ x: offsetX(-60), y: offsetY(60) }}>
           <Icon
             color={GREEN}
@@ -169,9 +169,9 @@ function CareerHeroIllustration({ sx, ...other }: BoxProps) {
       {/* Icon */}
       <Box
         sx={{
-          position: 'absolute',
+          position: "absolute",
           bottom: 220,
-          transform: 'translateX(-220px)',
+          transform: "translateX(-220px)",
         }}
       >
         <m.div style={{ x: offsetX(70), y: offsetY(70) }}>

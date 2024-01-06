@@ -1,11 +1,11 @@
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
-import { usePathname } from 'src/routes/hooks';
-import { RouterLink } from 'src/routes/components';
+import { usePathname } from "src/routes/hooks";
+import { RouterLink } from "src/routes/components";
 
-import { NavSubListProps } from '../types';
+import { NavSubListProps } from "../types";
 
 // ----------------------------------------------------------------------
 
@@ -31,19 +31,19 @@ export default function NavSubList({ data, slotProps, ...other }: NavSubListProp
                 key={link.title}
                 component={RouterLink}
                 href={link.path}
-                className={active ? 'active' : ''}
+                className={active ? "active" : ""}
                 variant="body2"
                 sx={{
                   fontSize: 13,
-                  color: 'text.secondary',
-                  transition: (theme) => theme.transitions.create('all'),
-                  '&:hover': {
-                    color: 'text.primary',
+                  color: "text.secondary",
+                  transition: (theme) => theme.transitions.create("all"),
+                  "&:hover": {
+                    color: "text.primary",
                   },
                   ...(active && {
-                    color: 'text.primary',
-                    textDecoration: 'underline',
-                    fontWeight: 'fontWeightSemiBold',
+                    color: "text.primary",
+                    textDecoration: "underline",
+                    fontWeight: "fontWeightSemiBold",
                   }),
                   ...slotProps?.subItem,
                 }}

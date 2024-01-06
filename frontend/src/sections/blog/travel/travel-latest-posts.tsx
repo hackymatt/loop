@@ -1,20 +1,20 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { IBlogPostProps } from 'src/types/blog';
+import { IBlogPostProps } from "src/types/blog";
 
-import PostItem from './travel-latest-post-item';
-import PostItemMobile from '../common/post-item-mobile';
+import PostItem from "./travel-latest-post-item";
+import PostItemMobile from "../common/post-item-mobile";
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ type Props = {
 };
 
 export default function TravelLatestPosts({ posts }: Props) {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const viewAllBtn = (
     <Button
@@ -39,7 +39,7 @@ export default function TravelLatestPosts({ posts }: Props) {
   return (
     <Box
       sx={{
-        bgcolor: 'background.neutral',
+        bgcolor: "background.neutral",
         py: { xs: 10, md: 15 },
       }}
     >
@@ -47,7 +47,7 @@ export default function TravelLatestPosts({ posts }: Props) {
         <Stack
           direction="row"
           alignItems="center"
-          justifyContent={{ xs: 'center', md: 'space-between' }}
+          justifyContent={{ xs: "center", md: "space-between" }}
           sx={{
             mb: { xs: 8, md: 10 },
           }}
@@ -60,11 +60,11 @@ export default function TravelLatestPosts({ posts }: Props) {
         <Box
           sx={{
             gap: 3,
-            display: 'grid',
+            display: "grid",
             gridTemplateColumns: {
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
-              md: 'repeat(4, 1fr)',
+              xs: "repeat(1, 1fr)",
+              sm: "repeat(2, 1fr)",
+              md: "repeat(4, 1fr)",
             },
           }}
         >

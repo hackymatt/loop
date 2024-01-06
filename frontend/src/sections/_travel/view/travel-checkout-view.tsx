@@ -1,29 +1,29 @@
-'use client';
+"use client";
 
-import * as Yup from 'yup';
-import { useForm } from 'react-hook-form';
-import { useState, useCallback } from 'react';
-import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from "yup";
+import { useForm } from "react-hook-form";
+import { useState, useCallback } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
+import { paths } from "src/routes/paths";
+import { useRouter } from "src/routes/hooks";
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from "src/hooks/use-boolean";
 
-import { _tours } from 'src/_mock';
+import { _tours } from "src/_mock";
 
-import FormProvider from 'src/components/hook-form';
+import FormProvider from "src/components/hook-form";
 
-import TravelCheckOutSummary from '../checkout/travel-check-out-summary';
-import TravelCheckOutPaymentForm from '../checkout/travel-check-out-payment-form';
-import TravelCheckOutShippingForm from '../checkout/travel-check-out-shipping-form';
+import TravelCheckOutSummary from "../checkout/travel-check-out-summary";
+import TravelCheckOutPaymentForm from "../checkout/travel-check-out-payment-form";
+import TravelCheckOutShippingForm from "../checkout/travel-check-out-shipping-form";
 
 // ----------------------------------------------------------------------
 
@@ -41,32 +41,32 @@ export default function TravelCheckoutView() {
 
   const TravelCheckoutSchema = Yup.object().shape({
     billingAddress: Yup.object().shape({
-      firstName: Yup.string().required('First name is required'),
-      lastName: Yup.string().required('Last name is required'),
-      fullAddress: Yup.string().required('Full address is required'),
+      firstName: Yup.string().required("First name is required"),
+      lastName: Yup.string().required("Last name is required"),
+      fullAddress: Yup.string().required("Full address is required"),
     }),
   });
 
   const defaultValues = {
     billingAddress: {
-      firstName: '',
-      lastName: '',
-      fullAddress: '',
-      fullAddress2: '',
+      firstName: "",
+      lastName: "",
+      fullAddress: "",
+      fullAddress2: "",
     },
     shippingAddress: {
-      firstName: '',
-      lastName: '',
-      fullAddress: '',
-      fullAddress2: '',
+      firstName: "",
+      lastName: "",
+      fullAddress: "",
+      fullAddress2: "",
     },
     paymentMethods: {
-      methods: 'paypal',
+      methods: "paypal",
       card: {
-        cardNumber: '',
-        cardHolder: '',
-        expirationDate: '',
-        ccv: '',
+        cardNumber: "",
+        cardHolder: "",
+        expirationDate: "",
+        ccv: "",
       },
     },
   };
@@ -87,7 +87,7 @@ export default function TravelCheckoutView() {
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       router.push(paths.travel.orderCompleted);
-      console.log('DATA', data);
+      console.log("DATA", data);
     } catch (error) {
       console.error(error);
     }
@@ -99,7 +99,7 @@ export default function TravelCheckoutView() {
 
   const handleIncrementGuests = useCallback(
     (guest?: string) => {
-      if (guest === 'children') {
+      if (guest === "children") {
         setGuests({ ...guests, children: guests.children + 1 });
       } else {
         setGuests({ ...guests, adults: guests.adults + 1 });
@@ -110,7 +110,7 @@ export default function TravelCheckoutView() {
 
   const handleDecreaseGuests = useCallback(
     (guest?: string) => {
-      if (guest === 'children') {
+      if (guest === "children") {
         setGuests({ ...guests, children: guests.children - 1 });
       } else {
         setGuests({ ...guests, adults: guests.adults - 1 });
@@ -122,7 +122,7 @@ export default function TravelCheckoutView() {
   return (
     <Container
       sx={{
-        overflow: 'hidden',
+        overflow: "hidden",
         pt: 5,
         pb: { xs: 8, md: 15 },
       }}
@@ -142,7 +142,7 @@ export default function TravelCheckoutView() {
                 onChangeSameBilling={sameBilling.onToggle}
               />
 
-              <Divider sx={{ my: 5, borderStyle: 'dashed' }} />
+              <Divider sx={{ my: 5, borderStyle: "dashed" }} />
 
               <StepLabel title="Payment Methods" step="2" />
 
@@ -176,20 +176,20 @@ type StepLabelProps = {
 
 function StepLabel({ step, title }: StepLabelProps) {
   return (
-    <Stack direction="row" alignItems="center" sx={{ mb: 3, typography: 'h5' }}>
+    <Stack direction="row" alignItems="center" sx={{ mb: 3, typography: "h5" }}>
       <Box
         sx={{
           mr: 1.5,
           width: 28,
           height: 28,
           flexShrink: 0,
-          display: 'flex',
-          typography: 'h6',
-          borderRadius: '50%',
-          alignItems: 'center',
-          bgcolor: 'primary.main',
-          justifyContent: 'center',
-          color: 'primary.contrastText',
+          display: "flex",
+          typography: "h6",
+          borderRadius: "50%",
+          alignItems: "center",
+          bgcolor: "primary.main",
+          justifyContent: "center",
+          color: "primary.contrastText",
         }}
       >
         {step}

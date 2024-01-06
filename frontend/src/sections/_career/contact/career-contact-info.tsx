@@ -1,12 +1,12 @@
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 
-import { _socials } from 'src/_mock';
+import { _socials } from "src/_mock";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
@@ -16,7 +16,7 @@ export default function CareerContactInfo() {
       sx={{
         pt: 5,
         pb: { xs: 5, md: 10 },
-        textAlign: { xs: 'center', md: 'left' },
+        textAlign: { xs: "center", md: "left" },
       }}
     >
       <Typography variant="h2">Get In Touch</Typography>
@@ -29,7 +29,7 @@ export default function CareerContactInfo() {
         }}
       >{`We'd love to talk about how we can help you.`}</Typography>
 
-      <Stack spacing={{ xs: 3, md: 5 }} direction={{ xs: 'column', md: 'row' }}>
+      <Stack spacing={{ xs: 3, md: 5 }} direction={{ xs: "column", md: "row" }}>
         <Stack spacing={1}>
           <Typography variant="subtitle2">Email</Typography>
 
@@ -50,7 +50,7 @@ export default function CareerContactInfo() {
           <Typography variant="body2">3891 Ranchview Dr. Richardson, California 62639</Typography>
         </Stack>
 
-        <Stack spacing={1} alignItems={{ xs: 'center', md: 'flex-start' }}>
+        <Stack spacing={1} alignItems={{ xs: "center", md: "flex-start" }}>
           <Typography variant="subtitle2">Follow Us</Typography>
 
           <Stack direction="row">

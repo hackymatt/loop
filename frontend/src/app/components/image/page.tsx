@@ -1,9 +1,9 @@
-import ImageView from 'src/sections/examples/image-view';
+import ImageView from "src/sections/examples/image-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Components: Image',
+  title: "Components: Image",
 };
 
 export default function ImagePage() {

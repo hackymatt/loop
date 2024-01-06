@@ -1,11 +1,11 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import { ITeamMemberProps } from 'src/types/team';
+import { ITeamMemberProps } from "src/types/team";
 
-import TravelTeamItem from './travel-team-item';
+import TravelTeamItem from "./travel-team-item";
 
 // ----------------------------------------------------------------------
 
@@ -23,15 +23,15 @@ export default function TravelTeam({ members }: Props) {
       <Stack
         spacing={3}
         sx={{
-          mx: 'auto',
+          mx: "auto",
           maxWidth: 480,
-          textAlign: 'center',
+          textAlign: "center",
           mb: { xs: 8, md: 10 },
         }}
       >
         <Typography variant="h2">Our Team</Typography>
 
-        <Typography sx={{ color: 'text.secondary' }}>
+        <Typography sx={{ color: "text.secondary" }}>
           Etiam sollicitudin, ipsum eu pulvinar rutrum, tellus ipsum laoreet sapien, quis venenatis
           ante odio sit amet eros.
         </Typography>
@@ -40,12 +40,12 @@ export default function TravelTeam({ members }: Props) {
       <Box
         sx={{
           columnGap: 3,
-          display: 'grid',
+          display: "grid",
           rowGap: { xs: 4, md: 5 },
           gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(2, 1fr)',
-            md: 'repeat(4, 1fr)',
+            xs: "repeat(1, 1fr)",
+            sm: "repeat(2, 1fr)",
+            md: "repeat(4, 1fr)",
           },
         }}
       >

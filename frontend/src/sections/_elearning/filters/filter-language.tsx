@@ -1,11 +1,11 @@
-import Chip from '@mui/material/Chip';
-import TextField from '@mui/material/TextField';
-import Checkbox, { checkboxClasses } from '@mui/material/Checkbox';
-import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
+import Chip from "@mui/material/Chip";
+import TextField from "@mui/material/TextField";
+import Checkbox, { checkboxClasses } from "@mui/material/Checkbox";
+import Autocomplete, { autocompleteClasses } from "@mui/material/Autocomplete";
 
-import { countries } from 'src/assets/data';
+import { countries } from "src/assets/data";
 
-import { ICountriesProps } from 'src/types/contact';
+import { ICountriesProps } from "src/types/contact";
 
 // ----------------------------------------------------------------------
 
@@ -45,7 +45,7 @@ export default function FilterLanguage({ filterLanguage, onChangeLanguage }: Pro
           placeholder="All Language"
           InputProps={{
             ...params.InputProps,
-            autoComplete: 'search',
+            autoComplete: "search",
             sx: { pb: 1 },
           }}
         />

@@ -1,27 +1,27 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Unstable_Grid2';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import { alpha, useTheme } from '@mui/material/styles';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Grid from "@mui/material/Unstable_Grid2";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
-import TextMaxLine from 'src/components/text-max-line';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
+import TextMaxLine from "src/components/text-max-line";
 
-import { ITourProps } from 'src/types/tour';
+import { ITourProps } from "src/types/tour";
 
 // ----------------------------------------------------------------------
 
 const ROWS = [
-  'First Class Flights',
-  '5 Star Accommodations',
-  'Inclusive Packages',
-  'Latest Model Vehicles',
-  'Handpicked Hotels',
-  'Accesibility managment',
+  "First Class Flights",
+  "5 Star Accommodations",
+  "Inclusive Packages",
+  "Latest Model Vehicles",
+  "Handpicked Hotels",
+  "Accesibility managment",
 ];
 
 // ----------------------------------------------------------------------
@@ -41,27 +41,27 @@ export default function TravelLandingFavoriteDestinations({ tours }: Props) {
         container
         rowSpacing={{ xs: 8, md: 0 }}
         columnSpacing={{ xs: 0, md: 3 }}
-        alignItems={{ md: 'center' }}
-        justifyContent={{ md: 'space-between' }}
+        alignItems={{ md: "center" }}
+        justifyContent={{ md: "space-between" }}
       >
         <Grid xs={12} md={4}>
           <Typography variant="h2">Our Favorite Destinations</Typography>
 
-          <Typography sx={{ my: 3, color: 'text.secondary' }}>
+          <Typography sx={{ my: 3, color: "text.secondary" }}>
             Since wire-frame renderings are relatively simple and fast to calculate, they are often
             used in cases
           </Typography>
 
           <Stack spacing={2}>
             {ROWS.map((line) => (
-              <Stack key={line} direction="row" alignItems="center" sx={{ typography: 'body1' }}>
+              <Stack key={line} direction="row" alignItems="center" sx={{ typography: "body1" }}>
                 <Box
                   sx={{
                     mr: 2,
                     width: 6,
                     height: 6,
-                    borderRadius: '50%',
-                    bgcolor: 'primary.main',
+                    borderRadius: "50%",
+                    bgcolor: "primary.main",
                   }}
                 />
                 {line}
@@ -78,8 +78,8 @@ export default function TravelLandingFavoriteDestinations({ tours }: Props) {
               sm={6}
               sx={{
                 ...(index === 1 && {
-                  display: { md: 'inline-flex' },
-                  alignItems: { md: 'flex-end' },
+                  display: { md: "inline-flex" },
+                  alignItems: { md: "flex-end" },
                 }),
               }}
             >
@@ -102,7 +102,7 @@ type DestinationItemProps = {
 function DestinationItem({ tour, order }: DestinationItemProps) {
   const theme = useTheme();
 
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const { location, continent, coverUrl } = tour;
 
@@ -111,14 +111,14 @@ function DestinationItem({ tour, order }: DestinationItemProps) {
       sx={{
         width: 1,
         borderRadius: 2,
-        position: 'relative',
-        overflow: 'hidden',
+        position: "relative",
+        overflow: "hidden",
       }}
     >
       <Image
         alt={location}
         src={coverUrl}
-        ratio={(!mdUp && '1/1') || (order && '1/1') || '4/6'}
+        ratio={(!mdUp && "1/1") || (order && "1/1") || "4/6"}
         overlay={`linear-gradient(to bottom, ${alpha(theme.palette.common.black, 0)} 0%, ${
           theme.palette.common.black
         } 75%)`}
@@ -131,8 +131,8 @@ function DestinationItem({ tour, order }: DestinationItemProps) {
           left: 0,
           bottom: 0,
           zIndex: 9,
-          color: 'common.white',
-          position: 'absolute',
+          color: "common.white",
+          position: "absolute",
         }}
       >
         <TextMaxLine variant="h5" line={1}>
@@ -140,7 +140,7 @@ function DestinationItem({ tour, order }: DestinationItemProps) {
         </TextMaxLine>
 
         <Stack direction="row" alignItems="center">
-          <Iconify icon="carbon:location" sx={{ mr: 1, color: 'primary.main' }} />
+          <Iconify icon="carbon:location" sx={{ mr: 1, color: "primary.main" }} />
           <TextMaxLine variant="body2" line={1} sx={{ opacity: 0.72 }}>
             {continent}
           </TextMaxLine>

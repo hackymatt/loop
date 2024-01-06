@@ -1,14 +1,14 @@
-import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Rating from '@mui/material/Rating';
-import Typography from '@mui/material/Typography';
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Rating from "@mui/material/Rating";
+import Typography from "@mui/material/Typography";
 
-import { fDate } from 'src/utils/format-time';
+import { fDate } from "src/utils/format-time";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { IReviewItemProp } from 'src/types/review';
+import { IReviewItemProp } from "src/types/review";
 
 // ----------------------------------------------------------------------
 
@@ -32,8 +32,8 @@ export default function ReviewItem({ name, rating, message, createdAt, avatarUrl
           precision={0.5}
           readOnly
           sx={{
-            '& svg': {
-              color: 'text.primary',
+            "& svg": {
+              color: "text.primary",
             },
           }}
         />
@@ -41,14 +41,14 @@ export default function ReviewItem({ name, rating, message, createdAt, avatarUrl
         <Typography variant="subtitle1">{name}</Typography>
 
         {createdAt && (
-          <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+          <Typography variant="caption" sx={{ color: "text.disabled" }}>
             {fDate(createdAt)}
           </Typography>
         )}
 
         <Typography variant="body2">{message}</Typography>
 
-        <Stack spacing={1} direction={{ xs: 'column', sm: 'row' }} alignItems={{ sm: 'center' }}>
+        <Stack spacing={1} direction={{ xs: "column", sm: "row" }} alignItems={{ sm: "center" }}>
           <Typography variant="subtitle2">Was this review helpful?</Typography>
 
           <Stack direction="row" alignItems="center" spacing={1}>
@@ -63,7 +63,7 @@ export default function ReviewItem({ name, rating, message, createdAt, avatarUrl
                 <Iconify
                   icon="carbon:thumbs-up"
                   sx={{
-                    transform: 'scale(-1, -1)',
+                    transform: "scale(-1, -1)",
                   }}
                 />
               }

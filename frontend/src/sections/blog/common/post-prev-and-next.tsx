@@ -1,13 +1,13 @@
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
-import CardActionArea from '@mui/material/CardActionArea';
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
+import CardActionArea from "@mui/material/CardActionArea";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { IBlogPostProps } from 'src/types/blog';
+import { IBlogPostProps } from "src/types/blog";
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ export default function PostPrevAndNext({ prevPost, nextPost }: Props) {
         <PostItem
           title={prevPost?.title}
           coverUrl={prevPost?.coverUrl}
-          icon={<Iconify icon="carbon:chevron-left" width={24} sx={{ color: 'text.disabled' }} />}
+          icon={<Iconify icon="carbon:chevron-left" width={24} sx={{ color: "text.disabled" }} />}
         />
       </Grid>
 
@@ -32,7 +32,7 @@ export default function PostPrevAndNext({ prevPost, nextPost }: Props) {
           isNext
           title={nextPost?.title}
           coverUrl={nextPost?.coverUrl}
-          icon={<Iconify width={24} icon="carbon:chevron-right" sx={{ color: 'text.disabled' }} />}
+          icon={<Iconify width={24} icon="carbon:chevron-right" sx={{ color: "text.disabled" }} />}
         />
       </Grid>
     </Grid>
@@ -54,7 +54,7 @@ function PostItem({ coverUrl, title, icon, isNext }: PostItemProps) {
       <Link color="inherit" underline="none">
         <Stack
           alignItems="center"
-          direction={isNext ? 'row-reverse' : 'row'}
+          direction={isNext ? "row-reverse" : "row"}
           spacing={2}
           sx={{
             p: 2.5,
@@ -72,12 +72,12 @@ function PostItem({ coverUrl, title, icon, isNext }: PostItemProps) {
             spacing={0.5}
             sx={{
               ...(isNext && {
-                textAlign: 'right',
+                textAlign: "right",
               }),
             }}
           >
-            <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              {isNext ? 'Next Post' : 'Previous Post'}
+            <Typography variant="overline" sx={{ color: "text.disabled" }}>
+              {isNext ? "Next Post" : "Previous Post"}
             </Typography>
 
             <Typography variant="subtitle1">{title}</Typography>

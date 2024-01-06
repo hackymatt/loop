@@ -1,9 +1,9 @@
-import Pricing02View from 'src/sections/pricing/view/pricing-02-view';
+import Pricing02View from "src/sections/pricing/view/pricing-02-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Pricing 02',
+  title: "Pricing 02",
 };
 
 export default function Pricing02Page() {

@@ -1,15 +1,15 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
 
-import { fDate } from 'src/utils/format-time';
+import { fDate } from "src/utils/format-time";
 
-import { TOUR_SERVICE_OPTIONS } from 'src/_mock';
+import { TOUR_SERVICE_OPTIONS } from "src/_mock";
 
-import Iconify, { IconifyProps } from 'src/components/iconify';
+import Iconify, { IconifyProps } from "src/components/iconify";
 
-import { ITourProps } from 'src/types/tour';
+import { ITourProps } from "src/types/tour";
 
 // ----------------------------------------------------------------------
 
@@ -38,31 +38,31 @@ export default function TravelTourDetailsSummary({ tour }: Props) {
           sx={{
             rowGap: 2.5,
             columnGap: 3,
-            display: 'grid',
+            display: "grid",
             gridTemplateColumns: {
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
+              xs: "repeat(1, 1fr)",
+              sm: "repeat(2, 1fr)",
             },
           }}
         >
           <OverviewItem
             icon="carbon:calendar"
             label="Available"
-            text={`${fDate(available.start, 'dd/MM/yyyy')} - ${fDate(available.end, 'dd/MM/yyyy')}`}
+            text={`${fDate(available.start, "dd/MM/yyyy")} - ${fDate(available.end, "dd/MM/yyyy")}`}
           />
           <OverviewItem icon="carbon:user" label="Contact name" text={tourGuide?.name} />
           <OverviewItem icon="carbon:location" label="Location" text={location} />
           <OverviewItem
             icon="carbon:mobile"
             label="Contact phone"
-            text={tourGuide?.phoneNumber || ''}
+            text={tourGuide?.phoneNumber || ""}
           />
           <OverviewItem icon="carbon:time" label="Durations" text={duration} />
-          <OverviewItem icon="carbon:translate" label="Languages" text={languages.join(', ')} />
+          <OverviewItem icon="carbon:translate" label="Languages" text={languages.join(", ")} />
         </Box>
       </Stack>
 
-      <Divider sx={{ borderStyle: 'dashed' }} />
+      <Divider sx={{ borderStyle: "dashed" }} />
 
       <Stack spacing={2}>
         <Typography variant="h5">Tour Description</Typography>
@@ -86,8 +86,8 @@ export default function TravelTourDetailsSummary({ tour }: Props) {
           rowGap={2}
           display="grid"
           gridTemplateColumns={{
-            xs: 'repeat(1, 1fr)',
-            md: 'repeat(2, 1fr)',
+            xs: "repeat(1, 1fr)",
+            md: "repeat(2, 1fr)",
           }}
         >
           {TOUR_SERVICE_OPTIONS.map((service) => (
@@ -98,16 +98,16 @@ export default function TravelTourDetailsSummary({ tour }: Props) {
               alignItems="center"
               sx={{
                 ...(services.includes(service.label) && {
-                  color: 'text.disabled',
+                  color: "text.disabled",
                 }),
               }}
             >
               <Iconify
                 icon="carbon:checkmark"
                 sx={{
-                  color: 'primary.main',
+                  color: "primary.main",
                   ...(services.includes(service.label) && {
-                    color: 'text.disabled',
+                    color: "text.disabled",
                   }),
                 }}
               />
@@ -135,12 +135,12 @@ type OverviewItemProp = {
   icon: IconifyProps;
 };
 
-function OverviewItem({ icon, label, text = '-' }: OverviewItemProp) {
+function OverviewItem({ icon, label, text = "-" }: OverviewItemProp) {
   return (
     <Stack spacing={1.5} direction="row" alignItems="flex-start">
       <Iconify icon={icon} width={24} />
       <Stack spacing={0.5}>
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
           {label}
         </Typography>
         <Typography>{text}</Typography>
@@ -161,7 +161,7 @@ function HighlightItem({ label, text }: HighlightItemProps) {
     <Stack spacing={1}>
       <Typography
         variant="subtitle1"
-        sx={{ color: 'primary.main', display: 'flex', alignItems: 'center' }}
+        sx={{ color: "primary.main", display: "flex", alignItems: "center" }}
       >
         <Box
           component="span"
@@ -169,7 +169,7 @@ function HighlightItem({ label, text }: HighlightItemProps) {
             width: 12,
             height: 2,
             borderRadius: 1,
-            bgcolor: 'currentColor',
+            bgcolor: "currentColor",
             mr: 1.5,
           }}
         />

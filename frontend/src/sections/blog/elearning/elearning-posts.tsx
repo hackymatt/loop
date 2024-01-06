@@ -1,9 +1,9 @@
-import Box from '@mui/material/Box';
-import Pagination, { paginationClasses } from '@mui/material/Pagination';
+import Box from "@mui/material/Box";
+import Pagination, { paginationClasses } from "@mui/material/Pagination";
 
-import { IBlogPostProps } from 'src/types/blog';
+import { IBlogPostProps } from "src/types/blog";
 
-import PostItem from './elearning-post-item';
+import PostItem from "./elearning-post-item";
 
 // ----------------------------------------------------------------------
 
@@ -17,11 +17,11 @@ export default function ElearningPosts({ posts }: Props) {
       <Box
         sx={{
           columnGap: 4,
-          display: 'grid',
+          display: "grid",
           rowGap: { xs: 4, md: 5 },
           gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(2, 1fr)',
+            xs: "repeat(1, 1fr)",
+            sm: "repeat(2, 1fr)",
           },
         }}
       >
@@ -36,7 +36,7 @@ export default function ElearningPosts({ posts }: Props) {
         sx={{
           py: { xs: 8, md: 10 },
           [`& .${paginationClasses.ul}`]: {
-            justifyContent: 'center',
+            justifyContent: "center",
           },
         }}
       />

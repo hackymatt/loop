@@ -1,15 +1,15 @@
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import Rating from '@mui/material/Rating';
-import Button from '@mui/material/Button';
-import RadioGroup from '@mui/material/RadioGroup';
-import Typography from '@mui/material/Typography';
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Rating from "@mui/material/Rating";
+import Button from "@mui/material/Button";
+import RadioGroup from "@mui/material/RadioGroup";
+import Typography from "@mui/material/Typography";
 
-import { fShortenNumber } from 'src/utils/format-number';
+import { fShortenNumber } from "src/utils/format-number";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import ReviewProgress from '../common/review-progress';
+import ReviewProgress from "../common/review-progress";
 
 // ----------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ export default function ReviewSummary({ reviewNumber, ratingNumber, onOpenForm }
 
           <Stack spacing={0.5}>
             <Rating value={ratingNumber} readOnly precision={0.1} />
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
               {fShortenNumber(reviewNumber)} reviews
             </Typography>
           </Stack>

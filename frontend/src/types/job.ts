@@ -1,6 +1,6 @@
-import { MapOfficeProps } from 'src/components/map';
+import { MapOfficeProps } from "src/components/map";
 
-import { ISocialLinks } from './socials';
+import { ISocialLinks } from "./socials";
 
 // ----------------------------------------------------------------------
 

@@ -1,9 +1,9 @@
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
-import { IProductItemProps } from 'src/types/product';
+import { IProductItemProps } from "src/types/product";
 
-import EcommerceProductItemBestSellers from '../item/ecommerce-product-item-best-sellers';
+import EcommerceProductItemBestSellers from "../item/ecommerce-product-item-best-sellers";
 
 // ----------------------------------------------------------------------
 

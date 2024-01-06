@@ -1,24 +1,24 @@
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Chip from '@mui/material/Chip';
-import Avatar from '@mui/material/Avatar';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import Stack, { StackProps } from '@mui/material/Stack';
-import InputAdornment from '@mui/material/InputAdornment';
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import Chip from "@mui/material/Chip";
+import Avatar from "@mui/material/Avatar";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import Stack, { StackProps } from "@mui/material/Stack";
+import InputAdornment from "@mui/material/InputAdornment";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import { _socials } from 'src/_mock';
+import { _socials } from "src/_mock";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { IAuthorProps } from 'src/types/author';
-import { IBlogPostProps, IBlogCategoryProps } from 'src/types/blog';
+import { IAuthorProps } from "src/types/author";
+import { IBlogPostProps, IBlogCategoryProps } from "src/types/blog";
 
-import PostItemMobile from './post-item-mobile';
-import Advertisement, { AdvertisementProps } from '../../advertisement';
+import PostItemMobile from "./post-item-mobile";
+import Advertisement, { AdvertisementProps } from "../../advertisement";
 
 // ----------------------------------------------------------------------
 
@@ -41,7 +41,7 @@ export default function PostSidebar({
   sx,
   ...other
 }: Props) {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const renderAuthor = author && (
     <Stack spacing={2} direction="row" sx={{ mb: { md: 5 } }}>
@@ -50,7 +50,7 @@ export default function PostSidebar({
       <Stack>
         <Typography variant="h5">{author.name}</Typography>
 
-        <Typography variant="body2" sx={{ mt: 0.5, mb: 2, color: 'text.secondary' }}>
+        <Typography variant="body2" sx={{ mt: 0.5, mb: 2, color: "text.secondary" }}>
           {author.role}
         </Typography>
 
@@ -78,8 +78,8 @@ export default function PostSidebar({
               mr: 2,
               width: 6,
               height: 6,
-              borderRadius: '50%',
-              bgcolor: 'primary.main',
+              borderRadius: "50%",
+              bgcolor: "primary.main",
             }}
           />
 
@@ -125,7 +125,7 @@ export default function PostSidebar({
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <Iconify icon="carbon:search" width={24} sx={{ color: 'text.disabled' }} />
+                <Iconify icon="carbon:search" width={24} sx={{ color: "text.disabled" }} />
               </InputAdornment>
             ),
           }}
