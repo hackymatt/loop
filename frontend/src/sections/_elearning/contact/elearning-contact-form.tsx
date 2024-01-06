@@ -1,36 +1,36 @@
-import * as Yup from 'yup';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
-import LoadingButton from '@mui/lab/LoadingButton';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
+import LoadingButton from "@mui/lab/LoadingButton";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Image from 'src/components/image';
-import FormProvider, { RHFTextField } from 'src/components/hook-form';
+import Image from "src/components/image";
+import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
 export default function ElearningContactForm() {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const ElearningContactSchema = Yup.object().shape({
-    fullName: Yup.string().required('Full name is required'),
-    email: Yup.string().required('Email is required').email('That is not an email'),
-    subject: Yup.string().required('Subject is required'),
-    message: Yup.string().required('Message is required'),
+    fullName: Yup.string().required("Full name is required"),
+    email: Yup.string().required("Email is required").email("That is not an email"),
+    subject: Yup.string().required("Subject is required"),
+    message: Yup.string().required("Message is required"),
   });
 
   const defaultValues = {
-    fullName: '',
-    subject: '',
-    email: '',
-    message: '',
+    fullName: "",
+    subject: "",
+    email: "",
+    message: "",
   };
 
   const methods = useForm({
@@ -48,7 +48,7 @@ export default function ElearningContactForm() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
-      console.log('DATA', data);
+      console.log("DATA", data);
     } catch (error) {
       console.error(error);
     }
@@ -57,7 +57,7 @@ export default function ElearningContactForm() {
   return (
     <Box
       sx={{
-        bgcolor: 'background.neutral',
+        bgcolor: "background.neutral",
         py: { xs: 10, md: 15 },
       }}
     >
@@ -78,12 +78,12 @@ export default function ElearningContactForm() {
               spacing={2}
               sx={{
                 mb: 5,
-                textAlign: { xs: 'center', md: 'left' },
+                textAlign: { xs: "center", md: "left" },
               }}
             >
               <Typography variant="h3">Drop Us A Line</Typography>
 
-              <Typography sx={{ color: 'text.secondary' }}>
+              <Typography sx={{ color: "text.secondary" }}>
                 We normally respond within 2 business days
               </Typography>
             </Stack>
@@ -104,7 +104,7 @@ export default function ElearningContactForm() {
                   variant="contained"
                   loading={isSubmitting}
                   sx={{
-                    mx: { xs: 'auto !important', md: 'unset !important' },
+                    mx: { xs: "auto !important", md: "unset !important" },
                   }}
                 >
                   Send Request

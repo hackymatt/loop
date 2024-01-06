@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import AuthIllustrationLayout from 'src/layouts/auth/illustration';
+import AuthIllustrationLayout from "src/layouts/auth/illustration";
 
 // ----------------------------------------------------------------------
 

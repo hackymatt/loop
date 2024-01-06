@@ -1,14 +1,14 @@
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from "react-hook-form";
 
-import Chip from '@mui/material/Chip';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import { filledInputClasses } from '@mui/material/FilledInput';
-import Autocomplete, { AutocompleteProps } from '@mui/material/Autocomplete';
+import Chip from "@mui/material/Chip";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import { filledInputClasses } from "@mui/material/FilledInput";
+import Autocomplete, { AutocompleteProps } from "@mui/material/Autocomplete";
 
-import { countries } from 'src/assets/data';
+import { countries } from "src/assets/data";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ interface Props<
   label?: string;
   placeholder?: string;
   hiddenLabel?: boolean;
-  type?: 'country' | string;
+  type?: "country" | string;
   helperText?: React.ReactNode;
 }
 
@@ -39,7 +39,7 @@ export default function RHFAutocomplete<
   hiddenLabel,
   placeholder,
   ...other
-}: Omit<Props<T, Multiple, DisableClearable, FreeSolo>, 'renderInput'>) {
+}: Omit<Props<T, Multiple, DisableClearable, FreeSolo>, "renderInput">) {
   const { control, setValue } = useFormContext();
 
   const { multiple } = other;
@@ -49,7 +49,7 @@ export default function RHFAutocomplete<
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => {
-        if (type === 'country') {
+        if (type === "country") {
           return (
             <Autocomplete
               {...field}
@@ -87,7 +87,7 @@ export default function RHFAutocomplete<
                   helperText: error ? error?.message : helperText,
                   inputProps: {
                     ...params.inputProps,
-                    autoComplete: 'new-password',
+                    autoComplete: "new-password",
                   },
                 };
 
@@ -105,7 +105,7 @@ export default function RHFAutocomplete<
                           position="start"
                           sx={{
                             ...(!country.code && {
-                              display: 'none',
+                              display: "none",
                             }),
                           }}
                         >
@@ -119,7 +119,7 @@ export default function RHFAutocomplete<
                     sx={{
                       ...(!hiddenLabel && {
                         [`& .${filledInputClasses.root}`]: {
-                          '& .component-iconify': {
+                          "& .component-iconify": {
                             mt: -2,
                           },
                         },
@@ -163,7 +163,7 @@ export default function RHFAutocomplete<
                 helperText={error ? error?.message : helperText}
                 inputProps={{
                   ...params.inputProps,
-                  autoComplete: 'new-password',
+                  autoComplete: "new-password",
                 }}
               />
             )}

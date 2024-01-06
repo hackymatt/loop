@@ -1,19 +1,19 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { IJobProps } from 'src/types/job';
+import { IJobProps } from "src/types/job";
 
-import CareerJobItem from './career-job-item';
+import CareerJobItem from "./career-job-item";
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ type Props = {
 };
 
 export default function CareerJobListSimilar({ jobs }: Props) {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const viewAllBtn = (
     <Button
@@ -36,12 +36,12 @@ export default function CareerJobListSimilar({ jobs }: Props) {
   );
 
   return (
-    <Box sx={{ bgcolor: 'background.neutral', py: { xs: 10, md: 15 } }}>
+    <Box sx={{ bgcolor: "background.neutral", py: { xs: 10, md: 15 } }}>
       <Container>
         <Stack
           direction="row"
           alignItems="center"
-          justifyContent={{ xs: 'center', md: 'space-between' }}
+          justifyContent={{ xs: "center", md: "space-between" }}
           sx={{
             mb: { xs: 8, md: 10 },
           }}
@@ -54,11 +54,11 @@ export default function CareerJobListSimilar({ jobs }: Props) {
         <Box
           sx={{
             gap: 4,
-            display: 'grid',
+            display: "grid",
             gridTemplateColumns: {
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
-              md: 'repeat(3, 1fr)',
+              xs: "repeat(1, 1fr)",
+              sm: "repeat(2, 1fr)",
+              md: "repeat(3, 1fr)",
             },
           }}
         >

@@ -1,13 +1,13 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import InputBase from '@mui/material/InputBase';
-import Typography from '@mui/material/Typography';
-import { alpha, useTheme } from '@mui/material/styles';
-import InputAdornment from '@mui/material/InputAdornment';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import InputBase from "@mui/material/InputBase";
+import Typography from "@mui/material/Typography";
+import { alpha, useTheme } from "@mui/material/styles";
+import InputAdornment from "@mui/material/InputAdornment";
 
-import { bgGradient } from 'src/theme/css';
+import { bgGradient } from "src/theme/css";
 
 // ----------------------------------------------------------------------
 
@@ -19,13 +19,13 @@ export default function CareerNewsletter() {
       sx={{
         ...bgGradient({
           color: `${alpha(theme.palette.grey[900], 0.88)}`,
-          imgUrl: '/assets/images/career/career_newsletter.jpg',
+          imgUrl: "/assets/images/career/career_newsletter.jpg",
         }),
         py: 15,
       }}
     >
       <Container>
-        <Stack spacing={3} alignItems="center" sx={{ color: 'common.white', textAlign: 'center' }}>
+        <Stack spacing={3} alignItems="center" sx={{ color: "common.white", textAlign: "center" }}>
           <Typography variant="h2">Get The Right Job For You</Typography>
 
           <Typography>
@@ -56,7 +56,7 @@ export default function CareerNewsletter() {
               height: 54,
               maxWidth: 560,
               borderRadius: 1,
-              bgcolor: 'common.white',
+              bgcolor: "common.white",
             }}
           />
         </Stack>

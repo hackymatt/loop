@@ -1,5 +1,5 @@
-import { _mock } from './_mock';
-import { _tags } from './assets';
+import { _mock } from "./_mock";
+import { _tags } from "./assets";
 
 // ----------------------------------------------------------------------
 
@@ -24,23 +24,23 @@ const LESSONS = [...Array(9)].map((_, index) => ({
 }));
 
 export const _courses = [...Array(12)].map((_, index) => {
-  const languages = ['Russian', 'Spanish', 'English'];
+  const languages = ["Russian", "Spanish", "English"];
 
   const skills = _tags.slice(0, 5);
 
   const level =
-    (index % 2 && 'Intermediate') ||
-    (index % 4 && 'Expert') ||
-    (index % 5 && 'All Levels') ||
-    'Beginner';
+    (index % 2 && "Intermediate") ||
+    (index % 4 && "Expert") ||
+    (index % 5 && "All Levels") ||
+    "Beginner";
 
   const learnList = [
-    'A fermentum in morbi pretium aliquam adipiscing donec tempus.',
-    'Vulputate placerat amet pulvinar lorem nisl.',
-    'Consequat feugiat habitant gravida quisque elit bibendum id adipiscing sed.',
-    'Etiam duis lobortis in fames ultrices commodo nibh.',
-    'Fusce neque. Nulla neque dolor, sagittis eget, iaculis quis, molestie non, velit.',
-    'Curabitur a felis in nunc fringilla tristique. Praesent congue erat at massa.',
+    "A fermentum in morbi pretium aliquam adipiscing donec tempus.",
+    "Vulputate placerat amet pulvinar lorem nisl.",
+    "Consequat feugiat habitant gravida quisque elit bibendum id adipiscing sed.",
+    "Etiam duis lobortis in fames ultrices commodo nibh.",
+    "Fusce neque. Nulla neque dolor, sagittis eget, iaculis quis, molestie non, velit.",
+    "Curabitur a felis in nunc fringilla tristique. Praesent congue erat at massa.",
   ];
 
   return {

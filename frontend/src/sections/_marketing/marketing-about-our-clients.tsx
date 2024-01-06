@@ -1,11 +1,11 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import Image from 'src/components/image';
+import Image from "src/components/image";
 
-import { IBrandProps } from 'src/types/brand';
+import { IBrandProps } from "src/types/brand";
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ export default function MarketingAboutOurClients({ brands }: Props) {
           direction="row"
           flexWrap="wrap"
           justifyContent="center"
-          sx={{ maxWidth: 680, overflow: 'hidden' }}
+          sx={{ maxWidth: 680, overflow: "hidden" }}
         >
           {brands.slice(0, 8).map((brand) => (
             <Box key={brand.id}>

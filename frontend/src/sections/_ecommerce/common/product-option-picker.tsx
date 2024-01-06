@@ -1,8 +1,8 @@
-import Radio from '@mui/material/Radio';
-import { alpha } from '@mui/material/styles';
-import RadioGroup from '@mui/material/RadioGroup';
-import Stack, { StackProps } from '@mui/material/Stack';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from "@mui/material/Radio";
+import { alpha } from "@mui/material/styles";
+import RadioGroup from "@mui/material/RadioGroup";
+import Stack, { StackProps } from "@mui/material/Stack";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 // ----------------------------------------------------------------------
 
@@ -28,8 +28,8 @@ export default function ProductOptionPicker({ value, options, onChange, sx }: Pr
             px: 1.5,
             height: 44,
             borderRadius: 1,
-            position: 'relative',
-            typography: 'subtitle2',
+            position: "relative",
+            typography: "subtitle2",
             border: (theme) => `solid 1px ${alpha(theme.palette.grey[500], 0.24)}`,
             ...(value === option.value && {
               boxShadow: (theme) => `0 0 0 2px ${theme.palette.text.primary}`,
@@ -41,7 +41,7 @@ export default function ProductOptionPicker({ value, options, onChange, sx }: Pr
 
           <FormControlLabel
             value={option.value}
-            control={<Radio sx={{ display: 'none' }} />}
+            control={<Radio sx={{ display: "none" }} />}
             label=""
             sx={{
               m: 0,
@@ -49,7 +49,7 @@ export default function ProductOptionPicker({ value, options, onChange, sx }: Pr
               right: 0,
               bottom: 0,
               left: 0,
-              position: 'absolute',
+              position: "absolute",
             }}
           />
         </Stack>

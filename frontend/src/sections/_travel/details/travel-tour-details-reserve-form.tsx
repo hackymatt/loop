@@ -1,22 +1,22 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import { alpha } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import { alpha } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
+import { paths } from "src/routes/paths";
+import { useRouter } from "src/routes/hooks";
 
-import { fCurrency } from 'src/utils/format-number';
+import { fCurrency } from "src/utils/format-number";
 
-import { ITourProps } from 'src/types/tour';
+import { ITourProps } from "src/types/tour";
 
-import FilterTime from '../filters/filter-time';
-import FilterGuests from '../filters/filter-guests';
+import FilterTime from "../filters/filter-time";
+import FilterGuests from "../filters/filter-guests";
 
 // ----------------------------------------------------------------------
 
@@ -42,7 +42,7 @@ export default function TravelTourDetailsReserveForm({ tour }: Props) {
 
   const handleIncrementGuests = useCallback(
     (guest?: string) => {
-      if (guest === 'children') {
+      if (guest === "children") {
         setGuests({ ...guests, children: guests.children + 1 });
       } else {
         setGuests({ ...guests, adults: guests.adults + 1 });
@@ -53,7 +53,7 @@ export default function TravelTourDetailsReserveForm({ tour }: Props) {
 
   const handleDecreaseGuests = useCallback(
     (guest?: string) => {
-      if (guest === 'children') {
+      if (guest === "children") {
         setGuests({ ...guests, children: guests.children - 1 });
       } else {
         setGuests({ ...guests, adults: guests.adults - 1 });
@@ -69,15 +69,15 @@ export default function TravelTourDetailsReserveForm({ tour }: Props) {
   return (
     <Card>
       <Stack spacing={3} sx={{ p: 3 }}>
-        <Stack spacing={1} direction="row" alignItems="center" sx={{ typography: 'h4' }}>
+        <Stack spacing={1} direction="row" alignItems="center" sx={{ typography: "h4" }}>
           {priceSale > 0 && (
-            <Box sx={{ color: 'grey.500', textDecoration: 'line-through', mr: 1 }}>
+            <Box sx={{ color: "grey.500", textDecoration: "line-through", mr: 1 }}>
               {fCurrency(priceSale)}
             </Box>
           )}
 
           {fCurrency(price)}
-          <Typography variant="body2" component="span" sx={{ color: 'text.disabled', ml: 1 }}>
+          <Typography variant="body2" component="span" sx={{ color: "text.disabled", ml: 1 }}>
             /Tour
           </Typography>
         </Stack>
@@ -110,21 +110,21 @@ export default function TravelTourDetailsReserveForm({ tour }: Props) {
         </Stack>
 
         <Stack spacing={1} direction="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+          <Typography variant="body2" sx={{ color: "text.disabled" }}>
             Service charge
           </Typography>
-          <Typography variant="body2">{fCurrency(priceSale) || '-'}</Typography>
+          <Typography variant="body2">{fCurrency(priceSale) || "-"}</Typography>
         </Stack>
 
         <Stack spacing={1} direction="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+          <Typography variant="body2" sx={{ color: "text.disabled" }}>
             Discount
           </Typography>
           <Typography variant="body2"> - </Typography>
         </Stack>
       </Stack>
 
-      <Divider sx={{ borderStyle: 'dashed' }} />
+      <Divider sx={{ borderStyle: "dashed" }} />
 
       <Stack spacing={3} sx={{ p: 3 }}>
         <Stack spacing={1} direction="row" alignItems="center" justifyContent="space-between">

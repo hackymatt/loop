@@ -1,14 +1,14 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Paper from '@mui/material/Paper';
-import { useTheme } from '@mui/material/styles';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Paper from "@mui/material/Paper";
+import { useTheme } from "@mui/material/styles";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import Image from 'src/components/image';
-import Carousel, { useCarousel } from 'src/components/carousel';
+import Image from "src/components/image";
+import Carousel, { useCarousel } from "src/components/carousel";
 
-import { IBrandProps } from 'src/types/brand';
+import { IBrandProps } from "src/types/brand";
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ export default function CareerOurClients({ brands }: Props) {
     autoplay: true,
     speed: 5000,
     autoplaySpeed: 5000,
-    cssEase: 'linear',
+    cssEase: "linear",
     responsive: [
       {
         breakpoint: theme.breakpoints.values.md,
@@ -48,15 +48,15 @@ export default function CareerOurClients({ brands }: Props) {
       <Stack
         spacing={3}
         sx={{
-          mx: 'auto',
+          mx: "auto",
           maxWidth: 480,
-          textAlign: 'center',
+          textAlign: "center",
           mb: { xs: 8, md: 10 },
         }}
       >
         <Typography variant="h2">Our Clients</Typography>
 
-        <Typography sx={{ color: 'text.secondary' }}>
+        <Typography sx={{ color: "text.secondary" }}>
           Curabitur a felis in nunc fringilla tristique. Fusce egestas elit eget lorem. Etiam vitae
           tortor.
         </Typography>
@@ -73,7 +73,7 @@ export default function CareerOurClients({ brands }: Props) {
               sx={{
                 py: 3,
                 borderRadius: 2,
-                bgcolor: 'background.default',
+                bgcolor: "background.default",
               }}
             >
               <Image
@@ -82,7 +82,7 @@ export default function CareerOurClients({ brands }: Props) {
                 sx={{
                   width: 106,
                   height: 32,
-                  mx: 'auto',
+                  mx: "auto",
                 }}
               />
             </Stack>

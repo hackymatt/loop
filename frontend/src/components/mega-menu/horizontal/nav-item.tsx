@@ -1,14 +1,14 @@
-import { forwardRef } from 'react';
+import { forwardRef } from "react";
 
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import { styled } from '@mui/material/styles';
-import ListItemButton from '@mui/material/ListItemButton';
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import { styled } from "@mui/material/styles";
+import ListItemButton from "@mui/material/ListItemButton";
 
-import { RouterLink } from 'src/routes/components';
+import { RouterLink } from "src/routes/components";
 
-import Iconify from '../../iconify';
-import { NavItemProps, NavItemStateProps } from '../types';
+import Iconify from "../../iconify";
+import { NavItemProps, NavItemStateProps } from "../types";
 
 // ----------------------------------------------------------------------
 
@@ -59,28 +59,28 @@ export default NavItem;
 // ----------------------------------------------------------------------
 
 const StyledNavItem = styled(ListItemButton, {
-  shouldForwardProp: (prop) => prop !== 'active',
+  shouldForwardProp: (prop) => prop !== "active",
 })<NavItemStateProps>(({ active, open, theme }) => {
   const opened = open && !active;
 
   return {
     ...theme.typography.body2,
     padding: 0,
-    minHeight: '100%',
+    minHeight: "100%",
     fontWeight: theme.typography.fontWeightMedium,
-    transition: theme.transitions.create(['all'], {
+    transition: theme.transitions.create(["all"], {
       duration: theme.transitions.duration.shorter,
     }),
-    '&:hover': {
-      backgroundColor: 'transparent',
+    "&:hover": {
+      backgroundColor: "transparent",
     },
-    '& .icon': {
+    "& .icon": {
       width: 20,
       height: 20,
       flexShrink: 0,
       marginRight: theme.spacing(1),
     },
-    '& .arrow': {
+    "& .arrow": {
       marginLeft: theme.spacing(0.75),
     },
     ...(active && {

@@ -1,12 +1,12 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import { ITeamMemberProps } from 'src/types/team';
+import { ITeamMemberProps } from "src/types/team";
 
-import ElearningTeamItem from './elearning-team-item';
+import ElearningTeamItem from "./elearning-team-item";
 
 // ----------------------------------------------------------------------
 
@@ -21,10 +21,10 @@ export default function ElearningTeam({ members }: Props) {
         py: { xs: 10, md: 15 },
       }}
     >
-      <Stack spacing={3} sx={{ maxWidth: 480, mx: 'auto', textAlign: 'center' }}>
+      <Stack spacing={3} sx={{ maxWidth: 480, mx: "auto", textAlign: "center" }}>
         <Typography variant="h2">Meet Our Teachers</Typography>
 
-        <Typography sx={{ color: 'text.secondary' }}>
+        <Typography sx={{ color: "text.secondary" }}>
           Since wire-frame renderings are relatively simple and fast to calculate, they are often
           used in cases
         </Typography>
@@ -32,13 +32,13 @@ export default function ElearningTeam({ members }: Props) {
 
       <Box
         sx={{
-          display: 'grid',
+          display: "grid",
           py: { xs: 8, md: 10 },
           gap: { xs: 4, md: 3 },
           gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(2, 1fr)',
-            md: 'repeat(4, 1fr)',
+            xs: "repeat(1, 1fr)",
+            sm: "repeat(2, 1fr)",
+            md: "repeat(4, 1fr)",
           },
         }}
       >

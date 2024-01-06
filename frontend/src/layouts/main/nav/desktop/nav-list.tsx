@@ -1,25 +1,25 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from "react";
 
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Fade from '@mui/material/Fade';
-import Stack from '@mui/material/Stack';
-import Paper from '@mui/material/Paper';
-import Portal from '@mui/material/Portal';
-import Grid from '@mui/material/Unstable_Grid2';
-import ListSubheader from '@mui/material/ListSubheader';
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import Fade from "@mui/material/Fade";
+import Stack from "@mui/material/Stack";
+import Paper from "@mui/material/Paper";
+import Portal from "@mui/material/Portal";
+import Grid from "@mui/material/Unstable_Grid2";
+import ListSubheader from "@mui/material/ListSubheader";
 
-import { usePathname } from 'src/routes/hooks';
-import { RouterLink } from 'src/routes/components';
-import { useActiveLink } from 'src/routes/hooks/use-active-link';
+import { usePathname } from "src/routes/hooks";
+import { RouterLink } from "src/routes/components";
+import { useActiveLink } from "src/routes/hooks/use-active-link";
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from "src/hooks/use-boolean";
 
-import Label from 'src/components/label';
-import Image from 'src/components/image';
+import Label from "src/components/label";
+import Image from "src/components/image";
 
-import NavItem from './nav-item';
-import { NavListProps, NavSubListProps } from '../types';
+import NavItem from "./nav-item";
+import { NavListProps, NavSubListProps } from "../types";
 
 // ----------------------------------------------------------------------
 
@@ -30,10 +30,10 @@ export default function NavList({ data }: NavListProps) {
 
   const active = useActiveLink(data.path, !!data.children);
 
-  const mainList = data.children ? data.children.filter((list) => list.subheader !== 'Common') : [];
+  const mainList = data.children ? data.children.filter((list) => list.subheader !== "Common") : [];
 
   const commonList = data.children
-    ? data.children.find((list) => list.subheader === 'Common')
+    ? data.children.find((list) => list.subheader === "Common")
     : null;
 
   useEffect(() => {
@@ -61,7 +61,7 @@ export default function NavList({ data }: NavListProps) {
         //
         active={active}
         hasChild={!!data.children}
-        externalLink={data.path.includes('http')}
+        externalLink={data.path.includes("http")}
       />
 
       {!!data.children && menuOpen.value && (
@@ -74,8 +74,8 @@ export default function NavList({ data }: NavListProps) {
                 top: 62,
                 width: 1,
                 borderRadius: 0,
-                position: 'fixed',
-                bgcolor: 'background.default',
+                position: "fixed",
+                bgcolor: "background.default",
                 zIndex: (theme) => theme.zIndex.modal,
                 boxShadow: (theme) => theme.customShadows.dialog,
               }}
@@ -89,8 +89,8 @@ export default function NavList({ data }: NavListProps) {
                     sx={{
                       p: 5,
                       height: 1,
-                      position: 'relative',
-                      bgcolor: 'background.neutral',
+                      position: "relative",
+                      bgcolor: "background.neutral",
                     }}
                   >
                     {mainList.map((list) => (
@@ -107,7 +107,7 @@ export default function NavList({ data }: NavListProps) {
 
                 {commonList && (
                   <Grid xs={3}>
-                    <Box sx={{ bgcolor: 'background.default', p: 5 }}>
+                    <Box sx={{ bgcolor: "background.default", p: 5 }}>
                       <NavSubList subheader={commonList.subheader} items={commonList.items} />
                     </Box>
                   </Grid>
@@ -126,18 +126,18 @@ export default function NavList({ data }: NavListProps) {
 function NavSubList({ subheader, isNew, cover, items }: NavSubListProps) {
   const pathname = usePathname();
 
-  const coverPath = items.length ? items[0].path : '';
+  const coverPath = items.length ? items[0].path : "";
 
-  const commonList = subheader === 'Common';
+  const commonList = subheader === "Common";
 
   return (
     <Stack spacing={2}>
       <ListSubheader
         sx={{
           p: 0,
-          typography: 'h6',
-          color: 'text.primary',
-          bgcolor: 'transparent',
+          typography: "h6",
+          color: "text.primary",
+          bgcolor: "transparent",
         }}
       >
         {subheader}
@@ -153,14 +153,14 @@ function NavSubList({ subheader, isNew, cover, items }: NavSubListProps) {
           <Image
             disabledEffect
             alt={cover}
-            src={cover || '/assets/placeholder.svg'}
+            src={cover || "/assets/placeholder.svg"}
             ratio="16/9"
             sx={{
               borderRadius: 1,
-              cursor: 'pointer',
+              cursor: "pointer",
               boxShadow: (theme) => theme.customShadows.z8,
-              transition: (theme) => theme.transitions.create('all'),
-              '&:hover': {
+              transition: (theme) => theme.transitions.create("all"),
+              "&:hover": {
                 opacity: 0.8,
                 boxShadow: (theme) => theme.customShadows.z24,
               },

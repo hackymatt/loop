@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { _products } from 'src/_mock';
+import { _products } from "src/_mock";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import EcommerceCartList from '../cart/ecommerce-cart-list';
+import EcommerceCartList from "../cart/ecommerce-cart-list";
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +21,7 @@ export default function EcommerceWishlistView() {
   return (
     <Container
       sx={{
-        overflow: 'hidden',
+        overflow: "hidden",
         pt: 5,
         pb: { xs: 5, md: 10 },
       }}
@@ -33,9 +33,9 @@ export default function EcommerceWishlistView() {
       <EcommerceCartList wishlist products={_products.slice(0, 4)} />
 
       <Stack
-        direction={{ xs: 'column-reverse', sm: 'row' }}
-        alignItems={{ sm: 'center' }}
-        justifyContent={{ sm: 'space-between' }}
+        direction={{ xs: "column-reverse", sm: "row" }}
+        alignItems={{ sm: "center" }}
+        justifyContent={{ sm: "space-between" }}
         sx={{ mt: 3 }}
       >
         <Button
@@ -53,7 +53,7 @@ export default function EcommerceWishlistView() {
             direction="row"
             alignItems="center"
             justifyContent="space-between"
-            sx={{ typography: 'h6' }}
+            sx={{ typography: "h6" }}
           >
             <Box component="span"> Subtotal</Box>
             $58.07

@@ -31,6 +31,27 @@ jobs:
         run: pylint backend --recursive=true --fail-under=10
       - name: Test code formatting
         run: black . --check
+
+
+  lint_frontend:
+    runs-on: ubuntu-latest 
+    
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ github.workspace }}/frontend
+    
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+      - name: Pull nodejs
+        uses: actions/setup-node@v4
+      - name: Install dependencies
+        run: npm install
+      - name: Test code quality
+        run: npm run lint:check
+      - name: Test code formatting
+        run: npm run prettier:check
       
 
   test_backend:

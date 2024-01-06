@@ -1,7 +1,7 @@
-import { memo } from 'react';
+import { memo } from "react";
 
-import Box from '@mui/material/Box';
-import Stack, { StackProps } from '@mui/material/Stack';
+import Box from "@mui/material/Box";
+import Stack, { StackProps } from "@mui/material/Stack";
 
 // ----------------------------------------------------------------------
 
@@ -21,13 +21,13 @@ function Label({ icon, text, sx, ...other }: Props) {
         fontSize: 15,
         borderRadius: 2,
         letterSpacing: -0.5,
-        color: 'common.black',
-        bgcolor: 'common.white',
-        fontWeight: 'fontWeightBold',
+        color: "common.black",
+        bgcolor: "common.white",
+        fontWeight: "fontWeightBold",
         boxShadow: (theme) =>
           `0px 24px 48px rgba(0, 0, 0, 0.8), inset 0px -4px 10px ${theme.palette.grey[600]}`,
-        '& > div': { lineHeight: 0 },
-        '& svg': { width: 44, height: 44 },
+        "& > div": { lineHeight: 0 },
+        "& svg": { width: 44, height: 44 },
         ...sx,
       }}
       {...other}

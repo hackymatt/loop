@@ -1,9 +1,9 @@
-import TravelLandingView from 'src/sections/_travel/view/travel-landing-view';
+import TravelLandingView from "src/sections/_travel/view/travel-landing-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Travel: Home',
+  title: "Travel: Home",
 };
 
 export default function TravelLandingPage() {

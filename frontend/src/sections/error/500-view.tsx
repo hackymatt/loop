@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { m } from 'framer-motion';
+import { m } from "framer-motion";
 
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 
-import { RouterLink } from 'src/routes/components';
+import { RouterLink } from "src/routes/components";
 
-import CompactLayout from 'src/layouts/compact';
+import CompactLayout from "src/layouts/compact";
 
-import Image from 'src/components/image';
-import { varBounce, MotionContainer } from 'src/components/animate';
+import Image from "src/components/image";
+import { varBounce, MotionContainer } from "src/components/animate";
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ export default function Error500View() {
         </m.div>
 
         <m.div variants={varBounce().in}>
-          <Typography sx={{ color: 'text.secondary' }}>
+          <Typography sx={{ color: "text.secondary" }}>
             There was an error, please try again later.
           </Typography>
         </m.div>
@@ -35,7 +35,7 @@ export default function Error500View() {
             alt="500"
             src="/assets/illustrations/illustration_500.svg"
             sx={{
-              mx: 'auto',
+              mx: "auto",
               maxWidth: 320,
               my: { xs: 5, sm: 8 },
             }}

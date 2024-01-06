@@ -1,12 +1,12 @@
-import Masonry from '@mui/lab/Masonry';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import Masonry from "@mui/lab/Masonry";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { IBlogPostProps } from 'src/types/blog';
+import { IBlogPostProps } from "src/types/blog";
 
-import CareerPostItem from './career-post-item';
+import CareerPostItem from "./career-post-item";
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ export default function CareerPosts({ posts }: Props) {
         defaultColumns={1}
         defaultSpacing={4}
         sx={{
-          mx: { xs: 'unset', sm: 0 },
+          mx: { xs: "unset", sm: 0 },
         }}
       >
         {posts.slice(0, 8).map((post, index) => (

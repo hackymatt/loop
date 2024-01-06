@@ -1,10 +1,10 @@
-import { m } from 'framer-motion';
+import { m } from "framer-motion";
 
-import Box from '@mui/material/Box';
+import Box from "@mui/material/Box";
 
-import Image from 'src/components/image';
-import { varTranHover } from 'src/components/animate';
-import Lightbox, { useLightbox } from 'src/components/lightbox';
+import Image from "src/components/image";
+import { varTranHover } from "src/components/animate";
+import Lightbox, { useLightbox } from "src/components/lightbox";
 
 // ----------------------------------------------------------------------
 
@@ -24,10 +24,10 @@ export default function TravelTourDetailsGallery({ images }: Props) {
       <Box
         sx={{
           gap: 1,
-          display: 'grid',
+          display: "grid",
           gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            md: 'repeat(2, 1fr)',
+            xs: "repeat(1, 1fr)",
+            md: "repeat(2, 1fr)",
           },
           mb: { xs: 5, md: 10 },
         }}
@@ -37,8 +37,8 @@ export default function TravelTourDetailsGallery({ images }: Props) {
         <Box
           sx={{
             gap: 1,
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
           }}
         >
           {slides.slice(1, 5).map((slide) => (
@@ -82,7 +82,7 @@ function PhotoItem({ photo, onOpenLightbox }: PhotoItemProps) {
         src={photo}
         ratio="1/1"
         onClick={onOpenLightbox}
-        sx={{ borderRadius: 2, cursor: 'pointer' }}
+        sx={{ borderRadius: 2, cursor: "pointer" }}
       />
     </m.div>
   );

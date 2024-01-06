@@ -1,30 +1,30 @@
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
-import { alpha, useTheme } from '@mui/material/styles';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import { bgGradient } from 'src/theme/css';
+import { bgGradient } from "src/theme/css";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
 export default function CareerLandingForRecruiters() {
   const theme = useTheme();
 
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   return (
     <Box
       sx={{
         ...bgGradient({
           color: alpha(theme.palette.grey[900], 0.8),
-          imgUrl: '/assets/background/overlay_2.jpg',
+          imgUrl: "/assets/background/overlay_2.jpg",
         }),
         py: 10,
       }}
@@ -36,11 +36,11 @@ export default function CareerLandingForRecruiters() {
             md={6}
             lg={5}
             sx={{
-              color: 'common.white',
-              textAlign: { xs: 'center', md: 'left' },
+              color: "common.white",
+              textAlign: { xs: "center", md: "left" },
             }}
           >
-            <Typography variant="overline" sx={{ color: 'primary.main', mb: 2, display: 'block' }}>
+            <Typography variant="overline" sx={{ color: "primary.main", mb: 2, display: "block" }}>
               FOR RECRUITERS
             </Typography>
 

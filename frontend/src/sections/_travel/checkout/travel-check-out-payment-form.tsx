@@ -1,27 +1,27 @@
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from "react-hook-form";
 
-import Box from '@mui/material/Box';
-import Radio from '@mui/material/Radio';
-import Stack from '@mui/material/Stack';
-import { alpha } from '@mui/material/styles';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
+import Box from "@mui/material/Box";
+import Radio from "@mui/material/Radio";
+import Stack from "@mui/material/Stack";
+import { alpha } from "@mui/material/styles";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel, { formControlLabelClasses } from "@mui/material/FormControlLabel";
 
-import Iconify from 'src/components/iconify';
-import { RHFTextField } from 'src/components/hook-form';
+import Iconify from "src/components/iconify";
+import { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
 const PAYMENT_OPTIONS = [
   {
-    label: 'Paypal',
-    value: 'paypal',
-    description: 'You will be redirected to PayPal website to complete your purchase securely.',
+    label: "Paypal",
+    value: "paypal",
+    description: "You will be redirected to PayPal website to complete your purchase securely.",
   },
   {
-    label: 'Credit / Debit',
-    value: 'creditcard',
-    description: 'We support Mastercard, Visa, Discover and Stripe.',
+    label: "Credit / Debit",
+    value: "creditcard",
+    description: "We support Mastercard, Visa, Discover and Stripe.",
   },
 ];
 
@@ -42,7 +42,7 @@ export default function TravelCheckOutPaymentForm() {
                 key={index}
                 option={option}
                 selected={option.value === field.value}
-                isCredit={option.value === 'creditcard' && option.value === field.value}
+                isCredit={option.value === "creditcard" && option.value === field.value}
               />
             ))}
           </Stack>
@@ -70,17 +70,17 @@ function OptionItem({ option, isCredit, selected }: OptionItemProps) {
   const renderLabel = (
     <Stack direction="row" alignItems="center">
       <Stack spacing={0.5} flexGrow={1}>
-        <Box component="span" sx={{ typography: 'subtitle1' }}>
+        <Box component="span" sx={{ typography: "subtitle1" }}>
           {label}
         </Box>
 
-        <Box component="span" sx={{ typography: 'caption', color: 'text.secondary' }}>
+        <Box component="span" sx={{ typography: "caption", color: "text.secondary" }}>
           {description}
         </Box>
       </Stack>
 
       <Stack spacing={1} direction="row" alignItems="center">
-        {value === 'creditcard' ? (
+        {value === "creditcard" ? (
           <>
             <Iconify icon="logos:mastercard" width={24} />
             <Iconify icon="logos:visa" width={24} />
@@ -157,7 +157,7 @@ function NewCardForm() {
       <Stack
         direction="row"
         alignItems="center"
-        sx={{ typography: 'caption', color: 'text.disabled' }}
+        sx={{ typography: "caption", color: "text.disabled" }}
       >
         <Iconify icon="carbon:locked" sx={{ mr: 0.5 }} />
         Your transaction is secured with SSL encryption

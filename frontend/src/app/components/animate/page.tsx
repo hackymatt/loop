@@ -1,9 +1,9 @@
-import AnimateView from 'src/sections/examples/animate-view';
+import AnimateView from "src/sections/examples/animate-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Components: Animate',
+  title: "Components: Animate",
 };
 
 export default function AnimatePage() {

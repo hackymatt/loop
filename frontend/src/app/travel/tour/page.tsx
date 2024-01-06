@@ -1,9 +1,9 @@
-import TravelTourView from 'src/sections/_travel/view/travel-tour-view';
+import TravelTourView from "src/sections/_travel/view/travel-tour-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Travel: Tour',
+  title: "Travel: Tour",
 };
 
 export default function TravelTourPage() {

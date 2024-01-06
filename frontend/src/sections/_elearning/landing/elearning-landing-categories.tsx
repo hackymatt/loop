@@ -1,14 +1,14 @@
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
 
-import Iconify from 'src/components/iconify';
-import TextMaxLine from 'src/components/text-max-line';
+import Iconify from "src/components/iconify";
+import TextMaxLine from "src/components/text-max-line";
 
-import { ICourseByCategoryProps } from 'src/types/course';
+import { ICourseByCategoryProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -20,23 +20,23 @@ export default function ElearningLandingCategories({ categories }: Props) {
   return (
     <Box
       sx={{
-        overflow: 'hidden',
-        bgcolor: 'background.neutral',
+        overflow: "hidden",
+        bgcolor: "background.neutral",
         py: { xs: 10, md: 15 },
       }}
     >
       <Container>
-        <Grid container spacing={{ xs: 8, lg: 3 }} justifyContent={{ lg: 'space-between' }}>
+        <Grid container spacing={{ xs: 8, lg: 3 }} justifyContent={{ lg: "space-between" }}>
           <Grid
             xs={12}
             lg={4}
             sx={{
-              textAlign: { xs: 'center', lg: 'unset' },
+              textAlign: { xs: "center", lg: "unset" },
             }}
           >
             <Typography variant="h2">Featured Category</Typography>
 
-            <Typography sx={{ color: 'text.secondary', mt: 2, mb: 5 }}>
+            <Typography sx={{ color: "text.secondary", mt: 2, mb: 5 }}>
               Since wire-frame renderings are relatively simple and fast to calculate, they are
               often used in cases
             </Typography>
@@ -55,10 +55,10 @@ export default function ElearningLandingCategories({ categories }: Props) {
             <Box
               sx={{
                 gap: 3,
-                display: 'grid',
+                display: "grid",
                 gridTemplateColumns: {
-                  xs: 'repeat(2, 1fr)',
-                  md: 'repeat(3, 1fr)',
+                  xs: "repeat(2, 1fr)",
+                  md: "repeat(3, 1fr)",
                 },
               }}
             >
@@ -86,17 +86,17 @@ function CategoryItem({ category }: CategoryItemProps) {
       sx={{
         p: 3,
         borderRadius: 1.5,
-        cursor: 'pointer',
-        bgcolor: 'transparent',
+        cursor: "pointer",
+        bgcolor: "transparent",
         transition: (theme) =>
-          theme.transitions.create('all', {
+          theme.transitions.create("all", {
             duration: theme.transitions.duration.enteringScreen,
           }),
-        '&:hover': {
-          bgcolor: 'background.paper',
+        "&:hover": {
+          bgcolor: "background.paper",
           boxShadow: (theme) => theme.customShadows.z24,
           h6: {
-            color: 'primary.main',
+            color: "primary.main",
           },
         },
       }}
@@ -105,7 +105,7 @@ function CategoryItem({ category }: CategoryItemProps) {
         {category.name}
       </TextMaxLine>
 
-      <Typography variant="body2" sx={{ mt: 1, color: 'text.disabled' }}>
+      <Typography variant="body2" sx={{ mt: 1, color: "text.disabled" }}>
         {category.totalStudents} students
       </Typography>
     </Paper>

@@ -1,19 +1,19 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { ICourseProps } from 'src/types/course';
+import { ICourseProps } from "src/types/course";
 
-import ElearningCourseItem from './elearning-course-item';
+import ElearningCourseItem from "./elearning-course-item";
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ type Props = {
 };
 
 export default function ElearningCourseListSimilar({ courses }: Props) {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const viewAllBtn = (
     <Button
@@ -38,7 +38,7 @@ export default function ElearningCourseListSimilar({ courses }: Props) {
   return (
     <Box
       sx={{
-        bgcolor: 'background.neutral',
+        bgcolor: "background.neutral",
         py: { xs: 10, md: 15 },
       }}
     >
@@ -46,7 +46,7 @@ export default function ElearningCourseListSimilar({ courses }: Props) {
         <Stack
           direction="row"
           alignItems="center"
-          justifyContent={{ xs: 'center', md: 'space-between' }}
+          justifyContent={{ xs: "center", md: "space-between" }}
           sx={{
             mb: { xs: 8, md: 10 },
           }}
@@ -59,11 +59,11 @@ export default function ElearningCourseListSimilar({ courses }: Props) {
         <Box
           sx={{
             gap: 4,
-            display: 'grid',
+            display: "grid",
             gridTemplateColumns: {
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
-              md: 'repeat(3, 1fr)',
+              xs: "repeat(1, 1fr)",
+              sm: "repeat(2, 1fr)",
+              md: "repeat(3, 1fr)",
             },
           }}
         >

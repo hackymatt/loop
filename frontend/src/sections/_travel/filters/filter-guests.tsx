@@ -1,14 +1,14 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
-import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton, { iconButtonClasses } from '@mui/material/IconButton';
-import InputBase, { InputBaseProps, inputBaseClasses } from '@mui/material/InputBase';
+import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
+import Popover from "@mui/material/Popover";
+import Typography from "@mui/material/Typography";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton, { iconButtonClasses } from "@mui/material/IconButton";
+import InputBase, { InputBaseProps, inputBaseClasses } from "@mui/material/InputBase";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
@@ -44,18 +44,18 @@ export default function FilterGuests({
     <>
       <InputBase
         fullWidth
-        value={totalGuests > 0 ? `${totalGuests} Guests` : ''}
+        value={totalGuests > 0 ? `${totalGuests} Guests` : ""}
         placeholder="Guests"
         startAdornment={
           <InputAdornment position="start">
-            <Iconify width={24} icon="carbon:events" sx={{ mr: 1, color: 'text.disabled' }} />
+            <Iconify width={24} icon="carbon:events" sx={{ mr: 1, color: "text.disabled" }} />
           </InputAdornment>
         }
         onClick={handleOpen}
         sx={{
           height: 52,
           [`& .${inputBaseClasses.input}`]: {
-            typography: 'subtitle1',
+            typography: "subtitle1",
           },
           ...sx,
         }}
@@ -66,15 +66,15 @@ export default function FilterGuests({
         open={!!open}
         onClose={handleClose}
         anchorEl={open}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
         slotProps={{
           paper: {
             sx: { width: 360, p: 3 },
           },
         }}
       >
-        <Stack spacing={2.5} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
+        <Stack spacing={2.5} divider={<Divider sx={{ borderStyle: "dashed" }} />}>
           <Input
             title="Adults"
             caption="Ages 13 or above"
@@ -87,8 +87,8 @@ export default function FilterGuests({
             title="Children"
             caption="Ages 2 - 12"
             total={guests.children}
-            onDecrease={() => onDecreaseGuests('children')}
-            onIncrement={() => onIncrementGuests('children')}
+            onDecrease={() => onDecreaseGuests("children")}
+            onIncrement={() => onIncrementGuests("children")}
           />
         </Stack>
       </Popover>
@@ -111,7 +111,7 @@ function Input({ title, caption, total, onDecrease, onIncrement }: RowProps) {
     <Stack direction="row">
       <Stack spacing={0.5} sx={{ flexGrow: 1 }}>
         <Typography variant="subtitle1">{title}</Typography>
-        <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+        <Typography variant="caption" sx={{ color: "text.disabled" }}>
           {caption}
         </Typography>
       </Stack>
@@ -120,7 +120,7 @@ function Input({ title, caption, total, onDecrease, onIncrement }: RowProps) {
         direction="row"
         alignItems="center"
         justifyContent="space-between"
-        sx={{ width: 100, typography: 'subtitle1' }}
+        sx={{ width: 100, typography: "subtitle1" }}
       >
         <IconButton
           disabled={total < 1}

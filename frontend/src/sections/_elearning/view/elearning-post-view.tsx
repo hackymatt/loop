@@ -1,46 +1,46 @@
-'use client';
+"use client";
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Fab from '@mui/material/Fab';
-import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
-import Popover from '@mui/material/Popover';
-import MenuItem from '@mui/material/MenuItem';
-import Checkbox from '@mui/material/Checkbox';
-import Grid from '@mui/material/Unstable_Grid2';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import { alpha, useTheme } from '@mui/material/styles';
+import Fab from "@mui/material/Fab";
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
+import Popover from "@mui/material/Popover";
+import MenuItem from "@mui/material/MenuItem";
+import Checkbox from "@mui/material/Checkbox";
+import Grid from "@mui/material/Unstable_Grid2";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import { paths } from 'src/routes/paths';
+import { paths } from "src/routes/paths";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import { fDate } from 'src/utils/format-time';
+import { fDate } from "src/utils/format-time";
 
-import { _socials, _coursePosts } from 'src/_mock';
+import { _socials, _coursePosts } from "src/_mock";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
-import Markdown from 'src/components/markdown';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
+import Markdown from "src/components/markdown";
+import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
-import PostTags from '../../blog/common/post-tags';
-import PostAuthor from '../../blog/common/post-author';
-import ElearningNewsletter from '../elearning-newsletter';
-import PostPrevAndNext from '../../blog/common/post-prev-and-next';
-import PostSocialsShare from '../../blog/common/post-socials-share';
-import ElearningLatestPosts from '../../blog/elearning/elearning-latest-posts';
+import PostTags from "../../blog/common/post-tags";
+import PostAuthor from "../../blog/common/post-author";
+import ElearningNewsletter from "../elearning-newsletter";
+import PostPrevAndNext from "../../blog/common/post-prev-and-next";
+import PostSocialsShare from "../../blog/common/post-socials-share";
+import ElearningLatestPosts from "../../blog/elearning/elearning-latest-posts";
 
 // ----------------------------------------------------------------------
 
 export default function ElearningPostView() {
   const theme = useTheme();
 
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const { title, description, duration, createdAt, author, favorited, heroUrl, tags, content } =
     _coursePosts[0];
@@ -65,11 +65,11 @@ export default function ElearningPostView() {
     <>
       <Divider />
 
-      <Container sx={{ overflow: 'hidden' }}>
+      <Container sx={{ overflow: "hidden" }}>
         <CustomBreadcrumbs
           links={[
-            { name: 'Home', href: '/' },
-            { name: 'Blog', href: paths.eLearning.posts },
+            { name: "Home", href: "/" },
+            { name: "Blog", href: paths.eLearning.posts },
             { name: title },
           ]}
           sx={{ my: 5 }}
@@ -78,13 +78,13 @@ export default function ElearningPostView() {
         <Stack
           alignItems="center"
           justifyContent="center"
-          sx={{ position: 'relative', borderRadius: 2, overflow: 'hidden' }}
+          sx={{ position: "relative", borderRadius: 2, overflow: "hidden" }}
         >
           <Fab
             color="primary"
             sx={{
               zIndex: 9,
-              position: 'absolute',
+              position: "absolute",
             }}
           >
             <Iconify icon="carbon:play" width={24} />
@@ -93,24 +93,24 @@ export default function ElearningPostView() {
           <Image
             alt="hero"
             src={heroUrl}
-            ratio={mdUp ? '21/9' : '16/9'}
+            ratio={mdUp ? "21/9" : "16/9"}
             overlay={`linear-gradient(to bottom, ${alpha(theme.palette.common.black, 0)} 0%, ${
               theme.palette.common.black
             } 75%)`}
           />
         </Stack>
 
-        <Grid container spacing={3} justifyContent={{ md: 'center' }}>
+        <Grid container spacing={3} justifyContent={{ md: "center" }}>
           <Grid xs={12} md={8}>
             <Stack
               spacing={3}
               sx={{
                 pb: 6,
-                textAlign: 'center',
+                textAlign: "center",
                 pt: { xs: 6, md: 10 },
               }}
             >
-              <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+              <Typography variant="body2" sx={{ color: "text.disabled" }}>
                 {duration}
               </Typography>
 
@@ -128,13 +128,13 @@ export default function ElearningPostView() {
 
               <Stack spacing={0.5} flexGrow={1}>
                 <Typography variant="subtitle2">{author.name}</Typography>
-                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                  {fDate(createdAt, 'dd/MM/yyyy p')}
+                <Typography variant="caption" sx={{ color: "text.secondary" }}>
+                  {fDate(createdAt, "dd/MM/yyyy p")}
                 </Typography>
               </Stack>
 
               <Stack direction="row" alignItems="center">
-                <IconButton onClick={handleOpen} color={open ? 'primary' : 'default'}>
+                <IconButton onClick={handleOpen} color={open ? "primary" : "default"}>
                   <Iconify icon="carbon:share" />
                 </IconButton>
 
@@ -177,8 +177,8 @@ export default function ElearningPostView() {
         open={!!open}
         onClose={handleClose}
         anchorEl={open}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        transformOrigin={{ vertical: "top", horizontal: "center" }}
         slotProps={{
           paper: {
             sx: { width: 220 },

@@ -1,15 +1,15 @@
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import Iconify from 'src/components/iconify';
-import SvgColor from 'src/components/svg-color';
-import TextMaxLine from 'src/components/text-max-line';
+import Iconify from "src/components/iconify";
+import SvgColor from "src/components/svg-color";
+import TextMaxLine from "src/components/text-max-line";
 
-import { IJobByCategoryProps } from 'src/types/job';
+import { IJobByCategoryProps } from "src/types/job";
 
 // ----------------------------------------------------------------------
 
@@ -25,19 +25,19 @@ export default function CareerLandingHotCategories({ categories }: Props) {
         pb: { xs: 5, md: 10 },
       }}
     >
-      <Typography variant="h2" sx={{ textAlign: 'center' }}>
+      <Typography variant="h2" sx={{ textAlign: "center" }}>
         Hot Categories
       </Typography>
 
       <Box
         sx={{
           gap: 4,
-          display: 'grid',
+          display: "grid",
           my: { xs: 8, md: 10 },
           gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(2, 1fr)',
-            md: 'repeat(4, 1fr)',
+            xs: "repeat(1, 1fr)",
+            sm: "repeat(2, 1fr)",
+            md: "repeat(4, 1fr)",
           },
         }}
       >
@@ -71,21 +71,21 @@ function CategoryItem({ category }: CategoryItemProps) {
     <Paper
       variant="outlined"
       sx={{
-        pt: '100%',
+        pt: "100%",
         borderRadius: 2,
-        cursor: 'pointer',
-        textAlign: 'center',
-        position: 'relative',
-        bgcolor: 'transparent',
-        transition: (theme) => theme.transitions.create('all'),
-        '&:hover': {
-          bgcolor: 'background.paper',
+        cursor: "pointer",
+        textAlign: "center",
+        position: "relative",
+        bgcolor: "transparent",
+        transition: (theme) => theme.transitions.create("all"),
+        "&:hover": {
+          bgcolor: "background.paper",
           boxShadow: (theme) => theme.customShadows.z24,
-          '& .icon': {
-            bgcolor: 'primary.main',
-            transition: (theme) => theme.transitions.create('all'),
-            '& > span': {
-              color: 'common.white',
+          "& .icon": {
+            bgcolor: "primary.main",
+            transition: (theme) => theme.transitions.create("all"),
+            "& > span": {
+              color: "common.white",
             },
           },
         },
@@ -98,7 +98,7 @@ function CategoryItem({ category }: CategoryItemProps) {
           width: 1,
           height: 1,
           top: 0,
-          position: 'absolute',
+          position: "absolute",
         }}
       >
         <Box
@@ -107,11 +107,11 @@ function CategoryItem({ category }: CategoryItemProps) {
             mb: 2.5,
             width: 72,
             height: 72,
-            mx: 'auto',
-            display: 'flex',
-            borderRadius: '50%',
-            alignItems: 'center',
-            justifyContent: 'center',
+            mx: "auto",
+            display: "flex",
+            borderRadius: "50%",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <SvgColor src={category.icon} sx={{ width: 48, height: 48 }} />
@@ -121,7 +121,7 @@ function CategoryItem({ category }: CategoryItemProps) {
           {category.name}
         </TextMaxLine>
 
-        <Typography variant="body2" sx={{ color: 'text.disabled', mt: 0.5 }}>
+        <Typography variant="body2" sx={{ color: "text.disabled", mt: 0.5 }}>
           {category.totalJobs} jobs
         </Typography>
       </Stack>

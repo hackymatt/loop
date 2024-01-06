@@ -1,16 +1,16 @@
-import { m } from 'framer-motion';
+import { m } from "framer-motion";
 
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { alpha, useTheme } from '@mui/material/styles';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import { paths } from 'src/routes/paths';
+import { paths } from "src/routes/paths";
 
-import { bgGradient } from 'src/theme/css';
+import { bgGradient } from "src/theme/css";
 
-import Iconify from 'src/components/iconify';
-import { varFade, MotionViewport } from 'src/components/animate';
+import Iconify from "src/components/iconify";
+import { varFade, MotionViewport } from "src/components/animate";
 
 // ----------------------------------------------------------------------
 
@@ -23,10 +23,10 @@ export default function HomeForDesigner() {
       sx={{
         ...bgGradient({
           color: alpha(theme.palette.grey[900], 0.8),
-          imgUrl: '/assets/images/home/for_designer.jpg',
+          imgUrl: "/assets/images/home/for_designer.jpg",
         }),
-        textAlign: 'center',
-        color: 'common.white',
+        textAlign: "center",
+        color: "common.white",
         py: { xs: 10, md: 15 },
       }}
     >

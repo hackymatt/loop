@@ -1,21 +1,21 @@
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import { alpha, styled } from '@mui/material/styles';
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import { alpha, styled } from "@mui/material/styles";
 
-import { _socials } from 'src/_mock';
-import { bgGradient } from 'src/theme/css';
+import { _socials } from "src/_mock";
+import { bgGradient } from "src/theme/css";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
 
-import { ITeamMemberProps } from 'src/types/team';
+import { ITeamMemberProps } from "src/types/team";
 
 // ----------------------------------------------------------------------
 
-const StyledOverlay = styled('div')(({ theme }) => ({
+const StyledOverlay = styled("div")(({ theme }) => ({
   ...bgGradient({
     startColor: `${alpha(theme.palette.common.black, 0)} 0%`,
     endColor: `${theme.palette.common.black} 75%`,
@@ -24,14 +24,14 @@ const StyledOverlay = styled('div')(({ theme }) => ({
   left: 0,
   zIndex: 8,
   opacity: 0,
-  width: '100%',
-  height: '100%',
-  position: 'absolute',
-  transition: theme.transitions.create('opacity', {
+  width: "100%",
+  height: "100%",
+  position: "absolute",
+  transition: theme.transitions.create("opacity", {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.short,
   }),
-  '&:hover': { opacity: 1 },
+  "&:hover": { opacity: 1 },
 }));
 
 // ----------------------------------------------------------------------
@@ -45,22 +45,22 @@ export default function ElearningTeamItem({ member }: Props) {
 
   return (
     <Card>
-      <Stack spacing={0.5} sx={{ textAlign: 'center', pt: 3, pb: 1.5 }}>
+      <Stack spacing={0.5} sx={{ textAlign: "center", pt: 3, pb: 1.5 }}>
         <Typography variant="h6">{name}</Typography>
 
-        <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+        <Typography variant="body2" sx={{ color: "text.disabled" }}>
           {role}
         </Typography>
       </Stack>
 
-      <Box sx={{ position: 'relative' }}>
+      <Box sx={{ position: "relative" }}>
         <Shape />
 
         <StyledOverlay>
           <Stack
             direction="row"
             justifyContent="center"
-            sx={{ width: 1, zIndex: 9, bottom: 24, position: 'absolute' }}
+            sx={{ width: 1, zIndex: 9, bottom: 24, position: "absolute" }}
           >
             {_socials.map((social) => (
               <IconButton key={social.value} color="primary">
@@ -86,8 +86,8 @@ function Shape() {
         width: 1,
         height: 8,
         zIndex: 9,
-        position: 'absolute',
-        color: 'background.paper',
+        position: "absolute",
+        color: "background.paper",
       }}
     >
       <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="32" viewBox="0 0 1080 32">

@@ -1,12 +1,12 @@
-import { differenceInCalendarDays } from 'date-fns';
+import { differenceInCalendarDays } from "date-fns";
 
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
-import { fDate } from 'src/utils/format-time';
+import { fDate } from "src/utils/format-time";
 
-import Iconify from 'src/components/iconify';
-import TextMaxLine from 'src/components/text-max-line';
+import Iconify from "src/components/iconify";
+import TextMaxLine from "src/components/text-max-line";
 
 // ----------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ export default function EcommerceAccountVoucherItem({ voucher }: Props) {
       direction="row"
       sx={{
         borderRadius: 1,
-        overflow: 'hidden',
+        overflow: "hidden",
         border: (theme) => `dashed 1px ${theme.palette.divider}`,
       }}
     >
@@ -60,10 +60,10 @@ export default function EcommerceAccountVoucherItem({ voucher }: Props) {
           direction="row"
           alignItems="center"
           sx={{
-            typography: 'caption',
-            color: 'text.disabled',
+            typography: "caption",
+            color: "text.disabled",
             ...(dayLeft <= 1 && {
-              color: 'error.main',
+              color: "error.main",
             }),
           }}
         >
@@ -82,10 +82,10 @@ function getIcon(type: string) {
   let icon;
 
   switch (type) {
-    case 'shipping':
+    case "shipping":
       icon = <Iconify icon="carbon:delivery" width={32} />;
       break;
-    case 'category':
+    case "category":
       icon = <Iconify icon="carbon:cut-out" width={32} />;
       break;
     default:

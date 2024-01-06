@@ -1,8 +1,8 @@
-import Box from '@mui/material/Box';
+import Box from "@mui/material/Box";
 
-import { countries } from 'src/assets/data';
+import { countries } from "src/assets/data";
 
-import { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
+import { RHFTextField, RHFAutocomplete } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
@@ -12,7 +12,7 @@ export default function EcommerceCheckoutShippingDetails() {
       rowGap={2.5}
       columnGap={2}
       display="grid"
-      gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+      gridTemplateColumns={{ xs: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
     >
       <RHFTextField name="streetAddress" label="Street address" />
 

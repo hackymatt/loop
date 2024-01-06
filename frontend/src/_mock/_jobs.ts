@@ -1,9 +1,9 @@
-import { add } from 'date-fns';
+import { add } from "date-fns";
 
-import { countries } from 'src/assets/data';
+import { countries } from "src/assets/data";
 
-import { _mock } from './_mock';
-import { _tags } from './assets';
+import { _mock } from "./_mock";
+import { _tags } from "./assets";
 
 // ----------------------------------------------------------------------
 
@@ -44,28 +44,28 @@ const CONTENT = `
 `;
 
 export const JOB_BENEFIT_OPTIONS = [
-  { value: 'Free parking', label: 'Free parking' },
-  { value: 'Bonus commission', label: 'Bonus commission' },
-  { value: 'Travel', label: 'Travel' },
-  { value: 'Device support', label: 'Device support' },
-  { value: 'Health care', label: 'Health care' },
-  { value: 'Training', label: 'Training' },
-  { value: 'Health Insurance', label: 'Health Insurance' },
-  { value: 'Retirement Plans', label: 'Retirement Plans' },
-  { value: 'Paid Time Off', label: 'Paid Time Off' },
-  { value: 'Flexible Work Schedule', label: 'Flexible Work Schedule' },
+  { value: "Free parking", label: "Free parking" },
+  { value: "Bonus commission", label: "Bonus commission" },
+  { value: "Travel", label: "Travel" },
+  { value: "Device support", label: "Device support" },
+  { value: "Health care", label: "Health care" },
+  { value: "Training", label: "Training" },
+  { value: "Health Insurance", label: "Health Insurance" },
+  { value: "Retirement Plans", label: "Retirement Plans" },
+  { value: "Paid Time Off", label: "Paid Time Off" },
+  { value: "Flexible Work Schedule", label: "Flexible Work Schedule" },
 ];
 
 export const _jobs = [...Array(12)].map((_, index) => {
   const benefits = JOB_BENEFIT_OPTIONS.slice(0, 3).map((option) => option.label);
 
-  const type = (index % 2 && 'part time') || (index % 4 && 'freelance') || 'full time';
+  const type = (index % 2 && "part time") || (index % 4 && "freelance") || "full time";
 
-  const level = (index % 2 && 'manager') || (index % 4 && 'intern/student') || 'No experience';
+  const level = (index % 2 && "manager") || (index % 4 && "intern/student") || "No experience";
 
   const location = countries.map((option) => option.label)[index + 1];
 
-  const languages = ['Russian', 'Spanish', 'English'];
+  const languages = ["Russian", "Spanish", "English"];
 
   const skills = _tags.slice(0, 5);
 
@@ -102,7 +102,7 @@ export const _jobs = [...Array(12)].map((_, index) => {
     favorited: [2, 4].includes(index),
     totalViews: _mock.number.nativeL(index),
     deadline: add(new Date(), { months: index }),
-    salary: (index % 3 && 12000) || 'competitive',
+    salary: (index % 3 && 12000) || "competitive",
     shareLinks: {
       facebook: `facebook/user-name`,
       instagram: `instagram/user-name`,
@@ -120,14 +120,14 @@ export const _jobsByCompanies = [...Array(12)].map((_, index) => ({
 }));
 
 const ICONS = [
-  '/assets/icons/ic_money.svg',
-  '/assets/icons/ic_marketing_bullhorn.svg',
-  '/assets/icons/ic_creativity.svg',
-  '/assets/icons/ic_web_programming.svg',
-  '/assets/icons/ic_chip.svg',
-  '/assets/icons/ic_customer_service.svg',
-  '/assets/icons/ic_stethoscope.svg',
-  '/assets/icons/ic_banking.svg',
+  "/assets/icons/ic_money.svg",
+  "/assets/icons/ic_marketing_bullhorn.svg",
+  "/assets/icons/ic_creativity.svg",
+  "/assets/icons/ic_web_programming.svg",
+  "/assets/icons/ic_chip.svg",
+  "/assets/icons/ic_customer_service.svg",
+  "/assets/icons/ic_stethoscope.svg",
+  "/assets/icons/ic_banking.svg",
 ];
 
 export const _jobsByCategories = [...Array(8)].map((_, index) => ({

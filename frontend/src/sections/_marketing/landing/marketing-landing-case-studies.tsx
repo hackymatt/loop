@@ -1,26 +1,26 @@
-import { m } from 'framer-motion';
+import { m } from "framer-motion";
 
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
-import { alpha, useTheme } from '@mui/material/styles';
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
-import TextMaxLine from 'src/components/text-max-line';
-import { varHover, varTranHover } from 'src/components/animate';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
+import TextMaxLine from "src/components/text-max-line";
+import { varHover, varTranHover } from "src/components/animate";
 
-import { ICaseStudyProps } from 'src/types/case-study';
+import { ICaseStudyProps } from "src/types/case-study";
 
 // ----------------------------------------------------------------------
 
@@ -29,12 +29,12 @@ type Props = {
 };
 
 export default function MarketingLandingCaseStudies({ caseStudies }: Props) {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   return (
     <Container
       sx={{
-        overflow: 'hidden',
+        overflow: "hidden",
         pt: { xs: 5, md: 10 },
         pb: 10,
       }}
@@ -42,10 +42,10 @@ export default function MarketingLandingCaseStudies({ caseStudies }: Props) {
       <Stack
         spacing={3}
         sx={{
-          textAlign: { xs: 'center', md: 'unset' },
+          textAlign: { xs: "center", md: "unset" },
         }}
       >
-        <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+        <Typography variant="overline" sx={{ color: "text.disabled" }}>
           Our Work
         </Typography>
 
@@ -80,7 +80,7 @@ export default function MarketingLandingCaseStudies({ caseStudies }: Props) {
           </Grid>
 
           <Grid xs={6} md={3}>
-            <Stack justifyContent={{ md: 'flex-end' }} sx={{ height: { md: 1 } }}>
+            <Stack justifyContent={{ md: "flex-end" }} sx={{ height: { md: 1 } }}>
               <SmallItem caseStudy={caseStudies[2]} square />
             </Stack>
           </Grid>
@@ -105,7 +105,7 @@ export default function MarketingLandingCaseStudies({ caseStudies }: Props) {
         )}
       </Grid>
 
-      <Stack alignItems={{ xs: 'center', md: 'flex-end' }}>
+      <Stack alignItems={{ xs: "center", md: "flex-end" }}>
         <Button
           component={RouterLink}
           href={paths.marketing.caseStudies}
@@ -130,12 +130,12 @@ function LargeItem({ caseStudy }: LargeItemProps) {
   return (
     <Paper
       sx={{
-        display: 'grid',
+        display: "grid",
         borderRadius: 2,
         boxShadow: (theme) => theme.customShadows.z24,
         gridTemplateColumns: {
-          xs: 'repeat(1, 1fr)',
-          md: 'repeat(2, 1fr)',
+          xs: "repeat(1, 1fr)",
+          md: "repeat(2, 1fr)",
         },
       }}
     >
@@ -145,7 +145,7 @@ function LargeItem({ caseStudy }: LargeItemProps) {
 
       <Stack alignItems="flex-end" justifyContent="space-between" sx={{ p: 3, pt: 5, height: 1 }}>
         <div>
-          <Typography variant="overline" sx={{ color: 'primary.main' }}>
+          <Typography variant="overline" sx={{ color: "primary.main" }}>
             {caseStudy.category}
           </Typography>
 
@@ -153,7 +153,7 @@ function LargeItem({ caseStudy }: LargeItemProps) {
             {caseStudy.title}
           </Typography>
 
-          <TextMaxLine variant="body2" sx={{ color: 'text.secondary' }}>
+          <TextMaxLine variant="body2" sx={{ color: "text.secondary" }}>
             {caseStudy.description}
           </TextMaxLine>
         </div>
@@ -182,7 +182,7 @@ type SmallItemProps = {
 function SmallItem({ caseStudy, square }: SmallItemProps) {
   const theme = useTheme();
 
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   return (
     <Link component={RouterLink} href={paths.marketing.caseStudy}>
@@ -190,10 +190,10 @@ function SmallItem({ caseStudy, square }: SmallItemProps) {
         component={m.div}
         whileHover="hover"
         sx={{
-          position: 'relative',
-          cursor: 'pointer',
+          position: "relative",
+          cursor: "pointer",
           borderRadius: 2,
-          overflow: 'hidden',
+          overflow: "hidden",
         }}
       >
         <Stack
@@ -204,9 +204,9 @@ function SmallItem({ caseStudy, square }: SmallItemProps) {
             width: 1,
             height: 1,
             zIndex: 9,
-            position: 'absolute',
-            color: 'common.white',
-            textAlign: 'center',
+            position: "absolute",
+            color: "common.white",
+            textAlign: "center",
           }}
         >
           <Typography variant="overline" sx={{ opacity: 0.48 }}>
@@ -219,7 +219,7 @@ function SmallItem({ caseStudy, square }: SmallItemProps) {
           <Image
             alt="cover"
             src={caseStudy.coverUrl}
-            ratio={(square && '1/1') || (mdUp && '3/4') || '1/1'}
+            ratio={(square && "1/1") || (mdUp && "3/4") || "1/1"}
             overlay={alpha(theme.palette.grey[900], 0.48)}
           />
         </m.div>

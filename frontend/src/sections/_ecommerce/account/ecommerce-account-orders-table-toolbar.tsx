@@ -1,10 +1,10 @@
-import Stack from '@mui/material/Stack';
-import Tooltip from '@mui/material/Tooltip';
-import Checkbox from '@mui/material/Checkbox';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
+import Checkbox from "@mui/material/Checkbox";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
@@ -36,9 +36,9 @@ export default function EcommerceAccountOrdersTableToolbar({
         zIndex: 9,
         height: 58,
         borderRadius: 1,
-        position: 'absolute',
-        bgcolor: 'text.primary',
-        color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
+        position: "absolute",
+        bgcolor: "text.primary",
+        color: (theme) => (theme.palette.mode === "light" ? "common.white" : "grey.800"),
       }}
     >
       <Checkbox
@@ -46,11 +46,11 @@ export default function EcommerceAccountOrdersTableToolbar({
         checked={rowCount > 0 && numSelected === rowCount}
         onChange={onSelectAllRows}
         inputProps={{
-          'aria-label': 'select all desserts',
+          "aria-label": "select all desserts",
         }}
       />
 
-      <Typography sx={{ flex: '1 1 100%' }} color="inherit" variant="subtitle1" component="div">
+      <Typography sx={{ flex: "1 1 100%" }} color="inherit" variant="subtitle1" component="div">
         {numSelected} selected
       </Typography>
 

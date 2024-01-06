@@ -1,13 +1,13 @@
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
-import ContactMap from 'src/components/map';
-import Iconify from 'src/components/iconify';
-import Markdown from 'src/components/markdown';
+import ContactMap from "src/components/map";
+import Iconify from "src/components/iconify";
+import Markdown from "src/components/markdown";
 
-import { IJobProps } from 'src/types/job';
+import { IJobProps } from "src/types/job";
 
 // ----------------------------------------------------------------------
 
@@ -39,28 +39,28 @@ export default function CareerJobDetailsSummary({ job }: Props) {
           sx={{
             rowGap: 2,
             columnGap: 3,
-            display: 'grid',
+            display: "grid",
             gridTemplateColumns: {
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
-              md: 'repeat(3, 1fr)',
+              xs: "repeat(1, 1fr)",
+              sm: "repeat(2, 1fr)",
+              md: "repeat(3, 1fr)",
             },
           }}
         >
           {benefits.map((benefit) => (
-            <Stack key={benefit} direction="row" alignItems="center" sx={{ typography: 'body2' }}>
+            <Stack key={benefit} direction="row" alignItems="center" sx={{ typography: "body2" }}>
               <Iconify
                 icon={
-                  (benefit === 'Free parking' && 'carbon:car-front') ||
-                  (benefit === 'Bonus commission' && 'carbon:money') ||
-                  (benefit === 'Travel' && 'carbon:airport-01') ||
-                  (benefit === 'Training' && 'carbon:group-presentation') ||
-                  (benefit === 'Device support' && 'carbon:devices') ||
-                  (benefit === 'Health care' && 'carbon:person-favorite') ||
-                  'carbon:direct-link'
+                  (benefit === "Free parking" && "carbon:car-front") ||
+                  (benefit === "Bonus commission" && "carbon:money") ||
+                  (benefit === "Travel" && "carbon:airport-01") ||
+                  (benefit === "Training" && "carbon:group-presentation") ||
+                  (benefit === "Device support" && "carbon:devices") ||
+                  (benefit === "Health care" && "carbon:person-favorite") ||
+                  "carbon:direct-link"
                 }
                 width={24}
-                sx={{ color: 'primary.main', mr: 1.5 }}
+                sx={{ color: "primary.main", mr: 1.5 }}
               />
               {benefit}
             </Stack>

@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-import Container from '@mui/material/Container';
+import Container from "@mui/material/Container";
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from "src/hooks/use-boolean";
 
-import { _tours } from 'src/_mock';
+import { _tours } from "src/_mock";
 
-import TravelNewsletter from '../travel-newsletter';
-import TravelFilters from '../filters/travel-filters';
-import TravelTourList from '../list/travel-tour-list';
+import TravelNewsletter from "../travel-newsletter";
+import TravelFilters from "../filters/travel-filters";
+import TravelTourList from "../list/travel-tour-list";
 
 // ----------------------------------------------------------------------
 

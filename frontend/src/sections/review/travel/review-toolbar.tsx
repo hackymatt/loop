@@ -1,16 +1,16 @@
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import Typography from '@mui/material/Typography';
-import FormControl from '@mui/material/FormControl';
-import Select, { selectClasses, SelectChangeEvent } from '@mui/material/Select';
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
+import FormControl from "@mui/material/FormControl";
+import Select, { selectClasses, SelectChangeEvent } from "@mui/material/Select";
 
 // ----------------------------------------------------------------------
 
 const SORT_OPTIONS = [
-  { value: 'latest', label: 'Latest' },
-  { value: 'oldest', label: 'Oldest' },
-  { value: 'popular', label: 'Popular' },
+  { value: "latest", label: "Latest" },
+  { value: "oldest", label: "Oldest" },
+  { value: "popular", label: "Popular" },
 ];
 
 // ----------------------------------------------------------------------
@@ -26,8 +26,8 @@ export default function ReviewToolbar({ sort, totalReviews, onOpenReview, onChan
   return (
     <Stack
       spacing={5}
-      alignItems={{ md: 'center' }}
-      direction={{ xs: 'column', md: 'row' }}
+      alignItems={{ md: "center" }}
+      direction={{ xs: "column", md: "row" }}
       sx={{ mb: 5 }}
     >
       <Typography variant="h4" sx={{ width: 1 }}>

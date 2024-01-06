@@ -1,21 +1,21 @@
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import { alpha } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import LoadingButton from '@mui/lab/LoadingButton';
-import Stack, { StackProps } from '@mui/material/Stack';
-import InputAdornment from '@mui/material/InputAdornment';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import { alpha } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import LoadingButton from "@mui/lab/LoadingButton";
+import Stack, { StackProps } from "@mui/material/Stack";
+import InputAdornment from "@mui/material/InputAdornment";
 
-import { fPercent, fCurrency } from 'src/utils/format-number';
+import { fPercent, fCurrency } from "src/utils/format-number";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
-import TextMaxLine from 'src/components/text-max-line';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
+import TextMaxLine from "src/components/text-max-line";
 
-import { IProductItemProps } from 'src/types/product';
+import { IProductItemProps } from "src/types/product";
 
 // ----------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ export default function EcommerceCheckoutOrderSummary({
             <ProductItem key={product.id} product={product} />
           ))}
 
-          <Divider sx={{ borderStyle: 'dashed' }} />
+          <Divider sx={{ borderStyle: "dashed" }} />
         </>
       )}
 
@@ -81,14 +81,14 @@ export default function EcommerceCheckoutOrderSummary({
         }}
       />
 
-      <Divider sx={{ borderStyle: 'dashed' }} />
+      <Divider sx={{ borderStyle: "dashed" }} />
 
       <Row
         label="Total"
         value={fCurrency(total)}
         sx={{
-          typography: 'h6',
-          '& span': { typography: 'h6' },
+          typography: "h6",
+          "& span": { typography: "h6" },
         }}
       />
 
@@ -122,12 +122,12 @@ function ProductItem({ product, ...other }: ProductItemProps) {
           height: 64,
           flexShrink: 0,
           borderRadius: 1.5,
-          bgcolor: 'background.neutral',
+          bgcolor: "background.neutral",
         }}
       />
 
       <Stack flexGrow={1}>
-        <TextMaxLine variant="body2" line={1} sx={{ fontWeight: 'fontWeightMedium' }}>
+        <TextMaxLine variant="body2" line={1} sx={{ fontWeight: "fontWeightMedium" }}>
           {product.name}
         </TextMaxLine>
 
@@ -172,10 +172,10 @@ function Row({ label, value, sx, ...other }: RowProps) {
       direction="row"
       alignItems="center"
       justifyContent="space-between"
-      sx={{ typography: 'subtitle2', ...sx }}
+      sx={{ typography: "subtitle2", ...sx }}
       {...other}
     >
-      <Box component="span" sx={{ typography: 'body2' }}>
+      <Box component="span" sx={{ typography: "body2" }}>
         {label}
       </Box>
       {value}

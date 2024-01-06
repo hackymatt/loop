@@ -1,26 +1,26 @@
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
-import LoadingButton from '@mui/lab/LoadingButton';
-import { inputBaseClasses } from '@mui/material/InputBase';
-import { inputAdornmentClasses } from '@mui/material/InputAdornment';
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import Card from "@mui/material/Card";
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { inputBaseClasses } from "@mui/material/InputBase";
+import { inputAdornmentClasses } from "@mui/material/InputAdornment";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import { fCurrency, fShortenNumber } from 'src/utils/format-number';
+import { fCurrency, fShortenNumber } from "src/utils/format-number";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
-import TextMaxLine from 'src/components/text-max-line';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
+import TextMaxLine from "src/components/text-max-line";
 
-import { ITourProps } from 'src/types/tour';
+import { ITourProps } from "src/types/tour";
 
-import FilterTime from '../filters/filter-time';
-import FilterGuests from '../filters/filter-guests';
+import FilterTime from "../filters/filter-time";
+import FilterGuests from "../filters/filter-guests";
 
 // ----------------------------------------------------------------------
 
@@ -46,7 +46,7 @@ export default function TravelCheckOutSummary({
   onIncrementGuests,
   onChangeDepartureDay,
 }: Props) {
-  const smUp = useResponsive('up', 'sm');
+  const smUp = useResponsive("up", "sm");
 
   const { coverUrl, slug, ratingNumber, totalReviews, price, tourGuide } = tour;
 
@@ -57,12 +57,12 @@ export default function TravelCheckOutSummary({
           p: 4,
           pb: 0,
           gap: 3,
-          display: 'grid',
+          display: "grid",
           gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(2, 1fr)',
-            md: 'repeat(1, 1fr)',
-            lg: 'repeat(2, 1fr)',
+            xs: "repeat(1, 1fr)",
+            sm: "repeat(2, 1fr)",
+            md: "repeat(1, 1fr)",
+            lg: "repeat(2, 1fr)",
           },
         }}
       >
@@ -74,26 +74,26 @@ export default function TravelCheckOutSummary({
           </TextMaxLine>
 
           <Stack spacing={0.5} direction="row" alignItems="center">
-            <Iconify icon="carbon:star-filled" sx={{ color: 'warning.main' }} />
+            <Iconify icon="carbon:star-filled" sx={{ color: "warning.main" }} />
 
-            <Box sx={{ typography: 'h6' }}>
+            <Box sx={{ typography: "h6" }}>
               {Number.isInteger(ratingNumber) ? `${ratingNumber}.0` : ratingNumber}
             </Box>
 
             {totalReviews && (
-              <Link variant="body2" sx={{ color: 'text.secondary' }}>
+              <Link variant="body2" sx={{ color: "text.secondary" }}>
                 ({fShortenNumber(totalReviews)} reviews)
               </Link>
             )}
           </Stack>
 
-          <Divider sx={{ borderStyle: 'dashed', my: 2.5 }} />
+          <Divider sx={{ borderStyle: "dashed", my: 2.5 }} />
 
           <Stack direction="row" alignItems="center" spacing={1.5}>
             <Avatar src={tourGuide.avatarUrl} />
 
             <div>
-              <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+              <Typography variant="body2" sx={{ color: "text.disabled" }}>
                 Tour guide by
               </Typography>
 
@@ -106,12 +106,12 @@ export default function TravelCheckOutSummary({
       <Stack sx={{ p: 4, pb: 3 }}>
         <Stack
           spacing={2.5}
-          direction={{ xs: 'column', sm: 'row' }}
+          direction={{ xs: "column", sm: "row" }}
           sx={{
             p: 2.5,
             borderRadius: 2,
-            color: 'text.disabled',
-            bgcolor: 'background.neutral',
+            color: "text.disabled",
+            bgcolor: "background.neutral",
           }}
         >
           <Stack direction="row" spacing={1.5} sx={{ width: 1 }}>
@@ -125,17 +125,17 @@ export default function TravelCheckOutSummary({
                 onChangeDepartureDay={onChangeDepartureDay}
                 sx={{
                   [`& .${inputBaseClasses.input}`]: {
-                    typography: 'subtitle1',
+                    typography: "subtitle1",
                   },
                   [`& .${inputAdornmentClasses.root}`]: {
-                    display: 'none',
+                    display: "none",
                   },
                 }}
               />
             </Stack>
           </Stack>
 
-          {smUp && <Divider flexItem orientation="vertical" sx={{ borderStyle: 'dashed' }} />}
+          {smUp && <Divider flexItem orientation="vertical" sx={{ borderStyle: "dashed" }} />}
 
           <Stack direction="row" spacing={1.5} sx={{ width: 1 }}>
             <Iconify icon="carbon:calendar" width={24} />
@@ -148,7 +148,7 @@ export default function TravelCheckOutSummary({
                 guests={guests}
                 onDecreaseGuests={onDecreaseGuests}
                 onIncrementGuests={onIncrementGuests}
-                sx={{ height: 'unset' }}
+                sx={{ height: "unset" }}
               />
             </Stack>
           </Stack>
@@ -161,21 +161,21 @@ export default function TravelCheckOutSummary({
           justifyContent="space-between"
           sx={{ mt: 3, mb: 2 }}
         >
-          <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+          <Typography variant="body2" sx={{ color: "text.disabled" }}>
             Service charge
           </Typography>
           <Typography variant="body2">{fCurrency(price)}</Typography>
         </Stack>
 
         <Stack spacing={1} direction="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+          <Typography variant="body2" sx={{ color: "text.disabled" }}>
             Discount
           </Typography>
           <Typography variant="body2">-</Typography>
         </Stack>
       </Stack>
 
-      <Divider sx={{ borderStyle: 'dashed' }} />
+      <Divider sx={{ borderStyle: "dashed" }} />
 
       <Stack spacing={3} sx={{ p: 3 }}>
         <Stack spacing={1} direction="row" alignItems="center" justifyContent="space-between">

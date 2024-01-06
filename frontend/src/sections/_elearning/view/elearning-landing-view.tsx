@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   _courses,
@@ -7,18 +7,18 @@ import {
   _brandsColor,
   _testimonials,
   _coursesByCategories,
-} from 'src/_mock';
+} from "src/_mock";
 
-import ElearningTeam from '../team/elearning-team';
-import ElearningNewsletter from '../elearning-newsletter';
-import ElearningOurClients from '../elearning-our-clients';
-import ElearningDownloadApp from '../elearning-download-app';
-import ElearningLandingHero from '../landing/elearning-landing-hero';
-import ElearningTestimonial from '../testimonial/elearning-testimonial';
-import ElearningLandingIntroduce from '../landing/elearning-landing-introduce';
-import ElearningLatestPosts from '../../blog/elearning/elearning-latest-posts';
-import ElearningLandingCategories from '../landing/elearning-landing-categories';
-import ElearningLandingFeaturedCourses from '../landing/elearning-landing-featured-courses';
+import ElearningTeam from "../team/elearning-team";
+import ElearningNewsletter from "../elearning-newsletter";
+import ElearningOurClients from "../elearning-our-clients";
+import ElearningDownloadApp from "../elearning-download-app";
+import ElearningLandingHero from "../landing/elearning-landing-hero";
+import ElearningTestimonial from "../testimonial/elearning-testimonial";
+import ElearningLandingIntroduce from "../landing/elearning-landing-introduce";
+import ElearningLatestPosts from "../../blog/elearning/elearning-latest-posts";
+import ElearningLandingCategories from "../landing/elearning-landing-categories";
+import ElearningLandingFeaturedCourses from "../landing/elearning-landing-featured-courses";
 
 // ----------------------------------------------------------------------
 

@@ -1,28 +1,28 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import { useTheme } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import { useTheme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import { _mock } from 'src/_mock';
+import { _mock } from "src/_mock";
 
-import Carousel, { useCarousel, CarouselArrows } from 'src/components/carousel';
+import Carousel, { useCarousel, CarouselArrows } from "src/components/carousel";
 
-import TopicItem from './travel-trending-topic-item';
+import TopicItem from "./travel-trending-topic-item";
 
 // ----------------------------------------------------------------------
 
 const CATEGORIES = [
-  'Marketing',
-  'Community',
-  'Tutorials',
-  'Business',
-  'Management',
-  'Sports',
-  'Travel',
-  'Design',
+  "Marketing",
+  "Community",
+  "Tutorials",
+  "Business",
+  "Management",
+  "Sports",
+  "Travel",
+  "Design",
 ];
 
 export const TOPICS = [...Array(8)].map((_, index) => ({
@@ -37,7 +37,7 @@ export const TOPICS = [...Array(8)].map((_, index) => ({
 export default function TravelTrendingTopics() {
   const theme = useTheme();
 
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const carousel = useCarousel({
     slidesToShow: 4,
@@ -55,7 +55,7 @@ export default function TravelTrendingTopics() {
   });
 
   return (
-    <Box sx={{ bgcolor: 'background.neutral' }}>
+    <Box sx={{ bgcolor: "background.neutral" }}>
       <Container
         sx={{
           py: { xs: 8, md: 10 },
@@ -63,7 +63,7 @@ export default function TravelTrendingTopics() {
       >
         <Stack
           direction="row"
-          justifyContent={{ md: 'space-between' }}
+          justifyContent={{ md: "space-between" }}
           sx={{
             mb: { xs: 8, md: 10 },
           }}

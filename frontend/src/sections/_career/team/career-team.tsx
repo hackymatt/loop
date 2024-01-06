@@ -1,10 +1,10 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
-import { ITeamMemberProps } from 'src/types/team';
+import { ITeamMemberProps } from "src/types/team";
 
-import CareerTeamItem from './career-team-item';
+import CareerTeamItem from "./career-team-item";
 
 // ----------------------------------------------------------------------
 
@@ -22,15 +22,15 @@ export default function CareerTeam({ members }: Props) {
       <Stack
         spacing={3}
         sx={{
-          mx: 'auto',
+          mx: "auto",
           maxWidth: 480,
-          textAlign: 'center',
+          textAlign: "center",
           mb: { xs: 8, md: 10 },
         }}
       >
         <Typography variant="h2">Our Team</Typography>
 
-        <Typography sx={{ color: 'text.secondary' }}>
+        <Typography sx={{ color: "text.secondary" }}>
           Etiam sollicitudin, ipsum eu pulvinar rutrum, tellus ipsum laoreet sapien, quis venenatis
           ante odio sit amet eros.
         </Typography>
@@ -38,11 +38,11 @@ export default function CareerTeam({ members }: Props) {
 
       <Box
         sx={{
-          display: 'grid',
+          display: "grid",
           gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(2, 1fr)',
-            md: 'repeat(4, 1fr)',
+            xs: "repeat(1, 1fr)",
+            sm: "repeat(2, 1fr)",
+            md: "repeat(4, 1fr)",
           },
         }}
       >

@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
-import Collapse from '@mui/material/Collapse';
+import Collapse from "@mui/material/Collapse";
 
-import { usePathname } from 'src/routes/hooks';
-import { useActiveLink } from 'src/routes/hooks/use-active-link';
+import { usePathname } from "src/routes/hooks";
+import { useActiveLink } from "src/routes/hooks/use-active-link";
 
-import NavItem from './nav-item';
-import { NavListProps, NavSubListProps } from '../types';
+import NavItem from "./nav-item";
+import { NavListProps, NavSubListProps } from "../types";
 
 // ----------------------------------------------------------------------
 
@@ -50,11 +50,11 @@ export default function NavList({ data, depth, slotProps }: NavListProps) {
         //
         depth={depth}
         hasChild={!!data.children}
-        externalLink={data.path.includes('http')}
+        externalLink={data.path.includes("http")}
         currentRole={slotProps?.currentRole}
         //
         active={active}
-        className={active ? 'active' : ''}
+        className={active ? "active" : ""}
         sx={{
           mb: `${slotProps?.gap}px`,
           ...(depth === 1 ? slotProps?.rootItem : slotProps?.subItem),

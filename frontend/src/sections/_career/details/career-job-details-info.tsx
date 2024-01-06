@@ -1,13 +1,13 @@
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
+import Card from "@mui/material/Card";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
-import { fDate } from 'src/utils/format-time';
-import { fCurrency } from 'src/utils/format-number';
+import { fDate } from "src/utils/format-time";
+import { fCurrency } from "src/utils/format-number";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { IJobProps } from 'src/types/job';
+import { IJobProps } from "src/types/job";
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +25,7 @@ export default function CareerJobDetailsInfo({ job }: Props) {
           <Iconify icon="carbon:calendar" width={24} />
           <Stack>
             <Typography variant="subtitle2"> Date Posted </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
               {fDate(createdAt)}
             </Typography>
           </Stack>
@@ -35,7 +35,7 @@ export default function CareerJobDetailsInfo({ job }: Props) {
           <Iconify icon="carbon:hourglass" width={24} />
           <Stack>
             <Typography variant="subtitle2"> Expiration date </Typography>
-            <Typography variant="body2" sx={{ color: 'error.main' }}>
+            <Typography variant="body2" sx={{ color: "error.main" }}>
               {fDate(deadline)}
             </Typography>
           </Stack>
@@ -45,8 +45,8 @@ export default function CareerJobDetailsInfo({ job }: Props) {
           <Iconify icon="carbon:money" width={24} />
           <Stack>
             <Typography variant="subtitle2"> Offered Salary (month) </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {typeof salary === 'number' ? fCurrency(salary) : salary}
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+              {typeof salary === "number" ? fCurrency(salary) : salary}
             </Typography>
           </Stack>
         </Stack>
@@ -55,7 +55,7 @@ export default function CareerJobDetailsInfo({ job }: Props) {
           <Iconify icon="carbon:increase-level" width={24} />
           <Stack>
             <Typography variant="subtitle2"> Experience </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
               {`${experience} year exp`}
             </Typography>
           </Stack>
@@ -65,7 +65,7 @@ export default function CareerJobDetailsInfo({ job }: Props) {
           <Iconify icon="carbon:user" width={24} />
           <Stack>
             <Typography variant="subtitle2"> Level </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
               {level}
             </Typography>
           </Stack>
@@ -75,8 +75,8 @@ export default function CareerJobDetailsInfo({ job }: Props) {
           <Iconify icon="carbon:translate" width={24} />
           <Stack>
             <Typography variant="subtitle2"> Language </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {typeof languages === 'string' ? languages : languages.join(', ')}
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+              {typeof languages === "string" ? languages : languages.join(", ")}
             </Typography>
           </Stack>
         </Stack>

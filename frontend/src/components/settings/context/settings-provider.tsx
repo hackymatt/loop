@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import isEqual from 'lodash.isequal';
-import { useMemo, useState, useCallback } from 'react';
+import isEqual from "lodash.isequal";
+import { useMemo, useState, useCallback } from "react";
 
-import { useLocalStorage } from 'src/hooks/use-local-storage';
+import { useLocalStorage } from "src/hooks/use-local-storage";
 
-import { SettingsValueProps } from '../types';
-import { SettingsContext } from './settings-context';
+import { SettingsValueProps } from "../types";
+import { SettingsContext } from "./settings-context";
 
 // ----------------------------------------------------------------------
 
-const STORAGE_KEY = 'settings';
+const STORAGE_KEY = "settings";
 
 type Props = {
   children: React.ReactNode;

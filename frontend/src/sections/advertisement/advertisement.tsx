@@ -1,12 +1,12 @@
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Box, { BoxProps } from '@mui/material/Box';
-import { alpha, useTheme } from '@mui/material/styles';
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Box, { BoxProps } from "@mui/material/Box";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import Image from 'src/components/image';
+import Image from "src/components/image";
 
-import { AdvertisementProps } from './types';
+import { AdvertisementProps } from "./types";
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ export default function Advertisement({ advertisement, sx, ...other }: Props) {
   const theme = useTheme();
 
   return (
-    <Box sx={{ position: 'relative', borderRadius: 2, overflow: 'hidden', ...sx }} {...other}>
+    <Box sx={{ position: "relative", borderRadius: 2, overflow: "hidden", ...sx }} {...other}>
       <Stack
         alignItems="center"
         sx={{
@@ -26,15 +26,15 @@ export default function Advertisement({ advertisement, sx, ...other }: Props) {
           width: 1,
           bottom: 0,
           zIndex: 9,
-          textAlign: 'center',
-          position: 'absolute',
+          textAlign: "center",
+          position: "absolute",
         }}
       >
-        <Typography variant="h4" sx={{ color: 'primary.main' }}>
+        <Typography variant="h4" sx={{ color: "primary.main" }}>
           {advertisement.title}
         </Typography>
 
-        <Typography variant="body2" sx={{ mt: 1, mb: 3, color: 'common.white' }}>
+        <Typography variant="body2" sx={{ mt: 1, mb: 3, color: "common.white" }}>
           {advertisement.description}
         </Typography>
 

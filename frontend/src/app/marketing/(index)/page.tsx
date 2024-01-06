@@ -1,9 +1,9 @@
-import MarketingLandingView from 'src/sections/_marketing/view/marketing-landing-view';
+import MarketingLandingView from "src/sections/_marketing/view/marketing-landing-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Marketing: Home',
+  title: "Marketing: Home",
 };
 
 export default function MarketingLandingPage() {

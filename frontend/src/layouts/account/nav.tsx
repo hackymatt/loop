@@ -1,49 +1,49 @@
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Drawer from '@mui/material/Drawer';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
-import { alpha } from '@mui/material/styles';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemButton from '@mui/material/ListItemButton';
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import Drawer from "@mui/material/Drawer";
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
+import { alpha } from "@mui/material/styles";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemButton from "@mui/material/ListItemButton";
 
-import { paths } from 'src/routes/paths';
-import { useActiveLink } from 'src/routes/hooks';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { useActiveLink } from "src/routes/hooks";
+import { RouterLink } from "src/routes/components";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import { _mock } from 'src/_mock';
+import { _mock } from "src/_mock";
 
-import Iconify from 'src/components/iconify';
-import TextMaxLine from 'src/components/text-max-line';
+import Iconify from "src/components/iconify";
+import TextMaxLine from "src/components/text-max-line";
 
 // ----------------------------------------------------------------------
 
 const navigations = [
   {
-    title: 'Personal Info',
+    title: "Personal Info",
     path: paths.eCommerce.account.personal,
     icon: <Iconify icon="carbon:user" />,
   },
   {
-    title: 'Wishlist',
+    title: "Wishlist",
     path: paths.eCommerce.account.wishlist,
     icon: <Iconify icon="carbon:favorite" />,
   },
   {
-    title: 'Vouchers',
+    title: "Vouchers",
     path: paths.eCommerce.account.vouchers,
     icon: <Iconify icon="carbon:cut-out" />,
   },
   {
-    title: 'Orders',
+    title: "Orders",
     path: paths.eCommerce.account.orders,
     icon: <Iconify icon="carbon:document" />,
   },
   {
-    title: 'Payment',
+    title: "Payment",
     path: paths.eCommerce.account.payment,
     icon: <Iconify icon="carbon:purchase" />,
   },
@@ -57,7 +57,7 @@ type Props = {
 };
 
 export default function Nav({ open, onClose }: Props) {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const renderContent = (
     <Stack
@@ -78,9 +78,9 @@ export default function Nav({ open, onClose }: Props) {
             direction="row"
             alignItems="center"
             sx={{
-              typography: 'caption',
-              cursor: 'pointer',
-              '&:hover': { opacity: 0.72 },
+              typography: "caption",
+              cursor: "pointer",
+              "&:hover": { opacity: 0.72 },
             }}
           >
             <Iconify icon="carbon:edit" sx={{ mr: 1 }} />
@@ -92,13 +92,13 @@ export default function Nav({ open, onClose }: Props) {
           <TextMaxLine variant="subtitle1" line={1}>
             Jayvion Simon
           </TextMaxLine>
-          <TextMaxLine variant="body2" line={1} sx={{ color: 'text.secondary' }}>
+          <TextMaxLine variant="body2" line={1} sx={{ color: "text.secondary" }}>
             nannie_abernathy70@yahoo.com
           </TextMaxLine>
         </Stack>
       </Stack>
 
-      <Divider sx={{ borderStyle: 'dashed' }} />
+      <Divider sx={{ borderStyle: "dashed" }} />
 
       <Stack sx={{ my: 1, px: 2 }}>
         {navigations.map((item) => (
@@ -106,7 +106,7 @@ export default function Nav({ open, onClose }: Props) {
         ))}
       </Stack>
 
-      <Divider sx={{ borderStyle: 'dashed' }} />
+      <Divider sx={{ borderStyle: "dashed" }} />
 
       <Stack sx={{ my: 1, px: 2 }}>
         <ListItemButton
@@ -122,7 +122,7 @@ export default function Nav({ open, onClose }: Props) {
           <ListItemText
             primary="Logout"
             primaryTypographyProps={{
-              typography: 'body2',
+              typography: "body2",
             }}
           />
         </ListItemButton>
@@ -169,7 +169,7 @@ function NavItem({ item }: NavItemProps) {
       component={RouterLink}
       key={item.title}
       href={item.path}
-      color={active ? 'primary' : 'inherit'}
+      color={active ? "primary" : "inherit"}
       underline="none"
     >
       <ListItemButton
@@ -183,9 +183,9 @@ function NavItem({ item }: NavItemProps) {
         <ListItemText
           primary={item.title}
           primaryTypographyProps={{
-            typography: 'body2',
+            typography: "body2",
             ...(active && {
-              typography: 'subtitle2',
+              typography: "subtitle2",
             }),
           }}
         />

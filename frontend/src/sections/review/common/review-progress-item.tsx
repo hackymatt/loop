@@ -1,14 +1,14 @@
-import Box from '@mui/material/Box';
-import Radio from '@mui/material/Radio';
-import Stack from '@mui/material/Stack';
-import { alpha } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
-import LinearProgress from '@mui/material/LinearProgress';
-import FormControlLabel, { formControlLabelClasses } from '@mui/material/FormControlLabel';
+import Box from "@mui/material/Box";
+import Radio from "@mui/material/Radio";
+import Stack from "@mui/material/Stack";
+import { alpha } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
+import LinearProgress from "@mui/material/LinearProgress";
+import FormControlLabel, { formControlLabelClasses } from "@mui/material/FormControlLabel";
 
-import { fShortenNumber } from 'src/utils/format-number';
+import { fShortenNumber } from "src/utils/format-number";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
@@ -25,15 +25,15 @@ export default function ReviewProgressItem({ rating, totals, index }: Props) {
   return (
     <FormControlLabel
       value={rating.value}
-      control={<Radio sx={{ display: 'none' }} />}
+      control={<Radio sx={{ display: "none" }} />}
       label={
         <Stack alignItems="center" direction="row">
           <Stack direction="row" alignItems="center">
             <Box
               sx={{
                 width: 12,
-                typography: 'subtitle1',
-                textAlign: 'center',
+                typography: "subtitle1",
+                textAlign: "center",
                 mr: 0.5,
               }}
             >
@@ -50,7 +50,7 @@ export default function ReviewProgressItem({ rating, totals, index }: Props) {
               mx: 2,
               width: 1,
               height: 6,
-              '&:before': {
+              "&:before": {
                 opacity: 1,
                 bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
               },
@@ -61,7 +61,7 @@ export default function ReviewProgressItem({ rating, totals, index }: Props) {
             variant="body2"
             sx={{
               minWidth: 40,
-              color: 'text.disabled',
+              color: "text.disabled",
             }}
           >
             {fShortenNumber(rating.number)}
@@ -70,7 +70,7 @@ export default function ReviewProgressItem({ rating, totals, index }: Props) {
       }
       sx={{
         mx: 0,
-        '&:hover': { opacity: 0.48 },
+        "&:hover": { opacity: 0.48 },
         [`& .${formControlLabelClasses.label}`]: {
           width: 1,
         },

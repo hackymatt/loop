@@ -1,21 +1,21 @@
-import { memo } from 'react';
-import { m } from 'framer-motion';
+import { memo } from "react";
+import { m } from "framer-motion";
 
-import Box, { BoxProps } from '@mui/material/Box';
+import Box, { BoxProps } from "@mui/material/Box";
 
-import Dot from './dots';
-import Circle from './circle';
+import Dot from "./dots";
+import Circle from "./circle";
 
 // ----------------------------------------------------------------------
 
 const animateDown = (duration = 60) => ({
   animate: { rotate: [360, 0] },
-  transition: { duration, repeat: Infinity, ease: 'linear' },
+  transition: { duration, repeat: Infinity, ease: "linear" },
 });
 
 const animateUp = (duration = 60) => ({
   animate: { rotate: [0, 360] },
-  transition: { duration, repeat: Infinity, ease: 'linear' },
+  transition: { duration, repeat: Infinity, ease: "linear" },
 });
 
 function Pattern02({ sx, ...other }: BoxProps) {
@@ -24,16 +24,16 @@ function Pattern02({ sx, ...other }: BoxProps) {
       sx={{
         width: 1,
         height: 1,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'absolute',
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "absolute",
         ...sx,
       }}
       {...other}
     >
       <Circle hide component={m.div} {...animateDown()}>
-        <Dot sx={{ left: -12, top: '50%', mt: -1.5 }} />
+        <Dot sx={{ left: -12, top: "50%", mt: -1.5 }} />
       </Circle>
 
       <Circle hide component={m.div} {...animateUp(80)}>

@@ -1,13 +1,13 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Typography from '@mui/material/Typography';
+import Typography from "@mui/material/Typography";
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from "src/hooks/use-boolean";
 
-import { ICourseLessonProp } from 'src/types/course';
+import { ICourseLessonProp } from "src/types/course";
 
-import ElearningCourseDetailsLessonItem from './elearning-course-details-lesson-item';
-import ElearningCourseDetailsLessonsDialog from './elearning-course-details-lessons-dialog';
+import ElearningCourseDetailsLessonItem from "./elearning-course-details-lesson-item";
+import ElearningCourseDetailsLessonsDialog from "./elearning-course-details-lessons-dialog";
 
 // ----------------------------------------------------------------------
 

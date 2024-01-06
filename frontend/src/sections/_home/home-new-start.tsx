@@ -1,12 +1,12 @@
-import { m } from 'framer-motion';
+import { m } from "framer-motion";
 
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import Image from 'src/components/image';
-import { varFade, MotionViewport } from 'src/components/animate';
+import Image from "src/components/image";
+import { varFade, MotionViewport } from "src/components/animate";
 
 // ----------------------------------------------------------------------
 
@@ -23,21 +23,21 @@ export default function HomeNewStart() {
         sx={{
           pb: 10,
           borderRadius: 3,
-          textAlign: 'center',
-          bgcolor: 'background.neutral',
+          textAlign: "center",
+          bgcolor: "background.neutral",
         }}
       >
         <m.div variants={varFade().inUp}>
           <Image
             alt="cover"
             src="/assets/images/home/new_start.png"
-            sx={{ maxWidth: 720, mx: 'auto' }}
+            sx={{ maxWidth: 720, mx: "auto" }}
           />
         </m.div>
 
-        <Box sx={{ mt: 3, mx: 'auto', px: 3, maxWidth: 560 }}>
+        <Box sx={{ mt: 3, mx: "auto", px: 3, maxWidth: 560 }}>
           <m.div variants={varFade().inDown}>
-            <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+            <Typography variant="overline" sx={{ color: "text.disabled" }}>
               new start
             </Typography>
           </m.div>
@@ -45,7 +45,7 @@ export default function HomeNewStart() {
           <m.div variants={varFade().inDown}>
             <Typography variant="h2" sx={{ my: 3 }}>
               The
-              <Box component="span" sx={{ color: 'primary.main' }}>
+              <Box component="span" sx={{ color: "primary.main" }}>
                 {` ZONE `}
               </Box>
               UI Kit
@@ -53,7 +53,7 @@ export default function HomeNewStart() {
           </m.div>
 
           <m.div variants={varFade().inDown}>
-            <Typography sx={{ color: 'text.secondary' }}>
+            <Typography sx={{ color: "text.secondary" }}>
               Modern ui kit to save your time, boost your creativity. Neat and super stylish layout
               ready to help with your projects
             </Typography>

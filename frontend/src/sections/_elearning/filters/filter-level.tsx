@@ -1,12 +1,12 @@
-import MenuItem from '@mui/material/MenuItem';
-import Typography from '@mui/material/Typography';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import Checkbox, { checkboxClasses } from '@mui/material/Checkbox';
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Checkbox, { checkboxClasses } from "@mui/material/Checkbox";
 
 // ----------------------------------------------------------------------
 
-const LEVELS = ['Beginner', 'Intermediate', 'Expert'];
+const LEVELS = ["Beginner", "Intermediate", "Expert"];
 
 // ----------------------------------------------------------------------
 
@@ -26,14 +26,14 @@ export default function FilterLevel({ filterLevel, onChangeLevel }: Props) {
         renderValue={(selected) => {
           if (!selected.length) {
             return (
-              <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+              <Typography variant="body2" sx={{ color: "text.disabled" }}>
                 All levels
               </Typography>
             );
           }
           return (
             <Typography variant="subtitle2" component="span">
-              {selected.join(', ')}
+              {selected.join(", ")}
             </Typography>
           );
         }}

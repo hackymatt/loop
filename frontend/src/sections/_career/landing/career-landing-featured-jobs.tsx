@@ -1,18 +1,18 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Unstable_Grid2';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Unstable_Grid2";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import { IJobProps } from 'src/types/job';
+import { IJobProps } from "src/types/job";
 
-import CareerJobItem from '../list/career-job-item';
+import CareerJobItem from "../list/career-job-item";
 
 // ----------------------------------------------------------------------
 
@@ -32,11 +32,11 @@ export default function CareerLandingFeaturedJobs({ jobs }: Props) {
         container
         spacing={{ xs: 2, md: 4 }}
         sx={{
-          textAlign: { xs: 'center', md: 'unset' },
+          textAlign: { xs: "center", md: "unset" },
         }}
       >
         <Grid xs={12} md={4}>
-          <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+          <Typography variant="overline" sx={{ color: "text.disabled" }}>
             Featured Jobs
           </Typography>
         </Grid>
@@ -52,13 +52,13 @@ export default function CareerLandingFeaturedJobs({ jobs }: Props) {
       <Box
         sx={{
           columnGap: 4,
-          display: 'grid',
+          display: "grid",
           py: { xs: 8, md: 10 },
           rowGap: { xs: 4, md: 5 },
           gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(2, 1fr)',
-            md: 'repeat(3, 1fr)',
+            xs: "repeat(1, 1fr)",
+            sm: "repeat(2, 1fr)",
+            md: "repeat(3, 1fr)",
           },
         }}
       >

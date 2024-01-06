@@ -1,6 +1,6 @@
-import { memo } from 'react';
+import { memo } from "react";
 
-import Box, { BoxProps } from '@mui/material/Box';
+import Box, { BoxProps } from "@mui/material/Box";
 
 // ----------------------------------------------------------------------
 
@@ -11,7 +11,7 @@ interface Props extends BoxProps {
 
 function Circle({ children, hide = false, sx, ...other }: Props) {
   return (
-    <Box sx={{ width: 460, height: 460, position: 'absolute', ...sx }} {...other}>
+    <Box sx={{ width: 460, height: 460, position: "absolute", ...sx }} {...other}>
       {!hide && (
         <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 520 520">
           <g

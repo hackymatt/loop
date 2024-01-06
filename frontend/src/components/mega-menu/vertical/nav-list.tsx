@@ -1,18 +1,18 @@
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback } from "react";
 
-import Masonry from '@mui/lab/Masonry';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
+import Masonry from "@mui/lab/Masonry";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
 
-import { usePathname, useActiveLink } from 'src/routes/hooks';
+import { usePathname, useActiveLink } from "src/routes/hooks";
 
-import NavItem from './nav-item';
-import { NavListProps } from '../types';
-import MenuTags from '../common/menu-tags';
-import NavSubList from '../common/nav-sub-list';
-import MenuProducts from '../common/menu-products';
-import MenuMoreLink from '../common/menu-more-link';
+import NavItem from "./nav-item";
+import { NavListProps } from "../types";
+import MenuTags from "../common/menu-tags";
+import NavSubList from "../common/nav-sub-list";
+import MenuProducts from "../common/menu-products";
+import MenuMoreLink from "../common/menu-more-link";
 
 // ----------------------------------------------------------------------
 
@@ -57,10 +57,10 @@ export default function NavList({ data, slotProps }: NavListProps) {
         icon={data.icon}
         //
         hasChild={!!data.children}
-        externalLink={data.path.includes('http')}
+        externalLink={data.path.includes("http")}
         //
         active={active}
-        className={active ? 'active' : ''}
+        className={active ? "active" : ""}
         sx={slotProps?.rootItem}
       />
 
@@ -73,13 +73,13 @@ export default function NavList({ data, slotProps }: NavListProps) {
             top: -40,
             width: 800,
             borderRadius: 2,
-            position: 'absolute',
-            left: 'calc(100% - 2px)',
+            position: "absolute",
+            left: "calc(100% - 2px)",
             zIndex: (theme) => theme.zIndex.drawer,
             boxShadow: (theme) => theme.customShadows.z20,
             ...(singleList && {
               p: 2,
-              width: 'auto',
+              width: "auto",
               minWidth: 160,
             }),
           }}
@@ -99,7 +99,7 @@ export default function NavList({ data, slotProps }: NavListProps) {
 
             {!!data.products && (
               <>
-                <Divider sx={{ borderStyle: 'dashed' }} />
+                <Divider sx={{ borderStyle: "dashed" }} />
 
                 <MenuProducts products={data.products} displayProduct={slotProps?.displayProduct} />
               </>
@@ -107,7 +107,7 @@ export default function NavList({ data, slotProps }: NavListProps) {
 
             {!!data.tags && (
               <>
-                <Divider sx={{ borderStyle: 'dashed' }} />
+                <Divider sx={{ borderStyle: "dashed" }} />
                 <MenuTags tags={data.tags} />
               </>
             )}

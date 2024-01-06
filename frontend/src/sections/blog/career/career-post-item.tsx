@@ -1,18 +1,18 @@
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { fDate } from 'src/utils/format-time';
+import { fDate } from "src/utils/format-time";
 
-import Image from 'src/components/image';
+import Image from "src/components/image";
 
-import { IBlogPostProps } from 'src/types/blog';
+import { IBlogPostProps } from "src/types/blog";
 
-import PostTimeBlock from '../common/post-time-block';
+import PostTimeBlock from "../common/post-time-block";
 
 // ----------------------------------------------------------------------
 
@@ -30,21 +30,21 @@ export default function CareerPostItem({ post, index }: Props) {
     <Stack
       sx={{
         borderRadius: 2,
-        overflow: 'hidden',
-        position: 'relative',
+        overflow: "hidden",
+        position: "relative",
       }}
     >
       {!noImage && (
-        <Image src={post.coverUrl} alt={post.title} ratio={smallImage ? '4/3' : '1/1'} />
+        <Image src={post.coverUrl} alt={post.title} ratio={smallImage ? "4/3" : "1/1"} />
       )}
 
       <Stack
         spacing={1}
         sx={{
           p: 3,
-          bgcolor: 'background.neutral',
+          bgcolor: "background.neutral",
           ...(noImage && {
-            bgcolor: 'primary.lighter',
+            bgcolor: "primary.lighter",
           }),
         }}
       >
@@ -52,7 +52,7 @@ export default function CareerPostItem({ post, index }: Props) {
           createdAt={fDate(post.createdAt)}
           duration={post.duration}
           sx={{
-            ...(noImage && { color: 'grey.500' }),
+            ...(noImage && { color: "grey.500" }),
           }}
         />
 
@@ -63,7 +63,7 @@ export default function CareerPostItem({ post, index }: Props) {
           variant="h5"
           sx={{
             ...(noImage && {
-              color: 'grey.800',
+              color: "grey.800",
             }),
           }}
         >
@@ -73,9 +73,9 @@ export default function CareerPostItem({ post, index }: Props) {
         <Typography
           variant="body2"
           sx={{
-            color: 'text.secondary',
+            color: "text.secondary",
             ...(noImage && {
-              color: 'grey.600',
+              color: "grey.600",
             }),
           }}
         >
@@ -86,10 +86,10 @@ export default function CareerPostItem({ post, index }: Props) {
           direction="row"
           alignItems="center"
           sx={{
-            typography: 'body2',
+            typography: "body2",
             pt: 1.5,
             ...(noImage && {
-              color: 'grey.800',
+              color: "grey.800",
             }),
           }}
         >

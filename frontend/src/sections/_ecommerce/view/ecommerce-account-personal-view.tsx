@@ -1,27 +1,27 @@
-'use client';
+"use client";
 
-import * as Yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Controller } from 'react-hook-form';
+import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm, Controller } from "react-hook-form";
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import LoadingButton from '@mui/lab/LoadingButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import LoadingButton from "@mui/lab/LoadingButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from "src/hooks/use-boolean";
 
-import { countries } from 'src/assets/data';
+import { countries } from "src/assets/data";
 
-import Iconify from 'src/components/iconify';
-import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
+import Iconify from "src/components/iconify";
+import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
-const GENDER_OPTIONS = ['Male', 'Female', 'Other'];
+const GENDER_OPTIONS = ["Male", "Female", "Other"];
 
 // ----------------------------------------------------------------------
 
@@ -29,31 +29,31 @@ export default function EcommerceAccountPersonalView() {
   const passwordShow = useBoolean();
 
   const EcommerceAccountPersonalSchema = Yup.object().shape({
-    firstName: Yup.string().required('First name is required'),
-    lastName: Yup.string().required('Last name is required'),
-    emailAddress: Yup.string().required('Email address is required'),
-    phoneNumber: Yup.string().required('Phone number is required'),
-    birthday: Yup.mixed<any>().nullable().required('Birthday is required'),
-    gender: Yup.string().required('Gender is required'),
-    streetAddress: Yup.string().required('Street address is required'),
-    city: Yup.string().required('City is required'),
-    zipCode: Yup.string().required('Zip code is required'),
+    firstName: Yup.string().required("First name is required"),
+    lastName: Yup.string().required("Last name is required"),
+    emailAddress: Yup.string().required("Email address is required"),
+    phoneNumber: Yup.string().required("Phone number is required"),
+    birthday: Yup.mixed<any>().nullable().required("Birthday is required"),
+    gender: Yup.string().required("Gender is required"),
+    streetAddress: Yup.string().required("Street address is required"),
+    city: Yup.string().required("City is required"),
+    zipCode: Yup.string().required("Zip code is required"),
   });
 
   const defaultValues = {
-    firstName: 'Jayvion',
-    lastName: 'Simon',
-    emailAddress: 'nannie_abernathy70@yahoo.com',
-    phoneNumber: '365-374-4961',
+    firstName: "Jayvion",
+    lastName: "Simon",
+    emailAddress: "nannie_abernathy70@yahoo.com",
+    phoneNumber: "365-374-4961",
     birthday: null,
-    gender: 'Male',
-    streetAddress: '',
-    zipCode: '',
-    city: '',
-    country: 'United States',
-    oldPassword: '',
-    newPassword: '',
-    confirmNewPassword: '',
+    gender: "Male",
+    streetAddress: "",
+    zipCode: "",
+    city: "",
+    country: "United States",
+    oldPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
   };
 
   const methods = useForm({
@@ -71,7 +71,7 @@ export default function EcommerceAccountPersonalView() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
-      console.log('DATA', data);
+      console.log("DATA", data);
     } catch (error) {
       console.error(error);
     }
@@ -87,7 +87,7 @@ export default function EcommerceAccountPersonalView() {
         rowGap={2.5}
         columnGap={2}
         display="grid"
-        gridTemplateColumns={{ xs: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+        gridTemplateColumns={{ xs: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
       >
         <RHFTextField name="firstName" label="First Name" />
 
@@ -145,12 +145,12 @@ export default function EcommerceAccountPersonalView() {
           <RHFTextField
             name="oldPassword"
             label="Old Password"
-            type={passwordShow.value ? 'text' : 'password'}
+            type={passwordShow.value ? "text" : "password"}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={passwordShow.onToggle} edge="end">
-                    <Iconify icon={passwordShow.value ? 'carbon:view' : 'carbon:view-off'} />
+                    <Iconify icon={passwordShow.value ? "carbon:view" : "carbon:view-off"} />
                   </IconButton>
                 </InputAdornment>
               ),
@@ -160,12 +160,12 @@ export default function EcommerceAccountPersonalView() {
           <RHFTextField
             name="newPassword"
             label="New Password"
-            type={passwordShow.value ? 'text' : 'password'}
+            type={passwordShow.value ? "text" : "password"}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={passwordShow.onToggle} edge="end">
-                    <Iconify icon={passwordShow.value ? 'carbon:view' : 'carbon:view-off'} />
+                    <Iconify icon={passwordShow.value ? "carbon:view" : "carbon:view-off"} />
                   </IconButton>
                 </InputAdornment>
               ),
@@ -175,12 +175,12 @@ export default function EcommerceAccountPersonalView() {
           <RHFTextField
             name="confirmNewPassword"
             label="Confirm New Password"
-            type={passwordShow.value ? 'text' : 'password'}
+            type={passwordShow.value ? "text" : "password"}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={passwordShow.onToggle} edge="end">
-                    <Iconify icon={passwordShow.value ? 'carbon:view' : 'carbon:view-off'} />
+                    <Iconify icon={passwordShow.value ? "carbon:view" : "carbon:view-off"} />
                   </IconButton>
                 </InputAdornment>
               ),

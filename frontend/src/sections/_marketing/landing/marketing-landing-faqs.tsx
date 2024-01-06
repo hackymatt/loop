@@ -1,24 +1,24 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Stack from '@mui/material/Stack';
-import Accordion from '@mui/material/Accordion';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary, { accordionSummaryClasses } from '@mui/material/AccordionSummary';
+import Stack from "@mui/material/Stack";
+import Accordion from "@mui/material/Accordion";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary, { accordionSummaryClasses } from "@mui/material/AccordionSummary";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import { _faqs } from 'src/_mock';
+import { _faqs } from "src/_mock";
 
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
 export default function MarketingLandingFaqs() {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const [expanded, setExpanded] = useState<string | false>(false);
 
@@ -38,7 +38,7 @@ export default function MarketingLandingFaqs() {
     >
       <Grid container spacing={3} justifyContent="space-between" alignItems="center">
         <Grid xs={12} md={6} lg={6}>
-          <Stack spacing={2} sx={{ mb: 5, textAlign: { xs: 'center', md: 'left' } }}>
+          <Stack spacing={2} sx={{ mb: 5, textAlign: { xs: "center", md: "left" } }}>
             <Typography variant="overline" color="text.disabled">
               FAQS
             </Typography>
@@ -60,7 +60,7 @@ export default function MarketingLandingFaqs() {
                     m: 0,
                   },
                   [`&.${accordionSummaryClasses.expanded}`]: {
-                    bgcolor: 'action.selected',
+                    bgcolor: "action.selected",
                   },
                 }}
               >
@@ -70,7 +70,7 @@ export default function MarketingLandingFaqs() {
 
                 <Iconify
                   width={24}
-                  icon={expanded === faq.question ? 'carbon:subtract' : 'carbon:add'}
+                  icon={expanded === faq.question ? "carbon:subtract" : "carbon:add"}
                 />
               </AccordionSummary>
 

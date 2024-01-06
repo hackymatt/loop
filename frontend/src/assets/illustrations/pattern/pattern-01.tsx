@@ -1,8 +1,8 @@
-import { memo } from 'react';
-import { m } from 'framer-motion';
+import { memo } from "react";
+import { m } from "framer-motion";
 
-import { useTheme } from '@mui/material/styles';
-import Box, { BoxProps } from '@mui/material/Box';
+import { useTheme } from "@mui/material/styles";
+import Box, { BoxProps } from "@mui/material/Box";
 
 // ----------------------------------------------------------------------
 
@@ -31,7 +31,7 @@ const varRight = {
 function Pattern01({ sx, ...other }: BoxProps) {
   const theme = useTheme();
 
-  const PURPLE = '#DC8CFF';
+  const PURPLE = "#DC8CFF";
   const BLUE = theme.palette.info.light;
   const RED = theme.palette.error.light;
   const CYAN = theme.palette.info.lighter;
@@ -39,7 +39,7 @@ function Pattern01({ sx, ...other }: BoxProps) {
   const ORANGE = theme.palette.warning.light;
 
   return (
-    <Box sx={{ width: 1, height: 1, position: 'absolute', opacity: 0.32, ...sx }} {...other}>
+    <Box sx={{ width: 1, height: 1, position: "absolute", opacity: 0.32, ...sx }} {...other}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="100%"

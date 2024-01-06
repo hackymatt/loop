@@ -1,16 +1,16 @@
-import Box from '@mui/material/Box';
-import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
-import TableHead from '@mui/material/TableHead';
-import TableCell from '@mui/material/TableCell';
-import TableSortLabel from '@mui/material/TableSortLabel';
+import Box from "@mui/material/Box";
+import TableRow from "@mui/material/TableRow";
+import Checkbox from "@mui/material/Checkbox";
+import TableHead from "@mui/material/TableHead";
+import TableCell from "@mui/material/TableCell";
+import TableSortLabel from "@mui/material/TableSortLabel";
 
-import { visuallyHidden } from './utils';
+import { visuallyHidden } from "./utils";
 
 // ----------------------------------------------------------------------
 
 interface Prop {
-  order: 'asc' | 'desc';
+  order: "asc" | "desc";
   orderBy: string;
   rowCount: number;
   headCells: any[];
@@ -42,20 +42,20 @@ export default function EcommerceAccountOrdersTableHead({
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.align ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'normal' : 'normal'}
+            align={headCell.align ? "right" : "left"}
+            padding={headCell.disablePadding ? "normal" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
             sx={{ width: headCell.width, minWidth: headCell.minWidth }}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
+              direction={orderBy === headCell.id ? order : "asc"}
               onClick={() => onSort(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </Box>
               ) : null}
             </TableSortLabel>

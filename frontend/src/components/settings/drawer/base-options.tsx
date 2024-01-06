@@ -1,7 +1,7 @@
-import Typography from '@mui/material/Typography';
-import ListItemButton, { ListItemButtonProps } from '@mui/material/ListItemButton';
+import Typography from "@mui/material/Typography";
+import ListItemButton, { ListItemButtonProps } from "@mui/material/ListItemButton";
 
-import Iconify from '../../iconify';
+import Iconify from "../../iconify";
 
 // ----------------------------------------------------------------------
 
@@ -16,9 +16,9 @@ export default function BaseOptions({ title, icons, selected, ...other }: Props)
     <ListItemButton
       sx={{
         p: 3,
-        justifyContent: 'space-between',
+        justifyContent: "space-between",
         ...(selected && {
-          color: 'primary.main',
+          color: "primary.main",
         }),
       }}
       {...other}

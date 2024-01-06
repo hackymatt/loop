@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------
 
 export type SettingsValueProps = {
-  themeMode: 'light' | 'dark';
-  themeDirection: 'rtl' | 'ltr';
-  themeColorPresets: 'default' | 'preset01' | 'preset02' | 'preset03' | 'preset04' | 'preset05';
+  themeMode: "light" | "dark";
+  themeDirection: "rtl" | "ltr";
+  themeColorPresets: "default" | "preset01" | "preset02" | "preset03" | "preset04" | "preset05";
 };
 
 export type SettingsContextProps = SettingsValueProps & {

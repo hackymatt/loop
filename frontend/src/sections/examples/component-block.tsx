@@ -1,7 +1,7 @@
-import Paper from '@mui/material/Paper';
-import CardHeader from '@mui/material/CardHeader';
-import Stack, { StackProps } from '@mui/material/Stack';
-import { Theme, alpha, SxProps } from '@mui/material/styles';
+import Paper from "@mui/material/Paper";
+import CardHeader from "@mui/material/CardHeader";
+import Stack, { StackProps } from "@mui/material/Stack";
+import { Theme, alpha, SxProps } from "@mui/material/styles";
 
 // ----------------------------------------------------------------------
 
@@ -17,7 +17,7 @@ export default function ComponentBlock({ title, sx, children, ...other }: BlockP
       variant="outlined"
       sx={{
         borderRadius: 1.5,
-        borderStyle: 'dashed',
+        borderStyle: "dashed",
         bgcolor: (theme) => alpha(theme.palette.grey[500], 0.04),
       }}
     >

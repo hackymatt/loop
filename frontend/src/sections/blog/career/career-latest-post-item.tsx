@@ -1,19 +1,19 @@
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { alpha, useTheme } from '@mui/material/styles';
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { fDate } from 'src/utils/format-time';
+import { fDate } from "src/utils/format-time";
 
-import Image from 'src/components/image';
-import TextMaxLine from 'src/components/text-max-line';
+import Image from "src/components/image";
+import TextMaxLine from "src/components/text-max-line";
 
-import { IBlogPostProps } from 'src/types/blog';
+import { IBlogPostProps } from "src/types/blog";
 
-import PostTimeBlock from '../common/post-time-block';
+import PostTimeBlock from "../common/post-time-block";
 
 // ----------------------------------------------------------------------
 
@@ -32,21 +32,21 @@ export default function CareerLatestPostItem({ post, order, largePost }: Props) 
       sx={{
         ...(largePost && {
           borderRadius: 2,
-          overflow: 'hidden',
-          position: 'relative',
+          overflow: "hidden",
+          position: "relative",
         }),
       }}
     >
       <Image
         src={post.coverUrl}
         alt={post.title}
-        ratio={(largePost && '3/4') || (order && '4/3') || '1/1'}
+        ratio={(largePost && "3/4") || (order && "4/3") || "1/1"}
         overlay={
           largePost
             ? `linear-gradient(to bottom, ${alpha(theme.palette.common.black, 0)} 0%, ${
                 theme.palette.common.black
               } 100%)`
-            : ''
+            : ""
         }
         sx={{ borderRadius: 2 }}
       />
@@ -58,8 +58,8 @@ export default function CareerLatestPostItem({ post, order, largePost }: Props) 
             p: 5,
             bottom: 0,
             zIndex: 9,
-            position: 'absolute',
-            color: 'common.white',
+            position: "absolute",
+            color: "common.white",
           }),
         }}
       >
@@ -69,13 +69,13 @@ export default function CareerLatestPostItem({ post, order, largePost }: Props) 
           sx={{
             ...(largePost && {
               opacity: 0.72,
-              color: 'inherit',
+              color: "inherit",
             }),
           }}
         />
 
         <Link component={RouterLink} href={paths.career.post} color="inherit">
-          <TextMaxLine variant={largePost ? 'h3' : 'h6'}>{post.title}</TextMaxLine>
+          <TextMaxLine variant={largePost ? "h3" : "h6"}>{post.title}</TextMaxLine>
         </Link>
 
         {largePost && <Typography sx={{ opacity: 0.48 }}>{post.description}</Typography>}

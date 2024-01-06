@@ -1,4 +1,4 @@
-import { sub } from 'date-fns';
+import { sub } from "date-fns";
 
 import {
   _id,
@@ -26,7 +26,7 @@ import {
   _descriptions,
   _productNames,
   _companyNames,
-} from './assets';
+} from "./assets";
 
 // ----------------------------------------------------------------------
 

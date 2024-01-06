@@ -1,17 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Unstable_Grid2';
-import Container from '@mui/material/Container';
-import { useTheme } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Grid from "@mui/material/Unstable_Grid2";
+import Container from "@mui/material/Container";
+import { useTheme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 
-import Carousel, { useCarousel, CarouselArrows } from 'src/components/carousel';
+import Carousel, { useCarousel, CarouselArrows } from "src/components/carousel";
 
-import { ITestimonialProps } from 'src/types/testimonial';
+import { ITestimonialProps } from "src/types/testimonial";
 
-import { TestimonialItemContent, TestimonialItemThumbnail } from './testimonial-item';
+import { TestimonialItemContent, TestimonialItemThumbnail } from "./testimonial-item";
 
 // ----------------------------------------------------------------------
 
@@ -36,8 +36,8 @@ export default function ElearningTestimonial({ testimonials }: Props) {
     swipeToSlide: true,
     autoplaySpeed: 3000,
     focusOnSelect: true,
-    centerPadding: '0px',
-    rtl: Boolean(theme.direction === 'rtl'),
+    centerPadding: "0px",
+    rtl: Boolean(theme.direction === "rtl"),
 
     responsive: [
       {
@@ -57,13 +57,13 @@ export default function ElearningTestimonial({ testimonials }: Props) {
   return (
     <Box
       sx={{
-        bgcolor: 'background.neutral',
-        textAlign: 'center',
-        overflow: 'hidden',
+        bgcolor: "background.neutral",
+        textAlign: "center",
+        overflow: "hidden",
         py: { xs: 10, md: 15 },
       }}
     >
-      <Container sx={{ position: 'relative' }}>
+      <Container sx={{ position: "relative" }}>
         <Grid container spacing={3} justifyContent="center">
           <Grid xs={12} md={6}>
             <Typography variant="h2" sx={{ mb: 5 }}>
@@ -74,10 +74,10 @@ export default function ElearningTestimonial({ testimonials }: Props) {
               onNext={carouselThumb.onNext}
               onPrev={carouselThumb.onPrev}
               leftButtonProps={{
-                sx: { display: { xs: 'none', md: 'inline-flex' } },
+                sx: { display: { xs: "none", md: "inline-flex" } },
               }}
               rightButtonProps={{
-                sx: { display: { xs: 'none', md: 'inline-flex' } },
+                sx: { display: { xs: "none", md: "inline-flex" } },
               }}
             >
               <Carousel
@@ -90,7 +90,7 @@ export default function ElearningTestimonial({ testimonials }: Props) {
                 ))}
               </Carousel>
 
-              <Box sx={{ mb: 3, mx: 'auto', maxWidth: { xs: 360, sm: 420 } }}>
+              <Box sx={{ mb: 3, mx: "auto", maxWidth: { xs: 360, sm: 420 } }}>
                 <Carousel
                   {...carouselThumb.carouselSettings}
                   asNavFor={carouselLarge.nav}
@@ -112,7 +112,7 @@ export default function ElearningTestimonial({ testimonials }: Props) {
                 carouselLarge.currentIndex === index && (
                   <Stack key={testimonial.id} spacing={0.5}>
                     <Typography variant="h6">{testimonial.name}</Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
                       {testimonial.role}
                     </Typography>
                   </Stack>

@@ -1,23 +1,23 @@
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
+import Card from "@mui/material/Card";
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
 
-import Image from 'src/components/image';
+import Image from "src/components/image";
 
 // ----------------------------------------------------------------------
 
 const VISIONS = [
   {
-    name: 'Vestibulum',
-    description: 'In dui magna, posuere eget, vestibulum et, tempor auctor, justo.',
+    name: "Vestibulum",
+    description: "In dui magna, posuere eget, vestibulum et, tempor auctor, justo.",
   },
   {
-    name: 'Fusce',
-    description: 'Donec elit libero, sodales nec, volutpat a, suscipit non, turpis.',
+    name: "Fusce",
+    description: "Donec elit libero, sodales nec, volutpat a, suscipit non, turpis.",
   },
-  { name: 'Praesent', description: 'Suspendisse feugiat. Quisque id odio.' },
+  { name: "Praesent", description: "Suspendisse feugiat. Quisque id odio." },
 ];
 
 // ----------------------------------------------------------------------
@@ -26,7 +26,7 @@ export default function TravelAboutOurVision() {
   return (
     <Container
       sx={{
-        overflow: 'hidden',
+        overflow: "hidden",
         py: { xs: 5, md: 10 },
       }}
     >
@@ -35,13 +35,13 @@ export default function TravelAboutOurVision() {
         sx={{
           maxWidth: 466,
           mb: { xs: 8, md: 5 },
-          mx: { xs: 'auto', md: 'unset' },
-          textAlign: { xs: 'center', md: 'left' },
+          mx: { xs: "auto", md: "unset" },
+          textAlign: { xs: "center", md: "left" },
         }}
       >
         <Typography variant="h2">Our Mission</Typography>
 
-        <Typography sx={{ color: 'text.secondary' }}>
+        <Typography sx={{ color: "text.secondary" }}>
           Curabitur ullamcorper ultricies nisi. Aenean viverra rhoncus pede.
         </Typography>
       </Stack>
@@ -50,14 +50,14 @@ export default function TravelAboutOurVision() {
         container
         spacing={{ xs: 8, md: 3 }}
         justifyContent="space-between"
-        alignItems={{ md: 'center' }}
+        alignItems={{ md: "center" }}
       >
         <Grid xs={12} md={6} lg={5}>
           <Image alt="vision" src="/assets/illustrations/illustration_vision.svg" />
         </Grid>
 
         <Grid xs={12} md={6} lg={6}>
-          <Stack alignItems={{ md: 'flex-end' }} sx={{ position: 'relative' }}>
+          <Stack alignItems={{ md: "flex-end" }} sx={{ position: "relative" }}>
             {VISIONS.map((vision, index) => {
               const { name, description } = vision;
 
@@ -73,18 +73,18 @@ export default function TravelAboutOurVision() {
                   sx={{
                     p: 4,
                     mt: 4,
-                    width: { md: 'calc(50% - 16px)' },
+                    width: { md: "calc(50% - 16px)" },
                     ...(firstVision && {
                       top: { md: 0 },
                       left: { md: 0 },
                       bottom: { md: 0 },
-                      my: { md: 'auto' },
+                      my: { md: "auto" },
                       boxShadow: { md: 0 },
                       maxHeight: { md: 304 },
-                      display: { md: 'flex' },
-                      position: { md: 'absolute' },
-                      flexDirection: { md: 'column' },
-                      justifyContent: { md: 'center' },
+                      display: { md: "flex" },
+                      position: { md: "absolute" },
+                      flexDirection: { md: "column" },
+                      justifyContent: { md: "center" },
                     }),
                     ...(secondVision && {
                       boxShadow: (theme) => ({ md: theme.customShadows.z24 }),
@@ -97,7 +97,7 @@ export default function TravelAboutOurVision() {
                   <Typography
                     variant="h1"
                     component="h2"
-                    sx={{ color: 'text.disabled', opacity: 0.24, mb: 3 }}
+                    sx={{ color: "text.disabled", opacity: 0.24, mb: 3 }}
                   >
                     {`0${index + 1}`}
                   </Typography>
@@ -106,7 +106,7 @@ export default function TravelAboutOurVision() {
                     {name}
                   </Typography>
 
-                  <Typography sx={{ color: 'text.secondary' }}>{description}</Typography>
+                  <Typography sx={{ color: "text.secondary" }}>{description}</Typography>
                 </Card>
               );
             })}

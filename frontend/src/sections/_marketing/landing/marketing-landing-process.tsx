@@ -1,32 +1,32 @@
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import Stack from '@mui/material/Stack';
-import { alpha } from '@mui/material/styles';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Card from "@mui/material/Card";
+import Stack from "@mui/material/Stack";
+import { alpha } from "@mui/material/styles";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import SvgColor from 'src/components/svg-color';
+import SvgColor from "src/components/svg-color";
 
 // ----------------------------------------------------------------------
 
-const COLORS = ['primary', 'secondary', 'warning', 'success'] as const;
+const COLORS = ["primary", "secondary", "warning", "success"] as const;
 
 const SERVICES = [
   {
-    name: 'Planning',
-    icon: '/assets/icons/ic_sketch_design.svg',
+    name: "Planning",
+    icon: "/assets/icons/ic_sketch_design.svg",
   },
   {
-    name: 'Research',
-    icon: '/assets/icons/ic_search.svg',
+    name: "Research",
+    icon: "/assets/icons/ic_search.svg",
   },
   {
-    name: 'Optimizing',
-    icon: '/assets/icons/ic_optimization.svg',
+    name: "Optimizing",
+    icon: "/assets/icons/ic_optimization.svg",
   },
   {
-    name: 'Results',
-    icon: '/assets/icons/ic_analysis.svg',
+    name: "Results",
+    icon: "/assets/icons/ic_analysis.svg",
   },
 ];
 
@@ -44,17 +44,17 @@ export default function MarketingLandingProcess() {
         sx={{
           maxWidth: 480,
           mb: { xs: 8, md: 5 },
-          mx: { xs: 'auto', md: 'unset' },
-          textAlign: { xs: 'center', md: 'unset' },
+          mx: { xs: "auto", md: "unset" },
+          textAlign: { xs: "center", md: "unset" },
         }}
       >
-        <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+        <Typography variant="overline" sx={{ color: "text.disabled" }}>
           Work Flow
         </Typography>
 
         <Typography variant="h2">Working Process</Typography>
 
-        <Typography sx={{ color: 'text.secondary' }}>
+        <Typography sx={{ color: "text.secondary" }}>
           Nunc nonummy metus. Donec elit libero, sodales nec, volutpat a, suscipit non, turpis.
         </Typography>
       </Stack>
@@ -62,12 +62,12 @@ export default function MarketingLandingProcess() {
       <Box
         sx={{
           gap: 4,
-          display: 'grid',
-          alignItems: 'flex-end',
+          display: "grid",
+          alignItems: "flex-end",
           gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(2, 1fr)',
-            md: 'repeat(4, 1fr)',
+            xs: "repeat(1, 1fr)",
+            sm: "repeat(2, 1fr)",
+            md: "repeat(4, 1fr)",
           },
         }}
       >
@@ -119,7 +119,7 @@ function ServiceItem({ service, index }: ServiceItemProps) {
         }}
       />
 
-      <Typography variant="h5" sx={{ mt: 3, textAlign: 'right' }}>
+      <Typography variant="h5" sx={{ mt: 3, textAlign: "right" }}>
         {name}
       </Typography>
     </Card>

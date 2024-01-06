@@ -1,9 +1,9 @@
-import Box from '@mui/material/Box';
-import Pagination, { paginationClasses } from '@mui/material/Pagination';
+import Box from "@mui/material/Box";
+import Pagination, { paginationClasses } from "@mui/material/Pagination";
 
-import { IReviewItemProp } from 'src/types/review';
+import { IReviewItemProp } from "src/types/review";
 
-import ReviewItem from './review-item';
+import ReviewItem from "./review-item";
 
 // ----------------------------------------------------------------------
 
@@ -57,7 +57,7 @@ export default function Reviews({ reviews }: Props) {
           mt: 5,
           mb: 10,
           [`& .${paginationClasses.ul}`]: {
-            justifyContent: 'center',
+            justifyContent: "center",
           },
         }}
       />

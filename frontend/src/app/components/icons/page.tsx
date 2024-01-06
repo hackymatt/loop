@@ -1,9 +1,9 @@
-import IconsView from 'src/sections/examples/icons-view';
+import IconsView from "src/sections/examples/icons-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: 'Components: Icons',
+  title: "Components: Icons",
 };
 
 export default function IconsPage() {

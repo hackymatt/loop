@@ -1,12 +1,12 @@
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Image from 'src/components/image';
+import Image from "src/components/image";
 
-import Header from '../common/header-simple';
+import Header from "../common/header-simple";
 
 // ----------------------------------------------------------------------
 
@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default function AuthIllustrationLayout({ children }: Props) {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   return (
     <>
@@ -46,7 +46,7 @@ export default function AuthIllustrationLayout({ children }: Props) {
               sx={{
                 p: 4,
                 borderRadius: 2,
-                textAlign: { xs: 'center', md: 'left' },
+                textAlign: { xs: "center", md: "left" },
                 boxShadow: (theme) => theme.customShadows.z24,
               }}
             >

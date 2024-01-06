@@ -1,58 +1,58 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import { alpha } from '@mui/material/styles';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import { alpha } from "@mui/material/styles";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import Image from 'src/components/image';
-import TextMaxLine from 'src/components/text-max-line';
+import Image from "src/components/image";
+import TextMaxLine from "src/components/text-max-line";
 
 // ----------------------------------------------------------------------
 
 const CATEGORIES = [
   {
-    label: 'Men Clothes',
-    icon: '/assets/icons/ecommerce/ic_men_clothes.svg',
-    path: '#',
+    label: "Men Clothes",
+    icon: "/assets/icons/ecommerce/ic_men_clothes.svg",
+    path: "#",
   },
   {
-    label: 'Women Clothes',
-    icon: '/assets/icons/ecommerce/ic_women_clothes.svg',
-    path: '#',
+    label: "Women Clothes",
+    icon: "/assets/icons/ecommerce/ic_women_clothes.svg",
+    path: "#",
   },
   {
-    label: 'Watches',
-    icon: '/assets/icons/ecommerce/ic_watches.svg',
-    path: '#',
+    label: "Watches",
+    icon: "/assets/icons/ecommerce/ic_watches.svg",
+    path: "#",
   },
   {
-    label: 'Home Appliances',
-    icon: '/assets/icons/ecommerce/ic_home_appliances.svg',
-    path: '#',
+    label: "Home Appliances",
+    icon: "/assets/icons/ecommerce/ic_home_appliances.svg",
+    path: "#",
   },
   {
-    label: 'Sport & Outdoor',
-    icon: '/assets/icons/ecommerce/ic_sport.svg',
-    path: '#',
+    label: "Sport & Outdoor",
+    icon: "/assets/icons/ecommerce/ic_sport.svg",
+    path: "#",
   },
   {
-    label: 'Books & Stationery',
-    icon: '/assets/icons/ecommerce/ic_book.svg',
-    path: '#',
+    label: "Books & Stationery",
+    icon: "/assets/icons/ecommerce/ic_book.svg",
+    path: "#",
   },
   {
-    label: 'Home & Living',
-    icon: '/assets/icons/ecommerce/ic_home_living.svg',
-    path: '#',
+    label: "Home & Living",
+    icon: "/assets/icons/ecommerce/ic_home_living.svg",
+    path: "#",
   },
-  { label: 'Health', icon: '/assets/icons/ecommerce/ic_health.svg', path: '#' },
-  { label: 'Mobile', icon: '/assets/icons/ecommerce/ic_mobile.svg', path: '#' },
-  { label: 'Laptop', icon: '/assets/icons/ecommerce/ic_laptop.svg', path: '#' },
-  { label: 'Tablet', icon: '/assets/icons/ecommerce/ic_tablet.svg', path: '#' },
+  { label: "Health", icon: "/assets/icons/ecommerce/ic_health.svg", path: "#" },
+  { label: "Mobile", icon: "/assets/icons/ecommerce/ic_mobile.svg", path: "#" },
+  { label: "Laptop", icon: "/assets/icons/ecommerce/ic_laptop.svg", path: "#" },
+  { label: "Tablet", icon: "/assets/icons/ecommerce/ic_tablet.svg", path: "#" },
   {
-    label: 'Headphones',
-    icon: '/assets/icons/ecommerce/ic_headphones.svg',
-    path: '#',
+    label: "Headphones",
+    icon: "/assets/icons/ecommerce/ic_headphones.svg",
+    path: "#",
   },
 ];
 
@@ -69,7 +69,7 @@ export default function EcommerceLandingCategories() {
         variant="h3"
         sx={{
           mb: 8,
-          textAlign: { xs: 'center', md: 'unset' },
+          textAlign: { xs: "center", md: "unset" },
         }}
       >
         Categories
@@ -79,9 +79,9 @@ export default function EcommerceLandingCategories() {
         gap={3}
         display="grid"
         gridTemplateColumns={{
-          xs: 'repeat(2, 1fr)',
-          sm: 'repeat(4, 1fr)',
-          md: 'repeat(6, 1fr)',
+          xs: "repeat(2, 1fr)",
+          sm: "repeat(4, 1fr)",
+          md: "repeat(6, 1fr)",
         }}
       >
         {CATEGORIES.map((category) => (
@@ -93,9 +93,9 @@ export default function EcommerceLandingCategories() {
               px: 1,
               py: 3,
               borderRadius: 2,
-              cursor: 'pointer',
+              cursor: "pointer",
               border: (theme) => `solid 1px ${alpha(theme.palette.grey[500], 0.24)}`,
-              '&:hover': {
+              "&:hover": {
                 boxShadow: (theme) => `0 0 0 2px ${theme.palette.text.primary}`,
               },
             }}
@@ -104,8 +104,8 @@ export default function EcommerceLandingCategories() {
               sx={{
                 mb: 2,
                 p: 1.5,
-                bgcolor: 'background.neutral',
-                borderRadius: '50%',
+                bgcolor: "background.neutral",
+                borderRadius: "50%",
               }}
             >
               <Image src={category.icon} sx={{ width: 40, height: 40 }} />

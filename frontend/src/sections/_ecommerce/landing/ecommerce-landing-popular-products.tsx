@@ -1,23 +1,23 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import { _products } from 'src/_mock';
+import { _products } from "src/_mock";
 
-import EcommerceProductItemBestSellers from '../product/item/ecommerce-product-item-best-sellers';
+import EcommerceProductItemBestSellers from "../product/item/ecommerce-product-item-best-sellers";
 
 // ----------------------------------------------------------------------
 
-const TABS = ['Featured Products', 'Top Rated Products', 'Onsale Products'];
+const TABS = ["Featured Products", "Top Rated Products", "Onsale Products"];
 
 // ----------------------------------------------------------------------
 
 export default function EcommerceLandingPopularProducts() {
-  const [tab, setTab] = useState('Featured Products');
+  const [tab, setTab] = useState("Featured Products");
 
   const handleChangeTab = useCallback((event: React.SyntheticEvent, newValue: string) => {
     setTab(newValue);
@@ -32,7 +32,7 @@ export default function EcommerceLandingPopularProducts() {
       <Typography
         variant="h3"
         sx={{
-          textAlign: { xs: 'center', md: 'unset' },
+          textAlign: { xs: "center", md: "unset" },
         }}
       >
         Popular Products
@@ -55,9 +55,9 @@ export default function EcommerceLandingPopularProducts() {
         gap={3}
         display="grid"
         gridTemplateColumns={{
-          xs: 'repeat(1, 1fr)',
-          sm: 'repeat(2, 1fr)',
-          md: 'repeat(4, 1fr)',
+          xs: "repeat(1, 1fr)",
+          sm: "repeat(2, 1fr)",
+          md: "repeat(4, 1fr)",
         }}
       >
         {_products.slice(0, 8).map((product) => (

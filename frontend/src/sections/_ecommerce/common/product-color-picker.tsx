@@ -1,9 +1,9 @@
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import Stack, { StackProps } from '@mui/material/Stack';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import Stack, { StackProps } from "@mui/material/Stack";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
@@ -29,9 +29,9 @@ export default function ProductColorPicker({ value, options, onChange, sx }: Pro
             width: 32,
             height: 32,
             borderRadius: 1,
-            position: 'relative',
+            position: "relative",
             bgcolor: option.label,
-            color: 'common.white',
+            color: "common.white",
             ...sx,
           }}
         >
@@ -39,7 +39,7 @@ export default function ProductColorPicker({ value, options, onChange, sx }: Pro
 
           <FormControlLabel
             value={option.value}
-            control={<Radio sx={{ display: 'none' }} />}
+            control={<Radio sx={{ display: "none" }} />}
             label=""
             sx={{
               m: 0,
@@ -47,7 +47,7 @@ export default function ProductColorPicker({ value, options, onChange, sx }: Pro
               right: 0,
               bottom: 0,
               left: 0,
-              position: 'absolute',
+              position: "absolute",
             }}
           />
         </Stack>

@@ -1,14 +1,14 @@
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { fDate } from 'src/utils/format-time';
+import { fDate } from "src/utils/format-time";
 
-import { IJobProps } from 'src/types/job';
+import { IJobProps } from "src/types/job";
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ export default function CareerJobDetailsCompanySimilar({ jobs }: Props) {
       sx={{
         p: 3,
         borderRadius: 2,
-        bgcolor: 'background.default',
+        bgcolor: "background.default",
       }}
     >
       <Typography variant="h5" sx={{ mb: 1 }}>
@@ -37,7 +37,7 @@ export default function CareerJobDetailsCompanySimilar({ jobs }: Props) {
           sx={{
             py: 2,
             borderBottom: (theme) => `dashed 1px ${theme.palette.divider}`,
-            '&:last-child': {
+            "&:last-child": {
               borderBottom: 0,
             },
           }}
@@ -46,7 +46,7 @@ export default function CareerJobDetailsCompanySimilar({ jobs }: Props) {
             {job.slug}
           </Link>
 
-          <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+          <Typography variant="body2" sx={{ color: "text.disabled" }}>
             {fDate(job.deadline)}
           </Typography>
         </Stack>

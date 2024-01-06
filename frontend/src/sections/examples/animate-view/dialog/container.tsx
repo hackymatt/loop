@@ -1,13 +1,13 @@
-import { m, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from "framer-motion";
 
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import Paper, { PaperProps } from '@mui/material/Paper';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import Paper, { PaperProps } from "@mui/material/Paper";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
 
-import getVariant from '../get-variant';
+import getVariant from "../get-variant";
 
 // ----------------------------------------------------------------------
 
@@ -30,10 +30,10 @@ export default function ContainerView({
       <Paper
         sx={{
           height: 480,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          bgcolor: 'background.neutral',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          bgcolor: "background.neutral",
         }}
         {...other}
       >

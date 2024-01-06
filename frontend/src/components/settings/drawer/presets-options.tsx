@@ -1,44 +1,44 @@
-import Box from '@mui/material/Box';
-import Radio from '@mui/material/Radio';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import RadioGroup from '@mui/material/RadioGroup';
-import { alpha, styled } from '@mui/material/styles';
-import CardActionArea from '@mui/material/CardActionArea';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Box from "@mui/material/Box";
+import Radio from "@mui/material/Radio";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import RadioGroup from "@mui/material/RadioGroup";
+import { alpha, styled } from "@mui/material/styles";
+import CardActionArea from "@mui/material/CardActionArea";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
-import { presetOptions } from 'src/theme/options/presets';
+import { presetOptions } from "src/theme/options/presets";
 
 // ----------------------------------------------------------------------
 
 const BOX_BORDER_RADIUS = 1.5;
 
-const StyledBoxWrap = styled('div')(() => ({
+const StyledBoxWrap = styled("div")(() => ({
   height: 104,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 }));
 
-const StyledBoxPrimary = styled('div')(() => ({
+const StyledBoxPrimary = styled("div")(() => ({
   width: 64,
   height: 64,
-  overflow: 'hidden',
-  borderRadius: '50%',
-  position: 'relative',
+  overflow: "hidden",
+  borderRadius: "50%",
+  position: "relative",
 }));
 
-const StyledBoxSecondary = styled('div')(({ theme }) => ({
+const StyledBoxSecondary = styled("div")(({ theme }) => ({
   top: 0,
   bottom: 0,
   right: 0,
-  margin: 'auto',
-  width: '50%',
-  height: '120%',
-  position: 'absolute',
-  borderRadius: '50%',
-  [theme.breakpoints.up('md')]: {
-    transition: theme.transitions.create('transform', {
+  margin: "auto",
+  width: "50%",
+  height: "120%",
+  position: "absolute",
+  borderRadius: "50%",
+  [theme.breakpoints.up("md")]: {
+    transition: theme.transitions.create("transform", {
       duration: theme.transitions.duration.complex,
       easing: theme.transitions.easing.sharp,
     }),
@@ -63,7 +63,7 @@ export default function PresetsOptions({ value, onChange }: Props) {
         dir="ltr"
         value={value}
         onChange={onChange}
-        sx={{ gap: 2, display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)' }}
+        sx={{ gap: 2, display: "grid", gridTemplateColumns: "repeat(2, 1fr)" }}
       >
         {presetOptions.map((color) => (
           <OptionItem
@@ -91,7 +91,7 @@ type OptionItemProps = {
 function OptionItem({ colorName, selected, primaryColor, secondaryColor }: OptionItemProps) {
   return (
     <Paper
-      variant={selected ? 'elevation' : 'outlined'}
+      variant={selected ? "elevation" : "outlined"}
       sx={{
         borderRadius: BOX_BORDER_RADIUS,
         ...(selected && {
@@ -108,8 +108,8 @@ function OptionItem({ colorName, selected, primaryColor, secondaryColor }: Optio
               sx={{
                 bgcolor: secondaryColor,
                 ...(selected && {
-                  transformOrigin: 'left',
-                  transform: 'rotate(25deg)',
+                  transformOrigin: "left",
+                  transform: "rotate(25deg)",
                 }),
               }}
             />
@@ -119,13 +119,13 @@ function OptionItem({ colorName, selected, primaryColor, secondaryColor }: Optio
         <FormControlLabel
           label=""
           value={colorName}
-          control={<Radio sx={{ display: 'none' }} />}
+          control={<Radio sx={{ display: "none" }} />}
           sx={{
             top: 0,
             margin: 0,
             width: 1,
             height: 1,
-            position: 'absolute',
+            position: "absolute",
           }}
         />
       </CardActionArea>

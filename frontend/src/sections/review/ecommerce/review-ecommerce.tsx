@@ -1,12 +1,12 @@
-import Container from '@mui/material/Container';
+import Container from "@mui/material/Container";
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from "src/hooks/use-boolean";
 
-import { _reviews } from 'src/_mock';
+import { _reviews } from "src/_mock";
 
-import ReviewList from './review-list';
-import ReviewSummary from './review-summary';
-import ReviewNewForm from '../common/review-new-form';
+import ReviewList from "./review-list";
+import ReviewSummary from "./review-summary";
+import ReviewNewForm from "../common/review-new-form";
 
 // ----------------------------------------------------------------------
 

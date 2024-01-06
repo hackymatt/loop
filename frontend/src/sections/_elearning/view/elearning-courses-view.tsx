@@ -1,22 +1,22 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from "src/hooks/use-boolean";
 
-import { _courses } from 'src/_mock';
+import { _courses } from "src/_mock";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import ElearningNewsletter from '../elearning-newsletter';
-import ElearningFilters from '../filters/elearning-filters';
-import ElearningCourseList from '../list/elearning-course-list';
+import ElearningNewsletter from "../elearning-newsletter";
+import ElearningFilters from "../filters/elearning-filters";
+import ElearningCourseList from "../list/elearning-course-list";
 
 // ----------------------------------------------------------------------
 
@@ -52,14 +52,14 @@ export default function ElearningCoursesView() {
             startIcon={<Iconify icon="carbon:filter" width={18} />}
             onClick={mobileOpen.onTrue}
             sx={{
-              display: { md: 'none' },
+              display: { md: "none" },
             }}
           >
             Filters
           </Button>
         </Stack>
 
-        <Stack direction={{ xs: 'column', md: 'row' }}>
+        <Stack direction={{ xs: "column", md: "row" }}>
           <ElearningFilters open={mobileOpen.value} onClose={mobileOpen.onFalse} />
 
           <Box

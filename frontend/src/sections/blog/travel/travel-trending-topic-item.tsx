@@ -1,26 +1,26 @@
-import { m } from 'framer-motion';
+import { m } from "framer-motion";
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { alpha, useTheme } from '@mui/material/styles';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import { _mock } from 'src/_mock';
+import { _mock } from "src/_mock";
 
-import Image from 'src/components/image';
-import { varHover, varTranHover } from 'src/components/animate';
+import Image from "src/components/image";
+import { varHover, varTranHover } from "src/components/animate";
 
 // ----------------------------------------------------------------------
 
 const CATEGORIES = [
-  'Marketing',
-  'Community',
-  'Tutorials',
-  'Business',
-  'Management',
-  'Sports',
-  'Travel',
-  'Design',
+  "Marketing",
+  "Community",
+  "Tutorials",
+  "Business",
+  "Management",
+  "Sports",
+  "Travel",
+  "Design",
 ];
 
 export const TOPICS = [...Array(8)].map((_, index) => ({
@@ -49,9 +49,9 @@ export default function TravelTrendingTopicItem({ topic }: Props) {
       whileHover="hover"
       variants={varHover(1)}
       transition={varTranHover()}
-      sx={{ px: 1.5, cursor: 'pointer' }}
+      sx={{ px: 1.5, cursor: "pointer" }}
     >
-      <Box sx={{ borderRadius: 2, overflow: 'hidden', position: 'relative' }}>
+      <Box sx={{ borderRadius: 2, overflow: "hidden", position: "relative" }}>
         <Stack
           spacing={0.5}
           sx={{
@@ -59,9 +59,9 @@ export default function TravelTrendingTopicItem({ topic }: Props) {
             width: 1,
             zIndex: 9,
             bottom: 0,
-            textAlign: 'center',
-            position: 'absolute',
-            color: 'common.white',
+            textAlign: "center",
+            position: "absolute",
+            color: "common.white",
           }}
         >
           <m.div variants={varHover(1.05)} transition={varTranHover()}>

@@ -1,71 +1,71 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Image from 'src/components/image';
+import Image from "src/components/image";
 
 // ----------------------------------------------------------------------
 
 const BENEFITS = [
   {
-    title: 'Online Media',
-    description: 'Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. ',
-    iconColor: 'primary',
+    title: "Online Media",
+    description: "Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. ",
+    iconColor: "primary",
   },
   {
-    title: 'Design',
-    description: 'Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. ',
-    iconColor: 'success',
+    title: "Design",
+    description: "Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. ",
+    iconColor: "success",
   },
   {
-    title: 'Marketing',
-    description: 'Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. ',
-    iconColor: 'secondary',
+    title: "Marketing",
+    description: "Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. ",
+    iconColor: "secondary",
   },
   {
-    title: 'HR & Recruiting',
-    description: 'Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. ',
-    iconColor: 'secondary',
+    title: "HR & Recruiting",
+    description: "Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. ",
+    iconColor: "secondary",
   },
   {
-    title: 'Management',
-    description: 'Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. ',
-    iconColor: 'success',
+    title: "Management",
+    description: "Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. ",
+    iconColor: "success",
   },
   {
-    title: 'Branding',
-    description: 'Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. ',
-    iconColor: 'primary',
+    title: "Branding",
+    description: "Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. ",
+    iconColor: "primary",
   },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function MarketingServicesBenefits() {
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   return (
     <Box
       sx={{
-        bgcolor: 'background.neutral',
+        bgcolor: "background.neutral",
         py: { xs: 10, md: 15 },
       }}
     >
       <Container>
-        <Typography variant="h2" sx={{ textAlign: 'center' }}>
+        <Typography variant="h2" sx={{ textAlign: "center" }}>
           Benefits Achieved
         </Typography>
 
         <Typography
           sx={{
             mt: 3,
-            mx: 'auto',
+            mx: "auto",
             opacity: 0.72,
             maxWidth: 480,
-            textAlign: 'center',
+            textAlign: "center",
             mb: { xs: 8, md: 10 },
           }}
         >
@@ -74,10 +74,10 @@ export default function MarketingServicesBenefits() {
 
         <Box
           sx={{
-            display: 'grid',
-            alignItems: 'center',
+            display: "grid",
+            alignItems: "center",
             gap: { xs: 4, md: 8 },
-            gridTemplateColumns: { md: 'repeat(3, 1fr)' },
+            gridTemplateColumns: { md: "repeat(3, 1fr)" },
           }}
         >
           <Stack spacing={{ xs: 4, md: 10 }}>
@@ -117,10 +117,10 @@ function BenefitItem({ benefit, reverse, index }: BenefitItemProps) {
   return (
     <Stack
       spacing={1}
-      direction={{ xs: 'row', md: reverse ? 'row-reverse' : 'row' }}
+      direction={{ xs: "row", md: reverse ? "row-reverse" : "row" }}
       sx={{
         ...(reverse && {
-          textAlign: { md: 'right' },
+          textAlign: { md: "right" },
         }),
         ...(index === 1 && {
           pl: { md: 6 },
@@ -137,14 +137,14 @@ function BenefitItem({ benefit, reverse, index }: BenefitItemProps) {
           width: 16,
           height: 16,
           flexShrink: 0,
-          borderRadius: '50%',
+          borderRadius: "50%",
           background: (theme) =>
             `linear-gradient(to bottom, ${theme.palette.primary.light}, ${theme.palette.primary.main})`,
-          ...(iconColor === 'secondary' && {
+          ...(iconColor === "secondary" && {
             background: (theme) =>
               `linear-gradient(to bottom, ${theme.palette.secondary.light}, ${theme.palette.secondary.main})`,
           }),
-          ...(iconColor === 'success' && {
+          ...(iconColor === "success" && {
             background: (theme) =>
               `linear-gradient(to bottom, ${theme.palette.success.light}, ${theme.palette.success.main})`,
           }),
@@ -154,7 +154,7 @@ function BenefitItem({ benefit, reverse, index }: BenefitItemProps) {
       <Stack spacing={1}>
         <Typography variant="h5">{title}</Typography>
 
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
           {description}
         </Typography>
       </Stack>

@@ -1,9 +1,9 @@
-import Chip from '@mui/material/Chip';
-import TextField from '@mui/material/TextField';
-import Checkbox, { checkboxClasses } from '@mui/material/Checkbox';
-import Autocomplete, { autocompleteClasses } from '@mui/material/Autocomplete';
+import Chip from "@mui/material/Chip";
+import TextField from "@mui/material/TextField";
+import Checkbox, { checkboxClasses } from "@mui/material/Checkbox";
+import Autocomplete, { autocompleteClasses } from "@mui/material/Autocomplete";
 
-import { _tags } from 'src/_mock';
+import { _tags } from "src/_mock";
 
 // ----------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ export default function FilterCategories({ filterCategories, onChangeCategory }:
           placeholder="All Categories"
           InputProps={{
             ...params.InputProps,
-            autoComplete: 'search',
+            autoComplete: "search",
           }}
         />
       )}

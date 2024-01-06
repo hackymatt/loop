@@ -1,19 +1,19 @@
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { Theme, SxProps } from '@mui/material/styles';
-import LinearProgress from '@mui/material/LinearProgress';
+import Link from "@mui/material/Link";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { Theme, SxProps } from "@mui/material/styles";
+import LinearProgress from "@mui/material/LinearProgress";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import Image from 'src/components/image';
-import TextMaxLine from 'src/components/text-max-line';
+import Image from "src/components/image";
+import TextMaxLine from "src/components/text-max-line";
 
-import { IProductItemProps } from 'src/types/product';
+import { IProductItemProps } from "src/types/product";
 
-import ProductPrice from '../../common/product-price';
+import ProductPrice from "../../common/product-price";
 
 // ----------------------------------------------------------------------
 
@@ -31,14 +31,14 @@ export default function EcommerceProductItemHot({ product, hotProduct = false, s
         sx={{
           p: 2,
           borderRadius: 2,
-          bgcolor: 'background.default',
+          bgcolor: "background.default",
           transition: (theme) =>
-            theme.transitions.create('background-color', {
+            theme.transitions.create("background-color", {
               easing: theme.transitions.easing.easeIn,
               duration: theme.transitions.duration.shortest,
             }),
-          '&:hover': {
-            bgcolor: 'background.neutral',
+          "&:hover": {
+            bgcolor: "background.neutral",
           },
           ...sx,
         }}
@@ -48,12 +48,12 @@ export default function EcommerceProductItemHot({ product, hotProduct = false, s
           sx={{
             mb: 2,
             borderRadius: 1.5,
-            bgcolor: 'background.neutral',
+            bgcolor: "background.neutral",
           }}
         />
 
         <Stack spacing={0.5}>
-          <TextMaxLine variant="body2" line={1} sx={{ fontWeight: 'fontWeightMedium' }}>
+          <TextMaxLine variant="body2" line={1} sx={{ fontWeight: "fontWeightMedium" }}>
             {product.name}
           </TextMaxLine>
 
@@ -61,7 +61,7 @@ export default function EcommerceProductItemHot({ product, hotProduct = false, s
             price={product.price}
             sx={{
               ...(hotProduct && {
-                color: 'error.main',
+                color: "error.main",
               }),
             }}
           />
@@ -78,7 +78,7 @@ export default function EcommerceProductItemHot({ product, hotProduct = false, s
 
             <Typography
               variant="caption"
-              sx={{ flexShrink: 0, color: 'text.disabled' }}
+              sx={{ flexShrink: 0, color: "text.disabled" }}
             >{`🔥 ${product.sold} Sold`}</Typography>
           </Stack>
         )}

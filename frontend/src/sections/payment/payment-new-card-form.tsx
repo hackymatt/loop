@@ -1,12 +1,12 @@
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Dialog, { DialogProps } from '@mui/material/Dialog';
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Dialog, { DialogProps } from "@mui/material/Dialog";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ export default function PaymentNewCardForm({ onClose, ...other }: Props) {
     <Dialog maxWidth="xs" onClose={onClose} {...other}>
       <DialogTitle> Add new card </DialogTitle>
 
-      <DialogContent sx={{ overflow: 'unset' }}>
+      <DialogContent sx={{ overflow: "unset" }}>
         <Stack spacing={2.5}>
           <TextField
             label="Card Number"
@@ -51,7 +51,7 @@ export default function PaymentNewCardForm({ onClose, ...other }: Props) {
           <Stack
             direction="row"
             alignItems="center"
-            sx={{ typography: 'caption', color: 'text.disabled' }}
+            sx={{ typography: "caption", color: "text.disabled" }}
           >
             <Iconify icon="carbon:locked" sx={{ mr: 0.5 }} />
             Your transaction is secured with SSL encryption

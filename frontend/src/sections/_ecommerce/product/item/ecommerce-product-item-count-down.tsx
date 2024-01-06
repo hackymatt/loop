@@ -1,23 +1,23 @@
-import { add } from 'date-fns';
+import { add } from "date-fns";
 
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import { Theme, alpha, SxProps, useTheme } from '@mui/material/styles';
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { Theme, alpha, SxProps, useTheme } from "@mui/material/styles";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import { fCurrency } from 'src/utils/format-number';
+import { fCurrency } from "src/utils/format-number";
 
-import { ColorSchema } from 'src/theme/palette';
+import { ColorSchema } from "src/theme/palette";
 
-import Image from 'src/components/image';
-import TextMaxLine from 'src/components/text-max-line';
+import Image from "src/components/image";
+import TextMaxLine from "src/components/text-max-line";
 
-import { IProductItemProps } from 'src/types/product';
+import { IProductItemProps } from "src/types/product";
 
-import ProductCountdownBlock from '../../common/product-countdown-block';
+import ProductCountdownBlock from "../../common/product-countdown-block";
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ type Props = {
   sx?: SxProps<Theme>;
 };
 
-export default function EcommerceProductItemCountDown({ product, color = 'primary', sx }: Props) {
+export default function EcommerceProductItemCountDown({ product, color = "primary", sx }: Props) {
   const theme = useTheme();
 
   return (
@@ -39,11 +39,11 @@ export default function EcommerceProductItemCountDown({ product, color = 'primar
           borderRadius: 2,
           color: `${color}.darker`,
           bgcolor: `${color}.lighter`,
-          transition: theme.transitions.create('background-color', {
+          transition: theme.transitions.create("background-color", {
             easing: theme.transitions.easing.easeIn,
             duration: theme.transitions.duration.shortest,
           }),
-          '&:hover': {
+          "&:hover": {
             bgcolor: `${color}.light`,
           },
           ...sx,
@@ -56,7 +56,7 @@ export default function EcommerceProductItemCountDown({ product, color = 'primar
           }}
         />
 
-        <Stack spacing={1} sx={{ textAlign: 'center' }}>
+        <Stack spacing={1} sx={{ textAlign: "center" }}>
           <TextMaxLine variant="subtitle2" sx={{ opacity: 0.72 }}>
             {product.name}
           </TextMaxLine>

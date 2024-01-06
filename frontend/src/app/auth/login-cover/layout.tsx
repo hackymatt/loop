@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import AuthCoverLayout from 'src/layouts/auth/cover';
+import AuthCoverLayout from "src/layouts/auth/cover";
 
 // ----------------------------------------------------------------------
 
@@ -13,8 +13,8 @@ export default function Layout({ children }: Props) {
     <AuthCoverLayout
       title="Hi, Welcome Back"
       images={[
-        '/assets/images/travel/travel_post_01.jpg',
-        '/assets/images/travel/travel_post_03.jpg',
+        "/assets/images/travel/travel_post_01.jpg",
+        "/assets/images/travel/travel_post_03.jpg",
       ]}
     >
       {children}

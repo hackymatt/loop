@@ -1,5 +1,5 @@
-import Chip from '@mui/material/Chip';
-import Stack, { StackProps } from '@mui/material/Stack';
+import Chip from "@mui/material/Chip";
+import Stack, { StackProps } from "@mui/material/Stack";
 
 // ----------------------------------------------------------------------
 
@@ -24,8 +24,8 @@ export default function FilterTag({ options, filterTag, onChangeTag, ...other }:
             onClick={() => onChangeTag(option)}
             sx={{
               ...(selected && {
-                bgcolor: 'action.selected',
-                fontWeight: 'fontWeightBold',
+                bgcolor: "action.selected",
+                fontWeight: "fontWeightBold",
               }),
             }}
           />

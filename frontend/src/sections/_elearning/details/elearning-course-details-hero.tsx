@@ -1,30 +1,30 @@
-import Fab from '@mui/material/Fab';
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Unstable_Grid2';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import { alpha, useTheme } from '@mui/material/styles';
+import Fab from "@mui/material/Fab";
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
+import Grid from "@mui/material/Unstable_Grid2";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import { paths } from 'src/routes/paths';
+import { paths } from "src/routes/paths";
 
-import { useBoolean } from 'src/hooks/use-boolean';
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useBoolean } from "src/hooks/use-boolean";
+import { useResponsive } from "src/hooks/use-responsive";
 
-import { fShortenNumber } from 'src/utils/format-number';
+import { fShortenNumber } from "src/utils/format-number";
 
-import { _mock } from 'src/_mock';
+import { _mock } from "src/_mock";
 
-import Label from 'src/components/label';
-import Image from 'src/components/image';
-import Iconify from 'src/components/iconify';
-import { PlayerDialog } from 'src/components/player';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+import Label from "src/components/label";
+import Image from "src/components/image";
+import Iconify from "src/components/iconify";
+import { PlayerDialog } from "src/components/player";
+import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
-import { ICourseProps } from 'src/types/course';
+import { ICourseProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -52,7 +52,7 @@ export default function ElearningCourseDetailsHero({ course }: Props) {
 
   const theme = useTheme();
 
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const videoOpen = useBoolean();
 
@@ -60,16 +60,16 @@ export default function ElearningCourseDetailsHero({ course }: Props) {
     <>
       <Box
         sx={{
-          bgcolor: 'background.neutral',
+          bgcolor: "background.neutral",
           pb: { xs: 5, md: 10 },
         }}
       >
-        <Container sx={{ overflow: 'hidden' }}>
+        <Container sx={{ overflow: "hidden" }}>
           <CustomBreadcrumbs
             links={[
-              { name: 'Home', href: '/' },
-              { name: 'Courses', href: paths.eLearning.courses },
-              { name: course.slug || '' },
+              { name: "Home", href: "/" },
+              { name: "Courses", href: paths.eLearning.courses },
+              { name: course.slug || "" },
             ]}
             sx={{
               pt: 5,
@@ -83,9 +83,9 @@ export default function ElearningCourseDetailsHero({ course }: Props) {
                 alignItems="center"
                 justifyContent="center"
                 sx={{
-                  position: 'relative',
+                  position: "relative",
                   borderRadius: 2,
-                  overflow: 'hidden',
+                  overflow: "hidden",
                 }}
               >
                 <Fab
@@ -93,7 +93,7 @@ export default function ElearningCourseDetailsHero({ course }: Props) {
                   onClick={videoOpen.onTrue}
                   sx={{
                     zIndex: 9,
-                    position: 'absolute',
+                    position: "absolute",
                   }}
                 >
                   <Iconify icon="carbon:play" width={24} />
@@ -102,7 +102,7 @@ export default function ElearningCourseDetailsHero({ course }: Props) {
                 <Image
                   alt="hero"
                   src={coverUrl}
-                  ratio={mdUp ? '3/4' : '4/3'}
+                  ratio={mdUp ? "3/4" : "4/3"}
                   overlay={`linear-gradient(to bottom, ${alpha(
                     theme.palette.common.black,
                     0
@@ -115,12 +115,12 @@ export default function ElearningCourseDetailsHero({ course }: Props) {
               <Stack spacing={3}>
                 <Stack spacing={2} alignItems="flex-start">
                   {bestSeller && (
-                    <Label color="warning" variant="filled" sx={{ textTransform: 'uppercase' }}>
+                    <Label color="warning" variant="filled" sx={{ textTransform: "uppercase" }}>
                       Best Seller
                     </Label>
                   )}
 
-                  <Typography variant="overline" sx={{ color: 'secondary.main' }}>
+                  <Typography variant="overline" sx={{ color: "secondary.main" }}>
                     {category}
                   </Typography>
 
@@ -128,7 +128,7 @@ export default function ElearningCourseDetailsHero({ course }: Props) {
                     {slug}
                   </Typography>
 
-                  <Typography sx={{ color: 'text.secondary' }}>{description}</Typography>
+                  <Typography sx={{ color: "text.secondary" }}>{description}</Typography>
                 </Stack>
 
                 <Stack
@@ -138,19 +138,19 @@ export default function ElearningCourseDetailsHero({ course }: Props) {
                   divider={<Divider orientation="vertical" sx={{ height: 20 }} />}
                 >
                   <Stack spacing={0.5} direction="row" alignItems="center">
-                    <Iconify icon="carbon:star-filled" sx={{ color: 'warning.main' }} />
-                    <Box sx={{ typography: 'h6' }}>
+                    <Iconify icon="carbon:star-filled" sx={{ color: "warning.main" }} />
+                    <Box sx={{ typography: "h6" }}>
                       {Number.isInteger(ratingNumber) ? `${ratingNumber}.0` : ratingNumber}
                     </Box>
 
                     {totalReviews && (
-                      <Link variant="body2" sx={{ color: 'text.secondary' }}>
+                      <Link variant="body2" sx={{ color: "text.secondary" }}>
                         ({fShortenNumber(totalReviews)} reviews)
                       </Link>
                     )}
                   </Stack>
 
-                  <Stack direction="row" sx={{ typography: 'subtitle2' }}>
+                  <Stack direction="row" sx={{ typography: "subtitle2" }}>
                     {fShortenNumber(totalStudents)}
                     <Box component="span" typography="body2" sx={{ ml: 0.5 }}>
                       students
@@ -172,31 +172,31 @@ export default function ElearningCourseDetailsHero({ course }: Props) {
                   )}
                 </Stack>
 
-                <Divider sx={{ borderStyle: 'dashed' }} />
+                <Divider sx={{ borderStyle: "dashed" }} />
 
                 <Stack spacing={2}>
                   <Stack
                     direction="row"
                     flexWrap="wrap"
                     sx={{
-                      '& > *': { my: 0.5, mr: 3 },
+                      "& > *": { my: 0.5, mr: 3 },
                     }}
                   >
-                    <Stack direction="row" alignItems="center" sx={{ typography: 'body2' }}>
+                    <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
                       <Iconify icon="carbon:time" sx={{ mr: 1 }} /> {`${totalHours} hours`}
                     </Stack>
 
-                    <Stack direction="row" alignItems="center" sx={{ typography: 'body2' }}>
+                    <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
                       <Iconify icon="carbon:document" sx={{ mr: 1 }} />
                       {`${lessons?.length} Lessons`}
                     </Stack>
 
-                    <Stack direction="row" alignItems="center" sx={{ typography: 'body2' }}>
+                    <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
                       <Iconify
                         icon={
-                          (level === 'Beginner' && 'carbon:skill-level-basic') ||
-                          (level === 'Intermediate' && 'carbon:skill-level-intermediate') ||
-                          'carbon:skill-level-advanced'
+                          (level === "Beginner" && "carbon:skill-level-basic") ||
+                          (level === "Intermediate" && "carbon:skill-level-intermediate") ||
+                          "carbon:skill-level-advanced"
                         }
                         sx={{ mr: 1 }}
                       />
@@ -208,15 +208,15 @@ export default function ElearningCourseDetailsHero({ course }: Props) {
                     direction="row"
                     flexWrap="wrap"
                     sx={{
-                      '& > *': { my: 0.5, mr: 3 },
+                      "& > *": { my: 0.5, mr: 3 },
                     }}
                   >
-                    <Stack direction="row" alignItems="center" sx={{ typography: 'body2' }}>
+                    <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
                       <Iconify icon="carbon:content-delivery-network" sx={{ mr: 1 }} />
-                      {typeof languages === 'string' ? languages : languages?.join(', ')}
+                      {typeof languages === "string" ? languages : languages?.join(", ")}
                     </Stack>
 
-                    <Stack direction="row" alignItems="center" sx={{ typography: 'body2' }}>
+                    <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
                       <Iconify icon="carbon:help" sx={{ mr: 1 }} /> {`${totalQuizzes} Quizzes`}
                     </Stack>
                   </Stack>

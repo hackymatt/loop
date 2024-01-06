@@ -1,10 +1,10 @@
-import Stack from '@mui/material/Stack';
+import Stack from "@mui/material/Stack";
 
-import Scrollbar from 'src/components/scrollbar';
+import Scrollbar from "src/components/scrollbar";
 
-import { IProductItemProps } from 'src/types/product';
+import { IProductItemProps } from "src/types/product";
 
-import EcommerceCartItem from './ecommerce-cart-item';
+import EcommerceCartItem from "./ecommerce-cart-item";
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ export default function EcommerceCartList({ products, wishlist = false }: Props)
         sx={{
           py: 2,
           minWidth: 720,
-          typography: 'subtitle2',
+          typography: "subtitle2",
           borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
         }}
       >

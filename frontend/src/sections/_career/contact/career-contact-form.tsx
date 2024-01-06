@@ -1,30 +1,30 @@
-import * as Yup from 'yup';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
-import LoadingButton from '@mui/lab/LoadingButton';
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
+import LoadingButton from "@mui/lab/LoadingButton";
 
-import FormProvider, { RHFTextField } from 'src/components/hook-form';
+import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
 export default function CareerContactForm() {
   const CareerContactSchema = Yup.object().shape({
-    fullName: Yup.string().required('Full name is required'),
-    email: Yup.string().required('Email is required').email('That is not an email'),
-    subject: Yup.string().required('Subject is required'),
-    message: Yup.string().required('Message is required'),
+    fullName: Yup.string().required("Full name is required"),
+    email: Yup.string().required("Email is required").email("That is not an email"),
+    subject: Yup.string().required("Subject is required"),
+    message: Yup.string().required("Message is required"),
   });
 
   const defaultValues = {
-    fullName: '',
-    subject: '',
-    email: '',
-    message: '',
+    fullName: "",
+    subject: "",
+    email: "",
+    message: "",
   };
 
   const methods = useForm({
@@ -42,7 +42,7 @@ export default function CareerContactForm() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
-      console.log('DATA', data);
+      console.log("DATA", data);
     } catch (error) {
       console.error(error);
     }
@@ -56,10 +56,10 @@ export default function CareerContactForm() {
     >
       <Grid container spacing={3} justifyContent="center">
         <Grid xs={12} md={8}>
-          <Stack spacing={2} sx={{ mb: 5, textAlign: 'center' }}>
+          <Stack spacing={2} sx={{ mb: 5, textAlign: "center" }}>
             <Typography variant="h3">Drop Us A Line</Typography>
 
-            <Typography sx={{ color: 'text.secondary' }}>
+            <Typography sx={{ color: "text.secondary" }}>
               We normally respond within 2 business days
             </Typography>
           </Stack>

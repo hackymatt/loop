@@ -1,53 +1,53 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import { fShortenNumber } from 'src/utils/format-number';
+import { fShortenNumber } from "src/utils/format-number";
 
-import { _mock } from 'src/_mock';
+import { _mock } from "src/_mock";
 
-import Image from 'src/components/image';
-import CountUp from 'src/components/count-up';
+import Image from "src/components/image";
+import CountUp from "src/components/count-up";
 
 // ----------------------------------------------------------------------
 
 const IMAGES = [...Array(4)].map((_, index) => _mock.image.travel(index + 2));
 
 const SUMMARY = [
-  { name: 'Air tickets sold', number: 130 },
-  { name: 'Tours booked', number: 196 },
-  { name: 'Site visitors', number: 10679 },
-  { name: 'Verified hotels', number: 877 },
+  { name: "Air tickets sold", number: 130 },
+  { name: "Tours booked", number: 196 },
+  { name: "Site visitors", number: 10679 },
+  { name: "Verified hotels", number: 877 },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function TravelAbout() {
-  const smUp = useResponsive('up', 'sm');
+  const smUp = useResponsive("up", "sm");
 
   return (
     <Container
       sx={{
-        overflow: 'hidden',
+        overflow: "hidden",
         py: 5,
       }}
     >
       <Stack
         spacing={3}
         sx={{
-          mx: 'auto',
+          mx: "auto",
           maxWidth: 560,
-          textAlign: 'center',
+          textAlign: "center",
           pb: { xs: 5, md: 10 },
         }}
       >
         <Typography variant="h1">About us</Typography>
 
-        <Typography sx={{ color: 'text.secondary' }}>
+        <Typography sx={{ color: "text.secondary" }}>
           Master Digital Marketing Strategy, Social Media Marketing, SEO, YouTube, Email, Facebook
           Marketing, Analytics & More!
         </Typography>
@@ -65,11 +65,11 @@ export default function TravelAbout() {
         sx={{
           rowGap: 5,
           columnGap: 3,
-          display: 'grid',
-          textAlign: 'center',
+          display: "grid",
+          textAlign: "center",
           gridTemplateColumns: {
-            xs: 'repeat(2, 1fr)',
-            md: 'repeat(4, 1fr)',
+            xs: "repeat(2, 1fr)",
+            md: "repeat(4, 1fr)",
           },
           pt: { xs: 5, md: 10 },
           pb: 10,
@@ -87,13 +87,13 @@ export default function TravelAbout() {
               <Typography
                 variant="h4"
                 component="span"
-                sx={{ verticalAlign: 'top', ml: 0.5, color: 'primary.main' }}
+                sx={{ verticalAlign: "top", ml: 0.5, color: "primary.main" }}
               >
                 +
               </Typography>
             </Typography>
 
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
               {value.name}
             </Typography>
           </Stack>
@@ -105,7 +105,7 @@ export default function TravelAbout() {
         spacing={{ xs: 5, md: 3 }}
         justifyContent="space-between"
         sx={{
-          textAlign: { xs: 'center', md: 'left' },
+          textAlign: { xs: "center", md: "left" },
         }}
       >
         <Grid xs={12} md={6} lg={5}>
@@ -115,8 +115,8 @@ export default function TravelAbout() {
               width: 24,
               height: 3,
               borderRadius: 3,
-              bgcolor: 'primary.main',
-              mx: { xs: 'auto', md: 0 },
+              bgcolor: "primary.main",
+              mx: { xs: "auto", md: 0 },
             }}
           />
           <Typography variant="h3">
@@ -129,7 +129,7 @@ export default function TravelAbout() {
             Fusce convallis metus id felis luctus
           </Typography>
 
-          <Typography sx={{ color: 'text.secondary' }}>
+          <Typography sx={{ color: "text.secondary" }}>
             Fusce convallis metus id felis luctus adipiscing. Etiam imperdiet imperdiet orci.
             Vestibulum eu odio. Phasellus nec sem in justo pellentesque facilisis.
             <br />

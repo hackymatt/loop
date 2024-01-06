@@ -1,13 +1,13 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
-import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import Pagination, { paginationClasses } from '@mui/material/Pagination';
+import Box from "@mui/material/Box";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
+import Pagination, { paginationClasses } from "@mui/material/Pagination";
 
-import { ICaseStudyProps } from 'src/types/case-study';
+import { ICaseStudyProps } from "src/types/case-study";
 
-import MarketingCaseStudyItem from './marketing-case-study-item';
+import MarketingCaseStudyItem from "./marketing-case-study-item";
 
 // ----------------------------------------------------------------------
 
@@ -16,11 +16,11 @@ type Props = {
 };
 
 export default function MarketingCaseStudyList({ caseStudies }: Props) {
-  const [tab, setTab] = useState('All');
+  const [tab, setTab] = useState("All");
 
   const getCategories = caseStudies.map((project) => project.category);
 
-  const categories = ['All', ...Array.from(new Set(getCategories))];
+  const categories = ["All", ...Array.from(new Set(getCategories))];
 
   const filtered = applyFilter(caseStudies, tab);
 
@@ -47,11 +47,11 @@ export default function MarketingCaseStudyList({ caseStudies }: Props) {
           pt: 5,
           pb: 10,
           gap: 4,
-          display: 'grid',
+          display: "grid",
           gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(2, 1fr)',
-            md: 'repeat(3, 1fr)',
+            xs: "repeat(1, 1fr)",
+            sm: "repeat(2, 1fr)",
+            md: "repeat(3, 1fr)",
           },
         }}
       >
@@ -66,7 +66,7 @@ export default function MarketingCaseStudyList({ caseStudies }: Props) {
         sx={{
           pb: 10,
           [`& .${paginationClasses.ul}`]: {
-            justifyContent: 'center',
+            justifyContent: "center",
           },
         }}
       />
@@ -77,7 +77,7 @@ export default function MarketingCaseStudyList({ caseStudies }: Props) {
 // ----------------------------------------------------------------------
 
 function applyFilter(arr: ICaseStudyProps[], category: string) {
-  if (category !== 'All') {
+  if (category !== "All") {
     arr = arr.filter((project) => project.category === category);
   }
   return arr;

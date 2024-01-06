@@ -1,16 +1,16 @@
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import { useTheme } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import { useTheme } from "@mui/material/styles";
+import Typography from "@mui/material/Typography";
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from "src/hooks/use-responsive";
 
-import Carousel, { useCarousel, CarouselDots, CarouselArrows } from 'src/components/carousel';
+import Carousel, { useCarousel, CarouselDots, CarouselArrows } from "src/components/carousel";
 
-import { ITestimonialProps } from 'src/types/testimonial';
+import { ITestimonialProps } from "src/types/testimonial";
 
-import TestimonialItem from './ecommerce-testimonial-item';
+import TestimonialItem from "./ecommerce-testimonial-item";
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +21,7 @@ type Props = {
 export default function EcommerceTestimonial({ testimonials }: Props) {
   const theme = useTheme();
 
-  const mdUp = useResponsive('up', 'md');
+  const mdUp = useResponsive("up", "md");
 
   const carousel = useCarousel({
     dots: !mdUp,
@@ -54,7 +54,7 @@ export default function EcommerceTestimonial({ testimonials }: Props) {
       }}
     >
       <Stack direction="row" alignItems="center" sx={{ mb: 8 }}>
-        <Typography variant="h3" sx={{ textAlign: { xs: 'center', md: 'unset' }, flexGrow: 1 }}>
+        <Typography variant="h3" sx={{ textAlign: { xs: "center", md: "unset" }, flexGrow: 1 }}>
           Popular Reviews
         </Typography>
 

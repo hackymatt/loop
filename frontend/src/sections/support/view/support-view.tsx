@@ -1,53 +1,53 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
-import Stack from '@mui/material/Stack';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 
-import { useBoolean } from 'src/hooks/use-boolean';
+import { useBoolean } from "src/hooks/use-boolean";
 
-import { _faqsSupport } from 'src/_mock';
+import { _faqsSupport } from "src/_mock";
 
-import Iconify from 'src/components/iconify';
+import Iconify from "src/components/iconify";
 
-import SupportNav from '../support-nav';
-import SupportHero from '../support-hero';
-import SupportContent from '../support-content';
+import SupportNav from "../support-nav";
+import SupportHero from "../support-hero";
+import SupportContent from "../support-content";
 
 // ----------------------------------------------------------------------
 
 const TOPICS = [
   {
-    title: 'Account',
-    icon: '/assets/icons/faq/ic_faq_account.svg',
+    title: "Account",
+    icon: "/assets/icons/faq/ic_faq_account.svg",
     content: <SupportContent contents={_faqsSupport} />,
   },
   {
-    title: 'Payment',
-    icon: '/assets/icons/faq/ic_faq_payment.svg',
+    title: "Payment",
+    icon: "/assets/icons/faq/ic_faq_payment.svg",
     content: <SupportContent contents={_faqsSupport} />,
   },
   {
-    title: 'Delivery',
-    icon: '/assets/icons/faq/ic_faq_delivery.svg',
+    title: "Delivery",
+    icon: "/assets/icons/faq/ic_faq_delivery.svg",
     content: <SupportContent contents={_faqsSupport} />,
   },
   {
-    title: 'Product',
-    icon: '/assets/icons/faq/ic_faq_package.svg',
+    title: "Product",
+    icon: "/assets/icons/faq/ic_faq_package.svg",
     content: <SupportContent contents={_faqsSupport} />,
   },
   {
-    title: 'Return & Refund',
-    icon: '/assets/icons/faq/ic_faq_refund.svg',
+    title: "Return & Refund",
+    icon: "/assets/icons/faq/ic_faq_refund.svg",
     content: <SupportContent contents={_faqsSupport} />,
   },
   {
-    title: 'Assurances',
-    icon: '/assets/icons/faq/ic_faq_assurances.svg',
+    title: "Assurances",
+    icon: "/assets/icons/faq/ic_faq_assurances.svg",
     content: <SupportContent contents={_faqsSupport} />,
   },
 ];
@@ -55,7 +55,7 @@ const TOPICS = [
 // ----------------------------------------------------------------------
 
 export default function SupportView() {
-  const [topic, setTopic] = useState('Payment');
+  const [topic, setTopic] = useState("Payment");
 
   const mobileOpen = useBoolean();
 
@@ -79,7 +79,7 @@ export default function SupportView() {
         sx={{
           py: 1.5,
           px: 2.5,
-          display: { md: 'none' },
+          display: { md: "none" },
           borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
         }}
       >

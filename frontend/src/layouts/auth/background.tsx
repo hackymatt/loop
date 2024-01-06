@@ -1,9 +1,9 @@
-import Stack from '@mui/material/Stack';
-import { alpha, useTheme } from '@mui/material/styles';
+import Stack from "@mui/material/Stack";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import { bgGradient } from 'src/theme/css';
+import { bgGradient } from "src/theme/css";
 
-import Header from '../common/header-simple';
+import Header from "../common/header-simple";
 
 // ----------------------------------------------------------------------
 
@@ -24,11 +24,11 @@ export default function AuthBackgroundLayout({ children }: Props) {
         sx={{
           ...bgGradient({
             color: alpha(theme.palette.background.default, 0.9),
-            imgUrl: '/assets/background/overlay_1.jpg',
+            imgUrl: "/assets/background/overlay_1.jpg",
           }),
           px: 2,
           py: 12,
-          minHeight: '100vh',
+          minHeight: "100vh",
         }}
       >
         <Stack
@@ -36,13 +36,13 @@ export default function AuthBackgroundLayout({ children }: Props) {
           sx={{
             p: 4,
             width: 1,
-            mx: 'auto',
+            mx: "auto",
             flexShrink: 0,
             maxWidth: 400,
             borderRadius: 2,
-            bgcolor: 'background.default',
+            bgcolor: "background.default",
             boxShadow: theme.customShadows.z24,
-            textAlign: { xs: 'center', md: 'left' },
+            textAlign: { xs: "center", md: "left" },
           }}
         >
           {children}

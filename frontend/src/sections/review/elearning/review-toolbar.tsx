@@ -1,15 +1,15 @@
-import Stack from '@mui/material/Stack';
-import MenuItem from '@mui/material/MenuItem';
-import Typography from '@mui/material/Typography';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Stack from "@mui/material/Stack";
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 // ----------------------------------------------------------------------
 
 const SORT_OPTIONS = [
-  { value: 'latest', label: 'Latest' },
-  { value: 'oldest', label: 'Oldest' },
-  { value: 'popular', label: 'Popular' },
+  { value: "latest", label: "Latest" },
+  { value: "oldest", label: "Oldest" },
+  { value: "popular", label: "Popular" },
 ];
 
 // ----------------------------------------------------------------------

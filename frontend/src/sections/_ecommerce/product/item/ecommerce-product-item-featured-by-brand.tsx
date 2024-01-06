@@ -1,16 +1,16 @@
-import Button from '@mui/material/Button';
-import { alpha } from '@mui/material/styles';
-import Stack, { StackProps } from '@mui/material/Stack';
+import Button from "@mui/material/Button";
+import { alpha } from "@mui/material/styles";
+import Stack, { StackProps } from "@mui/material/Stack";
 
-import { paths } from 'src/routes/paths';
-import { RouterLink } from 'src/routes/components';
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
-import Image from 'src/components/image';
-import TextMaxLine from 'src/components/text-max-line';
+import Image from "src/components/image";
+import TextMaxLine from "src/components/text-max-line";
 
-import { IProductItemProps } from 'src/types/product';
+import { IProductItemProps } from "src/types/product";
 
-import ProductPrice from '../../common/product-price';
+import ProductPrice from "../../common/product-price";
 
 // ----------------------------------------------------------------------
 
@@ -38,16 +38,16 @@ export default function EcommerceProductItemFeaturedByBrand({ product, sx, ...ot
           height: 128,
           flexShrink: 0,
           borderRadius: 1.5,
-          bgcolor: 'background.neutral',
+          bgcolor: "background.neutral",
         }}
       />
 
       <Stack spacing={0.5} flexGrow={1}>
-        <TextMaxLine variant="body2" line={1} sx={{ fontWeight: 'fontWeightMedium' }}>
+        <TextMaxLine variant="body2" line={1} sx={{ fontWeight: "fontWeightMedium" }}>
           {product.name}
         </TextMaxLine>
 
-        <TextMaxLine variant="caption" line={1} sx={{ color: 'text.disabled' }}>
+        <TextMaxLine variant="caption" line={1} sx={{ color: "text.disabled" }}>
           {product.category}
         </TextMaxLine>
 
