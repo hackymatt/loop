@@ -45,7 +45,7 @@ export function SettingsProvider({ children, defaultSettings }: Props) {
       onToggle: onToggleDrawer,
       onClose: onCloseDrawer,
     }),
-    [canReset, onCloseDrawer, onToggleDrawer, openDrawer, reset, state, update]
+    [canReset, onCloseDrawer, onToggleDrawer, openDrawer, reset, state, update],
   );
 
   return <SettingsContext.Provider value={memoizedValue}>{children}</SettingsContext.Provider>;

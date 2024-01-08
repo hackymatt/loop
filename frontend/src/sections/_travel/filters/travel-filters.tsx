@@ -32,7 +32,7 @@ export default function TravelFilters({ sx, ...other }: StackProps) {
         setGuests({ ...guests, adults: guests.adults + 1 });
       }
     },
-    [guests]
+    [guests],
   );
 
   const handleDecreaseGuests = useCallback(
@@ -43,7 +43,7 @@ export default function TravelFilters({ sx, ...other }: StackProps) {
         setGuests({ ...guests, adults: guests.adults - 1 });
       }
     },
-    [guests]
+    [guests],
   );
 
   return (

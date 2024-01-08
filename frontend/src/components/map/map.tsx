@@ -33,7 +33,7 @@ export default function Map({ offices, sx, ...other }: Props) {
       });
       setTooltip(office);
     },
-    [centerMap]
+    [centerMap],
   );
 
   return (

@@ -65,7 +65,7 @@ function Icon({ content, color, sx, ...other }: Props) {
         borderRadius: 2.5,
         background: `linear-gradient(to bottom, ${alpha(color, 0.24)} -8%, ${alpha(
           color,
-          0
+          0,
         )} 120%)`,
         ...sx,
       }}

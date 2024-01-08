@@ -27,7 +27,7 @@ const StyledInput = styled((props: TextFieldProps) => <TextField fullWidth {...p
         color: theme.palette.grey[500],
       },
     },
-  })
+  }),
 );
 
 // ----------------------------------------------------------------------

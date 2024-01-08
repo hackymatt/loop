@@ -25,7 +25,7 @@ export default function Pricing01View() {
         setSubscription(newValue);
       }
     },
-    []
+    [],
   );
 
   return (

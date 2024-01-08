@@ -29,7 +29,7 @@ export default function Inview() {
       setCount(count + 1);
       setSelectVariant((event.target as HTMLInputElement).value);
     },
-    [count]
+    [count],
   );
 
   return (

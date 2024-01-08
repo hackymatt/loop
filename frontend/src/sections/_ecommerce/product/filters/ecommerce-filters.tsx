@@ -74,7 +74,7 @@ export default function EcommerceFilters({ open, onClose }: Props) {
         filterCategories: name,
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeBrand = useCallback(
@@ -84,7 +84,7 @@ export default function EcommerceFilters({ open, onClose }: Props) {
         filterBrand: getSelected(filters.filterBrand, name),
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeShipping = useCallback(
@@ -94,7 +94,7 @@ export default function EcommerceFilters({ open, onClose }: Props) {
         filterShipping: getSelected(filters.filterShipping, name),
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeTag = useCallback(
@@ -104,7 +104,7 @@ export default function EcommerceFilters({ open, onClose }: Props) {
         filterTag: getSelected(filters.filterTag, name),
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeRating = useCallback(
@@ -114,7 +114,7 @@ export default function EcommerceFilters({ open, onClose }: Props) {
         filterRating: (event.target as HTMLInputElement).value,
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeStartPrice = useCallback(
@@ -127,7 +127,7 @@ export default function EcommerceFilters({ open, onClose }: Props) {
         },
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeEndPrice = useCallback(
@@ -140,7 +140,7 @@ export default function EcommerceFilters({ open, onClose }: Props) {
         },
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeStock = useCallback(
@@ -150,7 +150,7 @@ export default function EcommerceFilters({ open, onClose }: Props) {
         filterStock: event.target.checked,
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleClearAll = useCallback(() => {

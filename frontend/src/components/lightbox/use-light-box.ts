@@ -19,12 +19,12 @@ export default function useLightbox(slides: Slide[]): ReturnType {
       const slideIndex = slides.findIndex((slide) =>
         slide.type === "video"
           ? (slide as SlideVideo).poster === slideUrl
-          : (slide as SlideImage).src === slideUrl
+          : (slide as SlideImage).src === slideUrl,
       );
 
       setSelected(slideIndex);
     },
-    [slides]
+    [slides],
   );
 
   const handleClose = useCallback(() => {

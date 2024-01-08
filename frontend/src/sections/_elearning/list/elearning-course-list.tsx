@@ -22,7 +22,7 @@ export default function ElearningCourseList({ courses, loading }: Props) {
             <ElearningCourseItem key={course.id} course={course} />
           ) : (
             <ElearningCourseItemSkeleton key={index} />
-          )
+          ),
         )}
       </Stack>
 

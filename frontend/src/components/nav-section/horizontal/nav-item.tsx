@@ -32,7 +32,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
       currentRole = "admin",
       ...other
     },
-    ref
+    ref,
   ) => {
     const subItem = depth !== 1;
 
@@ -117,7 +117,7 @@ const NavItem = forwardRef<HTMLDivElement, NavItemProps>(
         {renderContent}
       </Link>
     );
-  }
+  },
 );
 
 export default NavItem;

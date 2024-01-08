@@ -69,7 +69,7 @@ export default function LightboxView() {
         [event.target.name]: event.target.checked,
       });
     },
-    [state]
+    [state],
   );
 
   return (
