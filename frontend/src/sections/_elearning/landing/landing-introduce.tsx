@@ -24,7 +24,6 @@ export default function LandingIntroduce() {
         sx={{
           display: "block",
           color: "primary.main",
-          mb: { xs: 2, md: 4 },
         }}
       >
         O nas
@@ -88,7 +87,7 @@ export default function LandingIntroduce() {
           <Stack
             direction={{ xs: "column", md: "row" }}
             spacing={{ xs: 5, md: 10 }}
-            sx={{ mt: { xs: 8, md: 10 } }}
+            sx={{ mt: { xs: 8, md: 6 } }}
           >
             <Stack spacing={3}>
               <Box sx={{ width: 24, height: 3, bgcolor: "primary.main" }} />

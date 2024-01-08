@@ -5,6 +5,7 @@ import { _courses, _members, _coursePosts, _testimonials, _coursesByCategories }
 import LandingHero from "../landing/landing-hero";
 import ElearningTeam from "../team/elearning-team";
 import ElearningNewsletter from "../elearning-newsletter";
+import LandingServices from "../landing/landing-services";
 import LandingIntroduce from "../landing/landing-introduce";
 import ElearningDownloadApp from "../elearning-download-app";
 import ElearningTestimonial from "../testimonial/elearning-testimonial";
@@ -20,6 +21,8 @@ export default function LandingView() {
       <LandingHero />
 
       <LandingIntroduce />
+
+      <LandingServices />
 
       <ElearningLandingFeaturedCourses courses={_courses} />
 
