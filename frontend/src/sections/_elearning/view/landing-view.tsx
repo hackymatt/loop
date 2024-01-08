@@ -5,9 +5,9 @@ import { _courses, _members, _coursePosts, _testimonials, _coursesByCategories }
 import LandingHero from "../landing/landing-hero";
 import ElearningTeam from "../team/elearning-team";
 import ElearningNewsletter from "../elearning-newsletter";
+import LandingIntroduce from "../landing/landing-introduce";
 import ElearningDownloadApp from "../elearning-download-app";
 import ElearningTestimonial from "../testimonial/elearning-testimonial";
-import ElearningLandingIntroduce from "../landing/elearning-landing-introduce";
 import ElearningLatestPosts from "../../blog/elearning/elearning-latest-posts";
 import ElearningLandingCategories from "../landing/elearning-landing-categories";
 import ElearningLandingFeaturedCourses from "../landing/elearning-landing-featured-courses";
@@ -19,7 +19,7 @@ export default function LandingView() {
     <>
       <LandingHero />
 
-      <ElearningLandingIntroduce />
+      <LandingIntroduce />
 
       <ElearningLandingFeaturedCourses courses={_courses} />
 
