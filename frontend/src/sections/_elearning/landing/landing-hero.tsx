@@ -61,8 +61,11 @@ export default function LandingHero() {
             >
               <Typography variant="h1">
                 Zostań
+                <Box component="span" sx={{ color: "text.disabled" }}>
+                  {` lepszym`}
+                </Box>{" "}
                 <Box component="span" sx={{ color: "primary.main", textDecoration: "underline" }}>
-                  {` programistą `}
+                  {` programistą`}
                 </Box>{" "}
                 już dziś!
               </Typography>
