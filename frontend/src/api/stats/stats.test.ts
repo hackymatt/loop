@@ -33,21 +33,213 @@ describe("statsQuery", () => {
 });
 
 describe("useStats", () => {
-  // Returns data and rest object when useQuery returns successfully
-  it("should return data and rest object when useQuery returns successfully", () => {
-    // Arrange
-    const queryKey = "testKey";
-    const queryFn = jest.fn().mockResolvedValue({ results: [], count: 0 });
-    const useQueryMock = jest
-      .fn()
-      .mockReturnValue({ data: { results: [], count: 0 }, isLoading: false, error: null });
-    jest.mock("@tanstack/react-query", () => ({ useQuery: useQueryMock }));
+  // Returns an object with 'data' property containing an array of 'IStats' objects when the query is successful
+  it("should return an object with 'data' property containing an array of 'IStats' objects when the query is successful", () => {
+    // Mock the statsQuery function
+    const mockStatsQuery = jest.fn(() => ({
+      queryKey: ["stats"],
+      queryFn: jest.fn().mockResolvedValue({ results: [{}, {}], count: 2 }),
+    }));
 
-    // Act
+    // Mock the useQuery function
+    const mockUseQuery = jest.fn(() => ({
+      data: { results: [{}, {}] },
+      isLoading: false,
+      isError: false,
+    }));
+
+    // Replace the original functions with the mock functions
+    jest.mock("@tanstack/react-query", () => ({
+      useQuery: mockUseQuery,
+    }));
+    jest.mock("../service", () => ({
+      statsQuery: mockStatsQuery,
+    }));
+
+    // Call the useStats function
     const result = useStats();
 
-    // Assert
-    expect(useQueryMock).toHaveBeenCalledWith({ queryKey, queryFn });
-    expect(result).toEqual({ data: [], isLoading: false, error: null });
+    // Assertions
+    expect(mockStatsQuery).toHaveBeenCalled();
+    expect(mockUseQuery).toHaveBeenCalledWith({
+      queryKey: ["stats"],
+      queryFn: expect.any(Function),
+    });
+    expect(result).toEqual({ data: [{}, {}], isLoading: false, isError: false });
+  });
+
+  // Returns an object with 'isLoading' property set to true when the query is in progress
+  it("should return an object with 'isLoading' property set to true when the query is in progress", () => {
+    // Mock the statsQuery function
+    const mockStatsQuery = jest.fn(() => ({
+      queryKey: ["stats"],
+      queryFn: jest.fn().mockResolvedValue({ results: [], count: 0 }),
+    }));
+
+    // Mock the useQuery function
+    const mockUseQuery = jest.fn(() => ({
+      data: null,
+      isLoading: true,
+      isError: false,
+    }));
+
+    // Replace the original functions with the mock functions
+    jest.mock("@tanstack/react-query", () => ({
+      useQuery: mockUseQuery,
+    }));
+    jest.mock("../service", () => ({
+      statsQuery: mockStatsQuery,
+    }));
+
+    // Call the useStats function
+    const result = useStats();
+
+    // Assertions
+    expect(mockStatsQuery).toHaveBeenCalled();
+    expect(mockUseQuery).toHaveBeenCalledWith({
+      queryKey: ["stats"],
+      queryFn: expect.any(Function),
+    });
+    expect(result).toEqual({ data: null, isLoading: true, isError: false });
+  });
+
+  // Returns an object with 'isError' property set to true when the query fails
+  it("should return an object with 'isError' property set to true when the query fails", () => {
+    // Mock the statsQuery function
+    const mockStatsQuery = jest.fn(() => ({
+      queryKey: ["stats"],
+      queryFn: jest.fn().mockRejectedValue(new Error("Query failed")),
+    }));
+
+    // Mock the useQuery function
+    const mockUseQuery = jest.fn(() => ({
+      data: null,
+      isLoading: false,
+      isError: true,
+    }));
+
+    // Replace the original functions with the mock functions
+    jest.mock("@tanstack/react-query", () => ({
+      useQuery: mockUseQuery,
+    }));
+    jest.mock("../service", () => ({
+      statsQuery: mockStatsQuery,
+    }));
+
+    // Call the useStats function
+    const result = useStats();
+
+    // Assertions
+    expect(mockStatsQuery).toHaveBeenCalled();
+    expect(mockUseQuery).toHaveBeenCalledWith({
+      queryKey: ["stats"],
+      queryFn: expect.any(Function),
+    });
+    expect(result).toEqual({ data: null, isLoading: false, isError: true });
+  });
+
+  // Returns an object with 'data' property set to null when the query fails
+  it("should return an object with 'data' property set to null when the query fails", () => {
+    // Mock the statsQuery function
+    const mockStatsQuery = jest.fn(() => ({
+      queryKey: ["stats"],
+      queryFn: jest.fn().mockRejectedValue(new Error("Query failed")),
+    }));
+
+    // Mock the useQuery function
+    const mockUseQuery = jest.fn(() => ({
+      data: null,
+      isLoading: false,
+      isError: true,
+    }));
+
+    // Replace the original functions with the mock functions
+    jest.mock("@tanstack/react-query", () => ({
+      useQuery: mockUseQuery,
+    }));
+    jest.mock("../service", () => ({
+      statsQuery: mockStatsQuery,
+    }));
+
+    // Call the useStats function
+    const result = useStats();
+
+    // Assertions
+    expect(mockStatsQuery).toHaveBeenCalled();
+    expect(mockUseQuery).toHaveBeenCalledWith({
+      queryKey: ["stats"],
+      queryFn: expect.any(Function),
+    });
+    expect(result).toEqual({ data: null, isLoading: false, isError: true });
+  });
+
+  // Returns an object with 'data' property set to null when the query is in progress
+  it("should return an object with 'data' property set to null when the query is in progress", () => {
+    // Mock the statsQuery function
+    const mockStatsQuery = jest.fn(() => ({
+      queryKey: ["stats"],
+      queryFn: jest.fn().mockResolvedValue({ results: [], count: 0 }),
+    }));
+
+    // Mock the useQuery function
+    const mockUseQuery = jest.fn(() => ({
+      data: null,
+      isLoading: true,
+      isError: false,
+    }));
+
+    // Replace the original functions with the mock functions
+    jest.mock("@tanstack/react-query", () => ({
+      useQuery: mockUseQuery,
+    }));
+    jest.mock("../service", () => ({
+      statsQuery: mockStatsQuery,
+    }));
+
+    // Call the useStats function
+    const result = useStats();
+
+    // Assertions
+    expect(mockStatsQuery).toHaveBeenCalled();
+    expect(mockUseQuery).toHaveBeenCalledWith({
+      queryKey: ["stats"],
+      queryFn: expect.any(Function),
+    });
+    expect(result).toEqual({ data: null, isLoading: true, isError: false });
+  });
+
+  // Returns an object with 'isLoading' property set to false when the query fails
+  it("should return an object with 'isLoading' property set to false when the query fails", () => {
+    // Mock the statsQuery function
+    const mockStatsQuery = jest.fn(() => ({
+      queryKey: ["stats"],
+      queryFn: jest.fn().mockRejectedValue(new Error("Query failed")),
+    }));
+
+    // Mock the useQuery function
+    const mockUseQuery = jest.fn(() => ({
+      data: null,
+      isLoading: false,
+      isError: true,
+    }));
+
+    // Replace the original functions with the mock functions
+    jest.mock("@tanstack/react-query", () => ({
+      useQuery: mockUseQuery,
+    }));
+    jest.mock("../service", () => ({
+      statsQuery: mockStatsQuery,
+    }));
+
+    // Call the useStats function
+    const result = useStats();
+
+    // Assertions
+    expect(mockStatsQuery).toHaveBeenCalled();
+    expect(mockUseQuery).toHaveBeenCalledWith({
+      queryKey: ["stats"],
+      queryFn: expect.any(Function),
+    });
+    expect(result).toEqual({ data: null, isLoading: false, isError: true });
   });
 });

@@ -10,6 +10,7 @@ import { LocalizationProvider } from "src/locales";
 import ProgressBar from "src/components/progress-bar";
 import { MotionLazy } from "src/components/animate/motion-lazy";
 import { SettingsDrawer, SettingsProvider } from "src/components/settings";
+import { ReactQueryProvider } from "./(index)/react-query-provider";
 
 // ----------------------------------------------------------------------
 
@@ -51,11 +52,13 @@ export default function RootLayout({ children }: Props) {
             }}
           >
             <ThemeProvider>
-              <MotionLazy>
-                <ProgressBar />
-                <SettingsDrawer />
-                {children}
-              </MotionLazy>
+              <ReactQueryProvider>
+                <MotionLazy>
+                  <ProgressBar />
+                  <SettingsDrawer />
+                  {children}
+                </MotionLazy>
+              </ReactQueryProvider>
             </ThemeProvider>
           </SettingsProvider>
         </LocalizationProvider>

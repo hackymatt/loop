@@ -14,24 +14,25 @@ import { useResponsive } from "src/hooks/use-responsive";
 import { fShortenNumber } from "src/utils/format-number";
 
 import { bgGradient } from "src/theme/css";
+import { useStats } from "src/api/stats/stats";
 import HeroIllustration from "src/assets/illustrations/hero-illustration";
 
 import Iconify from "src/components/iconify";
-
-// ----------------------------------------------------------------------
-
-const SUMMARY = [
-  { value: 14000, label: "Learners", color: "warning" },
-  { value: 1050, label: "Courses", color: "error" },
-  { value: 59000, label: "Graduates", color: "success" },
-] as const;
-
-// ----------------------------------------------------------------------
 
 export default function LandingHero() {
   const theme = useTheme();
 
   const mdUp = useResponsive("up", "md");
+
+  const { data: stats } = useStats();
+
+  const statsSummary = [
+    { value: stats?.students_count, label: "Studentów", color: "warning" },
+    { value: stats?.course_count, label: "Kursów", color: "error" },
+    { value: stats?.lecturers_count, label: "Wykładowców", color: "success" },
+  ] as const;
+
+  const showStats = statsSummary.every((item) => item.value > 0);
 
   return (
     <Box
@@ -90,26 +91,27 @@ export default function LandingHero() {
                 spacing={{ xs: 3, sm: 10 }}
                 justifyContent={{ xs: "center", md: "unset" }}
               >
-                {SUMMARY.map((item) => (
-                  <Stack key={item.value} spacing={0.5} sx={{ position: "relative" }}>
-                    <Box
-                      sx={{
-                        top: 8,
-                        left: -4,
-                        width: 24,
-                        height: 24,
-                        opacity: 0.24,
-                        borderRadius: "50%",
-                        position: "absolute",
-                        bgcolor: `${item.color}.main`,
-                      }}
-                    />
-                    <Typography variant="h3">{fShortenNumber(item.value)}+</Typography>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                      {item.label}
-                    </Typography>
-                  </Stack>
-                ))}
+                {showStats &&
+                  statsSummary.map((item) => (
+                    <Stack key={item.value} spacing={0.5} sx={{ position: "relative" }}>
+                      <Box
+                        sx={{
+                          top: 8,
+                          left: -4,
+                          width: 24,
+                          height: 24,
+                          opacity: 0.24,
+                          borderRadius: "50%",
+                          position: "absolute",
+                          bgcolor: `${item.color}.main`,
+                        }}
+                      />
+                      <Typography variant="h3">{fShortenNumber(item.value)}+</Typography>
+                      <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                        {item.label}
+                      </Typography>
+                    </Stack>
+                  ))}
               </Stack>
             </Stack>
           </Grid>
