@@ -29,7 +29,7 @@ export default function CareerJobList({ jobs, loading }: Props) {
         }}
       >
         {(loading ? [...Array(9)] : jobs).map((job, index) =>
-          job ? <CareerJobItem key={job.id} job={job} /> : <CareerJobItemSkeleton key={index} />
+          job ? <CareerJobItem key={job.id} job={job} /> : <CareerJobItemSkeleton key={index} />,
         )}
       </Box>
 

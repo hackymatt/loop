@@ -49,7 +49,7 @@ export default function ElearningFilters({ open, onClose }: Props) {
         filterRating: (event.target as HTMLInputElement).value,
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeCategory = useCallback(
@@ -59,7 +59,7 @@ export default function ElearningFilters({ open, onClose }: Props) {
         filterCategories: newValue,
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeLevel = useCallback(
@@ -72,7 +72,7 @@ export default function ElearningFilters({ open, onClose }: Props) {
         filterLevel: typeof value === "string" ? value.split(",") : value,
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeFee = useCallback(
@@ -85,7 +85,7 @@ export default function ElearningFilters({ open, onClose }: Props) {
         filterFee: typeof value === "string" ? value.split(",") : value,
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeDuration = useCallback(
@@ -98,7 +98,7 @@ export default function ElearningFilters({ open, onClose }: Props) {
         filterDuration: typeof value === "string" ? value.split(",") : value,
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeLanguage = useCallback(
@@ -108,7 +108,7 @@ export default function ElearningFilters({ open, onClose }: Props) {
         filterLanguage: newValue,
       });
     },
-    [filters]
+    [filters],
   );
 
   const renderContent = (

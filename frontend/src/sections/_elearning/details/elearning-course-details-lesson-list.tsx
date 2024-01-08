@@ -41,7 +41,7 @@ export default function ElearningCourseDetailsLessonList({ lessons }: Props) {
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     },
-    []
+    [],
   );
 
   return (

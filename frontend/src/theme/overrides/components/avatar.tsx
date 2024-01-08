@@ -45,7 +45,7 @@ export function avatar(theme: Theme) {
                 color: theme.palette[color].contrastText,
                 backgroundColor: theme.palette[color].main,
               },
-            }
+            },
       ),
 
       styleOverrides: {

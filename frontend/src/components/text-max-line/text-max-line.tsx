@@ -37,7 +37,7 @@ const TextMaxLine = forwardRef<HTMLAnchorElement, TextMaxLineProps>(
         {children}
       </Typography>
     );
-  }
+  },
 );
 
 export default TextMaxLine;

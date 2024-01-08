@@ -27,7 +27,7 @@ export default function MapPopup({ office, onClose, lat, lng }: Props) {
       onClose();
       console.log("lat-lng", lat, lng);
     },
-    [lat, lng, onClose]
+    [lat, lng, onClose],
   );
 
   return (

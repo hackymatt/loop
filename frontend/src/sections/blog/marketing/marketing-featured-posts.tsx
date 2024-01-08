@@ -84,7 +84,7 @@ export default function MarketingFeaturedPosts({ posts }: Props) {
               } 75%)`}
               sx={{ position: "absolute", top: 0, width: 1, height: 1 }}
             />
-          )
+          ),
       )}
     </Box>
   );

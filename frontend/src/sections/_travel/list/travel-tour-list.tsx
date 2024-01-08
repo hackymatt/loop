@@ -33,7 +33,7 @@ export default function TravelTourList({ tours, loading }: Props) {
             <TravelTourItem key={tour.id} tour={tour} />
           ) : (
             <TravelTourItemSkeleton key={index} />
-          )
+          ),
         )}
       </Box>
 

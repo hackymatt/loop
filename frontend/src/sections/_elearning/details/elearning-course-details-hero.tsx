@@ -105,7 +105,7 @@ export default function ElearningCourseDetailsHero({ course }: Props) {
                   ratio={mdUp ? "3/4" : "4/3"}
                   overlay={`linear-gradient(to bottom, ${alpha(
                     theme.palette.common.black,
-                    0
+                    0,
                   )} 0%, ${theme.palette.common.black} 75%)`}
                 />
               </Stack>

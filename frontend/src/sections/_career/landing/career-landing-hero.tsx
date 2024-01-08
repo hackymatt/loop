@@ -48,7 +48,7 @@ export default function CareerLandingHero() {
         filterKeyword: newValue,
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeLocation = useCallback(
@@ -58,7 +58,7 @@ export default function CareerLandingHero() {
         filterLocation: newValue,
       });
     },
-    [filters]
+    [filters],
   );
 
   const renderFilters = (

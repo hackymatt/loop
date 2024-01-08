@@ -57,7 +57,7 @@ export default function FilterSalary({ filterSalary, onChangeSalary }: Props) {
             }
             return (
               <Typography variant="subtitle2" component="span">{`${fCurrency(
-                minSalary
+                minSalary,
               )} - ${fCurrency(maxSalary)}`}</Typography>
             );
           }}

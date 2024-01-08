@@ -71,7 +71,7 @@ export default function EcommerceAccountOrdersPage() {
         setOrderBy(id);
       }
     },
-    [order, orderBy]
+    [order, orderBy],
   );
 
   const handleSelectAllRows = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,13 +97,13 @@ export default function EcommerceAccountOrdersPage() {
       } else if (selectedIndex > 0) {
         newSelected = newSelected.concat(
           selected.slice(0, selectedIndex),
-          selected.slice(selectedIndex + 1)
+          selected.slice(selectedIndex + 1),
         );
       }
 
       setSelected(newSelected);
     },
-    [selected]
+    [selected],
   );
 
   const handleChangePage = useCallback((event: unknown, newPage: number) => {
