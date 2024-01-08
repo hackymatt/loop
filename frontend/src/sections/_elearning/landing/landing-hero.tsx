@@ -1,20 +1,22 @@
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
+import Typography from "@mui/material/Typography";
 import { alpha, useTheme } from "@mui/material/styles";
+
+import { paths } from "src/routes/paths";
 
 import { useResponsive } from "src/hooks/use-responsive";
 
 import { fShortenNumber } from "src/utils/format-number";
 
-import HeroIllustration from "src/assets/illustrations/hero-illustration";
-import Iconify from "src/components/iconify";
-import { paths } from "src/routes/paths";
 import { bgGradient } from "src/theme/css";
+import HeroIllustration from "src/assets/illustrations/hero-illustration";
+
+import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
@@ -32,8 +34,7 @@ export default function LandingHero() {
   const mdUp = useResponsive("up", "md");
 
   return (
-    <>
-      <Box
+    <Box
         sx={{
           ...bgGradient({
             color: alpha(theme.palette.background.default, 0.9),
@@ -121,6 +122,5 @@ export default function LandingHero() {
           </Grid>
         </Container>
       </Box>
-    </>
   );
 }

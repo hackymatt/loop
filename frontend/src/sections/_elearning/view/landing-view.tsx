@@ -9,11 +9,11 @@ import {
   _coursesByCategories,
 } from "src/_mock";
 
+import LandingHero from "../landing/landing-hero";
 import ElearningTeam from "../team/elearning-team";
 import ElearningNewsletter from "../elearning-newsletter";
 import ElearningOurClients from "../elearning-our-clients";
 import ElearningDownloadApp from "../elearning-download-app";
-import LandingHero from "../landing/landing-hero";
 import ElearningTestimonial from "../testimonial/elearning-testimonial";
 import ElearningLandingIntroduce from "../landing/elearning-landing-introduce";
 import ElearningLatestPosts from "../../blog/elearning/elearning-latest-posts";

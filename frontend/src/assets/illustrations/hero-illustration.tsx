@@ -2,10 +2,10 @@ import { memo } from "react";
 import { m } from "framer-motion";
 
 import Box, { BoxProps } from "@mui/material/Box";
+
 import Image from "src/components/image";
 
 import Shape from "./pattern/shape";
-import Label from "./pattern/label";
 import Pattern02 from "./pattern/pattern-02";
 import Pattern01 from "./pattern/pattern-01";
 
