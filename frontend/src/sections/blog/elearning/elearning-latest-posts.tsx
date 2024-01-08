@@ -72,7 +72,7 @@ export default function ElearningLatestPosts({ posts }: Props) {
               <PostItem key={post.id} post={post} />
             ) : (
               <PostItemMobile key={post.id} post={post} />
-            )
+            ),
           )}
       </Box>
 

@@ -21,7 +21,7 @@ export default function BackgroundView() {
       setCount(count + 1);
       setSelectVariant(event.target.value);
     },
-    [count]
+    [count],
   );
 
   return (

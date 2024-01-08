@@ -32,9 +32,13 @@
     "@mui/material": "^5.14.20",
     "@mui/system": "^5.14.20",
     "@mui/x-date-pickers": "^6.18.4",
+    "@tanstack/react-query": "^5.17.9",
+    "@tanstack/react-query-devtools": "^5.17.9",
+    "axios": "^1.6.5",
     "date-fns": "^2.30.0",
     "framer-motion": "^10.16.16",
     "google-map-react": "^2.2.1",
+    "lodash-es": "^4.17.21",
     "lodash.isequal": "^4.5.0",
     "lodash.merge": "^4.6.2",
     "mui-one-time-password-input": "^2.0.1",
@@ -56,9 +60,11 @@
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
+    "@tanstack/eslint-plugin-query": "^5.17.7",
     "@testing-library/jest-dom": "^6.2.0",
     "@testing-library/react": "^14.1.2",
     "@types/google-map-react": "^2.1.10",
+    "@types/jest": "^29.5.11",
     "@types/lodash.isequal": "^4.5.8",
     "@types/lodash.merge": "^4.6.9",
     "@types/node": "^20.10.4",
@@ -85,5 +91,9 @@
     "jest-environment-jsdom": "^29.7.0",
     "prettier": "^3.1.1",
     "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   }
 }

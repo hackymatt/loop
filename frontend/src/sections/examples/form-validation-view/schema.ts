@@ -19,7 +19,7 @@ export const FormSchema = Yup.object().shape({
     .test(
       "date-min",
       "End date must be later than start date",
-      (value, { parent }) => value.getTime() > parent.startDate.getTime()
+      (value, { parent }) => value.getTime() > parent.startDate.getTime(),
     ),
   //
   password: Yup.string()

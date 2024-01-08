@@ -62,7 +62,7 @@ export default function EcommerceProductsView() {
         setViewMode(newAlignment);
       }
     },
-    []
+    [],
   );
 
   const handleChangeSort = useCallback((event: SelectChangeEvent) => {

@@ -58,7 +58,7 @@ export default function HomeFAQs() {
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     },
-    []
+    [],
   );
 
   return (

@@ -17,7 +17,7 @@ const RATINGS = [
 
 export default function ReviewProgress({ ...other }: StackProps) {
   const totals = RATINGS.map((rating) => rating.number).reduce(
-    (accumulator: number, curr: number) => accumulator + curr
+    (accumulator: number, curr: number) => accumulator + curr,
   );
 
   return (

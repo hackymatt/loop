@@ -25,7 +25,7 @@ export default function SupportContent({ contents }: Props) {
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     },
-    []
+    [],
   );
 
   return (

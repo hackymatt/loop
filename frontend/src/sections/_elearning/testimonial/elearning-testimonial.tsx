@@ -116,7 +116,7 @@ export default function ElearningTestimonial({ testimonials }: Props) {
                       {testimonial.role}
                     </Typography>
                   </Stack>
-                )
+                ),
             )}
           </Grid>
         </Grid>

@@ -81,7 +81,7 @@ export default function HomeFlexibleComponents() {
         setAlignment(newAlignment);
       }
     },
-    []
+    [],
   );
 
   const handleChangeCategory = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {

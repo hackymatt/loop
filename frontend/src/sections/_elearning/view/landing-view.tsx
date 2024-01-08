@@ -9,11 +9,11 @@ import {
   _coursesByCategories,
 } from "src/_mock";
 
+import LandingHero from "../landing/landing-hero";
 import ElearningTeam from "../team/elearning-team";
 import ElearningNewsletter from "../elearning-newsletter";
 import ElearningOurClients from "../elearning-our-clients";
 import ElearningDownloadApp from "../elearning-download-app";
-import ElearningLandingHero from "../landing/elearning-landing-hero";
 import ElearningTestimonial from "../testimonial/elearning-testimonial";
 import ElearningLandingIntroduce from "../landing/elearning-landing-introduce";
 import ElearningLatestPosts from "../../blog/elearning/elearning-latest-posts";
@@ -22,10 +22,10 @@ import ElearningLandingFeaturedCourses from "../landing/elearning-landing-featur
 
 // ----------------------------------------------------------------------
 
-export default function ElearningLandingView() {
+export default function LandingView() {
   return (
     <>
-      <ElearningLandingHero />
+      <LandingHero />
 
       <ElearningOurClients brands={_brandsColor} />
 

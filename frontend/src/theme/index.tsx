@@ -42,7 +42,7 @@ export default function ThemeProvider({ children }: Props) {
       shape: { borderRadius: 8 },
       typography,
     }),
-    [settings.themeMode, settings.themeDirection, presets.palette, presets.customShadows]
+    [settings.themeMode, settings.themeDirection, presets.palette, presets.customShadows],
   );
 
   const theme = createTheme(memoizedValue as ThemeOptions);

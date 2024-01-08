@@ -32,7 +32,7 @@ const Image = forwardRef<HTMLSpanElement, ImageProps>(
       sx,
       ...other
     },
-    ref
+    ref,
   ) => {
     const theme = useTheme();
 
@@ -111,7 +111,7 @@ const Image = forwardRef<HTMLSpanElement, ImageProps>(
         {content}
       </Box>
     );
-  }
+  },
 );
 
 export default Image;

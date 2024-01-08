@@ -36,7 +36,7 @@ export default function EcommerceProductList({ loading, viewMode, products }: Pr
               <EcommerceProductViewGridItem key={product.id} product={product} />
             ) : (
               <EcommerceProductViewGridItemSkeleton key={index} />
-            )
+            ),
           )}
         </Box>
       ) : (
@@ -46,7 +46,7 @@ export default function EcommerceProductList({ loading, viewMode, products }: Pr
               <EcommerceProductViewListItem key={product.id} product={product} />
             ) : (
               <EcommerceProductViewListItemSkeleton key={index} />
-            )
+            ),
           )}
         </Stack>
       )}

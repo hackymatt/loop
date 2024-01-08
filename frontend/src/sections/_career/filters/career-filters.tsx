@@ -47,7 +47,7 @@ export default function CareerFilters() {
         filterKeyword: newValue,
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeCategory = useCallback(
@@ -57,7 +57,7 @@ export default function CareerFilters() {
         filterCategories: newValue,
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeLocation = useCallback(
@@ -67,7 +67,7 @@ export default function CareerFilters() {
         filterLocation: newValue,
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeJobType = useCallback(
@@ -80,7 +80,7 @@ export default function CareerFilters() {
         filterType: typeof value === "string" ? value.split(",") : value,
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeJobLevel = useCallback(
@@ -93,7 +93,7 @@ export default function CareerFilters() {
         filterLevel: typeof value === "string" ? value.split(",") : value,
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeJobBenefits = useCallback(
@@ -106,7 +106,7 @@ export default function CareerFilters() {
         filterBenefits: typeof value === "string" ? value.split(",") : value,
       });
     },
-    [filters]
+    [filters],
   );
 
   const handleChangeSalary = useCallback(
@@ -116,7 +116,7 @@ export default function CareerFilters() {
         filterSalary: newValue as number[],
       });
     },
-    [filters]
+    [filters],
   );
 
   const onReset = useCallback(() => {

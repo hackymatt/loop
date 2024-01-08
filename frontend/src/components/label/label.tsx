@@ -38,7 +38,7 @@ const Label = forwardRef<HTMLSpanElement, LabelProps>(
         {endIcon && <Box sx={{ ml: 0.75, ...iconStyles }}> {endIcon} </Box>}
       </StyledLabel>
     );
-  }
+  },
 );
 
 export default Label;

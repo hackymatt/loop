@@ -18,7 +18,7 @@ export default function MapMarker({ onOpen, lat, lng }: Props) {
       event.stopPropagation();
       onOpen();
     },
-    [onOpen]
+    [onOpen],
   );
 
   return (
