@@ -1,7 +1,9 @@
 import Box, { BoxProps } from "@mui/material/Box";
 
-import Header from "./header";
+import { ReactQueryProvider } from "src/app/(index)/react-query-provider";
+
 import Footer from "./footer";
+import Header from "./header";
 import { HEADER } from "../config-layout";
 
 // ----------------------------------------------------------------------
@@ -40,7 +42,7 @@ export default function MainLayout({
           />
         )}
 
-        {children}
+        <ReactQueryProvider>{children}</ReactQueryProvider>
       </Box>
 
       <Footer />
