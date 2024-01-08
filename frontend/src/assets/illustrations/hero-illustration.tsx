@@ -95,7 +95,7 @@ function HeroIllustration({ sx, ...other }: BoxProps) {
         <Image
           visibleByDefault
           disabledEffect
-          alt="python"
+          alt="vba"
           src="/assets/icons/platforms/ic_vba.svg"
           sx={{ height: 56 }}
         />
@@ -109,7 +109,7 @@ function HeroIllustration({ sx, ...other }: BoxProps) {
         <Image
           visibleByDefault
           disabledEffect
-          alt="python"
+          alt="java"
           src="/assets/icons/platforms/ic_java.svg"
           sx={{ height: 56 }}
         />
@@ -119,7 +119,7 @@ function HeroIllustration({ sx, ...other }: BoxProps) {
         <Image
           visibleByDefault
           disabledEffect
-          alt="python"
+          alt="js"
           src="/assets/icons/platforms/ic_js.svg"
           sx={{ width: 56, height: 56 }}
         />
@@ -129,7 +129,7 @@ function HeroIllustration({ sx, ...other }: BoxProps) {
         <Image
           visibleByDefault
           disabledEffect
-          alt="python"
+          alt="c++"
           src="/assets/icons/platforms/ic_c++.svg"
           sx={{ width: 56, height: 56 }}
         />
@@ -139,7 +139,7 @@ function HeroIllustration({ sx, ...other }: BoxProps) {
         <Image
           visibleByDefault
           disabledEffect
-          alt="python"
+          alt="ts"
           src="/assets/icons/platforms/ic_ts.svg"
           sx={{ width: 56, height: 56 }}
         />
