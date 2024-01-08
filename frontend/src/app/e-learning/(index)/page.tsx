@@ -1,4 +1,4 @@
-import ElearningLandingView from "src/sections/_elearning/view/elearning-landing-view";
+import LandingView from "src/sections/_elearning/view/landing-view";
 
 // ----------------------------------------------------------------------
 
@@ -7,5 +7,5 @@ export const metadata = {
 };
 
 export default function ElearningLandingPage() {
-  return <ElearningLandingView />;
+  return <LandingView />;
 }

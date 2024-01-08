@@ -1,24 +1,20 @@
 import Box from "@mui/material/Box";
-import Fab from "@mui/material/Fab";
-import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
-import Grid from "@mui/material/Unstable_Grid2";
 import Container from "@mui/material/Container";
+import Divider from "@mui/material/Divider";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Unstable_Grid2";
 import { alpha, useTheme } from "@mui/material/styles";
 
-import { useBoolean } from "src/hooks/use-boolean";
 import { useResponsive } from "src/hooks/use-responsive";
 
 import { fShortenNumber } from "src/utils/format-number";
 
-import { _mock } from "src/_mock";
-import { bgGradient } from "src/theme/css";
-import ElearningHeroIllustration from "src/assets/illustrations/elearning-hero-illustration";
-
+import HeroIllustration from "src/assets/illustrations/hero-illustration";
 import Iconify from "src/components/iconify";
-import { PlayerDialog } from "src/components/player";
+import { paths } from "src/routes/paths";
+import { bgGradient } from "src/theme/css";
 
 // ----------------------------------------------------------------------
 
@@ -30,12 +26,10 @@ const SUMMARY = [
 
 // ----------------------------------------------------------------------
 
-export default function ElearningLandingHero() {
+export default function LandingHero() {
   const theme = useTheme();
 
   const mdUp = useResponsive("up", "md");
-
-  const videoOpen = useBoolean();
 
   return (
     <>
@@ -64,35 +58,31 @@ export default function ElearningLandingHero() {
                 }}
               >
                 <Typography variant="h1">
-                  Free
-                  <Box component="span" sx={{ color: "text.disabled" }}>
-                    {` Online `}
-                  </Box>
+                  Zostań
                   <Box component="span" sx={{ color: "primary.main", textDecoration: "underline" }}>
-                    {` Courses `}
-                  </Box>
-                  From The Experts
+                    {` programistą `}
+                  </Box>{" "}
+                  już dziś!
                 </Typography>
 
                 <Typography sx={{ color: "text.secondary", mt: 3, mb: 5 }}>
-                  Etiam sollicitudin, ipsum eu pulvinar rutrum, tellus ipsum laoreet sapien, quis
-                  venenatis ante odio sit amet eros.
+                  Zdalne zajęcia programowania prowadzone przez praktyków.
                 </Typography>
 
                 <Stack spacing={3} alignItems="center" direction={{ xs: "column", md: "row" }}>
-                  <Button color="inherit" size="large" variant="contained">
-                    Ready Start
+                  <Button
+                    color="inherit"
+                    size="large"
+                    variant="contained"
+                    href={paths.eLearning.courses}
+                    endIcon={<Iconify icon="carbon:chevron-right" />}
+                    sx={{ textTransform: "none" }}
+                  >
+                    Rozpocznij naukę
                   </Button>
-
-                  <Stack direction="row" alignItems="center" sx={{ typography: "h6" }}>
-                    <Fab size="medium" color="info" onClick={videoOpen.onTrue} sx={{ mr: 1 }}>
-                      <Iconify width={24} icon="carbon:play" />
-                    </Fab>
-                    Watch Video
-                  </Stack>
                 </Stack>
 
-                <Divider sx={{ borderStyle: "dashed", mt: 8, mb: 6 }} />
+                <Divider sx={{ borderStyle: "dashed", mt: 2, mb: 6 }} />
 
                 <Stack
                   direction="row"
@@ -125,14 +115,12 @@ export default function ElearningLandingHero() {
 
             {mdUp && (
               <Grid xs={12} md={6} lg={7}>
-                <ElearningHeroIllustration />
+                <HeroIllustration />
               </Grid>
             )}
           </Grid>
         </Container>
       </Box>
-
-      <PlayerDialog open={videoOpen.value} onClose={videoOpen.onFalse} videoPath={_mock.video(0)} />
     </>
   );
 }
