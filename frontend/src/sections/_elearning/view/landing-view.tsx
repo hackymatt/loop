@@ -1,18 +1,10 @@
 "use client";
 
-import {
-  _courses,
-  _members,
-  _coursePosts,
-  _brandsColor,
-  _testimonials,
-  _coursesByCategories,
-} from "src/_mock";
+import { _courses, _members, _coursePosts, _testimonials, _coursesByCategories } from "src/_mock";
 
 import LandingHero from "../landing/landing-hero";
 import ElearningTeam from "../team/elearning-team";
 import ElearningNewsletter from "../elearning-newsletter";
-import ElearningOurClients from "../elearning-our-clients";
 import ElearningDownloadApp from "../elearning-download-app";
 import ElearningTestimonial from "../testimonial/elearning-testimonial";
 import ElearningLandingIntroduce from "../landing/elearning-landing-introduce";
@@ -26,8 +18,6 @@ export default function LandingView() {
   return (
     <>
       <LandingHero />
-
-      <ElearningOurClients brands={_brandsColor} />
 
       <ElearningLandingIntroduce />
 
