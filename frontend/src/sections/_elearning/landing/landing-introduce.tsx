@@ -1,3 +1,5 @@
+import packageInfo from "package.json";
+
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
@@ -53,11 +55,20 @@ export default function LandingIntroduce() {
 
           <Stack sx={{ gap: 2 }}>
             <Typography sx={{ color: "text.secondary" }}>
-              W [Nazwa Szkoły] naszą misją jest umożliwienie zarówno początkującym entuzjastom, jak
-              i doświadczonym inżynierom oprogramowania rozwijania swojej wiedzy i umiejętności w
-              dynamicznym świecie programowania. Zobowiązujemy się tworzyć otoczenie edukacyjne
-              online, które jest dostępne i wspierające, zapewniając społeczność, w której ceni się
-              ciekawość, a współpraca jest kluczowa.
+              W{" "}
+              <Typography
+                variant="overline"
+                sx={{
+                  color: "primary.main",
+                }}
+              >
+                {packageInfo.name}
+              </Typography>{" "}
+              naszą misją jest umożliwienie zarówno początkującym entuzjastom, jak i doświadczonym
+              inżynierom oprogramowania rozwijania swojej wiedzy i umiejętności w dynamicznym
+              świecie programowania. Zobowiązujemy się tworzyć otoczenie edukacyjne online, które
+              jest dostępne i wspierające, zapewniając społeczność, w której ceni się ciekawość, a
+              współpraca jest kluczowa.
             </Typography>
 
             <Typography sx={{ color: "text.secondary" }}>
@@ -79,8 +90,16 @@ export default function LandingIntroduce() {
             </Typography>
 
             <Typography sx={{ color: "text.secondary" }}>
-              Dołącz do nas w [Nazwa Szkoły], gdzie nauka nie zna ograniczeń, a razem kształtujemy
-              przyszłość programowania
+              Dołącz do nas w{" "}
+              <Typography
+                variant="overline"
+                sx={{
+                  color: "primary.main",
+                }}
+              >
+                {packageInfo.name}
+              </Typography>
+              , gdzie nauka nie zna ograniczeń, a razem kształtujemy przyszłość programowania.
             </Typography>
           </Stack>
 

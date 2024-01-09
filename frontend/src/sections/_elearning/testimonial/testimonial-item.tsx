@@ -45,6 +45,13 @@ type TestimonialItemThumbnailProps = {
 };
 
 export function TestimonialItemThumbnail({ testimonial, selected }: TestimonialItemThumbnailProps) {
+  const genderAvatarUrl =
+    testimonial.gender === "K"
+      ? "/assets/images/avatar/avatar_female.jpg"
+      : "/assets/images/avatar/avatar_male.jpg";
+
+  const avatarUrl = testimonial.avatarUrl ? testimonial.avatarUrl : genderAvatarUrl;
+
   return (
     <Stack
       sx={{
@@ -55,7 +62,7 @@ export function TestimonialItemThumbnail({ testimonial, selected }: TestimonialI
       }}
     >
       <Avatar
-        src={testimonial.avatarUrl}
+        src={avatarUrl}
         sx={{
           width: 48,
           height: 48,

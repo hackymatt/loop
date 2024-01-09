@@ -65,11 +65,6 @@ class PurchaseTest(APITestCase):
         )
 
         create_purchase(
-            lesson=self.course_1.lessons.all()[0],
-            student=self.profile,
-            price=self.course_1.lessons.all()[0].price,
-        )
-        create_purchase(
             lesson=self.course_1.lessons.all()[1],
             student=self.profile,
             price=self.course_1.lessons.all()[1].price,
@@ -174,4 +169,27 @@ class PurchaseTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
-        self.assertEqual(records_count, 5)
+        self.assertEqual(records_count, 4)
+
+    def test_create_purchase_unauthenticated(self):
+        # login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "lesson": self.course_1.lessons.all()[0].id,
+            "price": self.course_1.lessons.all()[0].price,
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_create_purchase_authenticated(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "lesson": self.course_1.lessons.all()[0].id,
+            "price": self.course_1.lessons.all()[0].price,
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)

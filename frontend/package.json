@@ -1,7 +1,7 @@
 {
-  "name": "@zone-kit/next-ts",
-  "author": "Minimals",
-  "version": "2.4.0",
+  "name": "loop",
+  "author": "Mateusz Szczepek",
+  "version": "0.0.1",
   "description": "Next & TypeScript",
   "private": true,
   "scripts": {
