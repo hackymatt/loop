@@ -40,5 +40,5 @@ class BestReviewViewSet(ModelViewSet):
 
     def get_queryset(self):
         ids = self.queryset.values_list("id", flat=True)
-        random_ids = sample(list(ids), min(len(ids), 10))
+        random_ids = sample(list(ids), min(len(ids), 5))
         return self.queryset.filter(id__in=random_ids)

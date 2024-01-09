@@ -1,6 +1,7 @@
 [run]
 branch = true
 omit = 
+    */csrf/*
     */tests/*
     */utils/*
     */migrations/*
