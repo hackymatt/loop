@@ -78,6 +78,6 @@ urlpatterns = [
     path("admin", admin.site.urls),
     path("details", ProfileDetailsViewSet.as_view({"get": "list", "put": "update"})),
     path("stats", StatsViewSet.as_view({"get": "get_stats"})),
-    path('csrf', CsrfViewSet.as_view({"get": "get_csrf"})),
+    path("csrf", CsrfViewSet.as_view({"get": "get_csrf"})),
     path("newsletter-unsubscribe/<str:uuid>", NewsletterUnsubscribeViewSet.unsubscribe),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

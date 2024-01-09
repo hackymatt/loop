@@ -388,7 +388,7 @@ class CourseSerializer(ModelSerializer):
 
     class Meta:
         model = Course
-        exclude = ("active",)
+        fields = "__all__"
 
     def validate_lessons(self, lessons):
         if len(lessons) == 0:
@@ -539,6 +539,7 @@ class CourseSerializer(ModelSerializer):
         self.validate_lessons_github_url(course=instance, lessons=lessons)
         self.manage_lessons(course=instance, lessons=lessons)
 
+        instance.active = validated_data.get("active", instance.active)
         instance.title = validated_data.get("title", instance.title)
         instance.description = validated_data.get("description", instance.description)
         instance.level = validated_data.get("level", instance.level)
