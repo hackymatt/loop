@@ -101,7 +101,7 @@ class Course(BaseModel):
     topics = ManyToManyField(Topic, related_name="course_topics")
     active = BooleanField(default=False)
     image = ImageField(upload_to=course_directory_path)
-    video = FileField(upload_to=course_directory_path, null=True)
+    video = FileField(upload_to=course_directory_path, null=True, blank=True)
 
     class Meta:
         db_table = "course"

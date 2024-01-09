@@ -11,6 +11,7 @@ services:
       - 8000:8000
     volumes:
       - ./backend/:/usr/src/app/backend
+      - /usr/src/app/backend/media
     environment:
       - DB_NAME=loop
       - DB_USER=loop_dev

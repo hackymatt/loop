@@ -2,35 +2,42 @@ from rest_framework.serializers import (
     ModelSerializer,
     CharField,
     EmailField,
+    ImageField,
+    SerializerMethodField,
     ValidationError,
 )
 from review.models import Review
 from profile.models import Profile
-from course.models import Lesson
 from purchase.models import LessonPurchase
 
 
+class ProfileSerializer(ModelSerializer):
+    full_name = SerializerMethodField("get_full_name")
+    email = EmailField(source="user.email")
+    gender = CharField()
+    image = ImageField()
+
+    class Meta:
+        model = Profile
+        fields = (
+            "full_name",
+            "email",
+            "gender",
+            "image",
+        )
+
+    def get_full_name(self, profile):
+        return profile.user.first_name + " " + profile.user.last_name
+
+
 class BestReviewSerializer(ModelSerializer):
+    student = ProfileSerializer()
+
     class Meta:
         model = Review
         exclude = (
             "lecturer",
             "lesson",
-            "rating",
-        )
-
-
-class ProfileSerializer(ModelSerializer):
-    first_name = CharField(source="user.first_name")
-    last_name = CharField(source="user.last_name")
-    email = EmailField(source="user.email")
-
-    class Meta:
-        model = Profile
-        fields = (
-            "first_name",
-            "last_name",
-            "email",
         )
 
 

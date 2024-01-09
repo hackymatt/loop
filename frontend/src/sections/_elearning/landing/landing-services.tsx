@@ -9,8 +9,6 @@ import TextMaxLine from "src/components/text-max-line";
 
 // ----------------------------------------------------------------------
 
-const COLORS = ["primary", "secondary", "success", "warning"] as const;
-
 const SERVICES = [
   {
     name: "Niski próg wejścia",

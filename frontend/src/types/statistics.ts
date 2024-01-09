@@ -1,4 +1,4 @@
-export interface IStats {
+export type IStatistics = {
   students_count: number;
   course_count: number;
   lessons_count: number;
@@ -8,4 +8,4 @@ export interface IStats {
   hours_sum: number;
   rating: number;
   rating_count: number;
-}
+};

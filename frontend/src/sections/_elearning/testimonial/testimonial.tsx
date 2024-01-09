@@ -19,7 +19,7 @@ type Props = {
   testimonials: ITestimonialProps[];
 };
 
-export default function ElearningTestimonial({ testimonials }: Props) {
+export default function Testimonial({ testimonials }: Props) {
   const theme = useTheme();
 
   const carouselLarge = useCarousel({
@@ -67,7 +67,7 @@ export default function ElearningTestimonial({ testimonials }: Props) {
         <Grid container spacing={3} justifyContent="center">
           <Grid xs={12} md={6}>
             <Typography variant="h2" sx={{ mb: 5 }}>
-              What Our Customer Say
+              Co mówią nasi uczniowie
             </Typography>
 
             <CarouselArrows
@@ -112,9 +112,6 @@ export default function ElearningTestimonial({ testimonials }: Props) {
                 carouselLarge.currentIndex === index && (
                   <Stack key={testimonial.id} spacing={0.5}>
                     <Typography variant="h6">{testimonial.name}</Typography>
-                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                      {testimonial.role}
-                    </Typography>
                   </Stack>
                 ),
             )}

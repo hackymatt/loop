@@ -14,7 +14,7 @@ import { useResponsive } from "src/hooks/use-responsive";
 import { fShortenNumber } from "src/utils/format-number";
 
 import { bgGradient } from "src/theme/css";
-import { useStats } from "src/api/stats/stats";
+import { useStatistics } from "src/api/statistics/statistics";
 import HeroIllustration from "src/assets/illustrations/hero-illustration";
 
 import Iconify from "src/components/iconify";
@@ -24,7 +24,7 @@ export default function LandingHero() {
 
   const mdUp = useResponsive("up", "md");
 
-  const { data: stats } = useStats();
+  const { data: stats } = useStatistics();
 
   const statsSummary = [
     { value: stats?.students_count, label: "Studentów", color: "warning" },
@@ -96,7 +96,7 @@ export default function LandingHero() {
               >
                 {showStats &&
                   statsSummary.map((item) => (
-                    <Stack key={item.value} spacing={0.5} sx={{ position: "relative" }}>
+                    <Stack key={item.label} spacing={0.5} sx={{ position: "relative" }}>
                       <Box
                         sx={{
                           top: 8,
