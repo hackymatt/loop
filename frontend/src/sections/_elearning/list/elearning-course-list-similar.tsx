@@ -13,7 +13,7 @@ import Iconify from "src/components/iconify";
 
 import { ICourseProps } from "src/types/course";
 
-import ElearningCourseItem from "./elearning-course-item";
+import ElearningCourseItem from "./course-item";
 
 // ----------------------------------------------------------------------
 

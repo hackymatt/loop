@@ -184,8 +184,7 @@ class TopicSerializer(ModelSerializer):
 
 
 class LecturerSerializer(ModelSerializer):
-    first_name = CharField(source="user.first_name")
-    last_name = CharField(source="user.last_name")
+    full_name = SerializerMethodField("get_full_name")
     email = EmailField(source="user.email")
     image = Base64ImageField(required=True)
 
@@ -193,11 +192,13 @@ class LecturerSerializer(ModelSerializer):
         model = Profile
         fields = (
             "uuid",
-            "first_name",
-            "last_name",
+            "full_name",
             "email",
             "image",
         )
+
+    def get_full_name(self, profile):
+        return profile.user.first_name + " " + profile.user.last_name
 
 
 class LessonSerializer(ModelSerializer):
@@ -561,6 +562,61 @@ class CourseSerializer(ModelSerializer):
         instance.save()
 
         return instance
+
+
+class BestCourseSerializer(ModelSerializer):
+    technology = TechnologySerializer()
+    previous_price = SerializerMethodField("get_course_previous_price")
+    lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
+    duration = SerializerMethodField("get_course_duration")
+    lecturers = SerializerMethodField("get_course_lecturers")
+    students_count = SerializerMethodField("get_course_students_count")
+    rating = SerializerMethodField("get_course_rating")
+    rating_count = SerializerMethodField("get_course_rating_count")
+    image = Base64ImageField(required=True)
+    level = CharField(source="get_level_display")
+
+    def get_course_previous_price(self, course):
+        return get_previous_price(
+            price_history_model=CoursePriceHistory, instance=course
+        )
+
+    def get_course_lowest_30_days_price(self, course):
+        return get_lowest_30_days_price(
+            price_history_model=CoursePriceHistory, instance=course
+        )
+
+    def get_course_duration(self, course):
+        return get_duration(course)
+
+    def get_course_lecturers(self, course):
+        lessons = get_course_lessons(course=course)
+        return get_lecturers(lessons=lessons)
+
+    def get_course_rating(self, course):
+        lessons = get_course_lessons(course=course)
+        return get_rating(lessons=lessons)
+
+    def get_course_rating_count(self, course):
+        lessons = get_course_lessons(course=course)
+        return get_rating_count(lessons=lessons)
+
+    def get_course_students_count(self, course):
+        lessons = get_course_lessons(course=course)
+        return get_students_count(lessons=lessons)
+
+    class Meta:
+        model = Course
+        exclude = (
+            "active",
+            "skills",
+            "topics",
+            "video",
+            "created_at",
+            "modified_at",
+            "github_url",
+            "description",
+        )
 
 
 class CoursePriceHistorySerializer(ModelSerializer):

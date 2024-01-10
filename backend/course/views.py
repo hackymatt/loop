@@ -4,6 +4,7 @@ from course.serializers import (
     CourseListSerializer,
     CourseGetSerializer,
     CourseSerializer,
+    BestCourseSerializer,
     TechnologyListSerializer,
     CoursePriceHistorySerializer,
     LessonPriceHistorySerializer,
@@ -66,7 +67,7 @@ class CourseViewSet(ModelViewSet):
 class BestCourseViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = Course.objects.all()
-    serializer_class = CourseListSerializer
+    serializer_class = BestCourseSerializer
 
     def get_queryset(self):
         queryset = self.queryset

@@ -6,12 +6,12 @@ import { ICountriesProps } from "./contact";
 export type ICourseTeacherProp = {
   id: string;
   name: string;
-  role: string;
-  avatarUrl: string;
-  ratingNumber: number;
-  totalCourses: number;
-  totalReviews: number;
-  totalStudents: number;
+  role?: string;
+  avatarUrl?: string;
+  ratingNumber?: number;
+  totalCourses?: number;
+  totalReviews?: number;
+  totalStudents?: number;
 };
 
 export type ICourseLessonProp = {
@@ -34,14 +34,14 @@ export type ICourseProps = {
   slug: string;
   price: number;
   level: string;
-  createdAt: Date;
+  createdAt?: Date;
   coverUrl: string;
   category: string;
-  skills: string[];
+  skills?: string[];
   priceSale: number;
   resources: number;
   totalHours: number;
-  description: string;
+  description?: string;
   bestSeller: boolean;
   languages: string[];
   learnList: string[];

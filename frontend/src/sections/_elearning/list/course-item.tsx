@@ -1,3 +1,5 @@
+import { polishPlurals } from "polish-plurals";
+
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Link from "@mui/material/Link";
@@ -25,8 +27,9 @@ type Props = {
   vertical?: boolean;
 };
 
-export default function ElearningCourseItem({ course, vertical }: Props) {
+export default function CourseItem({ course, vertical }: Props) {
   const {
+    id,
     slug,
     level,
     price,
@@ -114,7 +117,7 @@ export default function ElearningCourseItem({ course, vertical }: Props) {
           </Stack>
 
           <Stack spacing={1}>
-            <Link component={RouterLink} href={paths.eLearning.course} color="inherit">
+            <Link component={RouterLink} href={`${paths.eLearning.course}/${id}`} color="inherit">
               <TextMaxLine variant="h6" line={1}>
                 {slug}
               </TextMaxLine>
@@ -149,7 +152,8 @@ export default function ElearningCourseItem({ course, vertical }: Props) {
 
             {totalReviews && (
               <Link variant="body2" sx={{ color: "text.secondary" }}>
-                ({fShortenNumber(totalReviews)} reviews)
+                ({fShortenNumber(totalReviews)}{" "}
+                {polishPlurals("ocena", "oceny", "ocen", totalReviews)})
               </Link>
             )}
           </Stack>
@@ -157,7 +161,7 @@ export default function ElearningCourseItem({ course, vertical }: Props) {
           <Stack direction="row" sx={{ typography: "subtitle2" }}>
             {fShortenNumber(totalStudents)}
             <Box component="span" typography="body2" sx={{ ml: 0.5 }}>
-              students
+              {polishPlurals("student", "studenci", "studentów", totalStudents)}
             </Box>
           </Stack>
         </Stack>
@@ -169,9 +173,10 @@ export default function ElearningCourseItem({ course, vertical }: Props) {
             {teachers[0]?.name}
           </Typography>
 
-          {teachers?.length > 0 && (
+          {teachers?.length > 1 && (
             <Link underline="always" color="text.secondary" variant="body2">
-              + {teachers?.length} teachers
+              + {teachers?.length}{" "}
+              {polishPlurals("nauczyciel", "nauczyciele", "nauczycieli", teachers?.length)}
             </Link>
           )}
         </Stack>
@@ -193,14 +198,16 @@ export default function ElearningCourseItem({ course, vertical }: Props) {
           sx={{ color: "text.disabled", "& > *:not(:last-child)": { mr: 2.5 } }}
         >
           <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
-            <Iconify icon="carbon:time" sx={{ mr: 1 }} /> {`${totalHours} hours`}
+            <Iconify icon="carbon:time" sx={{ mr: 1 }} />
+            {totalHours} {polishPlurals("godzina", "godziny", "godzin", totalHours)}
           </Stack>
 
           <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
             <Iconify
               icon={
-                (level === "Beginner" && "carbon:skill-level-basic") ||
-                (level === "Intermediate" && "carbon:skill-level-intermediate") ||
+                (level === "Początkujący" && "carbon:skill-level") ||
+                (level === "Średniozaawansowany" && "carbon:skill-level-basic") ||
+                (level === "Zaawansowany" && "carbon:skill-level-intermediate") ||
                 "carbon:skill-level-advanced"
               }
               sx={{ mr: 1 }}

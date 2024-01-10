@@ -10,7 +10,7 @@ import Carousel, { useCarousel, CarouselArrows } from "src/components/carousel";
 
 import { ICourseProps } from "src/types/course";
 
-import ElearningCourseItem from "../list/elearning-course-item";
+import CourseItem from "../list/course-item";
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ type Props = {
   courses: ICourseProps[];
 };
 
-export default function ElearningLandingFeaturedCourses({ courses }: Props) {
+export default function LandingFeaturedCourses({ courses }: Props) {
   const theme = useTheme();
 
   const carousel = useCarousel({
@@ -52,9 +52,9 @@ export default function ElearningLandingFeaturedCourses({ courses }: Props) {
         }}
       >
         <Stack spacing={3} flexGrow={1}>
-          <Typography variant="h2">Featured Courses</Typography>
+          <Typography variant="h2">Polecane kursy</Typography>
           <Typography sx={{ color: "text.secondary" }}>
-            Nullam accumsan lorem in dui. Praesent ac massa at ligula laoreet iaculis.
+            Sprawdź poniższe kursy, które są najbardziej doceniane przez studentów.
           </Typography>
         </Stack>
 
@@ -102,7 +102,7 @@ export default function ElearningLandingFeaturedCourses({ courses }: Props) {
                   pb: { xs: 10, md: 15 },
                 }}
               >
-                <ElearningCourseItem course={course} vertical />
+                <CourseItem course={course} vertical />
               </Box>
             ))}
           </Carousel>
