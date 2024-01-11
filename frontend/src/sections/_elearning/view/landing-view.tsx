@@ -29,7 +29,9 @@ export default function LandingView() {
 
       <LandingServices />
 
-      {bestCourses?.length >= 4 && <LandingFeaturedCourses courses={bestCourses} />}
+      {bestCourses?.length >= 1 && (
+        <LandingFeaturedCourses courses={Array(10).fill(bestCourses[0])} />
+      )}
 
       <ElearningLandingCategories categories={_coursesByCategories} />
 

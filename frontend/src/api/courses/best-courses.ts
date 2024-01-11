@@ -2,6 +2,7 @@ import { compact } from "lodash-es";
 import { useQuery } from "@tanstack/react-query";
 
 import { ICourseProps } from "src/types/course";
+import { IGender } from "src/types/testimonial";
 
 import { Api } from "../service";
 
@@ -13,6 +14,7 @@ type ILecturer = {
   full_name: string;
   uuid: string;
   image: string | null;
+  gender: IGender | null;
 };
 
 type ITechnology = {
@@ -46,12 +48,13 @@ export const bestCoursesQuery = () => {
     const { results, records_count } = data;
     const modifiedResults = results.map((course: ICourse) => ({
       id: course.id,
-      price: course.previous_price ? course.previous_price : course.price,
+      price: course.price,
       level: course.level,
       coverUrl: course.image,
       slug: course.title,
       category: course.technology.name,
-      priceSale: course.previous_price ? course.price : course.previous_price,
+      priceSale: course.previous_price,
+      lowest30DaysPrice: course.lowest_30_days_price,
       totalHours: course.duration / 60,
       ratingNumber: course.rating,
       totalReviews: course.rating_count,
