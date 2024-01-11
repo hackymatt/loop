@@ -30,18 +30,18 @@ export default function LandingHero() {
 
   const statsSummary = [
     {
-      value: stats?.students_count,
-      label: polishPlurals("Student", "Studenci", "Studentów", stats?.students_count),
+      value: Math.floor(stats?.students_count),
+      label: polishPlurals("Student", "Studentów", "Studentów", stats?.students_count),
       color: "warning",
     },
     {
-      value: stats?.course_count,
+      value: Math.floor(stats?.course_count),
       label: polishPlurals("Kurs", "Kursy", "Kursów", stats?.course_count),
       color: "error",
     },
     {
-      value: stats?.lecturers_count,
-      label: polishPlurals("Instruktor", "Instruktorzy", "Instruktorów", stats?.lecturers_count),
+      value: Math.floor(stats?.lecturers_count),
+      label: polishPlurals("Instruktor", "Instruktorów", "Instruktorów", stats?.lecturers_count),
       color: "success",
     },
   ] as const;

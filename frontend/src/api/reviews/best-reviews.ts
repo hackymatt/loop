@@ -32,6 +32,7 @@ export const bestReviewsQuery = () => {
     const modifiedResults = results.map((review: IReview) => ({
       id: review.id,
       name: review.student.full_name,
+      gender: review.student.gender,
       review: review.review,
       avatarUrl: review.student.image,
     }));

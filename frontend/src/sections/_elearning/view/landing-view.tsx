@@ -2,7 +2,7 @@
 
 import { useBestReviews } from "src/api/reviews/best-reviews";
 import { useBestCourses } from "src/api/courses/best-courses";
-import { _members, _coursePosts, _coursesByCategories, _courses } from "src/_mock";
+import { _members, _coursePosts, _coursesByCategories } from "src/_mock";
 
 import LandingHero from "../landing/landing-hero";
 import ElearningTeam from "../team/elearning-team";
@@ -20,6 +20,7 @@ import ElearningLandingCategories from "../landing/elearning-landing-categories"
 export default function LandingView() {
   const { data: bestReviews } = useBestReviews();
   const { data: bestCourses } = useBestCourses();
+
   return (
     <>
       <LandingHero />
@@ -28,9 +29,7 @@ export default function LandingView() {
 
       <LandingServices />
 
-      {/* {bestCourses?.length >= 0 && (
-        <LandingFeaturedCourses courses={Array(10).fill(bestCourses[0])} />
-      )} */}
+      {bestCourses?.length >= 4 && <LandingFeaturedCourses courses={bestCourses} />}
 
       <ElearningLandingCategories categories={_coursesByCategories} />
 

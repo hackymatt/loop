@@ -161,7 +161,7 @@ export default function CourseItem({ course, vertical }: Props) {
           <Stack direction="row" sx={{ typography: "subtitle2" }}>
             {fShortenNumber(totalStudents)}
             <Box component="span" typography="body2" sx={{ ml: 0.5 }}>
-              {polishPlurals("student", "studenci", "studentów", totalStudents)}
+              {polishPlurals("student", "studentów", "studentów", totalStudents)}
             </Box>
           </Stack>
         </Stack>
@@ -176,7 +176,7 @@ export default function CourseItem({ course, vertical }: Props) {
           {teachers?.length > 1 && (
             <Link underline="always" color="text.secondary" variant="body2">
               + {teachers?.length}{" "}
-              {polishPlurals("nauczyciel", "nauczyciele", "nauczycieli", teachers?.length)}
+              {polishPlurals("nauczyciel", "nauczycieli", "nauczycieli", teachers?.length)}
             </Link>
           )}
         </Stack>
@@ -199,7 +199,8 @@ export default function CourseItem({ course, vertical }: Props) {
         >
           <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
             <Iconify icon="carbon:time" sx={{ mr: 1 }} />
-            {totalHours} {polishPlurals("godzina", "godziny", "godzin", totalHours)}
+            {fShortenNumber(Math.floor(totalHours), 0)}+{" "}
+            {polishPlurals("godzina", "godziny", "godzin", totalHours)}
           </Stack>
 
           <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>

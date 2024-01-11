@@ -39,18 +39,18 @@ export type ICourseProps = {
   category: string;
   skills?: string[];
   priceSale: number;
-  resources: number;
+  resources?: number;
   totalHours: number;
   description?: string;
-  bestSeller: boolean;
-  languages: string[];
-  learnList: string[];
+  bestSeller?: boolean;
+  languages?: string[];
+  learnList?: string[];
   ratingNumber: number;
-  totalQuizzes: number;
+  totalQuizzes?: number;
   totalReviews: number;
   totalStudents: number;
-  shareLinks: ISocialLinks;
-  lessons: ICourseLessonProp[];
+  shareLinks?: ISocialLinks;
+  lessons?: ICourseLessonProp[];
   teachers: ICourseTeacherProp[];
 };
 

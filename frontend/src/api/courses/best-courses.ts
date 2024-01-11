@@ -16,10 +16,10 @@ type ILecturer = {
 };
 
 type ITechnology = {
-  id: 1;
-  modified_at: "2024-01-09T13:39:27.256007Z";
-  created_at: "2024-01-09T13:39:27.256040Z";
-  name: "Javascript";
+  id: number;
+  modified_at: string;
+  created_at: string;
+  name: string;
 };
 
 type ICourse = {
@@ -52,7 +52,7 @@ export const bestCoursesQuery = () => {
       slug: course.title,
       category: course.technology.name,
       priceSale: course.previous_price ? course.price : course.previous_price,
-      totalHours: course.duration / 17,
+      totalHours: course.duration / 60,
       ratingNumber: course.rating,
       totalReviews: course.rating_count,
       totalStudents: course.students_count,
