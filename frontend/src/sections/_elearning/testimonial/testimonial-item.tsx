@@ -46,7 +46,7 @@ type TestimonialItemThumbnailProps = {
 
 export function TestimonialItemThumbnail({ testimonial, selected }: TestimonialItemThumbnailProps) {
   const genderAvatarUrl =
-    testimonial.gender === "K"
+    testimonial.gender === "Kobieta"
       ? "/assets/images/avatar/avatar_female.jpg"
       : "/assets/images/avatar/avatar_male.jpg";
 

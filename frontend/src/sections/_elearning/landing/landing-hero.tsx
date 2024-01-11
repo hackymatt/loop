@@ -1,3 +1,5 @@
+import { polishPlurals } from "polish-plurals";
+
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -27,9 +29,21 @@ export default function LandingHero() {
   const { data: stats } = useStatistics();
 
   const statsSummary = [
-    { value: stats?.students_count, label: "Studentów", color: "warning" },
-    { value: stats?.course_count, label: "Kursów", color: "error" },
-    { value: stats?.lecturers_count, label: "Wykładowców", color: "success" },
+    {
+      value: Math.floor(stats?.students_count),
+      label: polishPlurals("Student", "Studentów", "Studentów", stats?.students_count),
+      color: "warning",
+    },
+    {
+      value: Math.floor(stats?.course_count),
+      label: polishPlurals("Kurs", "Kursy", "Kursów", stats?.course_count),
+      color: "error",
+    },
+    {
+      value: Math.floor(stats?.lecturers_count),
+      label: polishPlurals("Instruktor", "Instruktorów", "Instruktorów", stats?.lecturers_count),
+      color: "success",
+    },
   ] as const;
 
   const showStats = statsSummary.every((item) => item.value > 0);
@@ -109,7 +123,9 @@ export default function LandingHero() {
                           bgcolor: `${item.color}.main`,
                         }}
                       />
-                      <Typography variant="h3">{fShortenNumber(item.value)}+</Typography>
+                      <Typography variant="h3">
+                        {item.value > 1000 ? `${fShortenNumber(item.value)}+` : item.value}{" "}
+                      </Typography>
                       <Typography variant="body2" sx={{ color: "text.secondary" }}>
                         {item.label}
                       </Typography>

@@ -29,13 +29,12 @@ export const bestReviewsQuery = () => {
   const queryFn = async () => {
     const { data } = await Api.get(url);
     const { results, records_count } = data;
-    const modifiedResults = results.map((result: IReview) => ({
-      id: result.id,
-      name: result.student.full_name,
-      review: result.review,
-      avatarUrl: result.student.image,
-      createdAt: result.created_at,
-      ratingNumber: result.rating,
+    const modifiedResults = results.map((review: IReview) => ({
+      id: review.id,
+      name: review.student.full_name,
+      gender: review.student.gender,
+      review: review.review,
+      avatarUrl: review.student.image,
     }));
     return { results: modifiedResults, count: records_count };
   };

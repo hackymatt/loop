@@ -3,7 +3,7 @@ import Pagination, { paginationClasses } from "@mui/material/Pagination";
 
 import { ICourseProps } from "src/types/course";
 
-import ElearningCourseItem from "./elearning-course-item";
+import ElearningCourseItem from "./course-item";
 import ElearningCourseItemSkeleton from "./elearning-course-item-skeleton";
 
 // ----------------------------------------------------------------------

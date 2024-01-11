@@ -78,8 +78,8 @@ class Topic(BaseModel):
 
 
 def course_directory_path(instance, filename):
-    # file will be uploaded to MEDIA_ROOT / course / <id> / <filename>
-    return f"course/{instance.id}/{filename}"  # pragma: no cover
+    # file will be uploaded to MEDIA_ROOT / courses / <filename>
+    return f"courses/{filename}"  # pragma: no cover
 
 
 class Course(BaseModel):

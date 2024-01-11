@@ -1,7 +1,8 @@
 "use client";
 
 import { useBestReviews } from "src/api/reviews/best-reviews";
-import { _courses, _members, _coursePosts, _coursesByCategories } from "src/_mock";
+import { useBestCourses } from "src/api/courses/best-courses";
+import { _members, _coursePosts, _coursesByCategories } from "src/_mock";
 
 import LandingHero from "../landing/landing-hero";
 import ElearningTeam from "../team/elearning-team";
@@ -10,14 +11,16 @@ import ElearningNewsletter from "../elearning-newsletter";
 import LandingServices from "../landing/landing-services";
 import LandingIntroduce from "../landing/landing-introduce";
 import ElearningDownloadApp from "../elearning-download-app";
+import LandingFeaturedCourses from "../landing/landing-featured-courses";
 import ElearningLatestPosts from "../../blog/elearning/elearning-latest-posts";
 import ElearningLandingCategories from "../landing/elearning-landing-categories";
-import ElearningLandingFeaturedCourses from "../landing/elearning-landing-featured-courses";
 
 // ----------------------------------------------------------------------
 
 export default function LandingView() {
-  const { data: testimonials } = useBestReviews();
+  const { data: bestReviews } = useBestReviews();
+  const { data: bestCourses } = useBestCourses();
+
   return (
     <>
       <LandingHero />
@@ -26,13 +29,13 @@ export default function LandingView() {
 
       <LandingServices />
 
-      <ElearningLandingFeaturedCourses courses={_courses} />
+      {bestCourses?.length >= 4 && <LandingFeaturedCourses courses={bestCourses} />}
 
       <ElearningLandingCategories categories={_coursesByCategories} />
 
       <ElearningTeam members={_members.slice(0, 4)} />
 
-      {testimonials?.length >= 5 && <Testimonial testimonials={testimonials} />}
+      {bestReviews?.length >= 5 && <Testimonial testimonials={bestReviews} />}
 
       <ElearningLatestPosts posts={_coursePosts.slice(0, 4)} />
 

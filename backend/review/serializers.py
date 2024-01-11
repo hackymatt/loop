@@ -14,7 +14,7 @@ from purchase.models import LessonPurchase
 class ProfileSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
     email = EmailField(source="user.email")
-    gender = CharField()
+    gender = CharField(source="get_gender_display")
     image = ImageField()
 
     class Meta:
@@ -36,6 +36,9 @@ class BestReviewSerializer(ModelSerializer):
     class Meta:
         model = Review
         exclude = (
+            "rating",
+            "created_at",
+            "modified_at",
             "lecturer",
             "lesson",
         )
