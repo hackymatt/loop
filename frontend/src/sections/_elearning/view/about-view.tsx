@@ -2,11 +2,11 @@
 
 import { _members, _coursePosts, _brandsColor, _testimonials } from "src/_mock";
 
+import TeamAbout from "../team/team-about";
+import ElearningNewsletter from "../newsletter";
 import Testimonial from "../testimonial/testimonial";
 import ElearningAbout from "../about/elearning-about";
-import ElearningNewsletter from "../elearning-newsletter";
 import ElearningOurClients from "../elearning-our-clients";
-import TeamAbout from "../team/team-about";
 import ElearningAboutHero from "../about/elearning-about-hero";
 import ElearningAboutCoreValues from "../about/elearning-about-core-values";
 import ElearningLatestPosts from "../../blog/elearning/elearning-latest-posts";

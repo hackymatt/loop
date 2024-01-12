@@ -1,15 +1,14 @@
 "use client";
 
-import { _members } from "src/_mock";
 import { useBestCourses } from "src/api/courses/best-courses";
 import { useBestReviews } from "src/api/reviews/best-reviews";
 import { useTechnologies } from "src/api/technologies/technologies";
 import { useBestLecturers } from "src/api/lecturers/best-lecturers";
 
 import Team from "../team/team";
+import Newsletter from "../newsletter";
 import LandingHero from "../landing/landing-hero";
 import Testimonial from "../testimonial/testimonial";
-import ElearningNewsletter from "../elearning-newsletter";
 import LandingServices from "../landing/landing-services";
 import LandingIntroduce from "../landing/landing-introduce";
 import LandingCategories from "../landing/landing-categories";
@@ -39,7 +38,7 @@ export default function LandingView() {
 
       {bestReviews?.length >= 5 && <Testimonial testimonials={bestReviews} />}
 
-      <ElearningNewsletter />
+      <Newsletter />
     </>
   );
 }

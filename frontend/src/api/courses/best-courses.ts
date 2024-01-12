@@ -6,7 +6,7 @@ import { IGender } from "src/types/testimonial";
 
 import { Api } from "../service";
 
-const statsEndpoint = "/best-courses" as const;
+const endpoint = "/best-courses" as const;
 
 type ILevel = "P" | "Ś" | "Z" | "E";
 
@@ -41,7 +41,7 @@ type ICourse = {
 };
 
 export const bestCoursesQuery = () => {
-  const url = statsEndpoint;
+  const url = endpoint;
 
   const queryFn = async () => {
     const { data } = await Api.get(url);

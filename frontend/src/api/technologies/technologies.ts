@@ -5,7 +5,7 @@ import { ICourseByCategoryProps } from "src/types/course";
 
 import { Api } from "../service";
 
-const statsEndpoint = "/technologies?sort_by=-courses_count" as const;
+const endpoint = "/technologies?sort_by=-courses_count" as const;
 
 type ITechnology = {
   id: number;
@@ -16,7 +16,7 @@ type ITechnology = {
 };
 
 export const technologiesQuery = () => {
-  const url = statsEndpoint;
+  const url = endpoint;
 
   const queryFn = async () => {
     const { data } = await Api.get(url);

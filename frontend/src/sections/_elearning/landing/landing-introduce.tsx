@@ -59,6 +59,7 @@ export default function LandingIntroduce() {
               <Typography
                 variant="overline"
                 sx={{
+                  fontSize: 15,
                   color: "primary.main",
                 }}
               >
@@ -94,6 +95,7 @@ export default function LandingIntroduce() {
               <Typography
                 variant="overline"
                 sx={{
+                  fontSize: 15,
                   color: "primary.main",
                 }}
               >

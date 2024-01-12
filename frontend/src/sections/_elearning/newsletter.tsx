@@ -1,16 +1,30 @@
+import { useState } from "react";
+import packageInfo from "package.json";
+
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Grid from "@mui/material/Unstable_Grid2";
 import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 import InputAdornment from "@mui/material/InputAdornment";
 import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
+
+import { useRegisterNewsletter } from "src/api/newsletter/newsletter";
 
 import Image from "src/components/image";
 
 // ----------------------------------------------------------------------
 
-export default function ElearningNewsletter() {
+export default function Newsletter() {
+  const [email, setEmail] = useState<string>();
+  const { mutateAsync: register } = useRegisterNewsletter();
+
+  const handleRegister = () => {
+    if (email) {
+      register({ email });
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -28,20 +42,36 @@ export default function ElearningNewsletter() {
           direction={{ xs: "column-reverse", md: "row" }}
         >
           <Grid xs={12} md={5} sx={{ textAlign: "center", color: "grey.800" }}>
-            <Typography variant="h3">Register Now Forget 20% Discount Every Courses</Typography>
+            <Typography variant="h3">
+              Bądź na bieżąco z naszą aktualną ofertą i promocjami
+            </Typography>
 
             <Typography sx={{ mt: 2.5, mb: 5 }}>
-              Nam ipsum risus, rutrum vitae, vestibulum eu, molestie vel, lacus. Sed magna purus,
-              fermentum eu
+              Zapisz się do newslettera{" "}
+              <Typography
+                variant="overline"
+                sx={{
+                  fontSize: 15,
+                  color: "primary.main",
+                }}
+              >
+                {packageInfo.name}
+              </Typography>
             </Typography>
 
             <InputBase
               fullWidth
-              placeholder="Enter your email"
+              placeholder="Wpisz swój adres e-mail"
               endAdornment={
                 <InputAdornment position="end">
-                  <Button color="primary" size="large" variant="contained">
-                    Register
+                  <Button
+                    color="primary"
+                    size="large"
+                    variant="contained"
+                    disabled={!email}
+                    onClick={handleRegister}
+                  >
+                    Zapisz
                   </Button>
                 </InputAdornment>
               }
@@ -57,6 +87,7 @@ export default function ElearningNewsletter() {
                   boxShadow: (theme) => theme.customShadows.z4,
                 },
               }}
+              onChange={(event) => setEmail(event.target.value)}
             />
           </Grid>
 

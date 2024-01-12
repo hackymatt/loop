@@ -6,7 +6,7 @@ import { ITeamMemberProps } from "src/types/team";
 
 import { Api } from "../service";
 
-const statsEndpoint = "/best-lecturers" as const;
+const endpoint = "/best-lecturers" as const;
 
 type ILecturer = {
   id: number;
@@ -17,7 +17,7 @@ type ILecturer = {
 };
 
 export const bestLecturersQuery = () => {
-  const url = statsEndpoint;
+  const url = endpoint;
 
   const queryFn = async () => {
     const { data } = await Api.get(url);
