@@ -1,6 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from profile.lecturers.serializers import (
     LecturerSerializer,
+    BestLecturerSerializer,
 )
 from profile.models import Profile
 from review.models import Review
@@ -17,7 +18,7 @@ class LecturerViewSet(ModelViewSet):
 class BestLecturerViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = Profile.objects.filter(user_type="W").all()
-    serializer_class = LecturerSerializer
+    serializer_class = BestLecturerSerializer
 
     def get_rating(self, queryset):
         avg_rating = (
@@ -37,5 +38,5 @@ class BestLecturerViewSet(ModelViewSet):
         queryset = self.get_rating(queryset=queryset).filter(rating__gte=4)
 
         ids = queryset.values_list("id", flat=True)
-        random_ids = sample(list(ids), min(len(ids), 10))
+        random_ids = sample(list(ids), min(len(ids), 4))
         return queryset.filter(id__in=random_ids)

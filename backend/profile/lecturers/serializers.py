@@ -48,3 +48,21 @@ class LecturerSerializer(ModelSerializer):
             .distinct()
             .count()
         )
+
+
+class BestLecturerSerializer(ModelSerializer):
+    full_name = SerializerMethodField("get_full_name")
+    gender = EmailField(source="get_gender_display")
+    
+    class Meta:
+        model = Profile
+        fields = (
+            "id",
+            "full_name",
+            "gender",
+            "user_title",
+            "image",
+        )
+
+    def get_full_name(self, profile):
+        return profile.user.first_name + " " + profile.user.last_name
