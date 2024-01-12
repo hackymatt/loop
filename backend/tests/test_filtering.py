@@ -15,6 +15,7 @@ from .factory import (
     create_course_price_history,
     create_lesson_price_history,
     create_reservation,
+    create_technology,
 )
 from .helpers import login
 from django.contrib import auth
@@ -1239,3 +1240,36 @@ class LessonPriceHistoryFilterTest(APITestCase):
         self.assertEqual(records_count, 3)
         prices = [record["price"] for record in results]
         self.assertEqual(prices, ["15.00", "25.00", "5.00"])
+
+
+class TechnologyFilterTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/technologies"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        create_technology(name="Python")
+        create_technology(name="JavaScript")
+        create_technology(name="C++")
+        create_technology(name="C#")
+        create_technology(name="VBA")
+
+    def test_name_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}?name=Python")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        prices = [record["name"] for record in results]
+        self.assertEqual(prices, ["Python"])
