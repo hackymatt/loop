@@ -70,7 +70,9 @@ export default function LandingCategories({ categories }: Props) {
               }}
             >
               {categories.slice(0, 9).map((category) => (
-                <CategoryItem key={category.id} category={category} />
+                <Button href={paths.eLearning.courses} sx={{ borderRadius: 1.5, padding: 0 }}>
+                  <CategoryItem key={category.id} category={category} />
+                </Button>
               ))}
             </Box>
           </Grid>
@@ -92,6 +94,7 @@ function CategoryItem({ category }: CategoryItemProps) {
       variant="outlined"
       sx={{
         p: 3,
+        width: "100%",
         borderRadius: 1.5,
         cursor: "pointer",
         bgcolor: "transparent",
@@ -113,8 +116,7 @@ function CategoryItem({ category }: CategoryItemProps) {
       </TextMaxLine>
 
       <Typography variant="body2" sx={{ mt: 1, color: "text.disabled" }}>
-        {category.totalStudents}{" "}
-        {polishPlurals("student", "studentów", "studentów", category.totalStudents)}
+        {category.totalStudents} {polishPlurals("kurs", "kursy", "kursów", category.totalStudents)}
       </Typography>
     </Paper>
   );
