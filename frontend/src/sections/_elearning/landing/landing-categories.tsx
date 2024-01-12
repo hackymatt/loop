@@ -41,20 +41,21 @@ export default function LandingCategories({ categories }: Props) {
             <Typography variant="h2">Polecane technologie</Typography>
 
             <Typography sx={{ color: "text.secondary", mt: 2, mb: 5 }}>
-              Since wire-frame renderings are relatively simple and fast to calculate, they are
-              often used in cases
+              Sprawdź technologie dostępne w naszych kursach
             </Typography>
 
-            <Button
-              variant="contained"
-              size="large"
-              color="inherit"
-              href={paths.eLearning.courses}
-              endIcon={<Iconify icon="carbon:chevron-right" />}
-              sx={{ textTransform: "none" }}
-            >
-              Zobacz więcej
-            </Button>
+            {categories.length > 9 && (
+              <Button
+                variant="contained"
+                size="large"
+                color="inherit"
+                href={paths.eLearning.courses}
+                endIcon={<Iconify icon="carbon:chevron-right" />}
+                sx={{ textTransform: "none" }}
+              >
+                Zobacz więcej
+              </Button>
+            )}
           </Grid>
 
           <Grid xs={12} lg={7}>
@@ -68,7 +69,7 @@ export default function LandingCategories({ categories }: Props) {
                 },
               }}
             >
-              {categories.map((category) => (
+              {categories.slice(0, 9).map((category) => (
                 <CategoryItem key={category.id} category={category} />
               ))}
             </Box>

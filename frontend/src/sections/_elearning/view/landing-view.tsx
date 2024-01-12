@@ -31,7 +31,7 @@ export default function LandingView() {
 
       {bestCourses?.length >= 4 && <LandingFeaturedCourses courses={bestCourses} />}
 
-      {technologies?.length >= 1 && <LandingCategories categories={technologies.slice(0, 9)} />}
+      {technologies?.length >= 1 && <LandingCategories categories={technologies} />}
 
       <ElearningTeam members={_members.slice(0, 4)} />
 
