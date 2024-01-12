@@ -6,14 +6,14 @@ import Testimonial from "../testimonial/testimonial";
 import ElearningAbout from "../about/elearning-about";
 import ElearningNewsletter from "../elearning-newsletter";
 import ElearningOurClients from "../elearning-our-clients";
-import TeamElearningAbout from "../team/elearning-team-about";
+import TeamAbout from "../team/team-about";
 import ElearningAboutHero from "../about/elearning-about-hero";
 import ElearningAboutCoreValues from "../about/elearning-about-core-values";
 import ElearningLatestPosts from "../../blog/elearning/elearning-latest-posts";
 
 // ----------------------------------------------------------------------
 
-export default function ElearningAboutView() {
+export default function AboutView() {
   return (
     <>
       <ElearningAboutHero />
@@ -22,7 +22,7 @@ export default function ElearningAboutView() {
 
       <ElearningAboutCoreValues />
 
-      <TeamElearningAbout members={_members} />
+      <TeamAbout members={_members} />
 
       <ElearningOurClients brands={_brandsColor} />
 

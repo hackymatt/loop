@@ -21,6 +21,7 @@ type Props = {
 };
 
 export default function LandingCategories({ categories }: Props) {
+  const CATEGORIES_SLOTS: number = 9 as const;
   return (
     <Box
       sx={{
@@ -44,7 +45,7 @@ export default function LandingCategories({ categories }: Props) {
               Sprawdź technologie dostępne w naszych kursach
             </Typography>
 
-            {categories.length > 9 && (
+            {categories.length > CATEGORIES_SLOTS && (
               <Button
                 variant="contained"
                 size="large"
@@ -69,7 +70,7 @@ export default function LandingCategories({ categories }: Props) {
                 },
               }}
             >
-              {categories.slice(0, 9).map((category) => (
+              {categories.slice(0, CATEGORIES_SLOTS).map((category) => (
                 <Button href={paths.eLearning.courses} sx={{ borderRadius: 1.5, padding: 0 }}>
                   <CategoryItem key={category.id} category={category} />
                 </Button>

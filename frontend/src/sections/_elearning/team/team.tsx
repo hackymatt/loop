@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 
 import { ITeamMemberProps } from "src/types/team";
 
-import ElearningTeamItem from "./elearning-team-item";
+import TeamItem from "./team-item";
 
 // ----------------------------------------------------------------------
 
@@ -14,7 +14,8 @@ type Props = {
   members: ITeamMemberProps[];
 };
 
-export default function ElearningTeam({ members }: Props) {
+export default function Team({ members }: Props) {
+  const TEAM_MEMBER_SLOTS: number = 4 as const;
   return (
     <Container
       sx={{
@@ -22,11 +23,10 @@ export default function ElearningTeam({ members }: Props) {
       }}
     >
       <Stack spacing={3} sx={{ maxWidth: 480, mx: "auto", textAlign: "center" }}>
-        <Typography variant="h2">Meet Our Teachers</Typography>
+        <Typography variant="h2">Poznaj naszych instruktorów</Typography>
 
         <Typography sx={{ color: "text.secondary" }}>
-          Since wire-frame renderings are relatively simple and fast to calculate, they are often
-          used in cases
+          Sprawdź naszych instruktorów oraz ich kursy
         </Typography>
       </Stack>
 
@@ -42,16 +42,18 @@ export default function ElearningTeam({ members }: Props) {
           },
         }}
       >
-        {members.map((member) => (
-          <ElearningTeamItem key={member.id} member={member} />
+        {members.slice(0, TEAM_MEMBER_SLOTS).map((member) => (
+          <TeamItem key={member.id} member={member} />
         ))}
       </Box>
 
-      <Stack alignItems="center">
-        <Button variant="outlined" size="large" color="inherit">
-          View All Teachers
-        </Button>
-      </Stack>
+      {members.length > TEAM_MEMBER_SLOTS && (
+        <Stack alignItems="center">
+          <Button variant="outlined" size="large" color="inherit" sx={{ textTransform: "none" }}>
+            Zobacz wszystkich instruktorów
+          </Button>
+        </Stack>
+      )}
     </Container>
   );
 }
