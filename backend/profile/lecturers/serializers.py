@@ -53,7 +53,7 @@ class LecturerSerializer(ModelSerializer):
 class BestLecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
     gender = EmailField(source="get_gender_display")
-    
+
     class Meta:
         model = Profile
         fields = (
