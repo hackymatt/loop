@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 
 import { ITeamMemberProps } from "src/types/team";
 
-import ElearningTeamItem from "./elearning-team-item";
+import ElearningTeamItem from "./team-item";
 
 // ----------------------------------------------------------------------
 
@@ -12,7 +12,7 @@ type Props = {
   members: ITeamMemberProps[];
 };
 
-export default function ElearningTeamAbout({ members }: Props) {
+export default function TeamAbout({ members }: Props) {
   return (
     <Container sx={{ py: { xs: 8, md: 15 } }}>
       <Typography

@@ -46,25 +46,44 @@ export const bestCoursesQuery = () => {
   const queryFn = async () => {
     const { data } = await Api.get(url);
     const { results, records_count } = data;
-    const modifiedResults = results.map((course: ICourse) => ({
-      id: course.id,
-      price: course.price,
-      level: course.level,
-      coverUrl: course.image,
-      slug: course.title,
-      category: course.technology.name,
-      priceSale: course.previous_price,
-      lowest30DaysPrice: course.lowest_30_days_price,
-      totalHours: course.duration / 60,
-      ratingNumber: course.rating,
-      totalReviews: course.rating_count,
-      totalStudents: course.students_count,
-      teachers: course.lecturers.map((lecturer: ILecturer) => ({
-        id: lecturer.uuid,
-        name: lecturer.full_name,
-        avatarUrl: lecturer.image,
-      })),
-    }));
+    const modifiedResults = results.map(
+      ({
+        id,
+        price,
+        level,
+        image,
+        title,
+        technology,
+        previous_price,
+        lowest_30_days_price,
+        duration,
+        rating,
+        rating_count,
+        students_count,
+        lecturers,
+      }: ICourse) => {
+        const { name } = technology;
+        return {
+          id,
+          price,
+          level,
+          coverUrl: image,
+          slug: title,
+          category: name,
+          priceSale: previous_price,
+          lowest30DaysPrice: lowest_30_days_price,
+          totalHours: duration / 60,
+          ratingNumber: rating,
+          totalReviews: rating_count,
+          totalStudents: students_count,
+          teachers: lecturers.map(({ uuid, full_name, image: lecturerImage }: ILecturer) => ({
+            id: uuid,
+            name: full_name,
+            avatarUrl: lecturerImage,
+          })),
+        };
+      },
+    );
     return { results: modifiedResults, count: records_count };
   };
 

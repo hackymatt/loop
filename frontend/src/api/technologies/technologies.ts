@@ -21,10 +21,10 @@ export const technologiesQuery = () => {
   const queryFn = async () => {
     const { data } = await Api.get(url);
     const { results, records_count } = data;
-    const modifiedResults = results.map((technology: ITechnology) => ({
-      id: technology.id,
-      name: technology.name,
-      totalStudents: technology.courses_count,
+    const modifiedResults = results.map(({ id, name, courses_count }: ITechnology) => ({
+      id,
+      name,
+      totalStudents: courses_count,
     }));
     return { results: modifiedResults, count: records_count };
   };

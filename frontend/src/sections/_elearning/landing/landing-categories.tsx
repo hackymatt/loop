@@ -21,6 +21,7 @@ type Props = {
 };
 
 export default function LandingCategories({ categories }: Props) {
+  const CATEGORIES_SLOTS: number = 9 as const;
   return (
     <Box
       sx={{
@@ -41,20 +42,21 @@ export default function LandingCategories({ categories }: Props) {
             <Typography variant="h2">Polecane technologie</Typography>
 
             <Typography sx={{ color: "text.secondary", mt: 2, mb: 5 }}>
-              Since wire-frame renderings are relatively simple and fast to calculate, they are
-              often used in cases
+              Sprawdź technologie dostępne w naszych kursach
             </Typography>
 
-            <Button
-              variant="contained"
-              size="large"
-              color="inherit"
-              href={paths.eLearning.courses}
-              endIcon={<Iconify icon="carbon:chevron-right" />}
-              sx={{ textTransform: "none" }}
-            >
-              Zobacz więcej
-            </Button>
+            {categories.length > CATEGORIES_SLOTS && (
+              <Button
+                variant="contained"
+                size="large"
+                color="inherit"
+                href={paths.eLearning.courses}
+                endIcon={<Iconify icon="carbon:chevron-right" />}
+                sx={{ textTransform: "none" }}
+              >
+                Zobacz więcej
+              </Button>
+            )}
           </Grid>
 
           <Grid xs={12} lg={7}>
@@ -68,8 +70,10 @@ export default function LandingCategories({ categories }: Props) {
                 },
               }}
             >
-              {categories.map((category) => (
-                <CategoryItem key={category.id} category={category} />
+              {categories.slice(0, CATEGORIES_SLOTS).map((category) => (
+                <Button href={paths.eLearning.courses} sx={{ borderRadius: 1.5, padding: 0 }}>
+                  <CategoryItem key={category.id} category={category} />
+                </Button>
               ))}
             </Box>
           </Grid>
@@ -91,6 +95,7 @@ function CategoryItem({ category }: CategoryItemProps) {
       variant="outlined"
       sx={{
         p: 3,
+        width: "100%",
         borderRadius: 1.5,
         cursor: "pointer",
         bgcolor: "transparent",
@@ -112,8 +117,7 @@ function CategoryItem({ category }: CategoryItemProps) {
       </TextMaxLine>
 
       <Typography variant="body2" sx={{ mt: 1, color: "text.disabled" }}>
-        {category.totalStudents}{" "}
-        {polishPlurals("student", "studentów", "studentów", category.totalStudents)}
+        {category.totalStudents} {polishPlurals("kurs", "kursy", "kursów", category.totalStudents)}
       </Typography>
     </Paper>
   );

@@ -1,4 +1,4 @@
-import ElearningAboutView from "src/sections/_elearning/view/elearning-about-view";
+import AboutView from "src/sections/_elearning/view/about-view";
 
 // ----------------------------------------------------------------------
 
@@ -6,6 +6,6 @@ export const metadata = {
   title: "E-learning: About us",
 };
 
-export default function ElearningAboutPage() {
-  return <ElearningAboutView />;
+export default function AboutPage() {
+  return <AboutView />;
 }
