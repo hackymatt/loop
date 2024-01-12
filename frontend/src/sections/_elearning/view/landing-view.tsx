@@ -11,7 +11,6 @@ import Testimonial from "../testimonial/testimonial";
 import ElearningNewsletter from "../elearning-newsletter";
 import LandingServices from "../landing/landing-services";
 import LandingIntroduce from "../landing/landing-introduce";
-import ElearningDownloadApp from "../elearning-download-app";
 import LandingCategories from "../landing/landing-categories";
 import LandingFeaturedCourses from "../landing/landing-featured-courses";
 
@@ -37,8 +36,6 @@ export default function LandingView() {
       <ElearningTeam members={_members.slice(0, 4)} />
 
       {bestReviews?.length >= 5 && <Testimonial testimonials={bestReviews} />}
-
-      <ElearningDownloadApp />
 
       <ElearningNewsletter />
     </>
