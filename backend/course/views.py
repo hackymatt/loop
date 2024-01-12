@@ -13,6 +13,7 @@ from course.filters import (
     CourseFilter,
     CoursePriceHistoryFilter,
     LessonPriceHistoryFilter,
+    TechnologyFilter,
     get_rating,
 )
 from course.models import Course, Technology, CoursePriceHistory, LessonPriceHistory
@@ -23,6 +24,7 @@ class TechnologyViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = Technology.objects.all()
     serializer_class = TechnologyListSerializer
+    filterset_class = TechnologyFilter
 
 
 class CourseViewSet(ModelViewSet):

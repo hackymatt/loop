@@ -37,6 +37,7 @@ export default function CourseItem({ course, vertical }: Props) {
     coverUrl,
     category,
     priceSale,
+    lowest30DaysPrice,
     bestSeller,
     totalHours,
     description,
@@ -44,6 +45,13 @@ export default function CourseItem({ course, vertical }: Props) {
     totalReviews,
     totalStudents,
   } = course;
+
+  const genderAvatarUrl =
+    teachers?.[0].gender === "Kobieta"
+      ? "/assets/images/avatar/avatar_female.jpg"
+      : "/assets/images/avatar/avatar_male.jpg";
+
+  const avatarUrl = teachers?.[0]?.avatarUrl ? teachers?.[0]?.avatarUrl : genderAvatarUrl;
 
   return (
     <Card
@@ -99,8 +107,8 @@ export default function CourseItem({ course, vertical }: Props) {
               {category}
             </Typography>
 
-            <Typography variant="h4">
-              {priceSale > 0 && (
+            <Typography variant="h4" sx={{ textAlign: "right" }}>
+              {priceSale && (
                 <Box
                   component="span"
                   sx={{
@@ -113,6 +121,11 @@ export default function CourseItem({ course, vertical }: Props) {
                 </Box>
               )}
               {fCurrency(price)}
+              {priceSale && lowest30DaysPrice && (
+                <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "center" }}>
+                  Najniższa cena z 30 dni przed: {fCurrency(lowest30DaysPrice)}
+                </Typography>
+              )}
             </Typography>
           </Stack>
 
@@ -167,7 +180,7 @@ export default function CourseItem({ course, vertical }: Props) {
         </Stack>
 
         <Stack direction="row" alignItems="center">
-          <Avatar src={teachers[0]?.avatarUrl} />
+          <Avatar src={avatarUrl} />
 
           <Typography variant="body2" sx={{ ml: 1, mr: 0.5 }}>
             {teachers[0]?.name}

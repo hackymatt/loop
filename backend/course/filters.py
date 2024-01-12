@@ -5,7 +5,13 @@ from django_filters import (
     BaseInFilter,
     NumberFilter,
 )
-from course.models import Course, Lesson, CoursePriceHistory, LessonPriceHistory
+from course.models import (
+    Course,
+    Lesson,
+    Technology,
+    CoursePriceHistory,
+    LessonPriceHistory,
+)
 from review.models import Review
 from purchase.models import LessonPurchase
 from django.db.models import OuterRef, Subquery, Value, Avg, Sum, Count
@@ -53,6 +59,20 @@ def get_students_count(queryset):
     return courses
 
 
+def get_courses_count(queryset):
+    total_courses_count = (
+        Course.objects.filter(technology=OuterRef("pk"))
+        .annotate(dummy_group_by=Value(1))
+        .values("dummy_group_by")
+        .order_by("dummy_group_by")
+        .annotate(total_courses_count=Count("id"))
+        .values("total_courses_count")
+    )
+    technologies = queryset.annotate(courses_count=Subquery(total_courses_count))
+
+    return technologies
+
+
 class CharInFilter(BaseInFilter, CharFilter):
     pass
 
@@ -71,6 +91,8 @@ class OrderFilter(OrderingFilter):
                 queryset = get_rating(queryset).order_by(value)
             elif value in ["students_count", "-students_count"]:
                 queryset = get_students_count(queryset).order_by(value)
+            elif value in ["courses_count", "-courses_count"]:
+                queryset = get_courses_count(queryset).order_by(value)
             else:
                 queryset = queryset.order_by(value)
 
@@ -157,6 +179,31 @@ class CourseFilter(FilterSet):
     def filter_duration_to(self, queryset, field_name, value):
         lookup_field_name = f"{field_name}__lte"
         return get_duration(queryset).filter(**{lookup_field_name: value})
+
+
+class TechnologyFilter(FilterSet):
+    name = CharFilter(field_name="name", lookup_expr="exact")
+    sort_by = OrderFilter(
+        choices=(
+            ("name", "Name ASC"),
+            ("-name", "Name DESC"),
+            ("courses_count", "Courses Count ASC"),
+            ("-courses_count", "Courses Count DESC"),
+        ),
+        fields={
+            "name": "name",
+            "-name": "-name",
+            "courses_count": "courses_count",
+            "-courses_count": "-courses_count",
+        },
+    )
+
+    class Meta:
+        model = Technology
+        fields = (
+            "name",
+            "sort_by",
+        )
 
 
 class CoursePriceHistoryFilter(FilterSet):

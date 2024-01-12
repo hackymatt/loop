@@ -1,3 +1,4 @@
+import { IGender } from "./testimonial";
 import { ISocialLinks } from "./socials";
 import { ICountriesProps } from "./contact";
 
@@ -12,6 +13,7 @@ export type ICourseTeacherProp = {
   totalCourses?: number;
   totalReviews?: number;
   totalStudents?: number;
+  gender?: IGender;
 };
 
 export type ICourseLessonProp = {
@@ -39,6 +41,7 @@ export type ICourseProps = {
   category: string;
   skills?: string[];
   priceSale: number;
+  lowest30DaysPrice?: number;
   resources?: number;
   totalHours: number;
   description?: string;
