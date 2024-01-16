@@ -45,7 +45,7 @@ export const coursesQuery = (page?: number) => {
   const url = endpoint;
 
   const queryFn = async () => {
-    const { data } = await Api.get(`${url}?page=${page ?? 1}&page_size=1`);
+    const { data } = await Api.get(`${url}?page=${page ?? 1}`);
     const { results, records_count, pages_count } = data;
     const modifiedResults = results.map(
       ({
