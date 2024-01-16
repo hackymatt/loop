@@ -8,7 +8,7 @@ export const useQueryParams = () => {
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const setQueryParam = (name: string, value?: string | number) => {
+  const setQueryParam = (name: string, value?: string | number | null) => {
     params.set(name, value ? value.toString() : "");
     replace(`${pathname}?${params.toString()}`);
   };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -39,18 +39,21 @@ export default function CoursesView() {
   const { data: pagesCount } = useCoursesPagesCount();
 
   const [query, setQuery] = useState<IQueryParams>({
-    page: getQueryParam("page") ?? 1,
+    page: parseInt(getQueryParam("page") ?? "1", 10) ?? 1,
     sort_by: getQueryParam("sort_by") ?? "-students_count",
   });
 
   const { data: courses, isLoading } = useCourses(query);
+
+  useEffect(() => {
+    Object.keys(query).forEach((key: string) => setQueryParam(key, query[key]));
+  }, [query, setQueryParam]);
 
   const handleChange = (name: string, value?: string | number) => {
     setQuery((prevState) => ({
       ...prevState,
       [name]: value,
     }));
-    setQueryParam(name, value);
   };
 
   return (
