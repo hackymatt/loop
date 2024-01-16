@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { Select, MenuItem, FormControl, SelectChangeEvent } from "@mui/material";
+import { SelectChangeEvent } from "@mui/material";
 
 import { useBoolean } from "src/hooks/use-boolean";
 
@@ -18,6 +18,7 @@ import Iconify from "src/components/iconify";
 
 import Newsletter from "../newsletter";
 import Filters from "../filters/filters";
+import Sorting from "../sorting/sorting";
 import CourseList from "../list/course-list";
 
 // ----------------------------------------------------------------------
@@ -26,7 +27,7 @@ const SORT_OPTIONS = [
   { value: "-rating", label: "Ocena: najlepsza" },
   { value: "price", label: "Cena: od najniższej" },
   { value: "-price", label: "Cena: od najwyższej" },
-] as const;
+];
 
 export default function CoursesView() {
   const mobileOpen = useBoolean();
@@ -99,15 +100,7 @@ export default function CoursesView() {
             }}
           >
             <Stack direction="row" alignItems="center" justifyContent="right" sx={{ mb: 5 }}>
-              <FormControl size="small" hiddenLabel sx={{ width: 220 }}>
-                <Select value={sort} onChange={handleChangeSort}>
-                  {SORT_OPTIONS.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Sorting value={sort} options={SORT_OPTIONS} onChange={handleChangeSort} />
             </Stack>
 
             <CourseList
