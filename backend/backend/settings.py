@@ -92,6 +92,7 @@ TEMPLATES = [
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
             os.path.join(BASE_DIR, "profile", "verify", "templates"),
+            os.path.join(BASE_DIR, "newsletter", "templates"),
             os.path.join(BASE_DIR, "utils", "filtering", "templates"),
         ],
         "APP_DIRS": True,

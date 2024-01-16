@@ -1,7 +1,14 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
 from .factory import create_user, create_profile, create_newsletter
-from .helpers import login, newsletters_number, get_newsletter, is_data_match
+from .helpers import (
+    login,
+    newsletters_number,
+    get_newsletter,
+    is_data_match,
+    emails_sent_number,
+    get_mail,
+)
 from django.contrib import auth
 import json
 
@@ -128,6 +135,10 @@ class NewsletterSubscribeTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(newsletters_number(), 1)
+        self.assertEqual(emails_sent_number(), 1)
+        email = get_mail(0)
+        self.assertEqual(email.to, [data["email"]])
+        self.assertEqual(email.subject, "Potwierdzenie rejestracji w newsletterze.")
 
     def test_subscribe_to_newsletter_with_history(self):
         data = {"email": "test@example.com"}
@@ -136,6 +147,10 @@ class NewsletterSubscribeTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(newsletters_number(), 1)
+        self.assertEqual(emails_sent_number(), 1)
+        email = get_mail(0)
+        self.assertEqual(email.to, [data["email"]])
+        self.assertEqual(email.subject, "Potwierdzenie rejestracji w newsletterze.")
 
 
 class NewsletterUnsubscribeTest(APITestCase):
