@@ -11,13 +11,11 @@ import { useResponsive } from "src/hooks/use-responsive";
 
 import Iconify from "src/components/iconify";
 
-import { ICountriesProps } from "src/types/contact";
 import { ICourseFiltersProps } from "src/types/course";
 
-import FilterFee from "./filter-fee";
 import FilterLevel from "./filter-level";
+import FilterPrice from "./filter-price";
 import FilterRating from "./filter-rating";
-import FilterLanguage from "./filter-language";
 import FilterDuration from "./filter-duration";
 import FilterCategories from "./filter-categories";
 
@@ -27,9 +25,11 @@ const defaultValues = {
   filterDuration: [],
   filterCategories: [],
   filterRating: null,
-  filterFee: [],
+  filterPrice: {
+    start: 0,
+    end: 0,
+  },
   filterLevel: [],
-  filterLanguage: [],
 };
 
 type Props = {
@@ -75,19 +75,6 @@ export default function ElearningFilters({ open, onClose }: Props) {
     [filters],
   );
 
-  const handleChangeFee = useCallback(
-    (event: SelectChangeEvent<typeof filters.filterFee>) => {
-      const {
-        target: { value },
-      } = event;
-      setFilters({
-        ...filters,
-        filterFee: typeof value === "string" ? value.split(",") : value,
-      });
-    },
-    [filters],
-  );
-
   const handleChangeDuration = useCallback(
     (event: SelectChangeEvent<typeof filters.filterDuration>) => {
       const {
@@ -101,11 +88,27 @@ export default function ElearningFilters({ open, onClose }: Props) {
     [filters],
   );
 
-  const handleChangeLanguage = useCallback(
-    (newValue: ICountriesProps[]) => {
+  const handleChangeStartPrice = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       setFilters({
         ...filters,
-        filterLanguage: newValue,
+        filterPrice: {
+          ...filters.filterPrice,
+          start: Number(event.target.value),
+        },
+      });
+    },
+    [filters],
+  );
+
+  const handleChangeEndPrice = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setFilters({
+        ...filters,
+        filterPrice: {
+          ...filters.filterPrice,
+          end: Number(event.target.value),
+        },
       });
     },
     [filters],
@@ -122,7 +125,7 @@ export default function ElearningFilters({ open, onClose }: Props) {
       <TextField
         fullWidth
         hiddenLabel
-        placeholder="Search..."
+        placeholder="Szukaj..."
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -132,36 +135,33 @@ export default function ElearningFilters({ open, onClose }: Props) {
         }}
       />
 
-      <Block title="Ratings">
+      <Block title="Ocena">
         <FilterRating filterRating={filters.filterRating} onChangeRating={handleChangeRating} />
       </Block>
 
-      <Block title="Duration">
+      <Block title="Czas trwania">
         <FilterDuration
           filterDuration={filters.filterDuration}
           onChangeDuration={handleChangeDuration}
         />
       </Block>
 
-      <Block title="Category">
+      <Block title="Technologia">
         <FilterCategories
           filterCategories={filters.filterCategories}
           onChangeCategory={handleChangeCategory}
         />
       </Block>
 
-      <Block title="Level">
+      <Block title="Poziom">
         <FilterLevel filterLevel={filters.filterLevel} onChangeLevel={handleChangeLevel} />
       </Block>
 
-      <Block title="Fee">
-        <FilterFee filterFee={filters.filterFee} onChangeFee={handleChangeFee} />
-      </Block>
-
-      <Block title="Language">
-        <FilterLanguage
-          filterLanguage={filters.filterLanguage}
-          onChangeLanguage={handleChangeLanguage}
+      <Block title="Cena">
+        <FilterPrice
+          filterPrice={filters.filterPrice}
+          onChangeStartPrice={handleChangeStartPrice}
+          onChangeEndPrice={handleChangeEndPrice}
         />
       </Block>
     </Stack>

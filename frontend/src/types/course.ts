@@ -1,6 +1,5 @@
 import { IGender } from "./testimonial";
 import { ISocialLinks } from "./socials";
-import { ICountriesProps } from "./contact";
 
 // ----------------------------------------------------------------------
 
@@ -58,10 +57,12 @@ export type ICourseProps = {
 };
 
 export type ICourseFiltersProps = {
-  filterFee: string[];
+  filterPrice: {
+    start: number;
+    end: number;
+  };
   filterLevel: string[];
   filterDuration: string[];
   filterCategories: string[];
   filterRating: string | null;
-  filterLanguage: ICountriesProps[];
 };

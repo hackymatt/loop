@@ -28,9 +28,9 @@ import Iconify from "src/components/iconify";
 import Markdown from "src/components/markdown";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
+import ElearningNewsletter from "../newsletter";
 import PostTags from "../../blog/common/post-tags";
 import PostAuthor from "../../blog/common/post-author";
-import ElearningNewsletter from "../newsletter";
 import PostPrevAndNext from "../../blog/common/post-prev-and-next";
 import PostSocialsShare from "../../blog/common/post-socials-share";
 import ElearningLatestPosts from "../../blog/elearning/elearning-latest-posts";

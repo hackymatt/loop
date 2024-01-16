@@ -6,7 +6,7 @@ import Checkbox, { checkboxClasses } from "@mui/material/Checkbox";
 
 // ----------------------------------------------------------------------
 
-const DURATIONS = ["0 - 1 Hour", "1 - 3 Hours", "3 - 6 Hours", "6 - 18 Hours", "18+ Hours"];
+const DURATIONS = ["0 - 1 godzin", "1 - 3 godzin", "3 - 6 godzin", "6 - 18 godzin", "18+ godzin"];
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ export default function FilterDuration({ filterDuration, onChangeDuration }: Pro
           if (!selected.length) {
             return (
               <Typography variant="body2" sx={{ color: "text.disabled" }}>
-                All Duration
+                Wszystkie czasy trwania
               </Typography>
             );
           }

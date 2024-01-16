@@ -6,7 +6,7 @@ import Checkbox, { checkboxClasses } from "@mui/material/Checkbox";
 
 // ----------------------------------------------------------------------
 
-const LEVELS = ["Beginner", "Intermediate", "Expert"];
+const LEVELS = ["Początkujący", "Średniozaawansowany", "Zaawansowany", "Ekspert"];
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ export default function FilterLevel({ filterLevel, onChangeLevel }: Props) {
           if (!selected.length) {
             return (
               <Typography variant="body2" sx={{ color: "text.disabled" }}>
-                All levels
+                Wszystkie poziomy
               </Typography>
             );
           }

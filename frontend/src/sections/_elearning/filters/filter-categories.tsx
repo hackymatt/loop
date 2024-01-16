@@ -3,7 +3,9 @@ import TextField from "@mui/material/TextField";
 import Checkbox, { checkboxClasses } from "@mui/material/Checkbox";
 import Autocomplete, { autocompleteClasses } from "@mui/material/Autocomplete";
 
-import { _tags } from "src/_mock";
+import { useTechnologies } from "src/api/technologies/technologies";
+
+import { ICourseByCategoryProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -13,12 +15,14 @@ type Props = {
 };
 
 export default function FilterCategories({ filterCategories, onChangeCategory }: Props) {
+  const { data: technologies } = useTechnologies({ sort_by: "name" });
+
   return (
     <Autocomplete
       multiple
       limitTags={2}
       disableCloseOnSelect
-      options={_tags}
+      options={technologies?.map((technology: ICourseByCategoryProps) => technology.name) ?? []}
       getOptionLabel={(option) => option}
       value={filterCategories}
       onChange={(event, value) => onChangeCategory(value)}
@@ -40,7 +44,7 @@ export default function FilterCategories({ filterCategories, onChangeCategory }:
         <TextField
           {...params}
           hiddenLabel={!filterCategories.length}
-          placeholder="All Categories"
+          placeholder="Wszystkie technologie"
           InputProps={{
             ...params.InputProps,
             autoComplete: "search",

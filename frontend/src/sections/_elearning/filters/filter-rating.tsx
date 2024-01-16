@@ -6,7 +6,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 
 // ----------------------------------------------------------------------
 
-const RATINGS = ["up_4_stars", "up_3_stars", "up_2_stars"];
+const RATINGS = ["4", "3", "2"];
 
 type Props = {
   filterRating: string | null;
@@ -34,7 +34,7 @@ export default function FilterRating({ filterRating, onChangeRating }: Props) {
               >
                 <Rating
                   size="small"
-                  value={3}
+                  value={Number(rating)}
                   readOnly
                   sx={{
                     mr: 1,
@@ -43,7 +43,7 @@ export default function FilterRating({ filterRating, onChangeRating }: Props) {
                     }),
                   }}
                 />
-                & Up
+                i więcej
               </Stack>
             }
             sx={{
