@@ -14,8 +14,8 @@ import { _courses } from "src/_mock";
 
 import Iconify from "src/components/iconify";
 
-import ElearningNewsletter from "../newsletter";
-import ElearningFilters from "../filters/elearning-filters";
+import Newsletter from "../newsletter";
+import Filters from "../filters/filters";
 import CourseList from "../list/course-list";
 
 // ----------------------------------------------------------------------
@@ -60,7 +60,7 @@ export default function CoursesView() {
         </Stack>
 
         <Stack direction={{ xs: "column", md: "row" }}>
-          <ElearningFilters open={mobileOpen.value} onClose={mobileOpen.onFalse} />
+          <Filters open={mobileOpen.value} onClose={mobileOpen.onFalse} />
 
           <Box
             sx={{
@@ -74,7 +74,7 @@ export default function CoursesView() {
         </Stack>
       </Container>
 
-      <ElearningNewsletter />
+      <Newsletter />
     </>
   );
 }
