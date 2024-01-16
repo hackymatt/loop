@@ -1,29 +1,52 @@
-import { useState } from "react";
+import * as Yup from "yup";
 import packageInfo from "package.json";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import { Stack } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
-import InputAdornment from "@mui/material/InputAdornment";
-import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
 import { useRegisterNewsletter } from "src/api/newsletter/newsletter";
 
 import Image from "src/components/image";
+import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
 export default function Newsletter() {
-  const [email, setEmail] = useState<string>();
   const { mutateAsync: register } = useRegisterNewsletter();
 
-  const handleRegister = () => {
-    if (email) {
-      register({ email });
-    }
+  const NewsletterSchema = Yup.object().shape({
+    email: Yup.string().required("Adres email jest wymagany").email("Podaj poprawny adres e-mail"),
+  });
+
+  const defaultValues = {
+    email: "",
   };
+
+  const methods = useForm({
+    resolver: yupResolver(NewsletterSchema),
+    defaultValues,
+  });
+
+  const {
+    reset,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
+
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      await register(data);
+      reset();
+    } catch (error) {
+      console.error(error);
+    }
+  });
 
   return (
     <Box
@@ -59,36 +82,24 @@ export default function Newsletter() {
               </Typography>
             </Typography>
 
-            <InputBase
-              fullWidth
-              placeholder="Wpisz swój adres e-mail"
-              endAdornment={
-                <InputAdornment position="end">
-                  <Button
+            <FormProvider methods={methods} onSubmit={onSubmit}>
+              <Stack spacing={2.5} direction="row">
+                <RHFTextField name="email" label="Wpisz swój adres e-mail" />
+
+                <Stack justifyContent="flex-start">
+                  <LoadingButton
                     color="primary"
                     size="large"
                     variant="contained"
-                    disabled={!email}
-                    onClick={handleRegister}
+                    type="submit"
+                    loading={isSubmitting}
+                    sx={{ mt: 0.3 }}
                   >
                     Zapisz
-                  </Button>
-                </InputAdornment>
-              }
-              sx={{
-                pr: 0.5,
-                pl: 1.5,
-                height: 56,
-                maxWidth: 560,
-                borderRadius: 1,
-                bgcolor: "common.white",
-                transition: (theme) => theme.transitions.create(["box-shadow"]),
-                [`&.${inputBaseClasses.focused}`]: {
-                  boxShadow: (theme) => theme.customShadows.z4,
-                },
-              }}
-              onChange={(event) => setEmail(event.target.value)}
-            />
+                  </LoadingButton>
+                </Stack>
+              </Stack>
+            </FormProvider>
           </Grid>
 
           <Grid xs={12} md={5}>

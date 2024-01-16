@@ -4,8 +4,12 @@ import { Api } from "../service";
 
 const endpoint = "/newsletter-subscribe" as const;
 
+type INewsletter = {
+  email: string;
+};
+
 export const useRegisterNewsletter = () =>
-  useMutation({
-    mutationFn: (newsletter: { email: string }) =>
-      Api.post(endpoint, newsletter).then((response) => response.data),
+  useMutation<INewsletter, INewsletter, INewsletter>(async (variables) => {
+    const result = await Api.post(endpoint, variables);
+    return result.data as INewsletter;
   });
