@@ -1,8 +1,11 @@
 import { compact } from "lodash-es";
 import { useQuery } from "@tanstack/react-query";
 
+import { formatQueryParams } from "src/utils/query-params";
+
 import { ICourseProps } from "src/types/course";
 import { IGender } from "src/types/testimonial";
+import { IQueryParams } from "src/types/queryParams";
 
 import { Api } from "../service";
 
@@ -41,12 +44,12 @@ type ICourse = {
   price: string;
 };
 
-export const coursesQuery = (page?: number, sort?: string) => {
+export const coursesQuery = (query?: IQueryParams) => {
   const url = endpoint;
+  const urlParams = formatQueryParams(query);
 
   const queryFn = async () => {
-    const urlParams = [`page=${page ?? 1}`, `sort_by=${sort ?? "-students_count"}`];
-    const { data } = await Api.get(`${url}?${urlParams.join("&")}`);
+    const { data } = await Api.get(`${url}?${urlParams}`);
     const { results, records_count, pages_count } = data;
     const modifiedResults = results.map(
       ({
@@ -91,11 +94,11 @@ export const coursesQuery = (page?: number, sort?: string) => {
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };
   };
 
-  return { url, queryFn, queryKey: compact([url, page, sort]) };
+  return { url, queryFn, queryKey: compact([url, urlParams]) };
 };
 
-export const useCourses = (page?: number, sort?: string) => {
-  const { queryKey, queryFn } = coursesQuery(page, sort);
+export const useCourses = (query?: IQueryParams) => {
+  const { queryKey, queryFn } = coursesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.results as ICourseProps[], ...rest };
 };

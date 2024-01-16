@@ -17,7 +17,6 @@ type Props = {
 };
 
 export default function CourseList({ courses, loading, pagesCount, page, onPageChange }: Props) {
-  console.log(page);
   return (
     <>
       <Stack spacing={4}>

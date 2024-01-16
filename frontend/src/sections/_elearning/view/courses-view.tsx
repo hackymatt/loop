@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useState } from "react";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -11,10 +10,13 @@ import Typography from "@mui/material/Typography";
 import { SelectChangeEvent } from "@mui/material";
 
 import { useBoolean } from "src/hooks/use-boolean";
+import { useQueryParams } from "src/hooks/use-query-params";
 
 import { useCourses, useCoursesPagesCount } from "src/api/courses/courses";
 
 import Iconify from "src/components/iconify";
+
+import { IQueryParams } from "src/types/queryParams";
 
 import Newsletter from "../newsletter";
 import Filters from "../filters/filters";
@@ -22,6 +24,7 @@ import Sorting from "../sorting/sorting";
 import CourseList from "../list/course-list";
 
 // ----------------------------------------------------------------------
+
 const SORT_OPTIONS = [
   { value: "-students_count", label: "Popularność: największa" },
   { value: "-rating", label: "Ocena: najlepsza" },
@@ -31,37 +34,24 @@ const SORT_OPTIONS = [
 
 export default function CoursesView() {
   const mobileOpen = useBoolean();
-  const pathname = usePathname();
-  const { replace } = useRouter();
-  const searchParams = useSearchParams();
-
-  const params = new URLSearchParams(searchParams);
+  const { getQueryParam, setQueryParam } = useQueryParams();
 
   const { data: pagesCount } = useCoursesPagesCount();
 
-  const pageParam = parseInt(params.get("page") ?? "1", 10);
-  const urlPage = Number.isNaN(pageParam) ? 1 : pageParam;
+  const [query, setQuery] = useState<IQueryParams>({
+    page: getQueryParam("page") ?? 1,
+    sort_by: getQueryParam("sort_by") ?? "-students_count",
+  });
 
-  const [page, setPage] = useState<number>(1);
-  const [sort, setSort] = useState("-students_count");
+  const { data: courses, isLoading } = useCourses(query);
 
-  useEffect(() => {
-    if (pagesCount) {
-      setPage(Math.min(urlPage, Number.isNaN(pagesCount) ? 1 : pagesCount));
-    }
-  }, [pagesCount, urlPage]);
-
-  const { data: courses, isLoading } = useCourses(page, sort);
-
-  const handlePageChange = (selectedPage: number) => {
-    setPage(selectedPage);
-    params.set("page", selectedPage.toString());
-    replace(`${pathname}?${params.toString()}`);
+  const handleChange = (name: string, value?: string | number) => {
+    setQuery((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+    setQueryParam(name, value);
   };
-
-  const handleChangeSort = useCallback((event: SelectChangeEvent) => {
-    setSort(event.target.value as string);
-  }, []);
 
   return (
     <>
@@ -100,15 +90,19 @@ export default function CoursesView() {
             }}
           >
             <Stack direction="row" alignItems="center" justifyContent="right" sx={{ mb: 5 }}>
-              <Sorting value={sort} options={SORT_OPTIONS} onChange={handleChangeSort} />
+              <Sorting
+                value={query.sort_by as string}
+                options={SORT_OPTIONS}
+                onChange={(event: SelectChangeEvent) => handleChange("sort_by", event.target.value)}
+              />
             </Stack>
 
             <CourseList
               courses={courses}
               loading={isLoading}
               pagesCount={pagesCount}
-              page={page}
-              onPageChange={(selectedPage: number) => handlePageChange(selectedPage)}
+              page={query.page as number}
+              onPageChange={(selectedPage: number) => handleChange("page", selectedPage)}
             />
           </Box>
         </Stack>
