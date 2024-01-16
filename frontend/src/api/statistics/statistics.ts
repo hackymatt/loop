@@ -5,10 +5,10 @@ import { IStatistics } from "src/types/statistics";
 
 import { Api } from "../service";
 
-const statsEndpoint = "/stats" as const;
+const endpoint = "/stats" as const;
 
 export const statisticsQuery = () => {
-  const url = statsEndpoint;
+  const url = endpoint;
 
   const queryFn = async () => {
     const { data } = await Api.get(url);

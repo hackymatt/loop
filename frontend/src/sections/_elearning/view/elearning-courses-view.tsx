@@ -14,7 +14,7 @@ import { _courses } from "src/_mock";
 
 import Iconify from "src/components/iconify";
 
-import ElearningNewsletter from "../elearning-newsletter";
+import ElearningNewsletter from "../newsletter";
 import ElearningFilters from "../filters/elearning-filters";
 import ElearningCourseList from "../list/elearning-course-list";
 

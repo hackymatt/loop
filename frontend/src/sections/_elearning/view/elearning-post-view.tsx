@@ -30,7 +30,7 @@ import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
 import PostTags from "../../blog/common/post-tags";
 import PostAuthor from "../../blog/common/post-author";
-import ElearningNewsletter from "../elearning-newsletter";
+import ElearningNewsletter from "../newsletter";
 import PostPrevAndNext from "../../blog/common/post-prev-and-next";
 import PostSocialsShare from "../../blog/common/post-socials-share";
 import ElearningLatestPosts from "../../blog/elearning/elearning-latest-posts";

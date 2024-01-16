@@ -43,6 +43,7 @@ export const paths = {
     post: `/e-learning/post`,
     about: "/e-learning/about",
     contact: "/e-learning/contact",
+    newsletter: "/e-learning/newsletter-unsubscribe",
   },
   // E-commerce
   eCommerce: {

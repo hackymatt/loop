@@ -1,6 +1,6 @@
 "use client";
 
-import ElearningNewsletter from "../elearning-newsletter";
+import ElearningNewsletter from "../newsletter";
 import ElearningContactInfo from "../contact/elearning-contact-info";
 import ElearningContactForm from "../contact/elearning-contact-form";
 

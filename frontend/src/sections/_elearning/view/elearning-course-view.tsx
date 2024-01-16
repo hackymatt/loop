@@ -19,7 +19,7 @@ import Iconify from "src/components/iconify";
 import { SplashScreen } from "src/components/loading-screen";
 
 import Advertisement from "../../advertisement";
-import ElearningNewsletter from "../elearning-newsletter";
+import ElearningNewsletter from "../newsletter";
 import ReviewElearning from "../../review/elearning/review-elearning";
 import ElearningCourseListSimilar from "../list/elearning-course-list-similar";
 import ElearningCourseDetailsHero from "../details/elearning-course-details-hero";

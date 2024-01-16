@@ -5,7 +5,7 @@ import { IGender, ITestimonialProps } from "src/types/testimonial";
 
 import { Api } from "../service";
 
-const statsEndpoint = "/best-reviews" as const;
+const endpoint = "/best-reviews" as const;
 
 type IStudent = {
   full_name: string;
@@ -24,7 +24,7 @@ type IReview = {
 };
 
 export const bestReviewsQuery = () => {
-  const url = statsEndpoint;
+  const url = endpoint;
 
   const queryFn = async () => {
     const { data } = await Api.get(url);

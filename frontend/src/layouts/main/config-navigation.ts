@@ -60,6 +60,7 @@ export const pageLinks = [
       { title: "Blog Post", path: paths.eLearning.post },
       { title: "About", path: paths.eLearning.about },
       { title: "Contact", path: paths.eLearning.contact },
+      { title: "Newsletter unsubscribe", path: paths.eLearning.newsletter },
     ],
   },
   {
