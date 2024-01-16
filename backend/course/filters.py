@@ -128,7 +128,7 @@ class CourseFilter(FilterSet):
             ("level", "Level ASC"),
             ("-level", "Level DESC"),
             ("price", "Price ASC"),
-            ("-price", "price DESC"),
+            ("-price", "Price DESC"),
             ("duration", "Duration ASC"),
             ("-duration", "Duration DESC"),
             ("rating", "Rating ASC"),

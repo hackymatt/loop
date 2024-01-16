@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import Box from "@mui/material/Box";
@@ -8,6 +8,7 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import { Select, MenuItem, FormControl, SelectChangeEvent } from "@mui/material";
 
 import { useBoolean } from "src/hooks/use-boolean";
 
@@ -20,6 +21,12 @@ import Filters from "../filters/filters";
 import CourseList from "../list/course-list";
 
 // ----------------------------------------------------------------------
+const SORT_OPTIONS = [
+  { value: "-students_count", label: "Popularność: największa" },
+  { value: "-rating", label: "Ocena: najlepsza" },
+  { value: "price", label: "Cena: od najniższej" },
+  { value: "-price", label: "Cena: od najwyższej" },
+] as const;
 
 export default function CoursesView() {
   const mobileOpen = useBoolean();
@@ -35,6 +42,7 @@ export default function CoursesView() {
   const urlPage = Number.isNaN(pageParam) ? 1 : pageParam;
 
   const [page, setPage] = useState<number>(1);
+  const [sort, setSort] = useState("-students_count");
 
   useEffect(() => {
     if (pagesCount) {
@@ -42,13 +50,17 @@ export default function CoursesView() {
     }
   }, [pagesCount, urlPage]);
 
-  const { data: courses, isLoading } = useCourses(page);
+  const { data: courses, isLoading } = useCourses(page, sort);
 
   const handlePageChange = (selectedPage: number) => {
     setPage(selectedPage);
     params.set("page", selectedPage.toString());
     replace(`${pathname}?${params.toString()}`);
   };
+
+  const handleChangeSort = useCallback((event: SelectChangeEvent) => {
+    setSort(event.target.value as string);
+  }, []);
 
   return (
     <>
@@ -86,6 +98,18 @@ export default function CoursesView() {
               width: { md: `calc(100% - ${280}px)` },
             }}
           >
+            <Stack direction="row" alignItems="center" justifyContent="right" sx={{ mb: 5 }}>
+              <FormControl size="small" hiddenLabel sx={{ width: 220 }}>
+                <Select value={sort} onChange={handleChangeSort}>
+                  {SORT_OPTIONS.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Stack>
+
             <CourseList
               courses={courses}
               loading={isLoading}

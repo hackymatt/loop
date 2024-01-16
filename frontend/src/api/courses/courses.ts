@@ -41,11 +41,12 @@ type ICourse = {
   price: string;
 };
 
-export const coursesQuery = (page?: number) => {
+export const coursesQuery = (page?: number, sort?: string) => {
   const url = endpoint;
 
   const queryFn = async () => {
-    const { data } = await Api.get(`${url}?page=${page ?? 1}`);
+    const urlParams = [`page=${page ?? 1}`, `sort_by=${sort ?? "-students_count"}`];
+    const { data } = await Api.get(`${url}?${urlParams.join("&")}`);
     const { results, records_count, pages_count } = data;
     const modifiedResults = results.map(
       ({
@@ -90,11 +91,11 @@ export const coursesQuery = (page?: number) => {
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };
   };
 
-  return { url, queryFn, queryKey: compact([url, page]) };
+  return { url, queryFn, queryKey: compact([url, page, sort]) };
 };
 
-export const useCourses = (page?: number) => {
-  const { queryKey, queryFn } = coursesQuery(page);
+export const useCourses = (page?: number, sort?: string) => {
+  const { queryKey, queryFn } = coursesQuery(page, sort);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.results as ICourseProps[], ...rest };
 };
