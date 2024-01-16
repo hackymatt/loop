@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -10,7 +11,7 @@ import Typography from "@mui/material/Typography";
 
 import { useBoolean } from "src/hooks/use-boolean";
 
-import { _courses } from "src/_mock";
+import { useCourses, useCoursesPagesCount } from "src/api/courses/courses";
 
 import Iconify from "src/components/iconify";
 
@@ -22,20 +23,21 @@ import CourseList from "../list/course-list";
 
 export default function CoursesView() {
   const mobileOpen = useBoolean();
+  const searchParams = useSearchParams();
 
-  const loading = useBoolean(true);
+  const { data: pagesCount } = useCoursesPagesCount();
 
-  useEffect(() => {
-    const fakeLoading = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      loading.onFalse();
-    };
-    fakeLoading();
-  }, [loading]);
+  const params = new URLSearchParams(searchParams);
+  const pageParam = parseInt(params.get("page") ?? "1", 10);
+  const urlPage = Number.isNaN(pageParam) ? 1 : pageParam;
+
+  const [page, setPage] = useState<number>(Math.min(urlPage, pagesCount));
+
+  const { data: courses, isLoading } = useCourses(page);
 
   return (
     <>
-      <Container>
+      <Container sx={{ mb: 10 }}>
         <Stack
           direction="row"
           alignItems="center"
@@ -55,7 +57,7 @@ export default function CoursesView() {
               display: { md: "none" },
             }}
           >
-            Filters
+            Filtry
           </Button>
         </Stack>
 
@@ -69,7 +71,12 @@ export default function CoursesView() {
               width: { md: `calc(100% - ${280}px)` },
             }}
           >
-            <CourseList courses={_courses} loading={loading.value} />
+            <CourseList
+              courses={courses}
+              loading={isLoading}
+              pagesCount={pagesCount}
+              onPageChange={(selectedPage: number) => setPage(selectedPage)}
+            />
           </Box>
         </Stack>
       </Container>

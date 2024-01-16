@@ -245,7 +245,6 @@ class LessonSerializer(ModelSerializer):
 
 class CourseListSerializer(ModelSerializer):
     technology = TechnologySerializer()
-    lessons_count = SerializerMethodField("get_course_lessons_count")
     previous_price = SerializerMethodField("get_course_previous_price")
     lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
     duration = SerializerMethodField("get_course_duration")
@@ -254,10 +253,7 @@ class CourseListSerializer(ModelSerializer):
     rating = SerializerMethodField("get_course_rating")
     rating_count = SerializerMethodField("get_course_rating_count")
     image = Base64ImageField(required=True)
-    video = VideoBase64File(required=False)
-
-    def get_course_lessons_count(self, course):
-        return get_course_lessons(course=course).count()
+    level = CharField(source="get_level_display")
 
     def get_course_previous_price(self, course):
         return get_previous_price(
@@ -290,8 +286,15 @@ class CourseListSerializer(ModelSerializer):
 
     class Meta:
         model = Course
-        exclude = ("active", "skills", "topics")
-
+        exclude = (
+            "active",
+            "skills",
+            "topics",
+            "video",
+            "created_at",
+            "modified_at",
+            "github_url",
+        )
 
 class CourseGetSerializer(ModelSerializer):
     duration = SerializerMethodField("get_course_duration")

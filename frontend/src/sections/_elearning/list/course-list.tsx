@@ -11,9 +11,11 @@ import CourseItemSkeleton from "./course-item-skeleton";
 type Props = {
   courses: ICourseProps[];
   loading?: boolean;
+  pagesCount?: number;
+  onPageChange: (page: number) => void;
 };
 
-export default function CourseList({ courses, loading }: Props) {
+export default function CourseList({ courses, loading, pagesCount, onPageChange }: Props) {
   return (
     <>
       <Stack spacing={4}>
@@ -27,7 +29,7 @@ export default function CourseList({ courses, loading }: Props) {
       </Stack>
 
       <Pagination
-        count={10}
+        count={pagesCount ?? 0}
         color="primary"
         sx={{
           my: 10,
@@ -35,6 +37,7 @@ export default function CourseList({ courses, loading }: Props) {
             justifyContent: "center",
           },
         }}
+        onChange={(event, page: number) => onPageChange(page)}
       />
     </>
   );
