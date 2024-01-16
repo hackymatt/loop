@@ -16,11 +16,11 @@ import Iconify from "src/components/iconify";
 
 import ElearningNewsletter from "../newsletter";
 import ElearningFilters from "../filters/elearning-filters";
-import ElearningCourseList from "../list/elearning-course-list";
+import CourseList from "../list/course-list";
 
 // ----------------------------------------------------------------------
 
-export default function ElearningCoursesView() {
+export default function CoursesView() {
   const mobileOpen = useBoolean();
 
   const loading = useBoolean(true);
@@ -44,7 +44,7 @@ export default function ElearningCoursesView() {
             py: 5,
           }}
         >
-          <Typography variant="h2">Courses</Typography>
+          <Typography variant="h2">Kursy</Typography>
 
           <Button
             color="inherit"
@@ -69,7 +69,7 @@ export default function ElearningCoursesView() {
               width: { md: `calc(100% - ${280}px)` },
             }}
           >
-            <ElearningCourseList courses={_courses} loading={loading.value} />
+            <CourseList courses={_courses} loading={loading.value} />
           </Box>
         </Stack>
       </Container>

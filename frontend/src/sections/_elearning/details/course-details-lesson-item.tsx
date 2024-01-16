@@ -17,7 +17,7 @@ type LessonItemProps = {
   onExpanded: (event: React.SyntheticEvent, isExpanded: boolean) => void;
 };
 
-export default function ElearningCourseDetailsLessonItem({
+export default function CourseDetailsLessonItem({
   lesson,
   expanded,
   selected,

@@ -17,7 +17,7 @@ type Props = {
   teachers: ICourseTeacherProp[];
 };
 
-export default function ElearningCourseDetailsTeachersInfo({ teachers = [] }: Props) {
+export default function CourseDetailsTeachersInfo({ teachers = [] }: Props) {
   return (
     <>
       <Typography variant="h4" sx={{ mb: 5 }}>
@@ -84,7 +84,7 @@ function TeacherItem({ teacher }: TeacherItemProps) {
           >
             <Iconify icon="carbon:events" sx={{ mr: 1 }} />
             <Box component="strong" sx={{ mr: 0.25 }}>
-              {fShortenNumber(teacher.totalStudents)}
+              {fShortenNumber(teacher.totalStudents ?? 0)}
             </Box>
             Students
           </Stack>

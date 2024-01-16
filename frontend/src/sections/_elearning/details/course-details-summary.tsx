@@ -8,7 +8,7 @@ import Iconify from "src/components/iconify";
 
 import { ICourseProps } from "src/types/course";
 
-import ElearningCourseDetailsLessonList from "./elearning-course-details-lesson-list";
+import CourseDetailsLessonList from "./course-details-lesson-list";
 
 // ----------------------------------------------------------------------
 
@@ -16,10 +16,10 @@ type Props = {
   course: ICourseProps;
 };
 
-export default function ElearningCourseDetailsSummary({ course }: Props) {
+export default function CourseDetailsSummary({ course }: Props) {
   return (
     <Stack spacing={5}>
-      <ElearningCourseDetailsLessonList lessons={course.lessons} />
+      <CourseDetailsLessonList lessons={course.lessons} />
 
       <Stack spacing={3}>
         <Typography variant="h4">What You Will Learn</Typography>

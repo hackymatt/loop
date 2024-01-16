@@ -18,20 +18,21 @@ import { _mock, _socials, _courses } from "src/_mock";
 import Iconify from "src/components/iconify";
 import { SplashScreen } from "src/components/loading-screen";
 
+import ReviewElearning from "src/sections/review/elearning/review-elearning";
+
 import Advertisement from "../../advertisement";
 import ElearningNewsletter from "../newsletter";
-import ReviewElearning from "../../review/elearning/review-elearning";
-import ElearningCourseListSimilar from "../list/elearning-course-list-similar";
-import ElearningCourseDetailsHero from "../details/elearning-course-details-hero";
-import ElearningCourseDetailsInfo from "../details/elearning-course-details-info";
-import ElearningCourseDetailsSummary from "../details/elearning-course-details-summary";
-import ElearningCourseDetailsTeachersInfo from "../details/elearning-course-details-teachers-info";
+import CourseListSimilar from "../list/course-list-similar";
+import CourseDetailsHero from "../details/course-details-hero";
+import CourseDetailsInfo from "../details/course-details-info";
+import CourseDetailsSummary from "../details/course-details-summary";
+import CourseDetailsTeachersInfo from "../details/course-details-teachers-info";
 
 // ----------------------------------------------------------------------
 
 const _mockCourse = _courses[0];
 
-export default function ElearningCourseView() {
+export default function CourseView() {
   const mdUp = useResponsive("up", "md");
 
   const loading = useBoolean(true);
@@ -52,7 +53,7 @@ export default function ElearningCourseView() {
 
   return (
     <>
-      <ElearningCourseDetailsHero course={_mockCourse} />
+      <CourseDetailsHero course={_mockCourse} />
 
       <Container
         sx={{
@@ -64,12 +65,12 @@ export default function ElearningCourseView() {
         <Grid container spacing={{ xs: 5, md: 8 }}>
           {!mdUp && (
             <Grid xs={12}>
-              <ElearningCourseDetailsInfo course={_mockCourse} />
+              <CourseDetailsInfo course={_mockCourse} />
             </Grid>
           )}
 
           <Grid xs={12} md={7} lg={8}>
-            <ElearningCourseDetailsSummary course={_mockCourse} />
+            <CourseDetailsSummary course={_mockCourse} />
 
             <Stack direction="row" flexWrap="wrap" sx={{ mt: 5 }}>
               <Typography variant="subtitle2" sx={{ mt: 0.75, mr: 1.5 }}>
@@ -102,12 +103,12 @@ export default function ElearningCourseView() {
 
             <Divider sx={{ my: 5 }} />
 
-            <ElearningCourseDetailsTeachersInfo teachers={_mockCourse.teachers} />
+            <CourseDetailsTeachersInfo teachers={_mockCourse.teachers} />
           </Grid>
 
           <Grid xs={12} md={5} lg={4}>
             <Stack spacing={5}>
-              {mdUp && <ElearningCourseDetailsInfo course={_mockCourse} />}
+              {mdUp && <CourseDetailsInfo course={_mockCourse} />}
 
               <Advertisement
                 advertisement={{
@@ -126,7 +127,7 @@ export default function ElearningCourseView() {
 
       <ReviewElearning />
 
-      <ElearningCourseListSimilar courses={courseSimilar} />
+      <CourseListSimilar courses={courseSimilar} />
 
       <ElearningNewsletter />
     </>

@@ -13,7 +13,7 @@ import Iconify from "src/components/iconify";
 
 import { ICourseProps } from "src/types/course";
 
-import ElearningCourseItem from "./course-item";
+import CourseItem from "./course-item";
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +21,7 @@ type Props = {
   courses: ICourseProps[];
 };
 
-export default function ElearningCourseListSimilar({ courses }: Props) {
+export default function CourseListSimilar({ courses }: Props) {
   const mdUp = useResponsive("up", "md");
 
   const viewAllBtn = (
@@ -68,7 +68,7 @@ export default function ElearningCourseListSimilar({ courses }: Props) {
           }}
         >
           {courses.map((course) => (
-            <ElearningCourseItem key={course.id} course={course} vertical />
+            <CourseItem key={course.id} course={course} vertical />
           ))}
         </Box>
 

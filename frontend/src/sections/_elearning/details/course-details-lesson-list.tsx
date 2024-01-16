@@ -6,8 +6,8 @@ import { useBoolean } from "src/hooks/use-boolean";
 
 import { ICourseLessonProp } from "src/types/course";
 
-import ElearningCourseDetailsLessonItem from "./elearning-course-details-lesson-item";
-import ElearningCourseDetailsLessonsDialog from "./elearning-course-details-lessons-dialog";
+import CourseDetailsLessonItem from "./course-details-lesson-item";
+import CourseDetailsLessonsDialog from "./course-details-lessons-dialog";
 
 // ----------------------------------------------------------------------
 
@@ -15,7 +15,7 @@ type Props = {
   lessons: ICourseLessonProp[];
 };
 
-export default function ElearningCourseDetailsLessonList({ lessons }: Props) {
+export default function CourseDetailsLessonList({ lessons }: Props) {
   const videoPlay = useBoolean();
 
   const [expanded, setExpanded] = useState<string | false>(false);
@@ -51,7 +51,7 @@ export default function ElearningCourseDetailsLessonList({ lessons }: Props) {
       </Typography>
 
       {lessons.map((lesson) => (
-        <ElearningCourseDetailsLessonItem
+        <CourseDetailsLessonItem
           key={lesson.id}
           lesson={lesson}
           expanded={expanded === lesson.id}
@@ -63,7 +63,7 @@ export default function ElearningCourseDetailsLessonList({ lessons }: Props) {
         />
       ))}
 
-      <ElearningCourseDetailsLessonsDialog
+      <CourseDetailsLessonsDialog
         lessons={lessons}
         selectedLesson={selectedLesson}
         onSelectedLesson={(lesson) => setSelectedLesson(lesson)}

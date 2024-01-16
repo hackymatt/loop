@@ -1,4 +1,4 @@
-import ElearningCoursesView from "src/sections/_elearning/view/elearning-courses-view";
+import CoursesView from "src/sections/_elearning/view/courses-view";
 
 // ----------------------------------------------------------------------
 
@@ -6,6 +6,6 @@ export const metadata = {
   title: "E-learning: Courses",
 };
 
-export default function ElearningCoursesPage() {
-  return <ElearningCoursesView />;
+export default function CoursesPage() {
+  return <CoursesView />;
 }
