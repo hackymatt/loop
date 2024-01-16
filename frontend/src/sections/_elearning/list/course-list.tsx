@@ -12,10 +12,12 @@ type Props = {
   courses: ICourseProps[];
   loading?: boolean;
   pagesCount?: number;
-  onPageChange: (page: number) => void;
+  page: number;
+  onPageChange: (selectedPage: number) => void;
 };
 
-export default function CourseList({ courses, loading, pagesCount, onPageChange }: Props) {
+export default function CourseList({ courses, loading, pagesCount, page, onPageChange }: Props) {
+  console.log(page);
   return (
     <>
       <Stack spacing={4}>
@@ -30,6 +32,7 @@ export default function CourseList({ courses, loading, pagesCount, onPageChange 
 
       <Pagination
         count={pagesCount ?? 0}
+        page={page}
         color="primary"
         sx={{
           my: 10,
@@ -37,7 +40,7 @@ export default function CourseList({ courses, loading, pagesCount, onPageChange 
             justifyContent: "center",
           },
         }}
-        onChange={(event, page: number) => onPageChange(page)}
+        onChange={(event, selectedPage: number) => onPageChange(selectedPage)}
       />
     </>
   );

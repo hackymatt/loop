@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -23,17 +23,32 @@ import CourseList from "../list/course-list";
 
 export default function CoursesView() {
   const mobileOpen = useBoolean();
+  const pathname = usePathname();
+  const { replace } = useRouter();
   const searchParams = useSearchParams();
+
+  const params = new URLSearchParams(searchParams);
 
   const { data: pagesCount } = useCoursesPagesCount();
 
-  const params = new URLSearchParams(searchParams);
   const pageParam = parseInt(params.get("page") ?? "1", 10);
   const urlPage = Number.isNaN(pageParam) ? 1 : pageParam;
 
-  const [page, setPage] = useState<number>(Math.min(urlPage, pagesCount));
+  const [page, setPage] = useState<number>(1);
+
+  useEffect(() => {
+    if (pagesCount) {
+      setPage(Math.min(urlPage, Number.isNaN(pagesCount) ? 1 : pagesCount));
+    }
+  }, [pagesCount, urlPage]);
 
   const { data: courses, isLoading } = useCourses(page);
+
+  const handlePageChange = (selectedPage: number) => {
+    setPage(selectedPage);
+    params.set("page", selectedPage.toString());
+    replace(`${pathname}?${params.toString()}`);
+  };
 
   return (
     <>
@@ -75,7 +90,8 @@ export default function CoursesView() {
               courses={courses}
               loading={isLoading}
               pagesCount={pagesCount}
-              onPageChange={(selectedPage: number) => setPage(selectedPage)}
+              page={page}
+              onPageChange={(selectedPage: number) => handlePageChange(selectedPage)}
             />
           </Box>
         </Stack>
