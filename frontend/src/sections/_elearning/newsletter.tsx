@@ -10,7 +10,7 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 
-import { useRegisterNewsletter } from "src/api/newsletter/newsletter";
+import { useRegisterNewsletter } from "src/api/newsletter/register";
 
 import Image from "src/components/image";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
