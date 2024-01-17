@@ -49,7 +49,15 @@ export const coursesQuery = (query?: IQueryParams) => {
   const urlParams = formatQueryParams(query);
 
   const queryFn = async () => {
-    const { data } = await Api.get(`${url}?${urlParams}`);
+    let data;
+    try {
+      const response = await Api.get(`${url}?${urlParams}`);
+      ({ data } = response);
+    } catch (error) {
+      if (error.response && (error.response.status === 400 || error.response.status === 404)) {
+        data = { results: [], records_count: 0, pages_count: 0 };
+      }
+    }
     const { results, records_count, pages_count } = data;
     const modifiedResults = results.map(
       ({
