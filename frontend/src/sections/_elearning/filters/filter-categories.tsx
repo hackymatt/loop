@@ -5,18 +5,19 @@ import Autocomplete, { autocompleteClasses } from "@mui/material/Autocomplete";
 
 import { useTechnologies } from "src/api/technologies/technologies";
 
+import { IQueryParamValue } from "src/types/queryParams";
 import { ICourseByCategoryProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  filterCategories: string[];
-  onChangeCategory: (newValue: string[]) => void;
+  filterCategories: IQueryParamValue;
+  onChangeCategory: (newValue: IQueryParamValue) => void;
 };
 
 export default function FilterCategories({ filterCategories, onChangeCategory }: Props) {
   const { data: technologies } = useTechnologies({ sort_by: "name" });
-
+  const currentValue = filterCategories ? (filterCategories as string).split(",") : [];
   return (
     <Autocomplete
       multiple
@@ -24,8 +25,8 @@ export default function FilterCategories({ filterCategories, onChangeCategory }:
       disableCloseOnSelect
       options={technologies?.map((technology: ICourseByCategoryProps) => technology.name) ?? []}
       getOptionLabel={(option) => option}
-      value={filterCategories}
-      onChange={(event, value) => onChangeCategory(value)}
+      value={currentValue}
+      onChange={(event, value) => onChangeCategory(value.join(","))}
       slotProps={{
         paper: {
           sx: {
@@ -43,7 +44,7 @@ export default function FilterCategories({ filterCategories, onChangeCategory }:
       renderInput={(params) => (
         <TextField
           {...params}
-          hiddenLabel={!filterCategories.length}
+          hiddenLabel={!currentValue.length}
           placeholder="Wszystkie technologie"
           InputProps={{
             ...params.InputProps,

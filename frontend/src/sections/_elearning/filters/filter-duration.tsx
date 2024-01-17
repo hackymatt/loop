@@ -1,28 +1,53 @@
+import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Checkbox, { checkboxClasses } from "@mui/material/Checkbox";
+
+import { IQueryParamValue } from "src/types/queryParams";
 
 // ----------------------------------------------------------------------
 
-const DURATIONS = ["0 - 1 godzin", "1 - 3 godzin", "3 - 6 godzin", "6 - 18 godzin", "18+ godzin"];
+const DURATIONS = [
+  { value: "(duration_to=60)", label: "0 - 1 godzin" },
+  { value: "(duration_from=60)&(duration_to=180)", label: "1 - 3 godzin" },
+  { value: "(duration_from=180)&(duration_to=360)", label: "3 - 6 godzin" },
+  { value: "(duration_from=360)&(duration_to=1080)", label: "6 - 18 godzin" },
+  { value: "(duration_from=1080)", label: "18+ godzin" },
+];
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  filterDuration: string[];
-  onChangeDuration: (event: SelectChangeEvent<string[]>) => void;
+  filterDuration: IQueryParamValue;
+  onChangeDuration: (duration: IQueryParamValue) => void;
 };
 
 export default function FilterDuration({ filterDuration, onChangeDuration }: Props) {
+  const currentValue = filterDuration
+    ? (filterDuration as string)
+        .split("|")
+        .map(
+          (level: string) =>
+            DURATIONS.find((durationConfig) => durationConfig.value === level)?.label,
+        )
+    : [];
   return (
     <FormControl fullWidth hiddenLabel>
       <Select
         multiple
         displayEmpty
-        value={filterDuration}
-        onChange={onChangeDuration}
+        value={currentValue}
+        onChange={(event) => {
+          console.log(event.target.value);
+          const durations = (event.target.value as string[])
+            .map(
+              (duration: string) =>
+                DURATIONS.find((durationConfig) => durationConfig.label === duration)?.value,
+            )
+            .join("|");
+          onChangeDuration(durations);
+        }}
         renderValue={(selected) => {
           if (!selected.length) {
             return (
@@ -38,11 +63,11 @@ export default function FilterDuration({ filterDuration, onChangeDuration }: Pro
           );
         }}
       >
-        {DURATIONS.map((duration) => (
-          <MenuItem key={duration} value={duration}>
+        {DURATIONS.map(({ value, label }) => (
+          <MenuItem key={value} value={label}>
             <Checkbox
               size="small"
-              checked={filterDuration.includes(duration)}
+              checked={currentValue.includes(label)}
               sx={{
                 [`&.${checkboxClasses.root}`]: {
                   p: 0,
@@ -50,7 +75,7 @@ export default function FilterDuration({ filterDuration, onChangeDuration }: Pro
                 },
               }}
             />
-            {duration}
+            {label}
           </MenuItem>
         ))}
       </Select>

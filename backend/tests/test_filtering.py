@@ -387,6 +387,7 @@ class CourseFilterTest(APITestCase):
         response = self.client.get(f"{self.endpoint}?level_in=Podstawowy,Ekspert")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
+        print(data)
         count = data["records_count"]
         self.assertEqual(count, 2)
 

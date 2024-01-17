@@ -80,7 +80,13 @@ export default function CoursesView() {
         </Stack>
 
         <Stack direction={{ xs: "column", md: "row" }}>
-          <Filters open={mobileOpen.value} onClose={mobileOpen.onFalse} />
+          <Filters
+            open={mobileOpen.value}
+            onClose={mobileOpen.onFalse}
+            onChange={(filters: IQueryParams) => {
+              console.log(filters);
+            }}
+          />
 
           <Box
             sx={{

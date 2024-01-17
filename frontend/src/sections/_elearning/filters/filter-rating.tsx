@@ -4,18 +4,20 @@ import Rating from "@mui/material/Rating";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
+import { IQueryParamValue } from "src/types/queryParams";
+
 // ----------------------------------------------------------------------
 
 const RATINGS = ["4", "3", "2"];
 
 type Props = {
-  filterRating: string | null;
-  onChangeRating: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  filterRating: IQueryParamValue;
+  onChangeRating: (rating: IQueryParamValue) => void;
 };
 
 export default function FilterRating({ filterRating, onChangeRating }: Props) {
   return (
-    <RadioGroup value={filterRating} onChange={onChangeRating}>
+    <RadioGroup value={filterRating} onChange={(event) => onChangeRating(event.target.value)}>
       <Stack spacing={2} alignItems="flex-start">
         {RATINGS.map((rating) => (
           <FormControlLabel

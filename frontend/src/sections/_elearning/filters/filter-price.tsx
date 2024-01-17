@@ -1,21 +1,22 @@
 import TextField from "@mui/material/TextField";
 import Stack, { StackProps } from "@mui/material/Stack";
 
+import { IQueryParamValue } from "src/types/queryParams";
+
 // ----------------------------------------------------------------------
 
 interface Props extends StackProps {
-  filterPrice: {
-    start: number;
-    end: number;
-  };
-  onChangeStartPrice: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onChangeEndPrice: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  filterPriceFrom: IQueryParamValue;
+  filterPriceTo: IQueryParamValue;
+  onChangeStartPrice: (priceFrom: IQueryParamValue) => void;
+  onChangeEndPrice: (priceTo: IQueryParamValue) => void;
 }
 
 // ----------------------------------------------------------------------
 
 export default function FilterPrice({
-  filterPrice,
+  filterPriceFrom,
+  filterPriceTo,
   onChangeStartPrice,
   onChangeEndPrice,
   ...other
@@ -26,15 +27,15 @@ export default function FilterPrice({
         size="small"
         label="od"
         type="number"
-        value={filterPrice.start === 0 ? "" : filterPrice.start}
-        onChange={onChangeStartPrice}
+        value={filterPriceFrom === 0 ? "" : filterPriceFrom}
+        onChange={(event) => onChangeStartPrice(event.target.value)}
       />
       <TextField
         size="small"
         label="do"
         type="number"
-        value={filterPrice.end === 0 ? "" : filterPrice.end}
-        onChange={onChangeEndPrice}
+        value={filterPriceTo === 0 ? "" : filterPriceTo}
+        onChange={(event) => onChangeEndPrice(event.target.value)}
       />
     </Stack>
   );

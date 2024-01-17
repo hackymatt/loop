@@ -1,17 +1,17 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import Stack from "@mui/material/Stack";
 import Drawer from "@mui/material/Drawer";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { SelectChangeEvent } from "@mui/material/Select";
 import InputAdornment from "@mui/material/InputAdornment";
 
 import { useResponsive } from "src/hooks/use-responsive";
+import { useQueryParams } from "src/hooks/use-query-params";
 
 import Iconify from "src/components/iconify";
 
-import { ICourseFiltersProps } from "src/types/course";
+import { IQueryParams, IQueryParamValue } from "src/types/queryParams";
 
 import FilterLevel from "./filter-level";
 import FilterPrice from "./filter-price";
@@ -21,97 +21,50 @@ import FilterCategories from "./filter-categories";
 
 // ----------------------------------------------------------------------
 
-const defaultValues = {
-  filterDuration: [],
-  filterCategories: [],
-  filterRating: null,
-  filterPrice: {
-    start: 0,
-    end: 0,
-  },
-  filterLevel: [],
-};
-
 type Props = {
   open: boolean;
   onClose: VoidFunction;
+  onChange: (filters: IQueryParams) => void;
 };
 
-export default function ElearningFilters({ open, onClose }: Props) {
+export default function Filters({ open, onClose, onChange }: Props) {
   const mdUp = useResponsive("up", "md");
+  const { getQueryParam, setQueryParam, removeQueryParam } = useQueryParams();
 
-  const [filters, setFilters] = useState<ICourseFiltersProps>(defaultValues);
+  const [filters, setFilters] = useState<IQueryParams>({
+    search: getQueryParam("search"),
+    rating_from: getQueryParam("rating_from"),
+    level_in: getQueryParam("level_in"),
+    technology_in: getQueryParam("technology_in"),
+    price_from: getQueryParam("price_from"),
+    price_to: getQueryParam("price_to"),
+    filters: getQueryParam("filters"),
+  });
 
-  const handleChangeRating = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setFilters({
-        ...filters,
-        filterRating: (event.target as HTMLInputElement).value,
-      });
+  useEffect(() => {
+    if (filters) {
+      onChange(filters);
+    }
+  }, [filters, onChange]);
+
+  const handleChange = useCallback(
+    (name: string, value: IQueryParamValue) => {
+      console.log(value);
+      if (value) {
+        setFilters({
+          ...filters,
+          [name]: value,
+        });
+        setQueryParam(name, value);
+      } else {
+        setFilters({
+          ...filters,
+          [name]: null,
+        });
+        removeQueryParam(name);
+      }
     },
-    [filters],
-  );
-
-  const handleChangeCategory = useCallback(
-    (newValue: string[]) => {
-      setFilters({
-        ...filters,
-        filterCategories: newValue,
-      });
-    },
-    [filters],
-  );
-
-  const handleChangeLevel = useCallback(
-    (event: SelectChangeEvent<typeof filters.filterLevel>) => {
-      const {
-        target: { value },
-      } = event;
-      setFilters({
-        ...filters,
-        filterLevel: typeof value === "string" ? value.split(",") : value,
-      });
-    },
-    [filters],
-  );
-
-  const handleChangeDuration = useCallback(
-    (event: SelectChangeEvent<typeof filters.filterDuration>) => {
-      const {
-        target: { value },
-      } = event;
-      setFilters({
-        ...filters,
-        filterDuration: typeof value === "string" ? value.split(",") : value,
-      });
-    },
-    [filters],
-  );
-
-  const handleChangeStartPrice = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setFilters({
-        ...filters,
-        filterPrice: {
-          ...filters.filterPrice,
-          start: Number(event.target.value),
-        },
-      });
-    },
-    [filters],
-  );
-
-  const handleChangeEndPrice = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setFilters({
-        ...filters,
-        filterPrice: {
-          ...filters.filterPrice,
-          end: Number(event.target.value),
-        },
-      });
-    },
-    [filters],
+    [filters, removeQueryParam, setQueryParam],
   );
 
   const renderContent = (
@@ -133,35 +86,44 @@ export default function ElearningFilters({ open, onClose }: Props) {
             </InputAdornment>
           ),
         }}
+        value={filters?.search ?? ""}
+        onChange={(event) => handleChange("search", event.target.value)}
       />
 
       <Block title="Ocena">
-        <FilterRating filterRating={filters.filterRating} onChangeRating={handleChangeRating} />
+        <FilterRating
+          filterRating={filters?.rating_from ?? null}
+          onChangeRating={(value) => handleChange("rating_from", value)}
+        />
       </Block>
 
       <Block title="Czas trwania">
         <FilterDuration
-          filterDuration={filters.filterDuration}
-          onChangeDuration={handleChangeDuration}
+          filterDuration={filters?.filters ?? ""}
+          onChangeDuration={(value) => handleChange("filters", value)}
         />
       </Block>
 
       <Block title="Technologia">
         <FilterCategories
-          filterCategories={filters.filterCategories}
-          onChangeCategory={handleChangeCategory}
+          filterCategories={filters?.technology_in ?? ""}
+          onChangeCategory={(value) => handleChange("technology_in", value)}
         />
       </Block>
 
       <Block title="Poziom">
-        <FilterLevel filterLevel={filters.filterLevel} onChangeLevel={handleChangeLevel} />
+        <FilterLevel
+          filterLevel={filters?.level_in ?? ""}
+          onChangeLevel={(value) => handleChange("level_in", value)}
+        />
       </Block>
 
       <Block title="Cena">
         <FilterPrice
-          filterPrice={filters.filterPrice}
-          onChangeStartPrice={handleChangeStartPrice}
-          onChangeEndPrice={handleChangeEndPrice}
+          filterPriceFrom={filters?.price_from ?? 0}
+          filterPriceTo={filters?.price_to ?? 0}
+          onChangeStartPrice={(value) => handleChange("price_from", value)}
+          onChangeEndPrice={(value) => handleChange("price_to", value)}
         />
       </Block>
     </Stack>

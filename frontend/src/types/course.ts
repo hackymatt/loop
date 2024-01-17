@@ -55,14 +55,3 @@ export type ICourseProps = {
   lessons?: ICourseLessonProp[];
   teachers: ICourseTeacherProp[];
 };
-
-export type ICourseFiltersProps = {
-  filterPrice: {
-    start: number;
-    end: number;
-  };
-  filterLevel: string[];
-  filterDuration: string[];
-  filterCategories: string[];
-  filterRating: string | null;
-};
