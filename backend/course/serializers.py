@@ -296,6 +296,7 @@ class CourseListSerializer(ModelSerializer):
             "github_url",
         )
 
+
 class CourseGetSerializer(ModelSerializer):
     duration = SerializerMethodField("get_course_duration")
     previous_price = SerializerMethodField("get_course_previous_price")
