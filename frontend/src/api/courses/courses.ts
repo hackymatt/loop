@@ -103,8 +103,8 @@ export const useCourses = (query?: IQueryParams) => {
   return { data: data?.results as ICourseProps[], ...rest };
 };
 
-export const useCoursesPagesCount = () => {
-  const { queryKey, queryFn } = coursesQuery();
+export const useCoursesPagesCount = (query?: IQueryParams) => {
+  const { queryKey, queryFn } = coursesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.pagesCount, ...rest };
 };

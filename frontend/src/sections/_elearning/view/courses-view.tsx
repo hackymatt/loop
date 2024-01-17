@@ -36,14 +36,14 @@ export default function CoursesView() {
   const mobileOpen = useBoolean();
   const { getQueryParam, setQueryParam } = useQueryParams();
 
-  const { data: pagesCount } = useCoursesPagesCount();
-
   const [query, setQuery] = useState<IQueryParams>({
     page: parseInt(getQueryParam("page") ?? "1", 10) ?? 1,
     sort_by: getQueryParam("sort_by") ?? "-students_count",
   });
+  const [filters, setFilters] = useState<IQueryParams>();
 
-  const { data: courses, isLoading } = useCourses(query);
+  const { data: pagesCount } = useCoursesPagesCount({ ...query, ...filters });
+  const { data: courses, isLoading } = useCourses({ ...query, ...filters });
 
   const handleChange = (name: string, value?: string | number) => {
     setQuery((prevState) => ({
@@ -83,8 +83,8 @@ export default function CoursesView() {
           <Filters
             open={mobileOpen.value}
             onClose={mobileOpen.onFalse}
-            onChange={(filters: IQueryParams) => {
-              console.log(filters);
+            onChange={(selectedFilters: IQueryParams) => {
+              setFilters(selectedFilters);
             }}
           />
 

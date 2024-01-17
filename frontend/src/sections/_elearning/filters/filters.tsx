@@ -43,7 +43,10 @@ export default function Filters({ open, onClose, onChange }: Props) {
 
   useEffect(() => {
     if (filters) {
-      onChange(filters);
+      Object.keys(filters).forEach((key) => filters[key] === null && delete filters[key]);
+      if (filters) {
+        onChange(filters);
+      }
     }
   }, [filters, onChange]);
 
