@@ -65,8 +65,8 @@ export default function FilterCategories({ filterCategories, onChangeCategory }:
             key={option}
             label={option}
             size="small"
-            color="info"
-            variant="soft"
+            color="primary"
+            variant="filled"
           />
         ))
       }
