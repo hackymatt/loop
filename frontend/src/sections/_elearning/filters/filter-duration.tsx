@@ -39,7 +39,6 @@ export default function FilterDuration({ filterDuration, onChangeDuration }: Pro
         displayEmpty
         value={currentValue}
         onChange={(event) => {
-          console.log(event.target.value);
           const durations = (event.target.value as string[])
             .map(
               (duration: string) =>

@@ -1,9 +1,11 @@
-import TextField, { TextFieldProps } from "@mui/material/TextField";
+import { useState, useEffect } from "react";
+
+import TextField from "@mui/material/TextField";
 import Stack, { StackProps } from "@mui/material/Stack";
 
-import { IQueryParamValue } from "src/types/queryParams";
-import { useEffect, useState } from "react";
 import { useDebounce } from "src/hooks/use-debounce";
+
+import { IQueryParamValue } from "src/types/queryParams";
 
 // ----------------------------------------------------------------------
 
@@ -54,8 +56,10 @@ function PriceInput({ label, price, onChange }: PriceInputProps) {
   };
 
   useEffect(() => {
-    onChange(debouncedValue);
-  }, [debouncedValue, onChange]);
+    if (debouncedValue !== price) {
+      onChange(debouncedValue);
+    }
+  }, [debouncedValue, onChange, price]);
 
   return (
     <TextField

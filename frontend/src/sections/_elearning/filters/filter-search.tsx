@@ -22,8 +22,10 @@ export default function FilterSearch({ filterSearch, onChangeSearch }: Props) {
   };
 
   useEffect(() => {
-    onChangeSearch(debouncedValue);
-  }, [debouncedValue, onChangeSearch]);
+    if (debouncedValue !== filterSearch) {
+      onChangeSearch(debouncedValue);
+    }
+  }, [debouncedValue, filterSearch, onChangeSearch]);
 
   return (
     <TextField

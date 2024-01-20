@@ -32,7 +32,6 @@ export default function Filters({ open, onClose }: Props) {
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
-      console.log(value);
       if (value) {
         setQueryParam(name, value);
       } else {
