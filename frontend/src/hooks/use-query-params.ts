@@ -22,5 +22,7 @@ export const useQueryParams = () => {
 
   const getQueryParam = (name: string) => params.get(name);
 
-  return { getQueryParam, setQueryParam, removeQueryParam };
+  const getQueryParams = () => Object.fromEntries(params);
+
+  return { getQueryParam, setQueryParam, removeQueryParam, getQueryParams };
 };

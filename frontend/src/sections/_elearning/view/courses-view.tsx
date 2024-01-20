@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo } from "react";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -15,8 +15,6 @@ import { useQueryParams } from "src/hooks/use-query-params";
 import { useCourses, useCoursesPagesCount } from "src/api/courses/courses";
 
 import Iconify from "src/components/iconify";
-
-import { IQueryParams } from "src/types/queryParams";
 
 import Newsletter from "../newsletter";
 import Filters from "../filters/filters";
@@ -34,22 +32,14 @@ const SORT_OPTIONS = [
 
 export default function CoursesView() {
   const mobileOpen = useBoolean();
-  const { getQueryParam, setQueryParam } = useQueryParams();
+  const { setQueryParam, getQueryParams } = useQueryParams();
 
-  const [query, setQuery] = useState<IQueryParams>({
-    page: parseInt(getQueryParam("page") ?? "1", 10) ?? 1,
-    sort_by: getQueryParam("sort_by") ?? "-students_count",
-  });
-  const [filters, setFilters] = useState<IQueryParams>();
+  const query = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const { data: pagesCount } = useCoursesPagesCount({ ...query, ...filters });
-  const { data: courses, isLoading } = useCourses({ ...query, ...filters });
+  const { data: pagesCount } = useCoursesPagesCount(query);
+  const { data: courses, isLoading } = useCourses(query);
 
   const handleChange = (name: string, value?: string | number) => {
-    setQuery((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
     setQueryParam(name, value);
   };
 
@@ -80,13 +70,7 @@ export default function CoursesView() {
         </Stack>
 
         <Stack direction={{ xs: "column", md: "row" }}>
-          <Filters
-            open={mobileOpen.value}
-            onClose={mobileOpen.onFalse}
-            onChange={(selectedFilters: IQueryParams) => {
-              setFilters(selectedFilters);
-            }}
-          />
+          <Filters open={mobileOpen.value} onClose={mobileOpen.onFalse} />
 
           <Box
             sx={{
@@ -97,7 +81,7 @@ export default function CoursesView() {
           >
             <Stack direction="row" alignItems="center" justifyContent="right" sx={{ mb: 5 }}>
               <Sorting
-                value={query.sort_by as string}
+                value={query.sort_by ?? "-students_count"}
                 options={SORT_OPTIONS}
                 onChange={(event: SelectChangeEvent) => handleChange("sort_by", event.target.value)}
               />
@@ -107,7 +91,7 @@ export default function CoursesView() {
               courses={courses}
               loading={isLoading}
               pagesCount={pagesCount}
-              page={query.page as number}
+              page={parseInt(query.page ?? "1", 10) ?? 1}
               onPageChange={(selectedPage: number) => handleChange("page", selectedPage)}
             />
           </Box>

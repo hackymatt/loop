@@ -47,11 +47,12 @@ type ICourse = {
 export const coursesQuery = (query?: IQueryParams) => {
   const url = endpoint;
   const urlParams = formatQueryParams(query);
+  const queryUrl = urlParams ? `${url}?${urlParams}` : url;
 
   const queryFn = async () => {
     let data;
     try {
-      const response = await Api.get(`${url}?${urlParams}`);
+      const response = await Api.get(queryUrl);
       ({ data } = response);
     } catch (error) {
       if (error.response && (error.response.status === 400 || error.response.status === 404)) {
@@ -102,7 +103,7 @@ export const coursesQuery = (query?: IQueryParams) => {
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };
   };
 
-  return { url, queryFn, queryKey: compact([url, urlParams]) };
+  return { url, queryFn, queryKey: compact([queryUrl]) };
 };
 
 export const useCourses = (query?: IQueryParams) => {

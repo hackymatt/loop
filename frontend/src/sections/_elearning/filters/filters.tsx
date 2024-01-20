@@ -1,21 +1,18 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 import Stack from "@mui/material/Stack";
 import Drawer from "@mui/material/Drawer";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import InputAdornment from "@mui/material/InputAdornment";
 
 import { useResponsive } from "src/hooks/use-responsive";
 import { useQueryParams } from "src/hooks/use-query-params";
 
-import Iconify from "src/components/iconify";
-
-import { IQueryParams, IQueryParamValue } from "src/types/queryParams";
+import { IQueryParamValue } from "src/types/queryParams";
 
 import FilterLevel from "./filter-level";
 import FilterPrice from "./filter-price";
 import FilterRating from "./filter-rating";
+import FilterSearch from "./filter-search";
 import FilterDuration from "./filter-duration";
 import FilterCategories from "./filter-categories";
 
@@ -24,50 +21,24 @@ import FilterCategories from "./filter-categories";
 type Props = {
   open: boolean;
   onClose: VoidFunction;
-  onChange: (filters: IQueryParams) => void;
 };
 
-export default function Filters({ open, onClose, onChange }: Props) {
+export default function Filters({ open, onClose }: Props) {
   const mdUp = useResponsive("up", "md");
-  const { getQueryParam, setQueryParam, removeQueryParam } = useQueryParams();
+  const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
-  const [filters, setFilters] = useState<IQueryParams>({
-    search: getQueryParam("search"),
-    rating_from: getQueryParam("rating_from"),
-    level_in: getQueryParam("level_in"),
-    technology_in: getQueryParam("technology_in"),
-    price_from: getQueryParam("price_from"),
-    price_to: getQueryParam("price_to"),
-    filters: getQueryParam("filters"),
-  });
-
-  useEffect(() => {
-    if (filters) {
-      Object.keys(filters).forEach((key) => filters[key] === null && delete filters[key]);
-      if (filters) {
-        onChange(filters);
-      }
-    }
-  }, [filters, onChange]);
+  const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
       console.log(value);
       if (value) {
-        setFilters({
-          ...filters,
-          [name]: value,
-        });
         setQueryParam(name, value);
       } else {
-        setFilters({
-          ...filters,
-          [name]: null,
-        });
         removeQueryParam(name);
       }
     },
-    [filters, removeQueryParam, setQueryParam],
+    [removeQueryParam, setQueryParam],
   );
 
   const renderContent = (
@@ -78,19 +49,9 @@ export default function Filters({ open, onClose, onChange }: Props) {
         width: { xs: 1, md: 280 },
       }}
     >
-      <TextField
-        fullWidth
-        hiddenLabel
-        placeholder="Szukaj..."
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Iconify icon="carbon:search" width={24} sx={{ color: "text.disabled" }} />
-            </InputAdornment>
-          ),
-        }}
-        value={filters?.search ?? ""}
-        onChange={(event) => handleChange("search", event.target.value)}
+      <FilterSearch
+        filterSearch={filters?.search ?? ""}
+        onChangeSearch={(value) => handleChange("search", value)}
       />
 
       <Block title="Ocena">
