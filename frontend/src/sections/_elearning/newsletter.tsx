@@ -5,10 +5,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import Box from "@mui/material/Box";
 import { Stack } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
+import { LoadingButton, LoadingButtonProps } from "@mui/lab";
 
 import { useRegisterNewsletter } from "src/api/newsletter/register";
 
@@ -18,36 +18,6 @@ import FormProvider, { RHFTextField } from "src/components/hook-form";
 // ----------------------------------------------------------------------
 
 export default function Newsletter() {
-  const { mutateAsync: register } = useRegisterNewsletter();
-
-  const NewsletterSchema = Yup.object().shape({
-    email: Yup.string().required("Adres email jest wymagany").email("Podaj poprawny adres e-mail"),
-  });
-
-  const defaultValues = {
-    email: "",
-  };
-
-  const methods = useForm({
-    resolver: yupResolver(NewsletterSchema),
-    defaultValues,
-  });
-
-  const {
-    reset,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
-
-  const onSubmit = handleSubmit(async (data) => {
-    try {
-      await register(data);
-      reset();
-    } catch (error) {
-      console.error(error);
-    }
-  });
-
   return (
     <Box
       sx={{
@@ -82,24 +52,7 @@ export default function Newsletter() {
               </Typography>
             </Typography>
 
-            <FormProvider methods={methods} onSubmit={onSubmit}>
-              <Stack spacing={2.5} direction="row">
-                <RHFTextField name="email" label="Wpisz swój adres e-mail" />
-
-                <Stack justifyContent="flex-start">
-                  <LoadingButton
-                    color="primary"
-                    size="large"
-                    variant="contained"
-                    type="submit"
-                    loading={isSubmitting}
-                    sx={{ mt: 0.3 }}
-                  >
-                    Zapisz
-                  </LoadingButton>
-                </Stack>
-              </Stack>
-            </FormProvider>
+            <NewsletterEmail buttonLabel="Zapisz" sx={{ mt: 0.3 }} />
           </Grid>
 
           <Grid xs={12} md={5}>
@@ -112,5 +65,62 @@ export default function Newsletter() {
         </Grid>
       </Container>
     </Box>
+  );
+}
+
+interface Props extends LoadingButtonProps {
+  buttonLabel: string;
+}
+
+export function NewsletterEmail({ buttonLabel = "Zapisz", sx }: Props) {
+  const { mutateAsync: register } = useRegisterNewsletter();
+
+  const NewsletterSchema = Yup.object().shape({
+    email: Yup.string().required("Adres email jest wymagany").email("Podaj poprawny adres e-mail"),
+  });
+
+  const defaultValues = {
+    email: "",
+  };
+
+  const methods = useForm({
+    resolver: yupResolver(NewsletterSchema),
+    defaultValues,
+  });
+
+  const {
+    reset,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
+
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      await register(data);
+      reset();
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
+  return (
+    <FormProvider methods={methods} onSubmit={onSubmit}>
+      <Stack spacing={2.5} direction="row">
+        <RHFTextField name="email" label="Wpisz swój adres e-mail" />
+
+        <Stack justifyContent="flex-start">
+          <LoadingButton
+            color="primary"
+            size="large"
+            variant="contained"
+            type="submit"
+            loading={isSubmitting}
+            sx={sx}
+          >
+            {buttonLabel}
+          </LoadingButton>
+        </Stack>
+      </Stack>
+    </FormProvider>
   );
 }

@@ -71,7 +71,10 @@ export default function LandingCategories({ categories }: Props) {
               }}
             >
               {categories.slice(0, CATEGORIES_SLOTS).map((category) => (
-                <Button href={paths.eLearning.courses} sx={{ borderRadius: 1.5, padding: 0 }}>
+                <Button
+                  href={`${paths.eLearning.courses}?technology_in=${category.name}`}
+                  sx={{ borderRadius: 1.5, padding: 0 }}
+                >
                   <CategoryItem key={category.id} category={category} />
                 </Button>
               ))}

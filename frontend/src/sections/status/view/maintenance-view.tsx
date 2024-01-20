@@ -17,13 +17,13 @@ export default function MaintenanceView() {
     <MotionContainer>
       <m.div variants={varBounce().in}>
         <Typography variant="h3" paragraph>
-          Website Currently Under Maintenance
+          Strona internetowa obecnie w przebudowie
         </Typography>
       </m.div>
 
       <m.div variants={varBounce().in}>
         <Typography sx={{ color: "text.secondary" }}>
-          We are currently working hard on this page!
+          Obecnie ciężko pracujemy nad tą stroną!
         </Typography>
       </m.div>
 
@@ -39,8 +39,15 @@ export default function MaintenanceView() {
         />
       </m.div>
 
-      <Button component={RouterLink} href="/" size="large" color="inherit" variant="contained">
-        Go to Home
+      <Button
+        component={RouterLink}
+        href="/"
+        size="large"
+        color="inherit"
+        variant="contained"
+        sx={{ textTransform: "none" }}
+      >
+        Wróć do strony głownej
       </Button>
     </MotionContainer>
   );
