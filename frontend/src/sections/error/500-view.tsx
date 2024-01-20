@@ -20,13 +20,13 @@ export default function Error500View() {
       <MotionContainer>
         <m.div variants={varBounce().in}>
           <Typography variant="h3" paragraph>
-            500 Internal Server Error
+            500 Błąd serwera
           </Typography>
         </m.div>
 
         <m.div variants={varBounce().in}>
           <Typography sx={{ color: "text.secondary" }}>
-            There was an error, please try again later.
+            Wystąpił błąd. Spróbuj ponownie później.
           </Typography>
         </m.div>
 
@@ -42,8 +42,15 @@ export default function Error500View() {
           />
         </m.div>
 
-        <Button component={RouterLink} href="/" size="large" color="inherit" variant="contained">
-          Go to Home
+        <Button
+          component={RouterLink}
+          href="/"
+          size="large"
+          color="inherit"
+          variant="contained"
+          sx={{ textTransform: "none" }}
+        >
+          Wróć do strony głownej
         </Button>
       </MotionContainer>
     </CompactLayout>

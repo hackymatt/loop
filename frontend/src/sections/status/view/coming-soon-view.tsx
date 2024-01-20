@@ -1,33 +1,30 @@
 "use client";
 
+import { polishPlurals } from "polish-plurals";
+
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import InputAdornment from "@mui/material/InputAdornment";
 
 import { useCountdown } from "src/hooks/use-countdown";
 
-import { _socials } from "src/_mock";
-
 import Image from "src/components/image";
-import Iconify from "src/components/iconify";
+
+import { NewsletterEmail } from "src/sections/_elearning/newsletter";
 
 // ----------------------------------------------------------------------
 
 export default function ComingSoonView() {
-  const { days, hours, minutes, seconds } = useCountdown(new Date("07/07/2024 21:30"));
+  const { days, hours, minutes, seconds } = useCountdown(new Date("07/01/2024 12:00"));
 
   return (
     <>
       <Typography variant="h3" paragraph>
-        Coming Soon!
+        Już wkrótce!
       </Typography>
 
       <Typography sx={{ color: "text.secondary" }}>
-        We are currently working hard on this page!
+        Obecnie ciężko pracujemy nad tą stroną!
       </Typography>
 
       <Image
@@ -46,37 +43,26 @@ export default function ComingSoonView() {
         divider={<Box sx={{ mx: { xs: 1, sm: 2.5 } }}>:</Box>}
         sx={{ typography: "h2" }}
       >
-        <TimeBlock label="Days" value={days} />
+        <TimeBlock label={polishPlurals("Dzień", "Dni", "Dni", parseInt(days, 10))} value={days} />
 
-        <TimeBlock label="Hours" value={hours} />
+        <TimeBlock
+          label={polishPlurals("Godzina", "Godziny", "Godzin", parseInt(hours, 10))}
+          value={hours}
+        />
 
-        <TimeBlock label="Minutes" value={minutes} />
+        <TimeBlock
+          label={polishPlurals("Minuta", "Minuty", "Minut", parseInt(minutes, 10))}
+          value={minutes}
+        />
 
-        <TimeBlock label="Seconds" value={seconds} />
+        <TimeBlock
+          label={polishPlurals("Sekunda", "Sekundy", "Sekund", parseInt(seconds, 10))}
+          value={seconds}
+        />
       </Stack>
 
-      <TextField
-        fullWidth
-        hiddenLabel
-        placeholder="Enter your email"
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <Button variant="contained" size="large" color="inherit" sx={{ mr: -1.25 }}>
-                Notify
-              </Button>
-            </InputAdornment>
-          ),
-        }}
-        sx={{ my: 5 }}
-      />
-
-      <Stack direction="row" justifyContent="center">
-        {_socials.map((social) => (
-          <IconButton key={social.value}>
-            <Iconify icon={social.icon} sx={{ color: social.color }} />
-          </IconButton>
-        ))}
+      <Stack sx={{ mt: 3 }}>
+        <NewsletterEmail buttonLabel="Powiadom" sx={{ mt: 0.3 }} />
       </Stack>
     </>
   );
