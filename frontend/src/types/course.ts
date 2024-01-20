@@ -1,6 +1,5 @@
 import { IGender } from "./testimonial";
 import { ISocialLinks } from "./socials";
-import { ICountriesProps } from "./contact";
 
 // ----------------------------------------------------------------------
 
@@ -55,13 +54,4 @@ export type ICourseProps = {
   shareLinks?: ISocialLinks;
   lessons?: ICourseLessonProp[];
   teachers: ICourseTeacherProp[];
-};
-
-export type ICourseFiltersProps = {
-  filterFee: string[];
-  filterLevel: string[];
-  filterDuration: string[];
-  filterCategories: string[];
-  filterRating: string | null;
-  filterLanguage: ICountriesProps[];
 };

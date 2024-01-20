@@ -5,8 +5,8 @@ import Container from "@mui/material/Container";
 
 import { _tags, _mock, _categories, _coursePosts } from "src/_mock";
 
-import PostSidebar from "../../blog/common/post-sidebar";
 import ElearningNewsletter from "../newsletter";
+import PostSidebar from "../../blog/common/post-sidebar";
 import ElearningPosts from "../../blog/elearning/elearning-posts";
 import PostSearchMobile from "../../blog/common/post-search-mobile";
 import ElearningFeaturedPost from "../../blog/elearning/elearning-featured-post";

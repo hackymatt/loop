@@ -16,7 +16,7 @@ type Props = {
   course: ICourseProps;
 };
 
-export default function ElearningCourseDetailsInfo({ course }: Props) {
+export default function CourseDetailsInfo({ course }: Props) {
   return (
     <Card sx={{ p: 3, borderRadius: 2 }}>
       <Stack spacing={3}>

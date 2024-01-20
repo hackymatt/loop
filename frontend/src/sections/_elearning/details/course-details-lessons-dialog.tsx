@@ -24,7 +24,7 @@ type Props = {
   onPause: VoidFunction;
 };
 
-export default function ElearningCourseDetailsLessonsDialog({
+export default function CourseDetailsLessonsDialog({
   lessons,
   selectedLesson,
   onSelectedLesson,

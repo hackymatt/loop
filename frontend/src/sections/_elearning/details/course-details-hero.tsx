@@ -32,7 +32,7 @@ type Props = {
   course: ICourseProps;
 };
 
-export default function ElearningCourseDetailsHero({ course }: Props) {
+export default function CourseDetailsHero({ course }: Props) {
   const {
     slug,
     level,

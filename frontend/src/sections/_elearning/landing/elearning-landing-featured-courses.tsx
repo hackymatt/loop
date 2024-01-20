@@ -10,7 +10,7 @@ import Carousel, { useCarousel, CarouselArrows } from "src/components/carousel";
 
 import { ICourseProps } from "src/types/course";
 
-import ElearningCourseItem from "../list/elearning-course-item";
+import CourseItem from "../list/course-item";
 
 // ----------------------------------------------------------------------
 
@@ -102,7 +102,7 @@ export default function ElearningLandingFeaturedCourses({ courses }: Props) {
                   pb: { xs: 10, md: 15 },
                 }}
               >
-                <ElearningCourseItem course={course} vertical />
+                <CourseItem course={course} vertical />
               </Box>
             ))}
           </Carousel>

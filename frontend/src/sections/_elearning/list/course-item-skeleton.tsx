@@ -10,7 +10,7 @@ interface Props extends CardProps {
   vertical?: boolean;
 }
 
-export default function ElearningCourseItemSkeleton({ vertical, ...other }: Props) {
+export default function CourseItemSkeleton({ vertical, ...other }: Props) {
   const smUp = useResponsive("up", "sm");
 
   const verticalStyle = vertical || !smUp;

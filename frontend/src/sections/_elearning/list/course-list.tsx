@@ -3,31 +3,35 @@ import Pagination, { paginationClasses } from "@mui/material/Pagination";
 
 import { ICourseProps } from "src/types/course";
 
-import ElearningCourseItem from "./course-item";
-import ElearningCourseItemSkeleton from "./elearning-course-item-skeleton";
+import CourseItem from "./course-item";
+import CourseItemSkeleton from "./course-item-skeleton";
 
 // ----------------------------------------------------------------------
 
 type Props = {
   courses: ICourseProps[];
   loading?: boolean;
+  pagesCount?: number;
+  page: number;
+  onPageChange: (selectedPage: number) => void;
 };
 
-export default function ElearningCourseList({ courses, loading }: Props) {
+export default function CourseList({ courses, loading, pagesCount, page, onPageChange }: Props) {
   return (
     <>
       <Stack spacing={4}>
         {(loading ? [...Array(9)] : courses).map((course, index) =>
           course ? (
-            <ElearningCourseItem key={course.id} course={course} />
+            <CourseItem key={course.id} course={course} />
           ) : (
-            <ElearningCourseItemSkeleton key={index} />
+            <CourseItemSkeleton key={index} />
           ),
         )}
       </Stack>
 
       <Pagination
-        count={10}
+        count={pagesCount ?? 0}
+        page={page}
         color="primary"
         sx={{
           my: 10,
@@ -35,6 +39,7 @@ export default function ElearningCourseList({ courses, loading }: Props) {
             justifyContent: "center",
           },
         }}
+        onChange={(event, selectedPage: number) => onPageChange(selectedPage)}
       />
     </>
   );

@@ -47,7 +47,7 @@ export default function CourseItem({ course, vertical }: Props) {
   } = course;
 
   const genderAvatarUrl =
-    teachers?.[0].gender === "Kobieta"
+    teachers?.[0]?.gender === "Kobieta"
       ? "/assets/images/avatar/avatar_female.jpg"
       : "/assets/images/avatar/avatar_male.jpg";
 
