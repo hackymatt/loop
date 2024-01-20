@@ -1,7 +1,9 @@
-import TextField from "@mui/material/TextField";
+import TextField, { TextFieldProps } from "@mui/material/TextField";
 import Stack, { StackProps } from "@mui/material/Stack";
 
 import { IQueryParamValue } from "src/types/queryParams";
+import { useEffect, useState } from "react";
+import { useDebounce } from "src/hooks/use-debounce";
 
 // ----------------------------------------------------------------------
 
@@ -23,20 +25,45 @@ export default function FilterPrice({
 }: Props) {
   return (
     <Stack spacing={2} direction="row" alignItems="center" divider={<div> - </div>} {...other}>
-      <TextField
-        size="small"
+      <PriceInput
         label="od"
-        type="number"
-        value={filterPriceFrom === 0 ? "" : filterPriceFrom}
-        onChange={(event) => onChangeStartPrice(event.target.value)}
+        price={filterPriceFrom === 0 ? "" : filterPriceFrom}
+        onChange={(price) => onChangeStartPrice(price)}
       />
-      <TextField
-        size="small"
+      <PriceInput
         label="do"
-        type="number"
-        value={filterPriceTo === 0 ? "" : filterPriceTo}
-        onChange={(event) => onChangeEndPrice(event.target.value)}
+        price={filterPriceTo === 0 ? "" : filterPriceTo}
+        onChange={(price) => onChangeEndPrice(price)}
       />
     </Stack>
+  );
+}
+
+interface PriceInputProps {
+  label: string;
+  price: IQueryParamValue;
+  onChange: (price: IQueryParamValue) => void;
+}
+
+function PriceInput({ label, price, onChange }: PriceInputProps) {
+  const [value, setValue] = useState<IQueryParamValue>(price);
+  const debouncedValue = useDebounce<IQueryParamValue>(value);
+
+  const handleChange = (event: { target: { value: string } }) => {
+    setValue(event.target.value);
+  };
+
+  useEffect(() => {
+    onChange(debouncedValue);
+  }, [debouncedValue, onChange]);
+
+  return (
+    <TextField
+      size="small"
+      label={label}
+      type="number"
+      value={value === 0 ? "" : value}
+      onChange={(event) => handleChange(event)}
+    />
   );
 }

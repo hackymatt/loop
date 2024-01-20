@@ -2,6 +2,7 @@ import { useMemo, useCallback } from "react";
 
 import Stack from "@mui/material/Stack";
 import Drawer from "@mui/material/Drawer";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
 import { useResponsive } from "src/hooks/use-responsive";
@@ -54,7 +55,11 @@ export default function Filters({ open, onClose }: Props) {
         onChangeSearch={(value) => handleChange("search", value)}
       />
 
-      <Block title="Ocena">
+      <Block
+        title="Ocena"
+        clear={!!filters?.rating_from}
+        onClear={() => handleChange("rating_from", null)}
+      >
         <FilterRating
           filterRating={filters?.rating_from ?? null}
           onChangeRating={(value) => handleChange("rating_from", value)}
@@ -121,15 +126,29 @@ export default function Filters({ open, onClose }: Props) {
 
 type BlockProps = {
   title: string;
+  clear?: boolean;
+  onClear?: VoidFunction;
   children: React.ReactNode;
 };
 
-function Block({ title, children }: BlockProps) {
+function Block({ title, clear, onClear, children }: BlockProps) {
   return (
-    <Stack spacing={1.5}>
-      <Typography variant="overline" sx={{ color: "text.disabled" }}>
-        {title}
-      </Typography>
+    <Stack spacing={0.5}>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ minHeight: 30 }}
+      >
+        <Typography variant="overline" sx={{ color: "text.disabled" }}>
+          {title}
+        </Typography>
+        {clear && (
+          <Button variant="text" size="small" color="primary" onClick={onClear}>
+            Wyczyść
+          </Button>
+        )}
+      </Stack>
 
       {children}
     </Stack>

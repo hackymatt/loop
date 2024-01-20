@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { debounce } from "lodash-es";
+import { useState, useEffect } from "react";
 
 import { TextField, InputAdornment } from "@mui/material";
+
+import { useDebounce } from "src/hooks/use-debounce";
 
 import Iconify from "src/components/iconify";
 
@@ -13,18 +14,16 @@ type Props = {
 };
 
 export default function FilterSearch({ filterSearch, onChangeSearch }: Props) {
-  const [value, setValue] = useState(filterSearch ?? "");
-
-  const handleDebounceFn = (inputValue: string) => {
-    onChangeSearch(inputValue);
-  };
-
-  const debounceFn = debounce(handleDebounceFn, 10000);
+  const [value, setValue] = useState<IQueryParamValue>(filterSearch);
+  const debouncedValue = useDebounce<IQueryParamValue>(value);
 
   const handleChange = (event: { target: { value: string } }) => {
     setValue(event.target.value);
-    debounceFn(event.target.value);
   };
+
+  useEffect(() => {
+    onChangeSearch(debouncedValue);
+  }, [debouncedValue, onChangeSearch]);
 
   return (
     <TextField
