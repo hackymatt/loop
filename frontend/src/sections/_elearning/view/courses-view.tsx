@@ -16,6 +16,8 @@ import { useCourses, useCoursesPagesCount } from "src/api/courses/courses";
 
 import Iconify from "src/components/iconify";
 
+import NotFoundView from "src/sections/error/not-found-view";
+
 import Newsletter from "../newsletter";
 import Filters from "../filters/filters";
 import Sorting from "../sorting/sorting";
@@ -42,6 +44,10 @@ export default function CoursesView() {
   const handleChange = (name: string, value?: string | number) => {
     setQueryParam(name, value);
   };
+
+  if (pagesCount === 0) {
+    return <NotFoundView />;
+  }
 
   return (
     <>

@@ -91,7 +91,7 @@ export default function CourseItem({ course, vertical }: Props) {
             textTransform: "uppercase",
           }}
         >
-          Best Seller
+          Bestseller
         </Label>
       )}
 

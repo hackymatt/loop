@@ -32,20 +32,12 @@ import CourseDetailsTeachersInfo from "../details/course-details-teachers-info";
 
 const _mockCourse = _courses[0];
 
-export default function CourseView() {
+export default function CourseView({ id }: { id: string }) {
   const mdUp = useResponsive("up", "md");
 
-  const loading = useBoolean(true);
+  const loading = useBoolean(false);
 
   const courseSimilar = _courses.slice(-3);
-
-  useEffect(() => {
-    const fakeLoading = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      loading.onFalse();
-    };
-    fakeLoading();
-  }, [loading]);
 
   if (loading.value) {
     return <SplashScreen />;

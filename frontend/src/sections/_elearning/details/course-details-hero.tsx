@@ -67,8 +67,8 @@ export default function CourseDetailsHero({ course }: Props) {
         <Container sx={{ overflow: "hidden" }}>
           <CustomBreadcrumbs
             links={[
-              { name: "Home", href: "/" },
-              { name: "Courses", href: paths.eLearning.courses },
+              { name: "Strona główna", href: "/" },
+              { name: "Kursy", href: paths.eLearning.courses },
               { name: course.slug || "" },
             ]}
             sx={{

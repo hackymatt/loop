@@ -1,9 +1,11 @@
+import packageInfo from "package.json";
+
 import CoursesView from "src/sections/_elearning/view/courses-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: "E-learning: Courses",
+  title: `${packageInfo.name}: Kursy`,
 };
 
 export default function CoursesPage() {

@@ -29,18 +29,20 @@ export default function CourseList({ courses, loading, pagesCount, page, onPageC
         )}
       </Stack>
 
-      <Pagination
-        count={pagesCount ?? 0}
-        page={page}
-        color="primary"
-        sx={{
-          my: 10,
-          [`& .${paginationClasses.ul}`]: {
-            justifyContent: "center",
-          },
-        }}
-        onChange={(event, selectedPage: number) => onPageChange(selectedPage)}
-      />
+      {courses?.length > 0 && (
+        <Pagination
+          count={pagesCount ?? 0}
+          page={page}
+          color="primary"
+          sx={{
+            my: 10,
+            [`& .${paginationClasses.ul}`]: {
+              justifyContent: "center",
+            },
+          }}
+          onChange={(event, selectedPage: number) => onPageChange(selectedPage)}
+        />
+      )}
     </>
   );
 }
