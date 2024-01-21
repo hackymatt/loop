@@ -62,7 +62,7 @@ export default function CourseView({ id }: { id: string }) {
         <Grid container spacing={{ xs: 5, md: 8 }}>
           {!mdUp && (
             <Grid xs={12}>
-              <CourseDetailsInfo course={_mockCourse} />
+              <CourseDetailsInfo course={course} />
             </Grid>
           )}
 
@@ -76,7 +76,7 @@ export default function CourseView({ id }: { id: string }) {
 
           <Grid xs={12} md={5} lg={4}>
             <Stack spacing={5}>
-              {mdUp && <CourseDetailsInfo course={_mockCourse} />}
+              {mdUp && <CourseDetailsInfo course={course} />}
 
               <Advertisement
                 advertisement={{

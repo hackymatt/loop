@@ -1,3 +1,5 @@
+import { polishPlurals } from "polish-plurals";
+
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
@@ -21,60 +23,60 @@ export default function CourseDetailsInfo({ course }: Props) {
   return (
     <Card sx={{ p: 3, borderRadius: 2 }}>
       <Stack spacing={3}>
-        <Stack direction="row" sx={{ typography: "h3" }}>
-          {!!course.priceSale && (
-            <Box
-              component="span"
-              sx={{
-                mr: 1,
-                typography: "h4",
-                color: "text.disabled",
-                textDecoration: "line-through",
-              }}
-            >
-              {fCurrency(course.priceSale)}
-            </Box>
+        <Stack>
+          <Stack direction="row" justifyContent="left" sx={{ typography: "h3" }}>
+            {!!course.priceSale && (
+              <Box
+                component="span"
+                sx={{
+                  mr: 0.5,
+                  color: "text.disabled",
+                  textDecoration: "line-through",
+                }}
+              >
+                {fCurrency(course.priceSale)}
+              </Box>
+            )}
+            {fCurrency(course.price)}
+          </Stack>
+          {!!course.priceSale && course.lowest30DaysPrice && (
+            <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "left" }}>
+              Najniższa cena z 30 dni przed: {fCurrency(course.lowest30DaysPrice)}
+            </Typography>
           )}
-          {fCurrency(course.price)}
         </Stack>
 
         <Stack spacing={2}>
-          <Typography>This course includes:</Typography>
+          <Typography>Ten kurs zawiera:</Typography>
 
-          <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
-            <Iconify icon="carbon:document" sx={{ mr: 1 }} />
-            <Box component="strong" sx={{ mr: 0.5 }}>
-              {course.lessons?.length}
-            </Box>
-            Lessons
-          </Stack>
-
-          <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
-            <Iconify icon="carbon:document-download" sx={{ mr: 1 }} />
-            <Box component="strong" sx={{ mr: 0.5 }}>
-              {course.resources}
-            </Box>
-            Downloadable resources
-          </Stack>
+          {course.lessons && (
+            <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
+              <Iconify icon="carbon:document" sx={{ mr: 1 }} />
+              <Box component="strong" sx={{ mr: 0.5 }}>
+                {course.lessons?.length}
+              </Box>
+              {polishPlurals("lekcja", "lekcje", "lekcji", course.lessons?.length)}
+            </Stack>
+          )}
 
           <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
             <Iconify icon="carbon:data-accessor" sx={{ mr: 1 }} />
-            Full lifetime access
+            Dożywotni dostęp
           </Stack>
 
           <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
             <Iconify icon="carbon:devices" sx={{ mr: 1 }} />
-            Access on desktops, tablets, mobile
+            Dostęp na komputerach, tabletach i urządzeniach mobilnych
           </Stack>
 
           <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
             <Iconify icon="carbon:certificate" sx={{ mr: 1 }} />
-            Certificate of completion
+            Certyfikat ukończenia
           </Stack>
         </Stack>
 
-        <Button variant="contained" size="large" color="inherit">
-          Enrol Now
+        <Button variant="contained" size="large" color="inherit" sx={{ textTransform: "none" }}>
+          Zapisz się teraz
         </Button>
       </Stack>
     </Card>
