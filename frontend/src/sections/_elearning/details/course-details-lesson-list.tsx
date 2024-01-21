@@ -47,7 +47,7 @@ export default function CourseDetailsLessonList({ lessons }: Props) {
   return (
     <div>
       <Typography variant="h4" sx={{ mb: 3 }}>
-        Lessons
+        Lekcje
       </Typography>
 
       {lessons.map((lesson) => (

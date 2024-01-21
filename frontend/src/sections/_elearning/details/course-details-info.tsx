@@ -19,7 +19,6 @@ type Props = {
 };
 
 export default function CourseDetailsInfo({ course }: Props) {
-  console.log(course);
   return (
     <Card sx={{ p: 3, borderRadius: 2 }}>
       <Stack spacing={3}>

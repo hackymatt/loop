@@ -130,8 +130,8 @@ export const courseQuery = (id: string) => {
             role: user_title,
           }),
         ),
-        skills,
-        learnList: topics,
+        skills: skills.map((skill: ISkill) => skill.name),
+        learnList: topics.map((topic: ITopic) => topic.name),
         lessons,
       };
     } catch (error) {

@@ -30,7 +30,7 @@ export default function CourseDetailsLessonItem({
     <Accordion
       expanded={expanded}
       onChange={onExpanded}
-      disabled={!lesson.unLocked}
+      // disabled={!lesson.unLocked}
       sx={{
         [`&.${accordionClasses.expanded}`]: {
           borderRadius: 0,

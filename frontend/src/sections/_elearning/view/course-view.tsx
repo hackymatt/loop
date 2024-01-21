@@ -7,7 +7,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 
 import { useResponsive } from "src/hooks/use-responsive";
 
-import { _mock, _courses } from "src/_mock";
+import { _mock } from "src/_mock";
 import { useCourse } from "src/api/course/course";
 import { useBestCourses } from "src/api/courses/best-courses";
 
@@ -27,8 +27,6 @@ import CourseDetailsSummary from "../details/course-details-summary";
 import CourseDetailsTeachersInfo from "../details/course-details-teachers-info";
 
 // ----------------------------------------------------------------------
-
-const _mockCourse = _courses[0];
 
 export default function CourseView({ id }: { id: string }) {
   const mdUp = useResponsive("up", "md");
@@ -67,7 +65,7 @@ export default function CourseView({ id }: { id: string }) {
           )}
 
           <Grid xs={12} md={7} lg={8}>
-            <CourseDetailsSummary course={_mockCourse} />
+            <CourseDetailsSummary course={course} />
 
             <Divider sx={{ my: 5 }} />
 
