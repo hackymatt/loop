@@ -75,7 +75,7 @@ export default function CourseDetailsInfo({ course }: Props) {
         </Stack>
 
         <Button variant="contained" size="large" color="inherit" sx={{ textTransform: "none" }}>
-          Zapisz się teraz
+          Kup cały kurs
         </Button>
       </Stack>
     </Card>

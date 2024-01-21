@@ -19,9 +19,9 @@ export type ICourseLessonProp = {
   id: string;
   title: string;
   duration: number;
-  videoPath: string;
-  unLocked: boolean;
-  description: string;
+  videoPath?: string;
+  unLocked?: boolean;
+  description?: string;
 };
 
 export type ICourseByCategoryProps = {
