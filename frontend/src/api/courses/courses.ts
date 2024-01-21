@@ -90,11 +90,14 @@ export const coursesQuery = (query?: IQueryParams) => {
           ratingNumber: rating,
           totalReviews: rating_count,
           totalStudents: students_count,
-          teachers: lecturers.map(({ uuid, full_name, image: lecturerImage }: ILecturer) => ({
-            id: uuid,
-            name: full_name,
-            avatarUrl: lecturerImage,
-          })),
+          teachers: lecturers.map(
+            ({ uuid, full_name, gender, image: lecturerImage }: ILecturer) => ({
+              id: uuid,
+              name: full_name,
+              avatarUrl: lecturerImage,
+              gender,
+            }),
+          ),
         };
       },
     );

@@ -191,8 +191,8 @@ export default function CourseItem({ course, vertical }: Props) {
 
             {teachers?.length > 1 && (
               <Link underline="always" color="text.secondary" variant="body2">
-                + {teachers?.length}{" "}
-                {polishPlurals("nauczyciel", "nauczycieli", "nauczycieli", teachers?.length)}
+                + {teachers.length - 1}{" "}
+                {polishPlurals("nauczyciel", "nauczycieli", "nauczycieli", teachers.length - 1)}
               </Link>
             )}
           </Stack>

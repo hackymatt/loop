@@ -16,6 +16,8 @@ import { SplashScreen } from "src/components/loading-screen";
 import Review from "src/sections/review/elearning/review";
 import NotFoundView from "src/sections/error/not-found-view";
 
+import { ICourseProps } from "src/types/course";
+
 import Newsletter from "../newsletter";
 import Advertisement from "../../advertisement";
 import CourseListSimilar from "../list/course-list-similar";
@@ -34,7 +36,9 @@ export default function CourseView({ id }: { id: string }) {
   const { data: course, isLoading } = useCourse(id);
   const { data: bestCourses } = useBestCourses();
 
-  const courseSimilar = _courses.slice(-3);
+  const similarCourses = bestCourses?.filter(
+    (bestCourse: ICourseProps) => bestCourse.id !== course.id,
+  );
 
   if (isLoading) {
     return <SplashScreen />;
@@ -67,7 +71,7 @@ export default function CourseView({ id }: { id: string }) {
 
             <Divider sx={{ my: 5 }} />
 
-            <CourseDetailsTeachersInfo teachers={_mockCourse.teachers} />
+            {course && <CourseDetailsTeachersInfo teachers={course.teachers} />}
           </Grid>
 
           <Grid xs={12} md={5} lg={4}>
@@ -91,7 +95,7 @@ export default function CourseView({ id }: { id: string }) {
 
       <Review />
 
-      {bestCourses?.length >= 1 && <CourseListSimilar courses={bestCourses} />}
+      {similarCourses?.length >= 3 && <CourseListSimilar courses={similarCourses} />}
 
       <Newsletter />
     </>

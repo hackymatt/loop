@@ -1,3 +1,5 @@
+import { polishPlurals } from "polish-plurals";
+
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
@@ -21,7 +23,7 @@ export default function CourseDetailsTeachersInfo({ teachers = [] }: Props) {
   return (
     <>
       <Typography variant="h4" sx={{ mb: 5 }}>
-        Instructors ({teachers.length})
+        Instruktorzy ({teachers.length})
       </Typography>
 
       <Box
@@ -49,10 +51,17 @@ type TeacherItemProps = {
 };
 
 function TeacherItem({ teacher }: TeacherItemProps) {
+  const genderAvatarUrl =
+    teacher?.gender === "Kobieta"
+      ? "/assets/images/avatar/avatar_female.jpg"
+      : "/assets/images/avatar/avatar_male.jpg";
+
+  const avatarUrl = teacher?.avatarUrl ? teacher?.avatarUrl : genderAvatarUrl;
+
   return (
     <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
       <Stack direction="row" spacing={3} flexWrap="wrap">
-        <Avatar src={teacher.avatarUrl} sx={{ width: 72, height: 72 }} />
+        <Avatar src={avatarUrl} sx={{ width: 72, height: 72 }} />
 
         <Stack spacing={1} flexGrow={1}>
           <Stack spacing={0.5}>
@@ -62,44 +71,37 @@ function TeacherItem({ teacher }: TeacherItemProps) {
             </Typography>
           </Stack>
 
-          <Stack spacing={0.5} direction="row" alignItems="center">
-            <Iconify icon="carbon:star-filled" sx={{ color: "warning.main" }} />
-            <Box sx={{ typography: "h6" }}>
-              {Number.isInteger(teacher.ratingNumber)
-                ? `${teacher.ratingNumber}.0`
-                : teacher.ratingNumber}
-            </Box>
+          {teacher.ratingNumber && (
+            <Stack spacing={0.5} direction="row" alignItems="center">
+              <Iconify icon="carbon:star-filled" sx={{ color: "warning.main" }} />
+              <Box sx={{ typography: "h6" }}>
+                {Number.isInteger(teacher.ratingNumber)
+                  ? `${teacher.ratingNumber}.0`
+                  : teacher.ratingNumber}
+              </Box>
 
-            {teacher.totalReviews && (
-              <Link variant="body2" sx={{ color: "text.secondary" }}>
-                ({fShortenNumber(teacher.totalReviews)} reviews)
-              </Link>
-            )}
-          </Stack>
+              {teacher.totalReviews && (
+                <Link variant="body2" sx={{ color: "text.secondary" }}>
+                  ({fShortenNumber(teacher.totalReviews)}{" "}
+                  {polishPlurals("ocena", "oceny", "ocen", teacher.totalReviews)})
+                </Link>
+              )}
+            </Stack>
+          )}
 
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{ typography: "body2", color: "text.disabled" }}
-          >
-            <Iconify icon="carbon:events" sx={{ mr: 1 }} />
-            <Box component="strong" sx={{ mr: 0.25 }}>
-              {fShortenNumber(teacher.totalStudents ?? 0)}
-            </Box>
-            Students
-          </Stack>
-
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{ typography: "body2", color: "text.disabled" }}
-          >
-            <Iconify icon="carbon:notebook" sx={{ mr: 1 }} />
-            <Box component="strong" sx={{ mr: 0.25 }}>
-              {teacher.totalCourses}
-            </Box>
-            Lessons
-          </Stack>
+          {teacher.totalCourses && (
+            <Stack
+              direction="row"
+              alignItems="center"
+              sx={{ typography: "body2", color: "text.disabled" }}
+            >
+              <Iconify icon="carbon:notebook" sx={{ mr: 1 }} />
+              <Box component="strong" sx={{ mr: 0.25 }}>
+                {teacher.totalCourses}
+              </Box>
+              {polishPlurals("lekcja", "lekcje", "lekcji", teacher.totalCourses)}
+            </Stack>
+          )}
         </Stack>
       </Stack>
     </Paper>

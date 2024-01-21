@@ -113,6 +113,11 @@ def get_lecturers(lessons):
     lecturers = Profile.objects.filter(id__in=lecturer_ids).order_by("uuid")
     return LecturerSerializer(lecturers, many=True).data
 
+def get_lecturers_details(lessons):
+    lecturer_ids = Teaching.objects.filter(lesson__in=lessons).values("lecturer")
+    lecturers = Profile.objects.filter(id__in=lecturer_ids).order_by("uuid")
+    return LecturerDetailsSerializer(lecturers, many=True).data
+
 
 def get_rating(lessons):
     return Review.objects.filter(lesson__in=lessons).aggregate(Avg("rating"))[
@@ -132,6 +137,9 @@ def get_duration(course):
     return Lesson.objects.filter(course=course).aggregate(Sum("duration"))[
         "duration__sum"
     ]
+
+def get_lecturer_rating(lecturer):
+    return Review.objects.filter(lecturer=lecturer)
 
 
 def get_is_bestseller(lesson):
@@ -185,7 +193,6 @@ class TopicSerializer(ModelSerializer):
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
-    email = EmailField(source="user.email")
     gender = EmailField(source="get_gender_display")
     image = Base64ImageField(required=True)
 
@@ -194,13 +201,52 @@ class LecturerSerializer(ModelSerializer):
         fields = (
             "uuid",
             "full_name",
-            "email",
             "gender",
             "image",
         )
 
     def get_full_name(self, profile):
         return profile.user.first_name + " " + profile.user.last_name
+    
+
+class LecturerDetailsSerializer(ModelSerializer):
+    full_name = SerializerMethodField("get_full_name")
+    gender = EmailField(source="get_gender_display")
+    rating = SerializerMethodField("get_user_rating")
+    rating_count = SerializerMethodField("get_lecturer_rating_count")
+    lessons_count = SerializerMethodField("get_lessons_count")
+
+    class Meta:
+        model = Profile
+        fields = (
+            "uuid",
+            "full_name",
+            "gender",
+            "user_title",
+            "image",
+            "rating",
+            "rating_count",
+            "lessons_count",
+        )
+
+    def get_full_name(self, profile):
+        return profile.user.first_name + " " + profile.user.last_name
+
+    def get_user_rating(self, lecturer):
+        return get_lecturer_rating(lecturer=lecturer).aggregate(Avg("rating"))["rating__avg"]
+
+    def get_lecturer_rating_count(self, lecturer):
+        return get_lecturer_rating(lecturer=lecturer).count()
+
+    def get_lessons_count(self, lecturer):
+        return (
+            Teaching.objects.filter(lecturer=lecturer)
+            .values("lesson")
+            .distinct()
+            .count()
+        )
+
+    
 
 
 class LessonDetailsSerializer(ModelSerializer):
@@ -339,7 +385,7 @@ class CourseGetSerializer(ModelSerializer):
 
     def get_course_lecturers(self, course):
         lessons = get_course_lessons(course=course)
-        return get_lecturers(lessons=lessons)
+        return get_lecturers_details(lessons=lessons)
 
     def get_course_rating(self, course):
         lessons = get_course_lessons(course=course)

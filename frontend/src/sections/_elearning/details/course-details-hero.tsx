@@ -14,11 +14,8 @@ import { alpha, useTheme } from "@mui/material/styles";
 import { paths } from "src/routes/paths";
 
 import { useBoolean } from "src/hooks/use-boolean";
-import { useResponsive } from "src/hooks/use-responsive";
 
 import { fShortenNumber } from "src/utils/format-number";
-
-import { _mock } from "src/_mock";
 
 import Label from "src/components/label";
 import Image from "src/components/image";
@@ -52,8 +49,6 @@ export default function CourseDetailsHero({ course }: Props) {
   } = course;
 
   const theme = useTheme();
-
-  const mdUp = useResponsive("up", "md");
 
   const videoOpen = useBoolean();
 
@@ -174,18 +169,18 @@ export default function CourseDetailsHero({ course }: Props) {
 
                 {teachers?.length > 0 && (
                   <Stack direction="row" alignItems="center">
-                    <Avatar src={avatarUrl} />v
+                    <Avatar src={avatarUrl} />
                     <Typography variant="body2" sx={{ ml: 1, mr: 0.5 }}>
                       {teachers[0]?.name}
                     </Typography>
                     {teachers?.length > 1 && (
                       <Link underline="always" color="text.secondary" variant="body2">
-                        + {teachers?.length}{" "}
+                        + {teachers.length - 1}{" "}
                         {polishPlurals(
                           "nauczyciel",
                           "nauczycieli",
                           "nauczycieli",
-                          teachers?.length,
+                          teachers.length - 1,
                         )}
                       </Link>
                     )}

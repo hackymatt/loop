@@ -15,6 +15,10 @@ type ILecturer = {
   uuid: string;
   image: string | null;
   gender: IGender | null;
+  lessons_count: number;
+  rating: number | null;
+  rating_count: number;
+  user_title: string | null;
 };
 
 type ITechnology = {
@@ -105,11 +109,27 @@ export const courseQuery = (id: string) => {
         ratingNumber: rating,
         totalReviews: rating_count,
         totalStudents: students_count,
-        teachers: lecturers.map(({ uuid, full_name, image: lecturerImage }: ILecturer) => ({
-          id: uuid,
-          name: full_name,
-          avatarUrl: lecturerImage,
-        })),
+        teachers: lecturers.map(
+          ({
+            uuid,
+            full_name,
+            gender,
+            image: lecturerImage,
+            lessons_count,
+            rating: lecturerRating,
+            rating_count: lecturerRatingCount,
+            user_title,
+          }: ILecturer) => ({
+            id: uuid,
+            name: full_name,
+            gender,
+            avatarUrl: lecturerImage,
+            totalCourses: lessons_count,
+            ratingNumber: lecturerRating,
+            totalReviews: lecturerRatingCount,
+            role: user_title,
+          }),
+        ),
         skills,
         learnList: topics,
         lessons,
