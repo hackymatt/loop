@@ -85,13 +85,17 @@ export default function CoursesView() {
               width: { md: `calc(100% - ${280}px)` },
             }}
           >
-            <Stack direction="row" alignItems="center" justifyContent="right" sx={{ mb: 5 }}>
-              <Sorting
-                value={query.sort_by ?? "-students_count"}
-                options={SORT_OPTIONS}
-                onChange={(event: SelectChangeEvent) => handleChange("sort_by", event.target.value)}
-              />
-            </Stack>
+            {courses?.length > 0 && (
+              <Stack direction="row" alignItems="center" justifyContent="right" sx={{ mb: 5 }}>
+                <Sorting
+                  value={query.sort_by ?? "-students_count"}
+                  options={SORT_OPTIONS}
+                  onChange={(event: SelectChangeEvent) =>
+                    handleChange("sort_by", event.target.value)
+                  }
+                />
+              </Stack>
+            )}
 
             <CourseList
               courses={courses}

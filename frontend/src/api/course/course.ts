@@ -1,11 +1,8 @@
 import { compact } from "lodash-es";
 import { useQuery } from "@tanstack/react-query";
 
-import { formatQueryParams } from "src/utils/query-params";
-
 import { ICourseProps } from "src/types/course";
 import { IGender } from "src/types/testimonial";
-import { IQueryParams } from "src/types/queryParams";
 
 import { Api } from "../service";
 
@@ -22,9 +19,23 @@ type ILecturer = {
 
 type ITechnology = {
   id: number;
-  modified_at: string;
-  created_at: string;
   name: string;
+};
+
+type ISkill = {
+  id: number;
+  name: string;
+};
+
+type ITopic = {
+  id: number;
+  name: string;
+};
+
+type ILesson = {
+  id: number;
+  title: string;
+  duration: number;
 };
 
 type ICourse = {
@@ -39,59 +50,31 @@ type ICourse = {
   rating: number;
   rating_count: number;
   image: string;
+  video: string | null;
   title: string;
   level: ILevel;
   price: string;
+  skills: ISkill[];
+  topics: ITopic[];
+  lessons: ILesson[];
 };
 
-// {
-//   id: string;
-//   slug: string;
-//   price: number;
-//   level: string;
-//   createdAt?: Date;
-//   coverUrl: string;
-//   category: string;
-//   skills?: string[];
-//   priceSale: number;
-//   lowest30DaysPrice?: number;
-//   resources?: number;
-//   totalHours: number;
-//   description?: string;
-//   bestSeller?: boolean;
-//   languages?: string[];
-//   learnList?: string[];
-//   ratingNumber: number;
-//   totalQuizzes?: number;
-//   totalReviews: number;
-//   totalStudents: number;
-//   shareLinks?: ISocialLinks;
-//   lessons?: ICourseLessonProp[];
-//   teachers: ICourseTeacherProp[];
-// }
-
-export const courseQuery = (id: number) => {
+export const courseQuery = (id: string) => {
   const url = endpoint;
   const queryUrl = `${url}/${id}`;
 
   const queryFn = async () => {
-    let data;
+    let modifiedResults;
     try {
-      const response = await Api.get(queryUrl);
-      ({ data } = response);
-    } catch (error) {
-      if (error.response && (error.response.status === 400 || error.response.status === 404)) {
-        data = { results: [], records_count: 0, pages_count: 0 };
-      }
-    }
-    const { results, records_count, pages_count } = data;
-    const modifiedResults = results.map(
-      ({
-        id,
+      const response = await Api.get<ICourse>(queryUrl);
+      const { data } = response;
+      const {
+        id: courseId,
         description,
         price,
         level,
         image,
+        video,
         title,
         technology,
         previous_price,
@@ -101,38 +84,49 @@ export const courseQuery = (id: number) => {
         rating_count,
         students_count,
         lecturers,
-      }: ICourse) => {
-        const { name } = technology;
-        return {
-          id,
-          description,
-          price,
-          level,
-          coverUrl: image,
-          slug: title,
-          category: name,
-          priceSale: previous_price,
-          lowest30DaysPrice: lowest_30_days_price,
-          totalHours: duration / 60,
-          ratingNumber: rating,
-          totalReviews: rating_count,
-          totalStudents: students_count,
-          teachers: lecturers.map(({ uuid, full_name, image: lecturerImage }: ILecturer) => ({
-            id: uuid,
-            name: full_name,
-            avatarUrl: lecturerImage,
-          })),
-        };
-      },
-    );
-    return { results: modifiedResults, count: records_count, pagesCount: pages_count };
+        skills,
+        topics,
+        lessons,
+      } = data;
+      const { name } = technology;
+
+      modifiedResults = {
+        id: courseId,
+        description,
+        price,
+        level,
+        coverUrl: image,
+        video,
+        slug: title,
+        category: name,
+        priceSale: previous_price,
+        lowest30DaysPrice: lowest_30_days_price,
+        totalHours: duration / 60,
+        ratingNumber: rating,
+        totalReviews: rating_count,
+        totalStudents: students_count,
+        teachers: lecturers.map(({ uuid, full_name, image: lecturerImage }: ILecturer) => ({
+          id: uuid,
+          name: full_name,
+          avatarUrl: lecturerImage,
+        })),
+        skills,
+        learnList: topics,
+        lessons,
+      };
+    } catch (error) {
+      if (error.response && (error.response.status === 400 || error.response.status === 404)) {
+        modifiedResults = {};
+      }
+    }
+    return { results: modifiedResults };
   };
 
   return { url, queryFn, queryKey: compact([queryUrl]) };
 };
 
-export const useCourse = (id: number) => {
+export const useCourse = (id: string) => {
   const { queryKey, queryFn } = courseQuery(id);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as ICourseProps, ...rest };
+  return { data: data?.results as any as ICourseProps, ...rest };
 };

@@ -1,3 +1,5 @@
+import { polishPlurals } from "polish-plurals";
+
 import Fab from "@mui/material/Fab";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
@@ -39,12 +41,11 @@ export default function CourseDetailsHero({ course }: Props) {
     lessons,
     category,
     coverUrl,
-    languages,
+    video,
     bestSeller,
     totalHours,
     description,
     ratingNumber,
-    totalQuizzes,
     totalReviews,
     totalStudents,
     teachers = [],
@@ -55,6 +56,13 @@ export default function CourseDetailsHero({ course }: Props) {
   const mdUp = useResponsive("up", "md");
 
   const videoOpen = useBoolean();
+
+  const genderAvatarUrl =
+    teachers?.[0]?.gender === "Kobieta"
+      ? "/assets/images/avatar/avatar_female.jpg"
+      : "/assets/images/avatar/avatar_male.jpg";
+
+  const avatarUrl = teachers?.[0]?.avatarUrl ? teachers?.[0]?.avatarUrl : genderAvatarUrl;
 
   return (
     <>
@@ -88,25 +96,26 @@ export default function CourseDetailsHero({ course }: Props) {
                   overflow: "hidden",
                 }}
               >
-                <Fab
-                  color="primary"
-                  onClick={videoOpen.onTrue}
-                  sx={{
-                    zIndex: 9,
-                    position: "absolute",
-                  }}
-                >
-                  <Iconify icon="carbon:play" width={24} />
-                </Fab>
+                {video && (
+                  <Fab
+                    color="primary"
+                    onClick={videoOpen.onTrue}
+                    sx={{
+                      zIndex: 9,
+                      position: "absolute",
+                    }}
+                  >
+                    <Iconify icon="carbon:play" width={24} />
+                  </Fab>
+                )}
 
                 <Image
                   alt="hero"
                   src={coverUrl}
-                  ratio={mdUp ? "3/4" : "4/3"}
                   overlay={`linear-gradient(to bottom, ${alpha(
                     theme.palette.common.black,
                     0,
-                  )} 0%, ${theme.palette.common.black} 75%)`}
+                  )} 0%, ${theme.palette.common.black} 90%)`}
                 />
               </Stack>
             </Grid>
@@ -120,7 +129,7 @@ export default function CourseDetailsHero({ course }: Props) {
                     </Label>
                   )}
 
-                  <Typography variant="overline" sx={{ color: "secondary.main" }}>
+                  <Typography variant="overline" sx={{ color: "primary.main" }}>
                     {category}
                   </Typography>
 
@@ -137,40 +146,51 @@ export default function CourseDetailsHero({ course }: Props) {
                   alignItems="center"
                   divider={<Divider orientation="vertical" sx={{ height: 20 }} />}
                 >
-                  <Stack spacing={0.5} direction="row" alignItems="center">
-                    <Iconify icon="carbon:star-filled" sx={{ color: "warning.main" }} />
-                    <Box sx={{ typography: "h6" }}>
-                      {Number.isInteger(ratingNumber) ? `${ratingNumber}.0` : ratingNumber}
-                    </Box>
+                  {totalReviews > 0 && (
+                    <Stack spacing={0.5} direction="row" alignItems="center">
+                      <Iconify icon="carbon:star-filled" sx={{ color: "warning.main" }} />
+                      <Box sx={{ typography: "h6" }}>
+                        {Number.isInteger(ratingNumber) ? `${ratingNumber}.0` : ratingNumber}
+                      </Box>
 
-                    {totalReviews && (
-                      <Link variant="body2" sx={{ color: "text.secondary" }}>
-                        ({fShortenNumber(totalReviews)} reviews)
+                      {totalReviews && (
+                        <Link variant="body2" sx={{ color: "text.secondary" }}>
+                          ({fShortenNumber(totalReviews)}{" "}
+                          {polishPlurals("ocena", "oceny", "ocen", totalReviews)})
+                        </Link>
+                      )}
+                    </Stack>
+                  )}
+
+                  {totalStudents > 0 && (
+                    <Stack direction="row" sx={{ typography: "subtitle2" }}>
+                      {fShortenNumber(totalStudents)}
+                      <Box component="span" typography="body2" sx={{ ml: 0.5 }}>
+                        {polishPlurals("student", "studentów", "studentów", totalStudents)}
+                      </Box>
+                    </Stack>
+                  )}
+                </Stack>
+
+                {teachers?.length > 0 && (
+                  <Stack direction="row" alignItems="center">
+                    <Avatar src={avatarUrl} />v
+                    <Typography variant="body2" sx={{ ml: 1, mr: 0.5 }}>
+                      {teachers[0]?.name}
+                    </Typography>
+                    {teachers?.length > 1 && (
+                      <Link underline="always" color="text.secondary" variant="body2">
+                        + {teachers?.length}{" "}
+                        {polishPlurals(
+                          "nauczyciel",
+                          "nauczycieli",
+                          "nauczycieli",
+                          teachers?.length,
+                        )}
                       </Link>
                     )}
                   </Stack>
-
-                  <Stack direction="row" sx={{ typography: "subtitle2" }}>
-                    {fShortenNumber(totalStudents)}
-                    <Box component="span" typography="body2" sx={{ ml: 0.5 }}>
-                      students
-                    </Box>
-                  </Stack>
-                </Stack>
-
-                <Stack direction="row" alignItems="center">
-                  <Avatar src={teachers[0]?.avatarUrl} />
-
-                  <Typography variant="body2" sx={{ ml: 1, mr: 0.5 }}>
-                    {teachers[0]?.name}
-                  </Typography>
-
-                  {!!teachers.length && (
-                    <Link underline="always" color="text.secondary" variant="body2">
-                      + {teachers.length} teachers
-                    </Link>
-                  )}
-                </Stack>
+                )}
 
                 <Divider sx={{ borderStyle: "dashed" }} />
 
@@ -183,41 +203,34 @@ export default function CourseDetailsHero({ course }: Props) {
                     }}
                   >
                     <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
-                      <Iconify icon="carbon:time" sx={{ mr: 1 }} /> {`${totalHours} hours`}
+                      <Iconify icon="carbon:time" sx={{ mr: 1 }} />{" "}
+                      {fShortenNumber(Math.floor(totalHours), 0)}+{" "}
+                      {polishPlurals("godzina", "godziny", "godzin", totalHours)}
                     </Stack>
 
-                    <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
-                      <Iconify icon="carbon:document" sx={{ mr: 1 }} />
-                      {`${lessons?.length} Lessons`}
-                    </Stack>
+                    {lessons && (
+                      <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
+                        <Iconify icon="carbon:document" sx={{ mr: 1 }} />
+                        {`${lessons.length} ${polishPlurals(
+                          "lekcja",
+                          "lekcje",
+                          "lekcji",
+                          lessons.length,
+                        )}`}
+                      </Stack>
+                    )}
 
                     <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
                       <Iconify
                         icon={
-                          (level === "Beginner" && "carbon:skill-level-basic") ||
-                          (level === "Intermediate" && "carbon:skill-level-intermediate") ||
+                          (level === "Początkujący" && "carbon:skill-level") ||
+                          (level === "Średniozaawansowany" && "carbon:skill-level-basic") ||
+                          (level === "Zaawansowany" && "carbon:skill-level-intermediate") ||
                           "carbon:skill-level-advanced"
                         }
                         sx={{ mr: 1 }}
                       />
                       {level}
-                    </Stack>
-                  </Stack>
-
-                  <Stack
-                    direction="row"
-                    flexWrap="wrap"
-                    sx={{
-                      "& > *": { my: 0.5, mr: 3 },
-                    }}
-                  >
-                    <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
-                      <Iconify icon="carbon:content-delivery-network" sx={{ mr: 1 }} />
-                      {typeof languages === "string" ? languages : languages?.join(", ")}
-                    </Stack>
-
-                    <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
-                      <Iconify icon="carbon:help" sx={{ mr: 1 }} /> {`${totalQuizzes} Quizzes`}
                     </Stack>
                   </Stack>
                 </Stack>
@@ -227,7 +240,9 @@ export default function CourseDetailsHero({ course }: Props) {
         </Container>
       </Box>
 
-      <PlayerDialog open={videoOpen.value} onClose={videoOpen.onFalse} videoPath={_mock.video(0)} />
+      {video && (
+        <PlayerDialog open={videoOpen.value} onClose={videoOpen.onFalse} videoPath={video} />
+      )}
     </>
   );
 }

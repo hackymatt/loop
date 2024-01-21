@@ -19,8 +19,6 @@ type ILecturer = {
 
 type ITechnology = {
   id: number;
-  modified_at: string;
-  created_at: string;
   name: string;
 };
 

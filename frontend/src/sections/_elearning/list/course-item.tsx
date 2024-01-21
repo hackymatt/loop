@@ -157,42 +157,46 @@ export default function CourseItem({ course, vertical }: Props) {
           flexWrap="wrap"
           divider={<Divider orientation="vertical" sx={{ height: 20, my: "auto" }} />}
         >
-          <Stack spacing={0.5} direction="row" alignItems="center">
-            <Iconify icon="carbon:star-filled" sx={{ color: "warning.main" }} />
-            <Box sx={{ typography: "h6" }}>
-              {Number.isInteger(ratingNumber) ? `${ratingNumber}.0` : ratingNumber}
-            </Box>
+          {totalReviews && (
+            <Stack spacing={0.5} direction="row" alignItems="center">
+              <Iconify icon="carbon:star-filled" sx={{ color: "warning.main" }} />
+              <Box sx={{ typography: "h6" }}>
+                {Number.isInteger(ratingNumber) ? `${ratingNumber}.0` : ratingNumber}
+              </Box>
 
-            {totalReviews && (
               <Link variant="body2" sx={{ color: "text.secondary" }}>
                 ({fShortenNumber(totalReviews)}{" "}
                 {polishPlurals("ocena", "oceny", "ocen", totalReviews)})
               </Link>
-            )}
-          </Stack>
+            </Stack>
+          )}
 
-          <Stack direction="row" sx={{ typography: "subtitle2" }}>
-            {fShortenNumber(totalStudents)}
-            <Box component="span" typography="body2" sx={{ ml: 0.5 }}>
-              {polishPlurals("student", "studentów", "studentów", totalStudents)}
-            </Box>
-          </Stack>
-        </Stack>
-
-        <Stack direction="row" alignItems="center">
-          <Avatar src={avatarUrl} />
-
-          <Typography variant="body2" sx={{ ml: 1, mr: 0.5 }}>
-            {teachers[0]?.name}
-          </Typography>
-
-          {teachers?.length > 1 && (
-            <Link underline="always" color="text.secondary" variant="body2">
-              + {teachers?.length}{" "}
-              {polishPlurals("nauczyciel", "nauczycieli", "nauczycieli", teachers?.length)}
-            </Link>
+          {totalStudents > 0 && (
+            <Stack direction="row" sx={{ typography: "subtitle2" }}>
+              {fShortenNumber(totalStudents)}
+              <Box component="span" typography="body2" sx={{ ml: 0.5 }}>
+                {polishPlurals("student", "studentów", "studentów", totalStudents)}
+              </Box>
+            </Stack>
           )}
         </Stack>
+
+        {teachers?.length > 0 && (
+          <Stack direction="row" alignItems="center">
+            <Avatar src={avatarUrl} />
+
+            <Typography variant="body2" sx={{ ml: 1, mr: 0.5 }}>
+              {teachers[0]?.name}
+            </Typography>
+
+            {teachers?.length > 1 && (
+              <Link underline="always" color="text.secondary" variant="body2">
+                + {teachers?.length}{" "}
+                {polishPlurals("nauczyciel", "nauczycieli", "nauczycieli", teachers?.length)}
+              </Link>
+            )}
+          </Stack>
+        )}
 
         <Divider
           sx={{

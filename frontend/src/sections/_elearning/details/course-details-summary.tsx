@@ -22,7 +22,7 @@ export default function CourseDetailsSummary({ course }: Props) {
       <CourseDetailsLessonList lessons={course.lessons ?? []} />
 
       <Stack spacing={3}>
-        <Typography variant="h4">What You Will Learn</Typography>
+        <Typography variant="h4">Czego się nauczysz</Typography>
 
         <Stack spacing={1}>
           {course.learnList?.map((learn) => (

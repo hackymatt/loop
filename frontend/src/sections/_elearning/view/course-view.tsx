@@ -1,27 +1,23 @@
 "use client";
 
-import { useEffect } from "react";
-
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
-import { alpha } from "@mui/material/styles";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
-import Typography from "@mui/material/Typography";
 
-import { useBoolean } from "src/hooks/use-boolean";
 import { useResponsive } from "src/hooks/use-responsive";
 
-import { _mock, _socials, _courses } from "src/_mock";
+import { _mock, _courses } from "src/_mock";
+import { useCourse } from "src/api/course/course";
+import { useBestCourses } from "src/api/courses/best-courses";
 
-import Iconify from "src/components/iconify";
 import { SplashScreen } from "src/components/loading-screen";
 
-import ReviewElearning from "src/sections/review/elearning/review-elearning";
+import Review from "src/sections/review/elearning/review";
+import NotFoundView from "src/sections/error/not-found-view";
 
+import Newsletter from "../newsletter";
 import Advertisement from "../../advertisement";
-import ElearningNewsletter from "../newsletter";
 import CourseListSimilar from "../list/course-list-similar";
 import CourseDetailsHero from "../details/course-details-hero";
 import CourseDetailsInfo from "../details/course-details-info";
@@ -35,17 +31,22 @@ const _mockCourse = _courses[0];
 export default function CourseView({ id }: { id: string }) {
   const mdUp = useResponsive("up", "md");
 
-  const loading = useBoolean(false);
+  const { data: course, isLoading } = useCourse(id);
+  const { data: bestCourses } = useBestCourses();
 
   const courseSimilar = _courses.slice(-3);
 
-  if (loading.value) {
+  if (isLoading) {
     return <SplashScreen />;
+  }
+
+  if (Object.keys(course).length === 0) {
+    return <NotFoundView />;
   }
 
   return (
     <>
-      <CourseDetailsHero course={_mockCourse} />
+      <CourseDetailsHero course={course} />
 
       <Container
         sx={{
@@ -64,35 +65,6 @@ export default function CourseView({ id }: { id: string }) {
           <Grid xs={12} md={7} lg={8}>
             <CourseDetailsSummary course={_mockCourse} />
 
-            <Stack direction="row" flexWrap="wrap" sx={{ mt: 5 }}>
-              <Typography variant="subtitle2" sx={{ mt: 0.75, mr: 1.5 }}>
-                Share:
-              </Typography>
-
-              <Stack direction="row" alignItems="center" flexWrap="wrap">
-                {_socials.map((social) => (
-                  <Button
-                    key={social.value}
-                    size="small"
-                    variant="outlined"
-                    startIcon={<Iconify icon={social.icon} />}
-                    sx={{
-                      m: 0.5,
-                      flexShrink: 0,
-                      color: social.color,
-                      borderColor: social.color,
-                      "&:hover": {
-                        borderColor: social.color,
-                        bgcolor: alpha(social.color, 0.08),
-                      },
-                    }}
-                  >
-                    {social.label}
-                  </Button>
-                ))}
-              </Stack>
-            </Stack>
-
             <Divider sx={{ my: 5 }} />
 
             <CourseDetailsTeachersInfo teachers={_mockCourse.teachers} />
@@ -104,10 +76,10 @@ export default function CourseView({ id }: { id: string }) {
 
               <Advertisement
                 advertisement={{
-                  title: "Advertisement",
-                  description: "Duis leo. Donec orci lectus, aliquam ut, faucibus non",
+                  title: "Wejdź do IT",
+                  description: "Sprawdź nasze kursy przygotowujące do pracy programisty",
                   imageUrl: _mock.image.course(7),
-                  path: "",
+                  path: "/assets/images/course/course_8.jpg",
                 }}
               />
             </Stack>
@@ -117,11 +89,11 @@ export default function CourseView({ id }: { id: string }) {
 
       {mdUp && <Divider />}
 
-      <ReviewElearning />
+      <Review />
 
-      <CourseListSimilar courses={courseSimilar} />
+      {bestCourses?.length >= 1 && <CourseListSimilar courses={bestCourses} />}
 
-      <ElearningNewsletter />
+      <Newsletter />
     </>
   );
 }

@@ -159,7 +159,7 @@ class TechnologyListSerializer(ModelSerializer):
 
     class Meta:
         model = Technology
-        fields = "__all__"
+        exclude = ("modified_at", "created_at",)
 
     def get_courses_count(self, technology):
         return Course.objects.filter(technology=technology).count()
@@ -168,19 +168,19 @@ class TechnologyListSerializer(ModelSerializer):
 class TechnologySerializer(ModelSerializer):
     class Meta:
         model = Technology
-        fields = "__all__"
+        exclude = ("modified_at", "created_at",)
 
 
 class SkillSerializer(ModelSerializer):
     class Meta:
         model = Skill
-        fields = "__all__"
+        exclude = ("modified_at", "created_at",)
 
 
 class TopicSerializer(ModelSerializer):
     class Meta:
         model = Topic
-        fields = "__all__"
+        exclude = ("modified_at", "created_at",)
 
 
 class LecturerSerializer(ModelSerializer):
@@ -203,7 +203,7 @@ class LecturerSerializer(ModelSerializer):
         return profile.user.first_name + " " + profile.user.last_name
 
 
-class LessonSerializer(ModelSerializer):
+class LessonDetailsSerializer(ModelSerializer):
     id = IntegerField()
     previous_price = SerializerMethodField("get_lesson_previous_price")
     lowest_30_days_price = SerializerMethodField("get_lesson_lowest_30_days_price")
@@ -241,6 +241,14 @@ class LessonSerializer(ModelSerializer):
     class Meta:
         model = Lesson
         exclude = ("course",)
+
+
+class LessonSerializer(ModelSerializer):
+    id = IntegerField()
+
+    class Meta:
+        model = Lesson
+        fields = ("id", "title", "duration", )
 
 
 class CourseListSerializer(ModelSerializer):
@@ -298,6 +306,7 @@ class CourseListSerializer(ModelSerializer):
 
 
 class CourseGetSerializer(ModelSerializer):
+    level = CharField(source="get_level_display")
     duration = SerializerMethodField("get_course_duration")
     previous_price = SerializerMethodField("get_course_previous_price")
     lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
@@ -353,7 +362,7 @@ class CourseSerializer(ModelSerializer):
     duration = SerializerMethodField("get_course_duration")
     previous_price = SerializerMethodField("get_course_previous_price")
     lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
-    lessons = LessonSerializer(many=True)
+    lessons = LessonDetailsSerializer(many=True)
     technology = TechnologySerializer()
     skills = SkillSerializer(many=True)
     topics = TopicSerializer(many=True)
