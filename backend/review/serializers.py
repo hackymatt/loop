@@ -52,6 +52,7 @@ class ReviewGetSerializer(ModelSerializer):
     class Meta:
         model = Review
         fields = (
+            "id",
             "lesson_title",
             "student",
             "lecturer",

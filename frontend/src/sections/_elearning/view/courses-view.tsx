@@ -15,6 +15,7 @@ import { useQueryParams } from "src/hooks/use-query-params";
 import { useCourses, useCoursesPagesCount } from "src/api/courses/courses";
 
 import Iconify from "src/components/iconify";
+import { SplashScreen } from "src/components/loading-screen";
 
 import NotFoundView from "src/sections/error/not-found-view";
 
@@ -38,12 +39,18 @@ export default function CoursesView() {
 
   const query = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const { data: pagesCount } = useCoursesPagesCount(query);
-  const { data: courses, isLoading } = useCourses(query);
+  const { data: pagesCount, isLoading: isLoadingCoursesPagesCount } = useCoursesPagesCount(query);
+  const { data: courses, isLoading: isLoadingCourses } = useCourses(query);
 
   const handleChange = (name: string, value?: string | number) => {
     setQueryParam(name, value);
   };
+
+  const isLoading = isLoadingCourses || isLoadingCoursesPagesCount;
+
+  if (isLoading) {
+    return <SplashScreen />;
+  }
 
   if (pagesCount === 0) {
     return <NotFoundView />;

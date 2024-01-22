@@ -19,9 +19,10 @@ type Props = {
   };
   index: number;
   totals: number;
+  selected: boolean;
 };
 
-export default function ReviewProgressItem({ rating, totals, index }: Props) {
+export default function ReviewProgressItem({ rating, totals, index, selected }: Props) {
   return (
     <FormControlLabel
       value={rating.value}
@@ -54,6 +55,9 @@ export default function ReviewProgressItem({ rating, totals, index }: Props) {
                 opacity: 1,
                 bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
               },
+              ...(selected && {
+                opacity: 0.48,
+              }),
             }}
           />
 

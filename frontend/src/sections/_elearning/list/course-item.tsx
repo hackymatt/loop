@@ -166,7 +166,7 @@ export default function CourseItem({ course, vertical }: Props) {
 
               <Link variant="body2" sx={{ color: "text.secondary" }}>
                 ({fShortenNumber(totalReviews)}{" "}
-                {polishPlurals("ocena", "oceny", "ocen", totalReviews)})
+                {polishPlurals("recenzja", "recenzje", "recenzji", totalReviews)})
               </Link>
             </Stack>
           )}

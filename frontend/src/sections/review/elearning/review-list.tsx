@@ -9,58 +9,54 @@ import ReviewItem from "./review-item";
 
 type Props = {
   reviews: IReviewItemProp[];
+  pagesCount: number;
 };
 
-export default function Reviews({ reviews }: Props) {
+export default function Reviews({ reviews, pagesCount }: Props) {
   return (
     <>
-      {reviews.map((review) => {
-        const { id, name, rating, helpful, message, createdAt, avatarUrl, replyComment, users } =
-          review;
-
-        const hasReply = !!replyComment.length;
+      {reviews?.map((review) => {
+        const {
+          id,
+          name,
+          gender,
+          rating,
+          message,
+          createdAt,
+          avatarUrl,
+          lessonTitle,
+          teacherName,
+        } = review;
 
         return (
           <Box key={id}>
             <ReviewItem
               name={name}
+              gender={gender}
               avatarUrl={avatarUrl}
               createdAt={createdAt}
               message={message}
               rating={rating}
-              helpful={helpful}
+              lessonTitle={lessonTitle}
+              teacherName={teacherName}
             />
-            {hasReply &&
-              replyComment.map((reply) => {
-                const userReply = users.filter((user) => user.id === reply.userId)[0];
-
-                return (
-                  <ReviewItem
-                    key={reply.id}
-                    tagUser={reply.tagUser}
-                    createdAt={reply.createdAt}
-                    message={reply.message}
-                    name={userReply.name}
-                    avatarUrl={userReply.avatarUrl}
-                    hasReply
-                  />
-                );
-              })}
           </Box>
         );
       })}
 
-      <Pagination
-        count={10}
-        color="primary"
-        sx={{
-          mt: 5,
-          mb: 10,
-          [`& .${paginationClasses.ul}`]: {
-            justifyContent: "center",
-          },
-        }}
-      />
+      {reviews?.length > 0 && (
+        <Pagination
+          count={pagesCount}
+          color="primary"
+          sx={{
+            mt: 5,
+            mb: 10,
+            [`& .${paginationClasses.ul}`]: {
+              justifyContent: "center",
+            },
+          }}
+        />
+      )}
     </>
   );
 }

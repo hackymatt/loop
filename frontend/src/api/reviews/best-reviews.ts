@@ -17,10 +17,7 @@ type IStudent = {
 type IReview = {
   id: number;
   student: IStudent;
-  modified_at: string;
-  created_at: string;
   review: string;
-  rating: string;
 };
 
 export const bestReviewsQuery = () => {

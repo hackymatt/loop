@@ -31,12 +31,14 @@ import CourseDetailsTeachersInfo from "../details/course-details-teachers-info";
 export default function CourseView({ id }: { id: string }) {
   const mdUp = useResponsive("up", "md");
 
-  const { data: course, isLoading } = useCourse(id);
-  const { data: bestCourses } = useBestCourses();
+  const { data: course, isLoading: isLoadingCourse } = useCourse(id);
+  const { data: bestCourses, isLoading: isLoadingBestCourse } = useBestCourses();
 
   const similarCourses = bestCourses?.filter(
-    (bestCourse: ICourseProps) => bestCourse.id !== course.id,
+    (bestCourse: ICourseProps) => bestCourse.id !== course?.id,
   );
+
+  const isLoading = isLoadingCourse || isLoadingBestCourse;
 
   if (isLoading) {
     return <SplashScreen />;
@@ -91,7 +93,13 @@ export default function CourseView({ id }: { id: string }) {
 
       {mdUp && <Divider />}
 
-      <Review />
+      <Review
+        courseId={id}
+        ratingNumber={course.ratingNumber}
+        reviewNumber={course.totalReviews}
+        lessons={course.lessons ?? []}
+        teachers={course.teachers ?? []}
+      />
 
       {similarCourses?.length >= 3 && <CourseListSimilar courses={similarCourses} />}
 
