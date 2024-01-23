@@ -304,7 +304,11 @@ class LessonDetailsSerializer(ModelSerializer):
 
     class Meta:
         model = Lesson
-        exclude = ("course",)
+        exclude = (
+            "course",
+            "created_at",
+            "modified_at",
+        )
 
 
 class LessonSerializer(ModelSerializer):
