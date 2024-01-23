@@ -74,8 +74,14 @@ export default function CourseDetailsInfo({ course }: Props) {
           </Stack>
         </Stack>
 
-        <Button variant="contained" size="large" color="inherit" sx={{ textTransform: "none" }}>
-          Kup cały kurs
+        <Button
+          size="large"
+          color="inherit"
+          variant="contained"
+          startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
+          sx={{ textTransform: "none" }}
+        >
+          Dodaj do koszyka
         </Button>
       </Stack>
     </Card>

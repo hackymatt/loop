@@ -315,7 +315,7 @@ class CourseTest(APITestCase):
         technology_data = course_data.pop("technology")
         skills_data = course_data.pop("skills")
         topics_data = course_data.pop("topics")
-        duration = course_data.pop("duration")
+        course_data.pop("duration")
         course_data.pop("lecturers")
         rating = course_data.pop("rating")
         rating_count = course_data.pop("rating_count")
@@ -326,16 +326,31 @@ class CourseTest(APITestCase):
         self.assertTrue(
             is_data_match(get_technology(technology_data["id"]), technology_data)
         )
-        self.assertEqual(
-            duration, sum(lesson_data["duration"] for lesson_data in lessons_data)
-        )
         self.assertEqual(rating, 4.0)
         self.assertEqual(rating_count, 3)
         self.assertEqual(students_count, 2)
         self.assertEqual(previous_price, 120.0)
         self.assertEqual(lowest_30_days_price, 80.0)
         for lesson_data in lessons_data:
+            previous_price = lesson_data.pop("previous_price")
+            lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
+            is_bestseller = lesson_data.pop("is_bestseller")
+
             self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
+
+            if lesson_data["id"] == self.review_1.lesson.id:
+                self.assertEqual(previous_price, None)
+                self.assertEqual(lowest_30_days_price, None)
+                self.assertEqual(is_bestseller, True)
+            elif lesson_data["id"] == self.review_3.lesson.id:
+                self.assertEqual(previous_price, 3.0)
+                self.assertEqual(lowest_30_days_price, 1.0)
+                self.assertEqual(is_bestseller, False)
+            else:
+                self.assertEqual(previous_price, 2)
+                self.assertEqual(lowest_30_days_price, 2)
+                self.assertEqual(is_bestseller, False)
+
         for skill_data in skills_data:
             self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
         for topic_data in topics_data:
@@ -353,7 +368,7 @@ class CourseTest(APITestCase):
         technology_data = course_data.pop("technology")
         skills_data = course_data.pop("skills")
         topics_data = course_data.pop("topics")
-        duration = course_data.pop("duration")
+        course_data.pop("duration")
         course_data.pop("lecturers")
         rating = course_data.pop("rating")
         rating_count = course_data.pop("rating_count")
@@ -364,16 +379,30 @@ class CourseTest(APITestCase):
         self.assertTrue(
             is_data_match(get_technology(technology_data["id"]), technology_data)
         )
-        self.assertEqual(
-            duration, sum(lesson_data["duration"] for lesson_data in lessons_data)
-        )
         self.assertEqual(rating, 4.0)
         self.assertEqual(rating_count, 3)
         self.assertEqual(students_count, 2)
         self.assertEqual(previous_price, 120.0)
         self.assertEqual(lowest_30_days_price, 80.0)
         for lesson_data in lessons_data:
+            previous_price = lesson_data.pop("previous_price")
+            lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
+            is_bestseller = lesson_data.pop("is_bestseller")
+
             self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
+
+            if lesson_data["id"] == self.review_1.lesson.id:
+                self.assertEqual(previous_price, None)
+                self.assertEqual(lowest_30_days_price, None)
+                self.assertEqual(is_bestseller, True)
+            elif lesson_data["id"] == self.review_3.lesson.id:
+                self.assertEqual(previous_price, 3.0)
+                self.assertEqual(lowest_30_days_price, 1.0)
+                self.assertEqual(is_bestseller, False)
+            else:
+                self.assertEqual(previous_price, 2)
+                self.assertEqual(lowest_30_days_price, 2)
+                self.assertEqual(is_bestseller, False)
         for skill_data in skills_data:
             self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
         for topic_data in topics_data:

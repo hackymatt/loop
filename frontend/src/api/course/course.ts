@@ -40,7 +40,10 @@ type ITopic = {
 type ILesson = {
   id: number;
   title: string;
-  duration: number;
+  is_bestseller: boolean;
+  price: string;
+  previous_price: string | null;
+  lowest_30_days_price: string | null;
 };
 
 type ICourse = {
@@ -135,7 +138,23 @@ export const courseQuery = (id: string) => {
         ),
         skills: skills.map((skill: ISkill) => skill.name),
         learnList: topics.map((topic: ITopic) => topic.name),
-        lessons,
+        lessons: lessons.map(
+          ({
+            id: lessonId,
+            title: titleId,
+            is_bestseller,
+            lowest_30_days_price: lessonLowest30DaysPrice,
+            previous_price: lessonPreviousPrice,
+            price: lessonPrice,
+          }: ILesson) => ({
+            id: lessonId,
+            title: titleId,
+            lowest30DaysPrice: lessonLowest30DaysPrice,
+            priceSale: lessonPreviousPrice,
+            price: lessonPrice,
+            bestSeller: is_bestseller,
+          }),
+        ),
         githubUrl: github_url,
       };
     } catch (error) {

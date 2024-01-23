@@ -143,6 +143,7 @@ export default function CourseItem({ course, vertical }: Props) {
                 ...(vertical && {
                   display: { sm: "none" },
                 }),
+                textAlign: "justify",
               }}
             >
               {description}

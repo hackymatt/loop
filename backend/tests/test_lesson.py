@@ -370,17 +370,11 @@ class LessonTest(APITestCase):
             rating = lesson_data.pop("rating")
             rating_count = lesson_data.pop("rating_count")
             students_count = lesson_data.pop("students_count")
-            previous_price = lesson_data.pop("previous_price")
-            lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
-            is_bestseller = lesson_data.pop("is_bestseller")
             self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
             if lesson_data["id"] == self.review_1.lesson.id:
                 self.assertEqual(rating, 4.5)
                 self.assertEqual(rating_count, 2)
                 self.assertEqual(students_count, 1)
-                self.assertEqual(previous_price, None)
-                self.assertEqual(lowest_30_days_price, None)
-                self.assertEqual(is_bestseller, True)
             elif (
                 lesson_data["id"] == self.review_2.lesson.id
                 or lesson_data["id"] == self.review_3.lesson.id
@@ -390,9 +384,6 @@ class LessonTest(APITestCase):
                 self.assertEqual(rating, 3.0)
                 self.assertEqual(rating_count, 1)
                 self.assertEqual(students_count, 1)
-                self.assertEqual(previous_price, 3.0)
-                self.assertEqual(lowest_30_days_price, 1.0)
-                self.assertEqual(is_bestseller, False)
             elif (
                 lesson_data["id"] == self.review_4.lesson.id
                 or lesson_data["id"] == self.review_6.lesson.id
@@ -400,9 +391,6 @@ class LessonTest(APITestCase):
                 self.assertEqual(rating, 4.0)
                 self.assertEqual(rating_count, 1)
                 self.assertEqual(students_count, 1)
-                self.assertEqual(previous_price, None)
-                self.assertEqual(lowest_30_days_price, None)
-                self.assertEqual(is_bestseller, True)
 
             for lecturer_data in lecturers_data:
                 user_data = filter_dict(lecturer_data, self.user_columns)
@@ -428,17 +416,11 @@ class LessonTest(APITestCase):
         rating = data.pop("rating")
         rating_count = data.pop("rating_count")
         students_count = data.pop("students_count")
-        previous_price = data.pop("previous_price")
-        lowest_30_days_price = data.pop("lowest_30_days_price")
-        is_bestseller = data.pop("is_bestseller")
 
         self.assertTrue(is_data_match(get_lesson(data["id"]), data))
         self.assertEqual(rating, 4.5)
         self.assertEqual(rating_count, 2)
         self.assertEqual(students_count, 1)
-        self.assertEqual(previous_price, None)
-        self.assertEqual(lowest_30_days_price, None)
-        self.assertEqual(is_bestseller, True)
 
         for lecturer_data in lecturers_data:
             user_data = filter_dict(lecturer_data, self.user_columns)
@@ -463,17 +445,11 @@ class LessonTest(APITestCase):
         rating = data.pop("rating")
         rating_count = data.pop("rating_count")
         students_count = data.pop("students_count")
-        previous_price = data.pop("previous_price")
-        lowest_30_days_price = data.pop("lowest_30_days_price")
-        is_bestseller = data.pop("is_bestseller")
 
         self.assertTrue(is_data_match(get_lesson(data["id"]), data))
         self.assertEqual(rating, 4.5)
         self.assertEqual(rating_count, 2)
         self.assertEqual(students_count, 1)
-        self.assertEqual(previous_price, None)
-        self.assertEqual(lowest_30_days_price, None)
-        self.assertEqual(is_bestseller, True)
 
         for lecturer_data in lecturers_data:
             user_data = filter_dict(lecturer_data, self.user_columns)

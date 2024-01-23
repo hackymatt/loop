@@ -14,7 +14,7 @@ type Props = {
 
 export default function ReviewProgress({ value, options, onChange }: Props) {
   const totals = options
-    .map((option) => option.count)
+    ?.map((option) => option.count)
     .reduce((accumulator: number, curr: number) => accumulator + curr);
 
   return (

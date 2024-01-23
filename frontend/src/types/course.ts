@@ -21,7 +21,16 @@ export type ICourseLessonProp = {
   duration: number;
   videoPath?: string;
   unLocked?: boolean;
-  description?: string;
+  description: string;
+  price?: number;
+  priceSale?: number;
+  lowest30DaysPrice?: number;
+  ratingNumber?: number;
+  totalReviews?: number;
+  totalStudents?: number;
+  bestSeller?: boolean;
+  teachers?: ICourseTeacherProp[];
+  githubUrl?: string;
 };
 
 export type ICourseByCategoryProps = {
