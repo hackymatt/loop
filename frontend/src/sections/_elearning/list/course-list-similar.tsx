@@ -30,8 +30,9 @@ export default function CourseListSimilar({ courses }: Props) {
       href={paths.eLearning.courses}
       color="inherit"
       endIcon={<Iconify icon="carbon:chevron-right" />}
+      sx={{ textTransform: "none" }}
     >
-      View All
+      Zobacz wszystkie
     </Button>
   );
 
@@ -51,7 +52,7 @@ export default function CourseListSimilar({ courses }: Props) {
             mb: { xs: 8, md: 10 },
           }}
         >
-          <Typography variant="h3">Similar Courses</Typography>
+          <Typography variant="h3">Podobne kursy</Typography>
 
           {mdUp && viewAllBtn}
         </Stack>

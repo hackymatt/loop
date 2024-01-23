@@ -14,11 +14,12 @@ from rest_framework.routers import DefaultRouter
 from course.views import (
     CourseViewSet,
     BestCourseViewSet,
+    LessonViewSet,
     TechnologyViewSet,
     CoursePriceHistoryViewSet,
     LessonPriceHistoryViewSet,
 )
-from review.views import ReviewViewSet, BestReviewViewSet
+from review.views import ReviewViewSet, ReviewStatsViewSet, BestReviewViewSet
 from newsletter.views import (
     NewsletterEntriesViewSet,
     NewsletterSubscribeViewSet,
@@ -50,6 +51,7 @@ router.register(
 )
 router.register(r"courses", CourseViewSet, basename="courses")
 router.register(r"best-courses", BestCourseViewSet, basename="best_courses")
+router.register(r"lessons", LessonViewSet, basename="lessons")
 router.register(
     r"course-price-history", CoursePriceHistoryViewSet, basename="course_price_history"
 )
@@ -60,6 +62,7 @@ router.register(r"technologies", TechnologyViewSet, basename="technologies")
 router.register(r"best-lecturers", BestLecturerViewSet, basename="best_lecturers")
 router.register(r"lecturers", LecturerViewSet, basename="lecturers")
 router.register(r"reviews", ReviewViewSet, basename="reviews")
+router.register(r"reviews-stats", ReviewStatsViewSet, basename="reviews-stats")
 router.register(r"best-reviews", BestReviewViewSet, basename="best_reviews")
 router.register(r"schedules", ScheduleViewSet, basename="schedules")
 router.register(r"newsletter", NewsletterEntriesViewSet, basename="newsletter")

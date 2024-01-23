@@ -17,11 +17,21 @@ type IReviewReplyComment = {
 export type IReviewItemProp = {
   id: string;
   name: string;
+  gender?: string;
   rating: number;
   createdAt: Date;
   message: string;
-  helpful: number;
+  helpful?: number;
   avatarUrl: string;
-  users: IReviewUsers[];
-  replyComment: IReviewReplyComment[];
+  users?: IReviewUsers[];
+  replyComment?: IReviewReplyComment[];
+  lessonTitle?: string;
+  teacherName?: string;
+  teacherGender?: string;
+  teacherAvatarUrl?: string;
+};
+
+export type IReviewStatistic = {
+  rating: string;
+  count: number;
 };

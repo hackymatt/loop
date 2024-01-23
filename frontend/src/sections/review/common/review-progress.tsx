@@ -1,30 +1,33 @@
+import Stack from "@mui/material/Stack";
 import RadioGroup from "@mui/material/RadioGroup";
-import Stack, { StackProps } from "@mui/material/Stack";
+
+import { IReviewStatistic } from "src/types/review";
 
 import ReviewProgressItem from "./review-progress-item";
 
 // ----------------------------------------------------------------------
+type Props = {
+  value: string;
+  options: IReviewStatistic[];
+  onChange: (rating: string) => void;
+};
 
-const RATINGS = [
-  { value: "5start", number: 5212 },
-  { value: "4start", number: 2442 },
-  { value: "3start", number: 523 },
-  { value: "2start", number: 423 },
-  { value: "1start", number: 80 },
-];
-
-// ----------------------------------------------------------------------
-
-export default function ReviewProgress({ ...other }: StackProps) {
-  const totals = RATINGS.map((rating) => rating.number).reduce(
-    (accumulator: number, curr: number) => accumulator + curr,
-  );
+export default function ReviewProgress({ value, options, onChange }: Props) {
+  const totals = options
+    ?.map((option) => option.count)
+    .reduce((accumulator: number, curr: number) => accumulator + curr);
 
   return (
-    <RadioGroup>
-      <Stack spacing={2} {...other}>
-        {RATINGS.map((rating, index) => (
-          <ReviewProgressItem key={rating.value} rating={rating} index={index} totals={totals} />
+    <RadioGroup onChange={(event) => onChange(event.target.value)}>
+      <Stack spacing={2}>
+        {options.map((option, index) => (
+          <ReviewProgressItem
+            key={option.rating}
+            rating={option}
+            index={index}
+            totals={totals}
+            selected={option.rating === value}
+          />
         ))}
       </Stack>
     </RadioGroup>

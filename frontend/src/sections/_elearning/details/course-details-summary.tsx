@@ -22,7 +22,7 @@ export default function CourseDetailsSummary({ course }: Props) {
       <CourseDetailsLessonList lessons={course.lessons ?? []} />
 
       <Stack spacing={3}>
-        <Typography variant="h4">What You Will Learn</Typography>
+        <Typography variant="h4">Czego się nauczysz</Typography>
 
         <Stack spacing={1}>
           {course.learnList?.map((learn) => (
@@ -51,23 +51,13 @@ export default function CourseDetailsSummary({ course }: Props) {
       </Stack>
 
       <Stack spacing={3}>
-        <Typography variant="h4">Skills You Will Gain</Typography>
+        <Typography variant="h4">Umiejętności, które zdobędziesz</Typography>
 
         <Stack direction="row" flexWrap="wrap" spacing={1}>
           {course.skills?.map((skill) => (
             <Chip key={skill} label={skill} size="small" variant="soft" onClick={() => {}} />
           ))}
         </Stack>
-      </Stack>
-
-      <Stack spacing={2}>
-        <Typography variant="h4">Overview</Typography>
-
-        <Typography>
-          Consentaneum aeternitate dignitati commoventur primisque cupit mea officia peccata parens
-          egone dolorem minuis. Secundae neglegi sextilius conantur commodaita siti philosophi ioca
-          tenere lorem apparet assentior pudoris sint leves neglegebat unde reliquisti simile.
-        </Typography>
       </Stack>
     </Stack>
   );

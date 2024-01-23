@@ -19,9 +19,18 @@ export type ICourseLessonProp = {
   id: string;
   title: string;
   duration: number;
-  videoPath: string;
-  unLocked: boolean;
+  videoPath?: string;
+  unLocked?: boolean;
   description: string;
+  price?: number;
+  priceSale?: number;
+  lowest30DaysPrice?: number;
+  ratingNumber?: number;
+  totalReviews?: number;
+  totalStudents?: number;
+  bestSeller?: boolean;
+  teachers?: ICourseTeacherProp[];
+  githubUrl?: string;
 };
 
 export type ICourseByCategoryProps = {
@@ -37,6 +46,7 @@ export type ICourseProps = {
   level: string;
   createdAt?: Date;
   coverUrl: string;
+  video?: string;
   category: string;
   skills?: string[];
   priceSale: number;
@@ -54,4 +64,5 @@ export type ICourseProps = {
   shareLinks?: ISocialLinks;
   lessons?: ICourseLessonProp[];
   teachers: ICourseTeacherProp[];
+  githubUrl?: string;
 };

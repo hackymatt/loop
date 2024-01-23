@@ -1,13 +1,14 @@
+/* eslint-disable import/no-duplicates */
+import { pl } from "date-fns/locale";
 import { format, getTime, formatDistanceToNow } from "date-fns";
-
 // ----------------------------------------------------------------------
 
 type InputValue = Date | string | number | null | undefined;
 
 export function fDate(date: InputValue, newFormat?: string) {
-  const fm = newFormat || "dd MMM yyyy";
+  const fm = newFormat || "dd MMMM yyyy";
 
-  return date ? format(new Date(date), fm) : "";
+  return date ? format(new Date(date), fm, { locale: pl }) : "";
 }
 
 export function fTime(date: InputValue, newFormat?: string) {

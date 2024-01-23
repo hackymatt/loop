@@ -38,8 +38,13 @@ export default function Advertisement({ advertisement, sx, ...other }: Props) {
           {advertisement.description}
         </Typography>
 
-        <Button href={advertisement.path} variant="contained" color="primary">
-          Go Now
+        <Button
+          href={advertisement.path}
+          variant="contained"
+          color="primary"
+          sx={{ textTransform: "none" }}
+        >
+          Przejdź już teraz
         </Button>
       </Stack>
 

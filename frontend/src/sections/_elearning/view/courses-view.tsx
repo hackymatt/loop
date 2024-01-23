@@ -15,6 +15,9 @@ import { useQueryParams } from "src/hooks/use-query-params";
 import { useCourses, useCoursesPagesCount } from "src/api/courses/courses";
 
 import Iconify from "src/components/iconify";
+import { SplashScreen } from "src/components/loading-screen";
+
+import NotFoundView from "src/sections/error/not-found-view";
 
 import Newsletter from "../newsletter";
 import Filters from "../filters/filters";
@@ -36,12 +39,22 @@ export default function CoursesView() {
 
   const query = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const { data: pagesCount } = useCoursesPagesCount(query);
-  const { data: courses, isLoading } = useCourses(query);
+  const { data: pagesCount, isLoading: isLoadingCoursesPagesCount } = useCoursesPagesCount(query);
+  const { data: courses, isLoading: isLoadingCourses } = useCourses(query);
 
   const handleChange = (name: string, value?: string | number) => {
     setQueryParam(name, value);
   };
+
+  const isLoading = isLoadingCourses || isLoadingCoursesPagesCount;
+
+  if (isLoading) {
+    return <SplashScreen />;
+  }
+
+  if (pagesCount === 0) {
+    return <NotFoundView />;
+  }
 
   return (
     <>
@@ -79,13 +92,17 @@ export default function CoursesView() {
               width: { md: `calc(100% - ${280}px)` },
             }}
           >
-            <Stack direction="row" alignItems="center" justifyContent="right" sx={{ mb: 5 }}>
-              <Sorting
-                value={query.sort_by ?? "-students_count"}
-                options={SORT_OPTIONS}
-                onChange={(event: SelectChangeEvent) => handleChange("sort_by", event.target.value)}
-              />
-            </Stack>
+            {courses?.length > 0 && (
+              <Stack direction="row" alignItems="center" justifyContent="right" sx={{ mb: 5 }}>
+                <Sorting
+                  value={query.sort_by ?? "-students_count"}
+                  options={SORT_OPTIONS}
+                  onChange={(event: SelectChangeEvent) =>
+                    handleChange("sort_by", event.target.value)
+                  }
+                />
+              </Stack>
+            )}
 
             <CourseList
               courses={courses}

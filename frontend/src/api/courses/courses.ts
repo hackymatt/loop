@@ -16,14 +16,13 @@ type ILevel = "P" | "Ś" | "Z" | "E";
 type ILecturer = {
   full_name: string;
   uuid: string;
+  email: string;
   image: string | null;
   gender: IGender | null;
 };
 
 type ITechnology = {
   id: number;
-  modified_at: string;
-  created_at: string;
   name: string;
 };
 
@@ -92,11 +91,14 @@ export const coursesQuery = (query?: IQueryParams) => {
           ratingNumber: rating,
           totalReviews: rating_count,
           totalStudents: students_count,
-          teachers: lecturers.map(({ uuid, full_name, image: lecturerImage }: ILecturer) => ({
-            id: uuid,
-            name: full_name,
-            avatarUrl: lecturerImage,
-          })),
+          teachers: lecturers.map(
+            ({ uuid, full_name, gender, image: lecturerImage }: ILecturer) => ({
+              id: uuid,
+              name: full_name,
+              avatarUrl: lecturerImage,
+              gender,
+            }),
+          ),
         };
       },
     );

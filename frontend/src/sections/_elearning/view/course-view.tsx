@@ -1,27 +1,25 @@
 "use client";
 
-import { useEffect } from "react";
-
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
-import { alpha } from "@mui/material/styles";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
-import Typography from "@mui/material/Typography";
 
-import { useBoolean } from "src/hooks/use-boolean";
 import { useResponsive } from "src/hooks/use-responsive";
 
-import { _mock, _socials, _courses } from "src/_mock";
+import { useCourse } from "src/api/course/course";
+import { useBestCourses } from "src/api/courses/best-courses";
 
-import Iconify from "src/components/iconify";
 import { SplashScreen } from "src/components/loading-screen";
 
-import ReviewElearning from "src/sections/review/elearning/review-elearning";
+import Review from "src/sections/review/elearning/review";
+import NotFoundView from "src/sections/error/not-found-view";
 
+import { ICourseProps } from "src/types/course";
+
+import Newsletter from "../newsletter";
 import Advertisement from "../../advertisement";
-import ElearningNewsletter from "../newsletter";
+import Repository from "../repository/repository";
 import CourseListSimilar from "../list/course-list-similar";
 import CourseDetailsHero from "../details/course-details-hero";
 import CourseDetailsInfo from "../details/course-details-info";
@@ -30,30 +28,29 @@ import CourseDetailsTeachersInfo from "../details/course-details-teachers-info";
 
 // ----------------------------------------------------------------------
 
-const _mockCourse = _courses[0];
-
-export default function CourseView() {
+export default function CourseView({ id }: { id: string }) {
   const mdUp = useResponsive("up", "md");
 
-  const loading = useBoolean(true);
+  const { data: course, isLoading: isLoadingCourse } = useCourse(id);
+  const { data: bestCourses, isLoading: isLoadingBestCourse } = useBestCourses();
 
-  const courseSimilar = _courses.slice(-3);
+  const similarCourses = bestCourses?.filter(
+    (bestCourse: ICourseProps) => bestCourse.id !== course?.id,
+  );
 
-  useEffect(() => {
-    const fakeLoading = async () => {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      loading.onFalse();
-    };
-    fakeLoading();
-  }, [loading]);
+  const isLoading = isLoadingCourse || isLoadingBestCourse;
 
-  if (loading.value) {
+  if (isLoading) {
     return <SplashScreen />;
+  }
+
+  if (Object.keys(course).length === 0) {
+    return <NotFoundView />;
   }
 
   return (
     <>
-      <CourseDetailsHero course={_mockCourse} />
+      <CourseDetailsHero course={course} />
 
       <Container
         sx={{
@@ -65,57 +62,34 @@ export default function CourseView() {
         <Grid container spacing={{ xs: 5, md: 8 }}>
           {!mdUp && (
             <Grid xs={12}>
-              <CourseDetailsInfo course={_mockCourse} />
+              <CourseDetailsInfo course={course} />
             </Grid>
           )}
 
           <Grid xs={12} md={7} lg={8}>
-            <CourseDetailsSummary course={_mockCourse} />
+            <CourseDetailsSummary course={course} />
 
-            <Stack direction="row" flexWrap="wrap" sx={{ mt: 5 }}>
-              <Typography variant="subtitle2" sx={{ mt: 0.75, mr: 1.5 }}>
-                Share:
-              </Typography>
-
-              <Stack direction="row" alignItems="center" flexWrap="wrap">
-                {_socials.map((social) => (
-                  <Button
-                    key={social.value}
-                    size="small"
-                    variant="outlined"
-                    startIcon={<Iconify icon={social.icon} />}
-                    sx={{
-                      m: 0.5,
-                      flexShrink: 0,
-                      color: social.color,
-                      borderColor: social.color,
-                      "&:hover": {
-                        borderColor: social.color,
-                        bgcolor: alpha(social.color, 0.08),
-                      },
-                    }}
-                  >
-                    {social.label}
-                  </Button>
-                ))}
+            {course.githubUrl && (
+              <Stack direction="row" flexWrap="wrap" sx={{ mt: 5 }}>
+                <Repository githubUrl={course.githubUrl} />
               </Stack>
-            </Stack>
+            )}
 
             <Divider sx={{ my: 5 }} />
 
-            <CourseDetailsTeachersInfo teachers={_mockCourse.teachers} />
+            {course && <CourseDetailsTeachersInfo teachers={course.teachers} />}
           </Grid>
 
           <Grid xs={12} md={5} lg={4}>
             <Stack spacing={5}>
-              {mdUp && <CourseDetailsInfo course={_mockCourse} />}
+              {mdUp && <CourseDetailsInfo course={course} />}
 
               <Advertisement
                 advertisement={{
-                  title: "Advertisement",
-                  description: "Duis leo. Donec orci lectus, aliquam ut, faucibus non",
-                  imageUrl: _mock.image.course(7),
-                  path: "",
+                  title: "Wejdź do IT",
+                  description: "Sprawdź nasze kursy przygotowujące do pracy programisty",
+                  imageUrl: "/assets/images/course/course_8.jpg",
+                  path: "/assets/images/course/course_8.jpg",
                 }}
               />
             </Stack>
@@ -125,11 +99,17 @@ export default function CourseView() {
 
       {mdUp && <Divider />}
 
-      <ReviewElearning />
+      <Review
+        courseId={id}
+        ratingNumber={course.ratingNumber}
+        reviewNumber={course.totalReviews}
+        lessons={course.lessons ?? []}
+        teachers={course.teachers ?? []}
+      />
 
-      <CourseListSimilar courses={courseSimilar} />
+      {similarCourses?.length >= 3 && <CourseListSimilar courses={similarCourses} />}
 
-      <ElearningNewsletter />
+      <Newsletter />
     </>
   );
 }

@@ -5,6 +5,7 @@ from course.serializers import (
     CourseGetSerializer,
     CourseSerializer,
     BestCourseSerializer,
+    LessonDetailsSerializer,
     TechnologyListSerializer,
     CoursePriceHistorySerializer,
     LessonPriceHistorySerializer,
@@ -16,7 +17,13 @@ from course.filters import (
     TechnologyFilter,
     get_rating,
 )
-from course.models import Course, Technology, CoursePriceHistory, LessonPriceHistory
+from course.models import (
+    Course,
+    Lesson,
+    Technology,
+    CoursePriceHistory,
+    LessonPriceHistory,
+)
 from random import sample
 
 
@@ -78,6 +85,20 @@ class BestCourseViewSet(ModelViewSet):
         ids = queryset.values_list("id", flat=True)
         random_ids = sample(list(ids), min(len(ids), 10))
         return queryset.filter(id__in=random_ids)
+
+
+class LessonViewSet(ModelViewSet):
+    http_method_names = ["get"]
+    queryset = Lesson.objects.all()
+    serializer_class = LessonDetailsSerializer
+    permission_classes = [AllowAny]
+
+    def get_permissions(self):
+        if self.action == "list":
+            permission_classes = [IsAuthenticated & IsAdminUser]
+        else:
+            permission_classes = self.permission_classes
+        return [permission() for permission in permission_classes]
 
 
 class CoursePriceHistoryViewSet(ModelViewSet):

@@ -4,7 +4,6 @@ from django.db.models import (
     ForeignKey,
     TextField,
     DecimalField,
-    DateTimeField,
     CASCADE,
     Index,
 )
