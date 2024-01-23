@@ -55,4 +55,5 @@ export type ICourseProps = {
   shareLinks?: ISocialLinks;
   lessons?: ICourseLessonProp[];
   teachers: ICourseTeacherProp[];
+  githubUrl?: string;
 };

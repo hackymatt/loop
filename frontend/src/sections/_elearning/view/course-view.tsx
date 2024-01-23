@@ -4,13 +4,14 @@ import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
+import { Button, Typography } from "@mui/material";
 
 import { useResponsive } from "src/hooks/use-responsive";
 
-import { _mock } from "src/_mock";
 import { useCourse } from "src/api/course/course";
 import { useBestCourses } from "src/api/courses/best-courses";
 
+import Iconify from "src/components/iconify";
 import { SplashScreen } from "src/components/loading-screen";
 
 import Review from "src/sections/review/elearning/review";
@@ -69,6 +70,25 @@ export default function CourseView({ id }: { id: string }) {
           <Grid xs={12} md={7} lg={8}>
             <CourseDetailsSummary course={course} />
 
+            <Stack direction="row" flexWrap="wrap" sx={{ mt: 5 }}>
+              <Typography variant="subtitle2" sx={{ mt: 0.5, mr: 1.5 }}>
+                Repozytorium:
+              </Typography>
+
+              <Stack direction="row" alignItems="center" flexWrap="wrap">
+                <Button
+                  size="small"
+                  variant="outlined"
+                  component="a"
+                  href={course.githubUrl}
+                  target="_blank"
+                  startIcon={<Iconify icon="mdi:github" />}
+                >
+                  GitHub
+                </Button>
+              </Stack>
+            </Stack>
+
             <Divider sx={{ my: 5 }} />
 
             {course && <CourseDetailsTeachersInfo teachers={course.teachers} />}
@@ -82,7 +102,7 @@ export default function CourseView({ id }: { id: string }) {
                 advertisement={{
                   title: "Wejdź do IT",
                   description: "Sprawdź nasze kursy przygotowujące do pracy programisty",
-                  imageUrl: _mock.image.course(7),
+                  imageUrl: "/assets/images/course/course_8.jpg",
                   path: "/assets/images/course/course_8.jpg",
                 }}
               />

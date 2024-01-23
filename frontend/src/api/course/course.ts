@@ -62,6 +62,7 @@ type ICourse = {
   skills: ISkill[];
   topics: ITopic[];
   lessons: ILesson[];
+  github_url: string;
 };
 
 export const courseQuery = (id: string) => {
@@ -92,6 +93,7 @@ export const courseQuery = (id: string) => {
         skills,
         topics,
         lessons,
+        github_url,
       } = data;
       const { name } = technology;
 
@@ -134,6 +136,7 @@ export const courseQuery = (id: string) => {
         skills: skills.map((skill: ISkill) => skill.name),
         learnList: topics.map((topic: ITopic) => topic.name),
         lessons,
+        githubUrl: github_url,
       };
     } catch (error) {
       if (error.response && (error.response.status === 400 || error.response.status === 404)) {

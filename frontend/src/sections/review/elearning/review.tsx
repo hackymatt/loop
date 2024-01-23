@@ -59,37 +59,39 @@ export default function Review({ courseId, ratingNumber, reviewNumber, lessons, 
 
   return (
     <>
-      <Container sx={{ overflow: "hidden", pt: 10, pb: 10 }}>
-        <Grid xs={12} md={7} lg={8} sx={{ maxWidth: 750 }}>
-          <ReviewToolbar
-            lesson={query.lesson_id ?? ""}
-            lessonOptions={lessons}
-            teacher={query.lecturer_id ?? ""}
-            teacherOptions={teachers}
-            sort={query.sort_by}
-            onChangeLesson={(value) => handleChange("lesson_id", value)}
-            onChangeTeacher={(value) => handleChange("lecturer_id", value)}
-            onChangeSort={(event) => handleChange("sort_by", event.target.value)}
-          />
-        </Grid>
-
-        <Grid container spacing={8} direction="row-reverse">
-          <Grid xs={12} md={5} lg={4}>
-            <ReviewSummary
-              ratingNumber={ratingNumber}
-              reviewNumber={reviewNumber}
-              rating={query.rating ?? ""}
-              reviewStatistics={reviewStatistics}
-              onRatingChange={(value) => handleChange("rating", value)}
-              onOpenForm={formOpen.onTrue}
+      {reviewNumber > 0 && (
+        <Container sx={{ overflow: "hidden", pt: 10, pb: 10 }}>
+          <Grid xs={12} md={7} lg={8} sx={{ maxWidth: 750 }}>
+            <ReviewToolbar
+              lesson={query.lesson_id ?? ""}
+              lessonOptions={lessons}
+              teacher={query.lecturer_id ?? ""}
+              teacherOptions={teachers}
+              sort={query.sort_by}
+              onChangeLesson={(value) => handleChange("lesson_id", value)}
+              onChangeTeacher={(value) => handleChange("lecturer_id", value)}
+              onChangeSort={(event) => handleChange("sort_by", event.target.value)}
             />
           </Grid>
 
-          <Grid xs={12} md={7} lg={8}>
-            <ReviewList reviews={reviews} pagesCount={pagesCount} />
+          <Grid container spacing={8} direction="row-reverse">
+            <Grid xs={12} md={5} lg={4}>
+              <ReviewSummary
+                ratingNumber={ratingNumber}
+                reviewNumber={reviewNumber}
+                rating={query.rating ?? ""}
+                reviewStatistics={reviewStatistics}
+                onRatingChange={(value) => handleChange("rating", value)}
+                onOpenForm={formOpen.onTrue}
+              />
+            </Grid>
+
+            <Grid xs={12} md={7} lg={8}>
+              <ReviewList reviews={reviews} pagesCount={pagesCount} />
+            </Grid>
           </Grid>
-        </Grid>
-      </Container>
+        </Container>
+      )}
 
       <ReviewNewForm open={formOpen.value} onClose={formOpen.onFalse} />
     </>

@@ -43,7 +43,7 @@ export const reviewsQuery = (query?: IQueryParams) => {
         return {
           id,
           name: studentFullName,
-          rating,
+          rating: parseFloat(rating),
           createdAt: created_at,
           gender: studentGender,
           message: review,
