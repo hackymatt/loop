@@ -10,13 +10,12 @@ import { fShortenNumber } from "src/utils/format-number";
 
 import Iconify from "src/components/iconify";
 
+import { IReviewStatistic } from "src/types/review";
+
 // ----------------------------------------------------------------------
 
 type Props = {
-  rating: {
-    value: string;
-    number: number;
-  };
+  rating: IReviewStatistic;
   index: number;
   totals: number;
   selected: boolean;
@@ -25,7 +24,7 @@ type Props = {
 export default function ReviewProgressItem({ rating, totals, index, selected }: Props) {
   return (
     <FormControlLabel
-      value={rating.value}
+      value={rating.rating}
       control={<Radio sx={{ display: "none" }} />}
       label={
         <Stack alignItems="center" direction="row">
@@ -35,18 +34,18 @@ export default function ReviewProgressItem({ rating, totals, index, selected }: 
                 width: 12,
                 typography: "subtitle1",
                 textAlign: "center",
-                mr: 0.5,
+                mr: 2,
               }}
             >
-              {5 - index}
+              {rating.rating.length === 1 ? `${rating.rating}.0` : rating.rating}
             </Box>
-            <Iconify width={16} icon="carbon:star" />
+            <Iconify width={16} icon="carbon:star" sx={{ mb: 0.5 }} />
           </Stack>
 
           <LinearProgress
             color="inherit"
             variant="determinate"
-            value={(rating.number / totals) * 100}
+            value={totals !== 0 ? (rating.count / totals) * 100 : 0}
             sx={{
               mx: 2,
               width: 1,
@@ -68,7 +67,7 @@ export default function ReviewProgressItem({ rating, totals, index, selected }: 
               color: "text.disabled",
             }}
           >
-            {fShortenNumber(rating.number)}
+            {rating.count === 0 ? 0 : fShortenNumber(rating.count)}
           </Typography>
         </Stack>
       }

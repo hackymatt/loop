@@ -11,7 +11,13 @@ import { fShortenNumber } from "src/utils/format-number";
 
 import Iconify from "src/components/iconify";
 
+import { IReviewStatistic } from "src/types/review";
+
 import ReviewProgress from "../common/review-progress";
+
+// ----------------------------------------------------------------------
+
+const REVIEWS_RATINGS = ["5", "4.5", "4", "3.5", "3", "2.5", "2", "1.5", "1"] as const;
 
 // ----------------------------------------------------------------------
 
@@ -19,6 +25,7 @@ type Props = {
   reviewNumber: number;
   ratingNumber: number;
   rating: string;
+  reviewStatistics: IReviewStatistic[];
   onRatingChange: (value: string) => void;
   onOpenForm: VoidFunction;
 };
@@ -27,9 +34,17 @@ export default function ReviewSummary({
   reviewNumber,
   ratingNumber,
   rating,
+  reviewStatistics,
   onRatingChange,
   onOpenForm,
 }: Props) {
+  const reviewOptions = REVIEWS_RATINGS.map(
+    (r: string) =>
+      reviewStatistics?.find(
+        (reviewStatistic: IReviewStatistic) => reviewStatistic.rating === r,
+      ) ?? { rating: r, count: 0 },
+  );
+
   return (
     <Paper variant="outlined" sx={{ p: 4, pr: 3, borderRadius: 2 }}>
       <Stack spacing={3}>
@@ -48,7 +63,11 @@ export default function ReviewSummary({
         </Stack>
 
         <RadioGroup>
-          <ReviewProgress value={rating} onChange={(value) => onRatingChange(value)} />
+          <ReviewProgress
+            value={rating}
+            options={reviewOptions}
+            onChange={(value) => onRatingChange(value)}
+          />
           {rating && (
             <Button
               variant="text"

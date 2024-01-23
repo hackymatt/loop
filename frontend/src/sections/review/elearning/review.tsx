@@ -6,6 +6,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { useBoolean } from "src/hooks/use-boolean";
 
 import { useReviews, useReviewsPageCount } from "src/api/reviews/reviews";
+import { useReviewsStatistics } from "src/api/reviews/reviews-statistics";
 
 import { SplashScreen } from "src/components/loading-screen";
 
@@ -38,8 +39,10 @@ export default function Review({ courseId, ratingNumber, reviewNumber, lessons, 
 
   const { data: pagesCount, isLoading: isLoadingReviewsPageCount } = useReviewsPageCount(query);
   const { data: reviews, isLoading: isLoadingReviews } = useReviews(query);
+  const { data: reviewStatistics, isLoading: isLoadingReviewsStatistics } =
+    useReviewsStatistics(query);
 
-  const isLoading = isLoadingReviewsPageCount || isLoadingReviews;
+  const isLoading = isLoadingReviewsPageCount || isLoadingReviews || isLoadingReviewsStatistics;
 
   const formOpen = useBoolean();
 
@@ -76,6 +79,7 @@ export default function Review({ courseId, ratingNumber, reviewNumber, lessons, 
               ratingNumber={ratingNumber}
               reviewNumber={reviewNumber}
               rating={query.rating ?? ""}
+              reviewStatistics={reviewStatistics}
               onRatingChange={(value) => handleChange("rating", value)}
               onOpenForm={formOpen.onTrue}
             />

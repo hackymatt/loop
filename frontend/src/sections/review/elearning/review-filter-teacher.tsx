@@ -1,11 +1,11 @@
 import {
+  Stack,
+  Avatar,
   TextField,
+  Typography,
   Autocomplete,
   checkboxClasses,
   autocompleteClasses,
-  Avatar,
-  Stack,
-  Typography,
 } from "@mui/material";
 
 import { ICourseTeacherProp } from "src/types/course";
@@ -37,7 +37,6 @@ export default function FilterTeacher({ value, options, onChange }: Props) {
       limitTags={2}
       fullWidth
       size="small"
-      componentsProps={{ popper: { style: { width: "fit-content" } } }}
       options={modifiedOptions}
       getOptionLabel={(option) => option.label}
       value={currentValue}

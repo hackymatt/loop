@@ -27,7 +27,6 @@ export default function FilterLesson({ value, options, onChange }: Props) {
       limitTags={2}
       fullWidth
       size="small"
-      componentsProps={{ popper: { style: { width: "fit-content" } } }}
       options={modifiedOptions}
       getOptionLabel={(option) => option.label}
       value={currentValue}

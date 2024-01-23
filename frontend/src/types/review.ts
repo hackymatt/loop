@@ -30,3 +30,8 @@ export type IReviewItemProp = {
   teacherGender?: string;
   teacherAvatarUrl?: string;
 };
+
+export type IReviewStatistic = {
+  rating: string;
+  count: number;
+};
