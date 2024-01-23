@@ -4,11 +4,13 @@ from review.permissions import IsUserReview
 from review.serializers import (
     ReviewSerializer,
     ReviewGetSerializer,
+    ReviewStatsSerializer,
     BestReviewSerializer,
 )
 from review.filters import ReviewFilter
 from review.models import Review
 from random import sample
+from django.db.models import Count
 
 
 class ReviewViewSet(ModelViewSet):
@@ -31,6 +33,21 @@ class ReviewViewSet(ModelViewSet):
         else:
             permission_classes = self.permission_classes
         return [permission() for permission in permission_classes]
+
+
+class ReviewStatsViewSet(ModelViewSet):
+    http_method_names = ["get"]
+    queryset = Review.objects.all()
+    serializer_class = ReviewStatsSerializer
+    filterset_class = ReviewFilter
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        return (
+            self.queryset.values("rating")
+            .annotate(count=Count("rating"))
+            .order_by("rating")
+        )
 
 
 class BestReviewViewSet(ModelViewSet):

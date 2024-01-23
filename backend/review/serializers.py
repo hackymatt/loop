@@ -1,6 +1,7 @@
 from rest_framework.serializers import (
     ModelSerializer,
     CharField,
+    IntegerField,
     EmailField,
     ImageField,
     SerializerMethodField,
@@ -62,10 +63,29 @@ class ReviewGetSerializer(ModelSerializer):
         )
 
 
+class ReviewStatsSerializer(ModelSerializer):
+    count = IntegerField()
+
+    class Meta:
+        model = Review
+        fields = (
+            "rating",
+            "count",
+        )
+
+
 class ReviewSerializer(ModelSerializer):
     class Meta:
         model = Review
         exclude = ("student",)
+
+    def validate_rating(self, rating):
+        if not (rating * 10) % 5 == 0:
+            raise ValidationError(
+                {"rating": "Ocena musi być całkowita lub połowiczna."}
+            )
+
+        return rating
 
     def validate_lesson(self, lesson):
         request_type = self.context["request"].method
