@@ -39,10 +39,7 @@ class ProfilePasswordResetViewSet(ModelViewSet):
 
         mailer = Mailer()
 
-        code_parts = {
-            f"code_{i + 1}": code[i]
-            for i in range(0, len(code))
-        }
+        code_parts = {f"code_{i + 1}": code[i] for i in range(0, len(code))}
 
         data = {
             **{
