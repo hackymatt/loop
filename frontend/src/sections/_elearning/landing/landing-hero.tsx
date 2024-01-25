@@ -1,4 +1,4 @@
-import { polishPlurals } from "polish-plurals";
+import CountUp from "react-countup";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -31,17 +31,17 @@ export default function LandingHero() {
   const statsSummary = [
     {
       value: Math.floor(stats?.students_count),
-      label: polishPlurals("Student", "Studentów", "Studentów", stats?.students_count),
+      label: "Studentów",
       color: "warning",
     },
     {
       value: Math.floor(stats?.course_count),
-      label: polishPlurals("Kurs", "Kursy", "Kursów", stats?.course_count),
+      label: "Kursów",
       color: "error",
     },
     {
       value: Math.floor(stats?.lecturers_count),
-      label: polishPlurals("Instruktor", "Instruktorów", "Instruktorów", stats?.lecturers_count),
+      label: "Instruktorów",
       color: "success",
     },
   ] as const;
@@ -124,7 +124,12 @@ export default function LandingHero() {
                         }}
                       />
                       <Typography variant="h3">
-                        {item.value > 1000 ? `${fShortenNumber(item.value)}+` : item.value}{" "}
+                        <CountUp
+                          start={item.value / 2}
+                          end={item.value}
+                          formattingFn={(newValue: number) => fShortenNumber(newValue)}
+                        />
+                        +
                       </Typography>
                       <Typography variant="body2" sx={{ color: "text.secondary" }}>
                         {item.label}

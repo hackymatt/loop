@@ -6,35 +6,37 @@ import Typography from "@mui/material/Typography";
 
 import { fShortenNumber } from "src/utils/format-number";
 
+import { useStatistics } from "src/api/statistics/statistics";
+
 import Image from "src/components/image";
 import CountUp from "src/components/count-up";
 
 // ----------------------------------------------------------------------
 
-const SUMMARY = [
-  {
-    name: "Learners",
-    number: 14000,
-    description:
-      "Ut varius tincidunt libero. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem.",
-  },
-  {
-    name: "Courses",
-    number: 1050,
-    description:
-      "Ut varius tincidunt libero. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem.",
-  },
-  {
-    name: "Graduates",
-    number: 52000,
-    description:
-      "Ut varius tincidunt libero. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem.",
-  },
-];
+export default function About() {
+  const { data: stats } = useStatistics();
 
-// ----------------------------------------------------------------------
+  const statsSummary = [
+    {
+      number: Math.floor(stats?.students_count),
+      name: "Studentów",
+      description:
+        "Studenci naszej szkoły to dynamiczna społeczność entuzjastów technologii, zdeterminowanych rozwijać swoje umiejętności programistyczne i tworzyć innowacyjne rozwiązania.",
+    },
+    {
+      number: Math.floor(stats?.course_count),
+      name: "Kursów",
+      description:
+        "Kursy oferowane przez naszą szkołę to solidna droga do zdobycia praktycznych umiejętności w dynamicznie rozwijającej się dziedzinie, prowadzone przez doświadczonych instruktorów.",
+    },
+    {
+      number: Math.floor(stats?.lecturers_count),
+      name: "Instruktorów",
+      description:
+        "Instruktorzy w naszej szkole to pasjonaci z obszaru technologii, oferujący wszechstronną wiedzę oraz inspirujące podejście, które umożliwiają studentom pełne zaangażowanie w proces nauki.",
+    },
+  ] as const;
 
-export default function ElearningAbout() {
   return (
     <Container
       sx={{
@@ -51,19 +53,21 @@ export default function ElearningAbout() {
       >
         <Grid xs={12} md={6}>
           <Typography variant="overline" sx={{ color: "primary.main" }}>
-            Nullam accumsan lorem in dui.
+            Rozwijamy talenty, nie liczby.
+          </Typography>
+
+          <Typography variant="h3" sx={{ mb: 3 }}>
+            Tworzymy przyszłość kodowania - gdzie dostępność spotyka jakość, a liczby świadczą o
+            naszym sukcesie!
           </Typography>
         </Grid>
 
-        <Grid xs={12} md={6}>
-          <Typography variant="h3" sx={{ mb: 3 }}>
-            Effective Forms Advertising Internet Web Site
-          </Typography>
-
+        <Grid xs={12} md={6} display="flex" alignItems="center">
           <Typography sx={{ color: "text.secondary" }}>
-            Over 92% of computers are infected with Adware and spyware. Such software is rarely
-            accompanied by uninstall utility and even when it is it almost always leaves broken
-            Windows
+            Nasze statystyki to nie tylko liczby zadowolonych studentów, ale pasjonaci technologii,
+            którzy odkrywają świat programowania z wsparciem doświadczonych instruktorów. Nasze
+            kursy są nie tylko lekcjami, lecz też pełnym doświadczeniem, które kształtuje
+            umiejętności i inspiruje do tworzenia innowacyjnych rozwiązań.
           </Typography>
         </Grid>
       </Grid>
@@ -73,9 +77,6 @@ export default function ElearningAbout() {
         spacing={8}
         direction={{ md: "row-reverse" }}
         justifyContent={{ md: "space-between" }}
-        sx={{
-          pt: { xs: 8, md: 10 },
-        }}
       >
         <Grid xs={12} md={6} lg={6}>
           <Image
@@ -94,8 +95,8 @@ export default function ElearningAbout() {
             textAlign: { xs: "center", md: "left" },
           }}
         >
-          <Stack spacing={{ xs: 5, md: 10 }}>
-            {SUMMARY.map((value) => (
+          <Stack spacing={{ xs: 2, md: 2 }}>
+            {statsSummary.map((value) => (
               <Box key={value.name}>
                 <Typography variant="h4" sx={{ color: "text.disabled", opacity: 0.48 }}>
                   {value.name}

@@ -1,36 +1,34 @@
 "use client";
 
-import { _members, _coursePosts, _brandsColor, _testimonials } from "src/_mock";
+import { useBestReviews } from "src/api/reviews/best-reviews";
+import { useBestLecturers } from "src/api/lecturers/best-lecturers";
 
+import About from "../about/about";
+import Newsletter from "../newsletter";
 import TeamAbout from "../team/team-about";
-import ElearningNewsletter from "../newsletter";
+import AboutHero from "../about/about-hero";
 import Testimonial from "../testimonial/testimonial";
-import ElearningAbout from "../about/elearning-about";
-import ElearningOurClients from "../elearning-our-clients";
-import ElearningAboutHero from "../about/elearning-about-hero";
-import ElearningAboutCoreValues from "../about/elearning-about-core-values";
-import ElearningLatestPosts from "../../blog/elearning/elearning-latest-posts";
+import AboutCoreValues from "../about/about-core-values";
 
 // ----------------------------------------------------------------------
 
 export default function AboutView() {
+  const { data: bestReviews } = useBestReviews();
+  const { data: bestLecturers } = useBestLecturers();
+
   return (
     <>
-      <ElearningAboutHero />
+      <AboutHero />
 
-      <ElearningAbout />
+      <About />
 
-      <ElearningAboutCoreValues />
+      <AboutCoreValues />
 
-      <TeamAbout members={_members} />
+      {bestLecturers?.length >= 4 && <TeamAbout members={bestLecturers} />}
 
-      <ElearningOurClients brands={_brandsColor} />
+      {bestReviews?.length >= 5 && <Testimonial testimonials={bestReviews} />}
 
-      <Testimonial testimonials={_testimonials} />
-
-      <ElearningLatestPosts posts={_coursePosts.slice(0, 4)} />
-
-      <ElearningNewsletter />
+      <Newsletter />
     </>
   );
 }
