@@ -93,7 +93,7 @@ export default function LandingHero() {
                   color="inherit"
                   size="large"
                   variant="contained"
-                  href={paths.eLearning.courses}
+                  href={paths.courses}
                   endIcon={<Iconify icon="carbon:chevron-right" />}
                 >
                   Rozpocznij naukę

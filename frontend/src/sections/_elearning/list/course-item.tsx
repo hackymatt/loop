@@ -130,7 +130,7 @@ export default function CourseItem({ course, vertical }: Props) {
           </Stack>
 
           <Stack spacing={1}>
-            <Link component={RouterLink} href={`${paths.eLearning.course}/${id}`} color="inherit">
+            <Link component={RouterLink} href={`${paths.course}/${id}`} color="inherit">
               <TextMaxLine variant="h6" line={1}>
                 {slug}
               </TextMaxLine>
