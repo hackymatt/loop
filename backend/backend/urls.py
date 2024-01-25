@@ -33,6 +33,7 @@ from purchase.views import PurchaseViewSet
 from teaching.views import TeachingViewSet
 from reservation.views import ReservationViewSet
 from csrf.views import CsrfViewSet
+from contact.views import ContactViewSet
 
 
 router = DefaultRouter(trailing_slash=False)
@@ -83,4 +84,5 @@ urlpatterns = [
     path("stats", StatsViewSet.as_view({"get": "get_stats"})),
     path("csrf", CsrfViewSet.as_view({"get": "get_csrf"})),
     path("newsletter-unsubscribe/<str:uuid>", NewsletterUnsubscribeViewSet.unsubscribe),
+    path("contact", ContactViewSet.as_view({"post": "contact"})),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
