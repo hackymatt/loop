@@ -7,13 +7,12 @@ from rest_framework.serializers import (
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.models import User
 from profile.models import Profile
-from profile.verify.serializers import (
-    ProfileVerificationCodeSerializer,
-)
 from newsletter.models import Newsletter
 from datetime import datetime
 from django.utils.timezone import make_aware
 from profile.validators import validate_password_match, validate_password_strength
+from profile.verify.utils import VerificationCode
+from mailer.mailer import Mailer
 
 
 class ProfileRegisterSerializer(ModelSerializer):
@@ -67,14 +66,31 @@ class ProfileRegisterSerializer(ModelSerializer):
         user.set_password(password)
         user.save()
 
+        verification_code = VerificationCode()
+        code = verification_code.generate()
+
         profile = Profile.objects.create(
             user=user,
-            verification_code=ProfileVerificationCodeSerializer.generate(),
+            verification_code=code,
             verification_code_created_at=make_aware(datetime.now()),
         )
 
-        ProfileVerificationCodeSerializer.send(
-            profile, "verification_email.html", "Aktywuj swoje konto."
+        mailer = Mailer()
+
+        code_parts = {f"code_{i + 1}": code[i] for i in range(0, len(code))}
+
+        data = {
+            **{
+                "valid_for": int(verification_code.timeout() / 3600),
+            },
+            **code_parts,
+        }
+
+        mailer.send(
+            email_template="verification_email.html",
+            to=[user.email],
+            subject="Aktywuj swoje konto.",
+            data=data,
         )
 
         newsletter, created = Newsletter.objects.get_or_create(email=email)
