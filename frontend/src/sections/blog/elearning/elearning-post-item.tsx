@@ -36,7 +36,7 @@ export default function ElearningPostItem({ post }: Props) {
         </Stack>
 
         <Stack spacing={1}>
-          <Link component={RouterLink} href={paths.eLearning.post} color="inherit">
+          <Link component={RouterLink} href={paths.post} color="inherit">
             <TextMaxLine variant="h6" persistent>
               {post.title}
             </TextMaxLine>

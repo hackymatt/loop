@@ -27,7 +27,7 @@ export default function CourseListSimilar({ courses }: Props) {
   const viewAllBtn = (
     <Button
       component={RouterLink}
-      href={paths.eLearning.courses}
+      href={paths.courses}
       color="inherit"
       endIcon={<Iconify icon="carbon:chevron-right" />}
     >

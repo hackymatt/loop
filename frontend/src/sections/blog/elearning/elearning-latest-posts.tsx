@@ -28,7 +28,7 @@ export default function ElearningLatestPosts({ posts }: Props) {
   const viewAllBtn = (
     <Button
       component={RouterLink}
-      href={paths.eLearning.posts}
+      href={paths.posts}
       color="inherit"
       endIcon={<Iconify icon="carbon:chevron-right" />}
     >

@@ -49,7 +49,7 @@ export default function ElearningFeaturedPost({ post }: Props) {
           >
             <PostTimeBlock createdAt={fDate(post.createdAt)} duration={post.duration} />
 
-            <Link component={RouterLink} href={paths.eLearning.post} color="inherit" variant="h3">
+            <Link component={RouterLink} href={paths.post} color="inherit" variant="h3">
               {post.title}
             </Link>
 
