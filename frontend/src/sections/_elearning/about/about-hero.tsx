@@ -4,8 +4,9 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 
-import Image from "src/components/image";
 import { paths } from "src/routes/paths";
+
+import Image from "src/components/image";
 
 // ----------------------------------------------------------------------
 
