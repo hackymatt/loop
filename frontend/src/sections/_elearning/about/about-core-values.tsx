@@ -10,30 +10,34 @@ import Iconify from "src/components/iconify";
 
 const CORE_VALUES = [
   {
-    title: "Customer Satisfaction",
-    description: "Aenean urna dictum adipiscing nec, cras quisque.",
-    icon: "carbon:3d-curve-auto-colon",
+    title: "Innowacyjność",
+    description:
+      "Nasza szkoła kładzie nacisk na stałe dostosowywanie programów nauczania do najnowszych trendów i technologii, umożliwiając studentom naukę zgodną z aktualnymi wymaganiami rynku pracy.",
+    icon: "streamline:ai-technology-spark",
   },
   {
-    title: "Transparency",
-    description: "Aenean urna dictum adipiscing nec, cras quisque.",
-    icon: "carbon:chat-bot",
+    title: "Otwartość",
+    description:
+      "Nasza szkoła kładzie nacisk na zapewnienie przystępności cenowej kursów, aby umożliwić szerokiemu gronu uczniów korzystanie z wysokiej jakości edukacji bez dużego obciążenia finansowego.",
+    icon: "nimbus:money",
   },
   {
-    title: "Reputation",
-    description: "Aenean urna dictum adipiscing nec, cras quisque.",
-    icon: "carbon:airport-location",
+    title: "Elastyczność",
+    description:
+      "Zdajemy sobie sprawę, że nasi studenci mają różnorodne zobowiązania, dlatego oferujemy elastyczność w harmonogramie kursów, aby umożliwić dostosowanie nauki do indywidualnych potrzeb i czasu każdego uczestnika.",
+    icon: "cil:calendar",
   },
   {
-    title: "Cooperation",
-    description: "Aenean urna dictum adipiscing nec, cras quisque.",
-    icon: "carbon:event",
+    title: "Dostępność",
+    description:
+      "Zapewniamy dostęp do wysokiej jakości edukacji programowania z dowolnego miejsca na świecie, umożliwiając elastyczność i swobodę nauki online.",
+    icon: "wpf:worldwide-location",
   },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function ElearningAboutCoreValues() {
+export default function AboutCoreValues() {
   return (
     <Box
       sx={{
@@ -47,17 +51,17 @@ export default function ElearningAboutCoreValues() {
           spacing={3}
           direction={{ xs: "column", md: "row" }}
           justifyContent={{ md: "space-between" }}
+          alignItems="center"
           sx={{
             mb: { xs: 8, md: 15 },
             textAlign: { xs: "center", md: "left" },
           }}
         >
-          <Typography variant="h2">Core Values</Typography>
+          <Typography variant="h2">Główne wartości</Typography>
 
           <Typography sx={{ color: "text.secondary", maxWidth: { md: 540 } }}>
-            Etiam ultricies nisi vel augue. Suspendisse potenti. Sed mollis, eros et ultrices
-            tempus, mauris ipsum aliquam libero, non adipiscing dolor urna a orci. Phasellus viverra
-            nulla ut metus varius laoreet.
+            W naszej szkole kierujemy się czterema kluczowymi wartościami, które definiują naszą
+            misję i stanowią fundament naszych działań.
           </Typography>
         </Stack>
 

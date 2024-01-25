@@ -53,7 +53,7 @@ export default function LandingIntroduce() {
             Szkoła programowania dla każdego
           </Typography>
 
-          <Stack sx={{ gap: 2 }}>
+          <Stack sx={{ gap: 2, textAlign: "justify" }}>
             <Typography sx={{ color: "text.secondary" }}>
               W{" "}
               <Typography

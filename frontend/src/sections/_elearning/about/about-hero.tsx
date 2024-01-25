@@ -5,10 +5,11 @@ import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 
 import Image from "src/components/image";
+import { paths } from "src/routes/paths";
 
 // ----------------------------------------------------------------------
 
-export default function ElearningAboutHero() {
+export default function AboutHero() {
   return (
     <Box
       sx={{
@@ -28,15 +29,25 @@ export default function ElearningAboutHero() {
               textAlign: { xs: "center", md: "left" },
             }}
           >
-            <Typography variant="h1">Online Courses</Typography>
+            <Typography variant="h1">Kursy online</Typography>
 
             <Typography sx={{ mt: 3, mb: 6 }}>
-              Nunc nulla. Ut leo. Pellentesque commodo eros a enim. Nunc egestas, augue at
-              pellentesque laoreet, felis eros vehicula leo, at malesuada velit leo quis pede.
+              Nasza szkoła oferuje wysokiej jakości kursy programowania, które są dostosowane do
+              różnych poziomów umiejętności - od początkujących po zaawansowanych programistów. Nasi
+              doświadczeni instruktorzy zapewniają praktyczną wiedzę z obszaru programowania,
+              umożliwiając studentom zdobycie niezbędnych umiejętności do skutecznego rozwoju w
+              dziedzinie technologii. Dodatkowo, nasze kursy są elastyczne i dostępne w trybie
+              online, aby sprostać potrzebom każdego zainteresowanego nauką programowania.
             </Typography>
 
-            <Button variant="contained" size="large" color="primary">
-              Browse Courses
+            <Button
+              variant="contained"
+              size="large"
+              color="primary"
+              href={paths.eLearning.courses}
+              sx={{ textTransform: "none" }}
+            >
+              Przeglądaj kursy
             </Button>
           </Grid>
 
