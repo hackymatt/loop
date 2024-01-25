@@ -9,6 +9,8 @@ from profile.models import Profile
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
+from profile.verify.utils import VerificationCode
+from mailer.mailer import Mailer
 
 
 class ProfileVerifyViewSet(ModelViewSet):
@@ -36,11 +38,12 @@ class ProfileVerifyViewSet(ModelViewSet):
             )
 
         profile = Profile.objects.get(user=user)
+        verification_code = VerificationCode()
 
         if make_aware(
             datetime.now()
         ) - profile.verification_code_created_at > timedelta(
-            seconds=ProfileVerifySerializer.verification_code_timeout()
+            seconds=verification_code.timeout()
         ):
             return Response(
                 status=status.HTTP_400_BAD_REQUEST, data={"code": "Kod wygasł."}
@@ -66,8 +69,7 @@ class ProfileVerificationCodeViewSet(ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileVerificationCodeSerializer
 
-    @staticmethod
-    def regenerate(request):
+    def create(self, request, *args, **kwargs):
         data = request.data
         email = data["email"]
 
@@ -80,15 +82,32 @@ class ProfileVerificationCodeViewSet(ModelViewSet):
         user = User.objects.get(email=email)
         profile = Profile.objects.get(user=user)
 
-        profile.verification_code = ProfileVerificationCodeSerializer.generate()
+        verification_code = VerificationCode()
+        code = verification_code.generate()
+
+        profile.verification_code = code
         profile.verification_code_created_at = make_aware(datetime.now())
         profile.save()
 
-        ProfileVerificationCodeSerializer.send(
-            profile, "verification_email.html", "Aktywuj swoje konto."
+        mailer = Mailer()
+
+        code_parts = {
+            f"code_{i + 1}": code[i]
+            for i in range(0, len(code))
+        }
+
+        data = {
+            **{
+                "valid_for": int(verification_code.timeout() / 3600),
+            },
+            **code_parts,
+        }
+
+        mailer.send(
+            email_template="verification_email.html",
+            to=[user.email],
+            subject="Aktywuj swoje konto.",
+            data=data,
         )
 
         return Response(status=status.HTTP_200_OK, data={"code": "Kod wysłany."})
-
-    def create(self, request, *args, **kwargs):
-        return self.regenerate(request)

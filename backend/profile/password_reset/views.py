@@ -4,9 +4,10 @@ from rest_framework import status
 from profile.password_reset.serializers import ProfilePasswordResetSerializer
 from django.contrib.auth.models import User
 from profile.models import Profile
-from profile.verify.serializers import ProfileVerificationCodeSerializer
 from datetime import datetime
 from django.utils.timezone import make_aware
+from profile.verify.utils import VerificationCode
+from mailer.mailer import Mailer
 
 
 class ProfilePasswordResetViewSet(ModelViewSet):
@@ -26,7 +27,8 @@ class ProfilePasswordResetViewSet(ModelViewSet):
 
         user = User.objects.get(email=email)
 
-        code = ProfileVerificationCodeSerializer.generate()
+        verification_code = VerificationCode()
+        code = verification_code.generate()
         user.set_password(code)
         user.save()
 
@@ -35,8 +37,25 @@ class ProfilePasswordResetViewSet(ModelViewSet):
         profile.verification_code_created_at = make_aware(datetime.now())
         profile.save()
 
-        ProfileVerificationCodeSerializer.send(
-            profile, "password_reset_email.html", "Twoje tymczasowe hasło."
+        mailer = Mailer()
+
+        code_parts = {
+            f"code_{i + 1}": code[i]
+            for i in range(0, len(code))
+        }
+
+        data = {
+            **{
+                "valid_for": int(verification_code.timeout() / 3600),
+            },
+            **code_parts,
+        }
+
+        mailer.send(
+            email_template="password_reset_email.html",
+            to=[user.email],
+            subject="Twoje tymczasowe hasło.",
+            data=data,
         )
 
         return Response(
