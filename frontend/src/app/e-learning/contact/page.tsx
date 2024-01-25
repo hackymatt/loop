@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import ElearningContactView from "src/sections/_elearning/view/elearning-contact-view";
+import ContactView from "src/sections/_elearning/view/contact-view";
 
 // ----------------------------------------------------------------------
 
@@ -8,6 +8,6 @@ export const metadata = {
   title: `${packageInfo.name}: Kontakt`,
 };
 
-export default function ElearningContactPage() {
-  return <ElearningContactView />;
+export default function ContactPage() {
+  return <ContactView />;
 }

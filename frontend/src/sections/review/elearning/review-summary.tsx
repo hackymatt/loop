@@ -86,7 +86,6 @@ export default function ReviewSummary({
           fullWidth
           startIcon={<Iconify icon="carbon:edit" width={24} />}
           onClick={onOpenForm}
-          sx={{ textTransform: "none" }}
         >
           Napisz recenzje
         </Button>

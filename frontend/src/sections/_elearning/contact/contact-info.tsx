@@ -13,7 +13,7 @@ import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
 
-export default function ElearningContactInfo() {
+export default function ContactInfo() {
   return (
     <Container
       sx={{

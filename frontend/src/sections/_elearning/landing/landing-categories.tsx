@@ -52,7 +52,6 @@ export default function LandingCategories({ categories }: Props) {
                 color="inherit"
                 href={paths.eLearning.courses}
                 endIcon={<Iconify icon="carbon:chevron-right" />}
-                sx={{ textTransform: "none" }}
               >
                 Zobacz więcej
               </Button>

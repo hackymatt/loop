@@ -41,13 +41,7 @@ export default function AboutHero() {
               online, aby sprostać potrzebom każdego zainteresowanego nauką programowania.
             </Typography>
 
-            <Button
-              variant="contained"
-              size="large"
-              color="primary"
-              href={paths.eLearning.courses}
-              sx={{ textTransform: "none" }}
-            >
+            <Button variant="contained" size="large" color="primary" href={paths.eLearning.courses}>
               Przeglądaj kursy
             </Button>
           </Grid>

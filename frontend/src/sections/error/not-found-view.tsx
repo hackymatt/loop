@@ -49,7 +49,7 @@ export default function NotFoundView() {
           size="large"
           color="inherit"
           variant="contained"
-          sx={{ textTransform: "none" }}
+       
         >
           Wróć do strony głownej
         </Button>

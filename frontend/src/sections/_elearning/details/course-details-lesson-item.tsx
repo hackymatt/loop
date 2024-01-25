@@ -202,7 +202,7 @@ export default function CourseDetailsLessonItem({
             <Divider sx={{ borderStyle: "dashed" }} />
 
             <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="right">
-              <Button variant="text" size="large" color="info" sx={{ textTransform: "none" }}>
+              <Button variant="text" size="large" color="info">
                 Sprawdź terminy
               </Button>
 
@@ -211,7 +211,6 @@ export default function CourseDetailsLessonItem({
                 color="inherit"
                 variant="contained"
                 startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
-                sx={{ textTransform: "none" }}
               >
                 Dodaj do koszyka
               </Button>

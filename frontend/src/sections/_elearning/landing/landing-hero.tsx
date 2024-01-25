@@ -95,7 +95,6 @@ export default function LandingHero() {
                   variant="contained"
                   href={paths.eLearning.courses}
                   endIcon={<Iconify icon="carbon:chevron-right" />}
-                  sx={{ textTransform: "none" }}
                 >
                   Rozpocznij naukę
                 </Button>

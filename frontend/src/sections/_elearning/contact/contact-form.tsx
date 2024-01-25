@@ -16,14 +16,14 @@ import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
-export default function ElearningContactForm() {
+export default function ContactForm() {
   const mdUp = useResponsive("up", "md");
 
-  const ElearningContactSchema = Yup.object().shape({
-    fullName: Yup.string().required("Full name is required"),
-    email: Yup.string().required("Email is required").email("That is not an email"),
-    subject: Yup.string().required("Subject is required"),
-    message: Yup.string().required("Message is required"),
+  const ContactSchema = Yup.object().shape({
+    fullName: Yup.string().required("Imię i Nazwisko jest wymagane"),
+    email: Yup.string().required("Adres email jest wymagany").email("Podaj poprawny adres e-mail"),
+    subject: Yup.string().required("Temat jest wymagany"),
+    message: Yup.string().required("Wiadomość jest wymagana"),
   });
 
   const defaultValues = {
@@ -34,7 +34,7 @@ export default function ElearningContactForm() {
   };
 
   const methods = useForm({
-    resolver: yupResolver(ElearningContactSchema),
+    resolver: yupResolver(ContactSchema),
     defaultValues,
   });
 
@@ -81,22 +81,28 @@ export default function ElearningContactForm() {
                 textAlign: { xs: "center", md: "left" },
               }}
             >
-              <Typography variant="h3">Drop Us A Line</Typography>
+              <Typography variant="h3">Napisz do nas</Typography>
 
               <Typography sx={{ color: "text.secondary" }}>
-                We normally respond within 2 business days
+                Zwykle odpowiadamy w ciągu 2 dni roboczych
               </Typography>
             </Stack>
 
             <FormProvider methods={methods} onSubmit={onSubmit}>
               <Stack spacing={2.5} alignItems="flex-start">
-                <RHFTextField name="fullName" label="Full name" />
+                <RHFTextField name="fullName" label="Imię i nazwisko" />
 
-                <RHFTextField name="email" label="Email" />
+                <RHFTextField name="email" label="Adres e-mail" />
 
-                <RHFTextField name="subject" label="Subject" />
+                <RHFTextField name="subject" label="Tytuł" />
 
-                <RHFTextField name="message" multiline rows={4} label="Message" sx={{ pb: 2.5 }} />
+                <RHFTextField
+                  name="message"
+                  multiline
+                  rows={4}
+                  label="Wiadomość"
+                  sx={{ pb: 2.5 }}
+                />
 
                 <LoadingButton
                   size="large"
@@ -107,7 +113,7 @@ export default function ElearningContactForm() {
                     mx: { xs: "auto !important", md: "unset !important" },
                   }}
                 >
-                  Send Request
+                  Wyślij wiadomość
                 </LoadingButton>
               </Stack>
             </FormProvider>
