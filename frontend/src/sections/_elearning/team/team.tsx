@@ -49,7 +49,7 @@ export default function Team({ members }: Props) {
 
       {members.length > TEAM_MEMBER_SLOTS && (
         <Stack alignItems="center">
-          <Button variant="outlined" size="large" color="inherit" sx={{ textTransform: "none" }}>
+          <Button variant="outlined" size="large" color="inherit">
             Zobacz wszystkich instruktorów
           </Button>
         </Stack>

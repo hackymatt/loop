@@ -79,7 +79,6 @@ export default function CourseDetailsInfo({ course }: Props) {
           color="inherit"
           variant="contained"
           startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
-          sx={{ textTransform: "none" }}
         >
           Dodaj do koszyka
         </Button>

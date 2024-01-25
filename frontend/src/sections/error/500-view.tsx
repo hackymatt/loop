@@ -42,14 +42,7 @@ export default function Error500View() {
           />
         </m.div>
 
-        <Button
-          component={RouterLink}
-          href="/"
-          size="large"
-          color="inherit"
-          variant="contained"
-          sx={{ textTransform: "none" }}
-        >
+        <Button component={RouterLink} href="/" size="large" color="inherit" variant="contained">
           Wróć do strony głownej
         </Button>
       </MotionContainer>

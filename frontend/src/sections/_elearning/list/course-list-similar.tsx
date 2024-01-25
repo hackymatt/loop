@@ -30,7 +30,6 @@ export default function CourseListSimilar({ courses }: Props) {
       href={paths.eLearning.courses}
       color="inherit"
       endIcon={<Iconify icon="carbon:chevron-right" />}
-      sx={{ textTransform: "none" }}
     >
       Zobacz wszystkie
     </Button>
