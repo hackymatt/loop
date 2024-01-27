@@ -21,6 +21,10 @@ export const paths = {
     orders: "/account/orders",
     payment: "/account/payment",
   },
+  login: "/login",
+  register: "/register",
+  forgotPassword: "/forgot-password",
+  verify: "/verify",
 
   // Marketing
   marketing: {
@@ -81,8 +85,6 @@ export const paths = {
   registerCover: "/other/auth/register-cover",
   registerBackground: "/other/auth/register-background",
   registerIllustration: "/other/auth/register-illustration",
-  forgotPassword: "/other/auth/forgot-password",
-  verify: "/other/auth/verify",
   // Common
   maintenance: "/other/maintenance",
   comingsoon: "/other/coming-soon",

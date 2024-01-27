@@ -3,7 +3,7 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import { IQueryParamValue } from "src/types/queryParams";
 
-export const useQueryParams = () => {
+export function useQueryParams() {
   const searchParams = useSearchParams();
   const params = useMemo(() => new URLSearchParams(searchParams), [searchParams]);
 
@@ -25,4 +25,4 @@ export const useQueryParams = () => {
   const getQueryParams = () => Object.fromEntries(params);
 
   return { getQueryParam, setQueryParam, removeQueryParam, getQueryParams };
-};
+}

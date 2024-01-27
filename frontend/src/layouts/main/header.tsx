@@ -11,6 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
+import { useUser } from "src/hooks/use-user";
 import { useOffSetTop } from "src/hooks/use-off-set-top";
 import { useResponsive } from "src/hooks/use-responsive";
 
@@ -38,6 +39,8 @@ export default function Header({ headerOnDark }: Props) {
   const offset = useOffSetTop();
 
   const mdUp = useResponsive("up", "md");
+
+  const { isLoggedIn } = useUser();
 
   const renderContent = (
     <>
@@ -107,7 +110,7 @@ export default function Header({ headerOnDark }: Props) {
 
         <IconButton
           component={RouterLink}
-          href={paths.account.personal}
+          href={isLoggedIn ? paths.account.personal : paths.login}
           size="small"
           color="inherit"
           sx={{ p: 0 }}
