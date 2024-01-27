@@ -5,7 +5,7 @@ def validate_password_strength(password):
     min_length = 8
     if len(password) < 8:
         raise ValidationError(
-            {"password": f"Hasło musi mieć minimum {min_length} znaki."}
+            {"password": f"Hasło musi mieć minimum {min_length} znaków."}
         )
 
     if not any(char.isdigit() for char in password):
@@ -16,6 +16,16 @@ def validate_password_strength(password):
     if not any(char.isupper() for char in password):
         raise ValidationError(
             {"password": "Hasło musi składać się z minimum jednej dużej litery."}
+        )
+
+    if not any(char.islower() for char in password):
+        raise ValidationError(
+            {"password": "Hasło musi składać się z minimum jednej małej litery."}
+        )
+
+    if all(char.isalpha() or char.isdigit() for char in password):
+        raise ValidationError(
+            {"password": "Hasło musi składać się z minimum jednego znaku specjalnego."}
         )
 
 

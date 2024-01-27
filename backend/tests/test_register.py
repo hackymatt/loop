@@ -22,8 +22,8 @@ class RegisterTest(APITestCase):
             "first_name": "test_first_name",
             "last_name": "test_last_name",
             "email": "test_email@example.com",
-            "password": "TestPassword123",
-            "password2": "TestPassword123",
+            "password": "TestPassword123!",
+            "password2": "TestPassword123!",
         }
         self.user = create_user(
             first_name="first_name",
@@ -73,9 +73,29 @@ class RegisterTest(APITestCase):
         self.assertEqual(emails_sent_number(), 0)
         self.assertEqual(newsletters_number(), 0)
 
+        # new password without lowercase letter
+        new_password = "ABCDE1234"
+        data = self.data.copy()
+        data["password"] = new_password
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(users_number(), 2)
+        self.assertEqual(emails_sent_number(), 0)
+        self.assertEqual(newsletters_number(), 0)
+
+        # new password without special character
+        new_password = "Abcde1234"
+        data = self.data.copy()
+        data["password"] = new_password
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(users_number(), 2)
+        self.assertEqual(emails_sent_number(), 0)
+        self.assertEqual(newsletters_number(), 0)
+
     def test_new_password_match(self):
         # new password and password 2 does not match
-        new_password_2 = "TestPassword1234"
+        new_password_2 = "TestPassword12345!"
         data = self.data.copy()
         data["password2"] = new_password_2
         response = self.client.post(self.endpoint, data)

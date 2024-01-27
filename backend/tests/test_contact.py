@@ -21,7 +21,6 @@ class ContactTest(APITestCase):
             "message": "New message",
         }
         response = self.client.post(self.endpoint, data)
-        print(response.content)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(json.loads(response.content), data)
         self.assertEqual(emails_sent_number(), 1)

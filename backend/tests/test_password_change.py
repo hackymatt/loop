@@ -8,7 +8,7 @@ from django.contrib import auth
 class PasswordChangeTest(APITestCase):
     def setUp(self):
         self.endpoint = "/password-change"
-        self.data = {"email": "email@example.com", "password": "test_password"}
+        self.data = {"email": "email@example.com", "password": "TestPassword1234!"}
         create_user(
             first_name="first_name",
             last_name="last_name",
@@ -117,7 +117,7 @@ class PasswordChangeTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # new password
         old_password = self.data["password"] + "1"
-        new_password = "TestPassword123"
+        new_password = "TestPassword123!"
         data = {
             "old_password": old_password,
             "password": new_password,
@@ -134,7 +134,7 @@ class PasswordChangeTest(APITestCase):
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # new password
-        new_password = "TestPassword123"
+        new_password = "TestPassword123!"
         data = {
             "old_password": self.data["password"],
             "password": new_password,
