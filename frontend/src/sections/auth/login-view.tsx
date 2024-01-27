@@ -3,6 +3,7 @@
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { redirect, RedirectType } from "next/navigation";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
@@ -16,6 +17,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
+import { useUser } from "src/hooks/use-user";
 import { useBoolean } from "src/hooks/use-boolean";
 
 import Iconify from "src/components/iconify";
@@ -25,6 +27,8 @@ import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 export default function LoginView() {
   const passwordShow = useBoolean();
+
+  const { loginUser, isUnverified, isLoggedIn } = useUser();
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().required("Adres email jest wymagany").email("Podaj poprawny adres e-mail"),
@@ -42,20 +46,25 @@ export default function LoginView() {
   });
 
   const {
-    reset,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      console.log("DATA", data);
+      await loginUser(data);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   });
+
+  if (isUnverified) {
+    redirect(paths.verify, RedirectType.push);
+  }
+
+  if (isLoggedIn) {
+    redirect(paths.account.personal, RedirectType.push);
+  }
 
   const renderHead = (
     <div>

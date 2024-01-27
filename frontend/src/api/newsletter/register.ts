@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { useMutation } from "@tanstack/react-query";
 
 import { Api } from "../service";
@@ -9,7 +10,7 @@ type INewsletter = {
 };
 
 export const useRegisterNewsletter = () =>
-  useMutation<INewsletter, INewsletter, INewsletter>(async (variables) => {
+  useMutation<INewsletter, AxiosError, INewsletter>(async (variables) => {
     const result = await Api.post(endpoint, variables);
     return result.data as INewsletter;
   });

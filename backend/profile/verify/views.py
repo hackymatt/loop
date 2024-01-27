@@ -26,7 +26,7 @@ class ProfileVerifyViewSet(ModelViewSet):
         if not User.objects.filter(email=email).exists():
             return Response(
                 status=status.HTTP_401_UNAUTHORIZED,
-                data={"verify": "Użytkownik nie istnieje."},
+                data={"email": "Użytkownik nie istnieje."},
             )
 
         user = User.objects.get(email=email)

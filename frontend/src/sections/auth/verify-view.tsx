@@ -12,13 +12,21 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
+import { useUser } from "src/hooks/use-user";
+
 import Image from "src/components/image";
 import Iconify from "src/components/iconify";
 import FormProvider, { RHFCode } from "src/components/hook-form";
 
+import NotFoundView from "../error/not-found-view";
+
 // ----------------------------------------------------------------------
 
-export default function VerifyView({ email }: { email?: string }) {
+export default function VerifyView() {
+  const { email, verifyUser, isUnverified } = useUser();
+
+  console.log({ email, isUnverified });
+
   const VerifySchema = Yup.object().shape({
     code: Yup.string()
       .min(8, "Kod weryfikacyjny musi mieć 8 znaków")
@@ -26,7 +34,6 @@ export default function VerifyView({ email }: { email?: string }) {
   });
 
   const defaultValues = {
-    email: email ?? "",
     code: "",
   };
 
@@ -43,12 +50,15 @@ export default function VerifyView({ email }: { email?: string }) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      console.log("DATA", data);
+      await verifyUser({ email, code: data.code });
     } catch (error) {
       console.error(error);
     }
   });
+
+  if (!email) {
+    return <NotFoundView />;
+  }
 
   return (
     <Stack sx={{ textAlign: "center" }}>

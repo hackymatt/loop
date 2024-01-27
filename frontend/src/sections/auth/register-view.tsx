@@ -3,6 +3,7 @@
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { redirect, RedirectType } from "next/navigation";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
@@ -16,6 +17,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
+import { useUser } from "src/hooks/use-user";
 import { useBoolean } from "src/hooks/use-boolean";
 
 import Iconify from "src/components/iconify";
@@ -25,6 +27,8 @@ import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 export default function RegisterView() {
   const passwordShow = useBoolean();
+
+  const { registerUser, isRegistered } = useUser();
 
   const RegisterSchema = Yup.object().shape({
     first_name: Yup.string().required("Imię jest wymagane"),
@@ -56,20 +60,23 @@ export default function RegisterView() {
   });
 
   const {
-    reset,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { errors, isSubmitting },
   } = methods;
+
+  console.log(errors);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      console.log("DATA", data);
+      await registerUser(data);
     } catch (error) {
       console.error(error);
     }
   });
+
+  if (isRegistered) {
+    redirect(paths.verify, RedirectType.push);
+  }
 
   const renderHead = (
     <div>
