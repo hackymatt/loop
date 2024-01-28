@@ -72,6 +72,7 @@ export function UserProvider({ children }: Props) {
 
   useEffect(() => {
     if (isSuccessVerify) {
+      setIsRegistered(false);
       setIsUnverified(false);
     }
   }, [isSuccessVerify]);

@@ -25,7 +25,8 @@ import NotFoundView from "../error/not-found-view";
 export default function VerifyView() {
   const { push } = useRouter();
 
-  const { email, verifyUser, resendVerificationCode, isUnverified, isLoading } = useUserContext();
+  const { email, verifyUser, resendVerificationCode, isUnverified, isRegistered, isLoading } =
+    useUserContext();
 
   const VerifySchema = Yup.object().shape({
     code: Yup.string()
@@ -70,7 +71,7 @@ export default function VerifyView() {
     return <NotFoundView />;
   }
 
-  if (!isUnverified) {
+  if (!isUnverified && !isRegistered) {
     push(paths.login);
   }
 
