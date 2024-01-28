@@ -2,8 +2,8 @@
 
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { redirect, RedirectType } from "next/navigation";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
@@ -26,6 +26,8 @@ import FormProvider, { RHFTextField } from "src/components/hook-form";
 // ----------------------------------------------------------------------
 
 export default function RegisterView() {
+  const { push } = useRouter();
+
   const passwordShow = useBoolean();
 
   const { registerUser, isRegistered } = useUserContext();
@@ -75,7 +77,7 @@ export default function RegisterView() {
   });
 
   if (isRegistered) {
-    redirect(paths.verify, RedirectType.push);
+    push(paths.verify);
   }
 
   const renderHead = (

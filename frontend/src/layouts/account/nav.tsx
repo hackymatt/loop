@@ -1,4 +1,4 @@
-import { redirect, RedirectType } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
@@ -55,6 +55,8 @@ type Props = {
 };
 
 export default function Nav({ open, onClose }: Props) {
+  const { push } = useRouter();
+
   const mdUp = useResponsive("up", "md");
 
   const { logoutUser, isLoggedIn } = useUserContext();
@@ -68,7 +70,7 @@ export default function Nav({ open, onClose }: Props) {
   };
 
   if (!isLoggedIn) {
-    redirect(paths.login, RedirectType.push);
+    push(paths.login);
   }
 
   const renderContent = (

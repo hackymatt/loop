@@ -2,8 +2,8 @@
 
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { redirect, RedirectType } from "next/navigation";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
@@ -26,6 +26,7 @@ import FormProvider, { RHFTextField } from "src/components/hook-form";
 // ----------------------------------------------------------------------
 
 export default function LoginView() {
+  const { push } = useRouter();
   const passwordShow = useBoolean();
 
   const { loginUser, isUnverified, isLoggedIn } = useUserContext();
@@ -59,11 +60,11 @@ export default function LoginView() {
   });
 
   if (isUnverified) {
-    redirect(paths.verify, RedirectType.push);
+    push(paths.verify);
   }
 
   if (isLoggedIn) {
-    redirect(paths.account.personal, RedirectType.push);
+    push(paths.account.personal);
   }
 
   const renderHead = (

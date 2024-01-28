@@ -2,8 +2,8 @@
 
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { redirect, RedirectType } from "next/navigation";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
@@ -23,6 +23,8 @@ import NotFoundView from "../error/not-found-view";
 // ----------------------------------------------------------------------
 
 export default function VerifyView() {
+  const { push } = useRouter();
+
   const { email, verifyUser, resendVerificationCode, isUnverified, isLoading } = useUserContext();
 
   const VerifySchema = Yup.object().shape({
@@ -69,7 +71,7 @@ export default function VerifyView() {
   }
 
   if (!isUnverified) {
-    redirect(paths.login, RedirectType.push);
+    push(paths.login);
   }
 
   return (

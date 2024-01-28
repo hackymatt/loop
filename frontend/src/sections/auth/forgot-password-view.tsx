@@ -2,8 +2,8 @@
 
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { redirect, RedirectType } from "next/navigation";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
@@ -21,6 +21,8 @@ import FormProvider, { RHFTextField } from "src/components/hook-form";
 // ----------------------------------------------------------------------
 
 export default function ForgotPasswordView() {
+  const { push } = useRouter();
+
   const ForgotPasswordSchema = Yup.object().shape({
     email: Yup.string().required("Adres email jest wymagany").email("Podaj poprawny adres e-mail"),
   });
@@ -50,7 +52,7 @@ export default function ForgotPasswordView() {
   });
 
   if (isPasswordReset) {
-    redirect(paths.login, RedirectType.push);
+    push(paths.login);
   }
 
   return (
