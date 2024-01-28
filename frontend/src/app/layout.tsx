@@ -10,6 +10,7 @@ import { LocalizationProvider } from "src/locales";
 import ProgressBar from "src/components/progress-bar";
 import { MotionLazy } from "src/components/animate/motion-lazy";
 import { SettingsDrawer, SettingsProvider } from "src/components/settings";
+import { UserProvider } from "src/components/user";
 import { ReactQueryProvider } from "./(index)/react-query-provider";
 
 // ----------------------------------------------------------------------
@@ -43,25 +44,27 @@ export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" className={primaryFont.className}>
       <body>
-        <LocalizationProvider>
-          <SettingsProvider
-            defaultSettings={{
-              themeMode: "light", // 'light' | 'dark'
-              themeDirection: "ltr", //  'rtl' | 'ltr'
-              themeColorPresets: "default", // 'default' | 'preset01' | 'preset02' | 'preset03' | 'preset04' | 'preset05'
-            }}
-          >
-            <ThemeProvider>
-              <ReactQueryProvider>
-                <MotionLazy>
-                  <ProgressBar />
-                  <SettingsDrawer />
-                  {children}
-                </MotionLazy>
-              </ReactQueryProvider>
-            </ThemeProvider>
-          </SettingsProvider>
-        </LocalizationProvider>
+        <ReactQueryProvider>
+          <UserProvider>
+            <LocalizationProvider>
+              <SettingsProvider
+                defaultSettings={{
+                  themeMode: "light", // 'light' | 'dark'
+                  themeDirection: "ltr", //  'rtl' | 'ltr'
+                  themeColorPresets: "default", // 'default' | 'preset01' | 'preset02' | 'preset03' | 'preset04' | 'preset05'
+                }}
+              >
+                <ThemeProvider>
+                  <MotionLazy>
+                    <ProgressBar />
+                    <SettingsDrawer />
+                    {children}
+                  </MotionLazy>
+                </ThemeProvider>
+              </SettingsProvider>
+            </LocalizationProvider>
+          </UserProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );

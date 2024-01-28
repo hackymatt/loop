@@ -17,10 +17,10 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
-import { useUser } from "src/hooks/use-user";
 import { useBoolean } from "src/hooks/use-boolean";
 
 import Iconify from "src/components/iconify";
+import { useUserContext } from "src/components/user";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
@@ -28,7 +28,7 @@ import FormProvider, { RHFTextField } from "src/components/hook-form";
 export default function RegisterView() {
   const passwordShow = useBoolean();
 
-  const { registerUser, isRegistered } = useUser();
+  const { registerUser, isRegistered } = useUserContext();
 
   const RegisterSchema = Yup.object().shape({
     first_name: Yup.string().required("Imię jest wymagane"),

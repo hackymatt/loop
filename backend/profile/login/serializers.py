@@ -16,3 +16,13 @@ class ProfileLoginSerializer(ModelSerializer):
 
         email = EmailField(required=True)
         password = CharField(write_only=True, required=True)
+
+
+class UserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "first_name",
+            "last_name",
+            "email",
+        )

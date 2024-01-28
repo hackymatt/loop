@@ -1,3 +1,5 @@
+import { redirect, RedirectType } from "next/navigation";
+
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Drawer from "@mui/material/Drawer";
@@ -17,6 +19,7 @@ import { useResponsive } from "src/hooks/use-responsive";
 import { _mock } from "src/_mock";
 
 import Iconify from "src/components/iconify";
+import { useUserContext } from "src/components/user";
 import TextMaxLine from "src/components/text-max-line";
 
 // ----------------------------------------------------------------------
@@ -53,6 +56,20 @@ type Props = {
 
 export default function Nav({ open, onClose }: Props) {
   const mdUp = useResponsive("up", "md");
+
+  const { logoutUser, isLoggedIn } = useUserContext();
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser({});
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  if (!isLoggedIn) {
+    redirect(paths.login, RedirectType.push);
+  }
 
   const renderContent = (
     <Stack
@@ -110,6 +127,7 @@ export default function Nav({ open, onClose }: Props) {
             height: 44,
             borderRadius: 1,
           }}
+          onClick={handleLogout}
         >
           <ListItemIcon>
             <Iconify icon="carbon:logout" />

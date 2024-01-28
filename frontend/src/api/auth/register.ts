@@ -5,7 +5,7 @@ import { Api } from "../service";
 
 const endpoint = "/register" as const;
 
-type IRegister = {
+export type IRegister = {
   first_name: string;
   last_name: string;
   email: string;
@@ -13,7 +13,7 @@ type IRegister = {
   password2: string;
 };
 
-type IRegisterReturn = Omit<IRegister, "password" | "password2">;
+export type IRegisterReturn = Omit<IRegister, "password" | "password2">;
 
 export const useRegister = () =>
   useMutation<IRegisterReturn, AxiosError, IRegister>(async (variables) => {

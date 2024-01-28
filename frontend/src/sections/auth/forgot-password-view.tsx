@@ -3,6 +3,7 @@
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { redirect, RedirectType } from "next/navigation";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
@@ -14,6 +15,7 @@ import { RouterLink } from "src/routes/components";
 
 import Image from "src/components/image";
 import Iconify from "src/components/iconify";
+import { useUserContext } from "src/components/user";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
@@ -22,6 +24,8 @@ export default function ForgotPasswordView() {
   const ForgotPasswordSchema = Yup.object().shape({
     email: Yup.string().required("Adres email jest wymagany").email("Podaj poprawny adres e-mail"),
   });
+
+  const { resetUserPassword, isPasswordReset } = useUserContext();
 
   const defaultValues = {
     email: "",
@@ -33,19 +37,21 @@ export default function ForgotPasswordView() {
   });
 
   const {
-    reset,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      reset();
-      console.log("DATA", data);
+      resetUserPassword(data);
     } catch (error) {
       console.error(error);
     }
   });
+
+  if (isPasswordReset) {
+    redirect(paths.login, RedirectType.push);
+  }
 
   return (
     <Stack sx={{ textAlign: "center" }}>

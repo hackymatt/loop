@@ -11,7 +11,6 @@ import IconButton from "@mui/material/IconButton";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
-import { useUser } from "src/hooks/use-user";
 import { useOffSetTop } from "src/hooks/use-off-set-top";
 import { useResponsive } from "src/hooks/use-responsive";
 
@@ -20,6 +19,7 @@ import { bgBlur } from "src/theme/css";
 import Logo from "src/components/logo";
 import Label from "src/components/label";
 import Iconify from "src/components/iconify";
+import { useUserContext } from "src/components/user";
 
 import NavMobile from "./nav/mobile";
 import NavDesktop from "./nav/desktop";
@@ -40,7 +40,7 @@ export default function Header({ headerOnDark }: Props) {
 
   const mdUp = useResponsive("up", "md");
 
-  const { isLoggedIn } = useUser();
+  const { isLoggedIn } = useUserContext();
 
   const renderContent = (
     <>

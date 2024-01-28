@@ -5,13 +5,15 @@ import { Api } from "../service";
 
 const endpoint = "/verify" as const;
 
-type IVerify = {
+export type IVerify = {
   email: string;
   code: string;
 };
 
+export type IVerifyReturn = Pick<IVerify, "email"> & { code?: string };
+
 export const useVerify = () =>
-  useMutation<IVerify, AxiosError, IVerify>(async (variables) => {
+  useMutation<IVerifyReturn, AxiosError, IVerify>(async (variables) => {
     const result = await Api.post(endpoint, variables);
     return result.data;
   });

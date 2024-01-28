@@ -26,6 +26,7 @@ export default function FilterCategories({ filterCategories, onChangeCategory }:
       options={technologies?.map((technology: ICourseByCategoryProps) => technology.name) ?? []}
       getOptionLabel={(option) => option}
       value={currentValue}
+      noOptionsText="Brak opcji"
       onChange={(event, value) => onChangeCategory(value.join(","))}
       slotProps={{
         paper: {

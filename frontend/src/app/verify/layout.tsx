@@ -1,8 +1,8 @@
 "use client";
 
-import { useUser } from "src/hooks/use-user";
-
 import AuthBackgroundLayout from "src/layouts/auth/background";
+
+import { useUserContext } from "src/components/user";
 
 // ----------------------------------------------------------------------
 
@@ -11,6 +11,6 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
-  const { email } = useUser();
+  const { email } = useUserContext();
   return email ? <AuthBackgroundLayout>{children}</AuthBackgroundLayout> : <>{children}</>;
 }

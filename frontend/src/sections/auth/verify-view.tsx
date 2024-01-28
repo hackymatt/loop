@@ -3,6 +3,7 @@
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { redirect, RedirectType } from "next/navigation";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
@@ -12,10 +13,9 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
-import { useUser } from "src/hooks/use-user";
-
 import Image from "src/components/image";
 import Iconify from "src/components/iconify";
+import { useUserContext } from "src/components/user";
 import FormProvider, { RHFCode } from "src/components/hook-form";
 
 import NotFoundView from "../error/not-found-view";
@@ -23,9 +23,7 @@ import NotFoundView from "../error/not-found-view";
 // ----------------------------------------------------------------------
 
 export default function VerifyView() {
-  const { email, verifyUser, isUnverified } = useUser();
-
-  console.log({ email, isUnverified });
+  const { email, verifyUser, resendVerificationCode, isUnverified, isLoading } = useUserContext();
 
   const VerifySchema = Yup.object().shape({
     code: Yup.string()
@@ -45,6 +43,7 @@ export default function VerifyView() {
 
   const {
     handleSubmit,
+    reset,
     formState: { isSubmitting },
   } = methods;
 
@@ -56,8 +55,21 @@ export default function VerifyView() {
     }
   });
 
+  const onResendCode = async () => {
+    try {
+      await resendVerificationCode({ email });
+      reset();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   if (!email) {
     return <NotFoundView />;
+  }
+
+  if (!isUnverified) {
+    redirect(paths.login, RedirectType.push);
   }
 
   return (
@@ -90,12 +102,14 @@ export default function VerifyView() {
         </LoadingButton>
       </FormProvider>
 
-      <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-        Kod nie dotarł?{" "}
-        <Link variant="subtitle2" underline="none">
+      <Stack direction="row" alignItems="center" justifyContent="center" sx={{ mt: 3 }}>
+        <Typography variant="body2" align="center">
+          Kod nie dotarł lub wygasł?
+        </Typography>
+        <LoadingButton variant="text" color="primary" onClick={onResendCode} loading={isLoading}>
           Wyślij kod ponownie
-        </Link>
-      </Typography>
+        </LoadingButton>
+      </Stack>
 
       <Link
         component={RouterLink}
