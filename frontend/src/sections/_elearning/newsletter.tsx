@@ -15,6 +15,7 @@ import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 import { useRegisterNewsletter } from "src/api/newsletter/register";
 
 import Image from "src/components/image";
+import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
@@ -75,6 +76,8 @@ interface Props extends LoadingButtonProps {
 }
 
 export function NewsletterEmail({ buttonLabel = "Zapisz", sx }: Props) {
+  const { enqueueSnackbar } = useToastContext();
+
   const { mutateAsync: register } = useRegisterNewsletter();
 
   const NewsletterSchema = Yup.object().shape({
@@ -103,6 +106,7 @@ export function NewsletterEmail({ buttonLabel = "Zapisz", sx }: Props) {
     clearErrors();
     try {
       await register(data);
+      enqueueSnackbar("Zapisano do newslettera", { variant: "success" });
       reset();
     } catch (error) {
       handleFormError(error);

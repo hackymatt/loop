@@ -23,12 +23,16 @@ import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
+import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
 export default function LoginView() {
+  const { enqueueSnackbar } = useToastContext();
+
   const { push } = useRouter();
+
   const passwordShow = useBoolean();
 
   const { loginUser, isUnverified, isLoggedIn } = useUserContext();
@@ -60,6 +64,7 @@ export default function LoginView() {
     clearErrors();
     try {
       await loginUser(data);
+      enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
     } catch (error) {
       if ((error as AxiosError).response?.status !== 403) {
         handleFormError(error);

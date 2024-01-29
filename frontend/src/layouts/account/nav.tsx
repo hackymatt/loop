@@ -21,6 +21,7 @@ import { _mock } from "src/_mock";
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 import TextMaxLine from "src/components/text-max-line";
+import { useToastContext } from "src/components/toast";
 
 // ----------------------------------------------------------------------
 
@@ -55,6 +56,8 @@ type Props = {
 };
 
 export default function Nav({ open, onClose }: Props) {
+  const { enqueueSnackbar } = useToastContext();
+
   const { push } = useRouter();
 
   const mdUp = useResponsive("up", "md");
@@ -64,6 +67,7 @@ export default function Nav({ open, onClose }: Props) {
   const handleLogout = async () => {
     try {
       await logoutUser({});
+      enqueueSnackbar("Wylogowano pomyślnie", { variant: "success" });
     } catch (error) {
       console.error(error);
     }
