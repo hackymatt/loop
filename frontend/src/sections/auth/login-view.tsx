@@ -1,6 +1,7 @@
 "use client";
 
 import * as Yup from "yup";
+import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -18,6 +19,7 @@ import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
 import { useBoolean } from "src/hooks/use-boolean";
+import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
@@ -48,14 +50,20 @@ export default function LoginView() {
 
   const {
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
+    clearErrors,
   } = methods;
 
+  const handleFormError = useFormErrorHandler(methods);
+
   const onSubmit = handleSubmit(async (data) => {
+    clearErrors();
     try {
       await loginUser(data);
     } catch (error) {
-      console.log(error);
+      if ((error as AxiosError).response?.status !== 403) {
+        handleFormError(error);
+      }
     }
   });
 
@@ -117,6 +125,12 @@ export default function LoginView() {
             ),
           }}
         />
+
+        {errors.root && (
+          <Typography variant="body2" color="error" sx={{ width: 1 }}>
+            {errors.root.message}
+          </Typography>
+        )}
 
         <Link
           component={RouterLink}

@@ -17,13 +17,13 @@ class ProfileLoginViewSet(ModelViewSet):
         if not User.objects.filter(email=email).exists():
             return Response(
                 status=status.HTTP_401_UNAUTHORIZED,
-                data={"login": "Niepoprawny email lub hasło.", "email": email},
+                data={"root": "Niepoprawny email lub hasło."},
             )
 
         if not User.objects.get(email=email).is_active:
             return Response(
                 status=status.HTTP_403_FORBIDDEN,
-                data={"login": "Użytkownik nieaktywny.", "email": email},
+                data={"root": "Użytkownik nieaktywny.", "email": email},
             )
 
         password = request.data["password"]
@@ -32,7 +32,7 @@ class ProfileLoginViewSet(ModelViewSet):
         if not user:
             return Response(
                 status=status.HTTP_401_UNAUTHORIZED,
-                data={"login": "Niepoprawny email lub hasło.", "email": email},
+                data={"root": "Niepoprawny email lub hasło."},
             )
 
         login(request, user)

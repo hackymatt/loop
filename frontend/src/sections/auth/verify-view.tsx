@@ -5,16 +5,15 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import { paths } from "src/routes/paths";
-import { RouterLink } from "src/routes/components";
+
+import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import Image from "src/components/image";
-import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 import FormProvider, { RHFCode } from "src/components/hook-form";
 
@@ -25,8 +24,7 @@ import NotFoundView from "../error/not-found-view";
 export default function VerifyView() {
   const { push } = useRouter();
 
-  const { email, verifyUser, resendVerificationCode, isUnverified, isRegistered, isLoading } =
-    useUserContext();
+  const { email, verifyUser, resendVerificationCode, isUnverified, isLoading } = useUserContext();
 
   const VerifySchema = Yup.object().shape({
     code: Yup.string()
@@ -48,22 +46,27 @@ export default function VerifyView() {
     handleSubmit,
     reset,
     formState: { isSubmitting },
+    clearErrors,
   } = methods;
 
+  const handleFormError = useFormErrorHandler(methods);
+
   const onSubmit = handleSubmit(async (data) => {
+    clearErrors();
     try {
       await verifyUser({ email, code: data.code });
     } catch (error) {
-      console.error(error);
+      handleFormError(error);
     }
   });
 
   const onResendCode = async () => {
+    clearErrors();
     try {
       await resendVerificationCode({ email });
       reset();
     } catch (error) {
-      console.error(error);
+      handleFormError(error);
     }
   };
 
@@ -71,7 +74,7 @@ export default function VerifyView() {
     return <NotFoundView />;
   }
 
-  if (!isUnverified && !isRegistered) {
+  if (!isUnverified) {
     push(paths.login);
   }
 
@@ -113,22 +116,6 @@ export default function VerifyView() {
           Wyślij kod ponownie
         </LoadingButton>
       </Stack>
-
-      <Link
-        component={RouterLink}
-        href={paths.login}
-        color="inherit"
-        variant="subtitle2"
-        sx={{
-          mt: 3,
-          mx: "auto",
-          alignItems: "center",
-          display: "inline-flex",
-        }}
-      >
-        <Iconify icon="carbon:chevron-left" width={16} sx={{ mr: 1 }} />
-        Wróć do strony logowania
-      </Link>
     </Stack>
   );
 }

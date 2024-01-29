@@ -35,7 +35,7 @@ class ProfileVerifyViewSet(ModelViewSet):
         if user.is_active:
             return Response(
                 status=status.HTTP_304_NOT_MODIFIED,
-                data={"email": email, "code": "Użytkownik już jest aktywny."},
+                data={"email": "Użytkownik już jest aktywny."},
             )
 
         profile = Profile.objects.get(user=user)
@@ -48,13 +48,13 @@ class ProfileVerifyViewSet(ModelViewSet):
         ):
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
-                data={"email": email, "code": "Kod wygasł."},
+                data={"code": "Kod wygasł."},
             )
 
         if profile.verification_code != code:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
-                data={"email": email, "code": "Niepoprawny kod."},
+                data={"code": "Niepoprawny kod."},
             )
 
         user.is_active = True
@@ -80,7 +80,7 @@ class ProfileVerificationCodeViewSet(ModelViewSet):
         if not User.objects.filter(email=email).exists():
             return Response(
                 status=status.HTTP_401_UNAUTHORIZED,
-                data={"email": email, "code": "Użytkownik nie istnieje."},
+                data={"email": "Użytkownik nie istnieje."},
             )
 
         user = User.objects.get(email=email)
@@ -112,5 +112,5 @@ class ProfileVerificationCodeViewSet(ModelViewSet):
         )
 
         return Response(
-            status=status.HTTP_200_OK, data={"email": email, "code": "Kod wysłany."}
+            status=status.HTTP_200_OK, data={}
         )

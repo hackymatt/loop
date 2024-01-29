@@ -18,6 +18,7 @@ import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
 import { useBoolean } from "src/hooks/use-boolean";
+import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
@@ -63,16 +64,18 @@ export default function RegisterView() {
 
   const {
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
+    clearErrors,
   } = methods;
 
-  console.log(errors);
+  const handleFormError = useFormErrorHandler(methods);
 
   const onSubmit = handleSubmit(async (data) => {
+    clearErrors();
     try {
       await registerUser(data);
     } catch (error) {
-      console.error(error);
+      handleFormError(error);
     }
   });
 

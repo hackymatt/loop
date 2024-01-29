@@ -99,7 +99,6 @@ export function UserProvider({ children }: Props) {
     if (isErrorLogin) {
       if (loginError) {
         if ((loginError as AxiosError).response?.status === 403) {
-          console.log((loginError as AxiosError).response?.data as ILoginReturn);
           setEmail(((loginError as AxiosError).response?.data as ILoginReturn).email);
           setIsUnverified(true);
         }

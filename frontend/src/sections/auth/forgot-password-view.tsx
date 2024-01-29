@@ -13,6 +13,8 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
+import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
+
 import Image from "src/components/image";
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
@@ -41,13 +43,19 @@ export default function ForgotPasswordView() {
   const {
     handleSubmit,
     formState: { isSubmitting },
+    clearErrors,
+    reset,
   } = methods;
 
+  const handleFormError = useFormErrorHandler(methods);
+
   const onSubmit = handleSubmit(async (data) => {
+    clearErrors();
     try {
-      resetUserPassword(data);
+      await resetUserPassword(data);
+      reset();
     } catch (error) {
-      console.error(error);
+      handleFormError(error);
     }
   });
 
