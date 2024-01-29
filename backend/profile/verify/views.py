@@ -111,6 +111,4 @@ class ProfileVerificationCodeViewSet(ModelViewSet):
             data=data,
         )
 
-        return Response(
-            status=status.HTTP_200_OK, data={}
-        )
+        return Response(status=status.HTTP_200_OK, data={})
