@@ -1,3 +1,5 @@
+import { useRouter } from "next/navigation";
+
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Drawer from "@mui/material/Drawer";
@@ -17,6 +19,7 @@ import { useResponsive } from "src/hooks/use-responsive";
 import { _mock } from "src/_mock";
 
 import Iconify from "src/components/iconify";
+import { useUserContext } from "src/components/user";
 import TextMaxLine from "src/components/text-max-line";
 
 // ----------------------------------------------------------------------
@@ -24,27 +27,22 @@ import TextMaxLine from "src/components/text-max-line";
 const navigations = [
   {
     title: "Personal Info",
-    path: paths.eCommerce.account.personal,
+    path: paths.account.personal,
     icon: <Iconify icon="carbon:user" />,
   },
   {
     title: "Wishlist",
-    path: paths.eCommerce.account.wishlist,
+    path: paths.account.wishlist,
     icon: <Iconify icon="carbon:favorite" />,
   },
   {
-    title: "Vouchers",
-    path: paths.eCommerce.account.vouchers,
-    icon: <Iconify icon="carbon:cut-out" />,
-  },
-  {
     title: "Orders",
-    path: paths.eCommerce.account.orders,
+    path: paths.account.orders,
     icon: <Iconify icon="carbon:document" />,
   },
   {
     title: "Payment",
-    path: paths.eCommerce.account.payment,
+    path: paths.account.payment,
     icon: <Iconify icon="carbon:purchase" />,
   },
 ];
@@ -57,7 +55,23 @@ type Props = {
 };
 
 export default function Nav({ open, onClose }: Props) {
+  const { push } = useRouter();
+
   const mdUp = useResponsive("up", "md");
+
+  const { logoutUser, isLoggedIn } = useUserContext();
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser({});
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  if (!isLoggedIn) {
+    push(paths.login);
+  }
 
   const renderContent = (
     <Stack
@@ -115,6 +129,7 @@ export default function Nav({ open, onClose }: Props) {
             height: 44,
             borderRadius: 1,
           }}
+          onClick={handleLogout}
         >
           <ListItemIcon>
             <Iconify icon="carbon:logout" />

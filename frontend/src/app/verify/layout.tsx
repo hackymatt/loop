@@ -2,6 +2,8 @@
 
 import AuthBackgroundLayout from "src/layouts/auth/background";
 
+import { useUserContext } from "src/components/user";
+
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -9,5 +11,6 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
-  return <AuthBackgroundLayout>{children}</AuthBackgroundLayout>;
+  const { email } = useUserContext();
+  return email ? <AuthBackgroundLayout>{children}</AuthBackgroundLayout> : <>{children}</>;
 }

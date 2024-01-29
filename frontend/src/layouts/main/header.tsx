@@ -1,10 +1,15 @@
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
+import { Badge } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import { useTheme } from "@mui/material/styles";
+import IconButton from "@mui/material/IconButton";
+
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
 import { useOffSetTop } from "src/hooks/use-off-set-top";
 import { useResponsive } from "src/hooks/use-responsive";
@@ -13,6 +18,8 @@ import { bgBlur } from "src/theme/css";
 
 import Logo from "src/components/logo";
 import Label from "src/components/label";
+import Iconify from "src/components/iconify";
+import { useUserContext } from "src/components/user";
 
 import NavMobile from "./nav/mobile";
 import NavDesktop from "./nav/desktop";
@@ -32,6 +39,8 @@ export default function Header({ headerOnDark }: Props) {
   const offset = useOffSetTop();
 
   const mdUp = useResponsive("up", "md");
+
+  const { isLoggedIn } = useUserContext();
 
   const renderContent = (
     <>
@@ -73,6 +82,42 @@ export default function Header({ headerOnDark }: Props) {
       </>
 
       {!mdUp && <NavMobile data={navConfig} />}
+
+      <Stack spacing={3} direction="row" alignItems="center" flexGrow={1} justifyContent="flex-end">
+        <Badge badgeContent={2} color="primary">
+          <IconButton
+            component={RouterLink}
+            href={paths.wishlist}
+            size="small"
+            color="inherit"
+            sx={{ p: 0 }}
+          >
+            <Iconify icon="carbon:favorite" width={24} />
+          </IconButton>
+        </Badge>
+
+        <Badge badgeContent={4} color="primary">
+          <IconButton
+            component={RouterLink}
+            href={paths.cart}
+            size="small"
+            color="inherit"
+            sx={{ p: 0 }}
+          >
+            <Iconify icon="carbon:shopping-cart" width={24} />
+          </IconButton>
+        </Badge>
+
+        <IconButton
+          component={RouterLink}
+          href={isLoggedIn ? paths.account.personal : paths.login}
+          size="small"
+          color="inherit"
+          sx={{ p: 0 }}
+        >
+          <Iconify icon="carbon:user" width={24} />
+        </IconButton>
+      </Stack>
     </>
   );
 

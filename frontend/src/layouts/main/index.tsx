@@ -10,12 +10,16 @@ type Props = BoxProps & {
   children: React.ReactNode;
   headerOnDark?: boolean;
   disabledSpacing?: boolean;
+  disabledHeader?: boolean;
+  disabledFooter?: boolean;
 };
 
 export default function MainLayout({
   children,
   headerOnDark = false,
   disabledSpacing = false,
+  disabledHeader = false,
+  disabledFooter = false,
   sx,
   ...other
 }: Props) {
@@ -29,7 +33,7 @@ export default function MainLayout({
       }}
       {...other}
     >
-      <Header headerOnDark={headerOnDark} />
+      {!disabledHeader && <Header headerOnDark={headerOnDark} />}
 
       <Box component="main" sx={{ flexGrow: 1 }}>
         {!(disabledSpacing || headerOnDark) && (
@@ -43,7 +47,7 @@ export default function MainLayout({
         {children}
       </Box>
 
-      <Footer />
+      {!disabledFooter && <Footer />}
     </Box>
   );
 }

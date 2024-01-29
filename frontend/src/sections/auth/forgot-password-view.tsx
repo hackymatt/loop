@@ -2,6 +2,7 @@
 
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import Link from "@mui/material/Link";
@@ -12,16 +13,23 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
+import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
+
 import Image from "src/components/image";
 import Iconify from "src/components/iconify";
+import { useUserContext } from "src/components/user";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
 export default function ForgotPasswordView() {
+  const { push } = useRouter();
+
   const ForgotPasswordSchema = Yup.object().shape({
-    email: Yup.string().required("Email is required").email("Email must be a valid email address"),
+    email: Yup.string().required("Adres email jest wymagany").email("Podaj poprawny adres e-mail"),
   });
+
+  const { resetUserPassword, isPasswordReset } = useUserContext();
 
   const defaultValues = {
     email: "",
@@ -33,19 +41,27 @@ export default function ForgotPasswordView() {
   });
 
   const {
-    reset,
     handleSubmit,
     formState: { isSubmitting },
+    clearErrors,
+    reset,
   } = methods;
 
+  const handleFormError = useFormErrorHandler(methods);
+
   const onSubmit = handleSubmit(async (data) => {
+    clearErrors();
     try {
+      await resetUserPassword(data);
       reset();
-      console.log("DATA", data);
     } catch (error) {
-      console.error(error);
+      handleFormError(error);
     }
   });
+
+  if (isPasswordReset) {
+    push(paths.login);
+  }
 
   return (
     <Stack sx={{ textAlign: "center" }}>
@@ -56,16 +72,15 @@ export default function ForgotPasswordView() {
       />
 
       <Typography variant="h3" paragraph>
-        Forgot Your Password?
+        Nie pamiętasz hasła?
       </Typography>
 
       <Typography variant="body2" sx={{ color: "text.secondary", mb: 5 }}>
-        Please enter the email address associated with your account and We will email you a link to
-        reset your password.
+        Podaj adres e-mail powiązany z Twoim kontem, a my wyślemy Ci Twoje tymczasowe hasło.
       </Typography>
 
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <RHFTextField name="email" hiddenLabel placeholder="Email address" />
+        <RHFTextField name="email" hiddenLabel placeholder="Adres e-mail" />
 
         <LoadingButton
           fullWidth
@@ -76,13 +91,13 @@ export default function ForgotPasswordView() {
           loading={isSubmitting}
           sx={{ mt: 2.5 }}
         >
-          Reset Password
+          Resetuj hasło
         </LoadingButton>
       </FormProvider>
 
       <Link
         component={RouterLink}
-        href={paths.loginCover}
+        href={paths.login}
         color="inherit"
         variant="subtitle2"
         sx={{
@@ -93,7 +108,7 @@ export default function ForgotPasswordView() {
         }}
       >
         <Iconify icon="carbon:chevron-left" width={16} sx={{ mr: 1 }} />
-        Return to sign in
+        Wróć do logowania
       </Link>
     </Stack>
   );

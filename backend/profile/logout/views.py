@@ -13,4 +13,4 @@ class ProfileLogoutViewSet(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         logout(request)
-        return Response(status=status.HTTP_200_OK, data={"logout": "Wylogowany."})
+        return Response(status=status.HTTP_200_OK, data={})

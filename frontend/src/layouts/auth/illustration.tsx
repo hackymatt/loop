@@ -25,7 +25,7 @@ export default function AuthIllustrationLayout({ children }: Props) {
         sx={{
           pb: 10,
           minHeight: 1,
-          pt: { xs: 12, md: 21 },
+          pt: { xs: 12, md: 10 },
         }}
       >
         <Grid container columnSpacing={{ md: 5 }} justifyContent="space-between">

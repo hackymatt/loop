@@ -2,6 +2,7 @@
 
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import Link from "@mui/material/Link";
@@ -17,63 +18,81 @@ import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
 import { useBoolean } from "src/hooks/use-boolean";
+import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import Iconify from "src/components/iconify";
+import { useUserContext } from "src/components/user";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
-export default function LoginIllustrationView() {
+export default function RegisterView() {
+  const { push } = useRouter();
+
   const passwordShow = useBoolean();
 
-  const LoginSchema = Yup.object().shape({
-    email: Yup.string().required("Email is required").email("That is not an email"),
+  const { registerUser, isRegistered } = useUserContext();
+
+  const RegisterSchema = Yup.object().shape({
+    first_name: Yup.string().required("Imię jest wymagane"),
+    last_name: Yup.string().required("Nazwisko jest wymagane"),
+    email: Yup.string().required("Adres email jest wymagany").email("Podaj poprawny adres e-mail"),
     password: Yup.string()
-      .required("Password is required")
-      .min(6, "Password should be of minimum 6 characters length"),
+      .required("Hasło jest wymagane")
+      .min(8, "Hasło musi mieć minimum 8 znaków")
+      .matches(/^(?=.*[A-Z])/, "Hasło musi składać się z minimum jednej dużej litery.")
+      .matches(/^(?=.*[a-z])/, "Hasło musi składać się z minimum jednej małej litery.")
+      .matches(/^(?=.*[0-9])/, "Hasło musi składać się z minimum jednej cyfry")
+      .matches(/^(?=.*[!@#%&])/, "Hasło musi składać się z minimum jednego znaku specjalnego"),
+    password2: Yup.string()
+      .required("Hasło jest wymagane")
+      .oneOf([Yup.ref("password")], "Hasła nie są takie same"),
   });
 
   const defaultValues = {
+    first_name: "",
+    last_name: "",
     email: "",
     password: "",
+    password2: "",
   };
 
   const methods = useForm({
-    resolver: yupResolver(LoginSchema),
+    resolver: yupResolver(RegisterSchema),
     defaultValues,
   });
 
   const {
-    reset,
     handleSubmit,
     formState: { isSubmitting },
+    clearErrors,
   } = methods;
 
+  const handleFormError = useFormErrorHandler(methods);
+
   const onSubmit = handleSubmit(async (data) => {
+    clearErrors();
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      console.log("DATA", data);
+      await registerUser(data);
     } catch (error) {
-      console.error(error);
+      handleFormError(error);
     }
   });
+
+  if (isRegistered) {
+    push(paths.verify);
+  }
 
   const renderHead = (
     <div>
       <Typography variant="h3" paragraph>
-        Login
+        Rejestracja
       </Typography>
 
       <Typography variant="body2" sx={{ color: "text.secondary" }}>
-        {`Don’t have an account? `}
-        <Link
-          component={RouterLink}
-          href={paths.registerIllustration}
-          variant="subtitle2"
-          color="primary"
-        >
-          Get started
+        Już masz konto?{" "}
+        <Link component={RouterLink} href={paths.login} variant="subtitle2" color="primary">
+          Zaloguj się
         </Link>
       </Typography>
     </div>
@@ -97,12 +116,16 @@ export default function LoginIllustrationView() {
 
   const renderForm = (
     <FormProvider methods={methods} onSubmit={onSubmit}>
-      <Stack spacing={2.5} alignItems="flex-end">
-        <RHFTextField name="email" label="Email address" />
+      <Stack spacing={2.5}>
+        <RHFTextField name="first_name" label="Imię" />
+
+        <RHFTextField name="last_name" label="Nazwisko" />
+
+        <RHFTextField name="email" label="Adres e-mail" />
 
         <RHFTextField
           name="password"
-          label="Password"
+          label="Hasło"
           type={passwordShow.value ? "text" : "password"}
           InputProps={{
             endAdornment: (
@@ -115,15 +138,20 @@ export default function LoginIllustrationView() {
           }}
         />
 
-        <Link
-          component={RouterLink}
-          href={paths.forgotPassword}
-          variant="body2"
-          underline="always"
-          color="text.secondary"
-        >
-          Forgot password?
-        </Link>
+        <RHFTextField
+          name="password2"
+          label="Powtórz hasło"
+          type={passwordShow.value ? "text" : "password"}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={passwordShow.onToggle} edge="end">
+                  <Iconify icon={passwordShow.value ? "carbon:view" : "carbon:view-off"} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
 
         <LoadingButton
           fullWidth
@@ -133,8 +161,19 @@ export default function LoginIllustrationView() {
           variant="contained"
           loading={isSubmitting}
         >
-          Login
+          Zarejestruj się
         </LoadingButton>
+
+        <Typography variant="caption" align="center" sx={{ color: "text.secondary", mt: 1 }}>
+          Klikając przycisk Zarejestruj się, akceptujesz nasz{" "}
+          <Link color="text.primary" href="#" underline="always">
+            Regulamin
+          </Link>{" "}
+          oraz{" "}
+          <Link color="text.primary" href="#" underline="always">
+            Politykę prywatności.
+          </Link>
+        </Typography>
       </Stack>
     </FormProvider>
   );
@@ -147,7 +186,7 @@ export default function LoginIllustrationView() {
 
       <Divider>
         <Typography variant="body2" sx={{ color: "text.disabled" }}>
-          or continue with
+          lub
         </Typography>
       </Divider>
 

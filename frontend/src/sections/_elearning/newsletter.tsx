@@ -10,6 +10,8 @@ import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 import { LoadingButton, LoadingButtonProps } from "@mui/lab";
 
+import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
+
 import { useRegisterNewsletter } from "src/api/newsletter/register";
 
 import Image from "src/components/image";
@@ -92,14 +94,18 @@ export function NewsletterEmail({ buttonLabel = "Zapisz", sx }: Props) {
     reset,
     handleSubmit,
     formState: { isSubmitting },
+    clearErrors,
   } = methods;
 
+  const handleFormError = useFormErrorHandler(methods);
+
   const onSubmit = handleSubmit(async (data) => {
+    clearErrors();
     try {
       await register(data);
       reset();
     } catch (error) {
-      console.error(error);
+      handleFormError(error);
     }
   });
 

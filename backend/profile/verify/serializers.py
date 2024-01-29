@@ -26,3 +26,13 @@ class ProfileVerificationCodeSerializer(ModelSerializer):
         model = User
         fields = ("email",)
         email = EmailField(required=True)
+
+
+class UserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            "first_name",
+            "last_name",
+            "email",
+        )

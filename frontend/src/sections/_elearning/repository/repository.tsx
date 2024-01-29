@@ -22,7 +22,7 @@ export default function Repository({ githubUrl }: Props) {
           component="a"
           href={githubUrl}
           target="_blank"
-          startIcon={<Iconify icon="mdi:github" />}
+          startIcon={<Iconify icon="carbon:logo-github" />}
         >
           GitHub
         </Button>

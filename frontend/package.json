@@ -36,6 +36,7 @@
     "@tanstack/react-query-devtools": "^4.26.0",
     "axios": "^1.6.5",
     "date-fns": "^2.30.0",
+    "flat": "^6.0.1",
     "framer-motion": "^10.16.16",
     "google-map-react": "^2.2.1",
     "lodash-es": "^4.17.21",

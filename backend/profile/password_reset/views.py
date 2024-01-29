@@ -22,7 +22,7 @@ class ProfilePasswordResetViewSet(ModelViewSet):
         if not User.objects.filter(email=email).exists():
             return Response(
                 status=status.HTTP_401_UNAUTHORIZED,
-                data={"password_reset": "Użytkownik nie istnieje."},
+                data={"email": "Użytkownik nie istnieje."},
             )
 
         user = User.objects.get(email=email)
@@ -56,5 +56,6 @@ class ProfilePasswordResetViewSet(ModelViewSet):
         )
 
         return Response(
-            status=status.HTTP_200_OK, data={"password_reset": "Hasło zresetowane."}
+            status=status.HTTP_200_OK,
+            data={},
         )

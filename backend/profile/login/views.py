@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from profile.login.serializers import ProfileLoginSerializer
+from profile.login.serializers import ProfileLoginSerializer, UserSerializer
 from rest_framework import status
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
@@ -17,13 +17,13 @@ class ProfileLoginViewSet(ModelViewSet):
         if not User.objects.filter(email=email).exists():
             return Response(
                 status=status.HTTP_401_UNAUTHORIZED,
-                data={"login": "Niepoprawny email lub hasło."},
+                data={"root": "Niepoprawny email lub hasło."},
             )
 
         if not User.objects.get(email=email).is_active:
             return Response(
                 status=status.HTTP_403_FORBIDDEN,
-                data={"login": "Użytkownik nieaktywny."},
+                data={"root": "Użytkownik nieaktywny.", "email": email},
             )
 
         password = request.data["password"]
@@ -32,8 +32,10 @@ class ProfileLoginViewSet(ModelViewSet):
         if not user:
             return Response(
                 status=status.HTTP_401_UNAUTHORIZED,
-                data={"login": "Niepoprawny email lub hasło."},
+                data={"root": "Niepoprawny email lub hasło."},
             )
 
         login(request, user)
-        return Response(status=status.HTTP_200_OK, data={"login": "Sukces."})
+        return Response(
+            status=status.HTTP_200_OK, data=UserSerializer(instance=user).data
+        )

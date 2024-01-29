@@ -4,6 +4,7 @@ from rest_framework import status
 from profile.verify.serializers import (
     ProfileVerificationCodeSerializer,
     ProfileVerifySerializer,
+    UserSerializer,
 )
 from profile.models import Profile
 from django.contrib.auth.models import User
@@ -26,7 +27,7 @@ class ProfileVerifyViewSet(ModelViewSet):
         if not User.objects.filter(email=email).exists():
             return Response(
                 status=status.HTTP_401_UNAUTHORIZED,
-                data={"verify": "Użytkownik nie istnieje."},
+                data={"email": "Użytkownik nie istnieje."},
             )
 
         user = User.objects.get(email=email)
@@ -34,7 +35,7 @@ class ProfileVerifyViewSet(ModelViewSet):
         if user.is_active:
             return Response(
                 status=status.HTTP_304_NOT_MODIFIED,
-                data={"code": "Użytkownik już jest aktywny."},
+                data={"email": "Użytkownik już jest aktywny."},
             )
 
         profile = Profile.objects.get(user=user)
@@ -46,7 +47,8 @@ class ProfileVerifyViewSet(ModelViewSet):
             seconds=verification_code.timeout()
         ):
             return Response(
-                status=status.HTTP_400_BAD_REQUEST, data={"code": "Kod wygasł."}
+                status=status.HTTP_400_BAD_REQUEST,
+                data={"code": "Kod wygasł."},
             )
 
         if profile.verification_code != code:
@@ -58,7 +60,9 @@ class ProfileVerifyViewSet(ModelViewSet):
         user.is_active = True
         user.save()
 
-        return Response(status=status.HTTP_200_OK, data={"code": "Kod poprawny."})
+        return Response(
+            status=status.HTTP_200_OK, data=UserSerializer(instance=user).data
+        )
 
     def create(self, request, *args, **kwargs):
         return self.verify(request)
@@ -76,7 +80,7 @@ class ProfileVerificationCodeViewSet(ModelViewSet):
         if not User.objects.filter(email=email).exists():
             return Response(
                 status=status.HTTP_401_UNAUTHORIZED,
-                data={"verify": "Użytkownik nie istnieje."},
+                data={"email": "Użytkownik nie istnieje."},
             )
 
         user = User.objects.get(email=email)
@@ -107,4 +111,4 @@ class ProfileVerificationCodeViewSet(ModelViewSet):
             data=data,
         )
 
-        return Response(status=status.HTTP_200_OK, data={"code": "Kod wysłany."})
+        return Response(status=status.HTTP_200_OK, data={})

@@ -38,7 +38,7 @@ export default function AuthBackgroundLayout({ children }: Props) {
             width: 1,
             mx: "auto",
             flexShrink: 0,
-            maxWidth: 400,
+            maxWidth: 500,
             borderRadius: 2,
             bgcolor: "background.default",
             boxShadow: theme.customShadows.z24,

@@ -1,7 +1,9 @@
 "use client";
 
 import * as Yup from "yup";
+import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import Link from "@mui/material/Link";
@@ -17,72 +19,72 @@ import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
 import { useBoolean } from "src/hooks/use-boolean";
+import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import Iconify from "src/components/iconify";
+import { useUserContext } from "src/components/user";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
-export default function RegisterIllustrationView() {
+export default function LoginView() {
+  const { push } = useRouter();
   const passwordShow = useBoolean();
 
-  const RegisterSchema = Yup.object().shape({
-    fullName: Yup.string()
-      .required("Full name is required")
-      .min(6, "Mininum 6 characters")
-      .max(15, "Maximum 15 characters"),
-    email: Yup.string().required("Email is required").email("That is not an email"),
-    password: Yup.string()
-      .required("Password is required")
-      .min(6, "Password should be of minimum 6 characters length"),
-    confirmPassword: Yup.string()
-      .required("Confirm password is required")
-      .oneOf([Yup.ref("password")], "Password's not match"),
+  const { loginUser, isUnverified, isLoggedIn } = useUserContext();
+
+  const LoginSchema = Yup.object().shape({
+    email: Yup.string().required("Adres email jest wymagany").email("Podaj poprawny adres e-mail"),
+    password: Yup.string().required("Hasło jest wymagane"),
   });
 
   const defaultValues = {
-    fullName: "",
     email: "",
     password: "",
-    confirmPassword: "",
   };
 
   const methods = useForm({
-    resolver: yupResolver(RegisterSchema),
+    resolver: yupResolver(LoginSchema),
     defaultValues,
   });
 
   const {
-    reset,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
+    clearErrors,
   } = methods;
 
+  const handleFormError = useFormErrorHandler(methods);
+
   const onSubmit = handleSubmit(async (data) => {
+    clearErrors();
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      console.log("DATA", data);
+      await loginUser(data);
     } catch (error) {
-      console.error(error);
+      if ((error as AxiosError).response?.status !== 403) {
+        handleFormError(error);
+      }
     }
   });
+
+  if (isUnverified) {
+    push(paths.verify);
+  }
+
+  if (isLoggedIn) {
+    push(paths.account.personal);
+  }
 
   const renderHead = (
     <div>
       <Typography variant="h3" paragraph>
-        Get Started
+        Logowanie
       </Typography>
 
       <Typography variant="body2" sx={{ color: "text.secondary" }}>
-        {`Already have an account? `}
-        <Link
-          component={RouterLink}
-          href={paths.loginIllustration}
-          variant="subtitle2"
-          color="primary"
-        >
-          Login
+        Nie masz jeszcze konta?{" "}
+        <Link component={RouterLink} href={paths.register} variant="subtitle2" color="primary">
+          Zarejestruj się
         </Link>
       </Typography>
     </div>
@@ -106,14 +108,12 @@ export default function RegisterIllustrationView() {
 
   const renderForm = (
     <FormProvider methods={methods} onSubmit={onSubmit}>
-      <Stack spacing={2.5}>
-        <RHFTextField name="fullName" label="Full Name" />
-
-        <RHFTextField name="email" label="Email address" />
+      <Stack spacing={2.5} alignItems="flex-end">
+        <RHFTextField name="email" label="Adres e-mail" />
 
         <RHFTextField
           name="password"
-          label="Password"
+          label="Hasło"
           type={passwordShow.value ? "text" : "password"}
           InputProps={{
             endAdornment: (
@@ -126,20 +126,21 @@ export default function RegisterIllustrationView() {
           }}
         />
 
-        <RHFTextField
-          name="confirmPassword"
-          label="Confirm Password"
-          type={passwordShow.value ? "text" : "password"}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={passwordShow.onToggle} edge="end">
-                  <Iconify icon={passwordShow.value ? "carbon:view" : "carbon:view-off"} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
+        {errors.root && (
+          <Typography variant="body2" color="error" sx={{ width: 1 }}>
+            {errors.root.message}
+          </Typography>
+        )}
+
+        <Link
+          component={RouterLink}
+          href={paths.forgotPassword}
+          variant="body2"
+          underline="always"
+          color="text.secondary"
+        >
+          Nie pamiętasz hasła?
+        </Link>
 
         <LoadingButton
           fullWidth
@@ -149,19 +150,8 @@ export default function RegisterIllustrationView() {
           variant="contained"
           loading={isSubmitting}
         >
-          Register
+          Zaloguj się
         </LoadingButton>
-
-        <Typography variant="caption" align="center" sx={{ color: "text.secondary", mt: 3 }}>
-          {`I agree to `}
-          <Link color="text.primary" href="#" underline="always">
-            Terms of Service
-          </Link>
-          {` and `}
-          <Link color="text.primary" href="#" underline="always">
-            Privacy Policy.
-          </Link>
-        </Typography>
       </Stack>
     </FormProvider>
   );
@@ -174,7 +164,7 @@ export default function RegisterIllustrationView() {
 
       <Divider>
         <Typography variant="body2" sx={{ color: "text.disabled" }}>
-          or continue with
+          lub
         </Typography>
       </Divider>
 
