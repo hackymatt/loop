@@ -18,11 +18,14 @@ import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 import Image from "src/components/image";
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
+import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
 export default function ForgotPasswordView() {
+  const { enqueueSnackbar } = useToastContext();
+
   const { push } = useRouter();
 
   const ForgotPasswordSchema = Yup.object().shape({
@@ -53,6 +56,7 @@ export default function ForgotPasswordView() {
     clearErrors();
     try {
       await resetUserPassword(data);
+      enqueueSnackbar("Wysłano tymczasowe hasło", { variant: "success" });
       reset();
     } catch (error) {
       handleFormError(error);

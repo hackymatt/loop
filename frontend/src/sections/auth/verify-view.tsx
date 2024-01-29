@@ -15,6 +15,7 @@ import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import Image from "src/components/image";
 import { useUserContext } from "src/components/user";
+import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFCode } from "src/components/hook-form";
 
 import NotFoundView from "../error/not-found-view";
@@ -22,6 +23,8 @@ import NotFoundView from "../error/not-found-view";
 // ----------------------------------------------------------------------
 
 export default function VerifyView() {
+  const { enqueueSnackbar } = useToastContext();
+
   const { push } = useRouter();
 
   const { email, verifyUser, resendVerificationCode, isUnverified, isLoading } = useUserContext();
@@ -55,6 +58,7 @@ export default function VerifyView() {
     clearErrors();
     try {
       await verifyUser({ email, code: data.code });
+      enqueueSnackbar("Weryfikacja poprawna", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }
@@ -64,6 +68,7 @@ export default function VerifyView() {
     clearErrors();
     try {
       await resendVerificationCode({ email });
+      enqueueSnackbar("Wysłano kod weryfikacyjny ponownie", { variant: "success" });
       reset();
     } catch (error) {
       handleFormError(error);

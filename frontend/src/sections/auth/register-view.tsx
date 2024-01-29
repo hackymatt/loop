@@ -22,11 +22,14 @@ import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
+import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
 export default function RegisterView() {
+  const { enqueueSnackbar } = useToastContext();
+
   const { push } = useRouter();
 
   const passwordShow = useBoolean();
@@ -74,6 +77,7 @@ export default function RegisterView() {
     clearErrors();
     try {
       await registerUser(data);
+      enqueueSnackbar("Zarejestrowano pomyślnie", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }

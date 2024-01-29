@@ -11,6 +11,7 @@ import ProgressBar from "src/components/progress-bar";
 import { MotionLazy } from "src/components/animate/motion-lazy";
 import { SettingsDrawer, SettingsProvider } from "src/components/settings";
 import { UserProvider } from "src/components/user";
+import { ToastProvider } from "src/components/toast";
 import { ReactQueryProvider } from "./(index)/react-query-provider";
 
 // ----------------------------------------------------------------------
@@ -55,11 +56,13 @@ export default function RootLayout({ children }: Props) {
                 }}
               >
                 <ThemeProvider>
-                  <MotionLazy>
-                    <ProgressBar />
-                    <SettingsDrawer />
-                    {children}
-                  </MotionLazy>
+                  <ToastProvider>
+                    <MotionLazy>
+                      <ProgressBar />
+                      <SettingsDrawer />
+                      {children}
+                    </MotionLazy>
+                  </ToastProvider>
                 </ThemeProvider>
               </SettingsProvider>
             </LocalizationProvider>
