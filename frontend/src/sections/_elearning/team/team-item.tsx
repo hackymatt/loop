@@ -1,11 +1,39 @@
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
+import { IconButton } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import { alpha, styled } from "@mui/material/styles";
+
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
+
+import { bgGradient } from "src/theme/css";
 
 import Image from "src/components/image";
 
 import { ITeamMemberProps } from "src/types/team";
+
+// ----------------------------------------------------------------------
+
+const StyledOverlay = styled("div")(({ theme }) => ({
+  ...bgGradient({
+    startColor: `${alpha(theme.palette.common.black, 0)} 0%`,
+    endColor: `${theme.palette.common.black} 90%`,
+  }),
+  top: 0,
+  left: 0,
+  zIndex: 8,
+  opacity: 0,
+  width: "100%",
+  height: "100%",
+  position: "absolute",
+  transition: theme.transitions.create("opacity", {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.short,
+  }),
+  "&:hover": { opacity: 1 },
+}));
 
 // ----------------------------------------------------------------------
 
@@ -14,7 +42,7 @@ type Props = {
 };
 
 export default function TeamItem({ member }: Props) {
-  const { name, role, photo, gender } = member;
+  const { id, name, role, photo, gender } = member;
 
   const genderAvatarUrl =
     gender === "Kobieta"
@@ -35,6 +63,24 @@ export default function TeamItem({ member }: Props) {
 
       <Box sx={{ position: "relative" }}>
         <Shape />
+
+        <StyledOverlay>
+          <Stack
+            direction="row"
+            justifyContent="center"
+            sx={{ width: 1, zIndex: 9, bottom: 24, position: "absolute" }}
+          >
+            <IconButton
+              component={RouterLink}
+              href={`${paths.courses}?lecturer_in=${id}`}
+              sx={{ color: "common.white" }}
+            >
+              <Typography variant="body2" sx={{ color: "common.white" }}>
+                Zobacz kursy
+              </Typography>
+            </IconButton>
+          </Stack>
+        </StyledOverlay>
 
         <Image src={avatarUrl} alt={name} ratio="1/1" />
       </Box>

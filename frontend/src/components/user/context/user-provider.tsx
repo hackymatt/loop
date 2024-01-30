@@ -65,6 +65,7 @@ export function UserProvider({ children }: Props) {
 
   useEffect(() => {
     if (isSuccessRegister) {
+      setIsUnverified(true);
       setIsRegistered(true);
       setEmail(registerData.email);
     }

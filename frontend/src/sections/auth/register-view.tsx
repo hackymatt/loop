@@ -1,6 +1,7 @@
 "use client";
 
 import * as Yup from "yup";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -39,7 +40,7 @@ export default function RegisterView() {
   const RegisterSchema = Yup.object().shape({
     first_name: Yup.string().required("Imię jest wymagane"),
     last_name: Yup.string().required("Nazwisko jest wymagane"),
-    email: Yup.string().required("Adres email jest wymagany").email("Podaj poprawny adres e-mail"),
+    email: Yup.string().required("Adres e-mail jest wymagany").email("Podaj poprawny adres e-mail"),
     password: Yup.string()
       .required("Hasło jest wymagane")
       .min(8, "Hasło musi mieć minimum 8 znaków")
@@ -83,9 +84,11 @@ export default function RegisterView() {
     }
   });
 
-  if (isRegistered) {
-    push(paths.verify);
-  }
+  useEffect(() => {
+    if (isRegistered) {
+      push(paths.verify);
+    }
+  }, [isRegistered, push]);
 
   const renderHead = (
     <div>

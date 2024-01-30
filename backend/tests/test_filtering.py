@@ -370,6 +370,19 @@ class CourseFilterTest(APITestCase):
         count = data["records_count"]
         self.assertEqual(count, 1)
 
+    def test_lecturer_filter(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        ids = ",".join(
+            [str(self.lecturer_profile_1.uuid), str(self.lecturer_profile_2.uuid)]
+        )
+        response = self.client.get(f"{self.endpoint}?lecturer_in={ids}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 3)
+
     def test_technology_filter(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -1273,3 +1286,152 @@ class TechnologyFilterTest(APITestCase):
         self.assertEqual(records_count, 1)
         prices = [record["name"] for record in results]
         self.assertEqual(prices, ["Python"])
+
+
+class LecturerFilterTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/lecturers"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_profile(user=self.user)
+        self.user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="test2@example.com",
+            password="Test12345",
+            is_active=True,
+        )
+        self.profile_2 = create_profile(user=self.user_2)
+        self.lecturer_user_1 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_1@example.com",
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.lecturer_user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_2@example.com",
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile_1 = create_profile(
+            user=self.lecturer_user_1, user_type="W"
+        )
+        self.lecturer_profile_2 = create_profile(
+            user=self.lecturer_user_2, user_type="W"
+        )
+        # course 1
+        self.course_1 = create_course(
+            title="Python Beginner",
+            description="Learn Python today",
+            technology=create_technology_obj(name="Python"),
+            level="Podstawowy",
+            price="99.99",
+            github_url="https://github.com/hackymatt/course",
+            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            topics=[
+                create_topic_obj(name="You will learn how to code"),
+                create_topic_obj(name="You will learn a new IDE"),
+            ],
+            lessons=[
+                create_lesson_obj(
+                    id=-1,
+                    title="Python lesson 1",
+                    description="bbbb",
+                    duration="90",
+                    github_url="https://github.com/hackymatt/course/lesson",
+                    price="9.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Python lesson 2",
+                    description="bbbb",
+                    duration="30",
+                    github_url="https://github.com/hackymatt/course/lesson",
+                    price="2.99",
+                ),
+            ],
+        )
+
+        create_teaching(
+            lesson=self.course_1.lessons.all()[0],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course_1.lessons.all()[1],
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.course_1.lessons.all()[0],
+            lecturer=self.lecturer_profile_2,
+        )
+        create_teaching(
+            lesson=self.course_1.lessons.all()[1],
+            lecturer=self.lecturer_profile_2,
+        )
+
+        create_purchase(
+            lesson=self.course_1.lessons.all()[0],
+            student=self.profile,
+            price=self.course_1.lessons.all()[0].price,
+        )
+        create_purchase(
+            lesson=self.course_1.lessons.all()[1],
+            student=self.profile,
+            price=self.course_1.lessons.all()[1].price,
+        )
+
+        self.review_course_1_1 = create_review(
+            lesson=self.course_1.lessons.all()[0],
+            student=self.profile,
+            lecturer=self.lecturer_profile_1,
+            rating=5,
+            review="Great lesson.",
+        )
+        self.review_course_1_2 = create_review(
+            lesson=self.course_1.lessons.all()[0],
+            student=self.profile_2,
+            lecturer=self.lecturer_profile_1,
+            rating=4,
+            review="Good lesson.",
+        )
+        self.review_course_1_3 = create_review(
+            lesson=self.course_1.lessons.all()[1],
+            student=self.profile,
+            lecturer=self.lecturer_profile_2,
+            rating=3,
+            review="So so lesson.",
+        )
+
+    def test_search_filter(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}?search=lecturer_1")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 1)
+
+    def test_rating_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}?rating_from=4")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        ratings = [record["rating"] for record in results]
+        self.assertEqual(ratings, [4.5])

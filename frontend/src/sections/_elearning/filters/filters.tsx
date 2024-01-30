@@ -15,6 +15,7 @@ import FilterPrice from "./filter-price";
 import FilterRating from "./filter-rating";
 import FilterSearch from "./filter-search";
 import FilterDuration from "./filter-duration";
+import FilterTeachers from "./filter-teachers";
 import FilterCategories from "./filter-categories";
 
 // ----------------------------------------------------------------------
@@ -83,6 +84,13 @@ export default function Filters({ open, onClose }: Props) {
         <FilterLevel
           filterLevel={filters?.level_in ?? ""}
           onChangeLevel={(value) => handleChange("level_in", value)}
+        />
+      </Block>
+
+      <Block title="Instruktorzy">
+        <FilterTeachers
+          filterTeachers={filters?.lecturer_in ?? ""}
+          onChangeTeacher={(value) => handleChange("lecturer_in", value)}
         />
       </Block>
 

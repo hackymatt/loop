@@ -20,7 +20,8 @@ from profile.models import Profile
 from review.models import Review
 from purchase.models import LessonPurchase
 from teaching.models import Teaching
-from django.db.models import Sum, Avg, Min, Count
+from django.db.models.functions import Concat
+from django.db.models import Sum, Avg, Min, Count, Value
 from django.core.exceptions import FieldDoesNotExist
 from datetime import timedelta
 
@@ -108,16 +109,28 @@ def get_lowest_30_days_price(price_history_model, instance):
     return prices_in_last_30_days.aggregate(Min("price"))["price__min"]
 
 
-def get_lecturers(lessons):
+def get_lecturers(self, lessons):
     lecturer_ids = Teaching.objects.filter(lesson__in=lessons).values("lecturer")
-    lecturers = Profile.objects.filter(id__in=lecturer_ids).order_by("uuid")
-    return LecturerSerializer(lecturers, many=True).data
+    lecturers = (
+        Profile.objects.filter(id__in=lecturer_ids)
+        .annotate(full_name=Concat("user__first_name", Value(" "), "user__last_name"))
+        .order_by("full_name")
+    )
+    return LecturerSerializer(
+        lecturers, many=True, context={"request": self.context.get("request")}
+    ).data
 
 
-def get_lecturers_details(lessons):
+def get_lecturers_details(self, lessons):
     lecturer_ids = Teaching.objects.filter(lesson__in=lessons).values("lecturer")
-    lecturers = Profile.objects.filter(id__in=lecturer_ids).order_by("uuid")
-    return LecturerDetailsSerializer(lecturers, many=True).data
+    lecturers = (
+        Profile.objects.filter(id__in=lecturer_ids)
+        .annotate(full_name=Concat("user__first_name", Value(" "), "user__last_name"))
+        .order_by("full_name")
+    )
+    return LecturerDetailsSerializer(
+        lecturers, many=True, context={"request": self.context.get("request")}
+    ).data
 
 
 def get_rating(lessons):
@@ -275,7 +288,7 @@ class LessonDetailsSerializer(ModelSerializer):
     rating_count = SerializerMethodField("get_lesson_rating_count")
 
     def get_lesson_lecturers(self, lesson):
-        return get_lecturers(lessons=[lesson])
+        return get_lecturers(self, lessons=[lesson])
 
     def get_lesson_rating(self, lesson):
         return get_rating(lessons=[lesson])
@@ -321,7 +334,7 @@ class LessonSerializer(ModelSerializer):
         )
 
     def get_lesson_lecturers(self, lesson):
-        return get_lecturers(lessons=[lesson])
+        return get_lecturers(self, lessons=[lesson])
 
     def get_lesson_rating(self, lesson):
         return get_rating(lessons=[lesson])
@@ -395,7 +408,7 @@ class CourseListSerializer(ModelSerializer):
 
     def get_course_lecturers(self, course):
         lessons = get_course_lessons(course=course)
-        return get_lecturers(lessons=lessons)
+        return get_lecturers(self, lessons=lessons)
 
     def get_course_rating(self, course):
         lessons = get_course_lessons(course=course)
@@ -456,7 +469,7 @@ class CourseGetSerializer(ModelSerializer):
 
     def get_course_lecturers(self, course):
         lessons = get_course_lessons(course=course)
-        return get_lecturers_details(lessons=lessons)
+        return get_lecturers_details(self, lessons=lessons)
 
     def get_course_rating(self, course):
         lessons = get_course_lessons(course=course)
@@ -505,7 +518,7 @@ class CourseSerializer(ModelSerializer):
 
     def get_course_lecturers(self, course):
         lessons = get_course_lessons(course=course)
-        return get_lecturers(lessons=lessons)
+        return get_lecturers(self, lessons=lessons)
 
     def get_course_rating(self, course):
         lessons = get_course_lessons(course=course)
@@ -723,7 +736,7 @@ class BestCourseSerializer(ModelSerializer):
 
     def get_course_lecturers(self, course):
         lessons = get_course_lessons(course=course)
-        return get_lecturers(lessons=lessons)
+        return get_lecturers(self, lessons=lessons)
 
     def get_course_rating(self, course):
         lessons = get_course_lessons(course=course)

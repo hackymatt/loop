@@ -4,9 +4,9 @@ export const paths = {
   // main
   root: "/",
   courses: "/courses",
-  course: `/other/course`,
+  course: `/course`,
   posts: "/posts",
-  post: `/other/post`,
+  post: `/post`,
   about: "/about",
   contact: "/contact",
   newsletter: "/newsletter-unsubscribe",

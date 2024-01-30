@@ -14,7 +14,12 @@ from course.models import (
 )
 from review.models import Review
 from purchase.models import LessonPurchase
+from teaching.models import Teaching
+from profile.models import Profile
 from django.db.models import OuterRef, Subquery, Value, Avg, Sum, Count
+from django.contrib.postgres.aggregates import StringAgg
+from django.db.models.functions import Cast
+from django.db.models import TextField
 
 
 def get_rating(queryset):
@@ -55,6 +60,34 @@ def get_students_count(queryset):
         .values("total_student_count")
     )
     courses = queryset.annotate(students_count=Subquery(total_student_count))
+
+    return courses
+
+
+def get_lecturers(queryset):
+    lessons = Lesson.objects.filter(
+        course=OuterRef(OuterRef(OuterRef("pk")))
+    ).values_list("id")
+    lecturers = (
+        Teaching.objects.filter(lesson__in=Subquery(lessons))
+        .annotate(dummy_group_by=Value(1))
+        .values("dummy_group_by")
+        .order_by("dummy_group_by")
+        .values("lecturer")
+        .distinct()
+    )
+
+    profiles = (
+        Profile.objects.filter(id__in=Subquery(lecturers))
+        .values("uuid")
+        .annotate(dummy_group_by=Value(1))
+        .values("dummy_group_by")
+        .order_by("dummy_group_by")
+        .annotate(uuids=StringAgg(Cast("uuid", TextField()), delimiter=","))
+        .values("uuids")
+    )
+
+    courses = queryset.annotate(all_lecturers=Subquery(profiles))
 
     return courses
 
@@ -100,6 +133,11 @@ class OrderFilter(OrderingFilter):
 
 
 class CourseFilter(FilterSet):
+    lecturer_in = CharFilter(
+        label="Lecturer in",
+        field_name="all_lecturers",
+        method="filter_lecturer_in",
+    )
     technology_in = CharInFilter(field_name="technology__name", lookup_expr="in")
     level_in = CharInFilter(field_name="level", lookup_expr="in")
     price_from = NumberFilter(field_name="price", lookup_expr="gte")
@@ -157,6 +195,7 @@ class CourseFilter(FilterSet):
     class Meta:
         model = Course
         fields = (
+            "lecturer_in",
             "technology_in",
             "level_in",
             "price_from",
@@ -167,6 +206,21 @@ class CourseFilter(FilterSet):
             "active",
             "sort_by",
         )
+
+    def filter_lecturer_in(self, queryset, field_name, value):
+        lookup_field_name = f"{field_name}__contains"
+        uuids = value.split(",")
+
+        uuid_first, *uuid_rest = uuids
+        return_queryset = get_lecturers(queryset).filter(
+            **{lookup_field_name: uuid_first}
+        )
+        for uuid in uuid_rest:
+            return_queryset = return_queryset | get_lecturers(queryset).filter(
+                **{lookup_field_name: uuid}
+            )
+
+        return return_queryset
 
     def filter_rating_from(self, queryset, field_name, value):
         lookup_field_name = f"{field_name}__gte"

@@ -30,7 +30,7 @@ export default function Advertisement({ advertisement, sx, ...other }: Props) {
           position: "absolute",
         }}
       >
-        <Typography variant="h4" sx={{ color: "primary.main" }}>
+        <Typography variant="h4" sx={{ color: "secondary.main" }}>
           {advertisement.title}
         </Typography>
 
@@ -39,7 +39,7 @@ export default function Advertisement({ advertisement, sx, ...other }: Props) {
         </Typography>
 
         <Button href={advertisement.path} variant="contained" color="primary">
-          Przejdź już teraz
+          Sprawdź już teraz
         </Button>
       </Stack>
 

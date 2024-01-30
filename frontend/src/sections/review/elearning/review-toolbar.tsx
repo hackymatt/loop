@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { SelectChangeEvent } from "@mui/material/Select";
@@ -39,16 +40,21 @@ export default function ReviewToolbar({
   onChangeSort,
 }: Props) {
   return (
-    <Stack spacing={1} alignItems="left" direction="column" sx={{ mb: 5 }}>
+    <Stack spacing={1} alignItems="left" direction="column" sx={{ mb: 3 }}>
       <Typography variant="h4" sx={{ width: 1 }}>
         Recenzje
       </Typography>
 
-      <Stack direction="row" spacing={1} flexShrink={0} alignItems="center">
+      <Box
+        rowGap={2.5}
+        columnGap={2}
+        display="grid"
+        gridTemplateColumns={{ xs: "repeat(1, 1fr)", md: "repeat(3, 1fr)" }}
+      >
         <FilterLesson value={lesson} options={lessonOptions} onChange={onChangeLesson} />
         <FilterTeacher value={teacher} options={teacherOptions} onChange={onChangeTeacher} />
         <Sorting value={sort} options={SORT_OPTIONS} onChange={onChangeSort} />
-      </Stack>
+      </Box>
     </Stack>
   );
 }
