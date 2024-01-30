@@ -13,8 +13,10 @@ from django.db.models import Avg
 def get_rating(lecturer):
     return Review.objects.filter(lecturer=lecturer)
 
+
 def get_lessons(lecturer):
     return Teaching.objects.filter(lecturer=lecturer).values("lesson")
+
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
@@ -43,17 +45,13 @@ class LecturerSerializer(ModelSerializer):
 
     def get_lecturer_rating(self, lecturer):
         return get_rating(lecturer=lecturer).aggregate(Avg("rating"))["rating__avg"]
-    
+
     def get_lecturer_rating_count(self, lecturer):
         return get_rating(lecturer=lecturer).count()
-    
+
     def get_lecturer_lessons_count(self, lecturer):
-        return (
-            get_lessons(lecturer=lecturer)
-            .distinct()
-            .count()
-        )
-    
+        return get_lessons(lecturer=lecturer).distinct().count()
+
 
 class BestLecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
