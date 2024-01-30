@@ -81,7 +81,7 @@ export function NewsletterEmail({ buttonLabel = "Zapisz", sx }: Props) {
   const { mutateAsync: register } = useRegisterNewsletter();
 
   const NewsletterSchema = Yup.object().shape({
-    email: Yup.string().required("Adres email jest wymagany").email("Podaj poprawny adres e-mail"),
+    email: Yup.string().required("Adres e-mail jest wymagany").email("Podaj poprawny adres e-mail"),
   });
 
   const defaultValues = {

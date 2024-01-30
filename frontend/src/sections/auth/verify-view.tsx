@@ -1,6 +1,7 @@
 "use client";
 
 import * as Yup from "yup";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -75,12 +76,14 @@ export default function VerifyView() {
     }
   };
 
+  useEffect(() => {
+    if (!isUnverified) {
+      push(paths.login);
+    }
+  }, [isUnverified, push]);
+
   if (!email) {
     return <NotFoundView />;
-  }
-
-  if (!isUnverified) {
-    push(paths.login);
   }
 
   return (

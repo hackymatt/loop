@@ -3,6 +3,7 @@ from profile.lecturers.serializers import (
     LecturerSerializer,
     BestLecturerSerializer,
 )
+from profile.lecturers.filters import LecturerFilter
 from profile.models import Profile
 from review.models import Review
 from django.db.models import OuterRef, Subquery, Value, Avg
@@ -13,6 +14,13 @@ class LecturerViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = Profile.objects.filter(user_type="W").all()
     serializer_class = LecturerSerializer
+    filterset_class = LecturerFilter
+    search_fields = [
+        "user__first_name",
+        "user__last_name",
+        "user__email",
+        "user_title",
+    ]
 
 
 class BestLecturerViewSet(ModelViewSet):

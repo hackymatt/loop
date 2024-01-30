@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import Link from "@mui/material/Link";
@@ -73,9 +74,11 @@ export default function Nav({ open, onClose }: Props) {
     }
   };
 
-  if (!isLoggedIn) {
-    push(paths.login);
-  }
+  useEffect(() => {
+    if (!isLoggedIn) {
+      push(paths.login);
+    }
+  }, [isLoggedIn, push]);
 
   const renderContent = (
     <Stack

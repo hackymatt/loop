@@ -10,22 +10,26 @@ import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import { useResponsive } from "src/hooks/use-responsive";
+import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import { useContact } from "src/api/contact/contact";
 
 import Image from "src/components/image";
+import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
 export default function ContactForm() {
+  const { enqueueSnackbar } = useToastContext();
+
   const mdUp = useResponsive("up", "md");
 
   const { mutateAsync: contact } = useContact();
 
   const ContactSchema = Yup.object().shape({
     full_name: Yup.string().required("Imię i Nazwisko jest wymagane"),
-    email: Yup.string().required("Adres email jest wymagany").email("Podaj poprawny adres e-mail"),
+    email: Yup.string().required("Adres e-mail jest wymagany").email("Podaj poprawny adres e-mail"),
     subject: Yup.string().required("Temat jest wymagany"),
     message: Yup.string().required("Wiadomość jest wymagana"),
   });
@@ -48,12 +52,15 @@ export default function ContactForm() {
     formState: { isSubmitting },
   } = methods;
 
+  const handleFormError = useFormErrorHandler(methods);
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       await contact(data);
+      enqueueSnackbar("Wysłano wiadomość", { variant: "success" });
       reset();
     } catch (error) {
-      console.error(error);
+      handleFormError(error);
     }
   });
 

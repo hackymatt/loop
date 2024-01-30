@@ -1,6 +1,7 @@
 "use client";
 
 import * as Yup from "yup";
+import { useEffect } from "react";
 import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -38,7 +39,7 @@ export default function LoginView() {
   const { loginUser, isUnverified, isLoggedIn } = useUserContext();
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().required("Adres email jest wymagany").email("Podaj poprawny adres e-mail"),
+    email: Yup.string().required("Adres e-mail jest wymagany").email("Podaj poprawny adres e-mail"),
     password: Yup.string().required("Hasło jest wymagane"),
   });
 
@@ -72,13 +73,17 @@ export default function LoginView() {
     }
   });
 
-  if (isUnverified) {
-    push(paths.verify);
-  }
+  useEffect(() => {
+    if (isUnverified) {
+      push(paths.verify);
+    }
+  }, [isUnverified, push]);
 
-  if (isLoggedIn) {
-    push(paths.account.personal);
-  }
+  useEffect(() => {
+    if (isLoggedIn) {
+      push(paths.account.personal);
+    }
+  }, [isLoggedIn, push]);
 
   const renderHead = (
     <div>

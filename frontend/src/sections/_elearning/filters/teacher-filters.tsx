@@ -10,12 +10,8 @@ import { useQueryParams } from "src/hooks/use-query-params";
 
 import { IQueryParamValue } from "src/types/queryParams";
 
-import FilterLevel from "./filter-level";
-import FilterPrice from "./filter-price";
 import FilterRating from "./filter-rating";
 import FilterSearch from "./filter-search";
-import FilterDuration from "./filter-duration";
-import FilterCategories from "./filter-categories";
 
 // ----------------------------------------------------------------------
 
@@ -62,36 +58,6 @@ export default function Filters({ open, onClose }: Props) {
         <FilterRating
           filterRating={filters?.rating_from ?? null}
           onChangeRating={(value) => handleChange("rating_from", value)}
-        />
-      </Block>
-
-      <Block title="Czas trwania">
-        <FilterDuration
-          filterDuration={filters?.filters ?? ""}
-          onChangeDuration={(value) => handleChange("filters", value)}
-        />
-      </Block>
-
-      <Block title="Technologia">
-        <FilterCategories
-          filterCategories={filters?.technology_in ?? ""}
-          onChangeCategory={(value) => handleChange("technology_in", value)}
-        />
-      </Block>
-
-      <Block title="Poziom">
-        <FilterLevel
-          filterLevel={filters?.level_in ?? ""}
-          onChangeLevel={(value) => handleChange("level_in", value)}
-        />
-      </Block>
-
-      <Block title="Cena">
-        <FilterPrice
-          filterPriceFrom={filters?.price_from ?? 0}
-          filterPriceTo={filters?.price_to ?? 0}
-          onChangeStartPrice={(value) => handleChange("price_from", value)}
-          onChangeEndPrice={(value) => handleChange("price_to", value)}
         />
       </Block>
     </Stack>

@@ -173,7 +173,7 @@ export default function CourseDetailsLessonItem({
               )}
             </Stack>
 
-            {details?.teachers && (
+            {details?.teachers && details.teachers.length > 0 && (
               <Stack direction="row" alignItems="center">
                 <Avatar src={avatarUrl} />
                 <Typography variant="body2" sx={{ ml: 1, mr: 0.5 }}>

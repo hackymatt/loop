@@ -12,7 +12,7 @@ import { SelectChangeEvent } from "@mui/material";
 import { useBoolean } from "src/hooks/use-boolean";
 import { useQueryParams } from "src/hooks/use-query-params";
 
-import { useCourses, useCoursesPagesCount } from "src/api/courses/courses";
+import { useLecturers, useLecturersPagesCount } from "src/api/lecturers/lecturers";
 
 import Iconify from "src/components/iconify";
 import { SplashScreen } from "src/components/loading-screen";
@@ -21,32 +21,34 @@ import NotFoundView from "src/sections/error/not-found-view";
 
 import Newsletter from "../newsletter";
 import Sorting from "../sorting/sorting";
-import CourseList from "../list/course-list";
-import Filters from "../filters/course-filters";
+import TeacherList from "../list/teacher-list";
+import Filters from "../filters/teacher-filters";
 
 // ----------------------------------------------------------------------
 
 const SORT_OPTIONS = [
-  { value: "-students_count", label: "Popularność: największa" },
   { value: "-rating", label: "Ocena: najlepsza" },
-  { value: "price", label: "Cena: od najniższej" },
-  { value: "-price", label: "Cena: od najwyższej" },
+  { value: "user_title", label: "Rola: od A do Z" },
+  { value: "-user_title", label: "Rola: od Z do A" },
+  { value: "full_name", label: "Imię i Nazwisko: od A do Z" },
+  { value: "-full_name", label: "Imię i Nazwisko: od Z do A" },
 ];
 
-export default function CoursesView() {
+export default function TeachersView() {
   const mobileOpen = useBoolean();
   const { setQueryParam, getQueryParams } = useQueryParams();
 
   const query = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const { data: pagesCount, isLoading: isLoadingCoursesPagesCount } = useCoursesPagesCount(query);
-  const { data: courses, isLoading: isLoadingCourses } = useCourses(query);
+  const { data: pagesCount, isLoading: isLoadingLecturersPagesCount } =
+    useLecturersPagesCount(query);
+  const { data: lecturers, isLoading: isLoadingLecturers } = useLecturers(query);
 
   const handleChange = (name: string, value?: string | number) => {
     setQueryParam(name, value);
   };
 
-  const isLoading = isLoadingCourses || isLoadingCoursesPagesCount;
+  const isLoading = isLoadingLecturers || isLoadingLecturersPagesCount;
 
   if (isLoading) {
     return <SplashScreen />;
@@ -67,7 +69,7 @@ export default function CoursesView() {
             py: 5,
           }}
         >
-          <Typography variant="h2">Kursy</Typography>
+          <Typography variant="h2">Instruktorzy</Typography>
 
           <Button
             color="inherit"
@@ -92,10 +94,10 @@ export default function CoursesView() {
               width: { md: `calc(100% - ${280}px)` },
             }}
           >
-            {courses?.length > 0 && (
+            {lecturers?.length > 0 && (
               <Stack direction="row" alignItems="center" justifyContent="right" sx={{ mb: 5 }}>
                 <Sorting
-                  value={query.sort_by ?? "-students_count"}
+                  value={query.sort_by ?? "-rating"}
                   options={SORT_OPTIONS}
                   onChange={(event: SelectChangeEvent) =>
                     handleChange("sort_by", event.target.value)
@@ -104,8 +106,8 @@ export default function CoursesView() {
               </Stack>
             )}
 
-            <CourseList
-              courses={courses}
+            <TeacherList
+              teachers={lecturers}
               loading={isLoading}
               pagesCount={pagesCount}
               page={parseInt(query.page ?? "1", 10) ?? 1}

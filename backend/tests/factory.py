@@ -51,12 +51,14 @@ def create_profile(
     verification_code: str = "abcdefgh",
     verification_code_created_at: datetime = make_aware(datetime.now()),
     user_type: str = "S",
+    user_title: str = "",
 ):
     return Profile.objects.create(
         user=user,
         verification_code=verification_code,
         verification_code_created_at=verification_code_created_at,
         user_type=user_type,
+        user_title=user_title,
     )
 
 

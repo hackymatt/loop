@@ -1,10 +1,10 @@
 from rest_framework.serializers import (
     ModelSerializer,
     EmailField,
-    CharField,
     SerializerMethodField,
 )
 from profile.models import Profile
+from purchase.models import LessonPurchase
 from review.models import Review
 from teaching.models import Teaching
 from django.db.models import Avg
@@ -14,19 +14,24 @@ def get_rating(lecturer):
     return Review.objects.filter(lecturer=lecturer)
 
 
+def get_lessons(lecturer):
+    return Teaching.objects.filter(lecturer=lecturer).values("lesson")
+
+
 class LecturerSerializer(ModelSerializer):
-    first_name = CharField(source="user.first_name")
-    last_name = CharField(source="user.last_name")
+    full_name = SerializerMethodField("get_full_name")
+    gender = EmailField(source="get_gender_display")
     email = EmailField(source="user.email")
     rating = SerializerMethodField("get_lecturer_rating")
     rating_count = SerializerMethodField("get_lecturer_rating_count")
-    lessons_count = SerializerMethodField("get_lessons_count")
+    lessons_count = SerializerMethodField("get_lecturer_lessons_count")
 
     class Meta:
         model = Profile
         fields = (
-            "first_name",
-            "last_name",
+            "uuid",
+            "full_name",
+            "gender",
             "email",
             "user_title",
             "image",
@@ -35,19 +40,17 @@ class LecturerSerializer(ModelSerializer):
             "lessons_count",
         )
 
+    def get_full_name(self, profile):
+        return profile.user.first_name + " " + profile.user.last_name
+
     def get_lecturer_rating(self, lecturer):
         return get_rating(lecturer=lecturer).aggregate(Avg("rating"))["rating__avg"]
 
     def get_lecturer_rating_count(self, lecturer):
         return get_rating(lecturer=lecturer).count()
 
-    def get_lessons_count(self, lecturer):
-        return (
-            Teaching.objects.filter(lecturer=lecturer)
-            .values("lesson")
-            .distinct()
-            .count()
-        )
+    def get_lecturer_lessons_count(self, lecturer):
+        return get_lessons(lecturer=lecturer).distinct().count()
 
 
 class BestLecturerSerializer(ModelSerializer):
@@ -57,7 +60,7 @@ class BestLecturerSerializer(ModelSerializer):
     class Meta:
         model = Profile
         fields = (
-            "id",
+            "uuid",
             "full_name",
             "gender",
             "user_title",

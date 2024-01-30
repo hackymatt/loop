@@ -71,15 +71,15 @@ class CourseTest(APITestCase):
         )
         self.profile_2 = create_profile(user=self.user_2)
         self.lecturer_user_1 = create_user(
-            first_name="first_name",
-            last_name="last_name",
+            first_name="l1_first_name",
+            last_name="l1_last_name",
             email="lecturer_1@example.com",
             password=self.data["password"],
             is_active=True,
         )
         self.lecturer_user_2 = create_user(
-            first_name="first_name",
-            last_name="last_name",
+            first_name="l2_first_name",
+            last_name="l2_last_name",
             email="lecturer_2@example.com",
             password=self.data["password"],
             is_active=True,
@@ -1004,7 +1004,7 @@ class CourseTest(APITestCase):
                         )
                     )
                 ],
-                key=lambda d: d["uuid"],
+                key=lambda d: d["full_name"],
             ),
         )
         self.assertEqual(rating, 4.5)
@@ -1139,7 +1139,7 @@ class CourseTest(APITestCase):
                         )
                     )
                 ],
-                key=lambda d: d["uuid"],
+                key=lambda d: d["full_name"],
             ),
         )
         self.assertEqual(rating, 4.5)
@@ -1275,7 +1275,7 @@ class CourseTest(APITestCase):
                         )
                     )
                 ],
-                key=lambda d: d["uuid"],
+                key=lambda d: d["full_name"],
             ),
         )
         self.assertEqual(rating, 4.5)
