@@ -12,4 +12,6 @@ export type ITeamMemberProps = {
   socialLinks?: ISocialLinks;
   gender?: IGender;
   ratingNumber?: number;
+  totalReviews?: number;
+  totalLessons?: number;
 };

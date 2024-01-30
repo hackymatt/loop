@@ -4,6 +4,8 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 
+import { paths } from "src/routes/paths";
+
 import { ITeamMemberProps } from "src/types/team";
 
 import TeamItem from "./team-item";
@@ -47,9 +49,9 @@ export default function Team({ members }: Props) {
         ))}
       </Box>
 
-      {members.length > TEAM_MEMBER_SLOTS && (
+      {members.length > 0 && (
         <Stack alignItems="center">
-          <Button variant="outlined" size="large" color="inherit">
+          <Button variant="outlined" size="large" color="inherit" href={paths.teachers}>
             Zobacz wszystkich instruktorów
           </Button>
         </Stack>

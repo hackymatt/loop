@@ -5,6 +5,7 @@ export const paths = {
   root: "/",
   courses: "/courses",
   course: `/course`,
+  teachers: "/teachers",
   posts: "/posts",
   post: `/post`,
   about: "/about",
