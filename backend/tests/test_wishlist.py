@@ -35,7 +35,7 @@ class WishlistTest(APITestCase):
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
-            technology=create_technology_obj(name="Python"),
+            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -77,7 +77,7 @@ class WishlistTest(APITestCase):
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
-            technology=create_technology_obj(name="Javascript"),
+            technology=[create_technology_obj(name="Javascript")],
             level="Zaawansowany",
             price="300",
             github_url="https://github.com/hackymatt/course",
@@ -125,7 +125,7 @@ class WishlistTest(APITestCase):
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
-            technology=create_technology_obj(name="VBA"),
+            technology=[create_technology_obj(name="VBA")],
             level="Ekspert",
             price="220",
             github_url="https://github.com/hackymatt/course",

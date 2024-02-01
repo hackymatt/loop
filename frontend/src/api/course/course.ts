@@ -49,7 +49,7 @@ type ILesson = {
 type ICourse = {
   id: number;
   description: string;
-  technology: ITechnology;
+  technology: ITechnology[];
   previous_price: string | null;
   lowest_30_days_price: string | null;
   duration: number;
@@ -98,7 +98,6 @@ export const courseQuery = (id: string) => {
         lessons,
         github_url,
       } = data;
-      const { name } = technology;
 
       modifiedResults = {
         id: courseId,
@@ -108,7 +107,7 @@ export const courseQuery = (id: string) => {
         coverUrl: image,
         video,
         slug: title,
-        category: name,
+        category: technology.map(({ name }: ITechnology) => name),
         priceSale: previous_price,
         lowest30DaysPrice: lowest_30_days_price,
         totalHours: duration / 60,

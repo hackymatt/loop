@@ -116,9 +116,7 @@ class OrderFilter(OrderingFilter):
             return super().filter(queryset, values)
 
         for value in values:
-            if value in ["technology", "-technology"]:
-                queryset = queryset.order_by(f"{value}__name")
-            elif value in ["duration", "-duration"]:
+            if value in ["duration", "-duration"]:
                 queryset = get_duration(queryset).order_by(value)
             elif value in ["rating", "-rating"]:
                 queryset = get_rating(queryset).order_by(value)
@@ -161,8 +159,6 @@ class CourseFilter(FilterSet):
         choices=(
             ("title", "Title ASC"),
             ("-title", "Title DESC"),
-            ("technology", "Technology ASC"),
-            ("-technology", "Technology DESC"),
             ("level", "Level ASC"),
             ("-level", "Level DESC"),
             ("price", "Price ASC"),
@@ -177,8 +173,6 @@ class CourseFilter(FilterSet):
         fields={
             "title": "title",
             "-title": "-title",
-            "technology__name": "technology",
-            "technology__name": "-technology",
             "level": "level",
             "level": "-level",
             "price": "price",

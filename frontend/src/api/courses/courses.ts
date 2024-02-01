@@ -29,7 +29,7 @@ type ITechnology = {
 type ICourse = {
   id: number;
   description: string;
-  technology: ITechnology;
+  technology: ITechnology[];
   previous_price: string | null;
   lowest_30_days_price: string | null;
   duration: number;
@@ -75,32 +75,27 @@ export const coursesQuery = (query?: IQueryParams) => {
         rating_count,
         students_count,
         lecturers,
-      }: ICourse) => {
-        const { name } = technology;
-        return {
-          id,
-          description,
-          price,
-          level,
-          coverUrl: image,
-          slug: title,
-          category: name,
-          priceSale: previous_price,
-          lowest30DaysPrice: lowest_30_days_price,
-          totalHours: duration / 60,
-          ratingNumber: rating,
-          totalReviews: rating_count,
-          totalStudents: students_count,
-          teachers: lecturers.map(
-            ({ uuid, full_name, gender, image: lecturerImage }: ILecturer) => ({
-              id: uuid,
-              name: full_name,
-              avatarUrl: lecturerImage,
-              gender,
-            }),
-          ),
-        };
-      },
+      }: ICourse) => ({
+        id,
+        description,
+        price,
+        level,
+        coverUrl: image,
+        slug: title,
+        category: technology.map(({ name }: ITechnology) => name),
+        priceSale: previous_price,
+        lowest30DaysPrice: lowest_30_days_price,
+        totalHours: duration / 60,
+        ratingNumber: rating,
+        totalReviews: rating_count,
+        totalStudents: students_count,
+        teachers: lecturers.map(({ uuid, full_name, gender, image: lecturerImage }: ILecturer) => ({
+          id: uuid,
+          name: full_name,
+          avatarUrl: lecturerImage,
+          gender,
+        })),
+      }),
     );
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };
   };

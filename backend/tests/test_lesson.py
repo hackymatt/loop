@@ -85,7 +85,7 @@ class LessonTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
-            technology=create_technology_obj(name="Python"),
+            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -177,7 +177,7 @@ class LessonTest(APITestCase):
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
-            technology=create_technology_obj(name="JS"),
+            technology=[create_technology_obj(name="JS")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -262,7 +262,7 @@ class LessonTest(APITestCase):
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
-            technology=create_technology_obj(name="VBA"),
+            technology=[create_technology_obj(name="VBA")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",

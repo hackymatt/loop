@@ -382,7 +382,7 @@ class LessonShortSerializer(ModelSerializer):
 
 
 class CourseListSerializer(ModelSerializer):
-    technology = TechnologySerializer()
+    technology = TechnologySerializer(many=True)
     previous_price = SerializerMethodField("get_course_previous_price")
     lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
     duration = SerializerMethodField("get_course_duration")
@@ -441,7 +441,7 @@ class CourseGetSerializer(ModelSerializer):
     previous_price = SerializerMethodField("get_course_previous_price")
     lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
     lessons = SerializerMethodField("get_lessons")
-    technology = TechnologySerializer()
+    technology = TechnologySerializer(many=True)
     skills = SkillSerializer(many=True)
     topics = TopicSerializer(many=True)
     lecturers = SerializerMethodField("get_course_lecturers")
@@ -493,7 +493,7 @@ class CourseSerializer(ModelSerializer):
     previous_price = SerializerMethodField("get_course_previous_price")
     lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
     lessons = LessonSerializer(many=True)
-    technology = TechnologySerializer()
+    technology = TechnologySerializer(many=True)
     skills = SkillSerializer(many=True)
     topics = TopicSerializer(many=True)
     lecturers = SerializerMethodField("get_course_lecturers")
@@ -576,15 +576,20 @@ class CourseSerializer(ModelSerializer):
                     {"lessons": f"Github url musi być podfolderem kursu."}
                 )
 
-    def add_technology(self, technology):
-        obj, created = Technology.objects.get_or_create(name=technology["name"])
+    def add_technology(self, course, technologies):
+        objs = []
+        for technology in technologies:
+            obj, _ = Technology.objects.get_or_create(name=technology["name"])
+            objs.append(obj)
 
-        return obj
+        course.technology.add(*objs)
+
+        return course
 
     def add_skills(self, course, skills):
         objs = []
         for skill in skills:
-            obj, created = Skill.objects.get_or_create(name=skill["name"])
+            obj, _ = Skill.objects.get_or_create(name=skill["name"])
             objs.append(obj)
 
         course.skills.add(*objs)
@@ -594,7 +599,7 @@ class CourseSerializer(ModelSerializer):
     def add_topics(self, course, topics):
         objs = []
         for topic in topics:
-            obj, created = Topic.objects.get_or_create(name=topic["name"])
+            obj, _ = Topic.objects.get_or_create(name=topic["name"])
             objs.append(obj)
 
         course.topics.add(*objs)
@@ -665,11 +670,10 @@ class CourseSerializer(ModelSerializer):
         skills = validated_data.pop("skills")
         topics = validated_data.pop("topics")
 
-        course = Course.objects.create(
-            **validated_data, technology=self.add_technology(technology=technology)
-        )
+        course = Course.objects.create(**validated_data)
         self.validate_lessons_github_url(course=course, lessons=lessons)
         self.create_lessons(course=course, lessons=lessons)
+        course = self.add_technology(course=course, technologies=technology)
         course = self.add_skills(course=course, skills=skills)
         course = self.add_topics(course=course, topics=topics)
         course.save()
@@ -698,7 +702,8 @@ class CourseSerializer(ModelSerializer):
 
         instance.price = new_price
         instance.github_url = validated_data.get("github_url", instance.github_url)
-        instance.technology = self.add_technology(technology=technology)
+        instance.technology.clear()
+        instance = self.add_technology(course=instance, technologies=technology)
         instance.skills.clear()
         instance = self.add_skills(course=instance, skills=skills)
         instance.topics.clear()
@@ -710,7 +715,7 @@ class CourseSerializer(ModelSerializer):
 
 
 class BestCourseSerializer(ModelSerializer):
-    technology = TechnologySerializer()
+    technology = TechnologySerializer(many=True)
     previous_price = SerializerMethodField("get_course_previous_price")
     lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
     duration = SerializerMethodField("get_course_duration")

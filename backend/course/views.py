@@ -58,11 +58,11 @@ class CourseViewSet(ModelViewSet):
         if self.action == "list":
             active = self.request.query_params.get("active", None)
             if not active:
-                return self.queryset.filter(active=True).all()
+                return self.queryset.filter(active=True).all().distinct()
 
-            return self.queryset
+            return self.queryset.distinct()
 
-        return self.queryset
+        return self.queryset.distinct()
 
     def get_serializer_class(self):
         if self.action == "list":
