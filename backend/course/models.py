@@ -91,7 +91,7 @@ class Course(BaseModel):
     )
     title = CharField()
     description = TextField()
-    technology = ForeignKey(Technology, on_delete=CASCADE, related_name="technology")
+    technology = ManyToManyField(Technology, related_name="technology")
     level = CharField(choices=LEVEL_CHOICES, null=True)
     github_url = URLField()
     price = DecimalField(
@@ -114,35 +114,11 @@ class Course(BaseModel):
             ),
             Index(
                 fields=[
-                    "technology",
-                ]
-            ),
-            Index(
-                fields=[
                     "level",
                 ]
             ),
             Index(
                 fields=[
-                    "price",
-                ]
-            ),
-            Index(
-                fields=[
-                    "technology",
-                    "level",
-                    "price",
-                ]
-            ),
-            Index(
-                fields=[
-                    "technology",
-                    "level",
-                ]
-            ),
-            Index(
-                fields=[
-                    "technology",
                     "price",
                 ]
             ),

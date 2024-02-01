@@ -79,7 +79,7 @@ class CourseOrderTest(APITestCase):
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
-            technology=create_technology_obj(name="Python"),
+            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -145,7 +145,7 @@ class CourseOrderTest(APITestCase):
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
-            technology=create_technology_obj(name="Javascript"),
+            technology=[create_technology_obj(name="Javascript")],
             level="Zaawansowany",
             price="300",
             github_url="https://github.com/hackymatt/course",
@@ -248,7 +248,7 @@ class CourseOrderTest(APITestCase):
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
-            technology=create_technology_obj(name="VBA"),
+            technology=[create_technology_obj(name="VBA")],
             level="Ekspert",
             price="220",
             github_url="https://github.com/hackymatt/course",
@@ -297,7 +297,6 @@ class CourseOrderTest(APITestCase):
 
         self.fields = [
             "title",
-            "technology",
             "level",
             "price",
             "duration",
@@ -395,7 +394,7 @@ class ReviewOrderTest(APITestCase):
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
-            technology=create_technology_obj(name="Python"),
+            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -450,7 +449,7 @@ class ReviewOrderTest(APITestCase):
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
-            technology=create_technology_obj(name="Javascript"),
+            technology=[create_technology_obj(name="Javascript")],
             level="Zaawansowany",
             price="300",
             github_url="https://github.com/hackymatt/course",
@@ -527,7 +526,7 @@ class ReviewOrderTest(APITestCase):
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
-            technology=create_technology_obj(name="VBA"),
+            technology=[create_technology_obj(name="VBA")],
             level="Ekspert",
             price="220",
             github_url="https://github.com/hackymatt/course",
@@ -659,7 +658,7 @@ class ScheduleOrderTest(APITestCase):
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
-            technology=create_technology_obj(name="Python"),
+            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -692,7 +691,7 @@ class ScheduleOrderTest(APITestCase):
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
-            technology=create_technology_obj(name="Javascript"),
+            technology=[create_technology_obj(name="Javascript")],
             level="Zaawansowany",
             price="300",
             github_url="https://github.com/hackymatt/course",
@@ -733,7 +732,7 @@ class ScheduleOrderTest(APITestCase):
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
-            technology=create_technology_obj(name="VBA"),
+            technology=[create_technology_obj(name="VBA")],
             level="Ekspert",
             price="220",
             github_url="https://github.com/hackymatt/course",
@@ -835,7 +834,7 @@ class CoursePriceHistoryOrderTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
-            technology=create_technology_obj(name="Python"),
+            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -877,7 +876,7 @@ class CoursePriceHistoryOrderTest(APITestCase):
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
-            technology=create_technology_obj(name="JS"),
+            technology=[create_technology_obj(name="JS")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -919,7 +918,7 @@ class CoursePriceHistoryOrderTest(APITestCase):
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
-            technology=create_technology_obj(name="VBA"),
+            technology=[create_technology_obj(name="VBA")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -1024,7 +1023,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
-            technology=create_technology_obj(name="Python"),
+            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -1066,7 +1065,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
-            technology=create_technology_obj(name="JS"),
+            technology=[create_technology_obj(name="JS")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -1108,7 +1107,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
-            technology=create_technology_obj(name="VBA"),
+            technology=[create_technology_obj(name="VBA")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -1304,7 +1303,7 @@ class LecturerOrderTest(APITestCase):
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
-            technology=create_technology_obj(name="Python"),
+            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -1370,7 +1369,7 @@ class LecturerOrderTest(APITestCase):
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
-            technology=create_technology_obj(name="Javascript"),
+            technology=[create_technology_obj(name="Javascript")],
             level="Zaawansowany",
             price="300",
             github_url="https://github.com/hackymatt/course",
@@ -1473,7 +1472,7 @@ class LecturerOrderTest(APITestCase):
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
-            technology=create_technology_obj(name="VBA"),
+            technology=[create_technology_obj(name="VBA")],
             level="Ekspert",
             price="220",
             github_url="https://github.com/hackymatt/course",

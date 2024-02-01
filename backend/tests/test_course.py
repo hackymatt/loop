@@ -93,7 +93,7 @@ class CourseTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
-            technology=create_technology_obj(name="Python"),
+            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -185,7 +185,7 @@ class CourseTest(APITestCase):
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
-            technology=create_technology_obj(name="JS"),
+            technology=[create_technology_obj(name="JS")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -227,7 +227,7 @@ class CourseTest(APITestCase):
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
-            technology=create_technology_obj(name="VBA"),
+            technology=[create_technology_obj(name="VBA")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -323,9 +323,6 @@ class CourseTest(APITestCase):
         previous_price = course_data.pop("previous_price")
         lowest_30_days_price = course_data.pop("lowest_30_days_price")
         self.assertTrue(is_data_match(get_course(self.course.id), course_data))
-        self.assertTrue(
-            is_data_match(get_technology(technology_data["id"]), technology_data)
-        )
         self.assertEqual(rating, 4.0)
         self.assertEqual(rating_count, 3)
         self.assertEqual(students_count, 2)
@@ -351,6 +348,8 @@ class CourseTest(APITestCase):
                 self.assertEqual(lowest_30_days_price, 2)
                 self.assertEqual(is_bestseller, False)
 
+        for technology in technology_data:
+            self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
         for skill_data in skills_data:
             self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
         for topic_data in topics_data:
@@ -376,9 +375,6 @@ class CourseTest(APITestCase):
         previous_price = course_data.pop("previous_price")
         lowest_30_days_price = course_data.pop("lowest_30_days_price")
         self.assertTrue(is_data_match(get_course(self.course.id), course_data))
-        self.assertTrue(
-            is_data_match(get_technology(technology_data["id"]), technology_data)
-        )
         self.assertEqual(rating, 4.0)
         self.assertEqual(rating_count, 3)
         self.assertEqual(students_count, 2)
@@ -403,6 +399,9 @@ class CourseTest(APITestCase):
                 self.assertEqual(previous_price, 2)
                 self.assertEqual(lowest_30_days_price, 2)
                 self.assertEqual(is_bestseller, False)
+
+        for technology in technology_data:
+            self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
         for skill_data in skills_data:
             self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
         for topic_data in topics_data:
@@ -415,7 +414,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": create_technology_obj(name="Javascript"),
+            "technology": [create_technology_obj(name="Javascript")],
             "level": "E",
             "price": "999.99",
             "github_url": "https://github.com/hackymatt/course",
@@ -459,7 +458,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": create_technology_obj(name="Javascript"),
+            "technology": [create_technology_obj(name="Javascript")],
             "level": "E",
             "price": "999.99",
             "github_url": "https://github.com/hackymatt/course",
@@ -503,7 +502,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": create_technology_obj(name="Javascript"),
+            "technology": [create_technology_obj(name="Javascript")],
             "level": "E",
             "price": "999.99",
             "github_url": "https://github.com/hackymatt/course",
@@ -558,9 +557,6 @@ class CourseTest(APITestCase):
         previous_price = course_data.pop("previous_price")
         lowest_30_days_price = course_data.pop("lowest_30_days_price")
         self.assertTrue(is_data_match(get_course(course_data["id"]), course_data))
-        self.assertTrue(
-            is_data_match(get_technology(technology_data["id"]), technology_data)
-        )
         self.assertEqual(
             duration, sum(lesson_data["duration"] for lesson_data in lessons_data)
         )
@@ -610,6 +606,8 @@ class CourseTest(APITestCase):
                         get_profile(get_user(lecturer_data["email"])), profile_data
                     )
                 )
+        for technology in technology_data:
+            self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
         for skill_data in skills_data:
             self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
         for topic_data in topics_data:
@@ -623,7 +621,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": create_technology_obj(name="Javascript"),
+            "technology": [create_technology_obj(name="Javascript")],
             "level": "E",
             "price": "999.99",
             "github_url": "https://github.com/hackymatt/course",
@@ -647,7 +645,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": create_technology_obj(name="Javascript"),
+            "technology": [create_technology_obj(name="Javascript")],
             "level": "E",
             "price": "999.99",
             "github_url": "https://github.com/hackymatt/course",
@@ -697,7 +695,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": create_technology_obj(name="Javascript"),
+            "technology": [create_technology_obj(name="Javascript")],
             "level": "E",
             "price": "999.99",
             "github_url": "https://github.com/hackymatt/course",
@@ -747,7 +745,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": create_technology_obj(name="Javascript"),
+            "technology": [create_technology_obj(name="Javascript")],
             "level": "E",
             "price": "999.99",
             "github_url": "https://github.com/hackymatt/course",
@@ -797,7 +795,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": create_technology_obj(name="Javascript"),
+            "technology": [create_technology_obj(name="Javascript")],
             "level": "E",
             "price": "999.99",
             "github_url": "https://github.com/hackymatt/course",
@@ -843,7 +841,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": create_technology_obj(name="Javascript"),
+            "technology": [create_technology_obj(name="Javascript")],
             "level": "E",
             "price": "999.99",
             "github_url": "https://github.com/hackymatt/course",
@@ -887,7 +885,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": create_technology_obj(name="Javascript"),
+            "technology": [create_technology_obj(name="Javascript")],
             "level": "E",
             "price": "999.99",
             "github_url": "https://github.com/hackymatt/course",
@@ -931,7 +929,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": create_technology_obj(name="Javascript"),
+            "technology": [create_technology_obj(name="Javascript")],
             "level": "E",
             "price": "89.99",
             "active": "False",
@@ -986,9 +984,6 @@ class CourseTest(APITestCase):
         previous_price = course_data.pop("previous_price")
         lowest_30_days_price = course_data.pop("lowest_30_days_price")
         self.assertTrue(is_data_match(get_course(self.course.id), course_data))
-        self.assertTrue(
-            is_data_match(get_technology(technology_data["id"]), technology_data)
-        )
         self.assertEqual(
             duration, sum(lesson_data["duration"] for lesson_data in lessons_data)
         )
@@ -1053,6 +1048,8 @@ class CourseTest(APITestCase):
                         get_profile(get_user(lecturer_data["email"])), profile_data
                     )
                 )
+        for technology in technology_data:
+            self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
         for skill_data in skills_data:
             self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
         for topic_data in topics_data:
@@ -1066,7 +1063,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": create_technology_obj(name="Javascript"),
+            "technology": [create_technology_obj(name="Javascript")],
             "level": "E",
             "price": "109.99",
             "active": "False",
@@ -1121,9 +1118,6 @@ class CourseTest(APITestCase):
         previous_price = course_data.pop("previous_price")
         lowest_30_days_price = course_data.pop("lowest_30_days_price")
         self.assertTrue(is_data_match(get_course(self.course.id), course_data))
-        self.assertTrue(
-            is_data_match(get_technology(technology_data["id"]), technology_data)
-        )
         self.assertEqual(
             duration, sum(lesson_data["duration"] for lesson_data in lessons_data)
         )
@@ -1189,6 +1183,8 @@ class CourseTest(APITestCase):
                         get_profile(get_user(lecturer_data["email"])), profile_data
                     )
                 )
+        for technology in technology_data:
+            self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
         for skill_data in skills_data:
             self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
         for topic_data in topics_data:
@@ -1202,7 +1198,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": create_technology_obj(name="Javascript"),
+            "technology": [create_technology_obj(name="Javascript")],
             "level": "E",
             "price": "99.99",
             "active": "False",
@@ -1257,9 +1253,6 @@ class CourseTest(APITestCase):
         previous_price = course_data.pop("previous_price")
         lowest_30_days_price = course_data.pop("lowest_30_days_price")
         self.assertTrue(is_data_match(get_course(self.course.id), course_data))
-        self.assertTrue(
-            is_data_match(get_technology(technology_data["id"]), technology_data)
-        )
         self.assertEqual(
             duration, sum(lesson_data["duration"] for lesson_data in lessons_data)
         )
@@ -1324,6 +1317,8 @@ class CourseTest(APITestCase):
                         get_profile(get_user(lecturer_data["email"])), profile_data
                     )
                 )
+        for technology in technology_data:
+            self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
         for skill_data in skills_data:
             self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
         for topic_data in topics_data:
@@ -1337,7 +1332,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": create_technology_obj(name="Javascript"),
+            "technology": [create_technology_obj(name="Javascript")],
             "level": "E",
             "price": "999.99",
             "github_url": "https://github.com/hackymatt/course",
@@ -1361,7 +1356,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": create_technology_obj(name="Javascript"),
+            "technology": [create_technology_obj(name="Javascript")],
             "level": "E",
             "price": "999.99",
             "github_url": "https://github.com/hackymatt/course",
@@ -1405,7 +1400,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": create_technology_obj(name="Javascript"),
+            "technology": [create_technology_obj(name="Javascript")],
             "level": "E",
             "price": "999.99",
             "github_url": "https://github.com/hackymatt/course",
@@ -1455,7 +1450,7 @@ class CourseTest(APITestCase):
         data = {
             "title": "Javascript course",
             "description": "course_description",
-            "technology": create_technology_obj(name="Javascript"),
+            "technology": [create_technology_obj(name="Javascript")],
             "level": "E",
             "price": "999.99",
             "github_url": "https://github.com/hackymatt/course",
@@ -1541,7 +1536,7 @@ class BestCourseTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
-            technology=create_technology_obj(name="Python"),
+            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -1595,7 +1590,7 @@ class BestCourseTest(APITestCase):
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
-            technology=create_technology_obj(name="JS"),
+            technology=[create_technology_obj(name="JS")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -1627,7 +1622,7 @@ class BestCourseTest(APITestCase):
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
-            technology=create_technology_obj(name="VBA"),
+            technology=[create_technology_obj(name="VBA")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -1710,7 +1705,7 @@ class CoursePriceHistoryTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
-            technology=create_technology_obj(name="Python"),
+            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -1751,7 +1746,7 @@ class CoursePriceHistoryTest(APITestCase):
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
-            technology=create_technology_obj(name="JS"),
+            technology=[create_technology_obj(name="JS")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -1793,7 +1788,7 @@ class CoursePriceHistoryTest(APITestCase):
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
-            technology=create_technology_obj(name="VBA"),
+            technology=[create_technology_obj(name="VBA")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -1907,7 +1902,7 @@ class LessonPriceHistoryTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
-            technology=create_technology_obj(name="Python"),
+            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -1949,7 +1944,7 @@ class LessonPriceHistoryTest(APITestCase):
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
-            technology=create_technology_obj(name="JS"),
+            technology=[create_technology_obj(name="JS")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -1991,7 +1986,7 @@ class LessonPriceHistoryTest(APITestCase):
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
-            technology=create_technology_obj(name="VBA"),
+            technology=[create_technology_obj(name="VBA")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",

@@ -36,7 +36,7 @@ export default function CourseDetailsHero({ course }: Props) {
     slug,
     level,
     lessons,
-    category,
+    category: categories,
     coverUrl,
     video,
     bestSeller,
@@ -124,9 +124,28 @@ export default function CourseDetailsHero({ course }: Props) {
                     </Label>
                   )}
 
-                  <Typography variant="overline" sx={{ color: "primary.main" }}>
-                    {category}
-                  </Typography>
+                  <Stack
+                    spacing={0.5}
+                    direction="row"
+                    alignItems="center"
+                    flexWrap="wrap"
+                    divider={
+                      <Box
+                        sx={{
+                          width: 4,
+                          height: 4,
+                          bgcolor: "text.disabled",
+                          borderRadius: "50%",
+                        }}
+                      />
+                    }
+                  >
+                    {categories.map((category: string) => (
+                      <Typography variant="overline" sx={{ color: "primary.main" }}>
+                        {category}
+                      </Typography>
+                    ))}
+                  </Stack>
 
                   <Typography variant="h3" component="h1">
                     {slug}

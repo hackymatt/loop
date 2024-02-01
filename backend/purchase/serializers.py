@@ -69,7 +69,7 @@ class PurchaseSerializer(ModelSerializer):
 
         lesson = validated_data.pop("lesson")
 
-        course_purchase, created = CoursePurchase.objects.get_or_create(
+        course_purchase, _ = CoursePurchase.objects.get_or_create(
             course=lesson.course, price=lesson.course.price, student=student
         )
 

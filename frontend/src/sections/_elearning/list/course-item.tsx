@@ -35,7 +35,7 @@ export default function CourseItem({ course, vertical }: Props) {
     price,
     teachers,
     coverUrl,
-    category,
+    category: categories,
     priceSale,
     lowest30DaysPrice,
     bestSeller,
@@ -103,9 +103,28 @@ export default function CourseItem({ course, vertical }: Props) {
           }}
         >
           <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Typography variant="overline" sx={{ color: "primary.main" }}>
-              {category}
-            </Typography>
+            <Stack
+              spacing={0.5}
+              direction="row"
+              alignItems="center"
+              flexWrap="wrap"
+              divider={
+                <Box
+                  sx={{
+                    width: 4,
+                    height: 4,
+                    bgcolor: "text.disabled",
+                    borderRadius: "50%",
+                  }}
+                />
+              }
+            >
+              {categories.map((category: string) => (
+                <Typography variant="overline" sx={{ color: "primary.main" }}>
+                  {category}
+                </Typography>
+              ))}
+            </Stack>
 
             <Typography variant="h4" sx={{ textAlign: "right" }}>
               {priceSale && (

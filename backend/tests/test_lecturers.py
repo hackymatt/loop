@@ -71,7 +71,7 @@ class LecturersTest(APITestCase):
         self.course = create_course(
             title="Python Beginner",
             description="Learn Python today",
-            technology=create_technology_obj(name="Python"),
+            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",
@@ -216,7 +216,7 @@ class BestLecturersTest(APITestCase):
         self.course = create_course(
             title="Python Beginner",
             description="Learn Python today",
-            technology=create_technology_obj(name="Python"),
+            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",

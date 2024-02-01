@@ -68,7 +68,7 @@ class ReservationTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
-            technology=create_technology_obj(name="Python"),
+            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
             price="99.99",
             github_url="https://github.com/hackymatt/course",

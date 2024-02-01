@@ -78,7 +78,7 @@ def create_video():
 
 
 def create_field(value, model):
-    obj, created = model.objects.get_or_create(name=value["name"])
+    obj, _ = model.objects.get_or_create(name=value["name"])
 
     return obj
 
@@ -86,7 +86,7 @@ def create_field(value, model):
 def create_fields(values, model):
     objs = []
     for value in values:
-        obj, created = model.objects.get_or_create(name=value["name"])
+        obj, _ = model.objects.get_or_create(name=value["name"])
         objs.append(obj)
 
     return objs
@@ -107,13 +107,13 @@ def create_course(
     course = Course.objects.create(
         title=title,
         description=description,
-        technology=create_field(technology, Technology),
         level=level,
         price=price,
         github_url=github_url,
         active=active,
     )
 
+    course.technology.add(*create_fields(technology, Technology))
     course.skills.add(*create_fields(skills, Skill))
     course.topics.add(*create_fields(topics, Topic))
     course.image = create_image()
@@ -185,7 +185,7 @@ def create_purchase(
     student: Profile,
     price: float,
 ):
-    course_purchase, created = CoursePurchase.objects.get_or_create(
+    course_purchase, _ = CoursePurchase.objects.get_or_create(
         course=lesson.course, price=lesson.course.price, student=student
     )
     return LessonPurchase.objects.create(
