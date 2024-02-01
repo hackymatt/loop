@@ -4,7 +4,7 @@ import Rating from "@mui/material/Rating";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
-import { IQueryParamValue } from "src/types/queryParams";
+import { IQueryParamValue } from "src/types/query-params";
 
 // ----------------------------------------------------------------------
 

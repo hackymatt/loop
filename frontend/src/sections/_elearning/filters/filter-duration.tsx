@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
 import Checkbox, { checkboxClasses } from "@mui/material/Checkbox";
 
-import { IQueryParamValue } from "src/types/queryParams";
+import { IQueryParamValue } from "src/types/query-params";
 
 // ----------------------------------------------------------------------
 

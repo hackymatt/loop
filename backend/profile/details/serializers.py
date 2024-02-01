@@ -54,6 +54,7 @@ class LecturerDetailsSerializer(ModelSerializer):
     last_name = CharField(source="user.last_name")
     email = EmailField(source="user.email")
     gender = CharField(source="get_gender_display")
+    user_type = CharField(source="get_user_type_display")
     image = Base64ImageField(required=True)
 
     class Meta:

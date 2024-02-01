@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
-import { IQueryParamValue } from "src/types/queryParams";
+import { IQueryParamValue } from "src/types/query-params";
 
 export function useQueryParams() {
   const searchParams = useSearchParams();

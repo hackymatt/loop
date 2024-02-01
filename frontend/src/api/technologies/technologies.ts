@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
-import { IQueryParams } from "src/types/queryParams";
+import { IQueryParams } from "src/types/query-params";
 import { ICourseByCategoryProps } from "src/types/course";
 
 import { Api } from "../service";

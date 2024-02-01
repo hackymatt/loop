@@ -5,7 +5,7 @@ import { formatQueryParams } from "src/utils/query-params";
 
 import { IGender } from "src/types/testimonial";
 import { ITeamMemberProps } from "src/types/team";
-import { IQueryParams } from "src/types/queryParams";
+import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
 

@@ -12,7 +12,7 @@ import {
 import { useLecturers } from "src/api/lecturers/lecturers";
 
 import { ITeamMemberProps } from "src/types/team";
-import { IQueryParamValue } from "src/types/queryParams";
+import { IQueryParamValue } from "src/types/query-params";
 
 // ----------------------------------------------------------------------
 

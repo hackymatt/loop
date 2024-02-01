@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 
 import { ICourseTeacherProp } from "src/types/course";
-import { IQueryParamValue } from "src/types/queryParams";
+import { IQueryParamValue } from "src/types/query-params";
 
 // ----------------------------------------------------------------------
 

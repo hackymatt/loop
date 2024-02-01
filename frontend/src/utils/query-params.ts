@@ -1,4 +1,4 @@
-import { IQueryParams } from "src/types/queryParams";
+import { IQueryParams } from "src/types/query-params";
 
 export const formatQueryParams = (query?: IQueryParams) =>
   query

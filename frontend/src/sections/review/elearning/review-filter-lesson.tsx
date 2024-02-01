@@ -1,7 +1,7 @@
 import { TextField, Autocomplete, checkboxClasses, autocompleteClasses } from "@mui/material";
 
 import { ICourseLessonProp } from "src/types/course";
-import { IQueryParamValue } from "src/types/queryParams";
+import { IQueryParamValue } from "src/types/query-params";
 
 // ----------------------------------------------------------------------
 
