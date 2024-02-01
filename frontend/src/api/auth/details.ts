@@ -5,6 +5,7 @@ import { IGender } from "src/types/testimonial";
 import { IUserType, IUserDetailsProps } from "src/types/user";
 
 import { Api } from "../service";
+import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/details" as const;
 
@@ -28,7 +29,11 @@ export const userDetailsQuery = () => {
   const url = endpoint;
 
   const queryFn = async () => {
-    const response = await Api.get<IDetail>(url);
+    const response = await Api.get<IDetail>(url, {
+      headers: {
+        "X-CSRFToken": getCsrfToken(),
+      },
+    });
     const { data } = response;
     const {
       first_name,

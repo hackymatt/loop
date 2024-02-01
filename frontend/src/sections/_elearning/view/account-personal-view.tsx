@@ -12,6 +12,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { countries } from "src/assets/data";
 
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from "src/components/hook-form";
+import { useUserDetails } from "src/api/auth/details";
 
 // ----------------------------------------------------------------------
 
@@ -20,6 +21,10 @@ const GENDER_OPTIONS = ["Male", "Female", "Other"];
 // ----------------------------------------------------------------------
 
 export default function AccountPersonalView() {
+  const { data: userDetails } = useUserDetails();
+
+  console.log(userDetails);
+
   const EcommerceAccountPersonalSchema = Yup.object().shape({
     firstName: Yup.string().required("First name is required"),
     lastName: Yup.string().required("Last name is required"),
