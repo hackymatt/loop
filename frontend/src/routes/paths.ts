@@ -18,9 +18,8 @@ export const paths = {
   account: {
     root: "/account",
     personal: "/account/personal",
-    wishlist: "/account/wishlist",
-    orders: "/account/orders",
-    payment: "/account/payment",
+    password: "/account/password",
+    lessons: "/account/lessons",
   },
   login: "/login",
   register: "/register",

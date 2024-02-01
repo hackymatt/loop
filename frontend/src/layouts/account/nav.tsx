@@ -28,24 +28,19 @@ import { useToastContext } from "src/components/toast";
 
 const navigations = [
   {
-    title: "Personal Info",
+    title: "Dane osobowe",
     path: paths.account.personal,
     icon: <Iconify icon="carbon:user" />,
   },
   {
-    title: "Wishlist",
-    path: paths.account.wishlist,
-    icon: <Iconify icon="carbon:favorite" />,
+    title: "Zarządzaj hasłem",
+    path: paths.account.password,
+    icon: <Iconify icon="carbon:user" />,
   },
   {
-    title: "Orders",
-    path: paths.account.orders,
+    title: "Lekcje",
+    path: paths.account.lessons,
     icon: <Iconify icon="carbon:document" />,
-  },
-  {
-    title: "Payment",
-    path: paths.account.payment,
-    icon: <Iconify icon="carbon:purchase" />,
   },
 ];
 
@@ -105,7 +100,7 @@ export default function Nav({ open, onClose }: Props) {
             }}
           >
             <Iconify icon="carbon:edit" sx={{ mr: 1 }} />
-            Change photo
+            Zmień zdjęcie
           </Stack>
         </Stack>
 
@@ -142,7 +137,7 @@ export default function Nav({ open, onClose }: Props) {
             <Iconify icon="carbon:logout" />
           </ListItemIcon>
           <ListItemText
-            primary="Logout"
+            primary="Wyloguj"
             primaryTypographyProps={{
               typography: "body2",
             }}

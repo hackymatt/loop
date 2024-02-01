@@ -90,14 +90,14 @@ function HeroIllustration({ sx, ...other }: BoxProps) {
       <Box
         {...varLeft}
         component={m.div}
-        sx={{ top: 88, right: 72, zIndex: 8, position: "absolute" }}
+        sx={{ top: 80, right: 42, zIndex: 8, position: "absolute" }}
       >
         <Image
           visibleByDefault
           disabledEffect
           alt="vba"
           src="/assets/icons/platforms/ic_vba.svg"
-          sx={{ height: 56 }}
+          sx={{ height: 66 }}
         />
       </Box>
 
@@ -125,13 +125,31 @@ function HeroIllustration({ sx, ...other }: BoxProps) {
         />
       </Box>
 
-      <Box {...varUp} component={m.div} sx={{ zIndex: 8, right: 90, position: "absolute" }}>
+      <Box
+        {...varUp}
+        component={m.div}
+        sx={{ zIndex: 8, bottom: 240, right: 90, position: "absolute" }}
+      >
         <Image
           visibleByDefault
           disabledEffect
           alt="c++"
           src="/assets/icons/platforms/ic_c++.svg"
           sx={{ width: 56, height: 56 }}
+        />
+      </Box>
+
+      <Box
+        {...varUp}
+        component={m.div}
+        sx={{ zIndex: 8, top: 210, right: 0, position: "absolute" }}
+      >
+        <Image
+          visibleByDefault
+          disabledEffect
+          alt="c++"
+          src="/assets/icons/platforms/ic_git.svg"
+          sx={{ height: 46 }}
         />
       </Box>
 
