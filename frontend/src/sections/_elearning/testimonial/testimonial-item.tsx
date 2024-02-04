@@ -50,7 +50,7 @@ export function TestimonialItemThumbnail({ testimonial, selected }: TestimonialI
       ? "/assets/images/avatar/avatar_female.jpg"
       : "/assets/images/avatar/avatar_male.jpg";
 
-  const avatarUrl = testimonial.avatarUrl ? testimonial.avatarUrl : genderAvatarUrl;
+  const avatarUrl = testimonial.avatarUrl || genderAvatarUrl;
 
   return (
     <Stack

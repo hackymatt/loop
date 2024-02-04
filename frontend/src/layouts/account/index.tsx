@@ -26,7 +26,7 @@ export default function AccountLayout({ children }: Props) {
     <>
       {mdUp ? (
         <Container sx={{ my: 5 }}>
-          <Typography variant="h3">Account</Typography>
+          <Typography variant="h3">Konto</Typography>
         </Container>
       ) : (
         <Box
@@ -43,7 +43,7 @@ export default function AccountLayout({ children }: Props) {
               startIcon={<Iconify icon="carbon:menu" />}
               onClick={menuOpen.onTrue}
             >
-              Account
+              Konto
             </Button>
           </Container>
         </Box>

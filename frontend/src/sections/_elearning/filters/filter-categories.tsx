@@ -5,7 +5,7 @@ import Autocomplete, { autocompleteClasses } from "@mui/material/Autocomplete";
 
 import { useTechnologies } from "src/api/technologies/technologies";
 
-import { IQueryParamValue } from "src/types/queryParams";
+import { IQueryParamValue } from "src/types/query-params";
 import { ICourseByCategoryProps } from "src/types/course";
 
 // ----------------------------------------------------------------------

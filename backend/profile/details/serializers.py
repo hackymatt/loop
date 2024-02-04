@@ -40,7 +40,9 @@ class ProfileDetailsSerializer(ModelSerializer):
         instance.user.save()
 
         gender = validated_data.pop("get_gender_display", instance.gender)
+        image = validated_data.pop("image", instance.image)
         instance.gender = gender
+        instance.image = image
         instance.save()
 
         Profile.objects.filter(pk=instance.pk).update(**validated_data)
@@ -54,6 +56,7 @@ class LecturerDetailsSerializer(ModelSerializer):
     last_name = CharField(source="user.last_name")
     email = EmailField(source="user.email")
     gender = CharField(source="get_gender_display")
+    user_type = CharField(source="get_user_type_display")
     image = Base64ImageField(required=True)
 
     class Meta:
@@ -73,3 +76,25 @@ class LecturerDetailsSerializer(ModelSerializer):
             "country",
             "image",
         )
+
+    def update(self, instance, validated_data):
+        user = validated_data.pop("user")
+        user.pop("email")
+        first_name = user.pop("first_name", instance.user.first_name)
+        last_name = user.pop("last_name", instance.user.last_name)
+        instance.user.first_name = first_name
+        instance.user.last_name = last_name
+        instance.user.save()
+
+        gender = validated_data.pop("get_gender_display", instance.gender)
+        image = validated_data.pop("image", instance.image)
+        user_type = validated_data.pop("get_user_type_display", instance.user_type)
+        instance.gender = gender
+        instance.image = image
+        instance.user_type = user_type
+        instance.save()
+
+        Profile.objects.filter(pk=instance.pk).update(**validated_data)
+        instance = Profile.objects.get(pk=instance.pk)
+
+        return instance

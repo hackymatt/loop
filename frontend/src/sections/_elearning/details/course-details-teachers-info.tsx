@@ -56,7 +56,7 @@ function TeacherItem({ teacher }: TeacherItemProps) {
       ? "/assets/images/avatar/avatar_female.jpg"
       : "/assets/images/avatar/avatar_male.jpg";
 
-  const avatarUrl = teacher?.avatarUrl ? teacher?.avatarUrl : genderAvatarUrl;
+  const avatarUrl = teacher?.avatarUrl || genderAvatarUrl;
 
   return (
     <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>

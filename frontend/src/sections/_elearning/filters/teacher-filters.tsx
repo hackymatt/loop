@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import { useResponsive } from "src/hooks/use-responsive";
 import { useQueryParams } from "src/hooks/use-query-params";
 
-import { IQueryParamValue } from "src/types/queryParams";
+import { IQueryParamValue } from "src/types/query-params";
 
 import FilterRating from "./filter-rating";
 import FilterSearch from "./filter-search";

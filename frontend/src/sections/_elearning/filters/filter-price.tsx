@@ -5,7 +5,7 @@ import Stack, { StackProps } from "@mui/material/Stack";
 
 import { useDebounce } from "src/hooks/use-debounce";
 
-import { IQueryParamValue } from "src/types/queryParams";
+import { IQueryParamValue } from "src/types/query-params";
 
 // ----------------------------------------------------------------------
 

@@ -5,7 +5,7 @@ import { formatQueryParams } from "src/utils/query-params";
 
 import { ICourseProps } from "src/types/course";
 import { IGender } from "src/types/testimonial";
-import { IQueryParams } from "src/types/queryParams";
+import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
 

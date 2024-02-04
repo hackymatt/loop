@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { formatQueryParams } from "src/utils/query-params";
 
 import { IReviewStatistic } from "src/types/review";
-import { IQueryParams } from "src/types/queryParams";
+import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
 

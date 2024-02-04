@@ -15,13 +15,23 @@ class ProfileDetailsViewSet(ModelViewSet):
     serializer_class = ProfileDetailsSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_serializer_class(self):
+        user = self.request.user
+        profile = Profile.objects.get(user=user)
+        if profile.user_type == "S":
+            return ProfileDetailsSerializer
+        else:
+            return LecturerDetailsSerializer
+
     def list(self, request, *args, **kwargs):
         user = request.user
         profile = Profile.objects.get(user=user)
         if profile.user_type == "S":
-            serializer = ProfileDetailsSerializer(profile)
+            serializer = ProfileDetailsSerializer(profile, context={"request": request})
         else:
-            serializer = LecturerDetailsSerializer(profile)
+            serializer = LecturerDetailsSerializer(
+                profile, context={"request": request}
+            )
 
         return Response(serializer.data)
 

@@ -8,7 +8,10 @@ export const createAxiosInstance = (endpoint: string) => {
     });
     return axios.create({ baseURL: endpoint, httpsAgent });
   }
-  return axios.create({ baseURL: endpoint });
+  return axios.create({
+    baseURL: endpoint,
+    withCredentials: true,
+  });
 };
 
 export const Api = createAxiosInstance(process.env.API_URL ?? "");

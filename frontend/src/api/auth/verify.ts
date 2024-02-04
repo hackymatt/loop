@@ -2,6 +2,7 @@ import { AxiosError } from "axios";
 import { useMutation } from "@tanstack/react-query";
 
 import { Api } from "../service";
+import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/verify" as const;
 
@@ -14,6 +15,10 @@ export type IVerifyReturn = Pick<IVerify, "email"> & { code?: string };
 
 export const useVerify = () =>
   useMutation<IVerifyReturn, AxiosError, IVerify>(async (variables) => {
-    const result = await Api.post(endpoint, variables);
+    const result = await Api.post(endpoint, variables, {
+      headers: {
+        "X-CSRFToken": getCsrfToken(),
+      },
+    });
     return result.data;
   });

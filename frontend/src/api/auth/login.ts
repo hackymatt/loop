@@ -2,6 +2,7 @@ import { AxiosError } from "axios";
 import { useMutation } from "@tanstack/react-query";
 
 import { Api } from "../service";
+import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/login" as const;
 
@@ -19,6 +20,10 @@ export type ILoginReturn = {
 
 export const useLogin = () =>
   useMutation<ILoginReturn, AxiosError, ILogin>(async (variables) => {
-    const result = await Api.post(endpoint, variables);
+    const result = await Api.post(endpoint, variables, {
+      headers: {
+        "X-CSRFToken": getCsrfToken(),
+      },
+    });
     return result.data;
   });

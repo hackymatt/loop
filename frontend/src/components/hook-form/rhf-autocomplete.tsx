@@ -57,6 +57,7 @@ export default function RHFAutocomplete<
               autoHighlight={!multiple}
               disableCloseOnSelect={multiple}
               onChange={(event, newValue) => setValue(name, newValue, { shouldValidate: true })}
+              noOptionsText="Brak opcji"
               renderOption={(props, option) => {
                 const country = getCountry(option as string);
 

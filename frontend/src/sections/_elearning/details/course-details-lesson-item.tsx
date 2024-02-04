@@ -40,9 +40,7 @@ export default function CourseDetailsLessonItem({
       ? "/assets/images/avatar/avatar_female.jpg"
       : "/assets/images/avatar/avatar_male.jpg";
 
-  const avatarUrl = details?.teachers?.[0]?.avatarUrl
-    ? details?.teachers?.[0]?.avatarUrl
-    : genderAvatarUrl;
+  const avatarUrl = details?.teachers?.[0]?.avatarUrl || genderAvatarUrl;
   return (
     <Accordion
       expanded={expanded}
