@@ -1,5 +1,6 @@
+import { AxiosError } from "axios";
 import { compact } from "lodash-es";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { IGender } from "src/types/testimonial";
 import { IUserType, IUserDetailsProps } from "src/types/user";
@@ -24,6 +25,8 @@ export type IDetail = {
   country: string | null;
   image: string | null;
 };
+
+type IDetailReturn = IDetail;
 
 export const userDetailsQuery = () => {
   const url = endpoint;
@@ -77,4 +80,23 @@ export const useUserDetails = () => {
   const { queryKey, queryFn } = userDetailsQuery();
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.results as any as IUserDetailsProps, ...rest };
+};
+
+export const useUpdateUserDetails = () => {
+  const queryClient = useQueryClient();
+  return useMutation<IDetailReturn, AxiosError, IDetail>(
+    async (variables) => {
+      const result = await Api.put(endpoint, variables, {
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      });
+      return result.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [endpoint] });
+      },
+    },
+  );
 };

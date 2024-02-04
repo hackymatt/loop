@@ -6,28 +6,28 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import Checkbox from "@mui/material/Checkbox";
 import InputLabel from "@mui/material/InputLabel";
-import { Theme, SxProps } from "@mui/material/styles";
 import FormHelperText from "@mui/material/FormHelperText";
-import TextField, { TextFieldProps } from "@mui/material/TextField";
 import FormControl, { FormControlProps } from "@mui/material/FormControl";
 
 // ----------------------------------------------------------------------
 
-type RHFSelectProps = TextFieldProps & {
+type RHFSelectProps = FormControlProps & {
   name: string;
-  native?: boolean;
-  maxHeight?: boolean | number;
-  children: React.ReactNode;
-  PaperPropsSx?: SxProps<Theme>;
+  label?: string;
+  placeholder?: string;
+  helperText?: React.ReactNode;
+  options: {
+    label: string;
+    value: string;
+  }[];
 };
 
 export function RHFSelect({
   name,
-  native,
-  maxHeight = 220,
+  label,
+  options,
+  placeholder,
   helperText,
-  children,
-  PaperPropsSx,
   ...other
 }: RHFSelectProps) {
   const { control } = useFormContext();
@@ -37,30 +37,21 @@ export function RHFSelect({
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <TextField
-          {...field}
-          select
-          fullWidth
-          SelectProps={{
-            native,
-            MenuProps: {
-              PaperProps: {
-                sx: {
-                  ...(!native && {
-                    maxHeight: typeof maxHeight === "number" ? maxHeight : "unset",
-                  }),
-                  ...PaperPropsSx,
-                },
-              },
-            },
-            sx: { textTransform: "capitalize" },
-          }}
-          error={!!error}
-          helperText={error ? error?.message : helperText}
-          {...other}
-        >
-          {children}
-        </TextField>
+        <FormControl error={!!error} {...other}>
+          {label && <InputLabel id={name}> {label} </InputLabel>}
+
+          <Select {...field} displayEmpty={!!placeholder} labelId={name} label={label}>
+            {options.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+
+          {(!!error || helperText) && (
+            <FormHelperText error={!!error}>{error ? error?.message : helperText}</FormHelperText>
+          )}
+        </FormControl>
       )}
     />
   );

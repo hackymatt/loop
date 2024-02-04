@@ -49,6 +49,8 @@ class DetailsTest(APITestCase):
             "zip_code",
             "city",
             "country",
+            "user_title",
+            "user_type",
         ]
 
     def test_get_details_unauthenticated(self):
@@ -116,7 +118,7 @@ class DetailsTest(APITestCase):
         response = self.client.put(self.endpoint, new_data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_amend_details_authenticated(self):
+    def test_amend_details_student_authenticated(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -150,6 +152,45 @@ class DetailsTest(APITestCase):
         )
         self.assertEqual(get_profile(get_user(self.data["email"])).dob, None)
         self.assertIsNotNone(get_profile(get_user(self.data["email"])).image)
+
+    def test_amend_details_lecturer_authenticated(self):
+        # login
+        login(self, self.data_lecturer["email"], self.data_lecturer["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # new data
+        self.profile.phone_number = "123456789"
+        self.profile.dob = "2023-01-01"
+        self.profile.save()
+
+        new_data = {
+            "first_name": "Name",
+            "last_name": "LastName",
+            "email": "test_email_lecturer@example.com",
+            "user_type": "W",
+            "user_title": "Test role",
+            "phone_number": "999888777",
+            "gender": "M",
+            "dob": None,
+            "street_address": "abc",
+            "zip_code": "30-100",
+            "city": "Miasto",
+            "country": "Polska",
+            "image": b64encode(create_image().read()),
+        }
+        response = self.client.put(self.endpoint, new_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user_data = filter_dict(new_data, self.user_columns)
+        profile_columns = self.profile_columns.copy()
+        profile_columns.remove("dob")
+        profile_data = filter_dict(new_data, profile_columns)
+        self.assertTrue(is_data_match(get_user(self.data_lecturer["email"]), user_data))
+        self.assertTrue(
+            is_data_match(
+                get_profile(get_user(self.data_lecturer["email"])), profile_data
+            )
+        )
+        self.assertEqual(get_profile(get_user(self.data_lecturer["email"])).dob, None)
+        self.assertIsNotNone(get_profile(get_user(self.data_lecturer["email"])).image)
 
     def test_email_change(self):
         # login

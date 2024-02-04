@@ -1,8 +1,9 @@
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useState, useEffect, ChangeEvent } from "react";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
+import { LoadingButton } from "@mui/lab";
 import Drawer from "@mui/material/Drawer";
 import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
@@ -17,12 +18,17 @@ import { RouterLink } from "src/routes/components";
 
 import { useResponsive } from "src/hooks/use-responsive";
 
-import { _mock } from "src/_mock";
+import { fDate } from "src/utils/format-time";
+
+import { useUserDetails, useUpdateUserDetails } from "src/api/auth/details";
 
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 import TextMaxLine from "src/components/text-max-line";
 import { useToastContext } from "src/components/toast";
+import { CropperModal } from "src/components/cropper/cropper";
+
+import { IGender } from "src/types/testimonial";
 
 // ----------------------------------------------------------------------
 
@@ -60,12 +66,15 @@ export default function Nav({ open, onClose }: Props) {
 
   const { logoutUser, isLoggedIn } = useUserContext();
 
+  const { data: userDetails } = useUserDetails();
+  const { mutateAsync: updatePhoto, isLoading } = useUpdateUserDetails();
+
   const handleLogout = async () => {
     try {
       await logoutUser({});
       enqueueSnackbar("Wylogowano pomyślnie", { variant: "success" });
     } catch (error) {
-      console.error(error);
+      enqueueSnackbar("Wystąpił błąd", { variant: "error" });
     }
   };
 
@@ -74,6 +83,61 @@ export default function Nav({ open, onClose }: Props) {
       push(paths.login);
     }
   }, [isLoggedIn, push]);
+
+  const genderAvatarUrl =
+    userDetails?.gender === "Kobieta"
+      ? "/assets/images/avatar/avatar_female.jpg"
+      : "/assets/images/avatar/avatar_male.jpg";
+
+  const avatarUrl = userDetails?.photo || genderAvatarUrl;
+
+  const [isCropperModalOpen, setIsCropperModalOpen] = useState<boolean>(false);
+  const [image, setImage] = useState<string>();
+
+  const handleImagePick = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { files } = e.target as HTMLInputElement;
+    if (files && files.length > 0) {
+      setImage(URL.createObjectURL(files[0]));
+      setIsCropperModalOpen(true);
+    }
+  };
+
+  const handleSubmit = async (newPhoto: string) => {
+    const {
+      firstName,
+      lastName,
+      emailAddress,
+      phoneNumber,
+      birthday,
+      gender,
+      streetAddress,
+      zipCode,
+      city,
+      country,
+    } = userDetails;
+    try {
+      await updatePhoto({
+        first_name: firstName,
+        last_name: lastName,
+        email: emailAddress,
+        phone_number: phoneNumber ?? "",
+        dob: fDate(birthday, "yyyy-MM-dd") ?? "",
+        gender: gender as IGender,
+        street_address: streetAddress ?? "",
+        zip_code: zipCode ?? "",
+        city: city ?? "",
+        country,
+        image: newPhoto ?? "",
+      });
+      enqueueSnackbar("Zapisano pomyślnie", { variant: "success" });
+    } catch (error) {
+      enqueueSnackbar("Wystąpił błąd", { variant: "error" });
+    }
+  };
+
+  const handleImageChange = async (source: string) => {
+    await handleSubmit(source);
+  };
 
   const renderContent = (
     <Stack
@@ -89,7 +153,7 @@ export default function Nav({ open, onClose }: Props) {
     >
       <Stack spacing={2} sx={{ p: 3, pb: 2 }}>
         <Stack spacing={2} direction="row" alignItems="center">
-          <Avatar src={_mock.image.avatar(0)} sx={{ width: 64, height: 64 }} />
+          <Avatar src={avatarUrl} sx={{ width: 64, height: 64 }} />
           <Stack
             direction="row"
             alignItems="center"
@@ -99,19 +163,36 @@ export default function Nav({ open, onClose }: Props) {
               "&:hover": { opacity: 0.72 },
             }}
           >
-            <Iconify icon="carbon:edit" sx={{ mr: 1 }} />
-            Zmień zdjęcie
+            <LoadingButton
+              component="label"
+              variant="text"
+              size="small"
+              color="primary"
+              startIcon={<Iconify icon="carbon:edit" sx={{ mr: 1 }} />}
+              loading={isLoading}
+            >
+              Zmień zdjęcie
+              <input type="file" hidden onChange={handleImagePick} />
+              <CropperModal
+                open={isCropperModalOpen}
+                image={image ?? ""}
+                onImageChange={handleImageChange}
+                onClose={() => setIsCropperModalOpen(false)}
+              />
+            </LoadingButton>
           </Stack>
         </Stack>
 
-        <Stack spacing={0.5}>
-          <TextMaxLine variant="subtitle1" line={1}>
-            Jayvion Simon
-          </TextMaxLine>
-          <TextMaxLine variant="body2" line={1} sx={{ color: "text.secondary" }}>
-            nannie_abernathy70@yahoo.com
-          </TextMaxLine>
-        </Stack>
+        {userDetails && (
+          <Stack spacing={0.5}>
+            <TextMaxLine variant="subtitle1" line={1}>
+              {`${userDetails.firstName} ${userDetails.lastName}`}
+            </TextMaxLine>
+            <TextMaxLine variant="body2" line={1} sx={{ color: "text.secondary" }}>
+              {userDetails.emailAddress}
+            </TextMaxLine>
+          </Stack>
+        )}
       </Stack>
 
       <Divider sx={{ borderStyle: "dashed" }} />

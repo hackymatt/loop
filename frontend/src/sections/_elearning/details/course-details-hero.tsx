@@ -57,7 +57,7 @@ export default function CourseDetailsHero({ course }: Props) {
       ? "/assets/images/avatar/avatar_female.jpg"
       : "/assets/images/avatar/avatar_male.jpg";
 
-  const avatarUrl = teachers?.[0]?.avatarUrl ? teachers?.[0]?.avatarUrl : genderAvatarUrl;
+  const avatarUrl = teachers?.[0]?.avatarUrl || genderAvatarUrl;
 
   return (
     <>

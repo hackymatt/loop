@@ -1,6 +1,7 @@
 "use client";
 
 import * as Yup from "yup";
+import { useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 
@@ -9,49 +10,49 @@ import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
+import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
+
+import { fDate } from "src/utils/format-time";
+
 import { countries } from "src/assets/data";
+import { useUserDetails, useUpdateUserDetails } from "src/api/auth/details";
 
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from "src/components/hook-form";
-import { useUserDetails } from "src/api/auth/details";
+
+import { IGender } from "src/types/testimonial";
 
 // ----------------------------------------------------------------------
 
-const GENDER_OPTIONS = ["Male", "Female", "Other"];
+const GENDER_OPTIONS = [
+  { label: "Mężczyzna", value: "Mężczyzna" },
+  { label: "Kobieta", value: "Kobieta" },
+  { label: "Inne", value: "Inne" },
+];
 
 // ----------------------------------------------------------------------
 
 export default function AccountPersonalView() {
   const { data: userDetails } = useUserDetails();
+  const { mutateAsync: updateUserDetails } = useUpdateUserDetails();
 
-  console.log(userDetails);
-
-  const EcommerceAccountPersonalSchema = Yup.object().shape({
-    firstName: Yup.string().required("First name is required"),
-    lastName: Yup.string().required("Last name is required"),
-    emailAddress: Yup.string().required("Email address is required"),
-    phoneNumber: Yup.string().required("Phone number is required"),
-    birthday: Yup.mixed<any>().nullable().required("Birthday is required"),
-    gender: Yup.string().required("Gender is required"),
-    streetAddress: Yup.string().required("Street address is required"),
-    city: Yup.string().required("City is required"),
-    zipCode: Yup.string().required("Zip code is required"),
+  const AccountPersonalSchema = Yup.object().shape({
+    firstName: Yup.string().required("Imię jest wymagane"),
+    lastName: Yup.string().required("Nazwisko jest wymagane"),
+    emailAddress: Yup.string().required("Adres email jest wymagany"),
+    phoneNumber: Yup.string().nullable(),
+    birthday: Yup.mixed<any>().nullable(),
+    gender: Yup.string().required("Płeć jest wymagana"),
+    streetAddress: Yup.string().nullable(),
+    zipCode: Yup.string().nullable(),
+    city: Yup.string().nullable(),
+    country: Yup.string().required("Państwo jest wymagane"),
+    photo: Yup.string().nullable(),
   });
 
-  const defaultValues = {
-    firstName: "Jayvion",
-    lastName: "Simon",
-    emailAddress: "nannie_abernathy70@yahoo.com",
-    phoneNumber: "365-374-4961",
-    birthday: null,
-    gender: "Male",
-    streetAddress: "",
-    zipCode: "",
-    city: "",
-    country: "United States",
-  };
+  const defaultValues = { ...userDetails, birthday: new Date(userDetails?.birthday) };
 
   const methods = useForm({
-    resolver: yupResolver(EcommerceAccountPersonalSchema),
+    resolver: yupResolver(AccountPersonalSchema),
     defaultValues,
   });
 
@@ -61,20 +62,52 @@ export default function AccountPersonalView() {
     formState: { isSubmitting },
   } = methods;
 
+  const handleFormError = useFormErrorHandler(methods);
+
+  useEffect(() => {
+    if (userDetails) {
+      reset({ ...userDetails, birthday: new Date(userDetails?.birthday) });
+    }
+  }, [reset, userDetails]);
+
   const onSubmit = handleSubmit(async (data) => {
+    const {
+      firstName,
+      lastName,
+      emailAddress,
+      phoneNumber,
+      birthday,
+      gender,
+      streetAddress,
+      zipCode,
+      city,
+      country,
+      photo,
+    } = data;
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await updateUserDetails({
+        first_name: firstName,
+        last_name: lastName,
+        email: emailAddress,
+        phone_number: phoneNumber ?? "",
+        dob: fDate(birthday, "yyyy-MM-dd") ?? "",
+        gender: (gender as IGender) ?? "",
+        street_address: streetAddress ?? "",
+        zip_code: zipCode ?? "",
+        city: city ?? "",
+        country,
+        image: photo ?? "",
+      });
       reset();
-      console.log("DATA", data);
     } catch (error) {
-      console.error(error);
+      handleFormError(error);
     }
   });
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Personal
+        Dane osobowe
       </Typography>
 
       <Box
@@ -84,19 +117,19 @@ export default function AccountPersonalView() {
         gridTemplateColumns={{ xs: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
         sx={{ my: 5 }}
       >
-        <RHFTextField name="firstName" label="First Name" />
+        <RHFTextField name="firstName" label="Imię" />
 
-        <RHFTextField name="lastName" label="Last Name" />
+        <RHFTextField name="lastName" label="Nazwisko" />
 
-        <RHFTextField name="emailAddress" label="Email Address" />
+        <RHFTextField name="emailAddress" label="Adres e-mail" disabled />
 
-        <RHFTextField name="phoneNumber" label="Phone Number" />
+        <RHFTextField name="phoneNumber" label="Numer telefonu" />
 
         <Controller
           name="birthday"
           render={({ field, fieldState: { error } }) => (
             <DatePicker
-              label="Birthday"
+              label="Data urodzenia"
               slotProps={{
                 textField: {
                   helperText: error?.message,
@@ -109,25 +142,19 @@ export default function AccountPersonalView() {
           )}
         />
 
-        <RHFSelect native name="gender" label="Gender">
-          {GENDER_OPTIONS.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </RHFSelect>
+        <RHFSelect name="gender" label="Płeć" options={GENDER_OPTIONS} placeholder="Wybierz płeć" />
 
-        <RHFTextField name="streetAddress" label="Street Address" />
+        <RHFTextField name="streetAddress" label="Ulica, numer budynku, numer lokalu" />
 
-        <RHFTextField name="zipCode" label="Zip Code" />
+        <RHFTextField name="zipCode" label="Kod pocztowy" />
 
-        <RHFTextField name="city" label="City" />
+        <RHFTextField name="city" label="Miasto" />
 
         <RHFAutocomplete
           name="country"
           type="country"
-          label="Country"
-          placeholder="Choose a country"
+          label="Państwo"
+          placeholder="Wybierz państwo"
           fullWidth
           options={countries.map((option) => option.label)}
           getOptionLabel={(option) => option}
@@ -141,7 +168,7 @@ export default function AccountPersonalView() {
         variant="contained"
         loading={isSubmitting}
       >
-        Save Changes
+        Zapisz
       </LoadingButton>
     </FormProvider>
   );
