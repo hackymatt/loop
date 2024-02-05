@@ -9,10 +9,15 @@ from .factory import (
     create_skill_obj,
     create_topic_obj,
     create_purchase,
+    create_teaching,
+    create_schedule,
+    create_reservation,
 )
 from .helpers import login
 import json
 from django.contrib import auth
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
 
 
 class PurchaseTest(APITestCase):
@@ -30,6 +35,15 @@ class PurchaseTest(APITestCase):
             is_active=True,
         )
         self.profile = create_profile(user=self.user)
+
+        self.lecturer_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_1@example.com",
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
 
         # course 1
         self.course_1 = create_course(
@@ -65,9 +79,45 @@ class PurchaseTest(APITestCase):
         )
 
         create_purchase(
+            lesson=self.course_1.lessons.all()[0],
+            student=self.profile,
+            price=self.course_1.lessons.all()[0].price,
+        )
+
+        create_purchase(
             lesson=self.course_1.lessons.all()[1],
             student=self.profile,
             price=self.course_1.lessons.all()[1].price,
+        )
+
+        for lesson in self.course_1.lessons.all():
+            create_teaching(
+                lecturer=self.lecturer_profile,
+                lesson=lesson,
+            )
+
+        self.schedules = []
+        for i in range(-10, 10):
+            self.schedules.append(
+                create_schedule(
+                    lecturer=self.lecturer_profile,
+                    time=make_aware(
+                        datetime.now().replace(minute=15, second=0, microsecond=0)
+                        + timedelta(minutes=15 * i)
+                    ),
+                )
+            )
+
+        create_reservation(
+            student=self.profile,
+            lesson=self.course_1.lessons.all()[0],
+            schedule=self.schedules[len(self.schedules) - 3],
+        )
+
+        create_reservation(
+            student=self.profile,
+            lesson=self.course_1.lessons.all()[1],
+            schedule=self.schedules[0],
         )
 
         # course 2
@@ -147,12 +197,6 @@ class PurchaseTest(APITestCase):
             ],
         )
 
-        create_purchase(
-            lesson=self.course_3.lessons.all()[0],
-            student=self.profile,
-            price=self.course_3.lessons.all()[0].price,
-        )
-
     def test_get_purchase_unauthenticated(self):
         # login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -176,7 +220,7 @@ class PurchaseTest(APITestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
-            "lesson": self.course_1.lessons.all()[0].id,
+            "lesson": self.course_3.lessons.all()[0].id,
             "price": self.course_1.lessons.all()[0].price,
         }
         response = self.client.post(self.endpoint, data)
@@ -188,7 +232,7 @@ class PurchaseTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
-            "lesson": self.course_1.lessons.all()[0].id,
+            "lesson": self.course_3.lessons.all()[0].id,
             "price": self.course_1.lessons.all()[0].price,
         }
         response = self.client.post(self.endpoint, data)

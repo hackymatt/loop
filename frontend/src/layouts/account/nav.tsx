@@ -44,7 +44,12 @@ const navigations = [
   {
     title: "Lekcje",
     path: paths.account.lessons,
-    icon: <Iconify icon="carbon:document" />,
+    icon: <Iconify icon="carbon:book" />,
+  },
+  {
+    title: "Recenzje",
+    path: paths.account.reviews,
+    icon: <Iconify icon="carbon:review" />,
   },
 ];
 

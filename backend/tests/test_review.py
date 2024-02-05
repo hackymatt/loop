@@ -183,7 +183,7 @@ class ReviewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 5)
+        self.assertEqual(count, 1)
 
     def test_get_course_reviews_unauthenticated(self):
         # no login

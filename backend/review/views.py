@@ -9,6 +9,7 @@ from review.serializers import (
 )
 from review.filters import ReviewFilter
 from review.models import Review
+from profile.models import Profile
 from random import sample
 from django.db.models import Count
 
@@ -33,6 +34,21 @@ class ReviewViewSet(ModelViewSet):
         else:
             permission_classes = self.permission_classes
         return [permission() for permission in permission_classes]
+
+    def get_queryset(self):
+        if self.action == "list":
+            course_id = self.request.query_params.get("course_id", None)
+            if not course_id:
+                user = self.request.user
+                if user.is_authenticated:
+                    student = Profile.objects.get(user=user)
+                    return self.queryset.filter(student=student)
+                else:
+                    return self.queryset
+            else:
+                return self.queryset
+        else:
+            return self.queryset
 
 
 class ReviewStatsViewSet(ModelViewSet):
