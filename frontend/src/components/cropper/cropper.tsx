@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import AvatarEditor from "react-avatar-editor";
 
-import { Box, Modal, Slider, Button, Stack } from "@mui/material";
+import { Box, Modal, Stack, Slider, Button, Typography } from "@mui/material";
 
 import { blobToBase64 } from "src/utils/blob-to-base64";
 
@@ -42,50 +42,66 @@ export const CropperModal = ({ open, image, onImageChange, onClose }: Props) => 
       }}
       open={open}
     >
-      <Stack
-        spacing={0.5}
+      <Box
         sx={{
-          width: "300px",
-          height: "300px",
-          display: "flex",
-          flexFlow: "column",
-          justifyContent: "center",
-          alignItems: "center",
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          boxShadow: 24,
+          bgcolor: "common.white",
+          p: 6,
+          borderRadius: "4px",
         }}
       >
-        <AvatarEditor
-          ref={cropRef}
-          image={image}
-          style={{ width: "100%", height: "100%" }}
-          border={50}
-          borderRadius={150}
-          color={[0, 0, 0, 0.72]}
-          scale={slideValue / 10}
-          rotate={0}
-        />
-
-        <Slider
-          min={5}
-          max={20}
+        <Stack
+          spacing={0.5}
           sx={{
-            margin: "0 auto",
-            width: "90%",
+            width: "300px",
+            height: "300px",
+            display: "flex",
+            flexFlow: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            p: 2,
           }}
-          size="medium"
-          defaultValue={slideValue}
-          value={slideValue}
-          onChange={handleChange}
-        />
+        >
+          <Typography variant="h6" component="h2">
+            Dopasuj zdjęcie
+          </Typography>
+          <AvatarEditor
+            ref={cropRef}
+            image={image}
+            style={{ width: "100%", height: "100%" }}
+            border={0}
+            borderRadius={150}
+            scale={slideValue / 10}
+            rotate={0}
+          />
 
-        <Stack direction="row" spacing={1}>
-          <Button color="inherit" size="small" variant="contained" onClick={onClose}>
-            Anuluj
-          </Button>
-          <Button color="primary" size="small" variant="contained" onClick={handleSave}>
-            Zapisz
-          </Button>
+          <Slider
+            min={5}
+            max={20}
+            sx={{
+              margin: "0 auto",
+              width: "90%",
+            }}
+            size="medium"
+            defaultValue={slideValue}
+            value={slideValue}
+            onChange={handleChange}
+          />
+
+          <Stack direction="row" spacing={1} sx={{ p: 2 }}>
+            <Button color="inherit" size="small" variant="contained" onClick={onClose}>
+              Anuluj
+            </Button>
+            <Button color="primary" size="small" variant="contained" onClick={handleSave}>
+              Zapisz
+            </Button>
+          </Stack>
         </Stack>
-      </Stack>
+      </Box>
     </Modal>
   );
 };

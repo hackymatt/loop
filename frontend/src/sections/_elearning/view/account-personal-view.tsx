@@ -17,6 +17,7 @@ import { fDate } from "src/utils/format-time";
 import { countries } from "src/assets/data";
 import { useUserDetails, useUpdateUserDetails } from "src/api/auth/details";
 
+import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from "src/components/hook-form";
 
 import { IGender } from "src/types/testimonial";
@@ -32,24 +33,26 @@ const GENDER_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPersonalView() {
+  const { enqueueSnackbar } = useToastContext();
+
   const { data: userDetails } = useUserDetails();
   const { mutateAsync: updateUserDetails } = useUpdateUserDetails();
 
   const AccountPersonalSchema = Yup.object().shape({
-    firstName: Yup.string().required("Imię jest wymagane"),
-    lastName: Yup.string().required("Nazwisko jest wymagane"),
-    emailAddress: Yup.string().required("Adres email jest wymagany"),
-    phoneNumber: Yup.string().nullable(),
-    birthday: Yup.mixed<any>().nullable(),
+    first_name: Yup.string().required("Imię jest wymagane"),
+    last_name: Yup.string().required("Nazwisko jest wymagane"),
+    email: Yup.string().required("Adres email jest wymagany"),
+    phone_number: Yup.string().nullable(),
+    dob: Yup.mixed<any>().nullable(),
     gender: Yup.string().required("Płeć jest wymagana"),
-    streetAddress: Yup.string().nullable(),
-    zipCode: Yup.string().nullable(),
+    street_address: Yup.string().nullable(),
+    zip_code: Yup.string().nullable(),
     city: Yup.string().nullable(),
     country: Yup.string().required("Państwo jest wymagane"),
-    photo: Yup.string().nullable(),
+    image: Yup.string().nullable(),
   });
 
-  const defaultValues = { ...userDetails, birthday: new Date(userDetails?.birthday) };
+  const defaultValues = { ...userDetails, dob: new Date(userDetails?.dob) };
 
   const methods = useForm({
     resolver: yupResolver(AccountPersonalSchema),
@@ -66,39 +69,24 @@ export default function AccountPersonalView() {
 
   useEffect(() => {
     if (userDetails) {
-      reset({ ...userDetails, birthday: new Date(userDetails?.birthday) });
+      reset({ ...userDetails, dob: new Date(userDetails?.dob) });
     }
   }, [reset, userDetails]);
 
   const onSubmit = handleSubmit(async (data) => {
-    const {
-      firstName,
-      lastName,
-      emailAddress,
-      phoneNumber,
-      birthday,
-      gender,
-      streetAddress,
-      zipCode,
-      city,
-      country,
-      photo,
-    } = data;
+    delete data.image;
+    const { phone_number, dob, gender, street_address, zip_code, city } = data;
     try {
       await updateUserDetails({
-        first_name: firstName,
-        last_name: lastName,
-        email: emailAddress,
-        phone_number: phoneNumber ?? "",
-        dob: fDate(birthday, "yyyy-MM-dd") ?? "",
+        ...data,
+        phone_number: phone_number ?? "",
+        dob: fDate(dob, "yyyy-MM-dd") ?? "",
         gender: (gender as IGender) ?? "",
-        street_address: streetAddress ?? "",
-        zip_code: zipCode ?? "",
+        street_address: street_address ?? "",
+        zip_code: zip_code ?? "",
         city: city ?? "",
-        country,
-        image: photo ?? "",
       });
-      reset();
+      enqueueSnackbar("Dane zostały zmienione", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }
@@ -117,16 +105,16 @@ export default function AccountPersonalView() {
         gridTemplateColumns={{ xs: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
         sx={{ my: 5 }}
       >
-        <RHFTextField name="firstName" label="Imię" />
+        <RHFTextField name="first_name" label="Imię" />
 
-        <RHFTextField name="lastName" label="Nazwisko" />
+        <RHFTextField name="last_name" label="Nazwisko" />
 
-        <RHFTextField name="emailAddress" label="Adres e-mail" disabled />
+        <RHFTextField name="email" label="Adres e-mail" disabled />
 
-        <RHFTextField name="phoneNumber" label="Numer telefonu" />
+        <RHFTextField name="phone_number" label="Numer telefonu" />
 
         <Controller
-          name="birthday"
+          name="dob"
           render={({ field, fieldState: { error } }) => (
             <DatePicker
               label="Data urodzenia"
@@ -144,9 +132,9 @@ export default function AccountPersonalView() {
 
         <RHFSelect name="gender" label="Płeć" options={GENDER_OPTIONS} placeholder="Wybierz płeć" />
 
-        <RHFTextField name="streetAddress" label="Ulica, numer budynku, numer lokalu" />
+        <RHFTextField name="street_address" label="Ulica, numer budynku, numer lokalu" />
 
-        <RHFTextField name="zipCode" label="Kod pocztowy" />
+        <RHFTextField name="zip_code" label="Kod pocztowy" />
 
         <RHFTextField name="city" label="Miasto" />
 

@@ -11,45 +11,48 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import InputAdornment from "@mui/material/InputAdornment";
 
 import { useBoolean } from "src/hooks/use-boolean";
+import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
+
+import { usePasswordChange } from "src/api/auth/password-change";
 
 import Iconify from "src/components/iconify";
+import { useUserContext } from "src/components/user";
+import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
 export default function AccountPasswordView() {
+  const { enqueueSnackbar } = useToastContext();
+
+  const { logoutUser } = useUserContext();
+
   const passwordShow = useBoolean();
 
-  const EcommerceAccountPersonalSchema = Yup.object().shape({
-    firstName: Yup.string().required("First name is required"),
-    lastName: Yup.string().required("Last name is required"),
-    emailAddress: Yup.string().required("Email address is required"),
-    phoneNumber: Yup.string().required("Phone number is required"),
-    birthday: Yup.mixed<any>().nullable().required("Birthday is required"),
-    gender: Yup.string().required("Gender is required"),
-    streetAddress: Yup.string().required("Street address is required"),
-    city: Yup.string().required("City is required"),
-    zipCode: Yup.string().required("Zip code is required"),
+  const { mutateAsync: changePassword } = usePasswordChange();
+
+  const ChangePasswordSchema = Yup.object().shape({
+    old_password: Yup.string().required("Hasło jest wymagane"),
+    password: Yup.string()
+      .required("Hasło jest wymagane")
+      .min(8, "Hasło musi mieć minimum 8 znaków")
+      .matches(/^(?=.*[A-Z])/, "Hasło musi składać się z minimum jednej dużej litery.")
+      .matches(/^(?=.*[a-z])/, "Hasło musi składać się z minimum jednej małej litery.")
+      .matches(/^(?=.*[0-9])/, "Hasło musi składać się z minimum jednej cyfry")
+      .matches(/^(?=.*[!@#$%^&])/, "Hasło musi składać się z minimum jednego znaku specjalnego"),
+    password2: Yup.string()
+      .required("Hasło jest wymagane")
+      .oneOf([Yup.ref("password")], "Hasła nie są takie same"),
   });
 
   const defaultValues = {
-    firstName: "Jayvion",
-    lastName: "Simon",
-    emailAddress: "nannie_abernathy70@yahoo.com",
-    phoneNumber: "365-374-4961",
-    birthday: null,
-    gender: "Male",
-    streetAddress: "",
-    zipCode: "",
-    city: "",
-    country: "United States",
-    oldPassword: "",
-    newPassword: "",
-    confirmNewPassword: "",
+    old_password: "",
+    password: "",
+    password2: "",
   };
 
   const methods = useForm({
-    resolver: yupResolver(EcommerceAccountPersonalSchema),
+    resolver: yupResolver(ChangePasswordSchema),
     defaultValues,
   });
 
@@ -59,27 +62,30 @@ export default function AccountPasswordView() {
     formState: { isSubmitting },
   } = methods;
 
+  const handleFormError = useFormErrorHandler(methods);
+
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await changePassword(data);
       reset();
-      console.log("DATA", data);
+      await logoutUser({});
+      enqueueSnackbar("Hasło zostało zmienione. Zaloguj się ponownie.", { variant: "success" });
     } catch (error) {
-      console.error(error);
+      handleFormError(error);
     }
   });
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Change Password
+        Zarządzaj hasłem
       </Typography>
 
       <Stack spacing={3} sx={{ my: 5 }}>
         <Stack spacing={2.5}>
           <RHFTextField
-            name="oldPassword"
-            label="Old Password"
+            name="old_password"
+            label="Obecne hasło"
             type={passwordShow.value ? "text" : "password"}
             InputProps={{
               endAdornment: (
@@ -93,8 +99,8 @@ export default function AccountPasswordView() {
           />
 
           <RHFTextField
-            name="newPassword"
-            label="New Password"
+            name="password"
+            label="Nowe hasło"
             type={passwordShow.value ? "text" : "password"}
             InputProps={{
               endAdornment: (
@@ -108,8 +114,8 @@ export default function AccountPasswordView() {
           />
 
           <RHFTextField
-            name="confirmNewPassword"
-            label="Confirm New Password"
+            name="password2"
+            label="Potwierdź nowe hasło"
             type={passwordShow.value ? "text" : "password"}
             InputProps={{
               endAdornment: (
@@ -123,6 +129,7 @@ export default function AccountPasswordView() {
           />
         </Stack>
       </Stack>
+
       <LoadingButton
         color="inherit"
         size="large"
@@ -130,7 +137,7 @@ export default function AccountPasswordView() {
         variant="contained"
         loading={isSubmitting}
       >
-        Save Changes
+        Zapisz
       </LoadingButton>
     </FormProvider>
   );

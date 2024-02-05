@@ -23,10 +23,10 @@ class ProfilePasswordChangeViewSet(ModelViewSet):
         if not user.check_password(old_password):
             return Response(
                 status=status.HTTP_401_UNAUTHORIZED,
-                data={"password_change": "Obecne hasło jest nieprawidłowe."},
+                data={"old_password": "Obecne hasło jest nieprawidłowe."},
             )
 
         user.set_password(new_password)
         user.save()
 
-        return Response(status=status.HTTP_200_OK, data={"password_change": "Sukces."})
+        return Response(status=status.HTTP_200_OK, data={})

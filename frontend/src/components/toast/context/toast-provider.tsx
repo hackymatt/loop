@@ -9,5 +9,9 @@ type Props = {
 };
 
 export function ToastProvider({ children }: Props) {
-  return <SnackbarProvider maxSnack={3}>{children}</SnackbarProvider>;
+  return (
+    <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
+      {children}
+    </SnackbarProvider>
+  );
 }

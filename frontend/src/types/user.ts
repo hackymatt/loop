@@ -3,17 +3,17 @@ import { IGender } from "./testimonial";
 export type IUserType = "Admin" | "Wykładowca" | "Student";
 
 export type IUserDetailsProps = {
-  firstName: string;
-  lastName: string;
-  emailAddress: string;
-  phoneNumber: string;
-  birthday: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  dob: string;
   gender: IGender;
-  streetAddress: string;
-  zipCode: string;
+  street_address: string;
+  zip_code: string;
   city: string;
   country: string;
-  photo: string;
-  userType?: IUserType;
-  userTitle?: string;
+  image: string;
+  user_type?: IUserType;
+  user_title?: string;
 };

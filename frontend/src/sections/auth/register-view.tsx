@@ -47,7 +47,7 @@ export default function RegisterView() {
       .matches(/^(?=.*[A-Z])/, "Hasło musi składać się z minimum jednej dużej litery.")
       .matches(/^(?=.*[a-z])/, "Hasło musi składać się z minimum jednej małej litery.")
       .matches(/^(?=.*[0-9])/, "Hasło musi składać się z minimum jednej cyfry")
-      .matches(/^(?=.*[!@#%&])/, "Hasło musi składać się z minimum jednego znaku specjalnego"),
+      .matches(/^(?=.*[!@#$%^&])/, "Hasło musi składać się z minimum jednego znaku specjalnego"),
     password2: Yup.string()
       .required("Hasło jest wymagane")
       .oneOf([Yup.ref("password")], "Hasła nie są takie same"),

@@ -23,7 +23,7 @@ export type IDetail = {
   zip_code: string | null;
   city: string | null;
   country: string | null;
-  image: string | null;
+  image?: string | null;
 };
 
 type IDetailReturn = IDetail;
@@ -38,39 +38,8 @@ export const userDetailsQuery = () => {
       },
     });
     const { data } = response;
-    const {
-      first_name,
-      last_name,
-      email,
-      user_type,
-      user_title,
-      phone_number,
-      dob,
-      gender,
-      street_address,
-      zip_code,
-      city,
-      country,
-      image,
-    } = data;
 
-    const modifiedResults = {
-      firstName: first_name,
-      lastName: last_name,
-      emailAddress: email,
-      phoneNumber: phone_number,
-      birthday: dob,
-      gender,
-      streetAddress: street_address,
-      zipCode: zip_code,
-      city,
-      country,
-      photo: image,
-      userType: user_type,
-      userTitle: user_title,
-    };
-
-    return { results: modifiedResults };
+    return { results: data };
   };
 
   return { url, queryFn, queryKey: compact([url]) };
