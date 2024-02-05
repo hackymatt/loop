@@ -1,3 +1,5 @@
+"use client";
+
 import { useRouter } from "next/navigation";
 import { useState, useEffect, ChangeEvent } from "react";
 
@@ -18,8 +20,6 @@ import { RouterLink } from "src/routes/components";
 
 import { useResponsive } from "src/hooks/use-responsive";
 
-import { fDate } from "src/utils/format-time";
-
 import { useUserDetails, useUpdateUserDetails } from "src/api/auth/details";
 
 import Iconify from "src/components/iconify";
@@ -27,8 +27,6 @@ import { useUserContext } from "src/components/user";
 import TextMaxLine from "src/components/text-max-line";
 import { useToastContext } from "src/components/toast";
 import { CropperModal } from "src/components/cropper/cropper";
-
-import { IGender } from "src/types/testimonial";
 
 // ----------------------------------------------------------------------
 
@@ -89,7 +87,7 @@ export default function Nav({ open, onClose }: Props) {
       ? "/assets/images/avatar/avatar_female.jpg"
       : "/assets/images/avatar/avatar_male.jpg";
 
-  const avatarUrl = userDetails?.photo || genderAvatarUrl;
+  const avatarUrl = userDetails?.image || genderAvatarUrl;
 
   const [isCropperModalOpen, setIsCropperModalOpen] = useState<boolean>(false);
   const [image, setImage] = useState<string>();
@@ -103,32 +101,8 @@ export default function Nav({ open, onClose }: Props) {
   };
 
   const handleSubmit = async (newPhoto: string) => {
-    const {
-      firstName,
-      lastName,
-      emailAddress,
-      phoneNumber,
-      birthday,
-      gender,
-      streetAddress,
-      zipCode,
-      city,
-      country,
-    } = userDetails;
     try {
-      await updatePhoto({
-        first_name: firstName,
-        last_name: lastName,
-        email: emailAddress,
-        phone_number: phoneNumber ?? "",
-        dob: fDate(birthday, "yyyy-MM-dd") ?? "",
-        gender: gender as IGender,
-        street_address: streetAddress ?? "",
-        zip_code: zipCode ?? "",
-        city: city ?? "",
-        country,
-        image: newPhoto ?? "",
-      });
+      await updatePhoto({ ...userDetails, image: newPhoto ?? "" });
       enqueueSnackbar("Zapisano pomyślnie", { variant: "success" });
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd", { variant: "error" });
@@ -163,33 +137,47 @@ export default function Nav({ open, onClose }: Props) {
               "&:hover": { opacity: 0.72 },
             }}
           >
-            <LoadingButton
-              component="label"
-              variant="text"
-              size="small"
-              color="primary"
-              startIcon={<Iconify icon="carbon:edit" sx={{ mr: 1 }} />}
-              loading={isLoading}
-            >
-              Zmień zdjęcie
-              <input type="file" hidden onChange={handleImagePick} />
-              <CropperModal
-                open={isCropperModalOpen}
-                image={image ?? ""}
-                onImageChange={handleImageChange}
-                onClose={() => setIsCropperModalOpen(false)}
-              />
-            </LoadingButton>
+            {userDetails?.image === null ? (
+              <LoadingButton
+                component="label"
+                variant="text"
+                size="small"
+                color="primary"
+                startIcon={<Iconify icon="carbon:add-large" />}
+                loading={isLoading}
+              >
+                Dodaj zdjęcie
+                <input type="file" hidden onChange={handleImagePick} />
+                <CropperModal
+                  open={isCropperModalOpen}
+                  image={image ?? ""}
+                  onImageChange={handleImageChange}
+                  onClose={() => setIsCropperModalOpen(false)}
+                />
+              </LoadingButton>
+            ) : (
+              <LoadingButton
+                component="label"
+                variant="text"
+                size="small"
+                color="error"
+                startIcon={<Iconify icon="carbon:subtract-large" />}
+                loading={isLoading}
+                onClick={() => handleImageChange("")}
+              >
+                Usuń zdjęcie
+              </LoadingButton>
+            )}
           </Stack>
         </Stack>
 
         {userDetails && (
           <Stack spacing={0.5}>
             <TextMaxLine variant="subtitle1" line={1}>
-              {`${userDetails.firstName} ${userDetails.lastName}`}
+              {`${userDetails.first_name} ${userDetails.last_name}`}
             </TextMaxLine>
             <TextMaxLine variant="body2" line={1} sx={{ color: "text.secondary" }}>
-              {userDetails.emailAddress}
+              {userDetails.email}
             </TextMaxLine>
           </Stack>
         )}
