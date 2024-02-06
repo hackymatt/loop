@@ -88,10 +88,9 @@ class LecturerDetailsSerializer(ModelSerializer):
 
         gender = validated_data.pop("get_gender_display", instance.gender)
         image = validated_data.pop("image", instance.image)
-        user_type = validated_data.pop("get_user_type_display", instance.user_type)
+        validated_data.pop("get_user_type_display")
         instance.gender = gender
         instance.image = image
-        instance.user_type = user_type
         instance.save()
 
         Profile.objects.filter(pk=instance.pk).update(**validated_data)

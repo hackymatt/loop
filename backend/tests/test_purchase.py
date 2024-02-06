@@ -12,6 +12,7 @@ from .factory import (
     create_teaching,
     create_schedule,
     create_reservation,
+    create_review,
 )
 from .helpers import login
 import json
@@ -170,6 +171,14 @@ class PurchaseTest(APITestCase):
             lesson=self.course_2.lessons.all()[1],
             student=self.profile,
             price=self.course_2.lessons.all()[1].price,
+        )
+
+        create_review(
+            lesson=self.course_2.lessons.all()[0],
+            student=self.profile,
+            lecturer=self.lecturer_profile,
+            rating=5,
+            review="Great lesson.",
         )
 
         # course 3
