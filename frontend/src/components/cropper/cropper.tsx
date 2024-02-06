@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import AvatarEditor from "react-avatar-editor";
 
-import { Box, Modal, Stack, Slider, Button, Typography } from "@mui/material";
+import { Stack, Slider, Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 
 import { blobToBase64 } from "src/utils/blob-to-base64";
 
@@ -34,45 +34,20 @@ export const CropperModal = ({ open, image, onImageChange, onClose }: Props) => 
   };
 
   return (
-    <Modal
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-      open={open}
-    >
-      <Box
+    <Dialog maxWidth="sm" onClose={onClose} open={open}>
+      <DialogContent
         sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          boxShadow: 24,
-          bgcolor: "common.white",
-          p: 6,
-          borderRadius: "4px",
+          p: 1,
+          display: "flex",
+          flexFlow: "column",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <Stack
-          spacing={0.5}
-          sx={{
-            width: "300px",
-            height: "300px",
-            display: "flex",
-            flexFlow: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            p: 2,
-          }}
-        >
-          <Typography variant="h6" component="h2">
-            Dopasuj zdjęcie
-          </Typography>
+        <Stack spacing={2.5}>
           <AvatarEditor
             ref={cropRef}
             image={image}
-            style={{ width: "100%", height: "100%" }}
             border={0}
             borderRadius={150}
             scale={slideValue / 10}
@@ -91,17 +66,18 @@ export const CropperModal = ({ open, image, onImageChange, onClose }: Props) => 
             value={slideValue}
             onChange={handleChange}
           />
-
-          <Stack direction="row" spacing={1} sx={{ p: 2 }}>
-            <Button color="inherit" size="small" variant="contained" onClick={onClose}>
-              Anuluj
-            </Button>
-            <Button color="primary" size="small" variant="contained" onClick={handleSave}>
-              Zapisz
-            </Button>
-          </Stack>
         </Stack>
-      </Box>
-    </Modal>
+      </DialogContent>
+
+      <DialogActions>
+        <Button variant="outlined" onClick={onClose} color="inherit">
+          Anuluj
+        </Button>
+
+        <Button color="inherit" type="submit" variant="contained" onClick={handleSave}>
+          Zapisz
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
