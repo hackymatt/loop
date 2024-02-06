@@ -1,13 +1,11 @@
 "use client";
 
+import { useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useState, useEffect, ChangeEvent } from "react";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
-import { LoadingButton } from "@mui/lab";
 import Drawer from "@mui/material/Drawer";
-import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import { alpha } from "@mui/material/styles";
 import ListItemText from "@mui/material/ListItemText";
@@ -20,17 +18,20 @@ import { RouterLink } from "src/routes/components";
 
 import { useResponsive } from "src/hooks/use-responsive";
 
-import { useUserDetails, useUpdateUserDetails } from "src/api/auth/details";
+import { useUserDetails } from "src/api/auth/details";
 
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 import TextMaxLine from "src/components/text-max-line";
 import { useToastContext } from "src/components/toast";
-import { CropperModal } from "src/components/cropper/cropper";
+
+import AccountImage from "src/sections/_elearning/account/account-image";
+
+import { UserType } from "src/types/user";
 
 // ----------------------------------------------------------------------
 
-const navigations = [
+const userNavigations = [
   {
     title: "Dane osobowe",
     path: paths.account.personal,
@@ -41,16 +42,38 @@ const navigations = [
     path: paths.account.password,
     icon: <Iconify icon="carbon:user" />,
   },
-  {
-    title: "Lekcje",
-    path: paths.account.lessons,
-    icon: <Iconify icon="carbon:book" />,
-  },
-  {
-    title: "Recenzje",
-    path: paths.account.reviews,
-    icon: <Iconify icon="carbon:review" />,
-  },
+];
+
+const studentNavigations = [
+  ...userNavigations,
+  ...[
+    {
+      title: "Lekcje",
+      path: paths.account.lessons,
+      icon: <Iconify icon="carbon:book" />,
+    },
+    {
+      title: "Recenzje",
+      path: paths.account.reviews,
+      icon: <Iconify icon="carbon:review" />,
+    },
+  ],
+];
+
+const teacherNavigations = [
+  ...userNavigations,
+  ...[
+    {
+      title: "Nauczanie",
+      path: paths.account.lessons,
+      icon: <Iconify icon="carbon:book" />,
+    },
+    {
+      title: "Recenzje",
+      path: paths.account.reviews,
+      icon: <Iconify icon="carbon:review" />,
+    },
+  ],
 ];
 
 // ----------------------------------------------------------------------
@@ -70,7 +93,16 @@ export default function Nav({ open, onClose }: Props) {
   const { logoutUser, isLoggedIn } = useUserContext();
 
   const { data: userDetails } = useUserDetails();
-  const { mutateAsync: updatePhoto, isLoading } = useUpdateUserDetails();
+
+  const userType = useMemo(
+    () => (userDetails?.user_type ? userDetails.user_type : UserType.Student),
+    [userDetails],
+  );
+
+  const navigations = useMemo(
+    () => (userType === UserType.Student ? studentNavigations : teacherNavigations),
+    [userType],
+  );
 
   const handleLogout = async () => {
     try {
@@ -87,37 +119,6 @@ export default function Nav({ open, onClose }: Props) {
     }
   }, [isLoggedIn, push]);
 
-  const genderAvatarUrl =
-    userDetails?.gender === "Kobieta"
-      ? "/assets/images/avatar/avatar_female.jpg"
-      : "/assets/images/avatar/avatar_male.jpg";
-
-  const avatarUrl = userDetails?.image || genderAvatarUrl;
-
-  const [isCropperModalOpen, setIsCropperModalOpen] = useState<boolean>(false);
-  const [image, setImage] = useState<string>();
-
-  const handleImagePick = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { files } = e.target as HTMLInputElement;
-    if (files && files.length > 0) {
-      setImage(URL.createObjectURL(files[0]));
-      setIsCropperModalOpen(true);
-    }
-  };
-
-  const handleSubmit = async (newPhoto: string) => {
-    try {
-      await updatePhoto({ ...userDetails, image: newPhoto ?? "" });
-      enqueueSnackbar("Zapisano pomyślnie", { variant: "success" });
-    } catch (error) {
-      enqueueSnackbar("Wystąpił błąd", { variant: "error" });
-    }
-  };
-
-  const handleImageChange = async (source: string) => {
-    await handleSubmit(source);
-  };
-
   const renderContent = (
     <Stack
       sx={{
@@ -131,50 +132,7 @@ export default function Nav({ open, onClose }: Props) {
       }}
     >
       <Stack spacing={2} sx={{ p: 3, pb: 2 }}>
-        <Stack spacing={2} direction="row" alignItems="center">
-          <Avatar src={avatarUrl} sx={{ width: 64, height: 64 }} />
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{
-              typography: "caption",
-              cursor: "pointer",
-              "&:hover": { opacity: 0.72 },
-            }}
-          >
-            {userDetails?.image === null ? (
-              <LoadingButton
-                component="label"
-                variant="text"
-                size="small"
-                color="primary"
-                startIcon={<Iconify icon="carbon:add-large" />}
-                loading={isLoading}
-              >
-                Dodaj zdjęcie
-                <input type="file" hidden onChange={handleImagePick} />
-                <CropperModal
-                  open={isCropperModalOpen}
-                  image={image ?? ""}
-                  onImageChange={handleImageChange}
-                  onClose={() => setIsCropperModalOpen(false)}
-                />
-              </LoadingButton>
-            ) : (
-              <LoadingButton
-                component="label"
-                variant="text"
-                size="small"
-                color="error"
-                startIcon={<Iconify icon="carbon:subtract-large" />}
-                loading={isLoading}
-                onClick={() => handleImageChange("")}
-              >
-                Usuń zdjęcie
-              </LoadingButton>
-            )}
-          </Stack>
-        </Stack>
+        <AccountImage />
 
         {userDetails && (
           <Stack spacing={0.5}>

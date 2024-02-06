@@ -11,8 +11,8 @@ class ProfileDetailsSerializer(ModelSerializer):
     first_name = CharField(source="user.first_name")
     last_name = CharField(source="user.last_name")
     email = EmailField(source="user.email")
-    gender = CharField(source="get_gender_display")
-    image = Base64ImageField(required=True)
+    gender = CharField(source="get_gender_display", allow_blank=True)
+    image = Base64ImageField(required=False)
 
     class Meta:
         model = Profile
@@ -55,9 +55,9 @@ class LecturerDetailsSerializer(ModelSerializer):
     first_name = CharField(source="user.first_name")
     last_name = CharField(source="user.last_name")
     email = EmailField(source="user.email")
-    gender = CharField(source="get_gender_display")
+    gender = CharField(source="get_gender_display", allow_blank=True)
     user_type = CharField(source="get_user_type_display")
-    image = Base64ImageField(required=True)
+    image = Base64ImageField(required=False)
 
     class Meta:
         model = Profile
