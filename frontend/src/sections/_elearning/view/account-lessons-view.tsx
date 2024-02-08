@@ -1,141 +1,129 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
-import Switch from "@mui/material/Switch";
-import TableRow from "@mui/material/TableRow";
 import TableBody from "@mui/material/TableBody";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import InputAdornment from "@mui/material/InputAdornment";
 import TableContainer from "@mui/material/TableContainer";
+import { tableCellClasses } from "@mui/material/TableCell";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TablePagination from "@mui/material/TablePagination";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 
-import { _productsTable } from "src/_mock";
+import { useQueryParams } from "src/hooks/use-query-params";
+
+import { usePurchase, usePurchasePageCount } from "src/api/purchase/purchase";
 
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
 
-import { stableSort, getComparator } from "../account/utils";
-import AccountOrdersTableRow from "../account/account-orders-table-row";
-import AccountOrdersTableHead from "../account/account-orders-table-head";
-import AccountOrdersTableToolbar from "../account/account-orders-table-toolbar";
+import { LessonStatus } from "src/types/purchase";
+import { IQueryParamValue } from "src/types/query-params";
+
+import AccountLessonsTableRow from "../account/account-lessons-table-row";
+import AccountLessonsTableHead from "../account/account-lessons-table-head";
+import FilterTeachers from "../filters/filter-teachers";
+import FilterTeacher from "src/sections/review/elearning/review-filter-teacher";
 
 // ----------------------------------------------------------------------
 
-const TABS = ["All Orders", "Completed", "To Process", "Cancelled", "Return & Refund"];
+const TABS = [
+  { id: "", label: "Wszystkie lekcje" },
+  { id: LessonStatus.Nowa, label: "Nowe" },
+  { id: LessonStatus.Zaplanowana, label: "Zaplanowane" },
+  { id: LessonStatus.Zakończona, label: "Zakończone" },
+];
 
-export const TABLE_HEAD = [
-  { id: "orderId", label: "Order ID" },
-  { id: "item", label: "Item" },
-  { id: "deliveryDate", label: "Delivery date", width: 160 },
-  { id: "price", label: "Price", width: 100 },
-  { id: "status", label: "Status", width: 100 },
+const TABLE_HEAD = [
+  { id: "course_title", label: "Nazwa kursu" },
+  { id: "lesson_title", label: "Nazwa lekcji" },
+  { id: "status", label: "Status" },
+  { id: "lecturer_full_name", label: "Instruktor" },
+  { id: "created_at", label: "Data zakupu" },
   { id: "" },
 ];
+
+const ROWS_PER_PAGE_OPTIONS = [1, 5, 10, 25];
 
 // ----------------------------------------------------------------------
 
 export default function AccountLessonsPage() {
-  const [tab, setTab] = useState("All Orders");
+  const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
-  const [order, setOrder] = useState<"asc" | "desc">("asc");
+  const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const [orderBy, setOrderBy] = useState("orderId");
+  const { data: pagesCount } = usePurchasePageCount(filters);
+  const { data: lessons } = usePurchase(filters);
 
-  const [selected, setSelected] = useState<string[]>([]);
+  const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
+  const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
+  const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "created_at";
+  const order = filters?.sort_by && !filters.sort_by.startsWith("-") ? "asc" : "desc";
+  const tab = filters?.lesson_status ? filters.lesson_status : "";
 
-  const [page, setPage] = useState(0);
+  const handleChange = useCallback(
+    (name: string, value: IQueryParamValue) => {
+      if (value) {
+        setQueryParam(name, value);
+      } else {
+        removeQueryParam(name);
+      }
+    },
+    [removeQueryParam, setQueryParam],
+  );
 
-  const [dense, setDense] = useState(false);
-
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  const handleChangeTab = useCallback((event: React.SyntheticEvent, newValue: string) => {
-    setTab(newValue);
-  }, []);
+  const handleChangeTab = useCallback(
+    (event: React.SyntheticEvent, newValue: string) => {
+      console.log(newValue);
+      handleChange("lesson_status", newValue);
+    },
+    [handleChange],
+  );
 
   const handleSort = useCallback(
     (id: string) => {
       const isAsc = orderBy === id && order === "asc";
-      if (id !== "") {
-        setOrder(isAsc ? "desc" : "asc");
-        setOrderBy(id);
-      }
+      handleChange("sort_by", isAsc ? `-${id}` : id);
     },
-    [order, orderBy],
+    [handleChange, order, orderBy],
   );
 
-  const handleSelectAllRows = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = _productsTable.map((n) => n.id);
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
-  }, []);
-
-  const handleSelectRow = useCallback(
-    (id: string) => {
-      const selectedIndex = selected.indexOf(id);
-      let newSelected: string[] = [];
-
-      if (selectedIndex === -1) {
-        newSelected = newSelected.concat(selected, id);
-      } else if (selectedIndex === 0) {
-        newSelected = newSelected.concat(selected.slice(1));
-      } else if (selectedIndex === selected.length - 1) {
-        newSelected = newSelected.concat(selected.slice(0, -1));
-      } else if (selectedIndex > 0) {
-        newSelected = newSelected.concat(
-          selected.slice(0, selectedIndex),
-          selected.slice(selectedIndex + 1),
-        );
-      }
-
-      setSelected(newSelected);
+  const handleChangePage = useCallback(
+    (event: unknown, newPage: number) => {
+      handleChange("page", newPage + 1);
     },
-    [selected],
+    [handleChange],
   );
 
-  const handleChangePage = useCallback((event: unknown, newPage: number) => {
-    setPage(newPage);
-  }, []);
-
-  const handleChangeRowsPerPage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  }, []);
-
-  const handleChangeDense = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setDense(event.target.checked);
-  }, []);
-
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - _productsTable.length) : 0;
+  const handleChangeRowsPerPage = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      handleChange("page_size", parseInt(event.target.value, 10));
+      handleChange("page", 1);
+    },
+    [handleChange],
+  );
 
   return (
     <>
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Orders
+        Lekcje
       </Typography>
 
       <Tabs
-        value={tab}
+        value={TABS.find((t) => t.id === tab)?.id ?? ""}
         scrollButtons="auto"
         variant="scrollable"
         allowScrollButtonsMobile
         onChange={handleChangeTab}
       >
         {TABS.map((category) => (
-          <Tab key={category} value={category} label={category} />
+          <Tab key={category.id} value={category.id} label={category.label} />
         ))}
       </Tabs>
 
@@ -143,7 +131,8 @@ export default function AccountLessonsPage() {
         <TextField
           fullWidth
           hiddenLabel
-          placeholder="Search..."
+          placeholder="Nazwa kursu..."
+          size="small"
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -152,10 +141,24 @@ export default function AccountLessonsPage() {
             ),
           }}
         />
-        <Stack spacing={2} direction={{ xs: "column", md: "row" }} alignItems="center">
-          <DatePicker label="Start Date" sx={{ width: 1, minWidth: 180 }} />
-          <DatePicker label="End Date" sx={{ width: 1, minWidth: 180 }} />
-        </Stack>
+        <TextField
+          fullWidth
+          hiddenLabel
+          placeholder="Nazwa lekcji..."
+          size="small"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Iconify icon="carbon:search" width={24} sx={{ color: "text.disabled" }} />
+              </InputAdornment>
+            ),
+          }}
+        />
+        <DatePicker
+          label="Data zakupu"
+          sx={{ width: 1, minWidth: 180 }}
+          slotProps={{ textField: { size: "small", hiddenLabel: true } }}
+        />
       </Stack>
 
       <TableContainer
@@ -170,51 +173,27 @@ export default function AccountLessonsPage() {
           },
         }}
       >
-        <AccountOrdersTableToolbar
-          rowCount={_productsTable.length}
-          numSelected={selected.length}
-          onSelectAllRows={handleSelectAllRows}
-        />
-
         <Scrollbar>
           <Table
             sx={{
               minWidth: 720,
             }}
-            size={dense ? "small" : "medium"}
+            size="small"
           >
-            <AccountOrdersTableHead
+            <AccountLessonsTableHead
               order={order}
               orderBy={orderBy}
               onSort={handleSort}
               headCells={TABLE_HEAD}
-              rowCount={_productsTable.length}
-              numSelected={selected.length}
-              onSelectAllRows={handleSelectAllRows}
             />
 
-            <TableBody>
-              {stableSort(_productsTable, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => (
-                  <AccountOrdersTableRow
-                    key={row.id}
-                    row={row}
-                    selected={selected.includes(row.id)}
-                    onSelectRow={() => handleSelectRow(row.id)}
-                  />
+            {lessons && (
+              <TableBody>
+                {lessons.map((row) => (
+                  <AccountLessonsTableRow key={row.id} row={row} />
                 ))}
-
-              {emptyRows > 0 && (
-                <TableRow
-                  sx={{
-                    height: (dense ? 36 : 57) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={9} />
-                </TableRow>
-              )}
-            </TableBody>
+              </TableBody>
+            )}
           </Table>
         </Scrollbar>
       </TableContainer>
@@ -223,24 +202,13 @@ export default function AccountLessonsPage() {
         <TablePagination
           page={page}
           component="div"
-          count={_productsTable.length}
+          labelRowsPerPage="Wierszy na stronę"
+          labelDisplayedRows={({ from, to, count }) => `Strona ${from} z ${count}`}
+          count={pagesCount ?? 0}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
           onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-
-        <FormControlLabel
-          control={<Switch checked={dense} onChange={handleChangeDense} />}
-          label="Dense padding"
-          sx={{
-            pl: 2,
-            py: 1.5,
-            top: 0,
-            position: {
-              sm: "absolute",
-            },
-          }}
         />
       </Box>
     </>
