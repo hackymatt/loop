@@ -28,8 +28,7 @@ import { IQueryParamValue } from "src/types/query-params";
 
 import AccountLessonsTableRow from "../account/account-lessons-table-row";
 import AccountLessonsTableHead from "../account/account-lessons-table-head";
-import FilterTeachers from "../filters/filter-teachers";
-import FilterTeacher from "src/sections/review/elearning/review-filter-teacher";
+import FilterSearch from "../filters/filter-search";
 
 // ----------------------------------------------------------------------
 
@@ -80,7 +79,6 @@ export default function AccountLessonsPage() {
 
   const handleChangeTab = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
-      console.log(newValue);
       handleChange("lesson_status", newValue);
     },
     [handleChange],
@@ -128,32 +126,18 @@ export default function AccountLessonsPage() {
       </Tabs>
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 5, mb: 3 }}>
-        <TextField
-          fullWidth
-          hiddenLabel
+        <FilterSearch
+          value={filters?.course_title ?? ""}
+          onChangeSearch={(value) => handleChange("course_title", value)}
           placeholder="Nazwa kursu..."
-          size="small"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Iconify icon="carbon:search" width={24} sx={{ color: "text.disabled" }} />
-              </InputAdornment>
-            ),
-          }}
         />
-        <TextField
-          fullWidth
-          hiddenLabel
+
+        <FilterSearch
+          value={filters?.lesson_title ?? ""}
+          onChangeSearch={(value) => handleChange("lesson_title", value)}
           placeholder="Nazwa lekcji..."
-          size="small"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Iconify icon="carbon:search" width={24} sx={{ color: "text.disabled" }} />
-              </InputAdornment>
-            ),
-          }}
         />
+
         <DatePicker
           label="Data zakupu"
           sx={{ width: 1, minWidth: 180 }}

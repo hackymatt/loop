@@ -1,7 +1,7 @@
 "use client";
 
 import * as Yup from "yup";
-import { useEffect, useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 
@@ -20,8 +20,8 @@ import { useUserDetails, useUpdateUserDetails } from "src/api/auth/details";
 import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from "src/components/hook-form";
 
-import { IGender } from "src/types/testimonial";
 import { UserType } from "src/types/user";
+import { IGender } from "src/types/testimonial";
 
 // ----------------------------------------------------------------------
 

@@ -8,7 +8,11 @@ import Typography from "@mui/material/Typography";
 import { useResponsive } from "src/hooks/use-responsive";
 import { useQueryParams } from "src/hooks/use-query-params";
 
+import { useLecturers } from "src/api/lecturers/lecturers";
+import { useTechnologies } from "src/api/technologies/technologies";
+
 import { IQueryParamValue } from "src/types/query-params";
+import { ICourseByCategoryProps } from "src/types/course";
 
 import FilterLevel from "./filter-level";
 import FilterPrice from "./filter-price";
@@ -20,6 +24,25 @@ import FilterCategories from "./filter-categories";
 
 // ----------------------------------------------------------------------
 
+const DURATION_OPTIONS = [
+  { value: "(duration_to=60)", label: "0 - 1 godzin" },
+  { value: "(duration_from=60)&(duration_to=180)", label: "1 - 3 godzin" },
+  { value: "(duration_from=180)&(duration_to=360)", label: "3 - 6 godzin" },
+  { value: "(duration_from=360)&(duration_to=1080)", label: "6 - 18 godzin" },
+  { value: "(duration_from=1080)", label: "18+ godzin" },
+];
+
+const LEVEL_OPTIONS = [
+  { value: "P", label: "Początkujący" },
+  { value: "Ś", label: "Średniozaawansowany" },
+  { value: "Z", label: "Zaawansowany" },
+  { value: "E", label: "Ekspert" },
+];
+
+const RATING_OPTIONS = ["4", "3", "2"];
+
+// ----------------------------------------------------------------------
+
 type Props = {
   open: boolean;
   onClose: VoidFunction;
@@ -28,6 +51,9 @@ type Props = {
 export default function Filters({ open, onClose }: Props) {
   const mdUp = useResponsive("up", "md");
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
+
+  const { data: technologies } = useTechnologies({ sort_by: "name" });
+  const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: 1000 });
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
@@ -51,7 +77,7 @@ export default function Filters({ open, onClose }: Props) {
       }}
     >
       <FilterSearch
-        filterSearch={filters?.search ?? ""}
+        value={filters?.search ?? ""}
         onChangeSearch={(value) => handleChange("search", value)}
       />
 
@@ -61,43 +87,48 @@ export default function Filters({ open, onClose }: Props) {
         onClear={() => handleChange("rating_from", null)}
       >
         <FilterRating
-          filterRating={filters?.rating_from ?? null}
+          value={filters?.rating_from ?? null}
+          options={RATING_OPTIONS}
           onChangeRating={(value) => handleChange("rating_from", value)}
         />
       </Block>
 
       <Block title="Czas trwania">
         <FilterDuration
-          filterDuration={filters?.filters ?? ""}
+          value={filters?.filters ?? ""}
+          options={DURATION_OPTIONS}
           onChangeDuration={(value) => handleChange("filters", value)}
         />
       </Block>
 
       <Block title="Technologia">
         <FilterCategories
-          filterCategories={filters?.technology_in ?? ""}
+          value={filters?.technology_in ?? ""}
+          options={technologies?.map((technology: ICourseByCategoryProps) => technology.name)}
           onChangeCategory={(value) => handleChange("technology_in", value)}
         />
       </Block>
 
       <Block title="Poziom">
         <FilterLevel
-          filterLevel={filters?.level_in ?? ""}
+          value={filters?.level_in ?? ""}
+          options={LEVEL_OPTIONS}
           onChangeLevel={(value) => handleChange("level_in", value)}
         />
       </Block>
 
       <Block title="Instruktorzy">
         <FilterTeachers
-          filterTeachers={filters?.lecturer_in ?? ""}
+          value={filters?.lecturer_in ?? ""}
+          options={teachers}
           onChangeTeacher={(value) => handleChange("lecturer_in", value)}
         />
       </Block>
 
       <Block title="Cena">
         <FilterPrice
-          filterPriceFrom={filters?.price_from ?? 0}
-          filterPriceTo={filters?.price_to ?? 0}
+          valuePriceFrom={filters?.price_from ?? 0}
+          valuePriceTo={filters?.price_to ?? 0}
           onChangeStartPrice={(value) => handleChange("price_from", value)}
           onChangeEndPrice={(value) => handleChange("price_to", value)}
         />

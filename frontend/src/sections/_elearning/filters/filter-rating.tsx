@@ -8,18 +8,17 @@ import { IQueryParamValue } from "src/types/query-params";
 
 // ----------------------------------------------------------------------
 
-const RATINGS = ["4", "3", "2"];
-
 type Props = {
-  filterRating: IQueryParamValue;
+  value: IQueryParamValue;
+  options: IQueryParamValue[];
   onChangeRating: (rating: IQueryParamValue) => void;
 };
 
-export default function FilterRating({ filterRating, onChangeRating }: Props) {
+export default function FilterRating({ value, options, onChangeRating }: Props) {
   return (
-    <RadioGroup value={filterRating} onChange={(event) => onChangeRating(event.target.value)}>
+    <RadioGroup value={value} onChange={(event) => onChangeRating(event.target.value)}>
       <Stack spacing={2} alignItems="flex-start">
-        {RATINGS.map((rating) => (
+        {options.map((rating) => (
           <FormControlLabel
             key={rating}
             value={rating}
@@ -29,7 +28,7 @@ export default function FilterRating({ filterRating, onChangeRating }: Props) {
                 direction="row"
                 alignItems="center"
                 sx={{
-                  ...(filterRating === rating && {
+                  ...(value === rating && {
                     fontWeight: "fontWeightSemiBold",
                   }),
                 }}
@@ -40,7 +39,7 @@ export default function FilterRating({ filterRating, onChangeRating }: Props) {
                   readOnly
                   sx={{
                     mr: 1,
-                    ...(filterRating === rating && {
+                    ...(value === rating && {
                       opacity: 0.48,
                     }),
                   }}

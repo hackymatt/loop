@@ -9,29 +9,30 @@ import Iconify from "src/components/iconify";
 import { IQueryParamValue } from "src/types/query-params";
 
 type Props = {
-  filterSearch: IQueryParamValue;
+  value: IQueryParamValue;
   onChangeSearch: (search: IQueryParamValue) => void;
+  placeholder?: string;
 };
 
-export default function FilterSearch({ filterSearch, onChangeSearch }: Props) {
-  const [value, setValue] = useState<IQueryParamValue>(filterSearch);
-  const debouncedValue = useDebounce<IQueryParamValue>(value);
+export default function FilterSearch({ value, onChangeSearch, placeholder }: Props) {
+  const [internalValue, setInternalValue] = useState<IQueryParamValue>(value);
+  const debouncedValue = useDebounce<IQueryParamValue>(internalValue);
 
   const handleChange = (event: { target: { value: string } }) => {
-    setValue(event.target.value);
+    setInternalValue(event.target.value);
   };
 
   useEffect(() => {
-    if (debouncedValue !== filterSearch) {
+    if (debouncedValue !== value) {
       onChangeSearch(debouncedValue);
     }
-  }, [debouncedValue, filterSearch, onChangeSearch]);
+  }, [debouncedValue, value, onChangeSearch]);
 
   return (
     <TextField
       fullWidth
       hiddenLabel
-      placeholder="Szukaj..."
+      placeholder={placeholder ?? "Szukaj..."}
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
@@ -39,7 +40,7 @@ export default function FilterSearch({ filterSearch, onChangeSearch }: Props) {
           </InputAdornment>
         ),
       }}
-      value={value}
+      value={internalValue}
       onChange={handleChange}
     />
   );

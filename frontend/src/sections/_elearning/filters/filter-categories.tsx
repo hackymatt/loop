@@ -3,31 +3,28 @@ import TextField from "@mui/material/TextField";
 import Checkbox, { checkboxClasses } from "@mui/material/Checkbox";
 import Autocomplete, { autocompleteClasses } from "@mui/material/Autocomplete";
 
-import { useTechnologies } from "src/api/technologies/technologies";
-
 import { IQueryParamValue } from "src/types/query-params";
-import { ICourseByCategoryProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  filterCategories: IQueryParamValue;
+  value: IQueryParamValue;
+  options: IQueryParamValue[];
   onChangeCategory: (newValue: IQueryParamValue) => void;
 };
 
-export default function FilterCategories({ filterCategories, onChangeCategory }: Props) {
-  const { data: technologies } = useTechnologies({ sort_by: "name" });
-  const currentValue = filterCategories ? (filterCategories as string).split(",") : [];
+export default function FilterCategories({ value, options, onChangeCategory }: Props) {
+  const currentValue = value ? (value as string).split(",") : [];
   return (
     <Autocomplete
       multiple
       limitTags={2}
       disableCloseOnSelect
-      options={technologies?.map((technology: ICourseByCategoryProps) => technology.name) ?? []}
-      getOptionLabel={(option) => option}
+      options={options ?? []}
+      getOptionLabel={(option) => option as string}
       value={currentValue}
       noOptionsText="Brak opcji"
-      onChange={(event, value) => onChangeCategory(value.join(","))}
+      onChange={(event, selectedValue) => onChangeCategory(selectedValue.join(","))}
       slotProps={{
         paper: {
           sx: {
