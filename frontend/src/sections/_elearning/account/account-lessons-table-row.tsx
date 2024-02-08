@@ -45,7 +45,7 @@ export default function AccountLessonsTableRow({ row }: Props) {
       ? "/assets/images/avatar/avatar_female.jpg"
       : "/assets/images/avatar/avatar_male.jpg";
 
-  const avatarUrl = row?.teacher.photo || genderAvatarUrl;
+  const avatarUrl = row?.teacher.avatarUrl || genderAvatarUrl;
 
   const isCompleted = useMemo(
     () => row.lessonStatus === LessonStatus.Zakończona,

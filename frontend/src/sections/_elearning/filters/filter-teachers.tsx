@@ -31,6 +31,7 @@ export default function FilterTeachers({ value, options, onChangeTeacher }: Prop
       multiple
       limitTags={2}
       disableCloseOnSelect
+      size="small"
       options={options ?? []}
       getOptionLabel={(option: ITeamMemberProps) => option.name}
       value={currentValue as ITeamMemberProps[]}
@@ -72,7 +73,7 @@ export default function FilterTeachers({ value, options, onChangeTeacher }: Prop
             ? "/assets/images/avatar/avatar_female.jpg"
             : "/assets/images/avatar/avatar_male.jpg";
 
-        const avatarUrl = option.photo || genderAvatarUrl;
+        const avatarUrl = option.avatarUrl || genderAvatarUrl;
         return (
           <li {...props} key={option.id}>
             <Stack direction="row" alignItems="center">

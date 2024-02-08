@@ -28,12 +28,12 @@ export default function FilterPrice({
   return (
     <Stack spacing={2} direction="row" alignItems="center" divider={<div> - </div>} {...other}>
       <PriceInput
-        label="od"
+        placeholder="od"
         price={valuePriceFrom === 0 ? "" : valuePriceFrom}
         onChange={(price) => onChangeStartPrice(price)}
       />
       <PriceInput
-        label="do"
+        placeholder="do"
         price={valuePriceTo === 0 ? "" : valuePriceTo}
         onChange={(price) => onChangeEndPrice(price)}
       />
@@ -42,12 +42,12 @@ export default function FilterPrice({
 }
 
 interface PriceInputProps {
-  label: string;
+  placeholder: string;
   price: IQueryParamValue;
   onChange: (price: IQueryParamValue) => void;
 }
 
-function PriceInput({ label, price, onChange }: PriceInputProps) {
+function PriceInput({ placeholder, price, onChange }: PriceInputProps) {
   const [value, setValue] = useState<IQueryParamValue>(price);
   const debouncedValue = useDebounce<IQueryParamValue>(value);
 
@@ -63,8 +63,9 @@ function PriceInput({ label, price, onChange }: PriceInputProps) {
 
   return (
     <TextField
+      hiddenLabel
       size="small"
-      label={label}
+      placeholder={placeholder}
       type="number"
       value={value === 0 ? "" : value}
       onChange={(event) => handleChange(event)}

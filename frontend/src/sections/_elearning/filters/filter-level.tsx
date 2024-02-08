@@ -25,6 +25,7 @@ export default function FilterLevel({ value, options, onChangeLevel }: Props) {
       <Select
         multiple
         displayEmpty
+        size="small"
         value={currentValue}
         onChange={(event) => {
           const levels = (event.target.value as string[])

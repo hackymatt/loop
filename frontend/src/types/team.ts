@@ -8,7 +8,7 @@ export type ITeamMemberProps = {
   name: string;
   role?: string;
   email?: string;
-  photo: string;
+  avatarUrl: string;
   socialLinks?: ISocialLinks;
   gender?: IGender;
   ratingNumber?: number;

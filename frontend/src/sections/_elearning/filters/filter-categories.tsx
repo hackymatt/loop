@@ -19,6 +19,7 @@ export default function FilterCategories({ value, options, onChangeCategory }: P
     <Autocomplete
       multiple
       limitTags={2}
+      size="small"
       disableCloseOnSelect
       options={options ?? []}
       getOptionLabel={(option) => option as string}

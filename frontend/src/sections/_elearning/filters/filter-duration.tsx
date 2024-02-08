@@ -28,6 +28,7 @@ export default function FilterDuration({ value, options, onChangeDuration }: Pro
       <Select
         multiple
         displayEmpty
+        size="small"
         value={currentValue}
         onChange={(event) => {
           const durations = (event.target.value as string[])

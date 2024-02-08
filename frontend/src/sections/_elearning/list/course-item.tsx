@@ -120,7 +120,7 @@ export default function CourseItem({ course, vertical }: Props) {
               }
             >
               {categories.map((category: string) => (
-                <Typography variant="overline" sx={{ color: "primary.main" }}>
+                <Typography key={category} variant="overline" sx={{ color: "primary.main" }}>
                   {category}
                 </Typography>
               ))}

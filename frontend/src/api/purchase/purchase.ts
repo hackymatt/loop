@@ -78,7 +78,7 @@ export const purchaseQuery = (query?: IQueryParams) => {
                 id: lecturer.uuid,
                 name: lecturer.full_name,
                 email: lecturer.email,
-                photo: lecturer.image,
+                avatarUrl: lecturer.image,
                 gender: lecturer.gender,
               }
             : {},

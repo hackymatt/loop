@@ -41,7 +41,7 @@ type Props = {
 };
 
 export default function ElearningTeamItem({ member }: Props) {
-  const { name, role, photo } = member;
+  const { name, role, avatarUrl } = member;
 
   return (
     <Card>
@@ -70,7 +70,7 @@ export default function ElearningTeamItem({ member }: Props) {
           </Stack>
         </StyledOverlay>
 
-        <Image src={photo} alt={name} ratio="1/1" />
+        <Image src={avatarUrl} alt={name} ratio="1/1" />
       </Box>
     </Card>
   );

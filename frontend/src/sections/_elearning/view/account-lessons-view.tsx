@@ -8,9 +8,7 @@ import Tabs from "@mui/material/Tabs";
 import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import InputAdornment from "@mui/material/InputAdornment";
 import TableContainer from "@mui/material/TableContainer";
 import { tableCellClasses } from "@mui/material/TableCell";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -18,17 +16,21 @@ import TablePagination from "@mui/material/TablePagination";
 
 import { useQueryParams } from "src/hooks/use-query-params";
 
+import { fDate } from "src/utils/format-time";
+
+import { useLecturers } from "src/api/lecturers/lecturers";
 import { usePurchase, usePurchasePageCount } from "src/api/purchase/purchase";
 
-import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
 
 import { LessonStatus } from "src/types/purchase";
 import { IQueryParamValue } from "src/types/query-params";
 
+import FilterSearch from "../filters/filter-search";
+import FilterStatus from "../filters/filter-status";
+import FilterTeacher from "../filters/filter-teacher";
 import AccountLessonsTableRow from "../account/account-lessons-table-row";
 import AccountLessonsTableHead from "../account/account-lessons-table-head";
-import FilterSearch from "../filters/filter-search";
 
 // ----------------------------------------------------------------------
 
@@ -48,6 +50,12 @@ const TABLE_HEAD = [
   { id: "" },
 ];
 
+const STATUS_OPTIONS = [
+  { value: LessonStatus.Nowa, label: LessonStatus.Nowa, color: "info" },
+  { value: LessonStatus.Zaplanowana, label: LessonStatus.Zaplanowana, color: "warning" },
+  { value: LessonStatus.Zakończona, label: LessonStatus.Zakończona, color: "success" },
+];
+
 const ROWS_PER_PAGE_OPTIONS = [1, 5, 10, 25];
 
 // ----------------------------------------------------------------------
@@ -59,6 +67,8 @@ export default function AccountLessonsPage() {
 
   const { data: pagesCount } = usePurchasePageCount(filters);
   const { data: lessons } = usePurchase(filters);
+
+  const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: 1000 });
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
@@ -138,10 +148,31 @@ export default function AccountLessonsPage() {
           placeholder="Nazwa lekcji..."
         />
 
+        {!tab && (
+          <FilterStatus
+            value={filters?.lesson_status ?? ""}
+            options={STATUS_OPTIONS}
+            onChange={(value) => handleChange("lesson_status", value)}
+          />
+        )}
+
+        {teachers && (
+          <FilterTeacher
+            value={filters?.lecturer_id ?? ""}
+            options={teachers}
+            onChange={(value) => handleChange("lecturer_id", value)}
+          />
+        )}
+
         <DatePicker
-          label="Data zakupu"
+          value={filters?.created_at ? new Date(filters.created_at) : null}
+          onChange={(value: Date | null) =>
+            handleChange("created_at", value ? fDate(value, "yyyy-MM-dd") : "")
+          }
           sx={{ width: 1, minWidth: 180 }}
-          slotProps={{ textField: { size: "small", hiddenLabel: true } }}
+          slotProps={{
+            textField: { size: "small", hiddenLabel: true, placeholder: "Data zakupu" },
+          }}
         />
       </Stack>
 

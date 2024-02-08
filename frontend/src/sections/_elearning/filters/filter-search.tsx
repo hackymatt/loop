@@ -32,6 +32,7 @@ export default function FilterSearch({ value, onChangeSearch, placeholder }: Pro
     <TextField
       fullWidth
       hiddenLabel
+      size="small"
       placeholder={placeholder ?? "Szukaj..."}
       InputProps={{
         startAdornment: (

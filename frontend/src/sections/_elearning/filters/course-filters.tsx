@@ -70,7 +70,7 @@ export default function Filters({ open, onClose }: Props) {
 
   const renderContent = (
     <Stack
-      spacing={2.5}
+      spacing={1.5}
       sx={{
         flexShrink: 0,
         width: { xs: 1, md: 280 },
