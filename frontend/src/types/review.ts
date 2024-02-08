@@ -35,3 +35,10 @@ export type IReviewStatistic = {
   rating: string;
   count: number;
 };
+
+export type IReview = {
+  lesson: number;
+  lecturer: number;
+  rating: number;
+  review: string;
+};

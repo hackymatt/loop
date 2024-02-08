@@ -28,6 +28,7 @@ import { useToastContext } from "src/components/toast";
 import AccountImage from "src/sections/_elearning/account/account-image";
 
 import { UserType } from "src/types/user";
+import { ReviewStatus } from "src/types/purchase";
 
 // ----------------------------------------------------------------------
 
@@ -54,7 +55,7 @@ const studentNavigations = [
     },
     {
       title: "Recenzje",
-      path: paths.account.reviews,
+      path: `${paths.account.reviews}?review_status_exclude=${ReviewStatus.brak}`,
       icon: <Iconify icon="carbon:review" />,
     },
   ],

@@ -15,7 +15,7 @@ interface Prop {
   onSort: (id: string) => void;
 }
 
-export default function AccountLessonsTableHead({ order, onSort, orderBy, headCells }: Prop) {
+export default function AccountTableHead({ order, onSort, orderBy, headCells }: Prop) {
   return (
     <TableHead>
       <TableRow>

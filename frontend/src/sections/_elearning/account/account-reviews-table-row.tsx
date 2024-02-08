@@ -14,17 +14,18 @@ import { fDate } from "src/utils/format-time";
 import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 
-import { LessonStatus, IPurchaseItemProp } from "src/types/purchase";
+import { ReviewStatus, IPurchaseItemProp } from "src/types/purchase";
 
 // ----------------------------------------------------------------------
 
 type Props = {
   row: IPurchaseItemProp;
   onAdd: (purchase: IPurchaseItemProp) => void;
+  onEdit: (purchase: IPurchaseItemProp) => void;
   onDelete: (purchase: IPurchaseItemProp) => void;
 };
 
-export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) {
+export default function AccountLessonsTableRow({ row, onAdd, onEdit, onDelete }: Props) {
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
 
   const handleOpen = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -39,6 +40,11 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
     handleClose();
     onAdd(row);
   }, [handleClose, onAdd, row]);
+
+  const handleEdit = useCallback(() => {
+    handleClose();
+    onEdit(row);
+  }, [handleClose, onEdit, row]);
 
   const handleDelete = useCallback(() => {
     handleClose();
@@ -60,16 +66,11 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
   const avatarUrl = row?.teacher.avatarUrl || genderAvatarUrl;
 
   const isCompleted = useMemo(
-    () => row.lessonStatus === LessonStatus.zakończona,
-    [row.lessonStatus],
+    () => row.reviewStatus === ReviewStatus.ukończone,
+    [row.reviewStatus],
   );
 
-  const isPlanned = useMemo(
-    () => row.lessonStatus === LessonStatus.zaplanowana,
-    [row.lessonStatus],
-  );
-
-  const isNew = useMemo(() => row.lessonStatus === LessonStatus.nowa, [row.lessonStatus]);
+  const isPending = useMemo(() => row.reviewStatus === ReviewStatus.oczekujące, [row.reviewStatus]);
 
   return (
     <>
@@ -85,14 +86,9 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
         <TableCell sx={{ px: 1 }}>
           <Label
             sx={{ textTransform: "uppercase" }}
-            color={
-              (isCompleted && "success") ||
-              (isPlanned && "warning") ||
-              (isNew && "info") ||
-              "default"
-            }
+            color={(isCompleted && "success") || (isPending && "warning") || "default"}
           >
-            {row.lessonStatus}
+            {row.reviewStatus}
           </Label>
         </TableCell>
 
@@ -108,7 +104,7 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
         </TableCell>
 
         <TableCell align="right" padding="none">
-          <IconButton onClick={handleOpen} disabled={isCompleted}>
+          <IconButton onClick={handleOpen}>
             <Iconify icon="carbon:overflow-menu-vertical" />
           </IconButton>
         </TableCell>
@@ -126,18 +122,24 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
           },
         }}
       >
-        {isNew && (
+        {isPending && (
           <MenuItem onClick={handleAdd} sx={{ mr: 1, color: "success.main" }}>
             <Iconify icon="carbon:add" />
-            <Typography variant="body2">Dodaj rezerwację</Typography>
+            <Typography variant="body2">Dodaj recenzję</Typography>
           </MenuItem>
         )}
 
-        {isPlanned && (
-          <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
-            <Iconify icon="carbon:trash-can" sx={{ mr: 1 }} />{" "}
-            <Typography variant="body2">Odwołaj rezerwację</Typography>
-          </MenuItem>
+        {isCompleted && (
+          <>
+            <MenuItem onClick={handleEdit}>
+              <Iconify icon="carbon:edit" sx={{ mr: 1 }} />{" "}
+              <Typography variant="body2">Zmień recenzję</Typography>
+            </MenuItem>
+            <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
+              <Iconify icon="carbon:trash-can" sx={{ mr: 1 }} />{" "}
+              <Typography variant="body2">Usuń recenzję</Typography>
+            </MenuItem>
+          </>
         )}
       </Popover>
     </>

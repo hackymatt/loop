@@ -27,36 +27,29 @@ import { LessonStatus } from "src/types/purchase";
 import { IQueryParamValue } from "src/types/query-params";
 
 import FilterSearch from "../filters/filter-search";
-import FilterStatus from "../filters/filter-status";
 import FilterTeacher from "../filters/filter-teacher";
+import AccountTableHead from "../account/account-table-head";
 import AccountLessonsTableRow from "../account/account-lessons-table-row";
-import AccountLessonsTableHead from "../account/account-lessons-table-head";
 
 // ----------------------------------------------------------------------
 
 const TABS = [
   { id: "", label: "Wszystkie lekcje" },
-  { id: LessonStatus.Nowa, label: "Nowe" },
-  { id: LessonStatus.Zaplanowana, label: "Zaplanowane" },
-  { id: LessonStatus.Zakończona, label: "Zakończone" },
+  { id: LessonStatus.nowa, label: "Nowe" },
+  { id: LessonStatus.zaplanowana, label: "Zaplanowane" },
+  { id: LessonStatus.zakończona, label: "Zakończone" },
 ];
 
 const TABLE_HEAD = [
   { id: "course_title", label: "Nazwa kursu" },
   { id: "lesson_title", label: "Nazwa lekcji" },
-  { id: "status", label: "Status" },
-  { id: "lecturer_full_name", label: "Instruktor" },
+  { id: "lesson_status", label: "Status" },
+  { id: "lecturer_uuid", label: "Instruktor" },
   { id: "created_at", label: "Data zakupu" },
   { id: "" },
 ];
 
-const STATUS_OPTIONS = [
-  { value: LessonStatus.Nowa, label: LessonStatus.Nowa, color: "info" },
-  { value: LessonStatus.Zaplanowana, label: LessonStatus.Zaplanowana, color: "warning" },
-  { value: LessonStatus.Zakończona, label: LessonStatus.Zakończona, color: "success" },
-];
-
-const ROWS_PER_PAGE_OPTIONS = [1, 5, 10, 25];
+const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
 
 // ----------------------------------------------------------------------
 
@@ -148,14 +141,6 @@ export default function AccountLessonsPage() {
           placeholder="Nazwa lekcji..."
         />
 
-        {!tab && (
-          <FilterStatus
-            value={filters?.lesson_status ?? ""}
-            options={STATUS_OPTIONS}
-            onChange={(value) => handleChange("lesson_status", value)}
-          />
-        )}
-
         {teachers && (
           <FilterTeacher
             value={filters?.lecturer_id ?? ""}
@@ -195,7 +180,7 @@ export default function AccountLessonsPage() {
             }}
             size="small"
           >
-            <AccountLessonsTableHead
+            <AccountTableHead
               order={order}
               orderBy={orderBy}
               onSort={handleSort}
@@ -205,7 +190,12 @@ export default function AccountLessonsPage() {
             {lessons && (
               <TableBody>
                 {lessons.map((row) => (
-                  <AccountLessonsTableRow key={row.id} row={row} />
+                  <AccountLessonsTableRow
+                    key={row.id}
+                    row={row}
+                    onAdd={() => {}}
+                    onDelete={() => {}}
+                  />
                 ))}
               </TableBody>
             )}

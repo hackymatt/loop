@@ -3,8 +3,6 @@ import { useState, useCallback } from "react";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
 
-import { useBoolean } from "src/hooks/use-boolean";
-
 import { useReviews, useReviewsPageCount } from "src/api/reviews/reviews";
 import { useReviewsStatistics } from "src/api/reviews/reviews-statistics";
 
@@ -16,7 +14,6 @@ import { ICourseLessonProp, ICourseTeacherProp } from "src/types/course";
 import ReviewList from "./review-list";
 import ReviewSummary from "./review-summary";
 import ReviewToolbar from "./review-toolbar";
-import ReviewNewForm from "../common/review-new-form";
 
 // ----------------------------------------------------------------------
 
@@ -43,8 +40,6 @@ export default function Review({ courseId, ratingNumber, reviewNumber, lessons, 
     useReviewsStatistics(query);
 
   const isLoading = isLoadingReviewsPageCount || isLoadingReviews || isLoadingReviewsStatistics;
-
-  const formOpen = useBoolean();
 
   const handleChange = useCallback((name: string, value: IQueryParamValue) => {
     setQuery((prevState) => ({
@@ -82,7 +77,6 @@ export default function Review({ courseId, ratingNumber, reviewNumber, lessons, 
                 rating={query.rating ?? ""}
                 reviewStatistics={reviewStatistics}
                 onRatingChange={(value) => handleChange("rating", value)}
-                onOpenForm={formOpen.onTrue}
               />
             </Grid>
 
@@ -92,8 +86,6 @@ export default function Review({ courseId, ratingNumber, reviewNumber, lessons, 
           </Grid>
         </Container>
       )}
-
-      <ReviewNewForm open={formOpen.value} onClose={formOpen.onFalse} />
     </>
   );
 }

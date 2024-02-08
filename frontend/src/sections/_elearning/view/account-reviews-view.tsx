@@ -1,161 +1,181 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
-import Switch from "@mui/material/Switch";
-import TableRow from "@mui/material/TableRow";
 import TableBody from "@mui/material/TableBody";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import InputAdornment from "@mui/material/InputAdornment";
 import TableContainer from "@mui/material/TableContainer";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { tableCellClasses } from "@mui/material/TableCell";
 import TablePagination from "@mui/material/TablePagination";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-import { _productsTable } from "src/_mock";
+import { useBoolean } from "src/hooks/use-boolean";
+import { useQueryParams } from "src/hooks/use-query-params";
 
-import Iconify from "src/components/iconify";
+import { fDate } from "src/utils/format-time";
+
+import { useLecturers } from "src/api/lecturers/lecturers";
+import { usePurchase, usePurchasePageCount } from "src/api/purchase/purchase";
+
 import Scrollbar from "src/components/scrollbar";
 
-import { stableSort, getComparator } from "../account/utils";
-import AccountOrdersTableRow from "../account/account-orders-table-row";
-import AccountOrdersTableHead from "../account/account-orders-table-head";
-import AccountOrdersTableToolbar from "../account/account-orders-table-toolbar";
+import ReviewNewForm from "src/sections/review/common/review-new-form";
+
+import { ReviewStatus } from "src/types/purchase";
+import { IQueryParamValue } from "src/types/query-params";
+
+import FilterSearch from "../filters/filter-search";
+import FilterTeacher from "../filters/filter-teacher";
+import AccountTableHead from "../account/account-table-head";
+import AccountReviewsTableRow from "../account/account-reviews-table-row";
 
 // ----------------------------------------------------------------------
 
-const TABS = ["All Orders", "Completed", "To Process", "Cancelled", "Return & Refund"];
+const TABS = [
+  { id: ReviewStatus.brak, label: "Wszystkie recenzje" },
+  { id: ReviewStatus.oczekujące, label: "Oczekujące" },
+  { id: ReviewStatus.ukończone, label: "Ukończone" },
+];
 
-export const TABLE_HEAD = [
-  { id: "orderId", label: "Order ID" },
-  { id: "item", label: "Item" },
-  { id: "deliveryDate", label: "Delivery date", width: 160 },
-  { id: "price", label: "Price", width: 100 },
-  { id: "status", label: "Status", width: 100 },
+const TABLE_HEAD = [
+  { id: "course_title", label: "Nazwa kursu" },
+  { id: "lesson_title", label: "Nazwa lekcji" },
+  { id: "review_status", label: "Status" },
+  { id: "lecturer_uuid", label: "Instruktor" },
+  { id: "created_at", label: "Data zakupu" },
   { id: "" },
 ];
+
+const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
 
 // ----------------------------------------------------------------------
 
 export default function AccountReviewsView() {
-  const [tab, setTab] = useState("All Orders");
+  const formOpen = useBoolean();
 
-  const [order, setOrder] = useState<"asc" | "desc">("asc");
+  const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
-  const [orderBy, setOrderBy] = useState("orderId");
+  const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const [selected, setSelected] = useState<string[]>([]);
+  const { data: pagesCount } = usePurchasePageCount(filters);
+  const { data: reviews } = usePurchase(filters);
 
-  const [page, setPage] = useState(0);
+  const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: 1000 });
 
-  const [dense, setDense] = useState(false);
+  const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
+  const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
+  const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "created_at";
+  const order = filters?.sort_by && !filters.sort_by.startsWith("-") ? "asc" : "desc";
+  const tab = filters?.review_status ? filters.review_status : ReviewStatus.brak;
 
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const handleChange = useCallback(
+    (name: string, value: IQueryParamValue) => {
+      if (value) {
+        setQueryParam(name, value);
+      } else {
+        removeQueryParam(name);
+      }
+    },
+    [removeQueryParam, setQueryParam],
+  );
 
-  const handleChangeTab = useCallback((event: React.SyntheticEvent, newValue: string) => {
-    setTab(newValue);
-  }, []);
+  const manageTab = useCallback(
+    (tabName: string) => {
+      if (tabName === ReviewStatus.brak) {
+        handleChange("review_status", "");
+        handleChange("review_status_exclude", tabName);
+      } else {
+        handleChange("review_status", tabName);
+        handleChange("review_status_exclude", "");
+      }
+    },
+    [handleChange],
+  );
+
+  const handleChangeTab = useCallback(
+    (event: React.SyntheticEvent, newValue: string) => {
+      manageTab(newValue);
+    },
+    [manageTab],
+  );
 
   const handleSort = useCallback(
     (id: string) => {
       const isAsc = orderBy === id && order === "asc";
-      if (id !== "") {
-        setOrder(isAsc ? "desc" : "asc");
-        setOrderBy(id);
-      }
+      handleChange("sort_by", isAsc ? `-${id}` : id);
     },
-    [order, orderBy],
+    [handleChange, order, orderBy],
   );
 
-  const handleSelectAllRows = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = _productsTable.map((n) => n.id);
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
-  }, []);
-
-  const handleSelectRow = useCallback(
-    (id: string) => {
-      const selectedIndex = selected.indexOf(id);
-      let newSelected: string[] = [];
-
-      if (selectedIndex === -1) {
-        newSelected = newSelected.concat(selected, id);
-      } else if (selectedIndex === 0) {
-        newSelected = newSelected.concat(selected.slice(1));
-      } else if (selectedIndex === selected.length - 1) {
-        newSelected = newSelected.concat(selected.slice(0, -1));
-      } else if (selectedIndex > 0) {
-        newSelected = newSelected.concat(
-          selected.slice(0, selectedIndex),
-          selected.slice(selectedIndex + 1),
-        );
-      }
-
-      setSelected(newSelected);
+  const handleChangePage = useCallback(
+    (event: unknown, newPage: number) => {
+      handleChange("page", newPage + 1);
     },
-    [selected],
+    [handleChange],
   );
 
-  const handleChangePage = useCallback((event: unknown, newPage: number) => {
-    setPage(newPage);
-  }, []);
-
-  const handleChangeRowsPerPage = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  }, []);
-
-  const handleChangeDense = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setDense(event.target.checked);
-  }, []);
-
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - _productsTable.length) : 0;
+  const handleChangeRowsPerPage = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      handleChange("page_size", parseInt(event.target.value, 10));
+      handleChange("page", 1);
+    },
+    [handleChange],
+  );
 
   return (
     <>
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Orders
+        Recenzje
       </Typography>
 
       <Tabs
-        value={tab}
+        value={TABS.find((t) => t.id === tab)?.id ?? ReviewStatus.brak}
         scrollButtons="auto"
         variant="scrollable"
         allowScrollButtonsMobile
         onChange={handleChangeTab}
       >
         {TABS.map((category) => (
-          <Tab key={category} value={category} label={category} />
+          <Tab key={category.id} value={category.id} label={category.label} />
         ))}
       </Tabs>
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 5, mb: 3 }}>
-        <TextField
-          fullWidth
-          hiddenLabel
-          placeholder="Search..."
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Iconify icon="carbon:search" width={24} sx={{ color: "text.disabled" }} />
-              </InputAdornment>
-            ),
+        <FilterSearch
+          value={filters?.course_title ?? ""}
+          onChangeSearch={(value) => handleChange("course_title", value)}
+          placeholder="Nazwa kursu..."
+        />
+
+        <FilterSearch
+          value={filters?.lesson_title ?? ""}
+          onChangeSearch={(value) => handleChange("lesson_title", value)}
+          placeholder="Nazwa lekcji..."
+        />
+
+        {teachers && (
+          <FilterTeacher
+            value={filters?.lecturer_id ?? ""}
+            options={teachers}
+            onChange={(value) => handleChange("lecturer_id", value)}
+          />
+        )}
+
+        <DatePicker
+          value={filters?.created_at ? new Date(filters.created_at) : null}
+          onChange={(value: Date | null) =>
+            handleChange("created_at", value ? fDate(value, "yyyy-MM-dd") : "")
+          }
+          sx={{ width: 1, minWidth: 180 }}
+          slotProps={{
+            textField: { size: "small", hiddenLabel: true, placeholder: "Data zakupu" },
           }}
         />
-        <Stack spacing={2} direction={{ xs: "column", md: "row" }} alignItems="center">
-          <DatePicker label="Start Date" sx={{ width: 1, minWidth: 180 }} />
-          <DatePicker label="End Date" sx={{ width: 1, minWidth: 180 }} />
-        </Stack>
       </Stack>
 
       <TableContainer
@@ -170,51 +190,33 @@ export default function AccountReviewsView() {
           },
         }}
       >
-        <AccountOrdersTableToolbar
-          rowCount={_productsTable.length}
-          numSelected={selected.length}
-          onSelectAllRows={handleSelectAllRows}
-        />
-
         <Scrollbar>
           <Table
             sx={{
               minWidth: 720,
             }}
-            size={dense ? "small" : "medium"}
+            size="small"
           >
-            <AccountOrdersTableHead
+            <AccountTableHead
               order={order}
               orderBy={orderBy}
               onSort={handleSort}
               headCells={TABLE_HEAD}
-              rowCount={_productsTable.length}
-              numSelected={selected.length}
-              onSelectAllRows={handleSelectAllRows}
             />
 
-            <TableBody>
-              {stableSort(_productsTable, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => (
-                  <AccountOrdersTableRow
+            {reviews && (
+              <TableBody>
+                {reviews.map((row) => (
+                  <AccountReviewsTableRow
                     key={row.id}
                     row={row}
-                    selected={selected.includes(row.id)}
-                    onSelectRow={() => handleSelectRow(row.id)}
+                    onAdd={(purchase) => {}}
+                    onEdit={(purchase) => {}}
+                    onDelete={(purchase) => {}}
                   />
                 ))}
-
-              {emptyRows > 0 && (
-                <TableRow
-                  sx={{
-                    height: (dense ? 36 : 57) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={9} />
-                </TableRow>
-              )}
-            </TableBody>
+              </TableBody>
+            )}
           </Table>
         </Scrollbar>
       </TableContainer>
@@ -223,26 +225,17 @@ export default function AccountReviewsView() {
         <TablePagination
           page={page}
           component="div"
-          count={_productsTable.length}
+          labelRowsPerPage="Wierszy na stronę"
+          labelDisplayedRows={({ from, to, count }) => `Strona ${from} z ${count}`}
+          count={pagesCount ?? 0}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
-
-        <FormControlLabel
-          control={<Switch checked={dense} onChange={handleChangeDense} />}
-          label="Dense padding"
-          sx={{
-            pl: 2,
-            py: 1.5,
-            top: 0,
-            position: {
-              sm: "absolute",
-            },
-          }}
-        />
       </Box>
+
+      <ReviewNewForm open={formOpen.value} onClose={formOpen.onFalse} />
     </>
   );
 }

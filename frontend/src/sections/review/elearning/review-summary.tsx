@@ -9,8 +9,6 @@ import Typography from "@mui/material/Typography";
 
 import { fShortenNumber } from "src/utils/format-number";
 
-import Iconify from "src/components/iconify";
-
 import { IReviewStatistic } from "src/types/review";
 
 import ReviewProgress from "../common/review-progress";
@@ -27,7 +25,6 @@ type Props = {
   rating: string;
   reviewStatistics: IReviewStatistic[];
   onRatingChange: (value: string) => void;
-  onOpenForm: VoidFunction;
 };
 
 export default function ReviewSummary({
@@ -36,7 +33,6 @@ export default function ReviewSummary({
   rating,
   reviewStatistics,
   onRatingChange,
-  onOpenForm,
 }: Props) {
   const reviewOptions = REVIEWS_RATINGS.map(
     (r: string) =>
@@ -80,15 +76,6 @@ export default function ReviewSummary({
             </Button>
           )}
         </RadioGroup>
-
-        <Button
-          size="large"
-          fullWidth
-          startIcon={<Iconify icon="carbon:edit" width={24} />}
-          onClick={onOpenForm}
-        >
-          Napisz recenzje
-        </Button>
       </Stack>
     </Paper>
   );

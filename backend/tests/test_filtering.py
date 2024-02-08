@@ -1492,6 +1492,14 @@ class PurchaseFilterTest(APITestCase):
                     github_url="https://github.com/hackymatt/course/lesson",
                     price="2.99",
                 ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Python lesson 3",
+                    description="bbbb",
+                    duration="30",
+                    github_url="https://github.com/hackymatt/course/lesson",
+                    price="2.99",
+                ),
             ],
         )
 
@@ -1503,6 +1511,12 @@ class PurchaseFilterTest(APITestCase):
 
         create_purchase(
             lesson=self.course_1.lessons.all()[1],
+            student=self.profile,
+            price=self.course_1.lessons.all()[1].price,
+        )
+
+        create_purchase(
+            lesson=self.course_1.lessons.all()[2],
             student=self.profile,
             price=self.course_1.lessons.all()[1].price,
         )
@@ -1535,6 +1549,20 @@ class PurchaseFilterTest(APITestCase):
             student=self.profile,
             lesson=self.course_1.lessons.all()[1],
             schedule=self.schedules[0],
+        )
+
+        create_reservation(
+            student=self.profile,
+            lesson=self.course_1.lessons.all()[2],
+            schedule=self.schedules[1],
+        )
+
+        create_review(
+            lesson=self.course_1.lessons.all()[1],
+            student=self.profile,
+            lecturer=self.lecturer_profile,
+            rating=5,
+            review="Great lesson.",
         )
 
         # course 2
@@ -1632,7 +1660,7 @@ class PurchaseFilterTest(APITestCase):
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 2)
+        self.assertEqual(records_count, 3)
         titles = list(
             set([course_title in record["course"]["title"] for record in results])
         )
@@ -1649,7 +1677,7 @@ class PurchaseFilterTest(APITestCase):
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 2)
+        self.assertEqual(records_count, 3)
         titles = list(
             set([lesson_title in record["lesson"]["title"] for record in results])
         )
@@ -1660,7 +1688,7 @@ class PurchaseFilterTest(APITestCase):
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        lesson_status = "planned"
+        lesson_status = "zaplanowana"
         response = self.client.get(f"{self.endpoint}?lesson_status={lesson_status}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
@@ -1677,7 +1705,7 @@ class PurchaseFilterTest(APITestCase):
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        review_status = "completed"
+        review_status = "oczekujące"
         response = self.client.get(f"{self.endpoint}?review_status={review_status}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
@@ -1690,6 +1718,25 @@ class PurchaseFilterTest(APITestCase):
         self.assertTrue(len(statuses) == 1)
         self.assertTrue(statuses[0])
 
+    def test_review_status_exclude_filter(self):
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        review_status = "brak"
+        response = self.client.get(
+            f"{self.endpoint}?review_status_exclude={review_status}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 2)
+        statuses = list(
+            set([record["review_status"] == review_status for record in results])
+        )
+        self.assertTrue(len(statuses) == 1)
+        self.assertFalse(statuses[0])
+
     def test_lecturer_id_filter(self):
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -1700,7 +1747,7 @@ class PurchaseFilterTest(APITestCase):
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 2)
+        self.assertEqual(records_count, 3)
         uuids = list(
             set([str(record["lecturer"]["uuid"]) == str(uuid) for record in results])
         )
@@ -1717,7 +1764,7 @@ class PurchaseFilterTest(APITestCase):
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 4)
+        self.assertEqual(records_count, 5)
         dates = list(set([date in record["created_at"] for record in results]))
         self.assertTrue(len(dates) == 1)
         self.assertTrue(dates[0])

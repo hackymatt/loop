@@ -1760,6 +1760,7 @@ class PurchaseOrderTest(APITestCase):
             "lesson_title",
             "lesson_status",
             "review_status",
+            "lecturer_uuid",
             "created_at",
         ]
 
@@ -1778,6 +1779,14 @@ class PurchaseOrderTest(APITestCase):
             if "_title" in field:
                 field1, field2 = field.split("_")
                 field_values = [course[field1][field2] for course in results]
+            elif "_uuid" in field:
+                field1, field2 = field.split("_")
+                parent_objects = [
+                    course[field1] for course in results if course[field1] is not None
+                ]
+                field_values = [
+                    parent_object[field2] for parent_object in parent_objects
+                ]
             else:
                 field_values = [course[field] for course in results]
             if isinstance(field_values[0], dict):
@@ -1800,6 +1809,14 @@ class PurchaseOrderTest(APITestCase):
             if "_title" in field:
                 field1, field2 = field.split("_")
                 field_values = [course[field1][field2] for course in results]
+            elif "_uuid" in field:
+                field1, field2 = field.split("_")
+                parent_objects = [
+                    course[field1] for course in results if course[field1] is not None
+                ]
+                field_values = [
+                    parent_object[field2] for parent_object in parent_objects
+                ]
             else:
                 field_values = [course[field] for course in results]
             if isinstance(field_values[0], dict):

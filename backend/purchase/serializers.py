@@ -23,14 +23,15 @@ def get_reservation(purchase):
 
 
 class LessonStatus:
-    NEW = "Nowa"
-    PLANNED = "Zaplanowana"
-    COMPLETED = "Zakończona"
+    NEW = "nowa"
+    PLANNED = "zaplanowana"
+    COMPLETED = "zakończona"
 
 
 class ReviewStatus:
-    NOT_COMPLETED = "Oczekujące"
-    COMPLETED = "Ukończone"
+    NOT_COMPLETED = "oczekujące"
+    COMPLETED = "ukończone"
+    NONE = "brak"
 
 
 class TechnologySerializer(ModelSerializer):
@@ -137,18 +138,26 @@ class PurchaseGetSerializer(ModelSerializer):
             return LessonStatus.NEW
 
     def get_review_status(self, purchase):
-        review = get_review(purchase=purchase)
+        lesson_status = self.get_lesson_status(purchase=purchase)
 
-        if review.exists():
-            return ReviewStatus.COMPLETED
+        if lesson_status == LessonStatus.COMPLETED:
+            review = get_review(purchase=purchase)
+
+            if review.exists():
+                return ReviewStatus.COMPLETED
+            else:
+                return ReviewStatus.NOT_COMPLETED
         else:
-            return ReviewStatus.NOT_COMPLETED
+            return ReviewStatus.NONE
 
     def get_lecturer(self, purchase):
         reservation = get_reservation(purchase=purchase)
 
         if reservation.exists():
-            return ProfileSerializer(reservation.first().schedule.lecturer, context={"request": self.context.get("request")}).data
+            return ProfileSerializer(
+                reservation.first().schedule.lecturer,
+                context={"request": self.context.get("request")},
+            ).data
         else:
             return None
 

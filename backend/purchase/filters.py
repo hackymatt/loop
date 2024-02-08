@@ -17,6 +17,7 @@ from django.db.models import (
     When,
     F,
     CharField,
+    Q,
 )
 from django.db.models.functions import Cast, Extract
 from reservation.models import Reservation
@@ -43,10 +44,10 @@ def get_lesson_lecturer(queryset):
     ).annotate(
         lecturer_uuid=Case(
             When(
-                lecturer_exists=True,
+                lecturer_exists=1,
                 then=Cast(Subquery(reservation.values("lecturer_uuid")), CharField()),
             ),
-            When(lecturer_exists=False, then=Value("")),
+            When(lecturer_exists=None, then=Value("")),
         )
     )
 
@@ -85,8 +86,12 @@ def get_review_status(queryset):
     )
     purchase = queryset.annotate(review_exists=Subquery(found)).annotate(
         review_status=Case(
-            When(review_exists=True, then=Value(ReviewStatus.COMPLETED)),
-            When(review_exists=False, then=Value(ReviewStatus.NOT_COMPLETED)),
+            When(
+                ~Q(lesson_status=LessonStatus.COMPLETED),
+                then=Value(ReviewStatus.NONE),
+            ),
+            When(review_exists=1, then=Value(ReviewStatus.COMPLETED)),
+            When(review_exists=None, then=Value(ReviewStatus.NOT_COMPLETED)),
         )
     )
 
@@ -100,9 +105,13 @@ class OrderFilter(OrderingFilter):
 
         for value in values:
             if value in ["review_status", "-review_status"]:
-                queryset = get_review_status(queryset).order_by(value)
+                queryset = get_review_status(get_lesson_status(queryset)).order_by(
+                    value
+                )
             elif value in ["lesson_status", "-lesson_status"]:
                 queryset = get_lesson_status(queryset).order_by(value)
+            elif value in ["lecturer_uuid", "-lecturer_uuid"]:
+                queryset = get_lesson_lecturer(queryset).order_by(value)
             elif value in ["course_title", "-course_title"]:
                 value_modified = value.replace("course_", "course_purchase__course__")
                 queryset = queryset.order_by(value_modified)
@@ -135,6 +144,11 @@ class PurchaseFilter(FilterSet):
         field_name="review_status",
         method="filter_review_status",
     )
+    review_status_exclude = CharFilter(
+        label="Review status exclude",
+        field_name="review_status",
+        method="filter_review_status_exclude",
+    )
     created_at = DateFilter(field_name="created_at", lookup_expr="contains")
 
     sort_by = OrderFilter(
@@ -147,6 +161,8 @@ class PurchaseFilter(FilterSet):
             ("-lesson_status", "Lesson Status DESC"),
             ("review_status", "Review Status ASC"),
             ("-review_status", "Review Status DESC"),
+            ("lecturer_uuid", "Lecturer Id ASC"),
+            ("-lecturer_uuid", "Lecturer Id DESC"),
             ("created_at", "Created At ASC"),
             ("-created_at", "Created At DESC"),
         ),
@@ -159,6 +175,8 @@ class PurchaseFilter(FilterSet):
             "lesson_status": "-lesson_status",
             "review_status": "review_status",
             "review_status": "-review_status",
+            "lecturer_uuid": "lecturer_uuid",
+            "lecturer_uuid": "-lecturer_uuid",
             "created_at": "created_at",
             "created_at": "-created_at",
         },
@@ -172,13 +190,22 @@ class PurchaseFilter(FilterSet):
             "lesson_status",
             "lecturer_id",
             "review_status",
+            "review_status_exclude",
             "created_at",
             "sort_by",
         )
 
     def filter_review_status(self, queryset, field_name, value):
         lookup_field_name = field_name
-        return get_review_status(queryset).filter(**{lookup_field_name: value})
+        return get_review_status(get_lesson_status(queryset)).filter(
+            **{lookup_field_name: value}
+        )
+
+    def filter_review_status_exclude(self, queryset, field_name, value):
+        lookup_field_name = field_name
+        return get_review_status(get_lesson_status(queryset)).exclude(
+            **{lookup_field_name: value}
+        )
 
     def filter_lesson_status(self, queryset, field_name, value):
         lookup_field_name = field_name

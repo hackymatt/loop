@@ -3,14 +3,15 @@
 import { ITeamMemberProps } from "./team";
 
 export enum LessonStatus {
-  Nowa = "Nowa",
-  Zaplanowana = "Zaplanowana",
-  Zakończona = "Zakończona",
+  nowa = "nowa",
+  zaplanowana = "zaplanowana",
+  zakończona = "zakończona",
 }
 
 export enum ReviewStatus {
-  Ukończone = "Ukończone",
-  Oczekujące = "Oczekujące",
+  ukończone = "ukończone",
+  oczekujące = "oczekujące",
+  brak = "brak",
 }
 
 export type ILessonStatus = keyof typeof LessonStatus;
