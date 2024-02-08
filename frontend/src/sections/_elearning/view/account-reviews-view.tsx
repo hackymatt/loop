@@ -11,9 +11,10 @@ import TableBody from "@mui/material/TableBody";
 import Typography from "@mui/material/Typography";
 import TableContainer from "@mui/material/TableContainer";
 import { tableCellClasses } from "@mui/material/TableCell";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TablePagination from "@mui/material/TablePagination";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
+import { useBoolean } from "src/hooks/use-boolean";
 import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
@@ -23,27 +24,28 @@ import { usePurchase, usePurchasePageCount } from "src/api/purchase/purchase";
 
 import Scrollbar from "src/components/scrollbar";
 
-import { LessonStatus } from "src/types/purchase";
+import ReviewNewForm from "src/sections/review/common/review-new-form";
+
+import { ReviewStatus } from "src/types/purchase";
 import { IQueryParamValue } from "src/types/query-params";
 
 import FilterSearch from "../filters/filter-search";
 import FilterTeacher from "../filters/filter-teacher";
 import AccountTableHead from "../account/account-table-head";
-import AccountLessonsTableRow from "../account/account-lessons-table-row";
+import AccountReviewsTableRow from "../account/account-reviews-table-row";
 
 // ----------------------------------------------------------------------
 
 const TABS = [
-  { id: "", label: "Wszystkie lekcje" },
-  { id: LessonStatus.nowa, label: "Nowe" },
-  { id: LessonStatus.zaplanowana, label: "Zaplanowane" },
-  { id: LessonStatus.zakończona, label: "Zakończone" },
+  { id: ReviewStatus.brak, label: "Wszystkie recenzje" },
+  { id: ReviewStatus.oczekujące, label: "Oczekujące" },
+  { id: ReviewStatus.ukończone, label: "Ukończone" },
 ];
 
 const TABLE_HEAD = [
   { id: "course_title", label: "Nazwa kursu" },
   { id: "lesson_title", label: "Nazwa lekcji" },
-  { id: "lesson_status", label: "Status" },
+  { id: "review_status", label: "Status" },
   { id: "lecturer_uuid", label: "Instruktor" },
   { id: "created_at", label: "Data zakupu" },
   { id: "" },
@@ -53,13 +55,15 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
 
 // ----------------------------------------------------------------------
 
-export default function AccountLessonsPage() {
+export default function AccountReviewsView() {
+  const formOpen = useBoolean();
+
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
   const { data: pagesCount } = usePurchasePageCount(filters);
-  const { data: lessons } = usePurchase(filters);
+  const { data: reviews } = usePurchase(filters);
 
   const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: 1000 });
 
@@ -67,7 +71,7 @@ export default function AccountLessonsPage() {
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
   const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "created_at";
   const order = filters?.sort_by && !filters.sort_by.startsWith("-") ? "asc" : "desc";
-  const tab = filters?.lesson_status ? filters.lesson_status : "";
+  const tab = filters?.review_status ? filters.review_status : ReviewStatus.brak;
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -80,11 +84,24 @@ export default function AccountLessonsPage() {
     [removeQueryParam, setQueryParam],
   );
 
-  const handleChangeTab = useCallback(
-    (event: React.SyntheticEvent, newValue: string) => {
-      handleChange("lesson_status", newValue);
+  const manageTab = useCallback(
+    (tabName: string) => {
+      if (tabName === ReviewStatus.brak) {
+        handleChange("review_status", "");
+        handleChange("review_status_exclude", tabName);
+      } else {
+        handleChange("review_status", tabName);
+        handleChange("review_status_exclude", "");
+      }
     },
     [handleChange],
+  );
+
+  const handleChangeTab = useCallback(
+    (event: React.SyntheticEvent, newValue: string) => {
+      manageTab(newValue);
+    },
+    [manageTab],
   );
 
   const handleSort = useCallback(
@@ -113,11 +130,11 @@ export default function AccountLessonsPage() {
   return (
     <>
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Lekcje
+        Recenzje
       </Typography>
 
       <Tabs
-        value={TABS.find((t) => t.id === tab)?.id ?? ""}
+        value={TABS.find((t) => t.id === tab)?.id ?? ReviewStatus.brak}
         scrollButtons="auto"
         variant="scrollable"
         allowScrollButtonsMobile
@@ -187,14 +204,15 @@ export default function AccountLessonsPage() {
               headCells={TABLE_HEAD}
             />
 
-            {lessons && (
+            {reviews && (
               <TableBody>
-                {lessons.map((row) => (
-                  <AccountLessonsTableRow
+                {reviews.map((row) => (
+                  <AccountReviewsTableRow
                     key={row.id}
                     row={row}
-                    onAdd={() => {}}
-                    onDelete={() => {}}
+                    onAdd={(purchase) => {}}
+                    onEdit={(purchase) => {}}
+                    onDelete={(purchase) => {}}
                   />
                 ))}
               </TableBody>
@@ -216,6 +234,8 @@ export default function AccountLessonsPage() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Box>
+
+      <ReviewNewForm open={formOpen.value} onClose={formOpen.onFalse} />
     </>
   );
 }

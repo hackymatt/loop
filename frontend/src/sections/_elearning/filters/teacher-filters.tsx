@@ -15,6 +15,10 @@ import FilterSearch from "./filter-search";
 
 // ----------------------------------------------------------------------
 
+const RATING_OPTIONS = ["4", "3", "2"];
+
+// ----------------------------------------------------------------------
+
 type Props = {
   open: boolean;
   onClose: VoidFunction;
@@ -39,14 +43,14 @@ export default function Filters({ open, onClose }: Props) {
 
   const renderContent = (
     <Stack
-      spacing={2.5}
+      spacing={1.5}
       sx={{
         flexShrink: 0,
         width: { xs: 1, md: 280 },
       }}
     >
       <FilterSearch
-        filterSearch={filters?.search ?? ""}
+        value={filters?.search ?? ""}
         onChangeSearch={(value) => handleChange("search", value)}
       />
 
@@ -56,7 +60,8 @@ export default function Filters({ open, onClose }: Props) {
         onClear={() => handleChange("rating_from", null)}
       >
         <FilterRating
-          filterRating={filters?.rating_from ?? null}
+          value={filters?.rating_from ?? null}
+          options={RATING_OPTIONS}
           onChangeRating={(value) => handleChange("rating_from", value)}
         />
       </Block>

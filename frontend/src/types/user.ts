@@ -1,6 +1,12 @@
 import { IGender } from "./testimonial";
 
-export type IUserType = "Admin" | "Wykładowca" | "Student";
+export enum UserType {
+  Admin = "Admin",
+  Wykładowca = "Wykładowca",
+  Student = "Student",
+}
+
+export type IUserType = keyof typeof UserType;
 
 export type IUserDetailsProps = {
   first_name: string;

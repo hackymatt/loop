@@ -1435,3 +1435,336 @@ class LecturerFilterTest(APITestCase):
         self.assertEqual(records_count, 1)
         ratings = [record["rating"] for record in results]
         self.assertEqual(ratings, [4.5])
+
+
+class PurchaseFilterTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/purchase"
+        self.data = {
+            "email": "user@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_profile(user=self.user)
+
+        self.lecturer_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_1@example.com",
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
+
+        # course 1
+        self.course_1 = create_course(
+            title="Python Beginner",
+            description="Learn Python today",
+            technology=[create_technology_obj(name="Python")],
+            level="Podstawowy",
+            price="99.99",
+            github_url="https://github.com/hackymatt/course",
+            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            topics=[
+                create_topic_obj(name="You will learn how to code"),
+                create_topic_obj(name="You will learn a new IDE"),
+            ],
+            lessons=[
+                create_lesson_obj(
+                    id=-1,
+                    title="Python lesson 1",
+                    description="bbbb",
+                    duration="90",
+                    github_url="https://github.com/hackymatt/course/lesson",
+                    price="9.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Python lesson 2",
+                    description="bbbb",
+                    duration="30",
+                    github_url="https://github.com/hackymatt/course/lesson",
+                    price="2.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="Python lesson 3",
+                    description="bbbb",
+                    duration="30",
+                    github_url="https://github.com/hackymatt/course/lesson",
+                    price="2.99",
+                ),
+            ],
+        )
+
+        create_purchase(
+            lesson=self.course_1.lessons.all()[0],
+            student=self.profile,
+            price=self.course_1.lessons.all()[0].price,
+        )
+
+        create_purchase(
+            lesson=self.course_1.lessons.all()[1],
+            student=self.profile,
+            price=self.course_1.lessons.all()[1].price,
+        )
+
+        create_purchase(
+            lesson=self.course_1.lessons.all()[2],
+            student=self.profile,
+            price=self.course_1.lessons.all()[1].price,
+        )
+
+        for lesson in self.course_1.lessons.all():
+            create_teaching(
+                lecturer=self.lecturer_profile,
+                lesson=lesson,
+            )
+
+        self.schedules = []
+        for i in range(-100, 10):
+            self.schedules.append(
+                create_schedule(
+                    lecturer=self.lecturer_profile,
+                    time=make_aware(
+                        datetime.now().replace(minute=15, second=0, microsecond=0)
+                        + timedelta(minutes=15 * i)
+                    ),
+                )
+            )
+
+        create_reservation(
+            student=self.profile,
+            lesson=self.course_1.lessons.all()[0],
+            schedule=self.schedules[len(self.schedules) - 3],
+        )
+
+        create_reservation(
+            student=self.profile,
+            lesson=self.course_1.lessons.all()[1],
+            schedule=self.schedules[0],
+        )
+
+        create_reservation(
+            student=self.profile,
+            lesson=self.course_1.lessons.all()[2],
+            schedule=self.schedules[1],
+        )
+
+        create_review(
+            lesson=self.course_1.lessons.all()[1],
+            student=self.profile,
+            lecturer=self.lecturer_profile,
+            rating=5,
+            review="Great lesson.",
+        )
+
+        # course 2
+        self.course_2 = create_course(
+            title="Javascript course for Advanced",
+            description="Course for programmers",
+            technology=[create_technology_obj(name="Javascript")],
+            level="Zaawansowany",
+            price="300",
+            github_url="https://github.com/hackymatt/course",
+            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            topics=[
+                create_topic_obj(name="You will learn how to code"),
+                create_topic_obj(name="You will learn a new IDE"),
+            ],
+            lessons=[
+                create_lesson_obj(
+                    id=-1,
+                    title="JS lesson 1",
+                    description="bbbb",
+                    duration="90",
+                    github_url="https://github.com/hackymatt/course/lesson",
+                    price="9.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="JS lesson 2",
+                    description="bbbb",
+                    duration="30",
+                    github_url="https://github.com/hackymatt/course/lesson",
+                    price="2.99",
+                ),
+                create_lesson_obj(
+                    id=-1,
+                    title="JS lesson 3",
+                    description="bbbb",
+                    duration="120",
+                    github_url="https://github.com/hackymatt/course/lesson",
+                    price="2.99",
+                ),
+            ],
+        )
+
+        create_purchase(
+            lesson=self.course_2.lessons.all()[0],
+            student=self.profile,
+            price=self.course_2.lessons.all()[0].price,
+        )
+        create_purchase(
+            lesson=self.course_2.lessons.all()[1],
+            student=self.profile,
+            price=self.course_2.lessons.all()[1].price,
+        )
+
+        create_review(
+            lesson=self.course_2.lessons.all()[0],
+            student=self.profile,
+            lecturer=self.lecturer_profile,
+            rating=5,
+            review="Great lesson.",
+        )
+
+        # course 3
+        self.course_3 = create_course(
+            title="VBA course for Expert",
+            description="Course for programmers",
+            technology=[create_technology_obj(name="VBA")],
+            level="Ekspert",
+            price="220",
+            github_url="https://github.com/hackymatt/course",
+            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            topics=[
+                create_topic_obj(name="You will learn how to code"),
+                create_topic_obj(name="You will learn a new IDE"),
+            ],
+            lessons=[
+                create_lesson_obj(
+                    id=-1,
+                    title="VBA lesson 1",
+                    description="bbbb",
+                    duration="90",
+                    github_url="https://github.com/hackymatt/course/lesson",
+                    price="9.99",
+                ),
+            ],
+        )
+
+    def test_course_title_filter(self):
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        course_title = self.course_1.title[1:5]
+        response = self.client.get(f"{self.endpoint}?course_title={course_title}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 3)
+        titles = list(
+            set([course_title in record["course"]["title"] for record in results])
+        )
+        self.assertTrue(len(titles) == 1)
+        self.assertTrue(titles[0])
+
+    def test_lesson_title_filter(self):
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        lesson_title = self.course_1.lessons.all()[0].title[1:5]
+        response = self.client.get(f"{self.endpoint}?lesson_title={lesson_title}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 3)
+        titles = list(
+            set([lesson_title in record["lesson"]["title"] for record in results])
+        )
+        self.assertTrue(len(titles) == 1)
+        self.assertTrue(titles[0])
+
+    def test_lesson_status_filter(self):
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        lesson_status = "zaplanowana"
+        response = self.client.get(f"{self.endpoint}?lesson_status={lesson_status}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        statuses = list(
+            set([record["lesson_status"] == lesson_status for record in results])
+        )
+        self.assertTrue(len(statuses) == 1)
+        self.assertTrue(statuses[0])
+
+    def test_review_status_filter(self):
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        review_status = "oczekujące"
+        response = self.client.get(f"{self.endpoint}?review_status={review_status}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        statuses = list(
+            set([record["review_status"] == review_status for record in results])
+        )
+        self.assertTrue(len(statuses) == 1)
+        self.assertTrue(statuses[0])
+
+    def test_review_status_exclude_filter(self):
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        review_status = "brak"
+        response = self.client.get(
+            f"{self.endpoint}?review_status_exclude={review_status}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 2)
+        statuses = list(
+            set([record["review_status"] == review_status for record in results])
+        )
+        self.assertTrue(len(statuses) == 1)
+        self.assertFalse(statuses[0])
+
+    def test_lecturer_id_filter(self):
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        uuid = self.lecturer_profile.uuid
+        response = self.client.get(f"{self.endpoint}?lecturer_id={uuid}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 3)
+        uuids = list(
+            set([str(record["lecturer"]["uuid"]) == str(uuid) for record in results])
+        )
+        self.assertTrue(len(uuids) == 1)
+        self.assertTrue(uuids[0])
+
+    def test_created_at_filter(self):
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        date = str(self.course_1.created_at)[0:10]
+        response = self.client.get(f"{self.endpoint}?created_at={date}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 5)
+        dates = list(set([date in record["created_at"] for record in results]))
+        self.assertTrue(len(dates) == 1)
+        self.assertTrue(dates[0])

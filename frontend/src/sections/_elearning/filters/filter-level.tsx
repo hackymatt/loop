@@ -8,36 +8,29 @@ import { IQueryParamValue } from "src/types/query-params";
 
 // ----------------------------------------------------------------------
 
-const LEVELS = [
-  { value: "P", label: "Początkujący" },
-  { value: "Ś", label: "Średniozaawansowany" },
-  { value: "Z", label: "Zaawansowany" },
-  { value: "E", label: "Ekspert" },
-];
-
-// ----------------------------------------------------------------------
-
 type Props = {
-  filterLevel: IQueryParamValue;
+  value: IQueryParamValue;
+  options: { value: string; label: string }[];
   onChangeLevel: (levels: IQueryParamValue) => void;
 };
 
-export default function FilterLevel({ filterLevel, onChangeLevel }: Props) {
-  const currentValue = filterLevel
-    ? (filterLevel as string)
+export default function FilterLevel({ value, options, onChangeLevel }: Props) {
+  const currentValue = value
+    ? (value as string)
         .split(",")
-        .map((level: string) => LEVELS.find((levelConfig) => levelConfig.value === level)?.label)
+        .map((level: string) => options.find((levelConfig) => levelConfig.value === level)?.label)
     : [];
   return (
     <FormControl fullWidth hiddenLabel>
       <Select
         multiple
         displayEmpty
+        size="small"
         value={currentValue}
         onChange={(event) => {
           const levels = (event.target.value as string[])
             .map(
-              (level: string) => LEVELS.find((levelConfig) => levelConfig.label === level)?.value,
+              (level: string) => options.find((levelConfig) => levelConfig.label === level)?.value,
             )
             .join(",");
           onChangeLevel(levels);
@@ -57,8 +50,8 @@ export default function FilterLevel({ filterLevel, onChangeLevel }: Props) {
           );
         }}
       >
-        {LEVELS.map(({ value, label }) => (
-          <MenuItem key={value} value={label}>
+        {options.map(({ value: levelValue, label }) => (
+          <MenuItem key={levelValue} value={label}>
             <Checkbox
               size="small"
               checked={currentValue.includes(label)}

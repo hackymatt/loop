@@ -1,0 +1,31 @@
+// ----------------------------------------------------------------------
+
+import { ITeamMemberProps } from "./team";
+
+export enum LessonStatus {
+  nowa = "nowa",
+  zaplanowana = "zaplanowana",
+  zakończona = "zakończona",
+}
+
+export enum ReviewStatus {
+  ukończone = "ukończone",
+  oczekujące = "oczekujące",
+  brak = "brak",
+}
+
+export type ILessonStatus = keyof typeof LessonStatus;
+
+export type IReviewStatus = keyof typeof ReviewStatus;
+
+export type IPurchaseItemProp = {
+  id: string;
+  courseTitle: string;
+  lessonTitle: string;
+  lessonStatus: ILessonStatus;
+  teacher: ITeamMemberProps;
+  reviewStatus: IReviewStatus;
+  ratingNumber: number;
+  message: string;
+  createdAt: Date;
+};

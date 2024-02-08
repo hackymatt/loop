@@ -26,7 +26,7 @@ type Props = {
 };
 
 export default function TeacherItem({ teacher, vertical }: Props) {
-  const { id, name, role, email, photo, gender, ratingNumber, totalReviews, totalLessons } =
+  const { id, name, role, email, avatarUrl, gender, ratingNumber, totalReviews, totalLessons } =
     teacher;
 
   const genderAvatarUrl =
@@ -34,7 +34,7 @@ export default function TeacherItem({ teacher, vertical }: Props) {
       ? "/assets/images/avatar/avatar_female.jpg"
       : "/assets/images/avatar/avatar_male.jpg";
 
-  const photoUrl = photo || genderAvatarUrl;
+  const photoUrl = avatarUrl || genderAvatarUrl;
 
   return (
     <Card

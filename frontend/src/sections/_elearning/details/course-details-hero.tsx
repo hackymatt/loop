@@ -141,7 +141,7 @@ export default function CourseDetailsHero({ course }: Props) {
                     }
                   >
                     {categories.map((category: string) => (
-                      <Typography variant="overline" sx={{ color: "primary.main" }}>
+                      <Typography key={category} variant="overline" sx={{ color: "primary.main" }}>
                         {category}
                       </Typography>
                     ))}

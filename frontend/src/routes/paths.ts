@@ -20,6 +20,7 @@ export const paths = {
     personal: "/account/personal",
     password: "/account/password",
     lessons: "/account/lessons",
+    reviews: "/account/reviews",
   },
   login: "/login",
   register: "/register",

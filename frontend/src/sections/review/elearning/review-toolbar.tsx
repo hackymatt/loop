@@ -3,12 +3,12 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { SelectChangeEvent } from "@mui/material/Select";
 
+import Sorting from "src/sections/_elearning/sorting/sorting";
+import FilterLesson from "src/sections/_elearning/filters/filter-lesson";
+import FilterTeacher from "src/sections/_elearning/filters/filter-teacher";
+
 import { IQueryParamValue } from "src/types/query-params";
 import { ICourseLessonProp, ICourseTeacherProp } from "src/types/course";
-
-import Sorting from "./review-sorting";
-import FilterLesson from "./review-filter-lesson";
-import FilterTeacher from "./review-filter-teacher";
 
 // ----------------------------------------------------------------------
 

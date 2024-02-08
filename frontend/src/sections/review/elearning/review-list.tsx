@@ -12,7 +12,7 @@ type Props = {
   pagesCount: number;
 };
 
-export default function Reviews({ reviews, pagesCount }: Props) {
+export default function ReviewList({ reviews, pagesCount }: Props) {
   return (
     <>
       {reviews?.map((review) => {

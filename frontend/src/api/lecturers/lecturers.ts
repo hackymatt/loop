@@ -55,7 +55,7 @@ export const lecturersQuery = (query?: IQueryParams) => {
         name: full_name,
         email,
         role: user_title,
-        photo: image,
+        avatarUrl: image,
         gender,
         ratingNumber: rating,
         totalReviews: rating_count,

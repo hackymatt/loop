@@ -6,9 +6,9 @@ import { ISocialLinks } from "./socials";
 export type ITeamMemberProps = {
   id: string;
   name: string;
-  role: string;
+  role?: string;
   email?: string;
-  photo: string;
+  avatarUrl: string;
   socialLinks?: ISocialLinks;
   gender?: IGender;
   ratingNumber?: number;

@@ -1,7 +1,7 @@
 "use client";
 
 import * as Yup from "yup";
-import { useEffect } from "react";
+import { useMemo, useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 
@@ -20,6 +20,7 @@ import { useUserDetails, useUpdateUserDetails } from "src/api/auth/details";
 import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from "src/components/hook-form";
 
+import { UserType } from "src/types/user";
 import { IGender } from "src/types/testimonial";
 
 // ----------------------------------------------------------------------
@@ -38,7 +39,12 @@ export default function AccountPersonalView() {
   const { data: userDetails } = useUserDetails();
   const { mutateAsync: updateUserDetails } = useUpdateUserDetails();
 
-  const AccountPersonalSchema = Yup.object().shape({
+  const userType = useMemo(
+    () => (userDetails?.user_type ? userDetails.user_type : UserType.Student),
+    [userDetails],
+  );
+
+  const studentUserSchemaObject = {
     first_name: Yup.string().required("Imię jest wymagane"),
     last_name: Yup.string().required("Nazwisko jest wymagane"),
     email: Yup.string().required("Adres email jest wymagany"),
@@ -50,9 +56,24 @@ export default function AccountPersonalView() {
     city: Yup.string().nullable(),
     country: Yup.string().required("Państwo jest wymagane"),
     image: Yup.string().nullable(),
-  });
+  };
 
-  const defaultValues = { ...userDetails, dob: new Date(userDetails?.dob) };
+  const teacherUserSchemaObject = {
+    ...studentUserSchemaObject,
+    user_title: Yup.string().required("Tytuł zawodowy jest wymagany"),
+  };
+
+  const date18YearsAgo = useMemo(() => new Date().setFullYear(new Date().getFullYear() - 18), []);
+
+  const AccountPersonalSchema =
+    userType === UserType.Wykładowca
+      ? Yup.object().shape(teacherUserSchemaObject)
+      : Yup.object().shape(studentUserSchemaObject);
+
+  const defaultValues = {
+    ...userDetails,
+    dob: userDetails?.dob ? new Date(userDetails?.dob) : date18YearsAgo,
+  };
 
   const methods = useForm({
     resolver: yupResolver(AccountPersonalSchema),
@@ -69,9 +90,12 @@ export default function AccountPersonalView() {
 
   useEffect(() => {
     if (userDetails) {
-      reset({ ...userDetails, dob: new Date(userDetails?.dob) });
+      reset({
+        ...userDetails,
+        dob: userDetails?.dob ? new Date(userDetails?.dob) : date18YearsAgo,
+      });
     }
-  }, [reset, userDetails]);
+  }, [date18YearsAgo, reset, userDetails]);
 
   const onSubmit = handleSubmit(async (data) => {
     delete data.image;
@@ -110,6 +134,10 @@ export default function AccountPersonalView() {
         <RHFTextField name="last_name" label="Nazwisko" />
 
         <RHFTextField name="email" label="Adres e-mail" disabled />
+
+        {userType === UserType.Wykładowca && (
+          <RHFTextField name="user_title" label="Tytuł zawodowy" />
+        )}
 
         <RHFTextField name="phone_number" label="Numer telefonu" />
 

@@ -16,10 +16,9 @@ from review.models import Review
 from purchase.models import LessonPurchase
 from teaching.models import Teaching
 from profile.models import Profile
-from django.db.models import OuterRef, Subquery, Value, Avg, Sum, Count
+from django.db.models import OuterRef, Subquery, Value, Avg, Sum, Count, TextField
 from django.contrib.postgres.aggregates import StringAgg
 from django.db.models.functions import Cast
-from django.db.models import TextField
 
 
 def get_rating(queryset):

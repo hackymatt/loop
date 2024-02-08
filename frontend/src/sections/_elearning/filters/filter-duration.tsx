@@ -8,28 +8,19 @@ import { IQueryParamValue } from "src/types/query-params";
 
 // ----------------------------------------------------------------------
 
-const DURATIONS = [
-  { value: "(duration_to=60)", label: "0 - 1 godzin" },
-  { value: "(duration_from=60)&(duration_to=180)", label: "1 - 3 godzin" },
-  { value: "(duration_from=180)&(duration_to=360)", label: "3 - 6 godzin" },
-  { value: "(duration_from=360)&(duration_to=1080)", label: "6 - 18 godzin" },
-  { value: "(duration_from=1080)", label: "18+ godzin" },
-];
-
-// ----------------------------------------------------------------------
-
 type Props = {
-  filterDuration: IQueryParamValue;
+  value: IQueryParamValue;
+  options: { value: string; label: string }[];
   onChangeDuration: (duration: IQueryParamValue) => void;
 };
 
-export default function FilterDuration({ filterDuration, onChangeDuration }: Props) {
-  const currentValue = filterDuration
-    ? (filterDuration as string)
+export default function FilterDuration({ value, options, onChangeDuration }: Props) {
+  const currentValue = value
+    ? (value as string)
         .split("|")
         .map(
           (level: string) =>
-            DURATIONS.find((durationConfig) => durationConfig.value === level)?.label,
+            options.find((durationConfig) => durationConfig.value === level)?.label,
         )
     : [];
   return (
@@ -37,12 +28,13 @@ export default function FilterDuration({ filterDuration, onChangeDuration }: Pro
       <Select
         multiple
         displayEmpty
+        size="small"
         value={currentValue}
         onChange={(event) => {
           const durations = (event.target.value as string[])
             .map(
               (duration: string) =>
-                DURATIONS.find((durationConfig) => durationConfig.label === duration)?.value,
+                options.find((durationConfig) => durationConfig.label === duration)?.value,
             )
             .join("|");
           onChangeDuration(durations);
@@ -62,8 +54,8 @@ export default function FilterDuration({ filterDuration, onChangeDuration }: Pro
           );
         }}
       >
-        {DURATIONS.map(({ value, label }) => (
-          <MenuItem key={value} value={label}>
+        {options.map(({ value: durationValue, label }) => (
+          <MenuItem key={durationValue} value={label}>
             <Checkbox
               size="small"
               checked={currentValue.includes(label)}

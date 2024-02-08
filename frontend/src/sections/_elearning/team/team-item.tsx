@@ -42,14 +42,14 @@ type Props = {
 };
 
 export default function TeamItem({ member }: Props) {
-  const { id, name, role, photo, gender } = member;
+  const { id, name, role, avatarUrl, gender } = member;
 
   const genderAvatarUrl =
     gender === "Kobieta"
       ? "/assets/images/avatar/avatar_female.jpg"
       : "/assets/images/avatar/avatar_male.jpg";
 
-  const avatarUrl = photo || genderAvatarUrl;
+  const photoUrl = avatarUrl || genderAvatarUrl;
 
   return (
     <Card>
@@ -82,7 +82,7 @@ export default function TeamItem({ member }: Props) {
           </Stack>
         </StyledOverlay>
 
-        <Image src={avatarUrl} alt={name} ratio="1/1" />
+        <Image src={photoUrl} alt={name} ratio="1/1" />
       </Box>
     </Card>
   );
