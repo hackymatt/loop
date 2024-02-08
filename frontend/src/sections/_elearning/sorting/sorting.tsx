@@ -16,7 +16,7 @@ type Props = {
 
 export default function Sorting({ value, options, onChange }: Props) {
   return (
-    <FormControl size="small" hiddenLabel sx={{ width: 220 }}>
+    <FormControl size="small" hiddenLabel>
       <Select value={value} onChange={onChange}>
         {options.map((option) => (
           <MenuItem key={option.value} value={option.value}>
