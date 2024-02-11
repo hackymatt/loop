@@ -1,6 +1,5 @@
 from backend.base_model import BaseModel
 from django.db.models import (
-    UniqueConstraint,
     ForeignKey,
     TextField,
     DecimalField,
@@ -26,12 +25,6 @@ class Review(BaseModel):
     class Meta:
         db_table = "review"
         ordering = ["id"]
-        constraints = [
-            UniqueConstraint(
-                fields=["lesson", "student", "lecturer"],
-                name="review_lesson_student_lecturer_unique_together",
-            )
-        ]
         indexes = [
             Index(
                 fields=[
