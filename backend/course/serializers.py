@@ -156,6 +156,10 @@ def get_duration(course):
     return course.lessons.aggregate(Sum("duration"))["duration__sum"]
 
 
+def get_price(course):
+    return course.lessons.aggregate(Sum("price"))["price__sum"]
+
+
 def get_lecturer_rating(lecturer):
     return Review.objects.filter(lecturer=lecturer)
 
@@ -356,6 +360,7 @@ class LessonShortSerializer(ModelSerializer):
 
 
 class CourseListSerializer(ModelSerializer):
+    price = SerializerMethodField("get_course_price")
     duration = SerializerMethodField("get_course_duration")
     technologies = SerializerMethodField("get_course_technologies")
     lecturers = SerializerMethodField("get_course_lecturers")
@@ -365,12 +370,15 @@ class CourseListSerializer(ModelSerializer):
     image = Base64ImageField(required=True)
     level = CharField(source="get_level_display")
 
+    def get_course_price(self, course):
+        return get_price(course=course)
+
     def get_course_technologies(self, course):
         lessons = get_course_lessons(course=course)
         return get_technologies(lessons=lessons)
 
     def get_course_duration(self, course):
-        return get_duration(course)
+        return get_duration(course=course)
 
     def get_course_lecturers(self, course):
         lessons = get_course_lessons(course=course)
@@ -403,6 +411,7 @@ class CourseListSerializer(ModelSerializer):
 
 class CourseGetSerializer(ModelSerializer):
     level = CharField(source="get_level_display")
+    price = SerializerMethodField("get_course_price")
     duration = SerializerMethodField("get_course_duration")
     lessons = SerializerMethodField("get_lessons")
     technologies = SerializerMethodField("get_course_technologies")
@@ -414,6 +423,9 @@ class CourseGetSerializer(ModelSerializer):
     rating_count = SerializerMethodField("get_course_rating_count")
     image = Base64ImageField(required=True)
     video = VideoBase64File(required=False)
+
+    def get_course_price(self, course):
+        return get_price(course=course)
 
     def get_course_technologies(self, course):
         lessons = get_course_lessons(course=course)
@@ -447,6 +459,7 @@ class CourseGetSerializer(ModelSerializer):
 
 
 class CourseSerializer(ModelSerializer):
+    price = SerializerMethodField("get_course_price")
     duration = SerializerMethodField("get_course_duration")
     lessons = LessonSerializer(many=True)
     technologies = SerializerMethodField("get_course_technologies")
@@ -458,6 +471,9 @@ class CourseSerializer(ModelSerializer):
     rating_count = SerializerMethodField("get_course_rating_count")
     image = Base64ImageField(required=True)
     video = VideoBase64File(required=False)
+
+    def get_course_price(self, course):
+        return get_price(course=course)
 
     def get_course_technologies(self, course):
         lessons = get_course_lessons(course=course)
@@ -574,6 +590,7 @@ class CourseSerializer(ModelSerializer):
 
 
 class BestCourseSerializer(ModelSerializer):
+    price = SerializerMethodField("get_course_price")
     technologies = SerializerMethodField("get_course_technologies")
     duration = SerializerMethodField("get_course_duration")
     lecturers = SerializerMethodField("get_course_lecturers")
@@ -582,6 +599,9 @@ class BestCourseSerializer(ModelSerializer):
     rating_count = SerializerMethodField("get_course_rating_count")
     image = Base64ImageField(required=True)
     level = CharField(source="get_level_display")
+
+    def get_course_price(self, course):
+        return get_price(course=course)
 
     def get_course_technologies(self, course):
         lessons = get_course_lessons(course=course)
