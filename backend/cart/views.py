@@ -8,7 +8,7 @@ from profile.models import Profile
 
 
 class CartViewSet(ModelViewSet):
-    http_method_names = ["get", "post"]
+    http_method_names = ["get", "post", "delete"]
     queryset = Cart.objects.all()
     serializer_class = CartGetSerializer
     permission_classes = [IsAuthenticated]
@@ -19,12 +19,9 @@ class CartViewSet(ModelViewSet):
         return self.queryset.filter(student=student)
 
     def create(self, request, *args, **kwargs):
-        user = request.user
         data = request.data
 
-        student = Profile.objects.get(user=user)
-        data["student"] = student.id
-        serializer = CartSerializer(data=data)
+        serializer = CartSerializer(data=data, context={"request": request})
         serializer.is_valid(raise_exception=True)
         records = serializer.create(serializer.data)
 

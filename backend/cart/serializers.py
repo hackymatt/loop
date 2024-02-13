@@ -1,30 +1,14 @@
 from rest_framework.serializers import (
     ModelSerializer,
     IntegerField,
+    ListField,
 )
-from course.models import Course
-from lesson.models import Lesson, Technology
+from lesson.models import Lesson
 from cart.models import Cart
 from profile.models import Profile
 
 
-class TechnologySerializer(ModelSerializer):
-    class Meta:
-        model = Technology
-        fields = "__all__"
-
-
-class CourseSerializer(ModelSerializer):
-    technology = TechnologySerializer()
-
-    class Meta:
-        model = Course
-        exclude = ("active", "skills", "topics")
-
-
 class LessonSerializer(ModelSerializer):
-    course = CourseSerializer()
-
     class Meta:
         model = Lesson
         fields = "__all__"
@@ -39,50 +23,32 @@ class CartGetSerializer(ModelSerializer):
 
 
 class CartSerializer(ModelSerializer):
-    course = IntegerField(required=False)
-    lesson = IntegerField(required=False)
+    lessons = ListField(child=IntegerField())
 
     class Meta:
         model = Cart
-        fields = (
-            "student",
-            "course",
-            "lesson",
-        )
+        fields = ("lessons",)
 
     def create(self, validated_data):
-        student_id = validated_data.pop("student")
-        student = Profile.objects.get(pk=student_id)
+        user = self.context.get("request").user
+        student = Profile.objects.get(user=user)
 
-        course_id = validated_data.get("course", None)
-        lesson_id = validated_data.get("lesson", None)
+        lesson_ids = validated_data.get("lessons")
 
-        if course_id:
-            # manage whole course
-            course = Course.objects.get(pk=course_id)
-            course_lessons = course.lessons.all()
-            cart_items = Cart.objects.filter(
-                student=student, lesson__in=course_lessons
-            ).all()
-
-            if course_lessons.count() == cart_items.count():
-                # delete whole course
-                cart_items.delete()
-            else:
-                # add missing lessons
-                for course_lesson in course_lessons:
-                    Cart.objects.get_or_create(student=student, lesson=course_lesson)
-
-        else:
-            # manage specific lesson
+        for lesson_id in lesson_ids:
             lesson = Lesson.objects.get(pk=lesson_id)
-            cart_item = Cart.objects.filter(student=student, lesson=lesson).all()
+            Cart.objects.get_or_create(lesson=lesson, student=student)
 
-            if cart_item.exists():
-                # delete lesson
-                cart_item.delete()
-            else:
-                # add lesson
-                Cart.objects.create(student=student, lesson=lesson)
+        return Cart.objects.filter(student=student).all()
+
+    def destroy(self, validated_data):
+        user = self.context.get("request").user
+        student = Profile.objects.get(user=user)
+
+        lesson_ids = validated_data.get("lessons")
+
+        for lesson_id in lesson_ids:
+            lesson = Lesson.objects.get(pk=lesson_id)
+            Cart.objects.filter(lesson=lesson, student=student).delete()
 
         return Cart.objects.filter(student=student).all()

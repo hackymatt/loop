@@ -54,10 +54,4 @@ class Migration(migrations.Migration):
                 ],
             },
         ),
-        migrations.AddConstraint(
-            model_name="cart",
-            constraint=models.UniqueConstraint(
-                fields=("lesson", "student"), name="cart_lesson_student_unique_together"
-            ),
-        ),
     ]
