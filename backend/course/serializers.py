@@ -23,9 +23,6 @@ from django.core.exceptions import FieldDoesNotExist
 from datetime import timedelta
 
 
-MIN_LESSON_DURATION_MINS = 15
-
-
 class VideoBase64File(Base64FileField):
     ALLOWED_TYPES = ["mp4"]
 
@@ -116,6 +113,17 @@ def get_lecturers(self, lessons):
     return LecturerSerializer(
         lecturers, many=True, context={"request": self.context.get("request")}
     ).data
+
+
+def get_technologies(lessons):
+    ids = (
+        Lesson.technologies.through.objects.filter(lesson__in=lessons)
+        .all()
+        .distinct()
+        .values("technology_id")
+    )
+    technologies = Technology.objects.filter(id__in=ids).all()
+    return TechnologySerializer(technologies, many=True).data
 
 
 def get_lecturers_details(self, lessons):
@@ -286,6 +294,7 @@ class LessonDetailsSerializer(ModelSerializer):
 
 class LessonSerializer(ModelSerializer):
     id = IntegerField()
+    technologies = TechnologySerializer(many=True)
     previous_price = SerializerMethodField("get_lesson_previous_price")
     lowest_30_days_price = SerializerMethodField("get_lesson_lowest_30_days_price")
     lecturers = SerializerMethodField("get_lesson_lecturers")
@@ -347,14 +356,18 @@ class LessonShortSerializer(ModelSerializer):
 
 
 class CourseListSerializer(ModelSerializer):
-    technology = TechnologySerializer(many=True)
     duration = SerializerMethodField("get_course_duration")
+    technologies = SerializerMethodField("get_course_technologies")
     lecturers = SerializerMethodField("get_course_lecturers")
     students_count = SerializerMethodField("get_course_students_count")
     rating = SerializerMethodField("get_course_rating")
     rating_count = SerializerMethodField("get_course_rating_count")
     image = Base64ImageField(required=True)
     level = CharField(source="get_level_display")
+
+    def get_course_technologies(self, course):
+        lessons = get_course_lessons(course=course)
+        return get_technologies(lessons=lessons)
 
     def get_course_duration(self, course):
         return get_duration(course)
@@ -378,13 +391,13 @@ class CourseListSerializer(ModelSerializer):
     class Meta:
         model = Course
         exclude = (
+            "lessons",
             "active",
             "skills",
             "topics",
             "video",
             "created_at",
             "modified_at",
-            "github_url",
         )
 
 
@@ -392,7 +405,7 @@ class CourseGetSerializer(ModelSerializer):
     level = CharField(source="get_level_display")
     duration = SerializerMethodField("get_course_duration")
     lessons = SerializerMethodField("get_lessons")
-    technology = TechnologySerializer(many=True)
+    technologies = SerializerMethodField("get_course_technologies")
     skills = SkillSerializer(many=True)
     topics = TopicSerializer(many=True)
     lecturers = SerializerMethodField("get_course_lecturers")
@@ -401,6 +414,10 @@ class CourseGetSerializer(ModelSerializer):
     rating_count = SerializerMethodField("get_course_rating_count")
     image = Base64ImageField(required=True)
     video = VideoBase64File(required=False)
+
+    def get_course_technologies(self, course):
+        lessons = get_course_lessons(course=course)
+        return get_technologies(lessons=lessons)
 
     def get_lessons(self, course):
         return LessonShortSerializer(get_course_lessons(course=course), many=True).data
@@ -432,7 +449,7 @@ class CourseGetSerializer(ModelSerializer):
 class CourseSerializer(ModelSerializer):
     duration = SerializerMethodField("get_course_duration")
     lessons = LessonSerializer(many=True)
-    technology = TechnologySerializer(many=True)
+    technologies = SerializerMethodField("get_course_technologies")
     skills = SkillSerializer(many=True)
     topics = TopicSerializer(many=True)
     lecturers = SerializerMethodField("get_course_lecturers")
@@ -441,6 +458,10 @@ class CourseSerializer(ModelSerializer):
     rating_count = SerializerMethodField("get_course_rating_count")
     image = Base64ImageField(required=True)
     video = VideoBase64File(required=False)
+
+    def get_course_technologies(self, course):
+        lessons = get_course_lessons(course=course)
+        return get_technologies(lessons=lessons)
 
     def get_course_duration(self, course):
         return get_duration(course)
@@ -469,15 +490,6 @@ class CourseSerializer(ModelSerializer):
         if len(lessons) == 0:
             raise ValidationError({"lessons": "Kurs musi posiadać minimum 1 lekcję."})
 
-        for lesson in lessons:
-            duration = lesson["duration"]
-            if duration % MIN_LESSON_DURATION_MINS != 0:
-                raise ValidationError(
-                    {
-                        "lessons": f"Czas lekcji musi być wielokrotnością {MIN_LESSON_DURATION_MINS} minut."
-                    }
-                )
-
         return lessons
 
     def validate_skills(self, skills):
@@ -496,22 +508,13 @@ class CourseSerializer(ModelSerializer):
 
         return topic
 
-    def validate_lessons_github_url(self, course, lessons):
-        course_github_url = course.github_url
-        for lesson in lessons:
-            github_url = lesson["github_url"]
-            if course_github_url not in github_url:
-                raise ValidationError(
-                    {"lessons": f"Github url musi być podfolderem kursu."}
-                )
-
-    def add_technology(self, course, technologies):
+    def add_lessons(self, course, lessons):
         objs = []
-        for technology in technologies:
-            obj, _ = Technology.objects.get_or_create(name=technology["name"])
+        for lesson in lessons:
+            obj = Lesson.objects.get(pk=lesson["id"])
             objs.append(obj)
 
-        course.technology.add(*objs)
+        course.lessons.add(*objs)
 
         return course
 
@@ -535,74 +538,13 @@ class CourseSerializer(ModelSerializer):
 
         return course
 
-    @staticmethod
-    def is_lesson_in_list(lesson, lessons_list):
-        for lesson_obj in lessons_list:
-            if lesson_obj["id"] == lesson.id:
-                return True
-
-        return False
-
-    def create_lessons(self, course, lessons):
-        Lesson.objects.bulk_create(
-            Lesson(
-                course=course,
-                title=lesson["title"],
-                description=lesson["description"],
-                duration=lesson["duration"],
-                github_url=lesson["github_url"],
-                price=lesson["price"],
-                active=lesson["active"],
-            )
-            for lesson in lessons
-        )
-
-    def edit_lessons(self, lessons):
-        for lesson in lessons:
-            id = lesson.pop("id")
-            obj = Lesson.objects.get(pk=id)
-            obj.title = lesson.get("title", obj.title)
-            obj.description = lesson.get("description", obj.description)
-            obj.duration = lesson.get("duration", obj.duration)
-            obj.github_url = lesson.get("github_url", obj.github_url)
-
-            current_price = obj.price
-            new_price = lesson.get("price", obj.price)
-
-            if current_price != new_price:
-                LessonPriceHistory.objects.create(lesson=obj, price=current_price)
-
-            obj.price = new_price
-            obj.active = lesson.get("active", obj.active)
-
-            obj.save()
-
-    def deactivate_lessons(self, lesson_ids):
-        Lesson.objects.filter(id__in=lesson_ids).update(active=False)
-
-    def manage_lessons(self, course, lessons):
-        current_lessons = Lesson.objects.filter(course=course).all()
-        new_lessons = [lesson for lesson in lessons if lesson["id"] == -1]
-        edit_lessons = [lesson for lesson in lessons if lesson["id"] != -1]
-        inactive_lessons_ids = [
-            lesson.id
-            for lesson in current_lessons
-            if not self.is_lesson_in_list(lesson, lessons)
-        ]
-        self.create_lessons(course=course, lessons=new_lessons)
-        self.deactivate_lessons(lesson_ids=inactive_lessons_ids)
-        self.edit_lessons(lessons=edit_lessons)
-
     def create(self, validated_data):
         lessons = validated_data.pop("lessons")
-        technology = validated_data.pop("technology")
         skills = validated_data.pop("skills")
         topics = validated_data.pop("topics")
 
         course = Course.objects.create(**validated_data)
-        self.validate_lessons_github_url(course=course, lessons=lessons)
-        self.create_lessons(course=course, lessons=lessons)
-        course = self.add_technology(course=course, technologies=technology)
+        course = self.add_lessons(course=course, lessons=lessons)
         course = self.add_skills(course=course, skills=skills)
         course = self.add_topics(course=course, topics=topics)
         course.save()
@@ -611,24 +553,16 @@ class CourseSerializer(ModelSerializer):
 
     def update(self, instance, validated_data):
         lessons = validated_data.pop("lessons")
-        technology = validated_data.pop("technology")
         skills = validated_data.pop("skills")
         topics = validated_data.pop("topics")
-
-        self.validate_lessons_github_url(course=instance, lessons=lessons)
-        self.manage_lessons(course=instance, lessons=lessons)
 
         instance.active = validated_data.get("active", instance.active)
         instance.title = validated_data.get("title", instance.title)
         instance.description = validated_data.get("description", instance.description)
         instance.level = validated_data.get("level", instance.level)
 
-        new_price = validated_data.get("price", instance.price)
-
-        instance.price = new_price
-        instance.github_url = validated_data.get("github_url", instance.github_url)
-        instance.technology.clear()
-        instance = self.add_technology(course=instance, technologies=technology)
+        instance.lessons.clear()
+        instance = self.add_lessons(course=instance, lessons=lessons)
         instance.skills.clear()
         instance = self.add_skills(course=instance, skills=skills)
         instance.topics.clear()
@@ -640,7 +574,7 @@ class CourseSerializer(ModelSerializer):
 
 
 class BestCourseSerializer(ModelSerializer):
-    technology = TechnologySerializer(many=True)
+    technologies = SerializerMethodField("get_course_technologies")
     duration = SerializerMethodField("get_course_duration")
     lecturers = SerializerMethodField("get_course_lecturers")
     students_count = SerializerMethodField("get_course_students_count")
@@ -648,6 +582,10 @@ class BestCourseSerializer(ModelSerializer):
     rating_count = SerializerMethodField("get_course_rating_count")
     image = Base64ImageField(required=True)
     level = CharField(source="get_level_display")
+
+    def get_course_technologies(self, course):
+        lessons = get_course_lessons(course=course)
+        return get_technologies(lessons=lessons)
 
     def get_course_duration(self, course):
         return get_duration(course)
@@ -677,6 +615,5 @@ class BestCourseSerializer(ModelSerializer):
             "video",
             "created_at",
             "modified_at",
-            "github_url",
             "description",
         )

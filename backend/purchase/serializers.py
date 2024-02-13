@@ -53,7 +53,6 @@ class CourseSerializer(ModelSerializer):
             "image",
             "video",
             "description",
-            "github_url",
             "price",
             "active",
             "skills",
@@ -69,7 +68,6 @@ class LessonSerializer(ModelSerializer):
         exclude = (
             "description",
             "duration",
-            "github_url",
             "price",
             "active",
             "modified_at",

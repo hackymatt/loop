@@ -3,21 +3,44 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
-    create_course,
+    create_lesson,
     create_lesson_obj,
     create_technology_obj,
-    create_skill_obj,
-    create_topic_obj,
-    create_wishlist,
+    create_review,
+    create_purchase,
+    create_teaching,
+    create_lesson_price_history,
 )
-from .helpers import login
+from .helpers import (
+    login,
+    is_data_match,
+    get_user,
+    get_profile,
+    get_lesson,
+    filter_dict,
+    get_technology,
+    lessons_number,
+)
 from django.contrib import auth
 import json
 
 
-class WishlistTest(APITestCase):
+class LessonPriceHistoryTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/wishlist"
+        self.endpoint = "/lesson-price-history"
+        self.admin_data = {
+            "email": "admin_test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.admin_data["email"],
+            password=self.admin_data["password"],
+            is_active=True,
+            is_staff=True,
+        )
+        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -31,10 +54,9 @@ class WishlistTest(APITestCase):
         )
         self.profile = create_profile(user=self.user)
 
-        # course 1
-        self.course_1 = create_course(
-            title="Python Beginner",
-            description="Learn Python today",
+        self.course = create_course(
+            title="course_title",
+            description="course_description",
             technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
             price="99.99",
@@ -64,22 +86,22 @@ class WishlistTest(APITestCase):
             ],
         )
 
-        self.wishlist = []
-        for lesson in self.course_1.lessons.all():
-            self.wishlist.append(
-                create_wishlist(
-                    student=self.profile,
-                    lesson=lesson,
-                )
-            )
+        create_course_price_history(self.course, 80)
+        create_course_price_history(self.course, 100)
+        create_course_price_history(self.course, 120)
+        create_lesson_price_history(self.lesson_1, 15)
+        create_lesson_price_history(self.lesson_1, 25)
+        create_lesson_price_history(self.lesson_1, 5)
+        create_lesson_price_history(self.lesson_2, 1)
+        create_lesson_price_history(self.lesson_2, 5)
+        create_lesson_price_history(self.lesson_2, 3)
 
-        # course 2
         self.course_2 = create_course(
-            title="Javascript course for Advanced",
-            description="Course for programmers",
-            technology=[create_technology_obj(name="Javascript")],
-            level="Zaawansowany",
-            price="300",
+            title="course_title 2",
+            description="course_description",
+            technology=[create_technology_obj(name="JS")],
+            level="Podstawowy",
+            price="99.99",
             github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
@@ -103,31 +125,25 @@ class WishlistTest(APITestCase):
                     github_url="https://github.com/hackymatt/lesson",
                     price="2.99",
                 ),
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 3",
-                    description="bbbb",
-                    duration="120",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
             ],
         )
 
-        self.wishlist.append(
-            create_wishlist(
-                student=self.profile,
-                lesson=self.course_2.lessons.all()[1],
-            )
-        )
+        create_course_price_history(self.course_2, 120)
+        create_course_price_history(self.course_2, 100)
+        create_course_price_history(self.course_2, 80)
+        create_lesson_price_history(self.lesson_3, 15)
+        create_lesson_price_history(self.lesson_3, 25)
+        create_lesson_price_history(self.lesson_3, 5)
+        create_lesson_price_history(self.lesson_4, 1)
+        create_lesson_price_history(self.lesson_4, 5)
+        create_lesson_price_history(self.lesson_4, 3)
 
-        # course 3
         self.course_3 = create_course(
-            title="VBA course for Expert",
-            description="Course for programmers",
+            title="course_title 3",
+            description="course_description",
             technology=[create_technology_obj(name="VBA")],
-            level="Ekspert",
-            price="220",
+            level="Podstawowy",
+            price="99.99",
             github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
@@ -143,88 +159,66 @@ class WishlistTest(APITestCase):
                     github_url="https://github.com/hackymatt/lesson",
                     price="9.99",
                 ),
+                create_lesson_obj(
+                    id=-1,
+                    title="VBA lesson 2",
+                    description="bbbb",
+                    duration="30",
+                    github_url="https://github.com/hackymatt/lesson",
+                    price="2.99",
+                ),
             ],
         )
 
-        self.wishlist.append(
-            create_wishlist(
-                student=self.profile,
-                lesson=self.course_3.lessons.all()[0],
-            )
-        )
+        create_course_price_history(self.course_3, 100)
+        create_course_price_history(self.course_3, 80)
+        create_course_price_history(self.course_3, 120)
+        create_lesson_price_history(self.lesson_5, 15)
+        create_lesson_price_history(self.lesson_5, 25)
+        create_lesson_price_history(self.lesson_5, 5)
+        create_lesson_price_history(self.lesson_6, 1)
+        create_lesson_price_history(self.lesson_6, 5)
+        create_lesson_price_history(self.lesson_6, 3)
 
-    def test_get_wishlist_unauthenticated(self):
+    def test_get_lesson_price_history_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_get_wishlist_authenticated(self):
+    def test_get_lesson_price_history_not_admin(self):
         # login
         login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(self.endpoint)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_lesson_price_history_authenticated(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        count = data["records_count"]
-        self.assertEqual(count, 4)
-
-    def test_add_to_wishlist_unauthenticated(self):
-        # no login
-        self.assertFalse(auth.get_user(self.client).is_authenticated)
-        # get data
-        data = {
-            "lesson": self.course_2.lessons.all()[0].id,
-        }
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_add_to_wishlist_single_lesson_authenticated(self):
-        # login
-        login(self, self.data["email"], self.data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        data = {
-            "lesson": self.course_2.lessons.all()[0].id,
-        }
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(len(data), 5)
-
-    def test_add_to_wishlist_whole_course_authenticated(self):
-        # login
-        login(self, self.data["email"], self.data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        data = {
-            "course": self.course_2.id,
-        }
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(len(data), 6)
-
-    def test_delete_single_lesson_from_wishlist(self):
-        # no login
-        login(self, self.data["email"], self.data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        data = {"lesson": self.course_1.lessons.all()[0].id}
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(len(data), 3)
-
-    def test_delete_whole_course_from_wishlist(self):
-        # no login
-        login(self, self.data["email"], self.data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        data = {"course": self.course_1.id}
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(len(data), 2)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 18)
+        prices = [record["price"] for record in results]
+        self.assertEqual(
+            prices,
+            [
+                "15.00",
+                "25.00",
+                "5.00",
+                "1.00",
+                "5.00",
+                "3.00",
+                "15.00",
+                "25.00",
+                "5.00",
+                "1.00",
+            ],
+        )

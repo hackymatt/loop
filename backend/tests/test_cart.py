@@ -32,7 +32,7 @@ class CartTest(APITestCase):
             title="Python lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/course/lesson",
+            github_url="https://github.com/hackymatt/lesson",
             price="9.99",
             technologies=[create_technology_obj(name="Python")],
         )
@@ -40,7 +40,7 @@ class CartTest(APITestCase):
             title="Python lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/course/lesson",
+            github_url="https://github.com/hackymatt/lesson",
             price="2.99",
             technologies=[create_technology_obj(name="Python")],
         )
@@ -49,7 +49,7 @@ class CartTest(APITestCase):
             title="JS lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/course/lesson",
+            github_url="https://github.com/hackymatt/lesson",
             price="9.99",
             technologies=[create_technology_obj(name="JS")],
         )
@@ -57,7 +57,7 @@ class CartTest(APITestCase):
             title="JS lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/course/lesson",
+            github_url="https://github.com/hackymatt/lesson",
             price="2.99",
             technologies=[create_technology_obj(name="JS")],
         )
@@ -65,7 +65,7 @@ class CartTest(APITestCase):
             title="JS lesson 3",
             description="bbbb",
             duration="120",
-            github_url="https://github.com/hackymatt/course/lesson",
+            github_url="https://github.com/hackymatt/lesson",
             price="2.99",
             technologies=[create_technology_obj(name="JS")],
         )
@@ -74,7 +74,7 @@ class CartTest(APITestCase):
             title="VBA lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/course/lesson",
+            github_url="https://github.com/hackymatt/lesson",
             price="9.99",
             technologies=[create_technology_obj(name="VBA")],
         )
