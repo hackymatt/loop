@@ -2,15 +2,12 @@ from django.contrib.auth.models import User
 from profile.models import Profile
 from course.models import (
     Course,
-    Lesson,
-    Technology,
     Skill,
     Topic,
-    CoursePriceHistory,
-    LessonPriceHistory,
 )
+from lesson.models import Lesson, LessonPriceHistory, Technology
 from review.models import Review
-from purchase.models import CoursePurchase, LessonPurchase
+from purchase.models import Purchase
 from newsletter.models import Newsletter
 from schedule.models import Schedule
 from wishlist.models import Wishlist
@@ -136,23 +133,43 @@ def create_course(
     return course
 
 
-def create_lesson_obj(
-    id: int,
+def create_lesson(
     title: str,
     description: str,
     duration: int,
     github_url: str,
     price: str,
-    active: bool = True,
+    technologies,
+):
+    lesson = Lesson.objects.create(
+        title=title,
+        description=description,
+        duration=duration,
+        github_url=github_url,
+        price=price,
+    )
+
+    lesson.technologies.add(*create_fields(technologies, Technology))
+    lesson.save()
+
+    return lesson
+
+
+def create_lesson_obj(
+    title: str,
+    description: str,
+    duration: int,
+    github_url: str,
+    price: str,
+    technologies,
 ):
     return {
-        "id": id,
         "title": title,
         "description": description,
         "duration": duration,
         "github_url": github_url,
         "price": price,
-        "active": active,
+        "technologies": technologies,
     }
 
 
@@ -185,11 +202,7 @@ def create_purchase(
     student: Profile,
     price: float,
 ):
-    course_purchase, _ = CoursePurchase.objects.get_or_create(
-        course=lesson.course, price=lesson.course.price, student=student
-    )
-    return LessonPurchase.objects.create(
-        course_purchase=course_purchase,
+    return Purchase.objects.create(
         lesson=lesson,
         student=student,
         price=price,

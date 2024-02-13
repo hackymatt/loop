@@ -8,7 +8,6 @@ import AccordionSummary, { accordionSummaryClasses } from "@mui/material/Accordi
 
 import { fCurrency, fShortenNumber } from "src/utils/format-number";
 
-import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 
 import { ICourseLessonProp } from "src/types/course";
@@ -18,10 +17,7 @@ import Repository from "../repository/repository";
 // ----------------------------------------------------------------------
 
 type LessonItemProps = {
-  lesson: Pick<
-    ICourseLessonProp,
-    "id" | "title" | "bestSeller" | "price" | "priceSale" | "lowest30DaysPrice"
-  >;
+  lesson: Pick<ICourseLessonProp, "id" | "title" | "price" | "priceSale" | "lowest30DaysPrice">;
   details: ICourseLessonProp;
   expanded: boolean;
   onExpanded: (event: React.SyntheticEvent, isExpanded: boolean) => void;
@@ -73,12 +69,6 @@ export default function CourseDetailsLessonItem({
         >
           {lesson.title}
         </Typography>
-
-        {lesson.bestSeller && (
-          <Label color="warning" variant="filled" sx={{ textTransform: "uppercase", mr: 2 }}>
-            Bestseller
-          </Label>
-        )}
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h6" sx={{ textAlign: "right" }}>

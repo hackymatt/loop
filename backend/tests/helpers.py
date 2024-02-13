@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from profile.models import Profile
-from course.models import Course, Lesson, Technology, Skill, Topic
+from course.models import Course, Skill, Topic
+from lesson.models import Lesson, Technology
 from review.models import Review
 from newsletter.models import Newsletter
 from schedule.models import Schedule

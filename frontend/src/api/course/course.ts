@@ -40,7 +40,6 @@ type ITopic = {
 type ILesson = {
   id: number;
   title: string;
-  is_bestseller: boolean;
   price: string;
   previous_price: string | null;
   lowest_30_days_price: string | null;
@@ -141,7 +140,6 @@ export const courseQuery = (id: string) => {
           ({
             id: lessonId,
             title: titleId,
-            is_bestseller,
             lowest_30_days_price: lessonLowest30DaysPrice,
             previous_price: lessonPreviousPrice,
             price: lessonPrice,
@@ -151,7 +149,6 @@ export const courseQuery = (id: string) => {
             lowest30DaysPrice: lessonLowest30DaysPrice,
             priceSale: lessonPreviousPrice,
             price: lessonPrice,
-            bestSeller: is_bestseller,
           }),
         ),
         githubUrl: github_url,

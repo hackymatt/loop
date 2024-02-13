@@ -4,7 +4,6 @@ from rest_framework.serializers import (
     SerializerMethodField,
 )
 from profile.models import Profile
-from purchase.models import LessonPurchase
 from review.models import Review
 from teaching.models import Teaching
 from django.db.models import Avg

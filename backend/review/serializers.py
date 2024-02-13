@@ -9,7 +9,7 @@ from rest_framework.serializers import (
 )
 from review.models import Review
 from profile.models import Profile
-from purchase.models import LessonPurchase
+from purchase.models import Purchase
 
 
 class ProfileSerializer(ModelSerializer):
@@ -98,7 +98,7 @@ class ReviewSerializer(ModelSerializer):
         profile = Profile.objects.get(user=user)
         lecturer = Profile.objects.get(pk=data["lecturer"])
 
-        if not LessonPurchase.objects.filter(student=profile, lesson=lesson).exists():
+        if not Purchase.objects.filter(student=profile, lesson=lesson).exists():
             raise ValidationError({"lesson": "Lekcja nie została zakupiona."})
 
         if Review.objects.filter(

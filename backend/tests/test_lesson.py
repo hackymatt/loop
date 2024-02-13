@@ -3,15 +3,12 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
-    create_course,
+    create_lesson,
     create_lesson_obj,
     create_technology_obj,
-    create_skill_obj,
-    create_topic_obj,
     create_review,
     create_purchase,
     create_teaching,
-    create_course_price_history,
     create_lesson_price_history,
 )
 from .helpers import (
@@ -21,6 +18,8 @@ from .helpers import (
     get_profile,
     get_lesson,
     filter_dict,
+    get_technology,
+    lessons_number,
 )
 from django.contrib import auth
 import json
@@ -82,262 +81,212 @@ class LessonTest(APITestCase):
         self.lecturer_profile_2 = create_profile(
             user=self.lecturer_user_2, user_type="W"
         )
-        self.course = create_course(
-            title="course_title",
-            description="course_description",
-            technology=[create_technology_obj(name="Python")],
-            level="Podstawowy",
-            price="99.99",
-            github_url="https://github.com/hackymatt/course",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
-            topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
-            ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/course/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/course/lesson",
-                    price="2.99",
-                ),
-            ],
+
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="Python")],
         )
 
-        create_course_price_history(self.course, 80)
-        create_course_price_history(self.course, 100)
-        create_course_price_history(self.course, 120)
-        create_lesson_price_history(self.course.lessons.all()[0], 15)
-        create_lesson_price_history(self.course.lessons.all()[0], 25)
-        create_lesson_price_history(self.course.lessons.all()[0], 5)
-        create_lesson_price_history(self.course.lessons.all()[1], 1)
-        create_lesson_price_history(self.course.lessons.all()[1], 5)
-        create_lesson_price_history(self.course.lessons.all()[1], 3)
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
+
+        create_lesson_price_history(self.lesson_1, 15)
+        create_lesson_price_history(self.lesson_1, 25)
+        create_lesson_price_history(self.lesson_1, 5)
+        create_lesson_price_history(self.lesson_2, 1)
+        create_lesson_price_history(self.lesson_2, 5)
+        create_lesson_price_history(self.lesson_2, 3)
 
         create_teaching(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             lecturer=self.lecturer_profile_1,
         )
         create_teaching(
-            lesson=self.course.lessons.all()[1],
+            lesson=self.lesson_2,
             lecturer=self.lecturer_profile_1,
         )
         create_teaching(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             lecturer=self.lecturer_profile_2,
         )
         create_teaching(
-            lesson=self.course.lessons.all()[1],
+            lesson=self.lesson_2,
             lecturer=self.lecturer_profile_2,
         )
 
         create_purchase(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile,
-            price=self.course.lessons.all()[0].price,
+            price=self.lesson_1.price,
         )
         create_purchase(
-            lesson=self.course.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile,
-            price=self.course.lessons.all()[1].price,
+            price=self.lesson_2.price,
         )
 
         self.review_1 = create_review(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_2 = create_review(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_3 = create_review(
-            lesson=self.course.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=3,
             review="So so lesson.",
         )
 
-        self.course_2 = create_course(
-            title="course_title 2",
-            description="course_description",
-            technology=[create_technology_obj(name="JS")],
-            level="Podstawowy",
-            price="99.99",
-            github_url="https://github.com/hackymatt/course",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
-            topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
-            ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/course/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/course/lesson",
-                    price="2.99",
-                ),
-            ],
+        self.lesson_3 = create_lesson(
+            title="JS lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="JS")],
         )
 
-        create_course_price_history(self.course_2, 120)
-        create_course_price_history(self.course_2, 100)
-        create_course_price_history(self.course_2, 80)
-        create_lesson_price_history(self.course_2.lessons.all()[0], 15)
-        create_lesson_price_history(self.course_2.lessons.all()[0], 25)
-        create_lesson_price_history(self.course_2.lessons.all()[0], 5)
-        create_lesson_price_history(self.course_2.lessons.all()[1], 1)
-        create_lesson_price_history(self.course_2.lessons.all()[1], 5)
-        create_lesson_price_history(self.course_2.lessons.all()[1], 3)
+        self.lesson_4 = create_lesson(
+            title="JS lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
+
+        create_lesson_price_history(self.lesson_3, 15)
+        create_lesson_price_history(self.lesson_3, 25)
+        create_lesson_price_history(self.lesson_3, 5)
+        create_lesson_price_history(self.lesson_4, 1)
+        create_lesson_price_history(self.lesson_4, 5)
+        create_lesson_price_history(self.lesson_4, 3)
 
         create_teaching(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             lecturer=self.lecturer_profile_1,
         )
         create_teaching(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             lecturer=self.lecturer_profile_1,
         )
         create_teaching(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             lecturer=self.lecturer_profile_2,
         )
         create_teaching(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             lecturer=self.lecturer_profile_2,
         )
 
         create_purchase(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile,
-            price=self.course_2.lessons.all()[0].price,
+            price=self.lesson_3.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile,
-            price=self.course_2.lessons.all()[1].price,
+            price=self.lesson_4.price,
         )
 
         self.review_4 = create_review(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_5 = create_review(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=3,
             review="So so lesson.",
         )
 
-        self.course_3 = create_course(
-            title="course_title 3",
-            description="course_description",
-            technology=[create_technology_obj(name="VBA")],
-            level="Podstawowy",
-            price="99.99",
-            github_url="https://github.com/hackymatt/course",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
-            topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
-            ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="VBA lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/course/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="VBA lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/course/lesson",
-                    price="2.99",
-                ),
-            ],
+        self.lesson_5 = create_lesson(
+            title="VBA lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="VBA")],
         )
 
-        create_course_price_history(self.course_3, 100)
-        create_course_price_history(self.course_3, 80)
-        create_course_price_history(self.course_3, 120)
-        create_lesson_price_history(self.course_3.lessons.all()[0], 15)
-        create_lesson_price_history(self.course_3.lessons.all()[0], 25)
-        create_lesson_price_history(self.course_3.lessons.all()[0], 5)
-        create_lesson_price_history(self.course_3.lessons.all()[1], 1)
-        create_lesson_price_history(self.course_3.lessons.all()[1], 5)
-        create_lesson_price_history(self.course_3.lessons.all()[1], 3)
+        self.lesson_6 = create_lesson(
+            title="VBA lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="VBA")],
+        )
+
+        create_lesson_price_history(self.lesson_5, 15)
+        create_lesson_price_history(self.lesson_5, 25)
+        create_lesson_price_history(self.lesson_5, 5)
+        create_lesson_price_history(self.lesson_6, 1)
+        create_lesson_price_history(self.lesson_6, 5)
+        create_lesson_price_history(self.lesson_6, 3)
 
         create_teaching(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_5,
             lecturer=self.lecturer_profile_1,
         )
         create_teaching(
-            lesson=self.course_3.lessons.all()[1],
+            lesson=self.lesson_6,
             lecturer=self.lecturer_profile_1,
         )
         create_teaching(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_5,
             lecturer=self.lecturer_profile_2,
         )
         create_teaching(
-            lesson=self.course_3.lessons.all()[1],
+            lesson=self.lesson_6,
             lecturer=self.lecturer_profile_2,
         )
 
         create_purchase(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_5,
             student=self.profile,
-            price=self.course_3.lessons.all()[0].price,
+            price=self.lesson_5.price,
         )
         create_purchase(
-            lesson=self.course_3.lessons.all()[1],
+            lesson=self.lesson_6,
             student=self.profile,
-            price=self.course_3.lessons.all()[1].price,
+            price=self.lesson_6.price,
         )
 
         self.review_6 = create_review(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_5,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_7 = create_review(
-            lesson=self.course_3.lessons.all()[1],
+            lesson=self.lesson_6,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=3,
@@ -346,6 +295,24 @@ class LessonTest(APITestCase):
 
         self.user_columns = ["first_name", "last_name", "email"]
         self.profile_columns = ["uuid"]
+
+        self.new_lesson = create_lesson_obj(
+            title="Javascript course",
+            description="lesson_description",
+            price="89.99",
+            duration=90,
+            github_url="https://github.com/hackymatt/lesson",
+            technologies=[create_technology_obj(name="Javascript")],
+        )
+
+        self.amend_lesson = create_lesson_obj(
+            title=self.lesson_1.title,
+            description="lesson_description",
+            price="19.99",
+            duration=60,
+            github_url="https://github.com/hackymatt/lesson",
+            technologies=[create_technology_obj(name="Python")],
+        )
 
     def test_get_lessons_no_admin(self):
         # no login
@@ -366,6 +333,7 @@ class LessonTest(APITestCase):
         results = data["results"]
         self.assertEqual(count, 6)
         for lesson_data in results:
+            technologies_data = lesson_data.pop("technologies")
             lecturers_data = lesson_data.pop("lecturers")
             rating = lesson_data.pop("rating")
             rating_count = lesson_data.pop("rating_count")
@@ -392,6 +360,13 @@ class LessonTest(APITestCase):
                 self.assertEqual(rating_count, 1)
                 self.assertEqual(students_count, 1)
 
+            for technology_data in technologies_data:
+                self.assertTrue(
+                    is_data_match(
+                        get_technology(technology_data["id"]), technology_data
+                    )
+                )
+
             for lecturer_data in lecturers_data:
                 user_data = filter_dict(lecturer_data, self.user_columns)
                 profile_data = filter_dict(lecturer_data, self.profile_columns)
@@ -408,10 +383,11 @@ class LessonTest(APITestCase):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
-        response = self.client.get(f"{self.endpoint}/{self.course.lessons.all()[0].id}")
+        response = self.client.get(f"{self.endpoint}/{self.lesson_1.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
 
+        technologies_data = data.pop("technologies")
         lecturers_data = data.pop("lecturers")
         rating = data.pop("rating")
         rating_count = data.pop("rating_count")
@@ -421,6 +397,11 @@ class LessonTest(APITestCase):
         self.assertEqual(rating, 4.5)
         self.assertEqual(rating_count, 2)
         self.assertEqual(students_count, 1)
+
+        for technology_data in technologies_data:
+            self.assertTrue(
+                is_data_match(get_technology(technology_data["id"]), technology_data)
+            )
 
         for lecturer_data in lecturers_data:
             user_data = filter_dict(lecturer_data, self.user_columns)
@@ -437,10 +418,11 @@ class LessonTest(APITestCase):
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        response = self.client.get(f"{self.endpoint}/{self.course.lessons.all()[0].id}")
+        response = self.client.get(f"{self.endpoint}/{self.lesson_1.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
 
+        technologies_data = data.pop("technologies")
         lecturers_data = data.pop("lecturers")
         rating = data.pop("rating")
         rating_count = data.pop("rating_count")
@@ -450,6 +432,136 @@ class LessonTest(APITestCase):
         self.assertEqual(rating, 4.5)
         self.assertEqual(rating_count, 2)
         self.assertEqual(students_count, 1)
+
+        for technology_data in technologies_data:
+            self.assertTrue(
+                is_data_match(get_technology(technology_data["id"]), technology_data)
+            )
+
+        for lecturer_data in lecturers_data:
+            user_data = filter_dict(lecturer_data, self.user_columns)
+            profile_data = filter_dict(lecturer_data, self.profile_columns)
+            self.assertTrue(is_data_match(get_user(lecturer_data["email"]), user_data))
+            self.assertTrue(
+                is_data_match(
+                    get_profile(get_user(lecturer_data["email"])), profile_data
+                )
+            )
+
+    def test_create_lesson_unauthenticated(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = self.new_lesson
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(lessons_number(), 6)
+
+    def test_create_lesson_not_admin(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = self.new_lesson
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(lessons_number(), 6)
+
+    def test_create_lesson_incorrect_duration(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = self.new_lesson
+        data["duration"] = 55
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(lessons_number(), 6)
+
+    def test_create_lesson_authorized(self):
+        #  login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = self.new_lesson
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(lessons_number(), 7)
+
+        data = json.loads(response.content)
+
+        technologies_data = data.pop("technologies")
+        lecturers_data = data.pop("lecturers")
+        rating = data.pop("rating")
+        rating_count = data.pop("rating_count")
+        students_count = data.pop("students_count")
+
+        self.assertTrue(is_data_match(get_lesson(data["id"]), data))
+        self.assertEqual(rating, None)
+        self.assertEqual(rating_count, 0)
+        self.assertEqual(students_count, 0)
+
+        for technology_data in technologies_data:
+            self.assertTrue(
+                is_data_match(get_technology(technology_data["id"]), technology_data)
+            )
+
+        for lecturer_data in lecturers_data:
+            user_data = filter_dict(lecturer_data, self.user_columns)
+            profile_data = filter_dict(lecturer_data, self.profile_columns)
+            self.assertTrue(is_data_match(get_user(lecturer_data["email"]), user_data))
+            self.assertTrue(
+                is_data_match(
+                    get_profile(get_user(lecturer_data["email"])), profile_data
+                )
+            )
+
+    def test_update_lesson_unauthenticated(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = self.amend_lesson
+        response = self.client.put(f"{self.endpoint}/{self.lesson_1.id}", data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(lessons_number(), 6)
+
+    def test_update_lesson_not_admin(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = self.amend_lesson
+        response = self.client.put(f"{self.endpoint}/{self.lesson_1.id}", data)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(lessons_number(), 6)
+
+    def test_update_lesson_authorized(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = self.amend_lesson
+        response = self.client.put(f"{self.endpoint}/{self.lesson_1.id}", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(lessons_number(), 6)
+
+        data = json.loads(response.content)
+
+        technologies_data = data.pop("technologies")
+        lecturers_data = data.pop("lecturers")
+        rating = data.pop("rating")
+        rating_count = data.pop("rating_count")
+        students_count = data.pop("students_count")
+
+        self.assertTrue(is_data_match(get_lesson(data["id"]), data))
+        self.assertEqual(rating, 4.5)
+        self.assertEqual(rating_count, 2)
+        self.assertEqual(students_count, 1)
+
+        for technology_data in technologies_data:
+            self.assertTrue(
+                is_data_match(get_technology(technology_data["id"]), technology_data)
+            )
 
         for lecturer_data in lecturers_data:
             user_data = filter_dict(lecturer_data, self.user_columns)

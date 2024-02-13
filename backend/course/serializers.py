@@ -8,20 +8,17 @@ from rest_framework.serializers import (
 from drf_extra_fields.fields import Base64ImageField, Base64FileField
 from rest_framework.serializers import ValidationError
 from course.models import (
-    Lesson,
     Course,
-    Technology,
     Skill,
     Topic,
-    LessonPriceHistory,
-    CoursePriceHistory,
 )
+from lesson.models import Lesson, Technology, LessonPriceHistory
 from profile.models import Profile
 from review.models import Review
-from purchase.models import LessonPurchase
+from purchase.models import Purchase
 from teaching.models import Teaching
 from django.db.models.functions import Concat
-from django.db.models import Sum, Avg, Min, Count, Value
+from django.db.models import Sum, Avg, Min, Value
 from django.core.exceptions import FieldDoesNotExist
 from datetime import timedelta
 
@@ -44,8 +41,8 @@ def model_field_exists(obj, field):
         return False
 
 
-def get_course_lessons(course, active=True):
-    return Lesson.objects.filter(course=course, active=active).all()
+def get_course_lessons(course):
+    return course.lessons.all()
 
 
 def get_previous_prices(price_history_model, instance):
@@ -144,37 +141,15 @@ def get_rating_count(lessons):
 
 
 def get_students_count(lessons):
-    return LessonPurchase.objects.filter(lesson__in=lessons).count()
+    return Purchase.objects.filter(lesson__in=lessons).count()
 
 
 def get_duration(course):
-    return Lesson.objects.filter(course=course).aggregate(Sum("duration"))[
-        "duration__sum"
-    ]
+    return course.lessons.aggregate(Sum("duration"))["duration__sum"]
 
 
 def get_lecturer_rating(lecturer):
     return Review.objects.filter(lecturer=lecturer)
-
-
-def get_is_bestseller(lesson):
-    course = lesson.course
-    lessons = course.lessons.all()
-
-    students_count = (
-        LessonPurchase.objects.filter(lesson__in=lessons)
-        .values("lesson__pk")
-        .annotate(count=Count("student"))
-        .order_by("-count")
-        .values("lesson__pk", "count")[:1]
-    )
-
-    if students_count.count() == 0:
-        return False
-
-    bestseller_id = students_count[0]["lesson__pk"]
-
-    return lesson.id == bestseller_id
 
 
 class TechnologyListSerializer(ModelSerializer):
@@ -302,7 +277,6 @@ class LessonDetailsSerializer(ModelSerializer):
     class Meta:
         model = Lesson
         exclude = (
-            "course",
             "title",
             "price",
             "created_at",
@@ -318,10 +292,6 @@ class LessonSerializer(ModelSerializer):
     students_count = SerializerMethodField("get_lesson_students_count")
     rating = SerializerMethodField("get_lesson_rating")
     rating_count = SerializerMethodField("get_lesson_rating_count")
-    is_bestseller = SerializerMethodField("get_lesson_is_bestseller")
-
-    def get_lesson_is_bestseller(self, lesson):
-        return get_is_bestseller(lesson)
 
     def get_lesson_previous_price(self, lesson):
         return get_previous_price(
@@ -347,17 +317,13 @@ class LessonSerializer(ModelSerializer):
 
     class Meta:
         model = Lesson
-        exclude = ("course",)
+        fields = "__all__"
 
 
 class LessonShortSerializer(ModelSerializer):
     id = IntegerField()
     previous_price = SerializerMethodField("get_lesson_previous_price")
     lowest_30_days_price = SerializerMethodField("get_lesson_lowest_30_days_price")
-    is_bestseller = SerializerMethodField("get_lesson_is_bestseller")
-
-    def get_lesson_is_bestseller(self, lesson):
-        return get_is_bestseller(lesson)
 
     def get_lesson_previous_price(self, lesson):
         return get_previous_price(
@@ -377,14 +343,11 @@ class LessonShortSerializer(ModelSerializer):
             "price",
             "previous_price",
             "lowest_30_days_price",
-            "is_bestseller",
         )
 
 
 class CourseListSerializer(ModelSerializer):
     technology = TechnologySerializer(many=True)
-    previous_price = SerializerMethodField("get_course_previous_price")
-    lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
     duration = SerializerMethodField("get_course_duration")
     lecturers = SerializerMethodField("get_course_lecturers")
     students_count = SerializerMethodField("get_course_students_count")
@@ -392,16 +355,6 @@ class CourseListSerializer(ModelSerializer):
     rating_count = SerializerMethodField("get_course_rating_count")
     image = Base64ImageField(required=True)
     level = CharField(source="get_level_display")
-
-    def get_course_previous_price(self, course):
-        return get_previous_price(
-            price_history_model=CoursePriceHistory, instance=course
-        )
-
-    def get_course_lowest_30_days_price(self, course):
-        return get_lowest_30_days_price(
-            price_history_model=CoursePriceHistory, instance=course
-        )
 
     def get_course_duration(self, course):
         return get_duration(course)
@@ -438,8 +391,6 @@ class CourseListSerializer(ModelSerializer):
 class CourseGetSerializer(ModelSerializer):
     level = CharField(source="get_level_display")
     duration = SerializerMethodField("get_course_duration")
-    previous_price = SerializerMethodField("get_course_previous_price")
-    lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
     lessons = SerializerMethodField("get_lessons")
     technology = TechnologySerializer(many=True)
     skills = SkillSerializer(many=True)
@@ -453,16 +404,6 @@ class CourseGetSerializer(ModelSerializer):
 
     def get_lessons(self, course):
         return LessonShortSerializer(get_course_lessons(course=course), many=True).data
-
-    def get_course_previous_price(self, course):
-        return get_previous_price(
-            price_history_model=CoursePriceHistory, instance=course
-        )
-
-    def get_course_lowest_30_days_price(self, course):
-        return get_lowest_30_days_price(
-            price_history_model=CoursePriceHistory, instance=course
-        )
 
     def get_course_duration(self, course):
         return get_duration(course)
@@ -490,8 +431,6 @@ class CourseGetSerializer(ModelSerializer):
 
 class CourseSerializer(ModelSerializer):
     duration = SerializerMethodField("get_course_duration")
-    previous_price = SerializerMethodField("get_course_previous_price")
-    lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
     lessons = LessonSerializer(many=True)
     technology = TechnologySerializer(many=True)
     skills = SkillSerializer(many=True)
@@ -502,16 +441,6 @@ class CourseSerializer(ModelSerializer):
     rating_count = SerializerMethodField("get_course_rating_count")
     image = Base64ImageField(required=True)
     video = VideoBase64File(required=False)
-
-    def get_course_previous_price(self, course):
-        return get_previous_price(
-            price_history_model=CoursePriceHistory, instance=course
-        )
-
-    def get_course_lowest_30_days_price(self, course):
-        return get_lowest_30_days_price(
-            price_history_model=CoursePriceHistory, instance=course
-        )
 
     def get_course_duration(self, course):
         return get_duration(course)
@@ -694,11 +623,7 @@ class CourseSerializer(ModelSerializer):
         instance.description = validated_data.get("description", instance.description)
         instance.level = validated_data.get("level", instance.level)
 
-        current_price = instance.price
         new_price = validated_data.get("price", instance.price)
-
-        if current_price != new_price:
-            CoursePriceHistory.objects.create(course=instance, price=current_price)
 
         instance.price = new_price
         instance.github_url = validated_data.get("github_url", instance.github_url)
@@ -716,8 +641,6 @@ class CourseSerializer(ModelSerializer):
 
 class BestCourseSerializer(ModelSerializer):
     technology = TechnologySerializer(many=True)
-    previous_price = SerializerMethodField("get_course_previous_price")
-    lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
     duration = SerializerMethodField("get_course_duration")
     lecturers = SerializerMethodField("get_course_lecturers")
     students_count = SerializerMethodField("get_course_students_count")
@@ -725,16 +648,6 @@ class BestCourseSerializer(ModelSerializer):
     rating_count = SerializerMethodField("get_course_rating_count")
     image = Base64ImageField(required=True)
     level = CharField(source="get_level_display")
-
-    def get_course_previous_price(self, course):
-        return get_previous_price(
-            price_history_model=CoursePriceHistory, instance=course
-        )
-
-    def get_course_lowest_30_days_price(self, course):
-        return get_lowest_30_days_price(
-            price_history_model=CoursePriceHistory, instance=course
-        )
 
     def get_course_duration(self, course):
         return get_duration(course)
@@ -767,15 +680,3 @@ class BestCourseSerializer(ModelSerializer):
             "github_url",
             "description",
         )
-
-
-class CoursePriceHistorySerializer(ModelSerializer):
-    class Meta:
-        model = CoursePriceHistory
-        fields = "__all__"
-
-
-class LessonPriceHistorySerializer(ModelSerializer):
-    class Meta:
-        model = LessonPriceHistory
-        fields = "__all__"

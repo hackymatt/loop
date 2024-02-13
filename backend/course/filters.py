@@ -7,13 +7,10 @@ from django_filters import (
 )
 from course.models import (
     Course,
-    Lesson,
-    Technology,
-    CoursePriceHistory,
-    LessonPriceHistory,
 )
+from lesson.models import Lesson, Technology
 from review.models import Review
-from purchase.models import LessonPurchase
+from purchase.models import Purchase
 from teaching.models import Teaching
 from profile.models import Profile
 from django.db.models import OuterRef, Subquery, Value, Avg, Sum, Count, TextField
@@ -22,7 +19,9 @@ from django.db.models.functions import Cast
 
 
 def get_rating(queryset):
-    lessons = Lesson.objects.filter(course=OuterRef(OuterRef("pk"))).values("id")
+    lessons = Course.lessons.through.objects.filter(
+        course=OuterRef(OuterRef("pk"))
+    ).values("lesson_id")
     avg_rating = (
         Review.objects.filter(lesson__in=Subquery(lessons))
         .annotate(dummy_group_by=Value(1))
@@ -37,9 +36,15 @@ def get_rating(queryset):
 
 
 def get_duration(queryset):
+    lessons = Course.lessons.through.objects.filter(
+        course=OuterRef(OuterRef("pk"))
+    ).values("lesson_id")
+
     total_duration = (
-        Lesson.objects.filter(course=OuterRef("pk"))
-        .values("course__pk")
+        Lesson.objects.filter(id__in=Subquery(lessons))
+        .annotate(dummy_group_by=Value(1))
+        .values("dummy_group_by")
+        .order_by("dummy_group_by")
         .annotate(total_duration=Sum("duration"))
         .values("total_duration")
     )
@@ -49,9 +54,11 @@ def get_duration(queryset):
 
 
 def get_students_count(queryset):
-    lessons = Lesson.objects.filter(course=OuterRef(OuterRef("pk"))).values("id")
+    lessons = Course.lessons.through.objects.filter(
+        course=OuterRef(OuterRef("pk"))
+    ).values("lesson_id")
     total_student_count = (
-        LessonPurchase.objects.filter(lesson__in=Subquery(lessons))
+        Purchase.objects.filter(lesson__in=Subquery(lessons))
         .annotate(dummy_group_by=Value(1))
         .values("dummy_group_by")
         .order_by("dummy_group_by")
@@ -64,9 +71,9 @@ def get_students_count(queryset):
 
 
 def get_lecturers(queryset):
-    lessons = Lesson.objects.filter(
-        course=OuterRef(OuterRef(OuterRef("pk")))
-    ).values_list("id")
+    lessons = Course.lessons.through.objects.filter(
+        course=OuterRef(OuterRef("pk"))
+    ).values("lesson_id")
     lecturers = (
         Teaching.objects.filter(lesson__in=Subquery(lessons))
         .annotate(dummy_group_by=Value(1))
@@ -249,47 +256,5 @@ class TechnologyFilter(FilterSet):
         model = Technology
         fields = (
             "name",
-            "sort_by",
-        )
-
-
-class CoursePriceHistoryFilter(FilterSet):
-    course_id = NumberFilter(field_name="course__id", lookup_expr="exact")
-    sort_by = OrderFilter(
-        choices=(
-            ("created_at", "Created At ASC"),
-            ("-created_at", "Created At DESC"),
-        ),
-        fields={
-            "created_at": "created_at",
-            "-created_at": "-created_at",
-        },
-    )
-
-    class Meta:
-        model = CoursePriceHistory
-        fields = (
-            "course_id",
-            "sort_by",
-        )
-
-
-class LessonPriceHistoryFilter(FilterSet):
-    lesson_id = NumberFilter(field_name="lesson__id", lookup_expr="exact")
-    sort_by = OrderFilter(
-        choices=(
-            ("created_at", "Created At ASC"),
-            ("-created_at", "Created At DESC"),
-        ),
-        fields={
-            "created_at": "created_at",
-            "-created_at": "-created_at",
-        },
-    )
-
-    class Meta:
-        model = LessonPriceHistory
-        fields = (
-            "lesson_id",
             "sort_by",
         )

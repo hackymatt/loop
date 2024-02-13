@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "utils.filtering",
     "profile",
+    "lesson",
     "course",
     "review",
     "purchase",

@@ -2,7 +2,8 @@ from rest_framework.serializers import (
     ModelSerializer,
     IntegerField,
 )
-from course.models import Course, Lesson, Technology
+from course.models import Course
+from lesson.models import Lesson, Technology
 from cart.models import Cart
 from profile.models import Profile
 

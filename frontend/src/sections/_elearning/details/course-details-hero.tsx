@@ -17,7 +17,6 @@ import { useBoolean } from "src/hooks/use-boolean";
 
 import { fShortenNumber } from "src/utils/format-number";
 
-import Label from "src/components/label";
 import Image from "src/components/image";
 import Iconify from "src/components/iconify";
 import { PlayerDialog } from "src/components/player";
@@ -39,7 +38,6 @@ export default function CourseDetailsHero({ course }: Props) {
     category: categories,
     coverUrl,
     video,
-    bestSeller,
     totalHours,
     description,
     ratingNumber,
@@ -118,12 +116,6 @@ export default function CourseDetailsHero({ course }: Props) {
             <Grid xs={12} md={7}>
               <Stack spacing={3}>
                 <Stack spacing={2} alignItems="flex-start">
-                  {bestSeller && (
-                    <Label color="warning" variant="filled" sx={{ textTransform: "uppercase" }}>
-                      Best Seller
-                    </Label>
-                  )}
-
                   <Stack
                     spacing={0.5}
                     direction="row"

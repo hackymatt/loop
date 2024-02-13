@@ -28,7 +28,6 @@ export type ICourseLessonProp = {
   ratingNumber?: number;
   totalReviews?: number;
   totalStudents?: number;
-  bestSeller?: boolean;
   teachers?: ICourseTeacherProp[];
   githubUrl?: string;
 };
@@ -54,7 +53,6 @@ export type ICourseProps = {
   resources?: number;
   totalHours: number;
   description?: string;
-  bestSeller?: boolean;
   languages?: string[];
   learnList?: string[];
   ratingNumber: number;

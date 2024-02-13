@@ -5,8 +5,9 @@ from rest_framework.serializers import (
     CharField,
     ImageField,
 )
-from purchase.models import CoursePurchase, LessonPurchase
-from course.models import Course, Lesson, Technology
+from purchase.models import Purchase
+from course.models import Course
+from lesson.models import Lesson, Technology
 from profile.models import Profile
 from reservation.models import Reservation
 from review.models import Review
@@ -66,7 +67,6 @@ class LessonSerializer(ModelSerializer):
     class Meta:
         model = Lesson
         exclude = (
-            "course",
             "description",
             "duration",
             "github_url",
@@ -118,7 +118,7 @@ class PurchaseGetSerializer(ModelSerializer):
     review = SerializerMethodField("get_review_details")
 
     class Meta:
-        model = LessonPurchase
+        model = Purchase
         exclude = (
             "student",
             "modified_at",
@@ -172,7 +172,7 @@ class PurchaseGetSerializer(ModelSerializer):
 
 class PurchaseSerializer(ModelSerializer):
     class Meta:
-        model = LessonPurchase
+        model = Purchase
         exclude = (
             "course_purchase",
             "student",
@@ -182,15 +182,7 @@ class PurchaseSerializer(ModelSerializer):
         user = self.context["request"].user
         student = Profile.objects.get(user=user)
 
-        lesson = validated_data.pop("lesson")
-
-        course_purchase, _ = CoursePurchase.objects.get_or_create(
-            course=lesson.course, price=lesson.course.price, student=student
-        )
-
-        return LessonPurchase.objects.create(
+        return Purchase.objects.create(
             **validated_data,
-            course_purchase=course_purchase,
-            lesson=lesson,
             student=student,
         )

@@ -6,7 +6,7 @@ from django_filters import (
     DateFilter,
 )
 from review.models import Review
-from purchase.models import LessonPurchase
+from purchase.models import Purchase
 from profile.models import Profile
 from django.db.models import (
     OuterRef,
@@ -183,7 +183,7 @@ class PurchaseFilter(FilterSet):
     )
 
     class Meta:
-        model = LessonPurchase
+        model = Purchase
         fields = (
             "course_title",
             "lesson_title",

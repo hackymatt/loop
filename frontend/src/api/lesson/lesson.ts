@@ -24,7 +24,6 @@ type ILesson = {
   students_count: number;
   rating: number;
   rating_count: number;
-  is_bestseller: boolean;
   title: string;
   description: string;
   duration: number;
@@ -50,7 +49,6 @@ export const lessonQuery = (id: string) => {
         students_count,
         rating,
         rating_count,
-        is_bestseller,
         title,
         description,
         duration,
@@ -69,7 +67,6 @@ export const lessonQuery = (id: string) => {
         ratingNumber: rating,
         totalReviews: rating_count,
         totalStudents: students_count,
-        bestSeller: is_bestseller,
         teachers: lecturers.map(({ uuid, full_name, gender, image: lecturerImage }: ILecturer) => ({
           id: uuid,
           name: full_name,

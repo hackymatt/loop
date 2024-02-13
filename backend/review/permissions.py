@@ -1,7 +1,7 @@
 from rest_framework.permissions import BasePermission
 from profile.models import Profile
 from course.models import Lesson
-from purchase.models import LessonPurchase
+from purchase.models import Purchase
 from review.models import Review
 
 

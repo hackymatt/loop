@@ -6,8 +6,9 @@ from rest_framework.serializers import (
 )
 from reservation.models import Reservation
 from profile.models import Profile
-from course.models import Lesson, Course, Technology
-from purchase.models import LessonPurchase
+from course.models import Course
+from lesson.models import Lesson, Technology
+from purchase.models import Purchase
 from schedule.models import Schedule
 
 
@@ -76,7 +77,7 @@ class ReservationSerializer(ModelSerializer):
         user = self.context["request"].user
         profile = Profile.objects.get(user=user)
 
-        if not LessonPurchase.objects.filter(student=profile, lesson=lesson).exists():
+        if not Purchase.objects.filter(student=profile, lesson=lesson).exists():
             raise ValidationError({"lesson": "Lekcja nie została zakupiona."})
 
         return lesson
