@@ -18,8 +18,7 @@ from review.models import Review
 from purchase.models import Purchase
 from teaching.models import Teaching
 from django.db.models.functions import Concat
-from django.db.models import Sum, Avg, Min, Value
-from django.core.exceptions import FieldDoesNotExist
+from django.db.models import Sum, Avg, Min, Value, Count
 from datetime import timedelta
 
 
@@ -59,6 +58,23 @@ def get_previous_price(instance):
     return previous_price
 
 
+def get_previous_price_course(instance):
+    lessons_ids = Course.lessons.through.objects.filter(course=instance).values(
+        "lesson_id"
+    )
+    lessons = Lesson.objects.filter(id__in=lessons_ids).all()
+    prices = []
+    for lesson in lessons:
+        prev = get_previous_price(lesson)
+        curr = lesson.price
+        if prev is None:
+            prev = curr
+
+        prices.append(prev)
+
+    return sum(prices)
+
+
 def get_lowest_30_days_price(instance):
     current_price = instance.price
     previous_prices = get_previous_prices(instance)
@@ -84,6 +100,23 @@ def get_lowest_30_days_price(instance):
     )
 
     return prices_in_last_30_days.aggregate(Min("price"))["price__min"]
+
+
+def get_lowest_30_days_price_course(instance):
+    lessons_ids = Course.lessons.through.objects.filter(course=instance).values(
+        "lesson_id"
+    )
+    lessons = Lesson.objects.filter(id__in=lessons_ids).all()
+    prices = []
+    for lesson in lessons:
+        prev = get_lowest_30_days_price(lesson)
+        curr = lesson.price
+        if prev is None:
+            prev = curr
+
+        prices.append(prev)
+
+    return sum(prices)
 
 
 def get_lecturers(self, lessons):
@@ -145,6 +178,24 @@ def get_price(course):
 
 def get_lecturer_rating(lecturer):
     return Review.objects.filter(lecturer=lecturer)
+
+
+def get_is_bestseller(instance):
+    courses = Course.objects.all()
+
+    students = {}
+    for course in courses:
+        lessons_ids = Course.lessons.through.objects.filter(course=course).values(
+            "lesson_id"
+        )
+        lessons = Lesson.objects.filter(id__in=lessons_ids).all()
+        students[course.id] = get_students_count(lessons=lessons)
+
+    students = dict(sorted(students.items(), key=lambda item: item[1]))
+
+    bestseller_id = list(students.keys())[0]
+
+    return instance.id == bestseller_id
 
 
 class TechnologySerializer(ModelSerializer):
@@ -293,6 +344,9 @@ class LessonShortSerializer(ModelSerializer):
 
 class CourseListSerializer(ModelSerializer):
     price = SerializerMethodField("get_course_price")
+    previous_price = SerializerMethodField("get_course_previous_price")
+    lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
+    is_bestseller = SerializerMethodField("get_course_is_bestseller")
     duration = SerializerMethodField("get_course_duration")
     technologies = SerializerMethodField("get_course_technologies")
     lecturers = SerializerMethodField("get_course_lecturers")
@@ -304,6 +358,15 @@ class CourseListSerializer(ModelSerializer):
 
     def get_course_price(self, course):
         return get_price(course=course)
+
+    def get_course_previous_price(self, course):
+        return get_previous_price_course(instance=course)
+
+    def get_course_lowest_30_days_price(self, course):
+        return get_lowest_30_days_price_course(instance=course)
+
+    def get_course_is_bestseller(self, lesson):
+        return get_is_bestseller(lesson)
 
     def get_course_technologies(self, course):
         lessons = get_course_lessons(course=course)
@@ -344,6 +407,9 @@ class CourseListSerializer(ModelSerializer):
 class CourseGetSerializer(ModelSerializer):
     level = CharField(source="get_level_display")
     price = SerializerMethodField("get_course_price")
+    previous_price = SerializerMethodField("get_course_previous_price")
+    lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
+    is_bestseller = SerializerMethodField("get_course_is_bestseller")
     duration = SerializerMethodField("get_course_duration")
     lessons = SerializerMethodField("get_lessons")
     technologies = SerializerMethodField("get_course_technologies")
@@ -358,6 +424,15 @@ class CourseGetSerializer(ModelSerializer):
 
     def get_course_price(self, course):
         return get_price(course=course)
+
+    def get_course_previous_price(self, course):
+        return get_previous_price_course(instance=course)
+
+    def get_course_lowest_30_days_price(self, course):
+        return get_lowest_30_days_price_course(instance=course)
+
+    def get_course_is_bestseller(self, lesson):
+        return get_is_bestseller(lesson)
 
     def get_course_technologies(self, course):
         lessons = get_course_lessons(course=course)
