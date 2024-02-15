@@ -4,7 +4,7 @@ from .factory import (
     create_user,
     create_profile,
     create_course,
-    create_lesson_obj,
+    create_lesson,
     create_technology_obj,
     create_skill_obj,
     create_topic_obj,
@@ -65,52 +65,48 @@ class ReservationTest(APITestCase):
         )
         self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
 
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
+        self.lesson_3 = create_lesson(
+            title="Python lesson 3",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
+        self.lesson_4 = create_lesson(
+            title="Python lesson 4",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
         self.course = create_course(
             title="course_title",
             description="course_description",
-            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
-            price="99.99",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 3",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 4",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-            ],
+            lessons=[self.lesson_1, self.lesson_2, self.lesson_3, self.lesson_4],
         )
 
         create_purchase(
@@ -149,7 +145,7 @@ class ReservationTest(APITestCase):
         )
         self.reservation_2 = create_reservation(
             student=self.profile_1,
-            lesson=self.course.lessons.all()[2],
+            lesson=self.lesson_3,
             schedule=self.schedules[1],
         )
 

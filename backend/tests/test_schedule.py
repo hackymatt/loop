@@ -4,12 +4,10 @@ from .factory import (
     create_user,
     create_profile,
     create_course,
-    create_lesson_obj,
+    create_lesson,
     create_technology_obj,
     create_skill_obj,
     create_topic_obj,
-    create_review,
-    create_purchase,
     create_schedule,
     create_teaching,
 )
