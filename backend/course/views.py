@@ -5,25 +5,15 @@ from course.serializers import (
     CourseGetSerializer,
     CourseSerializer,
     BestCourseSerializer,
-    TechnologyListSerializer,
 )
 from course.filters import (
     CourseFilter,
-    TechnologyFilter,
     get_rating,
 )
 from course.models import (
     Course,
 )
-from lesson.models import Technology
 from random import sample
-
-
-class TechnologyViewSet(ModelViewSet):
-    http_method_names = ["get"]
-    queryset = Technology.objects.all()
-    serializer_class = TechnologyListSerializer
-    filterset_class = TechnologyFilter
 
 
 class CourseViewSet(ModelViewSet):

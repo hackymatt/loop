@@ -2,9 +2,11 @@ from django_filters import (
     FilterSet,
     OrderingFilter,
     NumberFilter,
+    CharFilter,
 )
 from lesson.models import (
     LessonPriceHistory,
+    Technology,
 )
 
 
@@ -33,5 +35,30 @@ class LessonPriceHistoryFilter(FilterSet):
         model = LessonPriceHistory
         fields = (
             "lesson_id",
+            "sort_by",
+        )
+
+
+class TechnologyFilter(FilterSet):
+    name = CharFilter(field_name="name", lookup_expr="exact")
+    sort_by = OrderFilter(
+        choices=(
+            ("name", "Name ASC"),
+            ("-name", "Name DESC"),
+            ("courses_count", "Courses Count ASC"),
+            ("-courses_count", "Courses Count DESC"),
+        ),
+        fields={
+            "name": "name",
+            "-name": "-name",
+            "courses_count": "courses_count",
+            "-courses_count": "-courses_count",
+        },
+    )
+
+    class Meta:
+        model = Technology
+        fields = (
+            "name",
             "sort_by",
         )

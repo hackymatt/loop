@@ -4,13 +4,16 @@ from utils.permissions.permissions import IsStudent
 from lesson.serializers import (
     LessonSerializer,
     LessonPriceHistorySerializer,
+    TechnologyListSerializer,
 )
 from lesson.filters import (
     LessonPriceHistoryFilter,
+    TechnologyFilter,
 )
 from lesson.models import (
     Lesson,
     LessonPriceHistory,
+    Technology,
 )
 
 
@@ -36,3 +39,10 @@ class LessonPriceHistoryViewSet(ModelViewSet):
     serializer_class = LessonPriceHistorySerializer
     filterset_class = LessonPriceHistoryFilter
     permission_classes = [IsAuthenticated & IsAdminUser]
+
+
+class TechnologyViewSet(ModelViewSet):
+    http_method_names = ["get"]
+    queryset = Technology.objects.all()
+    serializer_class = TechnologyListSerializer
+    filterset_class = TechnologyFilter

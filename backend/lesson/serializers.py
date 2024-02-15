@@ -15,6 +15,7 @@ from profile.models import Profile
 from review.models import Review
 from purchase.models import Purchase
 from teaching.models import Teaching
+from course.models import Course
 from django.db.models.functions import Concat
 from django.db.models import Avg, Value
 
@@ -143,3 +144,25 @@ class LessonPriceHistorySerializer(ModelSerializer):
     class Meta:
         model = LessonPriceHistory
         fields = "__all__"
+
+
+class TechnologyListSerializer(ModelSerializer):
+    courses_count = SerializerMethodField("get_course_count")
+
+    class Meta:
+        model = Technology
+        exclude = (
+            "modified_at",
+            "created_at",
+        )
+
+    def get_course_count(self, technology):
+        lessons = Lesson.technologies.through.objects.filter(
+            technology_id=technology
+        ).values("lesson_id")
+        courses = (
+            Course.lessons.through.objects.filter(lesson_id__in=lessons)
+            .values("course_id")
+            .distinct()
+        )
+        return courses.count()

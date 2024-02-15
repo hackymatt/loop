@@ -100,34 +100,34 @@ class StatsTest(APITestCase):
         )
 
         create_purchase(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile_1,
-            price=self.course.lessons.all()[0].price,
+            price=self.lesson_1.price,
         )
         create_purchase(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile_2,
-            price=self.course.lessons.all()[0].price,
+            price=self.lesson_1.price,
         )
         create_purchase(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile_3,
-            price=self.course.lessons.all()[0].price,
+            price=self.lesson_1.price,
         )
         create_purchase(
-            lesson=self.course.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile_1,
-            price=self.course.lessons.all()[1].price,
+            price=self.lesson_2.price,
         )
         create_purchase(
-            lesson=self.course.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile_2,
-            price=self.course.lessons.all()[1].price,
+            price=self.lesson_2.price,
         )
         create_purchase(
-            lesson=self.course.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile_3,
-            price=self.course.lessons.all()[0].price,
+            price=self.lesson_1.price,
         )
         create_purchase(
             lesson=self.course.lessons.all()[2],
@@ -136,41 +136,41 @@ class StatsTest(APITestCase):
         )
 
         self.review_1 = create_review(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile_1,
             lecturer=self.lecturer_profile,
             rating=5,
             review="Great lesson.",
         )
         self.review_2 = create_review(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile_2,
             lecturer=self.lecturer_profile,
             rating=5,
             review="Super helpful.",
         )
         self.review_3 = create_review(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile_3,
             lecturer=self.lecturer_profile,
             rating=4,
             review="Great lesson.",
         )
         self.review_4 = create_review(
-            lesson=self.course.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile_1,
             lecturer=self.lecturer_profile,
             rating=3,
         )
         self.review_5 = create_review(
-            lesson=self.course.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile_2,
             lecturer=self.lecturer_profile,
             rating=2,
             review="Terrible.",
         )
         self.review_6 = create_review(
-            lesson=self.course.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile_3,
             lecturer=self.lecturer_profile,
             rating=5,

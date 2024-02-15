@@ -14,7 +14,7 @@ from purchase.models import Purchase
 from teaching.models import Teaching
 from profile.models import Profile
 from django.db.models import OuterRef, Subquery, Value, Avg, Sum, Count, TextField
-from django.contrib.postgres.aggregates import StringAgg
+from django.contrib.postgres.aggregates import StringAgg, ArrayAgg
 from django.db.models.functions import Cast
 
 
@@ -267,14 +267,15 @@ class CourseFilter(FilterSet):
 
     def filter_technology_in(self, queryset, field_name, value):
         lookup_field_name = f"{field_name}__contains"
+
+        queryset = get_technologies(queryset)
+
         names = value.split(",")
 
         name_first, *name_rest = names
-        return_queryset = get_technologies(queryset).filter(
-            **{lookup_field_name: name_first}
-        )
+        return_queryset = queryset.filter(**{lookup_field_name: name_first})
         for name in name_rest:
-            return_queryset = return_queryset | get_technologies(queryset).filter(
+            return_queryset = return_queryset | queryset.filter(
                 **{lookup_field_name: name}
             )
 
@@ -282,14 +283,15 @@ class CourseFilter(FilterSet):
 
     def filter_lecturer_in(self, queryset, field_name, value):
         lookup_field_name = f"{field_name}__contains"
+
+        queryset = get_lecturers(queryset)
+
         uuids = value.split(",")
 
         uuid_first, *uuid_rest = uuids
-        return_queryset = get_lecturers(queryset).filter(
-            **{lookup_field_name: uuid_first}
-        )
+        return_queryset = queryset.filter(**{lookup_field_name: uuid_first})
         for uuid in uuid_rest:
-            return_queryset = return_queryset | get_lecturers(queryset).filter(
+            return_queryset = return_queryset | queryset.filter(
                 **{lookup_field_name: uuid}
             )
 
@@ -314,28 +316,3 @@ class CourseFilter(FilterSet):
     def filter_duration_to(self, queryset, field_name, value):
         lookup_field_name = f"{field_name}__lte"
         return get_duration(queryset).filter(**{lookup_field_name: value})
-
-
-class TechnologyFilter(FilterSet):
-    name = CharFilter(field_name="name", lookup_expr="exact")
-    sort_by = OrderFilter(
-        choices=(
-            ("name", "Name ASC"),
-            ("-name", "Name DESC"),
-            ("courses_count", "Courses Count ASC"),
-            ("-courses_count", "Courses Count DESC"),
-        ),
-        fields={
-            "name": "name",
-            "-name": "-name",
-            "courses_count": "courses_count",
-            "-courses_count": "-courses_count",
-        },
-    )
-
-    class Meta:
-        model = Technology
-        fields = (
-            "name",
-            "sort_by",
-        )

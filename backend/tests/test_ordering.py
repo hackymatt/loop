@@ -78,36 +78,32 @@ class CourseOrderTest(APITestCase):
             user=self.lecturer_user_2, user_type="W"
         )
         # course 1
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
-            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
-            price="99.99",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-            ],
+            lessons=[self.lesson_1, self.lesson_2],
         )
 
         create_purchase(
@@ -144,44 +140,40 @@ class CourseOrderTest(APITestCase):
         )
 
         # course 2
+        self.lesson_3 = create_lesson(
+            title="JS lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
+        self.lesson_4 = create_lesson(
+            title="JS lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
+        self.lesson_5 = create_lesson(
+            title="JS lesson 3",
+            description="bbbb",
+            duration="120",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
-            technology=[create_technology_obj(name="Javascript")],
             level="Zaawansowany",
-            price="300",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 3",
-                    description="bbbb",
-                    duration="120",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-            ],
+            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
         )
 
         create_purchase(
@@ -247,28 +239,24 @@ class CourseOrderTest(APITestCase):
         )
 
         # course 3
+        self.lesson_6 = create_lesson(
+            title="VBA lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="VBA")],
+        )
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
-            technology=[create_technology_obj(name="VBA")],
             level="Ekspert",
-            price="220",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="VBA lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-            ],
+            lessons=[self.lesson_6],
         )
 
         create_purchase(
@@ -393,36 +381,32 @@ class ReviewOrderTest(APITestCase):
             user=self.lecturer_user_2, user_type="W"
         )
         # course 1
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
-            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
-            price="99.99",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-            ],
+            lessons=[self.lesson_1, self.lesson_2],
         )
 
         self.review_course_1_1 = create_review(
@@ -448,44 +432,40 @@ class ReviewOrderTest(APITestCase):
         )
 
         # course 2
+        self.lesson_3 = create_lesson(
+            title="JS lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
+        self.lesson_4 = create_lesson(
+            title="JS lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
+        self.lesson_5 = create_lesson(
+            title="JS lesson 3",
+            description="bbbb",
+            duration="120",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
-            technology=[create_technology_obj(name="Javascript")],
             level="Zaawansowany",
-            price="300",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 3",
-                    description="bbbb",
-                    duration="120",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-            ],
+            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
         )
 
         self.review_course_2_1 = create_review(
@@ -525,28 +505,24 @@ class ReviewOrderTest(APITestCase):
         )
 
         # course 3
+        self.lesson_6 = create_lesson(
+            title="VBA lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="VBA")],
+        )
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
-            technology=[create_technology_obj(name="VBA")],
             level="Ekspert",
-            price="220",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="VBA lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-            ],
+            lessons=[self.lesson_6],
         )
 
         self.review_course_3_1 = create_review(
@@ -657,102 +633,90 @@ class ScheduleOrderTest(APITestCase):
             user=self.lecturer_user_2, user_type="W"
         )
         # course 1
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
-            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
-            price="99.99",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-            ],
+            lessons=[self.lesson_1, self.lesson_2],
         )
 
         # course 2
+        self.lesson_3 = create_lesson(
+            title="JS lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
+        self.lesson_4 = create_lesson(
+            title="JS lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
+        self.lesson_5 = create_lesson(
+            title="JS lesson 3",
+            description="bbbb",
+            duration="120",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
-            technology=[create_technology_obj(name="Javascript")],
             level="Zaawansowany",
-            price="300",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 3",
-                    description="bbbb",
-                    duration="120",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-            ],
+            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
         )
 
         # course 3
+        self.lesson_6 = create_lesson(
+            title="VBA lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="VBA")],
+        )
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
-            technology=[create_technology_obj(name="VBA")],
             level="Ekspert",
-            price="220",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="VBA lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-            ],
+            lessons=[self.lesson_6],
         )
 
         for i in range(10):
@@ -833,78 +797,70 @@ class CoursePriceHistoryOrderTest(APITestCase):
         )
         self.admin_profile = create_profile(user=self.admin_user, user_type="A")
 
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
         self.course = create_course(
             title="course_title",
             description="course_description",
-            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
-            price="99.99",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-            ],
+            lessons=[self.lesson_1, self.lesson_2],
         )
 
         create_course_price_history(self.course, 80)
         create_course_price_history(self.course, 100)
         create_course_price_history(self.course, 120)
-        create_lesson_price_history(self.course.lessons.all()[0], 15)
-        create_lesson_price_history(self.course.lessons.all()[0], 25)
-        create_lesson_price_history(self.course.lessons.all()[0], 5)
-        create_lesson_price_history(self.course.lessons.all()[1], 1)
-        create_lesson_price_history(self.course.lessons.all()[1], 5)
-        create_lesson_price_history(self.course.lessons.all()[1], 3)
+        create_lesson_price_history(self.lesson_1, 15)
+        create_lesson_price_history(self.lesson_1, 25)
+        create_lesson_price_history(self.lesson_1, 5)
+        create_lesson_price_history(self.lesson_2, 1)
+        create_lesson_price_history(self.lesson_2, 5)
+        create_lesson_price_history(self.lesson_2, 3)
 
+        self.lesson_3 = create_lesson(
+            title="JS lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
+        self.lesson_4 = create_lesson(
+            title="JS lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
-            technology=[create_technology_obj(name="JS")],
             level="Podstawowy",
-            price="99.99",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-            ],
+            lessons=[self.lesson_3, self.lesson_4],
         )
 
         create_course_price_history(self.course_2, 120)
@@ -917,36 +873,32 @@ class CoursePriceHistoryOrderTest(APITestCase):
         create_lesson_price_history(self.course_2.lessons.all()[1], 5)
         create_lesson_price_history(self.course_2.lessons.all()[1], 3)
 
+        self.lesson_5 = create_lesson(
+            title="VBA lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="VBA")],
+        )
+        self.lesson_6 = create_lesson(
+            title="VBA lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="VBA")],
+        )
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
-            technology=[create_technology_obj(name="VBA")],
             level="Podstawowy",
-            price="99.99",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="VBA lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="VBA lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-            ],
+            lessons=[self.lesson_5, self.lesson_6],
         )
 
         create_course_price_history(self.course_3, 100)
@@ -955,9 +907,9 @@ class CoursePriceHistoryOrderTest(APITestCase):
         create_lesson_price_history(self.course_3.lessons.all()[0], 15)
         create_lesson_price_history(self.course_3.lessons.all()[0], 25)
         create_lesson_price_history(self.course_3.lessons.all()[0], 5)
-        create_lesson_price_history(self.course_3.lessons.all()[1], 1)
-        create_lesson_price_history(self.course_3.lessons.all()[1], 5)
-        create_lesson_price_history(self.course_3.lessons.all()[1], 3)
+        create_lesson_price_history(self.lesson_6, 1)
+        create_lesson_price_history(self.lesson_6, 5)
+        create_lesson_price_history(self.lesson_6, 3)
 
         self.fields = ["created_at"]
 
@@ -1022,78 +974,70 @@ class LessonPriceHistoryOrderTest(APITestCase):
         )
         self.admin_profile = create_profile(user=self.admin_user, user_type="A")
 
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
         self.course = create_course(
             title="course_title",
             description="course_description",
-            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
-            price="99.99",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-            ],
+            lessons=[self.lesson_1, self.lesson_2],
         )
 
         create_course_price_history(self.course, 80)
         create_course_price_history(self.course, 100)
         create_course_price_history(self.course, 120)
-        create_lesson_price_history(self.course.lessons.all()[0], 15)
-        create_lesson_price_history(self.course.lessons.all()[0], 25)
-        create_lesson_price_history(self.course.lessons.all()[0], 5)
-        create_lesson_price_history(self.course.lessons.all()[1], 1)
-        create_lesson_price_history(self.course.lessons.all()[1], 5)
-        create_lesson_price_history(self.course.lessons.all()[1], 3)
+        create_lesson_price_history(self.lesson_1, 15)
+        create_lesson_price_history(self.lesson_1, 25)
+        create_lesson_price_history(self.lesson_1, 5)
+        create_lesson_price_history(self.lesson_2, 1)
+        create_lesson_price_history(self.lesson_2, 5)
+        create_lesson_price_history(self.lesson_2, 3)
 
+        self.lesson_3 = create_lesson(
+            title="JS lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
+        self.lesson_4 = create_lesson(
+            title="JS lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
-            technology=[create_technology_obj(name="JS")],
             level="Podstawowy",
-            price="99.99",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-            ],
+            lessons=[self.lesson_3, self.lesson_4],
         )
 
         create_course_price_history(self.course_2, 120)
@@ -1106,36 +1050,32 @@ class LessonPriceHistoryOrderTest(APITestCase):
         create_lesson_price_history(self.course_2.lessons.all()[1], 5)
         create_lesson_price_history(self.course_2.lessons.all()[1], 3)
 
+        self.lesson_5 = create_lesson(
+            title="VBA lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="VBA")],
+        )
+        self.lesson_6 = create_lesson(
+            title="VBA lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="VBA")],
+        )
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
-            technology=[create_technology_obj(name="VBA")],
             level="Podstawowy",
-            price="99.99",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="VBA lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="VBA lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-            ],
+            lessons=[self.lesson_5, self.lesson_6],
         )
 
         create_course_price_history(self.course_3, 100)
@@ -1144,9 +1084,9 @@ class LessonPriceHistoryOrderTest(APITestCase):
         create_lesson_price_history(self.course_3.lessons.all()[0], 15)
         create_lesson_price_history(self.course_3.lessons.all()[0], 25)
         create_lesson_price_history(self.course_3.lessons.all()[0], 5)
-        create_lesson_price_history(self.course_3.lessons.all()[1], 1)
-        create_lesson_price_history(self.course_3.lessons.all()[1], 5)
-        create_lesson_price_history(self.course_3.lessons.all()[1], 3)
+        create_lesson_price_history(self.lesson_6, 1)
+        create_lesson_price_history(self.lesson_6, 5)
+        create_lesson_price_history(self.lesson_6, 3)
 
         self.fields = ["created_at"]
 
@@ -1302,36 +1242,32 @@ class LecturerOrderTest(APITestCase):
             user=self.lecturer_user_2, user_type="W", user_title="DevOps"
         )
         # course 1
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
-            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
-            price="99.99",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-            ],
+            lessons=[self.lesson_1, self.lesson_2],
         )
 
         create_purchase(
@@ -1368,44 +1304,40 @@ class LecturerOrderTest(APITestCase):
         )
 
         # course 2
+        self.lesson_3 = create_lesson(
+            title="JS lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
+        self.lesson_4 = create_lesson(
+            title="JS lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
+        self.lesson_5 = create_lesson(
+            title="JS lesson 3",
+            description="bbbb",
+            duration="120",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
-            technology=[create_technology_obj(name="Javascript")],
             level="Zaawansowany",
-            price="300",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 3",
-                    description="bbbb",
-                    duration="120",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-            ],
+            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
         )
 
         create_purchase(
@@ -1471,28 +1403,24 @@ class LecturerOrderTest(APITestCase):
         )
 
         # course 3
+        self.lesson_6 = create_lesson(
+            title="VBA lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="VBA")],
+        )
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
-            technology=[create_technology_obj(name="VBA")],
             level="Ekspert",
-            price="220",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="VBA lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-            ],
+            lessons=[self.lesson_6],
         )
 
         create_purchase(
@@ -1596,36 +1524,32 @@ class PurchaseOrderTest(APITestCase):
         self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
 
         # course 1
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
-            technology=[create_technology_obj(name="Python")],
             level="Podstawowy",
-            price="99.99",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-            ],
+            lessons=[self.lesson_1, self.lesson_2],
         )
 
         create_purchase(
@@ -1671,44 +1595,40 @@ class PurchaseOrderTest(APITestCase):
         )
 
         # course 2
+        self.lesson_3 = create_lesson(
+            title="JS lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
+        self.lesson_4 = create_lesson(
+            title="JS lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
+        self.lesson_5 = create_lesson(
+            title="JS lesson 3",
+            description="bbbb",
+            duration="120",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
-            technology=[create_technology_obj(name="Javascript")],
             level="Zaawansowany",
-            price="300",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 3",
-                    description="bbbb",
-                    duration="120",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="2.99",
-                ),
-            ],
+            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
         )
 
         create_purchase(
@@ -1731,28 +1651,24 @@ class PurchaseOrderTest(APITestCase):
         )
 
         # course 3
+        self.lesson_6 = create_lesson(
+            title="VBA lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="VBA")],
+        )
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
-            technology=[create_technology_obj(name="VBA")],
             level="Ekspert",
-            price="220",
-            github_url="https://github.com/hackymatt/course",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
                 create_topic_obj(name="You will learn how to code"),
                 create_topic_obj(name="You will learn a new IDE"),
             ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="VBA lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/lesson",
-                    price="9.99",
-                ),
-            ],
+            lessons=[self.lesson_6],
         )
 
         self.fields = [

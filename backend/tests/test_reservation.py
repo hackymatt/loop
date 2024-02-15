@@ -114,14 +114,14 @@ class ReservationTest(APITestCase):
         )
 
         create_purchase(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile_1,
-            price=self.course.lessons.all()[0].price,
+            price=self.lesson_1.price,
         )
         create_purchase(
-            lesson=self.course.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile_1,
-            price=self.course.lessons.all()[1].price,
+            price=self.lesson_2.price,
         )
 
         for lesson in self.course.lessons.all():
@@ -144,7 +144,7 @@ class ReservationTest(APITestCase):
 
         self.reservation_1 = create_reservation(
             student=self.profile_1,
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             schedule=self.schedules[0],
         )
         self.reservation_2 = create_reservation(
@@ -176,7 +176,7 @@ class ReservationTest(APITestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
-            "lesson": self.course.lessons.all()[0].id,
+            "lesson": self.lesson_1.id,
             "schedule": self.schedules[2].id,
         }
         response = self.client.post(self.endpoint, data)
@@ -202,7 +202,7 @@ class ReservationTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
-            "lesson": self.course.lessons.all()[1].id,
+            "lesson": self.lesson_2.id,
             "schedule": self.schedules[1].id,
         }
         response = self.client.post(self.endpoint, data)
@@ -215,7 +215,7 @@ class ReservationTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
-            "lesson": self.course.lessons.all()[1].id,
+            "lesson": self.lesson_2.id,
             "schedule": self.schedules[3].id,
         }
         response = self.client.post(self.endpoint, data)

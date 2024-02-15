@@ -101,38 +101,38 @@ class LecturersTest(APITestCase):
         )
 
         create_teaching(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             lecturer=self.lecturer_profile_1,
         )
         create_teaching(
-            lesson=self.course.lessons.all()[1],
+            lesson=self.lesson_2,
             lecturer=self.lecturer_profile_1,
         )
         create_teaching(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             lecturer=self.lecturer_profile_2,
         )
         create_teaching(
-            lesson=self.course.lessons.all()[1],
+            lesson=self.lesson_2,
             lecturer=self.lecturer_profile_2,
         )
 
         self.review_course_1_1 = create_review(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.student_profile_1,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_1_2 = create_review(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.student_profile_2,
             lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_course_1_3 = create_review(
-            lesson=self.course.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.student_profile_1,
             lecturer=self.lecturer_profile_1,
             rating=3,
@@ -246,45 +246,45 @@ class BestLecturersTest(APITestCase):
         )
 
         create_teaching(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             lecturer=self.lecturer_profile_1,
         )
         create_teaching(
-            lesson=self.course.lessons.all()[1],
+            lesson=self.lesson_2,
             lecturer=self.lecturer_profile_1,
         )
         create_teaching(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             lecturer=self.lecturer_profile_2,
         )
         create_teaching(
-            lesson=self.course.lessons.all()[1],
+            lesson=self.lesson_2,
             lecturer=self.lecturer_profile_2,
         )
 
         self.review_course_1_1 = create_review(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.student_profile_1,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_1_2 = create_review(
-            lesson=self.course.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.student_profile_2,
             lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_course_1_3 = create_review(
-            lesson=self.course.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.student_profile_1,
             lecturer=self.lecturer_profile_1,
             rating=4,
             review="So so lesson.",
         )
         self.review_course_1_3 = create_review(
-            lesson=self.course.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.student_profile_1,
             lecturer=self.lecturer_profile_2,
             rating=3,

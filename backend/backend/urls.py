@@ -14,11 +14,11 @@ from rest_framework.routers import DefaultRouter
 from course.views import (
     CourseViewSet,
     BestCourseViewSet,
-    TechnologyViewSet,
 )
 from lesson.views import (
     LessonViewSet,
     LessonPriceHistoryViewSet,
+    TechnologyViewSet,
 )
 from review.views import ReviewViewSet, ReviewStatsViewSet, BestReviewViewSet
 from newsletter.views import (

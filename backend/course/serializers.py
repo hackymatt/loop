@@ -164,20 +164,6 @@ def get_lecturer_rating(lecturer):
     return Review.objects.filter(lecturer=lecturer)
 
 
-class TechnologyListSerializer(ModelSerializer):
-    courses_count = SerializerMethodField("get_courses_count")
-
-    class Meta:
-        model = Technology
-        exclude = (
-            "modified_at",
-            "created_at",
-        )
-
-    def get_courses_count(self, technology):
-        return Course.objects.filter(technology=technology).count()
-
-
 class TechnologySerializer(ModelSerializer):
     class Meta:
         model = Technology
