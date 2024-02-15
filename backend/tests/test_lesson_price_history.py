@@ -3,23 +3,15 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
+    create_course,
     create_lesson,
-    create_lesson_obj,
     create_technology_obj,
-    create_review,
-    create_purchase,
-    create_teaching,
+    create_skill_obj,
+    create_topic_obj,
     create_lesson_price_history,
 )
 from .helpers import (
     login,
-    is_data_match,
-    get_user,
-    get_profile,
-    get_lesson,
-    filter_dict,
-    get_technology,
-    lessons_number,
 )
 from django.contrib import auth
 import json
@@ -82,9 +74,6 @@ class LessonPriceHistoryTest(APITestCase):
             lessons=[self.lesson_1, self.lesson_2],
         )
 
-        create_course_price_history(self.course, 80)
-        create_course_price_history(self.course, 100)
-        create_course_price_history(self.course, 120)
         create_lesson_price_history(self.lesson_1, 15)
         create_lesson_price_history(self.lesson_1, 25)
         create_lesson_price_history(self.lesson_1, 5)
@@ -120,9 +109,6 @@ class LessonPriceHistoryTest(APITestCase):
             lessons=[self.lesson_3, self.lesson_4],
         )
 
-        create_course_price_history(self.course_2, 120)
-        create_course_price_history(self.course_2, 100)
-        create_course_price_history(self.course_2, 80)
         create_lesson_price_history(self.lesson_3, 15)
         create_lesson_price_history(self.lesson_3, 25)
         create_lesson_price_history(self.lesson_3, 5)
@@ -158,9 +144,6 @@ class LessonPriceHistoryTest(APITestCase):
             lessons=[self.lesson_5, self.lesson_6],
         )
 
-        create_course_price_history(self.course_3, 100)
-        create_course_price_history(self.course_3, 80)
-        create_course_price_history(self.course_3, 120)
         create_lesson_price_history(self.lesson_5, 15)
         create_lesson_price_history(self.lesson_5, 25)
         create_lesson_price_history(self.lesson_5, 5)
