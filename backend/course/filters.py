@@ -14,7 +14,7 @@ from purchase.models import Purchase
 from teaching.models import Teaching
 from profile.models import Profile
 from django.db.models import OuterRef, Subquery, Value, Avg, Sum, Count, TextField
-from django.contrib.postgres.aggregates import StringAgg, ArrayAgg
+from django.contrib.postgres.aggregates import StringAgg
 from django.db.models.functions import Cast
 
 
@@ -142,20 +142,6 @@ def get_technologies(queryset):
     return courses
 
 
-def get_courses_count(queryset):
-    total_courses_count = (
-        Course.objects.filter(technology=OuterRef("pk"))
-        .annotate(dummy_group_by=Value(1))
-        .values("dummy_group_by")
-        .order_by("dummy_group_by")
-        .annotate(total_courses_count=Count("id"))
-        .values("total_courses_count")
-    )
-    technologies = queryset.annotate(courses_count=Subquery(total_courses_count))
-
-    return technologies
-
-
 class CharInFilter(BaseInFilter, CharFilter):
     pass
 
@@ -174,8 +160,6 @@ class OrderFilter(OrderingFilter):
                 queryset = get_rating(queryset).order_by(value)
             elif value in ["students_count", "-students_count"]:
                 queryset = get_students_count(queryset).order_by(value)
-            elif value in ["courses_count", "-courses_count"]:
-                queryset = get_courses_count(queryset).order_by(value)
             else:
                 queryset = queryset.order_by(value)
 
