@@ -6,7 +6,6 @@ from rest_framework.serializers import (
     ImageField,
 )
 from purchase.models import Purchase
-from course.models import Course
 from lesson.models import Lesson, Technology
 from profile.models import Profile
 from reservation.models import Reservation
@@ -44,24 +43,6 @@ class TechnologySerializer(ModelSerializer):
         )
 
 
-class CourseSerializer(ModelSerializer):
-    class Meta:
-        model = Course
-        exclude = (
-            "technology",
-            "level",
-            "image",
-            "video",
-            "description",
-            "price",
-            "active",
-            "skills",
-            "topics",
-            "modified_at",
-            "created_at",
-        )
-
-
 class LessonSerializer(ModelSerializer):
     class Meta:
         model = Lesson
@@ -69,7 +50,6 @@ class LessonSerializer(ModelSerializer):
             "description",
             "duration",
             "price",
-            "active",
             "modified_at",
             "created_at",
         )
@@ -108,7 +88,6 @@ class ReviewSerializer(ModelSerializer):
 
 
 class PurchaseGetSerializer(ModelSerializer):
-    course = CourseSerializer(source="course_purchase.course")
     lesson = LessonSerializer()
     lesson_status = SerializerMethodField("get_lesson_status")
     lecturer = SerializerMethodField("get_lecturer")
@@ -120,7 +99,6 @@ class PurchaseGetSerializer(ModelSerializer):
         exclude = (
             "student",
             "modified_at",
-            "course_purchase",
         )
 
     def get_lesson_status(self, purchase):
@@ -171,10 +149,7 @@ class PurchaseGetSerializer(ModelSerializer):
 class PurchaseSerializer(ModelSerializer):
     class Meta:
         model = Purchase
-        exclude = (
-            "course_purchase",
-            "student",
-        )
+        exclude = ("student",)
 
     def create(self, validated_data):
         user = self.context["request"].user
