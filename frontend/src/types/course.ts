@@ -45,6 +45,7 @@ export type ICourseProps = {
   level: string;
   createdAt?: Date;
   coverUrl: string;
+  bestSeller: boolean;
   video?: string;
   category: string[];
   skills?: string[];

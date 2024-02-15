@@ -32,6 +32,7 @@ type ICourse = {
   technology: ITechnology[];
   previous_price: string | null;
   lowest_30_days_price: string | null;
+  is_bestseller: boolean;
   duration: number;
   lecturers: ILecturer[];
   students_count: number;
@@ -70,6 +71,7 @@ export const coursesQuery = (query?: IQueryParams) => {
         technology,
         previous_price,
         lowest_30_days_price,
+        is_bestseller,
         duration,
         rating,
         rating_count,
@@ -85,6 +87,7 @@ export const coursesQuery = (query?: IQueryParams) => {
         category: technology.map(({ name }: ITechnology) => name),
         priceSale: previous_price,
         lowest30DaysPrice: lowest_30_days_price,
+        bestSeller: is_bestseller,
         totalHours: duration / 60,
         ratingNumber: rating,
         totalReviews: rating_count,
