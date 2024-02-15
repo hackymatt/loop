@@ -30,38 +30,21 @@ class VideoBase64File(Base64FileField):
         return "mp4"
 
 
-def model_field_exists(obj, field):
-    try:
-        obj._meta.get_field(field)
-        return True
-    except (AttributeError, FieldDoesNotExist):
-        return False
-
-
 def get_course_lessons(course):
     return course.lessons.all()
 
 
-def get_previous_prices(price_history_model, instance):
-    if model_field_exists(price_history_model, "course"):
-        previous_prices = (
-            price_history_model.objects.filter(course=instance)
-            .order_by("-created_at")
-            .all()
-        )
-    else:
-        previous_prices = (
-            price_history_model.objects.filter(lesson=instance)
-            .order_by("-created_at")
-            .all()
-        )
+def get_previous_prices(instance):
+    previous_prices = (
+        LessonPriceHistory.objects.filter(lesson=instance).order_by("-created_at").all()
+    )
 
     return previous_prices
 
 
-def get_previous_price(price_history_model, instance):
+def get_previous_price(instance):
     current_price = instance.price
-    previous_prices = get_previous_prices(price_history_model, instance)
+    previous_prices = get_previous_prices(instance)
 
     if previous_prices.count() == 0:
         return None
@@ -76,9 +59,9 @@ def get_previous_price(price_history_model, instance):
     return previous_price
 
 
-def get_lowest_30_days_price(price_history_model, instance):
+def get_lowest_30_days_price(instance):
     current_price = instance.price
-    previous_prices = get_previous_prices(price_history_model, instance)
+    previous_prices = get_previous_prices(instance)
 
     if previous_prices.count() == 0:
         return None
@@ -253,35 +236,6 @@ class LecturerDetailsSerializer(ModelSerializer):
         )
 
 
-class LessonDetailsSerializer(ModelSerializer):
-    id = IntegerField()
-    lecturers = SerializerMethodField("get_lesson_lecturers")
-    students_count = SerializerMethodField("get_lesson_students_count")
-    rating = SerializerMethodField("get_lesson_rating")
-    rating_count = SerializerMethodField("get_lesson_rating_count")
-
-    def get_lesson_lecturers(self, lesson):
-        return get_lecturers(self, lessons=[lesson])
-
-    def get_lesson_rating(self, lesson):
-        return get_rating(lessons=[lesson])
-
-    def get_lesson_rating_count(self, lesson):
-        return get_rating_count(lessons=[lesson])
-
-    def get_lesson_students_count(self, lesson):
-        return get_students_count(lessons=[lesson])
-
-    class Meta:
-        model = Lesson
-        exclude = (
-            "title",
-            "price",
-            "created_at",
-            "modified_at",
-        )
-
-
 class LessonSerializer(ModelSerializer):
     id = IntegerField()
     technologies = TechnologySerializer(many=True)
@@ -293,14 +247,10 @@ class LessonSerializer(ModelSerializer):
     rating_count = SerializerMethodField("get_lesson_rating_count")
 
     def get_lesson_previous_price(self, lesson):
-        return get_previous_price(
-            price_history_model=LessonPriceHistory, instance=lesson
-        )
+        return get_previous_price(instance=lesson)
 
     def get_lesson_lowest_30_days_price(self, lesson):
-        return get_lowest_30_days_price(
-            price_history_model=LessonPriceHistory, instance=lesson
-        )
+        return get_lowest_30_days_price(instance=lesson)
 
     def get_lesson_lecturers(self, lesson):
         return get_lecturers(self, lessons=[lesson])
@@ -325,14 +275,10 @@ class LessonShortSerializer(ModelSerializer):
     lowest_30_days_price = SerializerMethodField("get_lesson_lowest_30_days_price")
 
     def get_lesson_previous_price(self, lesson):
-        return get_previous_price(
-            price_history_model=LessonPriceHistory, instance=lesson
-        )
+        return get_previous_price(instance=lesson)
 
     def get_lesson_lowest_30_days_price(self, lesson):
-        return get_lowest_30_days_price(
-            price_history_model=LessonPriceHistory, instance=lesson
-        )
+        return get_lowest_30_days_price(instance=lesson)
 
     class Meta:
         model = Lesson

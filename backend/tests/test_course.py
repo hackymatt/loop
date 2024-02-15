@@ -211,9 +211,6 @@ class CourseTest(APITestCase):
         create_lesson_price_history(self.lesson_3, 15)
         create_lesson_price_history(self.lesson_3, 25)
         create_lesson_price_history(self.lesson_3, 5)
-        create_lesson_price_history(self.lesson_4, 1)
-        create_lesson_price_history(self.lesson_4, 5)
-        create_lesson_price_history(self.lesson_4, 3)
 
         self.lesson_5 = create_lesson(
             title="VBA lesson 1",
@@ -428,6 +425,44 @@ class CourseTest(APITestCase):
         for topic_data in topics_data:
             self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
 
+    def test_get_course_authenticated_2(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.course_2.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        course_data = json.loads(response.content)
+        lessons_data = course_data.pop("lessons")
+        technology_data = course_data.pop("technologies")
+        skills_data = course_data.pop("skills")
+        topics_data = course_data.pop("topics")
+        course_data.pop("duration")
+        course_data.pop("lecturers")
+        course_data.pop("price")
+        rating = course_data.pop("rating")
+        rating_count = course_data.pop("rating_count")
+        students_count = course_data.pop("students_count")
+        self.assertTrue(is_data_match(get_course(self.course_2.id), course_data))
+        self.assertEqual(rating, None)
+        self.assertEqual(rating_count, 0)
+        self.assertEqual(students_count, 0)
+        for lesson_data in lessons_data:
+            previous_price = lesson_data.pop("previous_price")
+            lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
+
+            self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
+
+            self.assertEqual(previous_price, None)
+            self.assertEqual(lowest_30_days_price, None)
+
+        for technology in technology_data:
+            self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
+        for skill_data in skills_data:
+            self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
+        for topic_data in topics_data:
+            self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
+
     def test_create_course_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -535,6 +570,7 @@ class CourseTest(APITestCase):
         # post data
         data = self.new_course
         del data["lessons"]
+        data["lessons"] = []
 
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -547,6 +583,7 @@ class CourseTest(APITestCase):
         # post data
         data = self.new_course
         del data["skills"]
+        data["skills"] = []
 
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -559,6 +596,7 @@ class CourseTest(APITestCase):
         # post data
         data = self.new_course
         del data["topics"]
+        data["topics"] = []
 
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -583,6 +621,87 @@ class CourseTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(courses_number(), 3)
 
+    def test_update_course_authenticated(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = self.amend_course
+        response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(courses_number(), 3)
+        course_data = json.loads(response.content)
+        lessons_data = course_data.pop("lessons")
+        technology_data = course_data.pop("technologies")
+        skills_data = course_data.pop("skills")
+        topics_data = course_data.pop("topics")
+        duration = course_data.pop("duration")
+        lecturers = course_data.pop("lecturers")
+        course_data.pop("price")
+        rating = course_data.pop("rating")
+        rating_count = course_data.pop("rating_count")
+        students_count = course_data.pop("students_count")
+        self.assertTrue(is_data_match(get_course(course_data["id"]), course_data))
+        self.assertEqual(
+            duration, sum(lesson_data["duration"] for lesson_data in lessons_data)
+        )
+        self.assertEqual(
+            lecturers,
+            sorted(
+                [
+                    dict(y)
+                    for y in set(
+                        tuple(x.items())
+                        for x in sum(
+                            [lesson["lecturers"] for lesson in lessons_data], []
+                        )
+                    )
+                ],
+                key=lambda d: d["full_name"],
+            ),
+        )
+        self.assertEqual(rating, 4.5)
+        self.assertEqual(rating_count, 2)
+        self.assertEqual(students_count, 1)
+        for lesson_data in lessons_data:
+            technology_data = lesson_data.pop("technologies")
+            lecturers_data = lesson_data.pop("lecturers")
+            rating = lesson_data.pop("rating")
+            rating_count = lesson_data.pop("rating_count")
+            students_count = lesson_data.pop("students_count")
+            previous_price = lesson_data.pop("previous_price")
+            lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
+
+            self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
+            self.assertEqual(rating, 4.5)
+            self.assertEqual(rating_count, 2)
+            self.assertEqual(students_count, 1)
+            self.assertEqual(previous_price, None)
+            self.assertEqual(lowest_30_days_price, None)
+
+            for technology in technology_data:
+                self.assertTrue(
+                    is_data_match(get_technology(technology["id"]), technology)
+                )
+
+            for lecturer_data in lecturers_data:
+                user_data = filter_dict(lecturer_data, self.user_columns)
+                profile_data = filter_dict(lecturer_data, self.profile_columns)
+                self.assertTrue(
+                    is_data_match(get_user(lecturer_data["email"]), user_data)
+                )
+                self.assertTrue(
+                    is_data_match(
+                        get_profile(get_user(lecturer_data["email"])), profile_data
+                    )
+                )
+        for technology in technology_data:
+            self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
+        for skill_data in skills_data:
+            self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
+        for topic_data in topics_data:
+            self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
+
     def test_update_course_without_lesson(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
@@ -590,6 +709,7 @@ class CourseTest(APITestCase):
         # post data
         data = self.amend_course
         del data["lessons"]
+        data["lessons"] = []
 
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -602,6 +722,7 @@ class CourseTest(APITestCase):
         # post data
         data = self.amend_course
         del data["skills"]
+        data["skills"] = []
 
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -614,6 +735,7 @@ class CourseTest(APITestCase):
         # post data
         data = self.amend_course
         del data["topics"]
+        data["topics"] = []
 
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

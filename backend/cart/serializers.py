@@ -40,15 +40,3 @@ class CartSerializer(ModelSerializer):
             Cart.objects.get_or_create(lesson=lesson, student=student)
 
         return Cart.objects.filter(student=student).all()
-
-    def destroy(self, validated_data):
-        user = self.context.get("request").user
-        student = Profile.objects.get(user=user)
-
-        lesson_ids = validated_data.get("lessons")
-
-        for lesson_id in lesson_ids:
-            lesson = Lesson.objects.get(pk=lesson_id)
-            Cart.objects.filter(lesson=lesson, student=student).delete()
-
-        return Cart.objects.filter(student=student).all()
