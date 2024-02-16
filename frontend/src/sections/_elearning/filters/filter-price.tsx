@@ -26,7 +26,7 @@ export default function FilterPrice({
   ...other
 }: Props) {
   return (
-    <Stack spacing={2} direction="row" alignItems="center" divider={<div> - </div>} {...other}>
+    <Stack spacing={1} direction="row" alignItems="center" divider={<div> - </div>} {...other}>
       <PriceInput
         placeholder="od"
         price={valuePriceFrom === 0 ? "" : valuePriceFrom}

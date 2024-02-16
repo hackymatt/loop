@@ -16,22 +16,24 @@ type ILecturer = {
   gender: IGender | null;
 };
 
+type ITechnology = {
+  id: number;
+  name: string;
+};
+
 type ILesson = {
   id: number;
-  previous_price: number | null;
-  lowest_30_days_price: number | null;
   lecturers: ILecturer[];
   students_count: number;
   rating: number;
   rating_count: number;
+  technologies: ITechnology[];
   title: string;
   description: string;
   duration: number;
   github_url: string;
   price: string;
-  active: boolean;
 };
-
 export const lessonQuery = (id: string) => {
   const url = endpoint;
   const queryUrl = `${url}/${id}`;
@@ -43,8 +45,6 @@ export const lessonQuery = (id: string) => {
       const { data } = response;
       const {
         id: lessonId,
-        previous_price,
-        lowest_30_days_price,
         lecturers,
         students_count,
         rating,
@@ -54,6 +54,7 @@ export const lessonQuery = (id: string) => {
         duration,
         github_url,
         price,
+        technologies,
       } = data;
 
       modifiedResults = {
@@ -61,12 +62,11 @@ export const lessonQuery = (id: string) => {
         title,
         description,
         price,
-        priceSale: previous_price,
-        lowest30DaysPrice: lowest_30_days_price,
         duration,
         ratingNumber: rating,
         totalReviews: rating_count,
         totalStudents: students_count,
+        category: technologies.map(({ name }: ITechnology) => name),
         teachers: lecturers.map(({ uuid, full_name, gender, image: lecturerImage }: ILecturer) => ({
           id: uuid,
           name: full_name,
