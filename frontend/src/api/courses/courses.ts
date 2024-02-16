@@ -28,20 +28,20 @@ type ITechnology = {
 
 type ICourse = {
   id: number;
-  description: string;
-  technology: ITechnology[];
-  previous_price: string | null;
-  lowest_30_days_price: string | null;
+  price: number;
+  previous_price: number | null;
+  lowest_30_days_price: number | null;
   is_bestseller: boolean;
   duration: number;
+  technologies: ITechnology[];
   lecturers: ILecturer[];
   students_count: number;
   rating: number;
   rating_count: number;
   image: string;
-  title: string;
   level: ILevel;
-  price: string;
+  title: string;
+  description: string;
 };
 
 export const coursesQuery = (query?: IQueryParams) => {
@@ -68,7 +68,7 @@ export const coursesQuery = (query?: IQueryParams) => {
         level,
         image,
         title,
-        technology,
+        technologies,
         previous_price,
         lowest_30_days_price,
         is_bestseller,
@@ -84,7 +84,7 @@ export const coursesQuery = (query?: IQueryParams) => {
         level,
         coverUrl: image,
         slug: title,
-        category: technology.map(({ name }: ITechnology) => name),
+        category: technologies.map(({ name }: ITechnology) => name),
         priceSale: previous_price,
         lowest30DaysPrice: lowest_30_days_price,
         bestSeller: is_bestseller,

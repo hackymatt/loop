@@ -243,7 +243,7 @@ export default function CourseItem({ course, vertical }: Props) {
           <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
             <Iconify
               icon={
-                (level === "Początkujący" && "carbon:skill-level") ||
+                (level === "Podstawowy" && "carbon:skill-level") ||
                 (level === "Średniozaawansowany" && "carbon:skill-level-basic") ||
                 (level === "Zaawansowany" && "carbon:skill-level-intermediate") ||
                 "carbon:skill-level-advanced"
