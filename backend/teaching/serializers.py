@@ -2,7 +2,8 @@ from rest_framework.serializers import (
     ModelSerializer,
     IntegerField,
 )
-from course.models import Course, Lesson, Technology
+from course.models import Course
+from lesson.models import Lesson, Technology
 from teaching.models import Teaching
 from profile.models import Profile
 
@@ -13,17 +14,7 @@ class TechnologySerializer(ModelSerializer):
         fields = "__all__"
 
 
-class CourseSerializer(ModelSerializer):
-    technology = TechnologySerializer()
-
-    class Meta:
-        model = Course
-        exclude = ("active", "skills", "topics")
-
-
 class LessonSerializer(ModelSerializer):
-    course = CourseSerializer()
-
     class Meta:
         model = Lesson
         fields = "__all__"

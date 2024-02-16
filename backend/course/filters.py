@@ -7,13 +7,10 @@ from django_filters import (
 )
 from course.models import (
     Course,
-    Lesson,
-    Technology,
-    CoursePriceHistory,
-    LessonPriceHistory,
 )
+from lesson.models import Lesson, Technology
 from review.models import Review
-from purchase.models import LessonPurchase
+from purchase.models import Purchase
 from teaching.models import Teaching
 from profile.models import Profile
 from django.db.models import OuterRef, Subquery, Value, Avg, Sum, Count, TextField
@@ -22,7 +19,9 @@ from django.db.models.functions import Cast
 
 
 def get_rating(queryset):
-    lessons = Lesson.objects.filter(course=OuterRef(OuterRef("pk"))).values("id")
+    lessons = Course.lessons.through.objects.filter(
+        course=OuterRef(OuterRef("pk"))
+    ).values("lesson_id")
     avg_rating = (
         Review.objects.filter(lesson__in=Subquery(lessons))
         .annotate(dummy_group_by=Value(1))
@@ -37,9 +36,15 @@ def get_rating(queryset):
 
 
 def get_duration(queryset):
+    lessons = Course.lessons.through.objects.filter(
+        course=OuterRef(OuterRef("pk"))
+    ).values("lesson_id")
+
     total_duration = (
-        Lesson.objects.filter(course=OuterRef("pk"))
-        .values("course__pk")
+        Lesson.objects.filter(id__in=Subquery(lessons))
+        .annotate(dummy_group_by=Value(1))
+        .values("dummy_group_by")
+        .order_by("dummy_group_by")
         .annotate(total_duration=Sum("duration"))
         .values("total_duration")
     )
@@ -48,10 +53,30 @@ def get_duration(queryset):
     return courses
 
 
+def get_price(queryset):
+    lessons = Course.lessons.through.objects.filter(
+        course=OuterRef(OuterRef("pk"))
+    ).values("lesson_id")
+
+    total_price = (
+        Lesson.objects.filter(id__in=Subquery(lessons))
+        .annotate(dummy_group_by=Value(1))
+        .values("dummy_group_by")
+        .order_by("dummy_group_by")
+        .annotate(total_price=Sum("price"))
+        .values("total_price")
+    )
+    courses = queryset.annotate(price=Subquery(total_price))
+
+    return courses
+
+
 def get_students_count(queryset):
-    lessons = Lesson.objects.filter(course=OuterRef(OuterRef("pk"))).values("id")
+    lessons = Course.lessons.through.objects.filter(
+        course=OuterRef(OuterRef("pk"))
+    ).values("lesson_id")
     total_student_count = (
-        LessonPurchase.objects.filter(lesson__in=Subquery(lessons))
+        Purchase.objects.filter(lesson__in=Subquery(lessons))
         .annotate(dummy_group_by=Value(1))
         .values("dummy_group_by")
         .order_by("dummy_group_by")
@@ -64,9 +89,9 @@ def get_students_count(queryset):
 
 
 def get_lecturers(queryset):
-    lessons = Lesson.objects.filter(
+    lessons = Course.lessons.through.objects.filter(
         course=OuterRef(OuterRef(OuterRef("pk")))
-    ).values_list("id")
+    ).values("lesson_id")
     lecturers = (
         Teaching.objects.filter(lesson__in=Subquery(lessons))
         .annotate(dummy_group_by=Value(1))
@@ -91,18 +116,30 @@ def get_lecturers(queryset):
     return courses
 
 
-def get_courses_count(queryset):
-    total_courses_count = (
-        Course.objects.filter(technology=OuterRef("pk"))
+def get_technologies(queryset):
+    lessons = Course.lessons.through.objects.filter(
+        course=OuterRef(OuterRef(OuterRef("pk")))
+    ).values("lesson_id")
+
+    technologies = (
+        Lesson.technologies.through.objects.filter(lesson_id__in=Subquery(lessons))
+        .values("technology_id")
+        .distinct()
+    )
+
+    technologies = (
+        Technology.objects.filter(id__in=Subquery(technologies))
+        .values("name")
         .annotate(dummy_group_by=Value(1))
         .values("dummy_group_by")
         .order_by("dummy_group_by")
-        .annotate(total_courses_count=Count("id"))
-        .values("total_courses_count")
+        .annotate(names=StringAgg("name", delimiter=","))
+        .values("names")
     )
-    technologies = queryset.annotate(courses_count=Subquery(total_courses_count))
 
-    return technologies
+    courses = queryset.annotate(all_technologies=Subquery(technologies))
+
+    return courses
 
 
 class CharInFilter(BaseInFilter, CharFilter):
@@ -117,12 +154,12 @@ class OrderFilter(OrderingFilter):
         for value in values:
             if value in ["duration", "-duration"]:
                 queryset = get_duration(queryset).order_by(value)
+            elif value in ["price", "-price"]:
+                queryset = get_price(queryset).order_by(value)
             elif value in ["rating", "-rating"]:
                 queryset = get_rating(queryset).order_by(value)
             elif value in ["students_count", "-students_count"]:
                 queryset = get_students_count(queryset).order_by(value)
-            elif value in ["courses_count", "-courses_count"]:
-                queryset = get_courses_count(queryset).order_by(value)
             else:
                 queryset = queryset.order_by(value)
 
@@ -135,10 +172,22 @@ class CourseFilter(FilterSet):
         field_name="all_lecturers",
         method="filter_lecturer_in",
     )
-    technology_in = CharInFilter(field_name="technology__name", lookup_expr="in")
+    technology_in = CharFilter(
+        label="Technology in",
+        field_name="all_technologies",
+        method="filter_technology_in",
+    )
     level_in = CharInFilter(field_name="level", lookup_expr="in")
-    price_from = NumberFilter(field_name="price", lookup_expr="gte")
-    price_to = NumberFilter(field_name="price", lookup_expr="lte")
+    price_from = NumberFilter(
+        label="Price powyżej lub równe",
+        field_name="price",
+        method="filter_price_from",
+    )
+    price_to = NumberFilter(
+        label="Price poniżej lub równe",
+        field_name="price",
+        method="filter_price_to",
+    )
     rating_from = NumberFilter(
         label="Rating powyżej lub równe",
         field_name="rating",
@@ -200,16 +249,33 @@ class CourseFilter(FilterSet):
             "sort_by",
         )
 
+    def filter_technology_in(self, queryset, field_name, value):
+        lookup_field_name = f"{field_name}__contains"
+
+        queryset = get_technologies(queryset)
+
+        names = value.split(",")
+
+        name_first, *name_rest = names
+        return_queryset = queryset.filter(**{lookup_field_name: name_first})
+        for name in name_rest:
+            return_queryset = return_queryset | queryset.filter(
+                **{lookup_field_name: name}
+            )
+
+        return return_queryset
+
     def filter_lecturer_in(self, queryset, field_name, value):
         lookup_field_name = f"{field_name}__contains"
+
+        queryset = get_lecturers(queryset)
+
         uuids = value.split(",")
 
         uuid_first, *uuid_rest = uuids
-        return_queryset = get_lecturers(queryset).filter(
-            **{lookup_field_name: uuid_first}
-        )
+        return_queryset = queryset.filter(**{lookup_field_name: uuid_first})
         for uuid in uuid_rest:
-            return_queryset = return_queryset | get_lecturers(queryset).filter(
+            return_queryset = return_queryset | queryset.filter(
                 **{lookup_field_name: uuid}
             )
 
@@ -223,73 +289,14 @@ class CourseFilter(FilterSet):
         lookup_field_name = f"{field_name}__gte"
         return get_duration(queryset).filter(**{lookup_field_name: value})
 
+    def filter_price_from(self, queryset, field_name, value):
+        lookup_field_name = f"{field_name}__gte"
+        return get_price(queryset).filter(**{lookup_field_name: value})
+
+    def filter_price_to(self, queryset, field_name, value):
+        lookup_field_name = f"{field_name}__lte"
+        return get_price(queryset).filter(**{lookup_field_name: value})
+
     def filter_duration_to(self, queryset, field_name, value):
         lookup_field_name = f"{field_name}__lte"
         return get_duration(queryset).filter(**{lookup_field_name: value})
-
-
-class TechnologyFilter(FilterSet):
-    name = CharFilter(field_name="name", lookup_expr="exact")
-    sort_by = OrderFilter(
-        choices=(
-            ("name", "Name ASC"),
-            ("-name", "Name DESC"),
-            ("courses_count", "Courses Count ASC"),
-            ("-courses_count", "Courses Count DESC"),
-        ),
-        fields={
-            "name": "name",
-            "-name": "-name",
-            "courses_count": "courses_count",
-            "-courses_count": "-courses_count",
-        },
-    )
-
-    class Meta:
-        model = Technology
-        fields = (
-            "name",
-            "sort_by",
-        )
-
-
-class CoursePriceHistoryFilter(FilterSet):
-    course_id = NumberFilter(field_name="course__id", lookup_expr="exact")
-    sort_by = OrderFilter(
-        choices=(
-            ("created_at", "Created At ASC"),
-            ("-created_at", "Created At DESC"),
-        ),
-        fields={
-            "created_at": "created_at",
-            "-created_at": "-created_at",
-        },
-    )
-
-    class Meta:
-        model = CoursePriceHistory
-        fields = (
-            "course_id",
-            "sort_by",
-        )
-
-
-class LessonPriceHistoryFilter(FilterSet):
-    lesson_id = NumberFilter(field_name="lesson__id", lookup_expr="exact")
-    sort_by = OrderFilter(
-        choices=(
-            ("created_at", "Created At ASC"),
-            ("-created_at", "Created At DESC"),
-        ),
-        fields={
-            "created_at": "created_at",
-            "-created_at": "-created_at",
-        },
-    )
-
-    class Meta:
-        model = LessonPriceHistory
-        fields = (
-            "lesson_id",
-            "sort_by",
-        )

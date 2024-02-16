@@ -5,8 +5,8 @@ from rest_framework.serializers import (
     CharField,
     ImageField,
 )
-from purchase.models import CoursePurchase, LessonPurchase
-from course.models import Course, Lesson, Technology
+from purchase.models import Purchase
+from lesson.models import Lesson, Technology
 from profile.models import Profile
 from reservation.models import Reservation
 from review.models import Review
@@ -43,35 +43,13 @@ class TechnologySerializer(ModelSerializer):
         )
 
 
-class CourseSerializer(ModelSerializer):
-    class Meta:
-        model = Course
-        exclude = (
-            "technology",
-            "level",
-            "image",
-            "video",
-            "description",
-            "github_url",
-            "price",
-            "active",
-            "skills",
-            "topics",
-            "modified_at",
-            "created_at",
-        )
-
-
 class LessonSerializer(ModelSerializer):
     class Meta:
         model = Lesson
         exclude = (
-            "course",
             "description",
             "duration",
-            "github_url",
             "price",
-            "active",
             "modified_at",
             "created_at",
         )
@@ -110,7 +88,6 @@ class ReviewSerializer(ModelSerializer):
 
 
 class PurchaseGetSerializer(ModelSerializer):
-    course = CourseSerializer(source="course_purchase.course")
     lesson = LessonSerializer()
     lesson_status = SerializerMethodField("get_lesson_status")
     lecturer = SerializerMethodField("get_lecturer")
@@ -118,11 +95,10 @@ class PurchaseGetSerializer(ModelSerializer):
     review = SerializerMethodField("get_review_details")
 
     class Meta:
-        model = LessonPurchase
+        model = Purchase
         exclude = (
             "student",
             "modified_at",
-            "course_purchase",
         )
 
     def get_lesson_status(self, purchase):
@@ -172,25 +148,14 @@ class PurchaseGetSerializer(ModelSerializer):
 
 class PurchaseSerializer(ModelSerializer):
     class Meta:
-        model = LessonPurchase
-        exclude = (
-            "course_purchase",
-            "student",
-        )
+        model = Purchase
+        exclude = ("student",)
 
     def create(self, validated_data):
         user = self.context["request"].user
         student = Profile.objects.get(user=user)
 
-        lesson = validated_data.pop("lesson")
-
-        course_purchase, _ = CoursePurchase.objects.get_or_create(
-            course=lesson.course, price=lesson.course.price, student=student
-        )
-
-        return LessonPurchase.objects.create(
+        return Purchase.objects.create(
             **validated_data,
-            course_purchase=course_purchase,
-            lesson=lesson,
             student=student,
         )

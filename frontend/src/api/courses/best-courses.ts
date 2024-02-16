@@ -25,18 +25,20 @@ type ITechnology = {
 
 type ICourse = {
   id: number;
-  technology: ITechnology[];
-  previous_price: string | null;
-  lowest_30_days_price: string | null;
+  price: number;
+  previous_price: number | null;
+  lowest_30_days_price: number | null;
+  is_bestseller: boolean;
   duration: number;
+  technologies: ITechnology[];
   lecturers: ILecturer[];
   students_count: number;
   rating: number;
   rating_count: number;
   image: string;
-  title: string;
   level: ILevel;
-  price: string;
+  title: string;
+  description: string;
 };
 
 export const bestCoursesQuery = () => {
@@ -52,9 +54,10 @@ export const bestCoursesQuery = () => {
         level,
         image,
         title,
-        technology,
+        technologies,
         previous_price,
         lowest_30_days_price,
+        is_bestseller,
         duration,
         rating,
         rating_count,
@@ -66,10 +69,11 @@ export const bestCoursesQuery = () => {
         level,
         coverUrl: image,
         slug: title,
-        category: technology.map(({ name }: ITechnology) => name),
+        category: technologies.map(({ name }: ITechnology) => name),
         priceSale: previous_price,
         lowest30DaysPrice: lowest_30_days_price,
         totalHours: duration / 60,
+        bestSeller: is_bestseller,
         ratingNumber: rating,
         totalReviews: rating_count,
         totalStudents: students_count,

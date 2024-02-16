@@ -40,19 +40,23 @@ type ITopic = {
 type ILesson = {
   id: number;
   title: string;
-  is_bestseller: boolean;
-  price: string;
-  previous_price: string | null;
-  lowest_30_days_price: string | null;
+  price: number;
+  previous_price: number | null;
+  lowest_30_days_price: number | null;
 };
 
 type ICourse = {
   id: number;
-  description: string;
-  technology: ITechnology[];
-  previous_price: string | null;
-  lowest_30_days_price: string | null;
+  level: ILevel;
+  price: number;
+  previous_price: number | null;
+  lowest_30_days_price: number | null;
+  is_bestseller: boolean;
   duration: number;
+  lessons: ILesson[];
+  technologies: ITechnology[];
+  skills: ISkill[];
+  topics: ITopic[];
   lecturers: ILecturer[];
   students_count: number;
   rating: number;
@@ -60,12 +64,7 @@ type ICourse = {
   image: string;
   video: string | null;
   title: string;
-  level: ILevel;
-  price: string;
-  skills: ISkill[];
-  topics: ITopic[];
-  lessons: ILesson[];
-  github_url: string;
+  description: string;
 };
 
 export const courseQuery = (id: string) => {
@@ -85,7 +84,7 @@ export const courseQuery = (id: string) => {
         image,
         video,
         title,
-        technology,
+        technologies,
         previous_price,
         lowest_30_days_price,
         duration,
@@ -96,7 +95,6 @@ export const courseQuery = (id: string) => {
         skills,
         topics,
         lessons,
-        github_url,
       } = data;
 
       modifiedResults = {
@@ -107,7 +105,7 @@ export const courseQuery = (id: string) => {
         coverUrl: image,
         video,
         slug: title,
-        category: technology.map(({ name }: ITechnology) => name),
+        category: technologies.map(({ name }: ITechnology) => name),
         priceSale: previous_price,
         lowest30DaysPrice: lowest_30_days_price,
         totalHours: duration / 60,
@@ -141,7 +139,6 @@ export const courseQuery = (id: string) => {
           ({
             id: lessonId,
             title: titleId,
-            is_bestseller,
             lowest_30_days_price: lessonLowest30DaysPrice,
             previous_price: lessonPreviousPrice,
             price: lessonPrice,
@@ -151,10 +148,8 @@ export const courseQuery = (id: string) => {
             lowest30DaysPrice: lessonLowest30DaysPrice,
             priceSale: lessonPreviousPrice,
             price: lessonPrice,
-            bestSeller: is_bestseller,
           }),
         ),
-        githubUrl: github_url,
       };
     } catch (error) {
       if (error.response && (error.response.status === 400 || error.response.status === 404)) {

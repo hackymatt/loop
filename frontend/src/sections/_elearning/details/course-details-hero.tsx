@@ -17,8 +17,8 @@ import { useBoolean } from "src/hooks/use-boolean";
 
 import { fShortenNumber } from "src/utils/format-number";
 
-import Label from "src/components/label";
 import Image from "src/components/image";
+import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 import { PlayerDialog } from "src/components/player";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
@@ -39,8 +39,8 @@ export default function CourseDetailsHero({ course }: Props) {
     category: categories,
     coverUrl,
     video,
-    bestSeller,
     totalHours,
+    bestSeller,
     description,
     ratingNumber,
     totalReviews,
@@ -120,7 +120,7 @@ export default function CourseDetailsHero({ course }: Props) {
                 <Stack spacing={2} alignItems="flex-start">
                   {bestSeller && (
                     <Label color="warning" variant="filled" sx={{ textTransform: "uppercase" }}>
-                      Best Seller
+                      Bestseller
                     </Label>
                   )}
 
@@ -239,7 +239,7 @@ export default function CourseDetailsHero({ course }: Props) {
                     <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
                       <Iconify
                         icon={
-                          (level === "Początkujący" && "carbon:skill-level") ||
+                          (level === "Podstawowy" && "carbon:skill-level") ||
                           (level === "Średniozaawansowany" && "carbon:skill-level-basic") ||
                           (level === "Zaawansowany" && "carbon:skill-level-intermediate") ||
                           "carbon:skill-level-advanced"

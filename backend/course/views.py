@@ -5,33 +5,15 @@ from course.serializers import (
     CourseGetSerializer,
     CourseSerializer,
     BestCourseSerializer,
-    LessonDetailsSerializer,
-    TechnologyListSerializer,
-    CoursePriceHistorySerializer,
-    LessonPriceHistorySerializer,
 )
 from course.filters import (
     CourseFilter,
-    CoursePriceHistoryFilter,
-    LessonPriceHistoryFilter,
-    TechnologyFilter,
     get_rating,
 )
 from course.models import (
     Course,
-    Lesson,
-    Technology,
-    CoursePriceHistory,
-    LessonPriceHistory,
 )
 from random import sample
-
-
-class TechnologyViewSet(ModelViewSet):
-    http_method_names = ["get"]
-    queryset = Technology.objects.all()
-    serializer_class = TechnologyListSerializer
-    filterset_class = TechnologyFilter
 
 
 class CourseViewSet(ModelViewSet):
@@ -85,33 +67,3 @@ class BestCourseViewSet(ModelViewSet):
         ids = queryset.values_list("id", flat=True)
         random_ids = sample(list(ids), min(len(ids), 10))
         return queryset.filter(id__in=random_ids)
-
-
-class LessonViewSet(ModelViewSet):
-    http_method_names = ["get"]
-    queryset = Lesson.objects.all()
-    serializer_class = LessonDetailsSerializer
-    permission_classes = [AllowAny]
-
-    def get_permissions(self):
-        if self.action == "list":
-            permission_classes = [IsAuthenticated & IsAdminUser]
-        else:
-            permission_classes = self.permission_classes
-        return [permission() for permission in permission_classes]
-
-
-class CoursePriceHistoryViewSet(ModelViewSet):
-    http_method_names = ["get"]
-    queryset = CoursePriceHistory.objects.all()
-    serializer_class = CoursePriceHistorySerializer
-    filterset_class = CoursePriceHistoryFilter
-    permission_classes = [IsAuthenticated & IsAdminUser]
-
-
-class LessonPriceHistoryViewSet(ModelViewSet):
-    http_method_names = ["get"]
-    queryset = LessonPriceHistory.objects.all()
-    serializer_class = LessonPriceHistorySerializer
-    filterset_class = LessonPriceHistoryFilter
-    permission_classes = [IsAuthenticated & IsAdminUser]

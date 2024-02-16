@@ -6,7 +6,7 @@ from django_filters import (
     DateFilter,
 )
 from review.models import Review
-from purchase.models import LessonPurchase
+from purchase.models import Purchase
 from profile.models import Profile
 from django.db.models import (
     OuterRef,
@@ -112,9 +112,6 @@ class OrderFilter(OrderingFilter):
                 queryset = get_lesson_status(queryset).order_by(value)
             elif value in ["lecturer_uuid", "-lecturer_uuid"]:
                 queryset = get_lesson_lecturer(queryset).order_by(value)
-            elif value in ["course_title", "-course_title"]:
-                value_modified = value.replace("course_", "course_purchase__course__")
-                queryset = queryset.order_by(value_modified)
             elif value in ["lesson_title", "-lesson_title"]:
                 value_modified = value.replace("lesson_", "lesson__")
                 queryset = queryset.order_by(value_modified)
@@ -125,9 +122,6 @@ class OrderFilter(OrderingFilter):
 
 
 class PurchaseFilter(FilterSet):
-    course_title = CharFilter(
-        field_name="course_purchase__course__title", lookup_expr="icontains"
-    )
     lesson_title = CharFilter(field_name="lesson__title", lookup_expr="icontains")
     lesson_status = CharFilter(
         label="Lesson status",
@@ -153,8 +147,6 @@ class PurchaseFilter(FilterSet):
 
     sort_by = OrderFilter(
         choices=(
-            ("course_title", "Course Title ASC"),
-            ("-course_title", "Course Title DESC"),
             ("lesson_title", "Lesson Title ASC"),
             ("-lesson_title", "Lesson Title DESC"),
             ("lesson_status", "Lesson Status ASC"),
@@ -167,8 +159,6 @@ class PurchaseFilter(FilterSet):
             ("-created_at", "Created At DESC"),
         ),
         fields={
-            "course_title": "course_title",
-            "-course_title": "-course_title",
             "lesson_title": "lesson_title",
             "lesson_title": "-lesson_title",
             "lesson_status": "lesson_status",
@@ -183,9 +173,8 @@ class PurchaseFilter(FilterSet):
     )
 
     class Meta:
-        model = LessonPurchase
+        model = Purchase
         fields = (
-            "course_title",
             "lesson_title",
             "lesson_status",
             "lecturer_id",

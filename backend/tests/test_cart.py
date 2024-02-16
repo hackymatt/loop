@@ -3,14 +3,11 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
-    create_course,
-    create_lesson_obj,
+    create_lesson,
     create_technology_obj,
-    create_skill_obj,
-    create_topic_obj,
     create_cart,
 )
-from .helpers import login
+from .helpers import login, cart_number
 from django.contrib import auth
 import json
 
@@ -31,41 +28,68 @@ class CartTest(APITestCase):
         )
         self.profile = create_profile(user=self.user)
 
-        # course 1
-        self.course_1 = create_course(
-            title="Python Beginner",
-            description="Learn Python today",
-            technology=[create_technology_obj(name="Python")],
-            level="Podstawowy",
-            price="99.99",
-            github_url="https://github.com/hackymatt/course",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
-            topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
-            ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/course/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="Python lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/course/lesson",
-                    price="2.99",
-                ),
-            ],
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="Python")],
+        )
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="Python")],
         )
 
+        self.lesson_3 = create_lesson(
+            title="JS lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
+        self.lesson_4 = create_lesson(
+            title="JS lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
+        self.lesson_5 = create_lesson(
+            title="JS lesson 3",
+            description="bbbb",
+            duration="120",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[create_technology_obj(name="JS")],
+        )
+
+        self.lesson_6 = create_lesson(
+            title="VBA lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[create_technology_obj(name="VBA")],
+        )
+
+        self.lessons = [
+            self.lesson_1,
+            self.lesson_2,
+            self.lesson_3,
+            self.lesson_4,
+            self.lesson_5,
+            self.lesson_5,
+        ]
+
         self.cart = []
-        for lesson in self.course_1.lessons.all():
+        for lesson in self.lessons:
             self.cart.append(
                 create_cart(
                     student=self.profile,
@@ -73,85 +97,8 @@ class CartTest(APITestCase):
                 )
             )
 
-        # course 2
-        self.course_2 = create_course(
-            title="Javascript course for Advanced",
-            description="Course for programmers",
-            technology=[create_technology_obj(name="Javascript")],
-            level="Zaawansowany",
-            price="300",
-            github_url="https://github.com/hackymatt/course",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
-            topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
-            ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/course/lesson",
-                    price="9.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 2",
-                    description="bbbb",
-                    duration="30",
-                    github_url="https://github.com/hackymatt/course/lesson",
-                    price="2.99",
-                ),
-                create_lesson_obj(
-                    id=-1,
-                    title="JS lesson 3",
-                    description="bbbb",
-                    duration="120",
-                    github_url="https://github.com/hackymatt/course/lesson",
-                    price="2.99",
-                ),
-            ],
-        )
-
-        self.cart.append(
-            create_cart(
-                student=self.profile,
-                lesson=self.course_2.lessons.all()[1],
-            )
-        )
-
-        # course 3
-        self.course_3 = create_course(
-            title="VBA course for Expert",
-            description="Course for programmers",
-            technology=[create_technology_obj(name="VBA")],
-            level="Ekspert",
-            price="220",
-            github_url="https://github.com/hackymatt/course",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
-            topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
-            ],
-            lessons=[
-                create_lesson_obj(
-                    id=-1,
-                    title="VBA lesson 1",
-                    description="bbbb",
-                    duration="90",
-                    github_url="https://github.com/hackymatt/course/lesson",
-                    price="9.99",
-                ),
-            ],
-        )
-
-        self.cart.append(
-            create_cart(
-                student=self.profile,
-                lesson=self.course_3.lessons.all()[0],
-            )
-        )
+        self.new_items = [self.lesson_6]
+        self.delete_item = self.cart[0]
 
     def test_get_cart_unauthenticated(self):
         # no login
@@ -169,62 +116,43 @@ class CartTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 4)
+        self.assertEqual(count, 6)
 
     def test_add_to_cart_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         data = {
-            "lesson": self.course_2.lessons.all()[0].id,
+            "lessons": [new_item.id for new_item in self.new_items],
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_add_to_cart_single_lesson_authenticated(self):
+    def test_add_to_cart_authenticated(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         data = {
-            "lesson": self.course_2.lessons.all()[0].id,
+            "lessons": [new_item.id for new_item in self.new_items],
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 5)
+        self.assertEqual(cart_number(), 7)
 
-    def test_add_to_cart_whole_course_authenticated(self):
+    def test_delete_from_cart_unauthenticated(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.delete(f"{self.endpoint}/{self.delete_item.id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_from_cart_authenticated(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        data = {
-            "course": self.course_2.id,
-        }
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(len(data), 6)
-
-    def test_delete_single_lesson_from_cart(self):
-        # no login
-        login(self, self.data["email"], self.data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        data = {"lesson": self.course_1.lessons.all()[0].id}
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(len(data), 3)
-
-    def test_delete_whole_course_from_cart(self):
-        # no login
-        login(self, self.data["email"], self.data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        data = {"course": self.course_1.id}
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(len(data), 2)
+        response = self.client.delete(f"{self.endpoint}/{self.delete_item.id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(cart_number(), 5)

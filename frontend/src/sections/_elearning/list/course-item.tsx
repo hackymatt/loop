@@ -13,8 +13,8 @@ import { RouterLink } from "src/routes/components";
 
 import { fCurrency, fShortenNumber } from "src/utils/format-number";
 
-import Label from "src/components/label";
 import Image from "src/components/image";
+import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 import TextMaxLine from "src/components/text-max-line";
 
@@ -236,14 +236,14 @@ export default function CourseItem({ course, vertical }: Props) {
         >
           <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
             <Iconify icon="carbon:time" sx={{ mr: 1 }} />
-            {fShortenNumber(Math.floor(totalHours), 0)}+{" "}
+            {totalHours < 1 ? 0 : fShortenNumber(Math.floor(totalHours), 0)}+{" "}
             {polishPlurals("godzina", "godziny", "godzin", totalHours)}
           </Stack>
 
           <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
             <Iconify
               icon={
-                (level === "Początkujący" && "carbon:skill-level") ||
+                (level === "Podstawowy" && "carbon:skill-level") ||
                 (level === "Średniozaawansowany" && "carbon:skill-level-basic") ||
                 (level === "Zaawansowany" && "carbon:skill-level-intermediate") ||
                 "carbon:skill-level-advanced"

@@ -33,7 +33,7 @@ const DURATION_OPTIONS = [
 ];
 
 const LEVEL_OPTIONS = [
-  { value: "P", label: "Początkujący" },
+  { value: "P", label: "Podstawowy" },
   { value: "Ś", label: "Średniozaawansowany" },
   { value: "Z", label: "Zaawansowany" },
   { value: "E", label: "Ekspert" },

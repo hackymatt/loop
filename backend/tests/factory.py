@@ -2,15 +2,12 @@ from django.contrib.auth.models import User
 from profile.models import Profile
 from course.models import (
     Course,
-    Lesson,
-    Technology,
     Skill,
     Topic,
-    CoursePriceHistory,
-    LessonPriceHistory,
 )
+from lesson.models import Lesson, LessonPriceHistory, Technology
 from review.models import Review
-from purchase.models import CoursePurchase, LessonPurchase
+from purchase.models import Purchase
 from newsletter.models import Newsletter
 from schedule.models import Schedule
 from wishlist.models import Wishlist
@@ -21,6 +18,7 @@ from datetime import datetime
 from django.utils.timezone import make_aware
 from django.core.files.uploadedfile import SimpleUploadedFile
 import os
+from typing import List, Dict
 
 
 def create_user(
@@ -92,13 +90,19 @@ def create_fields(values, model):
     return objs
 
 
+def find_fields(values, model):
+    objs = []
+    for value in values:
+        obj = model.objects.get(pk=value.id)
+        objs.append(obj)
+
+    return objs
+
+
 def create_course(
     title: str,
     description: str,
-    technology,
     level: str,
-    price: str,
-    github_url: str,
     skills,
     topics,
     lessons,
@@ -108,42 +112,71 @@ def create_course(
         title=title,
         description=description,
         level=level,
-        price=price,
-        github_url=github_url,
         active=active,
     )
 
-    course.technology.add(*create_fields(technology, Technology))
+    course.lessons.add(*find_fields(lessons, Lesson))
     course.skills.add(*create_fields(skills, Skill))
     course.topics.add(*create_fields(topics, Topic))
     course.image = create_image()
     course.video = create_video()
     course.save()
 
-    Lesson.objects.bulk_create(
-        Lesson(
-            course=course,
-            title=lesson["title"],
-            description=lesson["description"],
-            duration=lesson["duration"],
-            github_url=lesson["github_url"],
-            price=lesson["price"],
-            active=lesson["active"],
-        )
-        for lesson in lessons
-    )
-
     return course
 
 
-def create_lesson_obj(
-    id: int,
+def create_course_obj(
+    title: str,
+    description: str,
+    level: str,
+    lessons: List[Dict[str, int]],
+    skills,
+    topics,
+    image: str = None,
+    video: str = None,
+):
+    return {
+        "title": title,
+        "description": description,
+        "level": level,
+        "lessons": lessons,
+        "skills": skills,
+        "topics": topics,
+        "image": image,
+        "video": video,
+    }
+
+
+def create_lesson(
     title: str,
     description: str,
     duration: int,
     github_url: str,
     price: str,
-    active: bool = True,
+    technologies,
+):
+    lesson = Lesson.objects.create(
+        title=title,
+        description=description,
+        duration=duration,
+        github_url=github_url,
+        price=price,
+    )
+
+    lesson.technologies.add(*create_fields(technologies, Technology))
+    lesson.save()
+
+    return lesson
+
+
+def create_lesson_obj(
+    title: str,
+    description: str,
+    duration: int,
+    github_url: str,
+    price: str,
+    technologies,
+    id: int = -1,
 ):
     return {
         "id": id,
@@ -152,7 +185,7 @@ def create_lesson_obj(
         "duration": duration,
         "github_url": github_url,
         "price": price,
-        "active": active,
+        "technologies": technologies,
     }
 
 
@@ -185,11 +218,7 @@ def create_purchase(
     student: Profile,
     price: float,
 ):
-    course_purchase, _ = CoursePurchase.objects.get_or_create(
-        course=lesson.course, price=lesson.course.price, student=student
-    )
-    return LessonPurchase.objects.create(
-        course_purchase=course_purchase,
+    return Purchase.objects.create(
         lesson=lesson,
         student=student,
         price=price,
@@ -205,10 +234,6 @@ def create_schedule(
     time: str,
 ):
     return Schedule.objects.create(lecturer=lecturer, time=time)
-
-
-def create_course_price_history(course: Course, price: float):
-    return CoursePriceHistory.objects.create(course=course, price=price)
 
 
 def create_lesson_price_history(lesson: Lesson, price: float):

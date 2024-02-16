@@ -6,39 +6,11 @@ from django.db.models import (
     PROTECT,
     Index,
 )
-from course.models import Course, Lesson
+from lesson.models import Lesson
 from profile.models import Profile
 
 
-class CoursePurchase(BaseModel):
-    course = ForeignKey(
-        Course,
-        on_delete=PROTECT,
-    )
-    student = ForeignKey(
-        Profile, on_delete=PROTECT, related_name="course_purchase_student"
-    )
-    price = DecimalField(max_digits=7, decimal_places=2, null=True)
-
-    class Meta:
-        db_table = "course_purchase"
-        ordering = ["id"]
-        indexes = [
-            Index(
-                fields=[
-                    "id",
-                ]
-            ),
-            Index(
-                fields=[
-                    "student",
-                ]
-            ),
-        ]
-
-
-class LessonPurchase(BaseModel):
-    course_purchase = ForeignKey(CoursePurchase, on_delete=PROTECT)
+class Purchase(BaseModel):
     lesson = ForeignKey(Lesson, on_delete=PROTECT)
     student = ForeignKey(
         Profile, on_delete=CASCADE, related_name="lesson_purchase_student"
@@ -46,7 +18,7 @@ class LessonPurchase(BaseModel):
     price = DecimalField(max_digits=7, decimal_places=2, null=True)
 
     class Meta:
-        db_table = "lesson_purchase"
+        db_table = "purchase"
         ordering = ["id"]
         indexes = [
             Index(
