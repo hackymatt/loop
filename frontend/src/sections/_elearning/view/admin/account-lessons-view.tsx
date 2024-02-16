@@ -30,11 +30,11 @@ import AccountLessonsTableRow from "../../account/account-reviews-table-row";
 // ----------------------------------------------------------------------
 
 const DURATION_OPTIONS = [
-  { value: "(duration_to=60)", label: "0 - 1 godzin" },
-  { value: "(duration_from=60)&(duration_to=180)", label: "1 - 3 godzin" },
-  { value: "(duration_from=180)&(duration_to=360)", label: "3 - 6 godzin" },
-  { value: "(duration_from=360)&(duration_to=1080)", label: "6 - 18 godzin" },
-  { value: "(duration_from=1080)", label: "18+ godzin" },
+  { value: "(duration_to=30)", label: "0 - 30 minut" },
+  { value: "(duration_from=30)&(duration_to=60)", label: "30 - 60 minut" },
+  { value: "(duration_from=60)&(duration_to=90)", label: "60 - 90 minut" },
+  { value: "(duration_from=90)&(duration_to=120)", label: "90 - 120 minut" },
+  { value: "(duration_from=120)", label: "120+ minut" },
 ];
 
 // ----------------------------------------------------------------------
@@ -61,7 +61,7 @@ export default function AccountLessonsPage() {
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
-  const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "created_at";
+  const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "title";
   const order = filters?.sort_by && !filters.sort_by.startsWith("-") ? "asc" : "desc";
 
   const handleChange = useCallback(

@@ -88,3 +88,46 @@ class TechnologyFilter(FilterSet):
             "name",
             "sort_by",
         )
+
+
+class LessonFilter(FilterSet):
+    title = CharFilter(field_name="title", lookup_expr="icontains")
+    duration_from = NumberFilter(field_name="duration", lookup_expr="gte")
+    duration_to = NumberFilter(field_name="duration", lookup_expr="lte")
+    price_from = NumberFilter(field_name="price", lookup_expr="gte")
+    price_to = NumberFilter(field_name="price", lookup_expr="lte")
+    github_url = CharFilter(field_name="github_url", lookup_expr="icontains")
+    sort_by = OrderFilter(
+        choices=(
+            ("title", "Title ASC"),
+            ("-title", "Title DESC"),
+            ("duration", "Duration ASC"),
+            ("-duration", "Duration DESC"),
+            ("price", "Price ASC"),
+            ("-price", "Price DESC"),
+            ("github_url", "Github Url  ASC"),
+            ("-github_url", "Github Url DESC"),
+        ),
+        fields={
+            "title": "title",
+            "-title": "-title",
+            "duration": "duration",
+            "-duration": "-duration",
+            "price": "price",
+            "-price": "-price",
+            "github_url": "github_url",
+            "-github_url": "-github_url",
+        },
+    )
+
+    class Meta:
+        model = Lesson
+        fields = (
+            "title",
+            "duration_from",
+            "duration_to",
+            "price_from",
+            "price_to",
+            "github_url",
+            "sort_by",
+        )

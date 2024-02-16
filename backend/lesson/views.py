@@ -9,6 +9,7 @@ from lesson.serializers import (
 from lesson.filters import (
     LessonPriceHistoryFilter,
     TechnologyFilter,
+    LessonFilter,
 )
 from lesson.models import (
     Lesson,
@@ -22,6 +23,7 @@ class LessonViewSet(ModelViewSet):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = [AllowAny]
+    filterset_class = LessonFilter
 
     def get_permissions(self):
         if self.action == "list":
