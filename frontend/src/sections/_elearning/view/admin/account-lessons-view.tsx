@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
 import { LoadingButton } from "@mui/lab";
+import { Tab, Tabs } from "@mui/material";
 import TableBody from "@mui/material/TableBody";
 import Typography from "@mui/material/Typography";
 import TableContainer from "@mui/material/TableContainer";
@@ -25,7 +26,7 @@ import FilterPrice from "../../filters/filter-price";
 import FilterSearch from "../../filters/filter-search";
 import FilterDuration from "../../filters/filter-duration";
 import AccountTableHead from "../../account/account-table-head";
-import AccountLessonsTableRow from "../../account/account-reviews-table-row";
+import AccountLessonsTableRow from "./account-lessons-table-row";
 
 // ----------------------------------------------------------------------
 
@@ -39,12 +40,19 @@ const DURATION_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
+const TABS = [
+  { id: "", label: "Wszystkie lekcje" },
+  { id: "True", label: "Aktywne" },
+  { id: "False", label: "Nieaktywne" },
+];
+
 const TABLE_HEAD = [
-  { id: "title", label: "Nazwa lekcji" },
-  { id: "duration", label: "Czas trwania (min)" },
-  { id: "price", label: "Cena" },
-  { id: "github_url", label: "Repozytorium" },
-  { id: "" },
+  { id: "title", label: "Nazwa lekcji", minWidth: 200 },
+  { id: "duration", label: "Czas", width: 100 },
+  { id: "active", label: "Status", width: 100 },
+  { id: "price", label: "Cena", width: 50 },
+  { id: "github_url", label: "Repozytorium", width: 100 },
+  { id: "", width: 25 },
 ];
 
 const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
@@ -62,7 +70,8 @@ export default function AccountLessonsPage() {
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
   const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "title";
-  const order = filters?.sort_by && !filters.sort_by.startsWith("-") ? "asc" : "desc";
+  const order = filters?.sort_by && filters.sort_by.startsWith("-") ? "desc" : "asc";
+  const tab = filters?.active ? filters.active : "";
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -73,6 +82,13 @@ export default function AccountLessonsPage() {
       }
     },
     [removeQueryParam, setQueryParam],
+  );
+
+  const handleChangeTab = useCallback(
+    (event: React.SyntheticEvent, newValue: string) => {
+      handleChange("active", newValue);
+    },
+    [handleChange],
   );
 
   const handleSort = useCallback(
@@ -115,6 +131,18 @@ export default function AccountLessonsPage() {
           <Iconify icon="carbon:add" />
         </LoadingButton>
       </Stack>
+
+      <Tabs
+        value={TABS.find((t) => t.id === tab)?.id ?? ""}
+        scrollButtons="auto"
+        variant="scrollable"
+        allowScrollButtonsMobile
+        onChange={handleChangeTab}
+      >
+        {TABS.map((category) => (
+          <Tab key={category.id} value={category.id} label={category.label} />
+        ))}
+      </Tabs>
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 5, mb: 3 }}>
         <FilterSearch

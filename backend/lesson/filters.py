@@ -97,6 +97,7 @@ class LessonFilter(FilterSet):
     price_from = NumberFilter(field_name="price", lookup_expr="gte")
     price_to = NumberFilter(field_name="price", lookup_expr="lte")
     github_url = CharFilter(field_name="github_url", lookup_expr="icontains")
+    active = CharFilter(field_name="active", lookup_expr="exact")
     sort_by = OrderFilter(
         choices=(
             ("title", "Title ASC"),
@@ -105,8 +106,10 @@ class LessonFilter(FilterSet):
             ("-duration", "Duration DESC"),
             ("price", "Price ASC"),
             ("-price", "Price DESC"),
-            ("github_url", "Github Url  ASC"),
+            ("github_url", "Github Url ASC"),
             ("-github_url", "Github Url DESC"),
+            ("active", "Active ASC"),
+            ("-active", "Active DESC"),
         ),
         fields={
             "title": "title",
@@ -117,6 +120,8 @@ class LessonFilter(FilterSet):
             "-price": "-price",
             "github_url": "github_url",
             "-github_url": "-github_url",
+            "active": "active",
+            "-active": "-active",
         },
     )
 
@@ -129,5 +134,6 @@ class LessonFilter(FilterSet):
             "price_from",
             "price_to",
             "github_url",
+            "active",
             "sort_by",
         )

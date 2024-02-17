@@ -38,6 +38,7 @@ type ILesson = {
   price: string;
   previous_price: number | null;
   lowest_30_days_price: number | null;
+  active: boolean;
 };
 
 export const lessonsQuery = (query?: IQueryParams) => {
@@ -71,6 +72,7 @@ export const lessonsQuery = (query?: IQueryParams) => {
         students_count,
         lecturers,
         github_url,
+        active,
       }: ILesson) => ({
         id,
         description,
@@ -90,6 +92,7 @@ export const lessonsQuery = (query?: IQueryParams) => {
           gender,
         })),
         githubUrl: github_url,
+        active,
       }),
     );
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };

@@ -65,6 +65,7 @@ type ICourse = {
   video: string | null;
   title: string;
   description: string;
+  active: boolean;
 };
 
 export const courseQuery = (id: string) => {

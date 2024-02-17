@@ -1828,12 +1828,7 @@ class LessonOrderTest(APITestCase):
             review="So so lesson.",
         )
 
-        self.fields = [
-            "title",
-            "duration",
-            "price",
-            "github_url",
-        ]
+        self.fields = ["title", "duration", "price", "github_url", "active"]
 
     def test_ordering(self):
         for field in self.fields:

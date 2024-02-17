@@ -30,6 +30,7 @@ export type ICourseLessonProp = {
   totalStudents?: number;
   teachers?: ICourseTeacherProp[];
   githubUrl?: string;
+  active?: boolean;
 };
 
 export type ICourseByCategoryProps = {

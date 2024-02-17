@@ -1879,3 +1879,21 @@ class LessonFilterTest(APITestCase):
         )
         self.assertTrue(len(github_urls) == 1)
         self.assertTrue(github_urls[0])
+
+    def test_active_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        self.lesson_5.active = True
+        self.lesson_5.save()
+
+        active = "True"
+        response = self.client.get(f"{self.endpoint}?active={active}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        actives = list(set([record["active"] for record in results]))
+        self.assertTrue(len(actives) == 1)
+        self.assertTrue(actives[0])

@@ -33,6 +33,7 @@ type ILesson = {
   duration: number;
   github_url: string;
   price: string;
+  active: boolean;
 };
 export const lessonQuery = (id: string) => {
   const url = endpoint;
@@ -54,6 +55,7 @@ export const lessonQuery = (id: string) => {
         duration,
         github_url,
         price,
+        active,
         technologies,
       } = data;
 
@@ -74,6 +76,7 @@ export const lessonQuery = (id: string) => {
           avatarUrl: lecturerImage,
         })),
         githubUrl: github_url,
+        active,
       };
     } catch (error) {
       if (error.response && (error.response.status === 400 || error.response.status === 404)) {
