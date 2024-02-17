@@ -64,6 +64,10 @@ export default function AccountLessonsPage() {
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
+  if (Object.keys(filters).length === 0) {
+    setQueryParam("sort_by", "title");
+  }
+
   const { data: pagesCount } = useLessonsPagesCount(filters);
   const { data: lessons } = useLessons(filters);
 

@@ -66,7 +66,7 @@ const teacherNavigations = [
   ...[
     {
       title: "Lekcje",
-      path: `${paths.account.teacher.lessons}?sort_by=title`,
+      path: paths.account.teacher.lessons,
       icon: <Iconify icon="carbon:notebook" />,
     },
     {
@@ -92,7 +92,7 @@ const adminNavigations = [
   ...[
     {
       title: "Lekcje",
-      path: `${paths.account.admin.lessons}?sort_by=title`,
+      path: paths.account.admin.lessons,
       icon: <Iconify icon="carbon:notebook" />,
     },
     {

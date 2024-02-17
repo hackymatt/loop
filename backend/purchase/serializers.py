@@ -4,6 +4,7 @@ from rest_framework.serializers import (
     EmailField,
     CharField,
     ImageField,
+    ValidationError,
 )
 from purchase.models import Purchase
 from lesson.models import Lesson, Technology
@@ -150,6 +151,12 @@ class PurchaseSerializer(ModelSerializer):
     class Meta:
         model = Purchase
         exclude = ("student",)
+
+    def validate_lesson(self, lesson):
+        if not lesson.active:
+            raise ValidationError({"lesson": "Lekcja jest nieaktywna."})
+
+        return lesson
 
     def create(self, validated_data):
         user = self.context["request"].user

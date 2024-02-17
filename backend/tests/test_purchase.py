@@ -76,15 +76,15 @@ class PurchaseTest(APITestCase):
         )
 
         create_purchase(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile,
-            price=self.course_1.lessons.all()[0].price,
+            price=self.lesson_1.price,
         )
 
         create_purchase(
-            lesson=self.course_1.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile,
-            price=self.course_1.lessons.all()[1].price,
+            price=self.lesson_2.price,
         )
 
         for lesson in self.course_1.lessons.all():
@@ -107,13 +107,13 @@ class PurchaseTest(APITestCase):
 
         create_reservation(
             student=self.profile,
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             schedule=self.schedules[len(self.schedules) - 3],
         )
 
         create_reservation(
             student=self.profile,
-            lesson=self.course_1.lessons.all()[1],
+            lesson=self.lesson_2,
             schedule=self.schedules[0],
         )
 
@@ -217,20 +217,35 @@ class PurchaseTest(APITestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
-            "lesson": self.course_3.lessons.all()[0].id,
-            "price": self.course_1.lessons.all()[0].price,
+            "lesson": self.lesson_6.id,
+            "price": self.lesson_1.price,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_create_purchase_inactive_lesson(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "lesson": self.lesson_6.id,
+            "price": self.lesson_1.price,
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_purchase_authenticated(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
+        self.lesson_6.active = True
+        self.lesson_6.save()
+
         data = {
-            "lesson": self.course_3.lessons.all()[0].id,
-            "price": self.course_1.lessons.all()[0].price,
+            "lesson": self.lesson_6.id,
+            "price": self.lesson_1.price,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
