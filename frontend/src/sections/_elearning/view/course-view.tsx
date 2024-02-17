@@ -19,7 +19,6 @@ import { ICourseProps } from "src/types/course";
 
 import Newsletter from "../newsletter";
 import Advertisement from "../../advertisement";
-import Repository from "../repository/repository";
 import CourseListSimilar from "../list/course-list-similar";
 import CourseDetailsHero from "../details/course-details-hero";
 import CourseDetailsInfo from "../details/course-details-info";
@@ -68,12 +67,6 @@ export default function CourseView({ id }: { id: string }) {
 
           <Grid xs={12} md={7} lg={8}>
             <CourseDetailsSummary course={course} />
-
-            {course.githubUrl && (
-              <Stack direction="row" flexWrap="wrap" sx={{ mt: 5 }}>
-                <Repository githubUrl={course.githubUrl} />
-              </Stack>
-            )}
 
             <Divider sx={{ my: 5 }} />
 
