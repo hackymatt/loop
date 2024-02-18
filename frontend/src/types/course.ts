@@ -33,6 +33,13 @@ export type ICourseLessonProp = {
   active?: boolean;
 };
 
+export type ICourseLessonPriceHistoryProp = {
+  id: string;
+  lesson: ICourseLessonProp;
+  price: number;
+  createdAt: Date;
+};
+
 export type ICourseByCategoryProps = {
   id: string;
   name: string;

@@ -1023,19 +1023,66 @@ class LessonPriceHistoryFilterTest(APITestCase):
         create_lesson_price_history(self.lesson_6, 5)
         create_lesson_price_history(self.lesson_6, 3)
 
-    def test_lesson_id_filter(self):
+    def test_lesson_name_filter(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        response = self.client.get(f"{self.endpoint}?lesson_id={self.lesson_1.id}")
+        title = self.lesson_1.title[0:5]
+        response = self.client.get(f"{self.endpoint}?lesson_name={title}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 3)
-        prices = [record["price"] for record in results]
-        self.assertEqual(prices, ["15.00", "25.00", "5.00"])
+        self.assertEqual(records_count, 6)
+        titles = list(set([title in record["lesson"]["title"] for record in results]))
+        self.assertTrue(len(titles) == 1)
+        self.assertTrue(titles[0])
+
+    def test_price_from_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        price = 5
+        response = self.client.get(f"{self.endpoint}?price_from={price}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 12)
+        prices = list(set([float(record["price"]) >= price for record in results]))
+        self.assertTrue(len(prices) == 1)
+        self.assertTrue(prices[0])
+
+    def test_price_to_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        price = 10
+        response = self.client.get(f"{self.endpoint}?price_to={price}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 12)
+        prices = list(set([float(record["price"]) <= price for record in results]))
+        self.assertTrue(len(prices) == 1)
+        self.assertTrue(prices[0])
+
+    def test_created_at_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        date = str(self.lesson_1.created_at)[0:10]
+        response = self.client.get(f"{self.endpoint}?created_at={date}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 18)
+        dates = list(set([date in record["created_at"] for record in results]))
+        self.assertTrue(len(dates) == 1)
+        self.assertTrue(dates[0])
 
 
 class TechnologyFilterTest(APITestCase):

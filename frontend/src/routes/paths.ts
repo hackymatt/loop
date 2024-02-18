@@ -21,6 +21,7 @@ export const paths = {
     password: "/account/password",
     admin: {
       lessons: "/account/admin/lessons",
+      lessonsPriceHistory: "/account/admin/lessons-price-history",
       courses: "/account/admin/courses",
       users: "/account/admin/users",
       purchases: "/account/admin/purchases",

@@ -41,7 +41,7 @@ const userNavigations = [
   {
     title: "Zarządzaj hasłem",
     path: paths.account.password,
-    icon: <Iconify icon="carbon:user" />,
+    icon: <Iconify icon="carbon:password" />,
   },
 ];
 
@@ -94,6 +94,11 @@ const adminNavigations = [
       title: "Lekcje",
       path: paths.account.admin.lessons,
       icon: <Iconify icon="carbon:notebook" />,
+    },
+    {
+      title: "Historia cen lekcji",
+      path: paths.account.admin.lessonsPriceHistory,
+      icon: <Iconify icon="carbon:chart-line" />,
     },
     {
       title: "Kursy",

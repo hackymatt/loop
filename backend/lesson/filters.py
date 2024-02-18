@@ -3,6 +3,7 @@ from django_filters import (
     OrderingFilter,
     NumberFilter,
     CharFilter,
+    DateFilter,
 )
 from lesson.models import (
     LessonPriceHistory,
@@ -38,6 +39,9 @@ class OrderFilter(OrderingFilter):
         for value in values:
             if value in ["courses_count", "-courses_count"]:
                 queryset = get_courses_count(queryset).order_by(value)
+            elif value in ["lesson_name", "-lesson_name"]:
+                value_modified = value.replace("_name", "__title")
+                queryset = get_courses_count(queryset).order_by(value_modified)
             else:
                 queryset = queryset.order_by(value)
 
@@ -45,13 +49,24 @@ class OrderFilter(OrderingFilter):
 
 
 class LessonPriceHistoryFilter(FilterSet):
-    lesson_id = NumberFilter(field_name="lesson__id", lookup_expr="exact")
+    lesson_name = CharFilter(field_name="lesson__title", lookup_expr="icontains")
+    price_from = NumberFilter(field_name="price", lookup_expr="gte")
+    price_to = NumberFilter(field_name="price", lookup_expr="lte")
+    created_at = DateFilter(field_name="created_at", lookup_expr="contains")
     sort_by = OrderFilter(
         choices=(
+            ("lesson_name", "Lesson Name ASC"),
+            ("-lesson_name", "Lesson Name  DESC"),
+            ("price", "Price ASC"),
+            ("-price", "Price  DESC"),
             ("created_at", "Created At ASC"),
             ("-created_at", "Created At DESC"),
         ),
         fields={
+            "lesson_name": "lesson_name",
+            "-lesson_name": "-lesson_name",
+            "price": "price",
+            "-price": "-price",
             "created_at": "created_at",
             "-created_at": "-created_at",
         },
@@ -60,7 +75,10 @@ class LessonPriceHistoryFilter(FilterSet):
     class Meta:
         model = LessonPriceHistory
         fields = (
-            "lesson_id",
+            "lesson_name",
+            "price_from",
+            "price_to",
+            "created_at",
             "sort_by",
         )
 

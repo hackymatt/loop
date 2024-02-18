@@ -901,7 +901,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
         create_lesson_price_history(self.lesson_6, 5)
         create_lesson_price_history(self.lesson_6, 3)
 
-        self.fields = ["created_at"]
+        self.fields = ["lesson_name", "price", "created_at"]
 
     def test_ordering(self):
         for field in self.fields:
@@ -915,7 +915,10 @@ class LessonPriceHistoryOrderTest(APITestCase):
             count = data["records_count"]
             results = data["results"]
             self.assertEqual(count, 18)
-            field_values = [course[field] for course in results]
+            if field == "lesson_name":
+                field_values = [course["lesson"]["title"] for course in results]
+            else:
+                field_values = [course[field] for course in results]
             if isinstance(field_values[0], dict):
                 self.assertEqual(
                     field_values, sorted(field_values, key=lambda d: d["name"])
@@ -933,7 +936,10 @@ class LessonPriceHistoryOrderTest(APITestCase):
             count = data["records_count"]
             results = data["results"]
             self.assertEqual(count, 18)
-            field_values = [course[field] for course in results]
+            if field == "lesson_name":
+                field_values = [course["lesson"]["title"] for course in results]
+            else:
+                field_values = [course[field] for course in results]
             if isinstance(field_values[0], dict):
                 self.assertEqual(
                     field_values,

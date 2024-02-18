@@ -141,9 +141,11 @@ class LessonSerializer(ModelSerializer):
 
 
 class LessonPriceHistorySerializer(ModelSerializer):
+    lesson = LessonSerializer()
+
     class Meta:
         model = LessonPriceHistory
-        fields = "__all__"
+        exclude = ("modified_at",)
 
 
 class TechnologyListSerializer(ModelSerializer):

@@ -5,7 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import IconButton from "@mui/material/IconButton";
-import { Button, Typography } from "@mui/material";
+import { Button, Divider, Typography } from "@mui/material";
 import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
 import { fCurrency } from "src/utils/format-number";
@@ -20,9 +20,10 @@ import { ICourseLessonProp } from "src/types/course";
 type Props = {
   row: ICourseLessonProp;
   onEdit: (lesson: ICourseLessonProp) => void;
+  onPriceHistoryView: (lesson: ICourseLessonProp) => void;
 };
 
-export default function AccountLessonsTableRow({ row, onEdit }: Props) {
+export default function AccountLessonsTableRow({ row, onEdit, onPriceHistoryView }: Props) {
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
 
   const handleOpen = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -37,6 +38,11 @@ export default function AccountLessonsTableRow({ row, onEdit }: Props) {
     handleClose();
     onEdit(row);
   }, [handleClose, onEdit, row]);
+
+  const handleViewPriceHistory = useCallback(() => {
+    handleClose();
+    onPriceHistoryView(row);
+  }, [handleClose, onPriceHistoryView, row]);
 
   const inputStyles = {
     pl: 1,
@@ -110,6 +116,13 @@ export default function AccountLessonsTableRow({ row, onEdit }: Props) {
         <MenuItem onClick={handleEdit} sx={{ mr: 1 }}>
           <Iconify icon="carbon:edit" />
           <Typography variant="body2">Edytuj lekcję</Typography>
+        </MenuItem>
+
+        <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
+
+        <MenuItem onClick={handleViewPriceHistory} sx={{ mr: 1 }}>
+          <Iconify icon="carbon:chart-line" />
+          <Typography variant="body2">Historia cen</Typography>
         </MenuItem>
       </Popover>
     </>
