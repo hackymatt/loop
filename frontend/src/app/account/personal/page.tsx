@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import AccountPersonalView from "src/sections/_elearning/view/account/account-personal-view";
+import AccountPersonalView from "src/sections/_elearning/view/account/user/account-personal-view";
 // ----------------------------------------------------------------------
 
 export const metadata = {

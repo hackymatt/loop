@@ -26,10 +26,10 @@ import Scrollbar from "src/components/scrollbar";
 import { LessonStatus } from "src/types/purchase";
 import { IQueryParamValue } from "src/types/query-params";
 
-import FilterSearch from "../../filters/filter-search";
-import FilterTeacher from "../../filters/filter-teacher";
-import AccountTableHead from "../../account/account-table-head";
-import AccountLessonsTableRow from "../../account/account-lessons-table-row";
+import FilterSearch from "../../../filters/filter-search";
+import FilterTeacher from "../../../filters/filter-teacher";
+import AccountTableHead from "../../../account/account-table-head";
+import AccountLessonsTableRow from "../../../account/user/account-lessons-table-row";
 
 // ----------------------------------------------------------------------
 

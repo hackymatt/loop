@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import AccountPasswordView from "src/sections/_elearning/view/account/account-password-view";
+import AccountPasswordView from "src/sections/_elearning/view/account/user/account-password-view";
 
 // ----------------------------------------------------------------------
 

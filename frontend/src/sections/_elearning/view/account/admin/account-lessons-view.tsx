@@ -30,7 +30,7 @@ import FilterPrice from "../../../filters/filter-price";
 import FilterSearch from "../../../filters/filter-search";
 import FilterDuration from "../../../filters/filter-duration";
 import AccountTableHead from "../../../account/account-table-head";
-import AccountLessonsTableRow from "./account-lessons-table-row";
+import AccountLessonsTableRow from "../../../account/admin/account-lessons-table-row";
 
 // ----------------------------------------------------------------------
 
