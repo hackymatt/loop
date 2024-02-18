@@ -6,7 +6,7 @@ import { useTechnologies } from "src/api/technologies/technologies";
 import { useBestLecturers } from "src/api/lecturers/best-lecturers";
 
 import Team from "../team/team";
-import Newsletter from "../newsletter";
+import Newsletter from "../newsletter/newsletter";
 import LandingHero from "../landing/landing-hero";
 import Testimonial from "../testimonial/testimonial";
 import LandingServices from "../landing/landing-services";

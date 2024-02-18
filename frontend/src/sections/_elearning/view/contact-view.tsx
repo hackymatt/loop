@@ -1,6 +1,6 @@
 "use client";
 
-import Newsletter from "../newsletter";
+import Newsletter from "../newsletter/newsletter";
 import ContactForm from "../contact/contact-form";
 
 // ----------------------------------------------------------------------

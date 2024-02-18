@@ -17,7 +17,7 @@ import NotFoundView from "src/sections/error/not-found-view";
 
 import { ICourseProps } from "src/types/course";
 
-import Newsletter from "../newsletter";
+import Newsletter from "../newsletter/newsletter";
 import Advertisement from "../../advertisement";
 import CourseListSimilar from "../list/course-list-similar";
 import CourseDetailsHero from "../details/course-details-hero";

@@ -3,85 +3,75 @@
 import { useMemo, useCallback } from "react";
 
 import Box from "@mui/material/Box";
+import Tab from "@mui/material/Tab";
+import Tabs from "@mui/material/Tabs";
 import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
-import { LoadingButton } from "@mui/lab";
-import { Tab, Tabs } from "@mui/material";
 import TableBody from "@mui/material/TableBody";
 import Typography from "@mui/material/Typography";
 import TableContainer from "@mui/material/TableContainer";
 import { tableCellClasses } from "@mui/material/TableCell";
 import TablePagination from "@mui/material/TablePagination";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-import { paths } from "src/routes/paths";
-import { useRouter } from "src/routes/hooks";
-
+import { useBoolean } from "src/hooks/use-boolean";
 import { useQueryParams } from "src/hooks/use-query-params";
 
-import { useLessons, useLessonsPagesCount } from "src/api/lessons/lessons";
+import { fDate } from "src/utils/format-time";
 
-import Iconify from "src/components/iconify";
+import { useLecturers } from "src/api/lecturers/lecturers";
+import { usePurchase, usePurchasePageCount } from "src/api/purchase/purchase";
+
 import Scrollbar from "src/components/scrollbar";
 
-import { ICourseLessonProp } from "src/types/course";
+import ReviewNewForm from "src/sections/review/common/review-new-form";
+
+import { ReviewStatus } from "src/types/purchase";
 import { IQueryParamValue } from "src/types/query-params";
 
-import FilterPrice from "../../filters/filter-price";
 import FilterSearch from "../../filters/filter-search";
-import FilterDuration from "../../filters/filter-duration";
+import FilterTeacher from "../../filters/filter-teacher";
 import AccountTableHead from "../../account/account-table-head";
-import AccountLessonsTableRow from "./account-lessons-table-row";
-
-// ----------------------------------------------------------------------
-
-const DURATION_OPTIONS = [
-  { value: "(duration_to=30)", label: "0 - 30 minut" },
-  { value: "(duration_from=30)&(duration_to=60)", label: "30 - 60 minut" },
-  { value: "(duration_from=60)&(duration_to=90)", label: "60 - 90 minut" },
-  { value: "(duration_from=90)&(duration_to=120)", label: "90 - 120 minut" },
-  { value: "(duration_from=120)", label: "120+ minut" },
-];
+import AccountReviewsTableRow from "../../account/account-reviews-table-row";
 
 // ----------------------------------------------------------------------
 
 const TABS = [
-  { id: "", label: "Wszystkie lekcje" },
-  { id: "True", label: "Aktywne" },
-  { id: "False", label: "Nieaktywne" },
+  { id: ReviewStatus.brak, label: "Wszystkie recenzje" },
+  { id: ReviewStatus.oczekujące, label: "Oczekujące" },
+  { id: ReviewStatus.ukończone, label: "Ukończone" },
 ];
 
 const TABLE_HEAD = [
-  { id: "title", label: "Nazwa lekcji", minWidth: 200 },
-  { id: "duration", label: "Czas", width: 100 },
-  { id: "active", label: "Status", width: 100 },
-  { id: "price", label: "Cena", width: 50 },
-  { id: "github_url", label: "Repozytorium", width: 100 },
-  { id: "", width: 25 },
+  { id: "course_title", label: "Nazwa kursu" },
+  { id: "lesson_title", label: "Nazwa lekcji" },
+  { id: "review_status", label: "Status" },
+  { id: "lecturer_uuid", label: "Instruktor" },
+  { id: "created_at", label: "Data zakupu" },
+  { id: "" },
 ];
 
 const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
 
 // ----------------------------------------------------------------------
 
-export default function AccountLessonsView() {
-  const router = useRouter();
+export default function AccountReviewsView() {
+  const formOpen = useBoolean();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  if (Object.keys(filters).length === 0) {
-    setQueryParam("sort_by", "title");
-  }
+  const { data: pagesCount } = usePurchasePageCount(filters);
+  const { data: reviews } = usePurchase(filters);
 
-  const { data: pagesCount } = useLessonsPagesCount(filters);
-  const { data: lessons } = useLessons(filters);
+  const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: 1000 });
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
-  const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "title";
-  const order = filters?.sort_by && filters.sort_by.startsWith("-") ? "desc" : "asc";
-  const tab = filters?.active ? filters.active : "";
+  const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "created_at";
+  const order = filters?.sort_by && !filters.sort_by.startsWith("-") ? "asc" : "desc";
+  const tab = filters?.review_status ? filters.review_status : ReviewStatus.brak;
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -94,11 +84,24 @@ export default function AccountLessonsView() {
     [removeQueryParam, setQueryParam],
   );
 
-  const handleChangeTab = useCallback(
-    (event: React.SyntheticEvent, newValue: string) => {
-      handleChange("active", newValue);
+  const manageTab = useCallback(
+    (tabName: string) => {
+      if (tabName === ReviewStatus.brak) {
+        handleChange("review_status", "");
+        handleChange("review_status_exclude", tabName);
+      } else {
+        handleChange("review_status", tabName);
+        handleChange("review_status_exclude", "");
+      }
     },
     [handleChange],
+  );
+
+  const handleChangeTab = useCallback(
+    (event: React.SyntheticEvent, newValue: string) => {
+      manageTab(newValue);
+    },
+    [manageTab],
   );
 
   const handleSort = useCallback(
@@ -124,33 +127,14 @@ export default function AccountLessonsView() {
     [handleChange],
   );
 
-  const handlePriceHistoryView = useCallback(
-    (lesson: ICourseLessonProp) => {
-      router.push(`${paths.account.admin.lessonsPriceHistory}/?lesson_name=${lesson.title}`);
-    },
-    [router],
-  );
-
   return (
     <>
-      <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
-        <Typography variant="h5" sx={{ mb: 3 }}>
-          Lekcje
-        </Typography>
-        <LoadingButton
-          component="label"
-          variant="contained"
-          size="small"
-          color="success"
-          loading={false}
-          onClick={() => {}}
-        >
-          <Iconify icon="carbon:add" />
-        </LoadingButton>
-      </Stack>
+      <Typography variant="h5" sx={{ mb: 3 }}>
+        Recenzje
+      </Typography>
 
       <Tabs
-        value={TABS.find((t) => t.id === tab)?.id ?? ""}
+        value={TABS.find((t) => t.id === tab)?.id ?? ReviewStatus.brak}
         scrollButtons="auto"
         variant="scrollable"
         allowScrollButtonsMobile
@@ -163,28 +147,34 @@ export default function AccountLessonsView() {
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 5, mb: 3 }}>
         <FilterSearch
-          value={filters?.title ?? ""}
-          onChangeSearch={(value) => handleChange("title", value)}
-          placeholder="Nazwa lekcji..."
-        />
-
-        <FilterDuration
-          value={filters?.filters ?? ""}
-          options={DURATION_OPTIONS}
-          onChangeDuration={(value) => handleChange("filters", value)}
-        />
-
-        <FilterPrice
-          valuePriceFrom={filters?.price_from ?? ""}
-          valuePriceTo={filters?.price_to ?? ""}
-          onChangeStartPrice={(value) => handleChange("price_from", value)}
-          onChangeEndPrice={(value) => handleChange("price_to", value)}
+          value={filters?.course_title ?? ""}
+          onChangeSearch={(value) => handleChange("course_title", value)}
+          placeholder="Nazwa kursu..."
         />
 
         <FilterSearch
-          value={filters?.github_url ?? ""}
-          onChangeSearch={(value) => handleChange("github_url", value)}
-          placeholder="Repozytorium..."
+          value={filters?.lesson_title ?? ""}
+          onChangeSearch={(value) => handleChange("lesson_title", value)}
+          placeholder="Nazwa lekcji..."
+        />
+
+        {teachers && (
+          <FilterTeacher
+            value={filters?.lecturer_id ?? ""}
+            options={teachers}
+            onChange={(value) => handleChange("lecturer_id", value)}
+          />
+        )}
+
+        <DatePicker
+          value={filters?.created_at ? new Date(filters.created_at) : null}
+          onChange={(value: Date | null) =>
+            handleChange("created_at", value ? fDate(value, "yyyy-MM-dd") : "")
+          }
+          sx={{ width: 1, minWidth: 180 }}
+          slotProps={{
+            textField: { size: "small", hiddenLabel: true, placeholder: "Data zakupu" },
+          }}
         />
       </Stack>
 
@@ -214,14 +204,15 @@ export default function AccountLessonsView() {
               headCells={TABLE_HEAD}
             />
 
-            {lessons && (
+            {reviews && (
               <TableBody>
-                {lessons.map((row) => (
-                  <AccountLessonsTableRow
+                {reviews.map((row) => (
+                  <AccountReviewsTableRow
                     key={row.id}
                     row={row}
-                    onEdit={() => {}}
-                    onPriceHistoryView={handlePriceHistoryView}
+                    onAdd={(purchase) => {}}
+                    onEdit={(purchase) => {}}
+                    onDelete={(purchase) => {}}
                   />
                 ))}
               </TableBody>
@@ -243,6 +234,8 @@ export default function AccountLessonsView() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Box>
+
+      <ReviewNewForm open={formOpen.value} onClose={formOpen.onFalse} />
     </>
   );
 }

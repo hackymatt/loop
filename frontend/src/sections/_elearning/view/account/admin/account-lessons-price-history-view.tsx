@@ -25,9 +25,9 @@ import Scrollbar from "src/components/scrollbar";
 
 import { IQueryParamValue } from "src/types/query-params";
 
-import FilterPrice from "../../filters/filter-price";
-import FilterSearch from "../../filters/filter-search";
-import AccountTableHead from "../../account/account-table-head";
+import FilterPrice from "../../../filters/filter-price";
+import FilterSearch from "../../../filters/filter-search";
+import AccountTableHead from "../../../account/account-table-head";
 import AccountLessonsPriceHistoryTableRow from "./account-lessons-table-price-history-row";
 
 // ----------------------------------------------------------------------
