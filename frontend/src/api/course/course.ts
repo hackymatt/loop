@@ -160,7 +160,7 @@ export const courseQuery = (id: string) => {
     return { results: modifiedResults };
   };
 
-  return { url, queryFn, queryKey: compact([queryUrl]) };
+  return { url, queryFn, queryKey: compact([endpoint]) };
 };
 
 export const useCourse = (id: string) => {

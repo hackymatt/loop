@@ -1,5 +1,6 @@
+import { AxiosError } from "axios";
 import { compact } from "lodash-es";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
@@ -8,6 +9,7 @@ import { ICourseLessonProp } from "src/types/course";
 import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
+import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/lessons" as const;
 
@@ -35,12 +37,23 @@ type ILesson = {
   description: string;
   duration: number;
   github_url: string;
-  price: string;
+  price: number;
   previous_price: number | null;
   lowest_30_days_price: number | null;
   active: boolean;
 };
 
+type ICreateLesson = Omit<
+  ILesson,
+  | "id"
+  | "lecturers"
+  | "students_count"
+  | "rating"
+  | "rating_count"
+  | "previous_price"
+  | "lowest_30_days_price"
+>;
+type ICreateLessonReturn = ICreateLesson;
 export const lessonsQuery = (query?: IQueryParams) => {
   const url = endpoint;
   const urlParams = formatQueryParams(query);
@@ -98,7 +111,7 @@ export const lessonsQuery = (query?: IQueryParams) => {
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };
   };
 
-  return { url, queryFn, queryKey: compact([queryUrl]) };
+  return { url, queryFn, queryKey: compact([endpoint, urlParams]) };
 };
 
 export const useLessons = (query?: IQueryParams) => {
@@ -111,4 +124,23 @@ export const useLessonsPagesCount = (query?: IQueryParams) => {
   const { queryKey, queryFn } = lessonsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.pagesCount, ...rest };
+};
+
+export const useCreateLesson = () => {
+  const queryClient = useQueryClient();
+  return useMutation<ICreateLessonReturn, AxiosError, ICreateLesson>(
+    async (variables) => {
+      const result = await Api.post(endpoint, variables, {
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      });
+      return result.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [endpoint] });
+      },
+    },
+  );
 };

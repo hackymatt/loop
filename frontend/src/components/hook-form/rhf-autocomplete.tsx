@@ -154,6 +154,7 @@ export default function RHFAutocomplete<
           <Autocomplete
             {...field}
             id={`autocomplete-${name}`}
+            noOptionsText="Brak opcji"
             onChange={(event, newValue) => setValue(name, newValue, { shouldValidate: true })}
             renderInput={(params) => (
               <TextField

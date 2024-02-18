@@ -16,6 +16,7 @@ import TablePagination from "@mui/material/TablePagination";
 import { paths } from "src/routes/paths";
 import { useRouter } from "src/routes/hooks";
 
+import { useBoolean } from "src/hooks/use-boolean";
 import { useQueryParams } from "src/hooks/use-query-params";
 
 import { useLessons, useLessonsPagesCount } from "src/api/lessons/lessons";
@@ -26,6 +27,7 @@ import Scrollbar from "src/components/scrollbar";
 import { ICourseLessonProp } from "src/types/course";
 import { IQueryParamValue } from "src/types/query-params";
 
+import LessonNewForm from "./lesson-new-form";
 import FilterPrice from "../../../filters/filter-price";
 import FilterSearch from "../../../filters/filter-search";
 import FilterDuration from "../../../filters/filter-duration";
@@ -65,6 +67,8 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
 
 export default function AccountLessonsView() {
   const router = useRouter();
+
+  const formOpen = useBoolean();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
@@ -143,7 +147,7 @@ export default function AccountLessonsView() {
           size="small"
           color="success"
           loading={false}
-          onClick={() => {}}
+          onClick={formOpen.onToggle}
         >
           <Iconify icon="carbon:add" />
         </LoadingButton>
@@ -243,6 +247,8 @@ export default function AccountLessonsView() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Box>
+
+      <LessonNewForm open={formOpen.value} onClose={formOpen.onFalse} />
     </>
   );
 }

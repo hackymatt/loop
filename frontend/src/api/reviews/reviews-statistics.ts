@@ -21,7 +21,7 @@ export const reviewsStatisticsQuery = (query?: IQueryParams) => {
     return { results, count: records_count, pagesCount: pages_count };
   };
 
-  return { url, queryFn, queryKey: compact([queryUrl]) };
+  return { url, queryFn, queryKey: compact([endpoint, urlParams]) };
 };
 
 export const useReviewsStatistics = (query?: IQueryParams) => {

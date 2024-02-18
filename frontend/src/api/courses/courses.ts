@@ -103,7 +103,7 @@ export const coursesQuery = (query?: IQueryParams) => {
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };
   };
 
-  return { url, queryFn, queryKey: compact([queryUrl]) };
+  return { url, queryFn, queryKey: compact([endpoint, urlParams]) };
 };
 
 export const useCourses = (query?: IQueryParams) => {
