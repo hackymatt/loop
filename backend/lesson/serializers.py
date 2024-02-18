@@ -134,6 +134,9 @@ class LessonSerializer(ModelSerializer):
     def update(self, instance, validated_data):
         technologies = validated_data.pop("technologies")
 
+        Lesson.objects.filter(pk=instance.pk).update(**validated_data)
+
+        instance = Lesson.objects.get(pk=instance.pk)
         instance = self.add_technology(lesson=instance, technologies=technologies)
         instance.save()
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
+import { useMemo, useState, useCallback } from "react";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -28,6 +28,7 @@ import { ICourseLessonProp } from "src/types/course";
 import { IQueryParamValue } from "src/types/query-params";
 
 import LessonNewForm from "./lesson-new-form";
+import LessonEditForm from "./lesson-edit-form";
 import FilterPrice from "../../../filters/filter-price";
 import FilterSearch from "../../../filters/filter-search";
 import FilterDuration from "../../../filters/filter-duration";
@@ -68,7 +69,8 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
 export default function AccountLessonsView() {
   const router = useRouter();
 
-  const formOpen = useBoolean();
+  const newLessonFormOpen = useBoolean();
+  const editLessonFormOpen = useBoolean();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
@@ -86,6 +88,8 @@ export default function AccountLessonsView() {
   const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "title";
   const order = filters?.sort_by && filters.sort_by.startsWith("-") ? "desc" : "asc";
   const tab = filters?.active ? filters.active : "";
+
+  const [editedLesson, setEditedLesson] = useState<ICourseLessonProp>();
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -135,6 +139,14 @@ export default function AccountLessonsView() {
     [router],
   );
 
+  const handleEditLesson = useCallback(
+    (lesson: ICourseLessonProp) => {
+      setEditedLesson(lesson);
+      editLessonFormOpen.onToggle();
+    },
+    [editLessonFormOpen],
+  );
+
   return (
     <>
       <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
@@ -147,7 +159,7 @@ export default function AccountLessonsView() {
           size="small"
           color="success"
           loading={false}
-          onClick={formOpen.onToggle}
+          onClick={newLessonFormOpen.onToggle}
         >
           <Iconify icon="carbon:add" />
         </LoadingButton>
@@ -224,7 +236,7 @@ export default function AccountLessonsView() {
                   <AccountLessonsTableRow
                     key={row.id}
                     row={row}
-                    onEdit={() => {}}
+                    onEdit={handleEditLesson}
                     onPriceHistoryView={handlePriceHistoryView}
                   />
                 ))}
@@ -248,7 +260,14 @@ export default function AccountLessonsView() {
         />
       </Box>
 
-      <LessonNewForm open={formOpen.value} onClose={formOpen.onFalse} />
+      <LessonNewForm open={newLessonFormOpen.value} onClose={newLessonFormOpen.onFalse} />
+      {editedLesson && (
+        <LessonEditForm
+          lesson={editedLesson}
+          open={editLessonFormOpen.value}
+          onClose={editLessonFormOpen.onFalse}
+        />
+      )}
     </>
   );
 }

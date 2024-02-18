@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -13,30 +14,28 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useCreateLesson } from "src/api/lessons/lessons";
+import { useEditLesson } from "src/api/lesson/lesson";
 import { useTechnologies } from "src/api/technologies/technologies";
 
-import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFSwitch, RHFTextField, RHFAutocomplete } from "src/components/hook-form";
 
-import { ICourseByCategoryProps } from "src/types/course";
+import { ICourseLessonProp, ICourseByCategoryProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
+  lesson: ICourseLessonProp;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function LessonNewForm({ onClose, ...other }: Props) {
-  const { enqueueSnackbar } = useToastContext();
-
+export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
   const { data: availableTechnologies, isLoading: isLoadingTechnologies } = useTechnologies({
     sort_by: "name",
   });
 
-  const { mutateAsync: createLesson } = useCreateLesson();
+  const { mutateAsync: editLesson } = useEditLesson(lesson.id);
 
   const defaultValues = {
     active: false,
@@ -78,14 +77,27 @@ export default function LessonNewForm({ onClose, ...other }: Props) {
     formState: { isSubmitting },
   } = methods;
 
+  useEffect(() => {
+    if (lesson && availableTechnologies) {
+      reset({
+        ...lesson,
+        github_url: lesson.githubUrl,
+        technologies: lesson.category.map((category: string) =>
+          availableTechnologies.find(
+            (technology: ICourseByCategoryProps) => technology.name === category,
+          ),
+        ),
+      });
+    }
+  }, [availableTechnologies, lesson, reset]);
+
   const handleFormError = useFormErrorHandler(methods);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await createLesson(data);
+      await editLesson(data);
       reset();
       onClose();
-      enqueueSnackbar("Lekcja została dodana", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }

@@ -19,6 +19,7 @@ export type ICourseLessonProp = {
   id: string;
   title: string;
   duration: number;
+  category: string[];
   videoPath?: string;
   unLocked?: boolean;
   description: string;

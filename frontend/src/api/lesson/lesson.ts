@@ -1,10 +1,12 @@
+import { AxiosError } from "axios";
 import { compact } from "lodash-es";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { IGender } from "src/types/testimonial";
 import { ICourseLessonProp } from "src/types/course";
 
 import { Api } from "../service";
+import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/lessons" as const;
 
@@ -32,9 +34,21 @@ type ILesson = {
   description: string;
   duration: number;
   github_url: string;
-  price: string;
+  price: number;
   active: boolean;
 };
+
+type IEditLesson = Omit<
+  ILesson,
+  | "id"
+  | "lecturers"
+  | "students_count"
+  | "rating"
+  | "rating_count"
+  | "previous_price"
+  | "lowest_30_days_price"
+>;
+type IEditLessonReturn = IEditLesson;
 export const lessonQuery = (id: string) => {
   const url = endpoint;
   const queryUrl = `${url}/${id}`;
@@ -93,4 +107,24 @@ export const useLesson = (id: string) => {
   const { queryKey, queryFn } = lessonQuery(id);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.results as any as ICourseLessonProp, ...rest };
+};
+
+export const useEditLesson = (id: string) => {
+  const queryClient = useQueryClient();
+  const url = `${endpoint}/${id}`;
+  return useMutation<IEditLessonReturn, AxiosError, IEditLesson>(
+    async (variables) => {
+      const result = await Api.put(url, variables, {
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      });
+      return result.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [endpoint] });
+      },
+    },
+  );
 };
