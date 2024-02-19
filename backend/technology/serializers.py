@@ -1,10 +1,5 @@
-from rest_framework.serializers import (
-    ModelSerializer,
-    SerializerMethodField,
-)
-from lesson.models import (
-    Lesson,
-)
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from lesson.models import Lesson
 from technology.models import Technology
 from course.models import Course
 
@@ -12,13 +7,10 @@ from course.models import Course
 class TechnologySerializer(ModelSerializer):
     class Meta:
         model = Technology
-        exclude = (
-            "modified_at",
-            "created_at",
-        )
+        exclude = ("modified_at",)
 
 
-class TechnologyListSerializer(ModelSerializer):
+class BestTechnologySerializer(ModelSerializer):
     courses_count = SerializerMethodField("get_course_count")
 
     class Meta:

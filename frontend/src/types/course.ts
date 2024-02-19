@@ -44,7 +44,7 @@ export type ICourseLessonPriceHistoryProp = {
 export type ICourseByCategoryProps = {
   id: string;
   name: string;
-  totalStudents: number;
+  totalStudents?: number;
 };
 
 export type ICourseProps = {

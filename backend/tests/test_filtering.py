@@ -1099,7 +1099,7 @@ class TechnologyFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        create_technology(name="Python")
+        self.technology = create_technology(name="Python")
         create_technology(name="JavaScript")
         create_technology(name="C++")
         create_technology(name="C#")
@@ -1116,6 +1116,20 @@ class TechnologyFilterTest(APITestCase):
         self.assertEqual(records_count, 1)
         prices = [record["name"] for record in results]
         self.assertEqual(prices, ["Python"])
+
+    def test_created_at_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        date = str(self.technology.created_at)[0:10]
+        response = self.client.get(f"{self.endpoint}?created_at={date}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 5)
+        dates = list(set([date in record["created_at"] for record in results]))
+        self.assertTrue(len(dates) == 1)
+        self.assertTrue(dates[0])
 
 
 class LecturerFilterTest(APITestCase):

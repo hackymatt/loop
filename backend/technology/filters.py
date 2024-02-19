@@ -2,6 +2,7 @@ from django_filters import (
     FilterSet,
     OrderingFilter,
     CharFilter,
+    DateFilter,
 )
 from lesson.models import (
     Lesson,
@@ -44,16 +45,21 @@ class OrderFilter(OrderingFilter):
 
 class TechnologyFilter(FilterSet):
     name = CharFilter(field_name="name", lookup_expr="exact")
+    created_at = DateFilter(field_name="created_at", lookup_expr="contains")
     sort_by = OrderFilter(
         choices=(
             ("name", "Name ASC"),
             ("-name", "Name DESC"),
+            ("created_at", "Created At ASC"),
+            ("-created_at", "Created At DESC"),
             ("courses_count", "Courses Count ASC"),
             ("-courses_count", "Courses Count DESC"),
         ),
         fields={
             "name": "name",
             "-name": "-name",
+            "created_at": "created_at",
+            "-created_at": "-created_at",
             "courses_count": "courses_count",
             "-courses_count": "-courses_count",
         },
@@ -63,5 +69,6 @@ class TechnologyFilter(FilterSet):
         model = Technology
         fields = (
             "name",
+            "created_at",
             "sort_by",
         )
