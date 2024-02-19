@@ -65,6 +65,7 @@ class Migration(migrations.Migration):
                         ],
                     ),
                 ),
+                ("active", models.BooleanField(default=False)),
                 (
                     "technologies",
                     models.ManyToManyField(

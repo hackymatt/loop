@@ -19,6 +19,7 @@ export type ICourseLessonProp = {
   id: string;
   title: string;
   duration: number;
+  category: string[];
   videoPath?: string;
   unLocked?: boolean;
   description: string;
@@ -30,6 +31,14 @@ export type ICourseLessonProp = {
   totalStudents?: number;
   teachers?: ICourseTeacherProp[];
   githubUrl?: string;
+  active?: boolean;
+};
+
+export type ICourseLessonPriceHistoryProp = {
+  id: string;
+  lesson: ICourseLessonProp;
+  price: number;
+  createdAt: Date;
 };
 
 export type ICourseByCategoryProps = {

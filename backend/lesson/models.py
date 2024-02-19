@@ -3,6 +3,7 @@ from django.db.models import (
     ForeignKey,
     CharField,
     TextField,
+    BooleanField,
     PositiveIntegerField,
     URLField,
     DecimalField,
@@ -43,6 +44,7 @@ class Lesson(BaseModel):
     price = DecimalField(
         max_digits=7, decimal_places=2, validators=[MinValueValidator(Decimal("0.00"))]
     )
+    active = BooleanField(default=False)
 
     class Meta:
         db_table = "lesson"

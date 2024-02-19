@@ -1,6 +1,6 @@
 "use client";
 
-import NewsletterUnsubscribe from "../newsletter-unsubscribe";
+import NewsletterUnsubscribe from "../newsletter/newsletter-unsubscribe";
 
 // ----------------------------------------------------------------------
 

@@ -535,12 +535,52 @@ class LessonTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(lessons_number(), 6)
 
-    def test_update_lesson_authorized(self):
+    def test_update_lesson_authorized_price_change(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = self.amend_lesson
+        response = self.client.put(f"{self.endpoint}/{self.lesson_1.id}", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(lessons_number(), 6)
+
+        data = json.loads(response.content)
+
+        technologies_data = data.pop("technologies")
+        lecturers_data = data.pop("lecturers")
+        rating = data.pop("rating")
+        rating_count = data.pop("rating_count")
+        students_count = data.pop("students_count")
+
+        self.assertTrue(is_data_match(get_lesson(data["id"]), data))
+        self.assertEqual(rating, 4.5)
+        self.assertEqual(rating_count, 2)
+        self.assertEqual(students_count, 1)
+
+        for technology_data in technologies_data:
+            self.assertTrue(
+                is_data_match(get_technology(technology_data["id"]), technology_data)
+            )
+
+        for lecturer_data in lecturers_data:
+            user_data = filter_dict(lecturer_data, self.user_columns)
+            profile_data = filter_dict(lecturer_data, self.profile_columns)
+            self.assertTrue(is_data_match(get_user(lecturer_data["email"]), user_data))
+            self.assertTrue(
+                is_data_match(
+                    get_profile(get_user(lecturer_data["email"])), profile_data
+                )
+            )
+
+    def test_update_lesson_authorized_no_price_change(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = self.amend_lesson
+        data["price"] = self.lesson_1.price
+
         response = self.client.put(f"{self.endpoint}/{self.lesson_1.id}", data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(lessons_number(), 6)

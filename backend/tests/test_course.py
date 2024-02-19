@@ -336,6 +336,16 @@ class CourseTest(APITestCase):
         self.assertEqual(results[0]["rating_count"], 3)
         self.assertEqual(results[0]["students_count"], 2)
 
+    def test_get_course_inactive(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        self.course.active = False
+        self.course.save()
+
+        response = self.client.get(f"{self.endpoint}/{self.course.id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
     def test_get_course_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -761,6 +771,44 @@ class CourseTest(APITestCase):
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(courses_number(), 3)
+
+    def test_delete_course_unauthorized(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+
+        response = self.client.delete(f"{self.endpoint}/{self.course.id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(courses_number(), 3)
+
+    def test_delete_course_not_admin(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+
+        response = self.client.delete(f"{self.endpoint}/{self.course.id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(courses_number(), 3)
+
+    def test_delete_course_active_authorized(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+
+        response = self.client.delete(f"{self.endpoint}/{self.course.id}")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(courses_number(), 3)
+
+    def test_delete_course_authorized(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+
+        self.course.active = False
+        self.course.save()
+
+        response = self.client.delete(f"{self.endpoint}/{self.course.id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(courses_number(), 2)
 
 
 class BestCourseTest(APITestCase):

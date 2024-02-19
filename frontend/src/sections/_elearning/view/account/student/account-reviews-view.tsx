@@ -29,10 +29,10 @@ import ReviewNewForm from "src/sections/review/common/review-new-form";
 import { ReviewStatus } from "src/types/purchase";
 import { IQueryParamValue } from "src/types/query-params";
 
-import FilterSearch from "../filters/filter-search";
-import FilterTeacher from "../filters/filter-teacher";
-import AccountTableHead from "../account/account-table-head";
-import AccountReviewsTableRow from "../account/account-reviews-table-row";
+import FilterSearch from "../../../filters/filter-search";
+import FilterTeacher from "../../../filters/filter-teacher";
+import AccountTableHead from "../../../account/account-table-head";
+import AccountReviewsTableRow from "../../../account/user/account-reviews-table-row";
 
 // ----------------------------------------------------------------------
 

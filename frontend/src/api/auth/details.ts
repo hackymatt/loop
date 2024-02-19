@@ -42,7 +42,7 @@ export const userDetailsQuery = () => {
     return { results: data };
   };
 
-  return { url, queryFn, queryKey: compact([url]) };
+  return { url, queryFn, queryKey: compact([endpoint]) };
 };
 
 export const useUserDetails = () => {

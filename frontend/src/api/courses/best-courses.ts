@@ -87,7 +87,7 @@ export const bestCoursesQuery = () => {
     return { results: modifiedResults, count: records_count };
   };
 
-  return { url, queryFn, queryKey: compact([url]) };
+  return { url, queryFn, queryKey: compact([endpoint]) };
 };
 
 export const useBestCourses = () => {

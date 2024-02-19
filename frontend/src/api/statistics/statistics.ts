@@ -15,7 +15,7 @@ export const statisticsQuery = () => {
     return { results: data };
   };
 
-  return { url, queryFn, queryKey: compact([url]) };
+  return { url, queryFn, queryKey: compact([endpoint]) };
 };
 
 export const useStatistics = () => {

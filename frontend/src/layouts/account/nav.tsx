@@ -41,7 +41,7 @@ const userNavigations = [
   {
     title: "Zarządzaj hasłem",
     path: paths.account.password,
-    icon: <Iconify icon="carbon:user" />,
+    icon: <Iconify icon="carbon:password" />,
   },
 ];
 
@@ -65,14 +65,65 @@ const teacherNavigations = [
   ...userNavigations,
   ...[
     {
-      title: "Nauczanie",
-      path: paths.account.lessons,
-      icon: <Iconify icon="carbon:book" />,
+      title: "Lekcje",
+      path: paths.account.teacher.lessons,
+      icon: <Iconify icon="carbon:notebook" />,
+    },
+    {
+      title: "Terminarz",
+      path: paths.account.teacher.calendar,
+      icon: <Iconify icon="carbon:calendar" />,
     },
     {
       title: "Recenzje",
-      path: paths.account.reviews,
+      path: paths.account.teacher.reviews,
       icon: <Iconify icon="carbon:review" />,
+    },
+    {
+      title: "Zarobki",
+      path: paths.account.teacher.earnings,
+      icon: <Iconify icon="carbon:currency-dollar" />,
+    },
+  ],
+];
+
+const adminNavigations = [
+  ...userNavigations,
+  ...[
+    {
+      title: "Lekcje",
+      path: paths.account.admin.lessons,
+      icon: <Iconify icon="carbon:notebook" />,
+    },
+    {
+      title: "Historia cen lekcji",
+      path: paths.account.admin.lessonsPriceHistory,
+      icon: <Iconify icon="carbon:chart-line" />,
+    },
+    {
+      title: "Kursy",
+      path: paths.account.admin.courses,
+      icon: <Iconify icon="carbon:book" />,
+    },
+    {
+      title: "Użytkownicy",
+      path: paths.account.admin.users,
+      icon: <Iconify icon="carbon:user-multiple" />,
+    },
+    {
+      title: "Zakupy",
+      path: paths.account.admin.purchases,
+      icon: <Iconify icon="carbon:purchase" />,
+    },
+    {
+      title: "Recenzje",
+      path: paths.account.admin.reviews,
+      icon: <Iconify icon="carbon:review" />,
+    },
+    {
+      title: "Zarobki",
+      path: paths.account.admin.earnings,
+      icon: <Iconify icon="carbon:currency-dollar" />,
     },
   ],
 ];
@@ -101,7 +152,12 @@ export default function Nav({ open, onClose }: Props) {
   );
 
   const navigations = useMemo(
-    () => (userType === UserType.Student ? studentNavigations : teacherNavigations),
+    () =>
+      ({
+        [UserType.Admin]: adminNavigations,
+        [UserType.Wykładowca]: teacherNavigations,
+        [UserType.Student]: studentNavigations,
+      })[userType],
     [userType],
   );
 
