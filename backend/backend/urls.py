@@ -18,8 +18,9 @@ from course.views import (
 from lesson.views import (
     LessonViewSet,
     LessonPriceHistoryViewSet,
-    TechnologyViewSet,
+
 )
+from technology.views import TechnologyViewSet
 from review.views import ReviewViewSet, ReviewStatsViewSet, BestReviewViewSet
 from newsletter.views import (
     NewsletterEntriesViewSet,
