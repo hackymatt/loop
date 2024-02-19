@@ -115,7 +115,7 @@ class LessonSerializer(ModelSerializer):
     def add_technology(self, lesson, technologies):
         objs = []
         for technology in technologies:
-            obj, _ = Technology.objects.get_or_create(name=technology["name"])
+            obj = Technology.objects.get(name=technology["name"])
             objs.append(obj)
 
         lesson.technologies.add(*objs)

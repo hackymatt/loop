@@ -5,7 +5,7 @@ from .factory import (
     create_profile,
     create_course,
     create_lesson,
-    create_technology_obj,
+    create_technology,
     create_skill_obj,
     create_topic_obj,
     create_teaching,
@@ -67,6 +67,10 @@ class LecturersTest(APITestCase):
             user=self.lecturer_user_2, user_type="W"
         )
 
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
+
         # course 1
         self.lesson_1 = create_lesson(
             title="Python lesson 1",
@@ -74,7 +78,7 @@ class LecturersTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
         self.lesson_2 = create_lesson(
             title="Python lesson 2",
@@ -82,7 +86,7 @@ class LecturersTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
         self.course = create_course(
             title="Python Beginner",
@@ -208,6 +212,10 @@ class BestLecturersTest(APITestCase):
             user=self.lecturer_user_2, user_type="W"
         )
 
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
+
         # course 1
         self.lesson_1 = create_lesson(
             title="Python lesson 1",
@@ -215,7 +223,7 @@ class BestLecturersTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
         self.lesson_2 = create_lesson(
             title="Python lesson 2",
@@ -223,7 +231,7 @@ class BestLecturersTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
         self.course = create_course(
             title="Python Beginner",

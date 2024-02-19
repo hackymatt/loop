@@ -5,7 +5,7 @@ from .factory import (
     create_profile,
     create_course,
     create_lesson,
-    create_technology_obj,
+    create_technology,
     create_skill_obj,
     create_topic_obj,
 )
@@ -30,6 +30,10 @@ class ThrottlingTest(APITestCase):
         )
         self.profile = create_profile(user=self.user)
 
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
+
         # course 1
         self.lesson_1 = create_lesson(
             title="Python lesson 1",
@@ -37,7 +41,7 @@ class ThrottlingTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
         self.lesson_2 = create_lesson(
             title="Python lesson 2",
@@ -45,7 +49,7 @@ class ThrottlingTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
         self.course_1 = create_course(
             title="Python Beginner",
@@ -66,7 +70,7 @@ class ThrottlingTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.lesson_4 = create_lesson(
             title="JS lesson 2",
@@ -74,7 +78,7 @@ class ThrottlingTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.lesson_5 = create_lesson(
             title="JS lesson 3",
@@ -82,7 +86,7 @@ class ThrottlingTest(APITestCase):
             duration="120",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.course_2 = create_course(
             title="Javascript course for Advanced",
@@ -103,7 +107,7 @@ class ThrottlingTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="VBA")],
+            technologies=[self.technology_3],
         )
         self.course_3 = create_course(
             title="VBA course for Expert",

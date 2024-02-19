@@ -5,7 +5,8 @@ from course.models import (
     Skill,
     Topic,
 )
-from lesson.models import Lesson, LessonPriceHistory, Technology
+from lesson.models import Lesson, LessonPriceHistory
+from technology.models import Technology
 from review.models import Review
 from purchase.models import Purchase
 from newsletter.models import Newsletter
@@ -163,7 +164,7 @@ def create_lesson(
         price=price,
     )
 
-    lesson.technologies.add(*create_fields(technologies, Technology))
+    lesson.technologies.add(*technologies)
     lesson.save()
 
     return lesson

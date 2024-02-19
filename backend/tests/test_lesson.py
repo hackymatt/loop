@@ -5,6 +5,7 @@ from .factory import (
     create_profile,
     create_lesson,
     create_lesson_obj,
+    create_technology,
     create_technology_obj,
     create_review,
     create_purchase,
@@ -82,13 +83,17 @@ class LessonTest(APITestCase):
             user=self.lecturer_user_2, user_type="W"
         )
 
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
+
         self.lesson_1 = create_lesson(
             title="Python lesson 1",
             description="bbbb",
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
 
         self.lesson_2 = create_lesson(
@@ -97,7 +102,7 @@ class LessonTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
 
         create_lesson_price_history(self.lesson_1, 15)
@@ -163,7 +168,7 @@ class LessonTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
 
         self.lesson_4 = create_lesson(
@@ -172,7 +177,7 @@ class LessonTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
 
         create_lesson_price_history(self.lesson_3, 15)
@@ -231,7 +236,7 @@ class LessonTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="VBA")],
+            technologies=[self.technology_3],
         )
 
         self.lesson_6 = create_lesson(
@@ -240,7 +245,7 @@ class LessonTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="VBA")],
+            technologies=[self.technology_3],
         )
 
         create_lesson_price_history(self.lesson_5, 15)
@@ -302,7 +307,7 @@ class LessonTest(APITestCase):
             price="89.99",
             duration=90,
             github_url="https://github.com/hackymatt/lesson",
-            technologies=[create_technology_obj(name="Javascript")],
+            technologies=[create_technology_obj(name=self.technology_2.name)],
         )
 
         self.amend_lesson = create_lesson_obj(
@@ -311,7 +316,7 @@ class LessonTest(APITestCase):
             price="19.99",
             duration=60,
             github_url="https://github.com/hackymatt/lesson",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[create_technology_obj(name=self.technology_1.name)],
         )
 
     def test_get_lessons_no_admin(self):

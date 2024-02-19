@@ -51,7 +51,7 @@ class TechnologyTest(APITestCase):
 
         self.new_technology = create_technology_obj(name="Git")
 
-        self.amend_technology = create_technology_obj(name="JS")
+        self.amend_technology = create_technology_obj(name=self.technology.name)
 
     def test_get_technologies_unauthenticated(self):
         # no login
