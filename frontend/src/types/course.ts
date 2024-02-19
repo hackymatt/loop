@@ -45,6 +45,7 @@ export type ICourseByCategoryProps = {
   id: string;
   name: string;
   totalStudents?: number;
+  createdAt: Date;
 };
 
 export type ICourseProps = {

@@ -5,7 +5,7 @@ import AdminLessonsPriceHistoryView from "src/sections/_elearning/view/account/a
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: `${packageInfo.name}: Konto - Lekcje`,
+  title: `${packageInfo.name}: Konto - Historia cen lekcji`,
 };
 
 export default function AccountLessonsPriceHistoryPage() {

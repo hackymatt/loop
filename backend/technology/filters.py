@@ -44,7 +44,7 @@ class OrderFilter(OrderingFilter):
 
 
 class TechnologyFilter(FilterSet):
-    name = CharFilter(field_name="name", lookup_expr="exact")
+    name = CharFilter(field_name="name", lookup_expr="icontains")
     created_at = DateFilter(field_name="created_at", lookup_expr="contains")
     sort_by = OrderFilter(
         choices=(

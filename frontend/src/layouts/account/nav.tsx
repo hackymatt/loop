@@ -101,6 +101,11 @@ const adminNavigations = [
       icon: <Iconify icon="carbon:chart-line" />,
     },
     {
+      title: "Technologie",
+      path: paths.account.admin.technologies,
+      icon: <Iconify icon="carbon:code" />,
+    },
+    {
       title: "Kursy",
       path: paths.account.admin.courses,
       icon: <Iconify icon="carbon:book" />,
