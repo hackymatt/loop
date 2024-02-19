@@ -151,7 +151,7 @@ export default function AccountLessonsView() {
     <>
       <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
         <Typography variant="h5" sx={{ mb: 3 }}>
-          Lekcje
+          Spis lekcji
         </Typography>
         <LoadingButton
           component="label"

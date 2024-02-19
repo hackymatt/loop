@@ -97,7 +97,7 @@ export default function AdminLessonsPriceHistoryView() {
     <>
       <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
         <Typography variant="h5" sx={{ mb: 3 }}>
-          Historia cen lekcji
+          Historia cen
         </Typography>
       </Stack>
 

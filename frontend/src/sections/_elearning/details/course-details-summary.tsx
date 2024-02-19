@@ -19,7 +19,7 @@ type Props = {
 export default function CourseDetailsSummary({ course }: Props) {
   return (
     <Stack spacing={5}>
-      <CourseDetailsLessonList lessons={course.lessons ?? []} />
+      {course.lessons && <CourseDetailsLessonList lessons={course.lessons ?? []} />}
 
       <Stack spacing={3}>
         <Typography variant="h4">Czego się nauczysz</Typography>

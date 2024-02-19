@@ -103,28 +103,30 @@ export default function CourseItem({ course, vertical }: Props) {
           }}
         >
           <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Stack
-              spacing={0.5}
-              direction="row"
-              alignItems="center"
-              flexWrap="wrap"
-              divider={
-                <Box
-                  sx={{
-                    width: 4,
-                    height: 4,
-                    bgcolor: "text.disabled",
-                    borderRadius: "50%",
-                  }}
-                />
-              }
-            >
-              {categories.map((category: string) => (
-                <Typography key={category} variant="overline" sx={{ color: "primary.main" }}>
-                  {category}
-                </Typography>
-              ))}
-            </Stack>
+            {categories && (
+              <Stack
+                spacing={0.5}
+                direction="row"
+                alignItems="center"
+                flexWrap="wrap"
+                divider={
+                  <Box
+                    sx={{
+                      width: 4,
+                      height: 4,
+                      bgcolor: "text.disabled",
+                      borderRadius: "50%",
+                    }}
+                  />
+                }
+              >
+                {categories.map((category: string) => (
+                  <Typography key={category} variant="overline" sx={{ color: "primary.main" }}>
+                    {category}
+                  </Typography>
+                ))}
+              </Stack>
+            )}
 
             <Typography variant="h4" sx={{ textAlign: "right" }}>
               {priceSale && (
