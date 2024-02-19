@@ -18,8 +18,8 @@ from course.views import (
 from lesson.views import (
     LessonViewSet,
     LessonPriceHistoryViewSet,
-    TechnologyViewSet,
 )
+from technology.views import TechnologyViewSet, BestTechnologyViewSet
 from review.views import ReviewViewSet, ReviewStatsViewSet, BestReviewViewSet
 from newsletter.views import (
     NewsletterEntriesViewSet,
@@ -58,6 +58,9 @@ router.register(
     r"lesson-price-history", LessonPriceHistoryViewSet, basename="lesson_price_history"
 )
 router.register(r"technologies", TechnologyViewSet, basename="technologies")
+router.register(
+    r"best-technologies", BestTechnologyViewSet, basename="best_technologies"
+)
 router.register(r"best-lecturers", BestLecturerViewSet, basename="best_lecturers")
 router.register(r"lecturers", LecturerViewSet, basename="lecturers")
 router.register(r"reviews", ReviewViewSet, basename="reviews")

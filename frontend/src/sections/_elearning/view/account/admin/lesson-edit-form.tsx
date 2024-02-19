@@ -47,7 +47,7 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
     technologies: [],
   };
 
-  const NewLessonSchema = Yup.object().shape({
+  const EditLessonSchema = Yup.object().shape({
     active: Yup.boolean().required("Status jest wymagany"),
     title: Yup.string().required("Nazwa jest wymagana"),
     description: Yup.string().required("Opis jest wymagany"),
@@ -67,7 +67,7 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
   });
 
   const methods = useForm({
-    resolver: yupResolver(NewLessonSchema),
+    resolver: yupResolver(EditLessonSchema),
     defaultValues,
   });
 

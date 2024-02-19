@@ -9,8 +9,8 @@ from drf_extra_fields.fields import Base64ImageField
 from lesson.models import (
     Lesson,
     LessonPriceHistory,
-    Technology,
 )
+from technology.models import Technology
 from profile.models import Profile
 from review.models import Review
 from purchase.models import Purchase
@@ -155,25 +155,3 @@ class LessonPriceHistorySerializer(ModelSerializer):
     class Meta:
         model = LessonPriceHistory
         exclude = ("modified_at",)
-
-
-class TechnologyListSerializer(ModelSerializer):
-    courses_count = SerializerMethodField("get_course_count")
-
-    class Meta:
-        model = Technology
-        exclude = (
-            "modified_at",
-            "created_at",
-        )
-
-    def get_course_count(self, technology):
-        lessons = Lesson.technologies.through.objects.filter(
-            technology_id=technology
-        ).values("lesson_id")
-        courses = (
-            Course.lessons.through.objects.filter(lesson_id__in=lessons)
-            .values("course_id")
-            .distinct()
-        )
-        return courses.count()

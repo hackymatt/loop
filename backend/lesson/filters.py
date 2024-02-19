@@ -7,7 +7,6 @@ from django_filters import (
 )
 from lesson.models import (
     LessonPriceHistory,
-    Technology,
     Lesson,
 )
 from course.models import Course
@@ -37,9 +36,7 @@ class OrderFilter(OrderingFilter):
             return super().filter(queryset, values)
 
         for value in values:
-            if value in ["courses_count", "-courses_count"]:
-                queryset = get_courses_count(queryset).order_by(value)
-            elif value in ["lesson_name", "-lesson_name"]:
+            if value in ["lesson_name", "-lesson_name"]:
                 value_modified = value.replace("_name", "__title")
                 queryset = get_courses_count(queryset).order_by(value_modified)
             else:
@@ -79,31 +76,6 @@ class LessonPriceHistoryFilter(FilterSet):
             "price_from",
             "price_to",
             "created_at",
-            "sort_by",
-        )
-
-
-class TechnologyFilter(FilterSet):
-    name = CharFilter(field_name="name", lookup_expr="exact")
-    sort_by = OrderFilter(
-        choices=(
-            ("name", "Name ASC"),
-            ("-name", "Name DESC"),
-            ("courses_count", "Courses Count ASC"),
-            ("-courses_count", "Courses Count DESC"),
-        ),
-        fields={
-            "name": "name",
-            "-name": "-name",
-            "courses_count": "courses_count",
-            "-courses_count": "-courses_count",
-        },
-    )
-
-    class Meta:
-        model = Technology
-        fields = (
-            "name",
             "sort_by",
         )
 

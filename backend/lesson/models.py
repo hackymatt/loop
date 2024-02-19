@@ -11,28 +11,9 @@ from django.db.models import (
     CASCADE,
     Index,
 )
+from technology.models import Technology
 from django.core.validators import MinValueValidator
 from decimal import Decimal
-
-
-class Technology(BaseModel):
-    name = CharField()
-
-    class Meta:
-        db_table = "technology"
-        ordering = ["id"]
-        indexes = [
-            Index(
-                fields=[
-                    "id",
-                ]
-            ),
-            Index(
-                fields=[
-                    "name",
-                ]
-            ),
-        ]
 
 
 class Lesson(BaseModel):

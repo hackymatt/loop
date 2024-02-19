@@ -1,27 +1,27 @@
 import { useState, useCallback } from "react";
 
+import { Typography } from "@mui/material";
 import Popover from "@mui/material/Popover";
 import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import IconButton from "@mui/material/IconButton";
-import { Button, Typography } from "@mui/material";
 import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
-import { fCurrency } from "src/utils/format-number";
+import { fDate } from "src/utils/format-time";
 
 import Iconify from "src/components/iconify";
 
-import { ICourseLessonProp } from "src/types/course";
+import { ICourseByCategoryProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: ICourseLessonProp;
-  onEdit: (lesson: ICourseLessonProp) => void;
+  row: ICourseByCategoryProps;
+  onEdit: (technology: ICourseByCategoryProps) => void;
 };
 
-export default function AccountLessonsTableRow({ row, onEdit }: Props) {
+export default function AccountTechnologiesTableRow({ row, onEdit }: Props) {
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
 
   const handleOpen = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -42,35 +42,18 @@ export default function AccountLessonsTableRow({ row, onEdit }: Props) {
     [`&.${inputBaseClasses.focused}`]: {
       bgcolor: "action.selected",
     },
+    width: 1,
   };
 
   return (
     <>
       <TableRow hover>
         <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.title} sx={inputStyles} />
+          <InputBase value={row.name} sx={inputStyles} />
         </TableCell>
 
         <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.duration} sx={inputStyles} />
-        </TableCell>
-
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={fCurrency(row.price ?? 0)} sx={inputStyles} />
-        </TableCell>
-
-        <TableCell sx={{ px: 1 }}>
-          <Button
-            size="small"
-            variant="outlined"
-            component="a"
-            href={row.githubUrl}
-            target="_blank"
-            startIcon={<Iconify icon="carbon:logo-github" />}
-            sx={{ ml: 1 }}
-          >
-            GitHub
-          </Button>
+          <InputBase value={fDate(row.createdAt)} />
         </TableCell>
 
         <TableCell align="right" padding="none">
@@ -94,7 +77,7 @@ export default function AccountLessonsTableRow({ row, onEdit }: Props) {
       >
         <MenuItem onClick={handleEdit} sx={{ mr: 1, width: "fit-content" }}>
           <Iconify icon="carbon:edit" />
-          <Typography variant="body2">Edytuj lekcję</Typography>
+          <Typography variant="body2">Edytuj technologię</Typography>
         </MenuItem>
       </Popover>
     </>

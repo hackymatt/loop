@@ -2,8 +2,8 @@
 
 import { useBestCourses } from "src/api/courses/best-courses";
 import { useBestReviews } from "src/api/reviews/best-reviews";
-import { useTechnologies } from "src/api/technologies/technologies";
 import { useBestLecturers } from "src/api/lecturers/best-lecturers";
+import { useBestTechnologies } from "src/api/technologies/best-technologies";
 
 import Team from "../team/team";
 import Newsletter from "../newsletter/newsletter";
@@ -19,7 +19,7 @@ import LandingFeaturedCourses from "../landing/landing-featured-courses";
 export default function HomeView() {
   const { data: bestReviews } = useBestReviews();
   const { data: bestCourses } = useBestCourses();
-  const { data: technologies } = useTechnologies({ sort_by: "-courses_count" });
+  const { data: technologies } = useBestTechnologies({ sort_by: "-courses_count" });
   const { data: bestLecturers } = useBestLecturers();
 
   return (

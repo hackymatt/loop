@@ -1,5 +1,6 @@
+import { AxiosError } from "axios";
 import { compact } from "lodash-es";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
@@ -7,16 +8,20 @@ import { IQueryParams } from "src/types/query-params";
 import { ICourseByCategoryProps } from "src/types/course";
 
 import { Api } from "../service";
+import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/technologies" as const;
 
 type ITechnology = {
   id: number;
-  courses_count: number;
   modified_at: string;
   created_at: string;
   name: string;
 };
+
+type ICreateTechnology = Pick<ITechnology, "name">;
+
+type ICreateTechnologyReturn = ICreateTechnology;
 
 export const technologiesQuery = (query?: IQueryParams) => {
   const url = endpoint;
@@ -24,13 +29,13 @@ export const technologiesQuery = (query?: IQueryParams) => {
 
   const queryFn = async () => {
     const { data } = await Api.get(`${url}?${urlParams}`);
-    const { results, records_count } = data;
-    const modifiedResults = results.map(({ id, name, courses_count }: ITechnology) => ({
+    const { results, records_count, pages_count } = data;
+    const modifiedResults = results.map(({ id, name, created_at }: ITechnology) => ({
       id,
       name,
-      totalStudents: courses_count,
+      createdAt: created_at,
     }));
-    return { results: modifiedResults, count: records_count };
+    return { results: modifiedResults, count: records_count, pagesCount: pages_count };
   };
 
   return { url, queryFn, queryKey: compact([url, urlParams]) };
@@ -40,4 +45,29 @@ export const useTechnologies = (query?: IQueryParams) => {
   const { queryKey, queryFn } = technologiesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.results as ICourseByCategoryProps[], ...rest };
+};
+
+export const useTechnologiesPagesCount = (query?: IQueryParams) => {
+  const { queryKey, queryFn } = technologiesQuery(query);
+  const { data, ...rest } = useQuery({ queryKey, queryFn });
+  return { data: data?.pagesCount, ...rest };
+};
+
+export const useCreateTechnology = () => {
+  const queryClient = useQueryClient();
+  return useMutation<ICreateTechnologyReturn, AxiosError, ICreateTechnology>(
+    async (variables) => {
+      const result = await Api.post(endpoint, variables, {
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      });
+      return result.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [endpoint] });
+      },
+    },
+  );
 };
