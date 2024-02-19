@@ -134,6 +134,12 @@ class LessonSerializer(ModelSerializer):
     def update(self, instance, validated_data):
         technologies = validated_data.pop("technologies")
 
+        current_price = instance.price
+        new_price = validated_data.get("price", instance.price)
+
+        if current_price != new_price:
+            LessonPriceHistory.objects.create(lesson=instance, price=current_price)
+
         Lesson.objects.filter(pk=instance.pk).update(**validated_data)
 
         instance = Lesson.objects.get(pk=instance.pk)

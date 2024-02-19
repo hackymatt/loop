@@ -48,7 +48,7 @@ export default function AdminLessonsPriceHistoryView() {
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
   if (Object.keys(filters).length === 0) {
-    setQueryParam("sort_by", "lesson_name");
+    setQueryParam("sort_by", "-created_at");
   }
 
   const { data: pagesCount } = useLessonsPriceHistoryPagesCount(filters);
@@ -101,7 +101,7 @@ export default function AdminLessonsPriceHistoryView() {
         </Typography>
       </Stack>
 
-      <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 5, mb: 3 }}>
+      <Stack direction={{ xs: "column", md: "row" }} spacing={1} sx={{ mt: 5, mb: 3 }}>
         <FilterSearch
           value={filters?.lesson_name ?? ""}
           onChangeSearch={(value) => handleChange("lesson_name", value)}

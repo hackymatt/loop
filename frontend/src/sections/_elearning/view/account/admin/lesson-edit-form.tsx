@@ -107,7 +107,7 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nową lekcję</DialogTitle>
+          <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj lekcję</DialogTitle>
           <RHFSwitch name="active" label="Status" />
         </Stack>
 

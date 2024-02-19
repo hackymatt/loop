@@ -177,7 +177,7 @@ export default function AccountLessonsView() {
         ))}
       </Tabs>
 
-      <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 5, mb: 3 }}>
+      <Stack direction={{ xs: "column", md: "row" }} spacing={1} sx={{ mt: 5, mb: 3 }}>
         <FilterSearch
           value={filters?.title ?? ""}
           onChangeSearch={(value) => handleChange("title", value)}
@@ -195,12 +195,6 @@ export default function AccountLessonsView() {
           valuePriceTo={filters?.price_to ?? ""}
           onChangeStartPrice={(value) => handleChange("price_from", value)}
           onChangeEndPrice={(value) => handleChange("price_to", value)}
-        />
-
-        <FilterSearch
-          value={filters?.github_url ?? ""}
-          onChangeSearch={(value) => handleChange("github_url", value)}
-          placeholder="Repozytorium..."
         />
       </Stack>
 

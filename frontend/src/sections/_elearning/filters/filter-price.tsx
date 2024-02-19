@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 
+import { InputAdornment } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Stack, { StackProps } from "@mui/material/Stack";
 
@@ -69,6 +70,10 @@ function PriceInput({ placeholder, price, onChange }: PriceInputProps) {
       type="number"
       value={value === 0 ? "" : value}
       onChange={(event) => handleChange(event)}
+      InputProps={{
+        inputProps: { min: 0, step: ".01" },
+        endAdornment: <InputAdornment position="end">zł</InputAdornment>,
+      }}
     />
   );
 }
