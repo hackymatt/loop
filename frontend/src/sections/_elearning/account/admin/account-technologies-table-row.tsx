@@ -75,7 +75,7 @@ export default function AccountTechnologiesTableRow({ row, onEdit }: Props) {
           },
         }}
       >
-        <MenuItem onClick={handleEdit} sx={{ mr: 1 }}>
+        <MenuItem onClick={handleEdit} sx={{ mr: 1, width: "fit-content" }}>
           <Iconify icon="carbon:edit" />
           <Typography variant="body2">Edytuj technologię</Typography>
         </MenuItem>
