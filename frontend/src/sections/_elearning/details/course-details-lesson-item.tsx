@@ -106,6 +106,31 @@ export default function CourseDetailsLessonItem({
           <LinearProgress />
         ) : (
           <Stack spacing={3}>
+            {details.category && (
+              <Stack
+                spacing={0.5}
+                direction="row"
+                alignItems="center"
+                flexWrap="wrap"
+                divider={
+                  <Box
+                    sx={{
+                      width: 4,
+                      height: 4,
+                      bgcolor: "text.disabled",
+                      borderRadius: "50%",
+                    }}
+                  />
+                }
+              >
+                {details.category.map((category: string) => (
+                  <Typography key={category} variant="overline" sx={{ color: "primary.main" }}>
+                    {category}
+                  </Typography>
+                ))}
+              </Stack>
+            )}
+
             <Typography sx={{ color: "text.secondary", textAlign: "justify" }}>
               {details?.description}
             </Typography>

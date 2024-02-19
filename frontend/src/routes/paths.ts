@@ -20,9 +20,11 @@ export const paths = {
     personal: "/account/personal",
     password: "/account/password",
     admin: {
-      lessons: "/account/admin/lessons",
-      lessonsPriceHistory: "/account/admin/lessons-price-history",
-      technologies: "/account/admin/technologies",
+      lessons: {
+        list: "/account/admin/lessons/list",
+        priceHistory: "/account/admin/lessons/price-history",
+        technologies: "/account/admin/lessons/technologies",
+      },
       courses: "/account/admin/courses",
       users: "/account/admin/users",
       purchases: "/account/admin/purchases",

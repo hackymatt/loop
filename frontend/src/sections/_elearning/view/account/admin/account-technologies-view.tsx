@@ -53,14 +53,8 @@ export default function AccountTechnologiesView() {
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  if (Object.keys(filters).length === 0) {
-    setQueryParam("sort_by", "name");
-  }
-
   const { data: pagesCount } = useTechnologiesPagesCount(filters);
   const { data: technologies } = useTechnologies(filters);
-
-  console.log(technologies);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;

@@ -47,10 +47,6 @@ export default function AdminLessonsPriceHistoryView() {
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  if (Object.keys(filters).length === 0) {
-    setQueryParam("sort_by", "-created_at");
-  }
-
   const { data: pagesCount } = useLessonsPriceHistoryPagesCount(filters);
   const { data: lessonsPriceHistories } = useLessonsPriceHistory(filters);
 

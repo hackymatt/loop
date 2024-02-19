@@ -106,13 +106,13 @@ const adminNavigations = [
       children: [
         {
           title: "Spis kursów",
-          path: paths.account.admin.lessons,
+          path: `${paths.account.admin.lessons.list}/?sort_by=title`,
           icon: <Iconify icon="carbon:list" />,
           children: [],
         },
         {
           title: "Umiejętności",
-          path: paths.account.admin.technologies,
+          path: `${paths.account.admin.lessons.technologies}/?sort_by=name`,
           icon: <Iconify icon="carbon:policy" />,
           children: [],
         },
@@ -126,24 +126,24 @@ const adminNavigations = [
     },
     {
       title: "Lekcje",
-      path: paths.account.admin.lessons,
+      path: paths.account.admin.lessons.list,
       icon: <Iconify icon="carbon:notebook" />,
       children: [
         {
           title: "Spis lekcji",
-          path: paths.account.admin.lessons,
+          path: `${paths.account.admin.lessons.list}/?sort_by=title`,
           icon: <Iconify icon="carbon:list" />,
           children: [],
         },
         {
           title: "Historia cen",
-          path: paths.account.admin.lessonsPriceHistory,
+          path: `${paths.account.admin.lessons.priceHistory}/?sort_by=-created_at`,
           icon: <Iconify icon="carbon:chart-line" />,
           children: [],
         },
         {
           title: "Technologie",
-          path: paths.account.admin.technologies,
+          path: `${paths.account.admin.lessons.technologies}/?sort_by=name`,
           icon: <Iconify icon="carbon:code" />,
           children: [],
         },
