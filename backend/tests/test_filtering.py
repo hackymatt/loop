@@ -5,7 +5,7 @@ from .factory import (
     create_profile,
     create_course,
     create_lesson,
-    create_skill_obj,
+    create_skill,
     create_topic,
     create_review,
     create_purchase,
@@ -92,11 +92,14 @@ class CourseFilterTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -184,7 +187,7 @@ class CourseFilterTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             level="Zaawansowany",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -293,7 +296,7 @@ class CourseFilterTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             level="Ekspert",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -492,11 +495,14 @@ class ReviewFilterTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -555,7 +561,7 @@ class ReviewFilterTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             level="Zaawansowany",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -612,7 +618,7 @@ class ReviewFilterTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             level="Ekspert",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -771,11 +777,14 @@ class ScheduleFilterTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -822,7 +831,7 @@ class ScheduleFilterTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             level="Zaawansowany",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -853,7 +862,7 @@ class ScheduleFilterTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             level="Ekspert",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -967,11 +976,14 @@ class LessonPriceHistoryFilterTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
         self.course = create_course(
             title="course_title",
             description="course_description",
             level="Podstawowy",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1006,7 +1018,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             title="course_title 2",
             description="course_description",
             level="Podstawowy",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1041,7 +1053,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             title="course_title 3",
             description="course_description",
             level="Podstawowy",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1212,6 +1224,53 @@ class TopicFilterTest(APITestCase):
         self.assertTrue(dates[0])
 
 
+class SkillFilterTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/skills"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.skill = create_skill(name="A")
+        create_skill(name="B")
+        create_skill(name="C")
+        create_skill(name="D")
+        create_skill(name="E")
+
+    def test_name_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}?name=A")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        prices = [record["name"] for record in results]
+        self.assertEqual(prices, ["A"])
+
+    def test_created_at_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        date = str(self.skill.created_at)[0:10]
+        response = self.client.get(f"{self.endpoint}?created_at={date}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 5)
+        dates = list(set([date in record["created_at"] for record in results]))
+        self.assertTrue(len(dates) == 1)
+        self.assertTrue(dates[0])
+
+
 class LecturerFilterTest(APITestCase):
     def setUp(self):
         self.endpoint = "/lecturers"
@@ -1281,11 +1340,14 @@ class LecturerFilterTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
         self.course = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1424,11 +1486,14 @@ class PurchaseFilterTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1527,7 +1592,7 @@ class PurchaseFilterTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             level="Zaawansowany",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1567,7 +1632,7 @@ class PurchaseFilterTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             level="Ekspert",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,

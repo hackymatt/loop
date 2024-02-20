@@ -7,12 +7,10 @@ from rest_framework.serializers import (
 )
 from drf_extra_fields.fields import Base64ImageField, Base64FileField
 from rest_framework.serializers import ValidationError
-from course.models import (
-    Course,
-    Skill,
-)
+from course.models import Course
 from lesson.models import Lesson, Technology, LessonPriceHistory
 from topic.models import Topic
+from skill.models import Skill
 from profile.models import Profile
 from review.models import Review
 from purchase.models import Purchase
@@ -559,7 +557,7 @@ class CourseSerializer(ModelSerializer):
     def add_skills(self, course, skills):
         objs = []
         for skill in skills:
-            obj, _ = Skill.objects.get_or_create(name=skill["name"])
+            obj = Skill.objects.get(name=skill["name"])
             objs.append(obj)
 
         course.skills.add(*objs)

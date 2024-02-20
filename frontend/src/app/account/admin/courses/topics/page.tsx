@@ -5,7 +5,7 @@ import AdminCoursesTopicsView from "src/sections/_elearning/view/account/admin/a
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: `${packageInfo.name}: Konto - Lekcje`,
+  title: `${packageInfo.name}: Konto - Tematy`,
 };
 
 export default function AccountCoursesTopicsPage() {

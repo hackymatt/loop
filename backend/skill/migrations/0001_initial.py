@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Technology",
+            name="Skill",
             fields=[
                 (
                     "id",
@@ -23,14 +23,14 @@ class Migration(migrations.Migration):
                 ),
                 ("modified_at", models.DateTimeField(auto_now=True)),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
-                ("name", models.CharField()),
+                ("name", models.TextField()),
             ],
             options={
-                "db_table": "technology",
+                "db_table": "skill",
                 "ordering": ["name"],
                 "indexes": [
-                    models.Index(fields=["id"], name="technology_id_74ed03_idx"),
-                    models.Index(fields=["name"], name="technology_name_ef7438_idx"),
+                    models.Index(fields=["id"], name="skill_id_0bf196_idx"),
+                    models.Index(fields=["name"], name="skill_name_e8acf2_idx"),
                 ],
             },
         ),

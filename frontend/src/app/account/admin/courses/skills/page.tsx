@@ -1,13 +1,13 @@
 import packageInfo from "package.json";
 
-import AdminLessonsView from "src/sections/_elearning/view/account/admin/account-lessons-view";
+import AccountCoursesSkillsView from "src/sections/_elearning/view/account/admin/account-courses-skills-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: `${packageInfo.name}: Konto - Lekcje`,
+  title: `${packageInfo.name}: Konto - Umiejętności`,
 };
 
-export default function AccountLessonsPage() {
-  return <AdminLessonsView />;
+export default function AccountCoursesSkillsPage() {
+  return <AccountCoursesSkillsView />;
 }

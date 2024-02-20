@@ -1,12 +1,10 @@
 from django.contrib.auth.models import User
 from profile.models import Profile
-from course.models import (
-    Course,
-    Skill,
-)
+from course.models import Course
 from lesson.models import Lesson, LessonPriceHistory
 from technology.models import Technology
 from topic.models import Topic
+from skill.models import Skill
 from review.models import Review
 from purchase.models import Purchase
 from newsletter.models import Newsletter
@@ -116,8 +114,8 @@ def create_course(
         active=active,
     )
 
-    course.lessons.add(*find_fields(lessons, Lesson))
-    course.skills.add(*create_fields(skills, Skill))
+    course.lessons.add(*lessons)
+    course.skills.add(*skills)
     course.topics.add(*topics)
     course.image = create_image()
     course.video = create_video()
@@ -196,6 +194,10 @@ def create_technology(name: str):
 
 def create_technology_obj(name: str):
     return {"name": name}
+
+
+def create_skill(name: str):
+    return Skill.objects.create(name=name)
 
 
 def create_skill_obj(name: str):
