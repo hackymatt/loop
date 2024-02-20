@@ -6,7 +6,7 @@ from .factory import (
     create_course,
     create_lesson,
     create_skill_obj,
-    create_topic_obj,
+    create_topic,
     create_review,
     create_purchase,
     create_teaching,
@@ -89,14 +89,17 @@ class CourseFilterTest(APITestCase):
             technologies=[self.technology_1],
         )
 
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2],
         )
@@ -183,8 +186,8 @@ class CourseFilterTest(APITestCase):
             level="Zaawansowany",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
         )
@@ -292,8 +295,8 @@ class CourseFilterTest(APITestCase):
             level="Ekspert",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_6],
         )
@@ -485,14 +488,18 @@ class ReviewFilterTest(APITestCase):
             price="2.99",
             technologies=[self.technology_1],
         )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2],
         )
@@ -550,8 +557,8 @@ class ReviewFilterTest(APITestCase):
             level="Zaawansowany",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
         )
@@ -607,8 +614,8 @@ class ReviewFilterTest(APITestCase):
             level="Ekspert",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_6],
         )
@@ -760,14 +767,18 @@ class ScheduleFilterTest(APITestCase):
             price="2.99",
             technologies=[self.technology_1],
         )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2],
         )
@@ -813,8 +824,8 @@ class ScheduleFilterTest(APITestCase):
             level="Zaawansowany",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
         )
@@ -844,8 +855,8 @@ class ScheduleFilterTest(APITestCase):
             level="Ekspert",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_6],
         )
@@ -952,14 +963,18 @@ class LessonPriceHistoryFilterTest(APITestCase):
             price="2.99",
             technologies=[self.technology_1],
         )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course = create_course(
             title="course_title",
             description="course_description",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2],
         )
@@ -993,8 +1008,8 @@ class LessonPriceHistoryFilterTest(APITestCase):
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_3, self.lesson_4],
         )
@@ -1028,8 +1043,8 @@ class LessonPriceHistoryFilterTest(APITestCase):
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_5, self.lesson_6],
         )
@@ -1150,6 +1165,53 @@ class TechnologyFilterTest(APITestCase):
         self.assertTrue(dates[0])
 
 
+class TopicFilterTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/topics"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.topic = create_topic(name="A")
+        create_topic(name="B")
+        create_topic(name="C")
+        create_topic(name="D")
+        create_topic(name="E")
+
+    def test_name_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}?name=A")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        prices = [record["name"] for record in results]
+        self.assertEqual(prices, ["A"])
+
+    def test_created_at_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        date = str(self.topic.created_at)[0:10]
+        response = self.client.get(f"{self.endpoint}?created_at={date}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 5)
+        dates = list(set([date in record["created_at"] for record in results]))
+        self.assertTrue(len(dates) == 1)
+        self.assertTrue(dates[0])
+
+
 class LecturerFilterTest(APITestCase):
     def setUp(self):
         self.endpoint = "/lecturers"
@@ -1215,14 +1277,18 @@ class LecturerFilterTest(APITestCase):
             price="2.99",
             technologies=[self.technology_1],
         )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2],
         )
@@ -1354,14 +1420,18 @@ class PurchaseFilterTest(APITestCase):
             price="2.99",
             technologies=[self.technology_1],
         )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2, self.lesson_3],
         )
@@ -1459,8 +1529,8 @@ class PurchaseFilterTest(APITestCase):
             level="Zaawansowany",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_4, self.lesson_5, self.lesson_6],
         )
@@ -1499,8 +1569,8 @@ class PurchaseFilterTest(APITestCase):
             level="Ekspert",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_7],
         )

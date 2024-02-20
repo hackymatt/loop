@@ -10,9 +10,9 @@ from rest_framework.serializers import ValidationError
 from course.models import (
     Course,
     Skill,
-    Topic,
 )
 from lesson.models import Lesson, Technology, LessonPriceHistory
+from topic.models import Topic
 from profile.models import Profile
 from review.models import Review
 from purchase.models import Purchase
@@ -569,7 +569,7 @@ class CourseSerializer(ModelSerializer):
     def add_topics(self, course, topics):
         objs = []
         for topic in topics:
-            obj, _ = Topic.objects.get_or_create(name=topic["name"])
+            obj = Topic.objects.get(name=topic["name"])
             objs.append(obj)
 
         course.topics.add(*objs)

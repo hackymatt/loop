@@ -1,8 +1,9 @@
 from django.contrib.auth.models import User
 from profile.models import Profile
-from course.models import Course, Skill, Topic
+from course.models import Course, Skill
 from lesson.models import Lesson
 from technology.models import Technology
+from topic.models import Topic
 from review.models import Review
 from newsletter.models import Newsletter
 from schedule.models import Schedule
@@ -100,6 +101,10 @@ def get_lesson(id: int):
 
 def technologies_number():
     return Technology.objects.count()
+
+
+def topics_number():
+    return Topic.objects.count()
 
 
 def reviews_number():

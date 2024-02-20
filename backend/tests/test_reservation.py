@@ -7,7 +7,7 @@ from .factory import (
     create_lesson,
     create_technology,
     create_skill_obj,
-    create_topic_obj,
+    create_topic,
     create_purchase,
     create_schedule,
     create_teaching,
@@ -101,14 +101,18 @@ class ReservationTest(APITestCase):
             price="2.99",
             technologies=[self.technology_1],
         )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course = create_course(
             title="course_title",
             description="course_description",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2, self.lesson_3, self.lesson_4],
         )

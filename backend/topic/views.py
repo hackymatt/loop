@@ -1,16 +1,16 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
-from technology.serializers import TechnologySerializer, BestTechnologySerializer
-from technology.filters import TechnologyFilter
-from technology.models import Technology
+from topic.serializers import TopicSerializer
+from topic.filters import TopicFilter
+from topic.models import Topic
 
 
-class TechnologyViewSet(ModelViewSet):
+class TopicViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Technology.objects.all()
-    serializer_class = TechnologySerializer
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
     permission_classes = [AllowAny]
-    filterset_class = TechnologyFilter
+    filterset_class = TopicFilter
 
     def get_permissions(self):
         if (
@@ -22,10 +22,3 @@ class TechnologyViewSet(ModelViewSet):
         else:
             permission_classes = self.permission_classes
         return [permission() for permission in permission_classes]
-
-
-class BestTechnologyViewSet(ModelViewSet):
-    http_method_names = ["get"]
-    queryset = Technology.objects.all()
-    serializer_class = BestTechnologySerializer
-    filterset_class = TechnologyFilter

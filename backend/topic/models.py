@@ -1,15 +1,15 @@
 from backend.base_model import BaseModel
 from django.db.models import (
-    CharField,
+    TextField,
     Index,
 )
 
 
-class Technology(BaseModel):
-    name = CharField()
+class Topic(BaseModel):
+    name = TextField()
 
     class Meta:
-        db_table = "technology"
+        db_table = "topic"
         ordering = ["name"]
         indexes = [
             Index(

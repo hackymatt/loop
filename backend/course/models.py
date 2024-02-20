@@ -9,6 +9,7 @@ from django.db.models import (
     Index,
 )
 from lesson.models import Lesson
+from topic.models import Topic
 
 
 class Skill(BaseModel):
@@ -16,26 +17,6 @@ class Skill(BaseModel):
 
     class Meta:
         db_table = "skill"
-        ordering = ["id"]
-        indexes = [
-            Index(
-                fields=[
-                    "id",
-                ]
-            ),
-            Index(
-                fields=[
-                    "name",
-                ]
-            ),
-        ]
-
-
-class Topic(BaseModel):
-    name = TextField()
-
-    class Meta:
-        db_table = "topic"
         ordering = ["id"]
         indexes = [
             Index(

@@ -6,7 +6,7 @@ from .factory import (
     create_course,
     create_lesson,
     create_skill_obj,
-    create_topic_obj,
+    create_topic,
     create_review,
     create_purchase,
     create_lesson_price_history,
@@ -96,14 +96,18 @@ class CourseOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_1],
         )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2],
         )
@@ -172,8 +176,8 @@ class CourseOrderTest(APITestCase):
             level="Zaawansowany",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
         )
@@ -255,8 +259,8 @@ class CourseOrderTest(APITestCase):
             level="Ekspert",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_6],
         )
@@ -404,14 +408,18 @@ class ReviewOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_1],
         )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2],
         )
@@ -469,8 +477,8 @@ class ReviewOrderTest(APITestCase):
             level="Zaawansowany",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
         )
@@ -526,8 +534,8 @@ class ReviewOrderTest(APITestCase):
             level="Ekspert",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_6],
         )
@@ -661,14 +669,18 @@ class ScheduleOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_1],
         )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2],
         )
@@ -704,8 +716,8 @@ class ScheduleOrderTest(APITestCase):
             level="Zaawansowany",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
         )
@@ -725,8 +737,8 @@ class ScheduleOrderTest(APITestCase):
             level="Ekspert",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_6],
         )
@@ -829,14 +841,18 @@ class LessonPriceHistoryOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_1],
         )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course = create_course(
             title="course_title",
             description="course_description",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2],
         )
@@ -870,8 +886,8 @@ class LessonPriceHistoryOrderTest(APITestCase):
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_3, self.lesson_4],
         )
@@ -905,8 +921,8 @@ class LessonPriceHistoryOrderTest(APITestCase):
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_5, self.lesson_6],
         )
@@ -1098,6 +1114,70 @@ class TechnologyOrderTest(APITestCase):
                 self.assertEqual(field_values, sorted(field_values, reverse=True))
 
 
+class TopicOrderTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/topics"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        create_topic(name="A")
+        create_topic(name="B")
+        create_topic(name="C")
+        create_topic(name="D")
+        create_topic(name="E")
+
+        self.fields = ["name", "created_at"]
+
+    def test_ordering(self):
+        for field in self.fields:
+            self.assertFalse(auth.get_user(self.client).is_authenticated)
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by={field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 5)
+            field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values, sorted(field_values, key=lambda d: d["name"])
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values))
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by=-{field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 5)
+            field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values,
+                    sorted(field_values, key=lambda d: d["name"], reverse=True),
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values, reverse=True))
+
+
 class LecturerOrderTest(APITestCase):
     def setUp(self):
         self.endpoint = "/lecturers"
@@ -1163,14 +1243,18 @@ class LecturerOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_1],
         )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2],
         )
@@ -1239,8 +1323,8 @@ class LecturerOrderTest(APITestCase):
             level="Zaawansowany",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
         )
@@ -1322,8 +1406,8 @@ class LecturerOrderTest(APITestCase):
             level="Ekspert",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_6],
         )
@@ -1449,14 +1533,18 @@ class PurchaseOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_1],
         )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2],
         )
@@ -1534,8 +1622,8 @@ class PurchaseOrderTest(APITestCase):
             level="Zaawansowany",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
         )
@@ -1574,8 +1662,8 @@ class PurchaseOrderTest(APITestCase):
             level="Ekspert",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_6],
         )
