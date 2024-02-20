@@ -101,24 +101,24 @@ const adminNavigations = [
   ...[
     {
       title: "Kursy",
-      path: paths.account.admin.courses,
+      path: paths.account.admin.courses.list,
       icon: <Iconify icon="carbon:book" />,
       children: [
         {
           title: "Spis kursów",
-          path: `${paths.account.admin.lessons.list}/?sort_by=title`,
+          path: `${paths.account.admin.courses.list}/?sort_by=title`,
           icon: <Iconify icon="carbon:list" />,
           children: [],
         },
         {
           title: "Umiejętności",
-          path: `${paths.account.admin.lessons.technologies}/?sort_by=name`,
+          path: `${paths.account.admin.courses.skills}/?sort_by=name`,
           icon: <Iconify icon="carbon:policy" />,
           children: [],
         },
         {
           title: "Tematy",
-          path: paths.account.admin.purchases,
+          path: `${paths.account.admin.courses.topics}/?sort_by=name`,
           icon: <Iconify icon="carbon:query" />,
           children: [],
         },
@@ -149,13 +149,13 @@ const adminNavigations = [
         },
         {
           title: "Zakupy",
-          path: paths.account.admin.purchases,
+          path: paths.account.admin.lessons.purchases,
           icon: <Iconify icon="carbon:purchase" />,
           children: [],
         },
         {
           title: "Recenzje",
-          path: paths.account.admin.reviews,
+          path: paths.account.admin.lessons.reviews,
           icon: <Iconify icon="carbon:review" />,
           children: [],
         },

@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import AccountLessonsView from "src/sections/_elearning/view/account/student/account-lessons-view";
+import AdminLessonsView from "src/sections/_elearning/view/account/admin/account-lessons-view";
 
 // ----------------------------------------------------------------------
 
@@ -9,5 +9,5 @@ export const metadata = {
 };
 
 export default function AccountLessonsPage() {
-  return <AccountLessonsView />;
+  return <AdminLessonsView />;
 }

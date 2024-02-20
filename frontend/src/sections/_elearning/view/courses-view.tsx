@@ -19,10 +19,10 @@ import { SplashScreen } from "src/components/loading-screen";
 
 import NotFoundView from "src/sections/error/not-found-view";
 
-import Newsletter from "../newsletter/newsletter";
 import Sorting from "../sorting/sorting";
 import CourseList from "../list/course-list";
 import Filters from "../filters/course-filters";
+import Newsletter from "../newsletter/newsletter";
 
 // ----------------------------------------------------------------------
 

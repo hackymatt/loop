@@ -4,9 +4,9 @@ import { useBestReviews } from "src/api/reviews/best-reviews";
 import { useBestLecturers } from "src/api/lecturers/best-lecturers";
 
 import About from "../about/about";
-import Newsletter from "../newsletter/newsletter";
 import TeamAbout from "../team/team-about";
 import AboutHero from "../about/about-hero";
+import Newsletter from "../newsletter/newsletter";
 import Testimonial from "../testimonial/testimonial";
 import AboutCoreValues from "../about/about-core-values";
 
