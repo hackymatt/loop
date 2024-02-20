@@ -557,7 +557,7 @@ class CourseSerializer(ModelSerializer):
     def add_skills(self, course, skills):
         objs = []
         for skill in skills:
-            obj, _ = Skill.objects.get_or_create(name=skill["name"])
+            obj = Skill.objects.get(name=skill["name"])
             objs.append(obj)
 
         course.skills.add(*objs)

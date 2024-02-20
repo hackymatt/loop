@@ -6,7 +6,7 @@ from .factory import (
     create_course,
     create_lesson,
     create_technology,
-    create_skill_obj,
+    create_skill,
     create_topic,
     create_teaching,
     create_review,
@@ -92,11 +92,14 @@ class LecturersTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
         self.course = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -241,11 +244,14 @@ class BestLecturersTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
         self.course = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,

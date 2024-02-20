@@ -9,6 +9,7 @@ from .factory import (
     create_lesson_obj,
     create_technology,
     create_technology_obj,
+    create_skill,
     create_skill_obj,
     create_topic,
     create_topic_obj,
@@ -119,11 +120,14 @@ class CourseTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
         self.course = create_course(
             title="course_title",
             description="course_description",
             level="Podstawowy",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -210,7 +214,7 @@ class CourseTest(APITestCase):
             title="course_title 2",
             description="course_description",
             level="Podstawowy",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -244,7 +248,7 @@ class CourseTest(APITestCase):
             title="course_title 3",
             description="course_description",
             level="Podstawowy",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -280,7 +284,10 @@ class CourseTest(APITestCase):
                     ],
                 ),
             ],
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[
+                create_skill_obj(name=self.skill_1.name),
+                create_skill_obj(name=self.skill_2.name),
+            ],
             topics=[
                 create_topic_obj(name=self.topic_1.name),
                 create_topic_obj(name=self.topic_2.name),
@@ -307,7 +314,7 @@ class CourseTest(APITestCase):
                     ],
                 ),
             ],
-            skills=[create_skill_obj(name="coding")],
+            skills=[create_skill_obj(name=self.skill_1.name)],
             topics=[create_topic_obj(name=self.topic_2.name)],
             image=b64encode(create_image().read()),
             video=b64encode(create_video().read()),
@@ -888,11 +895,14 @@ class BestCourseTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
         self.course = create_course(
             title="course_title",
             description="course_description",
             level="Podstawowy",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -979,7 +989,7 @@ class BestCourseTest(APITestCase):
             title="course_title 2",
             description="course_description",
             level="Podstawowy",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1016,7 +1026,7 @@ class BestCourseTest(APITestCase):
             title="course_title 3",
             description="course_description",
             level="Podstawowy",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,

@@ -6,7 +6,7 @@ from .factory import (
     create_course,
     create_lesson,
     create_technology,
-    create_skill_obj,
+    create_skill,
     create_topic,
     create_wishlist,
 )
@@ -56,11 +56,14 @@ class WishlistTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -106,7 +109,7 @@ class WishlistTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             level="Zaawansowany",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -134,7 +137,7 @@ class WishlistTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             level="Ekspert",
-            skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
+            skills=[self.skill_1, self.skill_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
