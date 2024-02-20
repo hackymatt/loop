@@ -9,27 +9,8 @@ from django.db.models import (
     Index,
 )
 from lesson.models import Lesson
+from skill.models import Skill
 from topic.models import Topic
-
-
-class Skill(BaseModel):
-    name = CharField()
-
-    class Meta:
-        db_table = "skill"
-        ordering = ["id"]
-        indexes = [
-            Index(
-                fields=[
-                    "id",
-                ]
-            ),
-            Index(
-                fields=[
-                    "name",
-                ]
-            ),
-        ]
 
 
 def course_directory_path(instance, filename):

@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "profile",
     "technology",
     "lesson",
+    "skill",
     "topic",
     "course",
     "review",

@@ -21,6 +21,7 @@ from lesson.views import (
 )
 from technology.views import TechnologyViewSet, BestTechnologyViewSet
 from topic.views import TopicViewSet
+from skill.views import SkillViewSet
 from review.views import ReviewViewSet, ReviewStatsViewSet, BestReviewViewSet
 from newsletter.views import (
     NewsletterEntriesViewSet,
@@ -63,6 +64,7 @@ router.register(
     r"best-technologies", BestTechnologyViewSet, basename="best_technologies"
 )
 router.register(r"topics", TopicViewSet, basename="topics")
+router.register(r"skills", SkillViewSet, basename="skills")
 router.register(r"best-lecturers", BestLecturerViewSet, basename="best_lecturers")
 router.register(r"lecturers", LecturerViewSet, basename="lecturers")
 router.register(r"reviews", ReviewViewSet, basename="reviews")
