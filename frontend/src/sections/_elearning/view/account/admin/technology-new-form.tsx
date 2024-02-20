@@ -78,8 +78,8 @@ export default function TechnologyNewForm({ onClose, ...other }: Props) {
             Anuluj
           </Button>
 
-          <LoadingButton color="inherit" type="submit" variant="contained" loading={isSubmitting}>
-            Zapisz
+          <LoadingButton color="success" type="submit" variant="contained" loading={isSubmitting}>
+            Dodaj
           </LoadingButton>
         </DialogActions>
       </FormProvider>

@@ -76,10 +76,6 @@ export default function AccountLessonsView() {
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  if (Object.keys(filters).length === 0) {
-    setQueryParam("sort_by", "title");
-  }
-
   const { data: pagesCount } = useLessonsPagesCount(filters);
   const { data: lessons } = useLessons(filters);
 
@@ -151,7 +147,7 @@ export default function AccountLessonsView() {
     <>
       <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
         <Typography variant="h5" sx={{ mb: 3 }}>
-          Lekcje
+          Spis lekcji
         </Typography>
         <LoadingButton
           component="label"

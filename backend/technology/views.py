@@ -1,6 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
-from utils.permissions.permissions import IsStudent
 from technology.serializers import TechnologySerializer, BestTechnologySerializer
 from technology.filters import TechnologyFilter
 from technology.models import Technology

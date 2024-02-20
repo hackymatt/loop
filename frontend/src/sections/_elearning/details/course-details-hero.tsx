@@ -124,28 +124,34 @@ export default function CourseDetailsHero({ course }: Props) {
                     </Label>
                   )}
 
-                  <Stack
-                    spacing={0.5}
-                    direction="row"
-                    alignItems="center"
-                    flexWrap="wrap"
-                    divider={
-                      <Box
-                        sx={{
-                          width: 4,
-                          height: 4,
-                          bgcolor: "text.disabled",
-                          borderRadius: "50%",
-                        }}
-                      />
-                    }
-                  >
-                    {categories.map((category: string) => (
-                      <Typography key={category} variant="overline" sx={{ color: "primary.main" }}>
-                        {category}
-                      </Typography>
-                    ))}
-                  </Stack>
+                  {categories && (
+                    <Stack
+                      spacing={0.5}
+                      direction="row"
+                      alignItems="center"
+                      flexWrap="wrap"
+                      divider={
+                        <Box
+                          sx={{
+                            width: 4,
+                            height: 4,
+                            bgcolor: "text.disabled",
+                            borderRadius: "50%",
+                          }}
+                        />
+                      }
+                    >
+                      {categories.map((category: string) => (
+                        <Typography
+                          key={category}
+                          variant="overline"
+                          sx={{ color: "primary.main" }}
+                        >
+                          {category}
+                        </Typography>
+                      ))}
+                    </Stack>
+                  )}
 
                   <Typography variant="h3" component="h1">
                     {slug}

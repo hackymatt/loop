@@ -47,10 +47,6 @@ export default function AdminLessonsPriceHistoryView() {
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  if (Object.keys(filters).length === 0) {
-    setQueryParam("sort_by", "-created_at");
-  }
-
   const { data: pagesCount } = useLessonsPriceHistoryPagesCount(filters);
   const { data: lessonsPriceHistories } = useLessonsPriceHistory(filters);
 
@@ -97,7 +93,7 @@ export default function AdminLessonsPriceHistoryView() {
     <>
       <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
         <Typography variant="h5" sx={{ mb: 3 }}>
-          Historia cen lekcji
+          Historia cen
         </Typography>
       </Stack>
 

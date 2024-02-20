@@ -48,6 +48,12 @@ export type ICourseByCategoryProps = {
   createdAt: Date;
 };
 
+export type ICourseByTopicProps = {
+  id: string;
+  name: string;
+  createdAt: Date;
+};
+
 export type ICourseProps = {
   id: string;
   slug: string;

@@ -3,9 +3,10 @@ from profile.models import Profile
 from course.models import (
     Course,
     Skill,
-    Topic,
 )
-from lesson.models import Lesson, LessonPriceHistory, Technology
+from lesson.models import Lesson, LessonPriceHistory
+from technology.models import Technology
+from topic.models import Topic
 from review.models import Review
 from purchase.models import Purchase
 from newsletter.models import Newsletter
@@ -117,7 +118,7 @@ def create_course(
 
     course.lessons.add(*find_fields(lessons, Lesson))
     course.skills.add(*create_fields(skills, Skill))
-    course.topics.add(*create_fields(topics, Topic))
+    course.topics.add(*topics)
     course.image = create_image()
     course.video = create_video()
     course.save()
@@ -163,7 +164,7 @@ def create_lesson(
         price=price,
     )
 
-    lesson.technologies.add(*create_fields(technologies, Technology))
+    lesson.technologies.add(*technologies)
     lesson.save()
 
     return lesson
@@ -199,6 +200,10 @@ def create_technology_obj(name: str):
 
 def create_skill_obj(name: str):
     return {"name": name}
+
+
+def create_topic(name: str):
+    return Topic.objects.create(name=name)
 
 
 def create_topic_obj(name: str):

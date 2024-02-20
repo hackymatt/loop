@@ -5,9 +5,8 @@ from .factory import (
     create_profile,
     create_course,
     create_lesson,
-    create_technology_obj,
     create_skill_obj,
-    create_topic_obj,
+    create_topic,
     create_review,
     create_purchase,
     create_lesson_price_history,
@@ -76,6 +75,10 @@ class CourseOrderTest(APITestCase):
         self.lecturer_profile_2 = create_profile(
             user=self.lecturer_user_2, user_type="W"
         )
+
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
         # course 1
         self.lesson_1 = create_lesson(
             title="Python lesson 1",
@@ -83,7 +86,7 @@ class CourseOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
         self.lesson_2 = create_lesson(
             title="Python lesson 2",
@@ -91,16 +94,20 @@ class CourseOrderTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2],
         )
@@ -145,7 +152,7 @@ class CourseOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.lesson_4 = create_lesson(
             title="JS lesson 2",
@@ -153,7 +160,7 @@ class CourseOrderTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.lesson_5 = create_lesson(
             title="JS lesson 3",
@@ -161,7 +168,7 @@ class CourseOrderTest(APITestCase):
             duration="120",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.course_2 = create_course(
             title="Javascript course for Advanced",
@@ -169,8 +176,8 @@ class CourseOrderTest(APITestCase):
             level="Zaawansowany",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
         )
@@ -244,7 +251,7 @@ class CourseOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="VBA")],
+            technologies=[self.technology_3],
         )
         self.course_3 = create_course(
             title="VBA course for Expert",
@@ -252,8 +259,8 @@ class CourseOrderTest(APITestCase):
             level="Ekspert",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_6],
         )
@@ -379,6 +386,11 @@ class ReviewOrderTest(APITestCase):
         self.lecturer_profile_2 = create_profile(
             user=self.lecturer_user_2, user_type="W"
         )
+
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
+
         # course 1
         self.lesson_1 = create_lesson(
             title="Python lesson 1",
@@ -386,7 +398,7 @@ class ReviewOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
         self.lesson_2 = create_lesson(
             title="Python lesson 2",
@@ -394,16 +406,20 @@ class ReviewOrderTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2],
         )
@@ -437,7 +453,7 @@ class ReviewOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.lesson_4 = create_lesson(
             title="JS lesson 2",
@@ -445,7 +461,7 @@ class ReviewOrderTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.lesson_5 = create_lesson(
             title="JS lesson 3",
@@ -453,7 +469,7 @@ class ReviewOrderTest(APITestCase):
             duration="120",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.course_2 = create_course(
             title="Javascript course for Advanced",
@@ -461,8 +477,8 @@ class ReviewOrderTest(APITestCase):
             level="Zaawansowany",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
         )
@@ -510,7 +526,7 @@ class ReviewOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="VBA")],
+            technologies=[self.technology_3],
         )
         self.course_3 = create_course(
             title="VBA course for Expert",
@@ -518,8 +534,8 @@ class ReviewOrderTest(APITestCase):
             level="Ekspert",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_6],
         )
@@ -631,6 +647,11 @@ class ScheduleOrderTest(APITestCase):
         self.lecturer_profile_2 = create_profile(
             user=self.lecturer_user_2, user_type="W"
         )
+
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
+
         # course 1
         self.lesson_1 = create_lesson(
             title="Python lesson 1",
@@ -638,7 +659,7 @@ class ScheduleOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
         self.lesson_2 = create_lesson(
             title="Python lesson 2",
@@ -646,16 +667,20 @@ class ScheduleOrderTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2],
         )
@@ -667,7 +692,7 @@ class ScheduleOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.lesson_4 = create_lesson(
             title="JS lesson 2",
@@ -675,7 +700,7 @@ class ScheduleOrderTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.lesson_5 = create_lesson(
             title="JS lesson 3",
@@ -683,7 +708,7 @@ class ScheduleOrderTest(APITestCase):
             duration="120",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.course_2 = create_course(
             title="Javascript course for Advanced",
@@ -691,8 +716,8 @@ class ScheduleOrderTest(APITestCase):
             level="Zaawansowany",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
         )
@@ -704,7 +729,7 @@ class ScheduleOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="VBA")],
+            technologies=[self.technology_3],
         )
         self.course_3 = create_course(
             title="VBA course for Expert",
@@ -712,8 +737,8 @@ class ScheduleOrderTest(APITestCase):
             level="Ekspert",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_6],
         )
@@ -796,13 +821,17 @@ class LessonPriceHistoryOrderTest(APITestCase):
         )
         self.admin_profile = create_profile(user=self.admin_user, user_type="A")
 
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
+
         self.lesson_1 = create_lesson(
             title="Python lesson 1",
             description="bbbb",
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
         self.lesson_2 = create_lesson(
             title="Python lesson 2",
@@ -810,16 +839,20 @@ class LessonPriceHistoryOrderTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course = create_course(
             title="course_title",
             description="course_description",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2],
         )
@@ -837,7 +870,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.lesson_4 = create_lesson(
             title="JS lesson 2",
@@ -845,7 +878,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.course_2 = create_course(
             title="course_title 2",
@@ -853,8 +886,8 @@ class LessonPriceHistoryOrderTest(APITestCase):
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_3, self.lesson_4],
         )
@@ -872,7 +905,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="VBA")],
+            technologies=[self.technology_3],
         )
         self.lesson_6 = create_lesson(
             title="VBA lesson 2",
@@ -880,7 +913,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="VBA")],
+            technologies=[self.technology_3],
         )
         self.course_3 = create_course(
             title="course_title 3",
@@ -888,8 +921,8 @@ class LessonPriceHistoryOrderTest(APITestCase):
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_5, self.lesson_6],
         )
@@ -1081,6 +1114,70 @@ class TechnologyOrderTest(APITestCase):
                 self.assertEqual(field_values, sorted(field_values, reverse=True))
 
 
+class TopicOrderTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/topics"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        create_topic(name="A")
+        create_topic(name="B")
+        create_topic(name="C")
+        create_topic(name="D")
+        create_topic(name="E")
+
+        self.fields = ["name", "created_at"]
+
+    def test_ordering(self):
+        for field in self.fields:
+            self.assertFalse(auth.get_user(self.client).is_authenticated)
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by={field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 5)
+            field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values, sorted(field_values, key=lambda d: d["name"])
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values))
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by=-{field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 5)
+            field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values,
+                    sorted(field_values, key=lambda d: d["name"], reverse=True),
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values, reverse=True))
+
+
 class LecturerOrderTest(APITestCase):
     def setUp(self):
         self.endpoint = "/lecturers"
@@ -1124,6 +1221,11 @@ class LecturerOrderTest(APITestCase):
         self.lecturer_profile_2 = create_profile(
             user=self.lecturer_user_2, user_type="W", user_title="DevOps"
         )
+
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
+
         # course 1
         self.lesson_1 = create_lesson(
             title="Python lesson 1",
@@ -1131,7 +1233,7 @@ class LecturerOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
         self.lesson_2 = create_lesson(
             title="Python lesson 2",
@@ -1139,16 +1241,20 @@ class LecturerOrderTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2],
         )
@@ -1193,7 +1299,7 @@ class LecturerOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.lesson_4 = create_lesson(
             title="JS lesson 2",
@@ -1201,7 +1307,7 @@ class LecturerOrderTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.lesson_5 = create_lesson(
             title="JS lesson 3",
@@ -1209,7 +1315,7 @@ class LecturerOrderTest(APITestCase):
             duration="120",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.course_2 = create_course(
             title="Javascript course for Advanced",
@@ -1217,8 +1323,8 @@ class LecturerOrderTest(APITestCase):
             level="Zaawansowany",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
         )
@@ -1292,7 +1398,7 @@ class LecturerOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="VBA")],
+            technologies=[self.technology_3],
         )
         self.course_3 = create_course(
             title="VBA course for Expert",
@@ -1300,8 +1406,8 @@ class LecturerOrderTest(APITestCase):
             level="Ekspert",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_6],
         )
@@ -1406,6 +1512,10 @@ class PurchaseOrderTest(APITestCase):
         )
         self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
 
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
+
         # course 1
         self.lesson_1 = create_lesson(
             title="Python lesson 1",
@@ -1413,7 +1523,7 @@ class PurchaseOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
         self.lesson_2 = create_lesson(
             title="Python lesson 2",
@@ -1421,16 +1531,20 @@ class PurchaseOrderTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_1, self.lesson_2],
         )
@@ -1484,7 +1598,7 @@ class PurchaseOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.lesson_4 = create_lesson(
             title="JS lesson 2",
@@ -1492,7 +1606,7 @@ class PurchaseOrderTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.lesson_5 = create_lesson(
             title="JS lesson 3",
@@ -1500,7 +1614,7 @@ class PurchaseOrderTest(APITestCase):
             duration="120",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
         self.course_2 = create_course(
             title="Javascript course for Advanced",
@@ -1508,8 +1622,8 @@ class PurchaseOrderTest(APITestCase):
             level="Zaawansowany",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
         )
@@ -1540,7 +1654,7 @@ class PurchaseOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="VBA")],
+            technologies=[self.technology_3],
         )
         self.course_3 = create_course(
             title="VBA course for Expert",
@@ -1548,8 +1662,8 @@ class PurchaseOrderTest(APITestCase):
             level="Ekspert",
             skills=[create_skill_obj(name="coding"), create_skill_obj(name="IDE")],
             topics=[
-                create_topic_obj(name="You will learn how to code"),
-                create_topic_obj(name="You will learn a new IDE"),
+                self.topic_1,
+                self.topic_2,
             ],
             lessons=[self.lesson_6],
         )
@@ -1687,13 +1801,17 @@ class LessonOrderTest(APITestCase):
             user=self.lecturer_user_2, user_type="W"
         )
 
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
+
         self.lesson_1 = create_lesson(
             title="Python lesson 1",
             description="bbbb",
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
 
         self.lesson_2 = create_lesson(
@@ -1702,7 +1820,7 @@ class LessonOrderTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="Python")],
+            technologies=[self.technology_1],
         )
 
         create_lesson_price_history(self.lesson_1, 15)
@@ -1768,7 +1886,7 @@ class LessonOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
 
         self.lesson_4 = create_lesson(
@@ -1777,7 +1895,7 @@ class LessonOrderTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
-            technologies=[create_technology_obj(name="JS")],
+            technologies=[self.technology_2],
         )
 
         create_lesson_price_history(self.lesson_3, 15)
@@ -1836,7 +1954,7 @@ class LessonOrderTest(APITestCase):
             duration="90",
             github_url="https://github.com/hackymatt/lesson",
             price="9.99",
-            technologies=[create_technology_obj(name="VBA")],
+            technologies=[self.technology_3],
         )
 
         self.lesson_6 = create_lesson(
@@ -1845,7 +1963,7 @@ class LessonOrderTest(APITestCase):
             duration="30",
             github_url="https://github.com/hackymatt/lasson",
             price="2.99",
-            technologies=[create_technology_obj(name="VBA")],
+            technologies=[self.technology_3],
         )
 
         create_lesson_price_history(self.lesson_5, 15)

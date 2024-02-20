@@ -1,13 +1,14 @@
 "use client";
 
-import { useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useMemo, useState, useEffect } from "react";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Drawer from "@mui/material/Drawer";
 import Divider from "@mui/material/Divider";
 import { alpha } from "@mui/material/styles";
+import { List, Collapse } from "@mui/material";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -37,11 +38,13 @@ const userNavigations = [
     title: "Dane osobowe",
     path: paths.account.personal,
     icon: <Iconify icon="carbon:user" />,
+    children: [],
   },
   {
     title: "Zarządzaj hasłem",
     path: paths.account.password,
     icon: <Iconify icon="carbon:password" />,
+    children: [],
   },
 ];
 
@@ -52,11 +55,13 @@ const studentNavigations = [
       title: "Lekcje",
       path: paths.account.lessons,
       icon: <Iconify icon="carbon:book" />,
+      children: [],
     },
     {
       title: "Recenzje",
       path: `${paths.account.reviews}?review_status_exclude=${ReviewStatus.brak}`,
       icon: <Iconify icon="carbon:review" />,
+      children: [],
     },
   ],
 ];
@@ -68,21 +73,25 @@ const teacherNavigations = [
       title: "Lekcje",
       path: paths.account.teacher.lessons,
       icon: <Iconify icon="carbon:notebook" />,
+      children: [],
     },
     {
       title: "Terminarz",
       path: paths.account.teacher.calendar,
       icon: <Iconify icon="carbon:calendar" />,
+      children: [],
     },
     {
       title: "Recenzje",
       path: paths.account.teacher.reviews,
       icon: <Iconify icon="carbon:review" />,
+      children: [],
     },
     {
       title: "Zarobki",
       path: paths.account.teacher.earnings,
       icon: <Iconify icon="carbon:currency-dollar" />,
+      children: [],
     },
   ],
 ];
@@ -91,44 +100,78 @@ const adminNavigations = [
   ...userNavigations,
   ...[
     {
-      title: "Lekcje",
-      path: paths.account.admin.lessons,
-      icon: <Iconify icon="carbon:notebook" />,
-    },
-    {
-      title: "Historia cen lekcji",
-      path: paths.account.admin.lessonsPriceHistory,
-      icon: <Iconify icon="carbon:chart-line" />,
-    },
-    {
-      title: "Technologie",
-      path: paths.account.admin.technologies,
-      icon: <Iconify icon="carbon:code" />,
-    },
-    {
       title: "Kursy",
-      path: paths.account.admin.courses,
+      path: paths.account.admin.courses.list,
       icon: <Iconify icon="carbon:book" />,
+      children: [
+        {
+          title: "Spis kursów",
+          path: `${paths.account.admin.courses.list}/?sort_by=title`,
+          icon: <Iconify icon="carbon:list" />,
+          children: [],
+        },
+        {
+          title: "Umiejętności",
+          path: `${paths.account.admin.courses.skills}/?sort_by=name`,
+          icon: <Iconify icon="carbon:policy" />,
+          children: [],
+        },
+        {
+          title: "Tematy",
+          path: `${paths.account.admin.courses.topics}/?sort_by=name`,
+          icon: <Iconify icon="carbon:query" />,
+          children: [],
+        },
+      ],
+    },
+    {
+      title: "Lekcje",
+      path: paths.account.admin.lessons.list,
+      icon: <Iconify icon="carbon:notebook" />,
+      children: [
+        {
+          title: "Spis lekcji",
+          path: `${paths.account.admin.lessons.list}/?sort_by=title`,
+          icon: <Iconify icon="carbon:list" />,
+          children: [],
+        },
+        {
+          title: "Historia cen",
+          path: `${paths.account.admin.lessons.priceHistory}/?sort_by=-created_at`,
+          icon: <Iconify icon="carbon:chart-line" />,
+          children: [],
+        },
+        {
+          title: "Technologie",
+          path: `${paths.account.admin.lessons.technologies}/?sort_by=name`,
+          icon: <Iconify icon="carbon:code" />,
+          children: [],
+        },
+        {
+          title: "Zakupy",
+          path: paths.account.admin.lessons.purchases,
+          icon: <Iconify icon="carbon:purchase" />,
+          children: [],
+        },
+        {
+          title: "Recenzje",
+          path: paths.account.admin.lessons.reviews,
+          icon: <Iconify icon="carbon:review" />,
+          children: [],
+        },
+      ],
     },
     {
       title: "Użytkownicy",
       path: paths.account.admin.users,
       icon: <Iconify icon="carbon:user-multiple" />,
-    },
-    {
-      title: "Zakupy",
-      path: paths.account.admin.purchases,
-      icon: <Iconify icon="carbon:purchase" />,
-    },
-    {
-      title: "Recenzje",
-      path: paths.account.admin.reviews,
-      icon: <Iconify icon="carbon:review" />,
+      children: [],
     },
     {
       title: "Zarobki",
       path: paths.account.admin.earnings,
       icon: <Iconify icon="carbon:currency-dollar" />,
+      children: [],
     },
   ],
 ];
@@ -211,8 +254,14 @@ export default function Nav({ open, onClose }: Props) {
       <Divider sx={{ borderStyle: "dashed" }} />
 
       <Stack sx={{ my: 1, px: 2 }}>
-        {navigations.map((item) => (
-          <NavItem key={item.title} item={item} />
+        {navigations.map((navigation) => (
+          <NavItem
+            key={navigation.title}
+            title={navigation.title}
+            path={navigation.path}
+            icon={navigation.icon}
+            children={navigation.children}
+          />
         ))}
       </Stack>
 
@@ -265,34 +314,48 @@ export default function Nav({ open, onClose }: Props) {
 // ----------------------------------------------------------------------
 
 type NavItemProps = {
-  item: {
-    title: string;
-    path: string;
-    icon: React.ReactNode;
-  };
+  title: string;
+  path: string;
+  icon?: React.ReactNode;
+  children: NavItemProps[];
+  isChild?: boolean;
 };
 
-function NavItem({ item }: NavItemProps) {
-  const active = useActiveLink(item.path);
+function NavItem({ title, path, icon, children, isChild }: NavItemProps) {
+  const active = useActiveLink(path);
 
-  return (
-    <Link
-      component={RouterLink}
-      key={item.title}
-      href={item.path}
-      color={active ? "primary" : "inherit"}
-      underline="none"
-    >
+  const [open, setOpen] = useState(false);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
+  const itemWithChildren = children.length > 0 ?? false;
+
+  const expandIcon = open ? (
+    <ListItemIcon>
+      <Iconify icon="carbon:chevron-up" />
+    </ListItemIcon>
+  ) : (
+    <ListItemIcon>
+      <Iconify icon="carbon:chevron-down" />
+    </ListItemIcon>
+  );
+
+  const renderContent = (
+    <>
       <ListItemButton
         sx={{
           px: 1,
           height: 44,
           borderRadius: 1,
+          pl: isChild ?? false ? 2 : 1,
         }}
+        onClick={handleClick}
       >
-        <ListItemIcon>{item.icon}</ListItemIcon>
+        {icon && <ListItemIcon>{icon}</ListItemIcon>}
         <ListItemText
-          primary={item.title}
+          primary={title}
           primaryTypographyProps={{
             typography: "body2",
             ...(active && {
@@ -300,7 +363,43 @@ function NavItem({ item }: NavItemProps) {
             }),
           }}
         />
+        {itemWithChildren && expandIcon}
       </ListItemButton>
-    </Link>
+
+      {itemWithChildren && (
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding>
+            {children.map((child) => (
+              <NavItem
+                key={child.title}
+                title={child.title}
+                path={child.path}
+                icon={child.icon}
+                children={child.children}
+                isChild
+              />
+            ))}
+          </List>
+        </Collapse>
+      )}
+    </>
+  );
+
+  return (
+    <>
+      {itemWithChildren ? (
+        renderContent
+      ) : (
+        <Link
+          component={RouterLink}
+          key={title}
+          href={path}
+          color={active ? "primary" : "inherit"}
+          underline="none"
+        >
+          {renderContent}
+        </Link>
+      )}
+    </>
   );
 }

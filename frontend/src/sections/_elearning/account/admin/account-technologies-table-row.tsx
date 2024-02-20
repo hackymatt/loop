@@ -1,11 +1,11 @@
 import { useState, useCallback } from "react";
 
-import { Typography } from "@mui/material";
 import Popover from "@mui/material/Popover";
 import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import IconButton from "@mui/material/IconButton";
+import { Divider, Typography } from "@mui/material";
 import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
 import { fDate } from "src/utils/format-time";
@@ -19,9 +19,10 @@ import { ICourseByCategoryProps } from "src/types/course";
 type Props = {
   row: ICourseByCategoryProps;
   onEdit: (technology: ICourseByCategoryProps) => void;
+  onDelete: (technology: ICourseByCategoryProps) => void;
 };
 
-export default function AccountTechnologiesTableRow({ row, onEdit }: Props) {
+export default function AccountTechnologiesTableRow({ row, onEdit, onDelete }: Props) {
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
 
   const handleOpen = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -36,6 +37,11 @@ export default function AccountTechnologiesTableRow({ row, onEdit }: Props) {
     handleClose();
     onEdit(row);
   }, [handleClose, onEdit, row]);
+
+  const handleDelete = useCallback(() => {
+    handleClose();
+    onDelete(row);
+  }, [handleClose, onDelete, row]);
 
   const inputStyles = {
     pl: 1,
@@ -78,6 +84,13 @@ export default function AccountTechnologiesTableRow({ row, onEdit }: Props) {
         <MenuItem onClick={handleEdit} sx={{ mr: 1, width: "fit-content" }}>
           <Iconify icon="carbon:edit" />
           <Typography variant="body2">Edytuj technologię</Typography>
+        </MenuItem>
+
+        <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
+
+        <MenuItem onClick={handleDelete} sx={{ mr: 1, color: "error.main", width: "fit-content" }}>
+          <Iconify icon="carbon:trash-can" />
+          <Typography variant="body2">Usuń technologię</Typography>
         </MenuItem>
       </Popover>
     </>

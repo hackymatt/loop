@@ -10,7 +10,7 @@ class Technology(BaseModel):
 
     class Meta:
         db_table = "technology"
-        ordering = ["id"]
+        ordering = ["name"]
         indexes = [
             Index(
                 fields=[

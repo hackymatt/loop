@@ -20,14 +20,20 @@ export const paths = {
     personal: "/account/personal",
     password: "/account/password",
     admin: {
-      lessons: "/account/admin/lessons",
-      lessonsPriceHistory: "/account/admin/lessons-price-history",
-      technologies: "/account/admin/technologies",
-      courses: "/account/admin/courses",
+      courses: {
+        list: "/account/admin/courses/list",
+        skills: "/account/admin/courses/skills",
+        topics: "/account/admin/courses/topics",
+      },
+      lessons: {
+        list: "/account/admin/lessons/list",
+        priceHistory: "/account/admin/lessons/price-history",
+        technologies: "/account/admin/lessons/technologies",
+        purchases: "/account/admin/lessons/purchases",
+        reviews: "/account/admin/lessons/reviews",
+      },
       users: "/account/admin/users",
-      purchases: "/account/admin/purchases",
       earnings: "/account/admin/earnings",
-      reviews: "/account/admin/reviews",
     },
     teacher: {
       lessons: "/account/teacher/lessons",
