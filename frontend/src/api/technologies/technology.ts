@@ -17,12 +17,36 @@ type IEditTechnology = Pick<ITechnology, "name">;
 
 type IEditTechnologyReturn = IEditTechnology;
 
+type IDeleteTechnology = {};
+
+type IDeleteTechnologyReturn = {};
+
 export const useEditTechnology = (id: string) => {
   const queryClient = useQueryClient();
   const url = `${endpoint}/${id}`;
   return useMutation<IEditTechnologyReturn, AxiosError, IEditTechnology>(
     async (variables) => {
       const result = await Api.put(url, variables, {
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      });
+      return result.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [endpoint] });
+      },
+    },
+  );
+};
+
+export const useDeleteTechnology = (id: string) => {
+  const queryClient = useQueryClient();
+  const url = `${endpoint}/${id}`;
+  return useMutation<IDeleteTechnologyReturn, AxiosError, IDeleteTechnology>(
+    async () => {
+      const result = await Api.delete(url, {
         headers: {
           "X-CSRFToken": getCsrfToken(),
         },

@@ -1,9 +1,8 @@
-import * as Yup from "yup";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 
-import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import { Typography } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -12,34 +11,29 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useCreateTechnology } from "src/api/technologies/technologies";
+import { useDeleteTechnology } from "src/api/technologies/technology";
 
-import { useToastContext } from "src/components/toast";
-import FormProvider, { RHFTextField } from "src/components/hook-form";
+import FormProvider from "src/components/hook-form";
+
+import { ICourseByCategoryProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
+  technology: ICourseByCategoryProps;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function TechnologyNewForm({ onClose, ...other }: Props) {
-  const { enqueueSnackbar } = useToastContext();
-
-  const { mutateAsync: createTechnology } = useCreateTechnology();
+export default function TechnologyDeleteForm({ technology, onClose, ...other }: Props) {
+  const { mutateAsync: deleteTechnology } = useDeleteTechnology(technology.id);
 
   const defaultValues = {
     name: "",
   };
 
-  const NewTechnologySchema = Yup.object().shape({
-    name: Yup.string().required("Nazwa jest wymagana"),
-  });
-
   const methods = useForm({
-    resolver: yupResolver(NewTechnologySchema),
     defaultValues,
   });
 
@@ -49,14 +43,19 @@ export default function TechnologyNewForm({ onClose, ...other }: Props) {
     formState: { isSubmitting },
   } = methods;
 
+  useEffect(() => {
+    if (technology) {
+      reset(technology);
+    }
+  }, [reset, technology]);
+
   const handleFormError = useFormErrorHandler(methods);
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async () => {
     try {
-      await createTechnology(data);
+      await deleteTechnology({});
       reset();
       onClose();
-      enqueueSnackbar("Technologia została dodana", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }
@@ -65,12 +64,10 @@ export default function TechnologyNewForm({ onClose, ...other }: Props) {
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nową technologię</DialogTitle>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń technologię</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
-          <Stack spacing={1}>
-            <RHFTextField name="name" label="Nazwa" />
-          </Stack>
+          <Typography>{`Czy na pewno chcesz usunąć technologię ${technology.name}?`}</Typography>
         </DialogContent>
 
         <DialogActions>
@@ -78,8 +75,8 @@ export default function TechnologyNewForm({ onClose, ...other }: Props) {
             Anuluj
           </Button>
 
-          <LoadingButton color="success" type="submit" variant="contained" loading={isSubmitting}>
-            Dodaj
+          <LoadingButton color="error" type="submit" variant="contained" loading={isSubmitting}>
+            Usuń
           </LoadingButton>
         </DialogActions>
       </FormProvider>

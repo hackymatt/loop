@@ -31,6 +31,7 @@ import { ICourseByCategoryProps } from "src/types/course";
 import TechnologyNewForm from "./technology-new-form";
 import TechnologyEditForm from "./technology-edit-form";
 import FilterSearch from "../../../filters/filter-search";
+import TechnologyDeleteForm from "./technology-delete-form";
 import AccountTableHead from "../../../account/account-table-head";
 
 // ----------------------------------------------------------------------
@@ -48,6 +49,7 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
 export default function AccountTechnologiesView() {
   const newTechnologyFormOpen = useBoolean();
   const editTechnologyFormOpen = useBoolean();
+  const deleteTechnologyFormOpen = useBoolean();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
@@ -62,6 +64,7 @@ export default function AccountTechnologiesView() {
   const order = filters?.sort_by && filters.sort_by.startsWith("-") ? "desc" : "asc";
 
   const [editedTechnology, setEditedTechnology] = useState<ICourseByCategoryProps>();
+  const [deletedTechnology, setDeletedTechnology] = useState<ICourseByCategoryProps>();
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -103,6 +106,14 @@ export default function AccountTechnologiesView() {
       editTechnologyFormOpen.onToggle();
     },
     [editTechnologyFormOpen],
+  );
+
+  const handleDeleteTechnology = useCallback(
+    (technology: ICourseByCategoryProps) => {
+      setDeletedTechnology(technology);
+      deleteTechnologyFormOpen.onToggle();
+    },
+    [deleteTechnologyFormOpen],
   );
 
   return (
@@ -175,6 +186,7 @@ export default function AccountTechnologiesView() {
                     key={row.id}
                     row={row}
                     onEdit={handleEditTechnology}
+                    onDelete={handleDeleteTechnology}
                   />
                 ))}
               </TableBody>
@@ -206,6 +218,13 @@ export default function AccountTechnologiesView() {
           technology={editedTechnology}
           open={editTechnologyFormOpen.value}
           onClose={editTechnologyFormOpen.onFalse}
+        />
+      )}
+      {deletedTechnology && (
+        <TechnologyDeleteForm
+          technology={deletedTechnology}
+          open={deleteTechnologyFormOpen.value}
+          onClose={deleteTechnologyFormOpen.onFalse}
         />
       )}
     </>

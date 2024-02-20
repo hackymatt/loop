@@ -6,7 +6,7 @@ from django.db.models import (
 
 
 class Technology(BaseModel):
-    name = CharField()
+    name = CharField(unique=True)
 
     class Meta:
         db_table = "technology"
