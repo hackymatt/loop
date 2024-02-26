@@ -115,6 +115,7 @@ export const courseQuery = (id: string) => {
         skills,
         topics,
         lessons,
+        active,
       } = data;
 
       modifiedResults = {
@@ -170,6 +171,7 @@ export const courseQuery = (id: string) => {
             price: lessonPrice,
           }),
         ),
+        active,
       };
     } catch (error) {
       if (error.response && (error.response.status === 400 || error.response.status === 404)) {

@@ -75,7 +75,6 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
 
   useEffect(() => {
     if (courseData) {
-      console.log(courseData);
       reset({
         ...courseData,
         title: courseData.slug,

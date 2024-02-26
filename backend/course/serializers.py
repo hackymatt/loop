@@ -404,7 +404,6 @@ class CourseListSerializer(ModelSerializer):
         model = Course
         exclude = (
             "lessons",
-            "active",
             "skills",
             "topics",
             "video",
@@ -472,7 +471,6 @@ class CourseGetSerializer(ModelSerializer):
     class Meta:
         model = Course
         exclude = (
-            "active",
             "created_at",
             "modified_at",
         )
