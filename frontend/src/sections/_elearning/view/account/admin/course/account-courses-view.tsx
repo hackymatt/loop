@@ -6,39 +6,65 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
 import { LoadingButton } from "@mui/lab";
+import { Tab, Tabs } from "@mui/material";
 import TableBody from "@mui/material/TableBody";
 import Typography from "@mui/material/Typography";
 import TableContainer from "@mui/material/TableContainer";
 import { tableCellClasses } from "@mui/material/TableCell";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TablePagination from "@mui/material/TablePagination";
 
 import { useBoolean } from "src/hooks/use-boolean";
 import { useQueryParams } from "src/hooks/use-query-params";
 
-import { fDate } from "src/utils/format-time";
-
-import { useTopics, useTopicsPagesCount } from "src/api/topics/topics";
+import { useCourses, useCoursesPagesCount } from "src/api/courses/courses";
 
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
 
-import AccountTopicsTableRow from "src/sections/_elearning/account/admin/account-topics-table-row";
+import FilterLevel from "src/sections/_elearning/filters/filter-level";
+import AccountCoursesTableRow from "src/sections/_elearning/account/admin/account-courses-table-row";
 
-import { ICourseByTopicProps } from "src/types/course";
+import { ICourseProps } from "src/types/course";
 import { IQueryParamValue } from "src/types/query-params";
 
-import TopicNewForm from "./topic-new-form";
-import TopicEditForm from "./topic-edit-form";
-import TopicDeleteForm from "./topic-delete-form";
-import FilterSearch from "../../../filters/filter-search";
-import AccountTableHead from "../../../account/account-table-head";
+import CourseNewForm from "./course-new-form";
+import CourseEditForm from "./course-edit-form";
+import FilterPrice from "../../../../filters/filter-price";
+import FilterSearch from "../../../../filters/filter-search";
+import FilterDuration from "../../../../filters/filter-duration";
+import AccountTableHead from "../../../../account/account-table-head";
 
 // ----------------------------------------------------------------------
 
+const DURATION_OPTIONS = [
+  { value: "(duration_to=30)", label: "0 - 30 minut" },
+  { value: "(duration_from=30)&(duration_to=60)", label: "30 - 60 minut" },
+  { value: "(duration_from=60)&(duration_to=90)", label: "60 - 90 minut" },
+  { value: "(duration_from=90)&(duration_to=120)", label: "90 - 120 minut" },
+  { value: "(duration_from=120)", label: "120+ minut" },
+];
+
+const LEVEL_OPTIONS = [
+  { value: "P", label: "Podstawowy" },
+  { value: "Ś", label: "Średniozaawansowany" },
+  { value: "Z", label: "Zaawansowany" },
+  { value: "E", label: "Ekspert" },
+];
+
+// ----------------------------------------------------------------------
+
+const TABS = [
+  { id: "", label: "Wszystkie kursy" },
+  { id: "True", label: "Aktywne" },
+  { id: "False", label: "Nieaktywne" },
+];
+
 const TABLE_HEAD = [
-  { id: "name", label: "Nazwa tematu", minWidth: 200 },
-  { id: "created_at", label: "Data utworzenia", width: 200 },
+  { id: "title", label: "Nazwa kursu", minWidth: 200 },
+  { id: "duration", label: "Czas", width: 100 },
+  { id: "active", label: "Status", width: 100 },
+  { id: "price", label: "Cena", width: 50 },
+  { id: "level", label: "Poziom", width: 100 },
   { id: "", width: 25 },
 ];
 
@@ -46,25 +72,24 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
 
 // ----------------------------------------------------------------------
 
-export default function AccountCoursesTopicsView() {
-  const newTopicFormOpen = useBoolean();
-  const editTopicFormOpen = useBoolean();
-  const deleteTopicFormOpen = useBoolean();
+export default function AccountCoursesView() {
+  const newCourseFormOpen = useBoolean();
+  const editCourseFormOpen = useBoolean();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const { data: pagesCount } = useTopicsPagesCount(filters);
-  const { data: topics } = useTopics(filters);
+  const { data: pagesCount } = useCoursesPagesCount(filters);
+  const { data: courses } = useCourses(filters);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
   const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "title";
   const order = filters?.sort_by && filters.sort_by.startsWith("-") ? "desc" : "asc";
+  const tab = filters?.active ? filters.active : "";
 
-  const [editedTopic, setEditedTopic] = useState<ICourseByTopicProps>();
-  const [deletedTopic, setDeletedTopic] = useState<ICourseByTopicProps>();
+  const [editedCourse, setEditedCourse] = useState<ICourseProps>();
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -75,6 +100,13 @@ export default function AccountCoursesTopicsView() {
       }
     },
     [removeQueryParam, setQueryParam],
+  );
+
+  const handleChangeTab = useCallback(
+    (event: React.SyntheticEvent, newValue: string) => {
+      handleChange("active", newValue);
+    },
+    [handleChange],
   );
 
   const handleSort = useCallback(
@@ -100,27 +132,19 @@ export default function AccountCoursesTopicsView() {
     [handleChange],
   );
 
-  const handleEditTopic = useCallback(
-    (topic: ICourseByTopicProps) => {
-      setEditedTopic(topic);
-      editTopicFormOpen.onToggle();
+  const handleEditCourse = useCallback(
+    (course: ICourseProps) => {
+      setEditedCourse(course);
+      editCourseFormOpen.onToggle();
     },
-    [editTopicFormOpen],
-  );
-
-  const handleDeleteTopic = useCallback(
-    (topic: ICourseByTopicProps) => {
-      setDeletedTopic(topic);
-      deleteTopicFormOpen.onToggle();
-    },
-    [deleteTopicFormOpen],
+    [editCourseFormOpen],
   );
 
   return (
     <>
       <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
         <Typography variant="h5" sx={{ mb: 3 }}>
-          Tematy
+          Spis kursów
         </Typography>
         <LoadingButton
           component="label"
@@ -128,28 +152,48 @@ export default function AccountCoursesTopicsView() {
           size="small"
           color="success"
           loading={false}
-          onClick={newTopicFormOpen.onToggle}
+          onClick={newCourseFormOpen.onToggle}
         >
           <Iconify icon="carbon:add" />
         </LoadingButton>
       </Stack>
 
+      <Tabs
+        value={TABS.find((t) => t.id === tab)?.id ?? ""}
+        scrollButtons="auto"
+        variant="scrollable"
+        allowScrollButtonsMobile
+        onChange={handleChangeTab}
+      >
+        {TABS.map((category) => (
+          <Tab key={category.id} value={category.id} label={category.label} />
+        ))}
+      </Tabs>
+
       <Stack direction={{ xs: "column", md: "row" }} spacing={1} sx={{ mt: 5, mb: 3 }}>
         <FilterSearch
-          value={filters?.name ?? ""}
-          onChangeSearch={(value) => handleChange("name", value)}
-          placeholder="Nazwa tematu..."
+          value={filters?.title ?? ""}
+          onChangeSearch={(value) => handleChange("title", value)}
+          placeholder="Nazwa kursu..."
         />
 
-        <DatePicker
-          value={filters?.created_at ? new Date(filters.created_at) : null}
-          onChange={(value: Date | null) =>
-            handleChange("created_at", value ? fDate(value, "yyyy-MM-dd") : "")
-          }
-          sx={{ width: 1, minWidth: 180 }}
-          slotProps={{
-            textField: { size: "small", hiddenLabel: true, placeholder: "Data utworzenia" },
-          }}
+        <FilterDuration
+          value={filters?.filters ?? ""}
+          options={DURATION_OPTIONS}
+          onChangeDuration={(value) => handleChange("filters", value)}
+        />
+
+        <FilterPrice
+          valuePriceFrom={filters?.price_from ?? ""}
+          valuePriceTo={filters?.price_to ?? ""}
+          onChangeStartPrice={(value) => handleChange("price_from", value)}
+          onChangeEndPrice={(value) => handleChange("price_to", value)}
+        />
+
+        <FilterLevel
+          value={filters?.level_in ?? ""}
+          options={LEVEL_OPTIONS}
+          onChangeLevel={(value) => handleChange("level_in", value)}
         />
       </Stack>
 
@@ -179,15 +223,10 @@ export default function AccountCoursesTopicsView() {
               headCells={TABLE_HEAD}
             />
 
-            {topics && (
+            {courses && (
               <TableBody>
-                {topics.map((row) => (
-                  <AccountTopicsTableRow
-                    key={row.id}
-                    row={row}
-                    onEdit={handleEditTopic}
-                    onDelete={handleDeleteTopic}
-                  />
+                {courses.map((row) => (
+                  <AccountCoursesTableRow key={row.id} row={row} onEdit={handleEditCourse} />
                 ))}
               </TableBody>
             )}
@@ -209,19 +248,12 @@ export default function AccountCoursesTopicsView() {
         />
       </Box>
 
-      <TopicNewForm open={newTopicFormOpen.value} onClose={newTopicFormOpen.onFalse} />
-      {editedTopic && (
-        <TopicEditForm
-          topic={editedTopic}
-          open={editTopicFormOpen.value}
-          onClose={editTopicFormOpen.onFalse}
-        />
-      )}
-      {deletedTopic && (
-        <TopicDeleteForm
-          topic={deletedTopic}
-          open={deleteTopicFormOpen.value}
-          onClose={deleteTopicFormOpen.onFalse}
+      <CourseNewForm open={newCourseFormOpen.value} onClose={newCourseFormOpen.onFalse} />
+      {editedCourse && (
+        <CourseEditForm
+          course={editedCourse}
+          open={editCourseFormOpen.value}
+          onClose={editCourseFormOpen.onFalse}
         />
       )}
     </>

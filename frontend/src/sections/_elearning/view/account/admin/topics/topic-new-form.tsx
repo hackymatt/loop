@@ -1,8 +1,8 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
+import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import { Typography } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -11,29 +11,29 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useDeleteSkill } from "src/api/skills/skill";
+import { useCreateTopic } from "src/api/topics/topics";
 
 import FormProvider from "src/components/hook-form";
+import { useToastContext } from "src/components/toast";
 
-import { ICourseBySkillProps } from "src/types/course";
+import { useTopicFields } from "./topic-fields";
+import { schema, defaultValues } from "./topic";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  skill: ICourseBySkillProps;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function SkillDeleteForm({ skill, onClose, ...other }: Props) {
-  const { mutateAsync: deleteSkill } = useDeleteSkill(skill.id);
+export default function TopicNewForm({ onClose, ...other }: Props) {
+  const { enqueueSnackbar } = useToastContext();
 
-  const defaultValues = {
-    name: "",
-  };
+  const { mutateAsync: createTopic } = useCreateTopic();
 
   const methods = useForm({
+    resolver: yupResolver(schema),
     defaultValues,
   });
 
@@ -43,31 +43,28 @@ export default function SkillDeleteForm({ skill, onClose, ...other }: Props) {
     formState: { isSubmitting },
   } = methods;
 
-  useEffect(() => {
-    if (skill) {
-      reset(skill);
-    }
-  }, [reset, skill]);
-
   const handleFormError = useFormErrorHandler(methods);
 
-  const onSubmit = handleSubmit(async () => {
+  const onSubmit = handleSubmit(async (data) => {
     try {
-      await deleteSkill({});
+      await createTopic(data);
       reset();
       onClose();
+      enqueueSnackbar("Temat został dodany", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }
   });
 
+  const { fields } = useTopicFields();
+
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń umiejętność</DialogTitle>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nowy temat</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
-          <Typography>{`Czy na pewno chcesz usunąć umiejętność ${skill.name}?`}</Typography>
+          <Stack spacing={1}>{fields.name}</Stack>
         </DialogContent>
 
         <DialogActions>
@@ -75,8 +72,8 @@ export default function SkillDeleteForm({ skill, onClose, ...other }: Props) {
             Anuluj
           </Button>
 
-          <LoadingButton color="error" type="submit" variant="contained" loading={isSubmitting}>
-            Usuń
+          <LoadingButton color="success" type="submit" variant="contained" loading={isSubmitting}>
+            Dodaj
           </LoadingButton>
         </DialogActions>
       </FormProvider>

@@ -11,27 +11,25 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useDeleteTopic } from "src/api/topics/topic";
+import { useDeleteSkill } from "src/api/skills/skill";
 
 import FormProvider from "src/components/hook-form";
 
-import { ICourseByTopicProps } from "src/types/course";
+import { ICourseBySkillProps } from "src/types/course";
+
+import { defaultValues } from "./skill";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  topic: ICourseByTopicProps;
+  skill: ICourseBySkillProps;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function TopicDeleteForm({ topic, onClose, ...other }: Props) {
-  const { mutateAsync: deleteTopic } = useDeleteTopic(topic.id);
-
-  const defaultValues = {
-    name: "",
-  };
+export default function SkillDeleteForm({ skill, onClose, ...other }: Props) {
+  const { mutateAsync: deleteSkill } = useDeleteSkill(skill.id);
 
   const methods = useForm({
     defaultValues,
@@ -44,16 +42,16 @@ export default function TopicDeleteForm({ topic, onClose, ...other }: Props) {
   } = methods;
 
   useEffect(() => {
-    if (topic) {
-      reset(topic);
+    if (skill) {
+      reset(skill);
     }
-  }, [reset, topic]);
+  }, [reset, skill]);
 
   const handleFormError = useFormErrorHandler(methods);
 
   const onSubmit = handleSubmit(async () => {
     try {
-      await deleteTopic({});
+      await deleteSkill({});
       reset();
       onClose();
     } catch (error) {
@@ -64,10 +62,10 @@ export default function TopicDeleteForm({ topic, onClose, ...other }: Props) {
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń temat</DialogTitle>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń umiejętność</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
-          <Typography>{`Czy na pewno chcesz usunąć temat ${topic.name}?`}</Typography>
+          <Typography>{`Czy na pewno chcesz usunąć umiejętność ${skill.name}?`}</Typography>
         </DialogContent>
 
         <DialogActions>

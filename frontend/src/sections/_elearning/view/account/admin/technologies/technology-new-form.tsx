@@ -1,4 +1,3 @@
-import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -12,10 +11,13 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useCreateTopic } from "src/api/topics/topics";
+import { useCreateTechnology } from "src/api/technologies/technologies";
 
+import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
-import FormProvider, { RHFTextField } from "src/components/hook-form";
+
+import { schema, defaultValues } from "./technology";
+import { useTechnologyFields } from "./technology-fields";
 
 // ----------------------------------------------------------------------
 
@@ -25,21 +27,13 @@ interface Props extends DialogProps {
 
 // ----------------------------------------------------------------------
 
-export default function TopicNewForm({ onClose, ...other }: Props) {
+export default function TechnologyNewForm({ onClose, ...other }: Props) {
   const { enqueueSnackbar } = useToastContext();
 
-  const { mutateAsync: createTopic } = useCreateTopic();
-
-  const defaultValues = {
-    name: "",
-  };
-
-  const NewTechnologySchema = Yup.object().shape({
-    name: Yup.string().required("Nazwa jest wymagana"),
-  });
+  const { mutateAsync: createTechnology } = useCreateTechnology();
 
   const methods = useForm({
-    resolver: yupResolver(NewTechnologySchema),
+    resolver: yupResolver(schema),
     defaultValues,
   });
 
@@ -53,24 +47,24 @@ export default function TopicNewForm({ onClose, ...other }: Props) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await createTopic(data);
+      await createTechnology(data);
       reset();
       onClose();
-      enqueueSnackbar("Temat został dodany", { variant: "success" });
+      enqueueSnackbar("Technologia została dodana", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }
   });
 
+  const { fields } = useTechnologyFields();
+
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nowy temat</DialogTitle>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nową technologię</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
-          <Stack spacing={1}>
-            <RHFTextField name="name" label="Nazwa" multiline minRows={3} />
-          </Stack>
+          <Stack spacing={1}>{fields.name}</Stack>
         </DialogContent>
 
         <DialogActions>

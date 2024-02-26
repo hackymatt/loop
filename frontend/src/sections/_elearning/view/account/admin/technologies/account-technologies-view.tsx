@@ -30,9 +30,9 @@ import { ICourseByCategoryProps } from "src/types/course";
 
 import TechnologyNewForm from "./technology-new-form";
 import TechnologyEditForm from "./technology-edit-form";
-import FilterSearch from "../../../filters/filter-search";
 import TechnologyDeleteForm from "./technology-delete-form";
-import AccountTableHead from "../../../account/account-table-head";
+import FilterSearch from "../../../../filters/filter-search";
+import AccountTableHead from "../../../../account/account-table-head";
 
 // ----------------------------------------------------------------------
 

@@ -128,14 +128,14 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
       >
         {isNew && (
           <MenuItem onClick={handleAdd} sx={{ mr: 1, color: "success.main" }}>
-            <Iconify icon="carbon:add" />
+            <Iconify icon="carbon:add" sx={{ mr: 0.5 }} />
             <Typography variant="body2">Dodaj rezerwację</Typography>
           </MenuItem>
         )}
 
         {isPlanned && (
           <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
-            <Iconify icon="carbon:trash-can" sx={{ mr: 1 }} />{" "}
+            <Iconify icon="carbon:trash-can" sx={{ mr: 0.5 }} />
             <Typography variant="body2">Odwołaj rezerwację</Typography>
           </MenuItem>
         )}

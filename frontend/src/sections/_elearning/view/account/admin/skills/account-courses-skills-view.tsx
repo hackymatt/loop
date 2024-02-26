@@ -31,8 +31,8 @@ import { IQueryParamValue } from "src/types/query-params";
 import SkillNewForm from "./skill-new-form";
 import SkillEditForm from "./skill-edit-form";
 import SkillDeleteForm from "./skill-delete-form";
-import FilterSearch from "../../../filters/filter-search";
-import AccountTableHead from "../../../account/account-table-head";
+import FilterSearch from "../../../../filters/filter-search";
+import AccountTableHead from "../../../../account/account-table-head";
 
 // ----------------------------------------------------------------------
 

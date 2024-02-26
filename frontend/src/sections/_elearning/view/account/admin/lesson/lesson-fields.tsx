@@ -1,0 +1,58 @@
+import { InputAdornment } from "@mui/material";
+
+import { useTechnologies } from "src/api/technologies/technologies";
+
+import { RHFTextField, RHFAutocomplete } from "src/components/hook-form";
+
+import { ICourseByCategoryProps } from "src/types/course";
+
+export const useLessonFields = () => {
+  const { data: availableTechnologies, isLoading: isLoadingTechnologies } = useTechnologies({
+    sort_by: "name",
+  });
+
+  const fields: { [key: string]: JSX.Element } = {
+    title: <RHFTextField key="title" name="title" label="Nazwa" />,
+    description: (
+      <RHFTextField key="description" name="description" label="Opis" multiline rows={5} />
+    ),
+    price: (
+      <RHFTextField
+        key="price"
+        name="price"
+        label="Cena"
+        type="number"
+        InputProps={{
+          inputProps: { min: 0, step: ".01" },
+          endAdornment: <InputAdornment position="end">zł</InputAdornment>,
+        }}
+      />
+    ),
+    duration: (
+      <RHFTextField
+        key="duration"
+        name="duration"
+        label="Czas trwania"
+        type="number"
+        InputProps={{
+          inputProps: { min: 15 },
+          endAdornment: <InputAdornment position="end">min</InputAdornment>,
+        }}
+      />
+    ),
+    github_url: <RHFTextField key="github_url" name="github_url" label="Repozytorium" type="url" />,
+    technologies: (
+      <RHFAutocomplete
+        key="technologies"
+        name="technologies"
+        label="Technologie"
+        multiple
+        options={availableTechnologies}
+        getOptionLabel={(option) => (option as ICourseByCategoryProps).name}
+        loading={isLoadingTechnologies}
+        isOptionEqualToValue={(a, b) => a.name === b.name}
+      />
+    ),
+  };
+  return { fields };
+};

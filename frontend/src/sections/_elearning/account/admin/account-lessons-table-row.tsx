@@ -114,14 +114,14 @@ export default function AccountLessonsTableRow({ row, onEdit, onPriceHistoryView
         }}
       >
         <MenuItem onClick={handleEdit} sx={{ mr: 1, width: "fit-content" }}>
-          <Iconify icon="carbon:edit" />
+          <Iconify icon="carbon:edit" sx={{ mr: 0.5 }} />
           <Typography variant="body2">Edytuj lekcję</Typography>
         </MenuItem>
 
         <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
 
         <MenuItem onClick={handleViewPriceHistory} sx={{ mr: 1, width: "fit-content" }}>
-          <Iconify icon="carbon:chart-line" />
+          <Iconify icon="carbon:chart-line" sx={{ mr: 0.5 }} />
           <Typography variant="body2">Historia cen</Typography>
         </MenuItem>
       </Popover>

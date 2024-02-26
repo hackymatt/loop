@@ -82,14 +82,14 @@ export default function AccountSkillsTableRow({ row, onEdit, onDelete }: Props) 
         }}
       >
         <MenuItem onClick={handleEdit} sx={{ mr: 1, width: "fit-content" }}>
-          <Iconify icon="carbon:edit" />
+          <Iconify icon="carbon:edit" sx={{ mr: 0.5 }} />
           <Typography variant="body2">Edytuj umiejętność</Typography>
         </MenuItem>
 
         <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
 
         <MenuItem onClick={handleDelete} sx={{ mr: 1, color: "error.main", width: "fit-content" }}>
-          <Iconify icon="carbon:trash-can" />
+          <Iconify icon="carbon:trash-can" sx={{ mr: 0.5 }} />
           <Typography variant="body2">Usuń umiejętność</Typography>
         </MenuItem>
       </Popover>
