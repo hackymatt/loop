@@ -3,7 +3,7 @@ import AvatarEditor from "react-avatar-editor";
 
 import { Stack, Slider, Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 
-import { blobToBase64 } from "src/utils/blob-to-base64";
+import { urlToBlob } from "src/utils/blob-to-base64";
 
 type Props = {
   open: boolean;
@@ -21,9 +21,7 @@ export const CropperModal = ({ open, image, onImageChange, onClose }: Props) => 
   const handleSave = async () => {
     if (cropRef && cropRef.current) {
       const dataUrl = cropRef.current.getImage().toDataURL();
-      const result = await fetch(dataUrl);
-      const blob = await result.blob();
-      const base64Image = await blobToBase64(blob);
+      const base64Image = await urlToBlob(dataUrl);
       onImageChange(base64Image as string);
       onClose();
     }

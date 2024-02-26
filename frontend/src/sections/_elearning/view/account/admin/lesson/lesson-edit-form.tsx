@@ -13,7 +13,7 @@ import { Step, Stepper, StepLabel, StepContent } from "@mui/material";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useEditLesson } from "src/api/lesson/lesson";
+import { useLesson, useEditLesson } from "src/api/lesson/lesson";
 import { useTechnologies } from "src/api/technologies/technologies";
 
 import { isStepFailed } from "src/components/stepper/step";
@@ -38,6 +38,7 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
     sort_by: "name",
   });
 
+  const { data: lessonData } = useLesson(lesson.id);
   const { mutateAsync: editLesson } = useEditLesson(lesson.id);
 
   const methods = useForm({
@@ -52,18 +53,18 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
   } = methods;
 
   useEffect(() => {
-    if (lesson && availableTechnologies) {
+    if (lessonData && availableTechnologies) {
       reset({
-        ...lesson,
-        github_url: lesson.githubUrl,
-        technologies: lesson.category.map((category: string) =>
+        ...lessonData,
+        github_url: lessonData.githubUrl,
+        technologies: lessonData.category.map((category: string) =>
           availableTechnologies.find(
             (technology: ICourseByCategoryProps) => technology.name === category,
           ),
         ),
       });
     }
-  }, [availableTechnologies, lesson, reset]);
+  }, [availableTechnologies, lessonData, reset]);
 
   const handleFormError = useFormErrorHandler(methods);
 

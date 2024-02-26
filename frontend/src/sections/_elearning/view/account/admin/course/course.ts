@@ -4,7 +4,7 @@ export const defaultValues = {
   active: false,
   title: "",
   description: "",
-  level: "",
+  level: "Podstawowy",
   lessons: [],
   skills: [],
   topics: [],

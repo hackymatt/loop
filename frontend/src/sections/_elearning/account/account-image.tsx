@@ -1,7 +1,7 @@
-import { useState, ChangeEvent } from "react";
+import { useMemo, useState, ChangeEvent } from "react";
 
 import { Stack } from "@mui/system";
-import { Avatar } from "@mui/material";
+import { Avatar, Tooltip } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import { useUserDetails, useUpdateUserDetails } from "src/api/auth/details";
@@ -55,50 +55,60 @@ export default function AccountImage() {
     await handleSubmit(source);
   };
 
+  const isUploadDisabled = useMemo(
+    () => userDetails?.first_name === "" || userDetails?.last_name === "",
+    [userDetails?.first_name, userDetails?.last_name],
+  );
+
   return (
     <Stack spacing={2} direction="row" alignItems="center">
       <Avatar src={avatarUrl} sx={{ width: 64, height: 64 }} />
-      <Stack
-        direction="row"
-        alignItems="center"
-        sx={{
-          typography: "caption",
-          cursor: "pointer",
-          "&:hover": { opacity: 0.72 },
-        }}
+      <Tooltip
+        title={isUploadDisabled ? "Uzupełnij swoje dane osobowe" : "Uzupełnij swoje dane osobowe"}
       >
-        {userDetails?.image === null ? (
-          <LoadingButton
-            component="label"
-            variant="text"
-            size="small"
-            color="primary"
-            startIcon={<Iconify icon="carbon:add-large" />}
-            loading={isLoading}
-          >
-            Dodaj zdjęcie
-            <input type="file" hidden onChange={handleImagePick} />
-            <CropperModal
-              open={isCropperModalOpen}
-              image={image ?? ""}
-              onImageChange={handleImageChange}
-              onClose={() => setIsCropperModalOpen(false)}
-            />
-          </LoadingButton>
-        ) : (
-          <LoadingButton
-            component="label"
-            variant="text"
-            size="small"
-            color="error"
-            startIcon={<Iconify icon="carbon:subtract-large" />}
-            loading={isLoading}
-            onClick={() => handleImageChange("")}
-          >
-            Usuń zdjęcie
-          </LoadingButton>
-        )}
-      </Stack>
+        <Stack
+          direction="row"
+          alignItems="center"
+          sx={{
+            typography: "caption",
+            cursor: "pointer",
+            "&:hover": { opacity: 0.72 },
+          }}
+        >
+          {userDetails?.image === null ? (
+            <LoadingButton
+              component="label"
+              variant="text"
+              size="small"
+              color="primary"
+              startIcon={<Iconify icon="carbon:add-large" />}
+              loading={isLoading}
+              disabled={isUploadDisabled}
+            >
+              Dodaj zdjęcie
+              <input type="file" hidden onChange={handleImagePick} />
+              <CropperModal
+                open={isCropperModalOpen}
+                image={image ?? ""}
+                onImageChange={handleImageChange}
+                onClose={() => setIsCropperModalOpen(false)}
+              />
+            </LoadingButton>
+          ) : (
+            <LoadingButton
+              component="label"
+              variant="text"
+              size="small"
+              color="error"
+              startIcon={<Iconify icon="carbon:subtract-large" />}
+              loading={isLoading}
+              onClick={() => handleImageChange("")}
+            >
+              Usuń zdjęcie
+            </LoadingButton>
+          )}
+        </Stack>
+      </Tooltip>
     </Stack>
   );
 }

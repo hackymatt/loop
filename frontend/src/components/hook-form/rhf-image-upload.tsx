@@ -6,7 +6,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormControlLabel, { FormControlLabelProps } from "@mui/material/FormControlLabel";
 
-import { blobToBase64 } from "src/utils/blob-to-base64";
+import { urlToBlob } from "src/utils/blob-to-base64";
 
 import Image from "src/components/image";
 
@@ -46,10 +46,9 @@ function ImageInput({ value, onChange }: { value: string; onChange: (file: strin
   const handleFilePick = async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { files } = e.target as HTMLInputElement;
     if (files && files.length > 0) {
-      setSource(URL.createObjectURL(files[0]));
-      const result = await fetch(URL.createObjectURL(files[0]));
-      const blob = await result.blob();
-      const base64Image = await blobToBase64(blob);
+      const url = URL.createObjectURL(files[0]);
+      setSource(url);
+      const base64Image = await urlToBlob(url);
       onChange(base64Image as string);
     }
   };
@@ -71,6 +70,7 @@ function ImageInput({ value, onChange }: { value: string; onChange: (file: strin
           size="small"
           color="primary"
           startIcon={<Iconify icon="carbon:add-large" />}
+          disabled
         >
           Dodaj zdjęcie
           <input

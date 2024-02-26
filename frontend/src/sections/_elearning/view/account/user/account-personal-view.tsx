@@ -73,7 +73,7 @@ export default function AccountPersonalView() {
   const defaultValues = {
     ...userDetails,
     dob: userDetails?.dob ? new Date(userDetails?.dob) : date18YearsAgo,
-    gender: userDetails?.gender ? userDetails.gender : "",
+    gender: userDetails?.gender ? userDetails.gender : "Mężczyzna",
   };
 
   const methods = useForm({
@@ -94,7 +94,7 @@ export default function AccountPersonalView() {
       reset({
         ...userDetails,
         dob: userDetails?.dob ? new Date(userDetails?.dob) : date18YearsAgo,
-        gender: userDetails?.gender !== null ? userDetails.gender : "",
+        gender: userDetails?.gender !== null ? userDetails.gender : "Mężczyzna",
       });
     }
   }, [date18YearsAgo, reset, userDetails]);
