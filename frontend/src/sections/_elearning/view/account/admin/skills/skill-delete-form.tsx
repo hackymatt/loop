@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import Button from "@mui/material/Button";
@@ -40,12 +39,6 @@ export default function SkillDeleteForm({ skill, onClose, ...other }: Props) {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-  useEffect(() => {
-    if (skill) {
-      reset(skill);
-    }
-  }, [reset, skill]);
 
   const handleFormError = useFormErrorHandler(methods);
 

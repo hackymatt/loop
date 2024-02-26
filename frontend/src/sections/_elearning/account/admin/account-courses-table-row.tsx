@@ -22,9 +22,10 @@ import { ICourseProps } from "src/types/course";
 type Props = {
   row: ICourseProps;
   onEdit: (course: ICourseProps) => void;
+  onDelete: (course: ICourseProps) => void;
 };
 
-export default function AccountCoursesTableRow({ row, onEdit }: Props) {
+export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props) {
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
 
   const handleOpen = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -39,6 +40,11 @@ export default function AccountCoursesTableRow({ row, onEdit }: Props) {
     handleClose();
     onEdit(row);
   }, [handleClose, onEdit, row]);
+
+  const handleDelete = useCallback(() => {
+    handleClose();
+    onDelete(row);
+  }, [handleClose, onDelete, row]);
 
   const inputStyles = {
     pl: 1,
@@ -110,7 +116,14 @@ export default function AccountCoursesTableRow({ row, onEdit }: Props) {
 
         <MenuItem onClick={handleEdit} sx={{ mr: 1, width: "fit-content" }}>
           <Iconify icon="carbon:edit" sx={{ mr: 0.5 }} />
-          <Typography variant="body2">Edytuj lekcję</Typography>
+          <Typography variant="body2">Edytuj kurs</Typography>
+        </MenuItem>
+
+        <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
+
+        <MenuItem onClick={handleDelete} sx={{ mr: 1, color: "error.main", width: "fit-content" }}>
+          <Iconify icon="carbon:trash-can" sx={{ mr: 0.5 }} />
+          <Typography variant="body2">Usuń kurs</Typography>
         </MenuItem>
       </Popover>
     </>

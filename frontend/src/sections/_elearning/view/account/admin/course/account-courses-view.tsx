@@ -29,6 +29,7 @@ import { IQueryParamValue } from "src/types/query-params";
 
 import CourseNewForm from "./course-new-form";
 import CourseEditForm from "./course-edit-form";
+import CourseDeleteForm from "./course-delete-form";
 import FilterPrice from "../../../../filters/filter-price";
 import FilterSearch from "../../../../filters/filter-search";
 import FilterDuration from "../../../../filters/filter-duration";
@@ -75,6 +76,7 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
 export default function AccountCoursesView() {
   const newCourseFormOpen = useBoolean();
   const editCourseFormOpen = useBoolean();
+  const deleteCourseFormOpen = useBoolean();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
@@ -90,6 +92,7 @@ export default function AccountCoursesView() {
   const tab = filters?.active ? filters.active : "";
 
   const [editedCourse, setEditedCourse] = useState<ICourseProps>();
+  const [deletedCourse, setDeletedCourse] = useState<ICourseProps>();
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -140,6 +143,14 @@ export default function AccountCoursesView() {
     [editCourseFormOpen],
   );
 
+  const handleDeleteCourse = useCallback(
+    (course: ICourseProps) => {
+      setDeletedCourse(course);
+      deleteCourseFormOpen.onToggle();
+    },
+    [deleteCourseFormOpen],
+  );
+
   return (
     <>
       <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
@@ -183,12 +194,14 @@ export default function AccountCoursesView() {
           onChangeDuration={(value) => handleChange("filters", value)}
         />
 
-        <FilterPrice
-          valuePriceFrom={filters?.price_from ?? ""}
-          valuePriceTo={filters?.price_to ?? ""}
-          onChangeStartPrice={(value) => handleChange("price_from", value)}
-          onChangeEndPrice={(value) => handleChange("price_to", value)}
-        />
+        <Box sx={{ width: 1 }}>
+          <FilterPrice
+            valuePriceFrom={filters?.price_from ?? ""}
+            valuePriceTo={filters?.price_to ?? ""}
+            onChangeStartPrice={(value) => handleChange("price_from", value)}
+            onChangeEndPrice={(value) => handleChange("price_to", value)}
+          />
+        </Box>
 
         <FilterLevel
           value={filters?.level_in ?? ""}
@@ -226,7 +239,12 @@ export default function AccountCoursesView() {
             {courses && (
               <TableBody>
                 {courses.map((row) => (
-                  <AccountCoursesTableRow key={row.id} row={row} onEdit={handleEditCourse} />
+                  <AccountCoursesTableRow
+                    key={row.id}
+                    row={row}
+                    onEdit={handleEditCourse}
+                    onDelete={handleDeleteCourse}
+                  />
                 ))}
               </TableBody>
             )}
@@ -254,6 +272,13 @@ export default function AccountCoursesView() {
           course={editedCourse}
           open={editCourseFormOpen.value}
           onClose={editCourseFormOpen.onFalse}
+        />
+      )}
+      {deletedCourse && (
+        <CourseDeleteForm
+          course={deletedCourse}
+          open={deleteCourseFormOpen.value}
+          onClose={deleteCourseFormOpen.onFalse}
         />
       )}
     </>

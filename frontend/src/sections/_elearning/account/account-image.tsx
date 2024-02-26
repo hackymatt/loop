@@ -63,9 +63,7 @@ export default function AccountImage() {
   return (
     <Stack spacing={2} direction="row" alignItems="center">
       <Avatar src={avatarUrl} sx={{ width: 64, height: 64 }} />
-      <Tooltip
-        title={isUploadDisabled ? "Uzupełnij swoje dane osobowe" : "Uzupełnij swoje dane osobowe"}
-      >
+      <Tooltip title={isUploadDisabled ? "Uzupełnij swoje dane osobowe" : ""}>
         <Stack
           direction="row"
           alignItems="center"

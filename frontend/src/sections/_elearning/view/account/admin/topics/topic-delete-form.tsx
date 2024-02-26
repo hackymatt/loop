@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import Button from "@mui/material/Button";
@@ -40,12 +39,6 @@ export default function TopicDeleteForm({ topic, onClose, ...other }: Props) {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-  useEffect(() => {
-    if (topic) {
-      reset(topic);
-    }
-  }, [reset, topic]);
 
   const handleFormError = useFormErrorHandler(methods);
 

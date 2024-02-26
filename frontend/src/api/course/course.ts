@@ -87,6 +87,10 @@ type IEditCourse = Omit<
 
 type IEditCourseReturn = IEditCourse;
 
+type IDeleteCourse = {};
+
+type IDeleteCourseReturn = {};
+
 export const courseQuery = (id: string) => {
   const url = endpoint;
   const queryUrl = `${url}/${id}`;
@@ -196,6 +200,26 @@ export const useEditCourse = (id: string) => {
   return useMutation<IEditCourseReturn, AxiosError, IEditCourse>(
     async (variables) => {
       const result = await Api.put(url, variables, {
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      });
+      return result.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [endpoint] });
+      },
+    },
+  );
+};
+
+export const useDeleteCourse = (id: string) => {
+  const queryClient = useQueryClient();
+  const url = `${endpoint}/${id}`;
+  return useMutation<IDeleteCourseReturn, AxiosError, IDeleteCourse>(
+    async () => {
+      const result = await Api.delete(url, {
         headers: {
           "X-CSRFToken": getCsrfToken(),
         },

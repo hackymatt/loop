@@ -70,7 +70,6 @@ function ImageInput({ value, onChange }: { value: string; onChange: (file: strin
           size="small"
           color="primary"
           startIcon={<Iconify icon="carbon:add-large" />}
-          disabled
         >
           Dodaj zdjęcie
           <input

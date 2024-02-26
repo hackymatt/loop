@@ -10,25 +10,25 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useDeleteTechnology } from "src/api/technologies/technology";
+import { useDeleteCourse } from "src/api/course/course";
 
 import FormProvider from "src/components/hook-form";
 
-import { ICourseByCategoryProps } from "src/types/course";
+import { ICourseProps } from "src/types/course";
 
-import { defaultValues } from "./technology";
+import { defaultValues } from "./course";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  technology: ICourseByCategoryProps;
+  course: ICourseProps;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function TechnologyDeleteForm({ technology, onClose, ...other }: Props) {
-  const { mutateAsync: deleteTechnology } = useDeleteTechnology(technology.id);
+export default function CourseDeleteForm({ course, onClose, ...other }: Props) {
+  const { mutateAsync: deleteCourse } = useDeleteCourse(course.id);
 
   const methods = useForm({
     defaultValues,
@@ -44,7 +44,7 @@ export default function TechnologyDeleteForm({ technology, onClose, ...other }: 
 
   const onSubmit = handleSubmit(async () => {
     try {
-      await deleteTechnology({});
+      await deleteCourse({});
       reset();
       onClose();
     } catch (error) {
@@ -55,10 +55,10 @@ export default function TechnologyDeleteForm({ technology, onClose, ...other }: 
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń technologię</DialogTitle>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń kurs</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
-          <Typography>{`Czy na pewno chcesz usunąć technologię ${technology.name}?`}</Typography>
+          <Typography>{`Czy na pewno chcesz usunąć kurs ${course.slug}?`}</Typography>
         </DialogContent>
 
         <DialogActions>
