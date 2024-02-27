@@ -101,7 +101,8 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
             ),
           };
         }),
-        image: courseData.coverUrl,
+        image: courseData.coverUrl ?? "",
+        video: courseData.video ?? "",
       });
     }
   }, [

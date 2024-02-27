@@ -35,6 +35,7 @@ def create_user(
         username=email,
         is_active=is_active,
         is_staff=is_staff,
+        is_superuser=is_staff,
     )
 
     user.set_password(password)

@@ -121,7 +121,11 @@ export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props)
 
         <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
 
-        <MenuItem onClick={handleDelete} sx={{ mr: 1, color: "error.main", width: "fit-content" }}>
+        <MenuItem
+          onClick={handleDelete}
+          sx={{ mr: 1, color: "error.main", width: "fit-content" }}
+          disabled={row.active}
+        >
           <Iconify icon="carbon:trash-can" sx={{ mr: 0.5 }} />
           <Typography variant="body2">Usuń kurs</Typography>
         </MenuItem>

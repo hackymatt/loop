@@ -595,6 +595,9 @@ class CourseSerializer(ModelSerializer):
         instance.description = validated_data.get("description", instance.description)
         instance.level = validated_data.get("level", instance.level)
 
+        instance.image = validated_data.get("image", instance.image)
+        instance.video = validated_data.get("video", instance.video)
+
         instance.lessons.clear()
         instance = self.add_lessons(course=instance, lessons=lessons)
         instance.skills.clear()

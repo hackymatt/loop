@@ -351,6 +351,22 @@ class CourseTest(APITestCase):
         self.assertEqual(results[0]["rating_count"], 3)
         self.assertEqual(results[0]["students_count"], 2)
 
+    def test_get_courses_authenticated_admin(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(self.endpoint)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        results = data["results"]
+        self.assertFalse(all("lessons" in course.keys() for course in results))
+        self.assertFalse(all("skills" in course.keys() for course in results))
+        self.assertFalse(all("topics" in course.keys() for course in results))
+        self.assertEqual(results[0]["rating"], 4.0)
+        self.assertEqual(results[0]["rating_count"], 3)
+        self.assertEqual(results[0]["students_count"], 2)
+
     def test_get_course_inactive(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -467,6 +483,51 @@ class CourseTest(APITestCase):
     def test_get_course_authenticated_2(self):
         # login
         login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.course_2.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        course_data = json.loads(response.content)
+        lessons_data = course_data.pop("lessons")
+        technology_data = course_data.pop("technologies")
+        skills_data = course_data.pop("skills")
+        topics_data = course_data.pop("topics")
+        course_data.pop("duration")
+        course_data.pop("lecturers")
+        price = course_data.pop("price")
+        previous_price = course_data.pop("previous_price")
+        lowest_30_days_price = course_data.pop("lowest_30_days_price")
+        is_bestseller = course_data.pop("is_bestseller")
+        rating = course_data.pop("rating")
+        rating_count = course_data.pop("rating_count")
+        students_count = course_data.pop("students_count")
+        self.assertTrue(is_data_match(get_course(self.course_2.id), course_data))
+        self.assertEqual(price, 12.98)
+        self.assertEqual(previous_price, None)
+        self.assertEqual(lowest_30_days_price, None)
+        self.assertEqual(is_bestseller, True)
+        self.assertEqual(rating, None)
+        self.assertEqual(rating_count, 0)
+        self.assertEqual(students_count, 0)
+        for lesson_data in lessons_data:
+            previous_price = lesson_data.pop("previous_price")
+            lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
+
+            self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
+
+            self.assertEqual(previous_price, None)
+            self.assertEqual(lowest_30_days_price, None)
+
+        for technology in technology_data:
+            self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
+        for skill_data in skills_data:
+            self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
+        for topic_data in topics_data:
+            self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
+
+    def test_get_course_authenticated_admin(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(f"{self.endpoint}/{self.course_2.id}")

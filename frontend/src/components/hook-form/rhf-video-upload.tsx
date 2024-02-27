@@ -70,7 +70,7 @@ const VideoInput = forwardRef(
           "&:hover": { opacity: 0.72 },
         }}
       >
-        {source === "" ? (
+        {!source ? (
           <LoadingButton
             component="label"
             variant="text"
