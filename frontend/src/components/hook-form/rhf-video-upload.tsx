@@ -1,5 +1,5 @@
-import { useRef, useState, ChangeEvent } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { useRef, useState, forwardRef, MouseEvent, ChangeEvent, ForwardedRef } from "react";
 
 import { Stack } from "@mui/system";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -25,9 +25,9 @@ export default function RHFVideoUpload({ name, helperText, ...other }: Props) {
     <Controller
       name={name}
       control={control}
-      render={({ field, fieldState: { error } }) => (
+      render={({ field: { ref, ...field }, fieldState: { error } }) => (
         <div>
-          <FormControlLabel control={<VideoInput {...field} />} {...other} />
+          <FormControlLabel control={<VideoInput {...field} ref={ref} />} {...other} />
 
           {(!!error || helperText) && (
             <FormHelperText error={!!error}>{error ? error?.message : helperText}</FormHelperText>
@@ -38,54 +38,63 @@ export default function RHFVideoUpload({ name, helperText, ...other }: Props) {
   );
 }
 
-function VideoInput({ value, onChange }: { value: string; onChange: (file: string) => void }) {
-  const videoRef = useRef(null);
-  const [source, setSource] = useState<string>(value);
+const VideoInput = forwardRef(
+  (props: { value: string; onChange: (file: string) => void }, ref: ForwardedRef<unknown>) => {
+    const { value, onChange } = props;
+    const videoRef = useRef(null);
+    const [source, setSource] = useState<string>(value);
 
-  const handleFilePick = async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { files } = e.target as HTMLInputElement;
-    if (files && files.length > 0) {
-      const url = URL.createObjectURL(files[0]);
-      setSource(url);
-      const base64Image = await urlToBlob(url);
-      onChange(base64Image as string);
-    }
-  };
+    const handleFilePick = async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { files } = e.target as HTMLInputElement;
+      if (files && files.length > 0) {
+        const url = URL.createObjectURL(files[0]);
+        setSource(url);
+        const base64Image = await urlToBlob(url);
+        onChange(base64Image as string);
+      }
+    };
 
-  return (
-    <Stack
-      direction="column"
-      alignItems="center"
-      sx={{
-        typography: "caption",
-        cursor: "pointer",
-        "&:hover": { opacity: 0.72 },
-      }}
-    >
-      {source === "" ? (
-        <LoadingButton
-          component="label"
-          variant="text"
-          size="small"
-          color="primary"
-          startIcon={<Iconify icon="carbon:add-large" />}
-        >
-          Dodaj film
-          <input ref={videoRef} hidden type="file" onChange={handleFilePick} accept=".mp4" />
-        </LoadingButton>
-      ) : (
-        <LoadingButton
-          component="label"
-          variant="text"
-          size="small"
-          color="error"
-          startIcon={<Iconify icon="carbon:subtract-large" />}
-          onClick={() => setSource("")}
-        >
-          Usuń film
-        </LoadingButton>
-      )}
-      {source && <Player controls url={source} />}
-    </Stack>
-  );
-}
+    const handleFileClear = async (e: MouseEvent<HTMLElement>) => {
+      setSource("");
+      onChange("");
+      e.preventDefault();
+    };
+
+    return (
+      <Stack
+        direction="column"
+        alignItems="center"
+        sx={{
+          typography: "caption",
+          cursor: "pointer",
+          "&:hover": { opacity: 0.72 },
+        }}
+      >
+        {source === "" ? (
+          <LoadingButton
+            component="label"
+            variant="text"
+            size="small"
+            color="primary"
+            startIcon={<Iconify icon="carbon:add-large" />}
+          >
+            Dodaj film
+            <input ref={videoRef} hidden type="file" onChange={handleFilePick} accept=".mp4" />
+          </LoadingButton>
+        ) : (
+          <LoadingButton
+            component="label"
+            variant="text"
+            size="small"
+            color="error"
+            startIcon={<Iconify icon="carbon:subtract-large" />}
+            onClick={handleFileClear}
+          >
+            Usuń film
+          </LoadingButton>
+        )}
+        {source && <Player controls url={source} />}
+      </Stack>
+    );
+  },
+);
