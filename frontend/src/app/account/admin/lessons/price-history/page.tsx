@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import AdminLessonsPriceHistoryView from "src/sections/_elearning/view/account/admin/account-lessons-price-history-view";
+import AdminLessonsPriceHistoryView from "src/sections/_elearning/view/account/admin/lesson-price-history/account-lessons-price-history-view";
 
 // ----------------------------------------------------------------------
 

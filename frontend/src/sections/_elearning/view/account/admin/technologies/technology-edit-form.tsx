@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
+import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import { Typography } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -11,11 +12,14 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useDeleteTechnology } from "src/api/technologies/technology";
+import { useEditTechnology } from "src/api/technologies/technology";
 
 import FormProvider from "src/components/hook-form";
 
 import { ICourseByCategoryProps } from "src/types/course";
+
+import { schema, defaultValues } from "./technology";
+import { useTechnologyFields } from "./technology-fields";
 
 // ----------------------------------------------------------------------
 
@@ -26,14 +30,11 @@ interface Props extends DialogProps {
 
 // ----------------------------------------------------------------------
 
-export default function TechnologyDeleteForm({ technology, onClose, ...other }: Props) {
-  const { mutateAsync: deleteTechnology } = useDeleteTechnology(technology.id);
-
-  const defaultValues = {
-    name: "",
-  };
+export default function TechnologyEditForm({ technology, onClose, ...other }: Props) {
+  const { mutateAsync: editTechnology } = useEditTechnology(technology.id);
 
   const methods = useForm({
+    resolver: yupResolver(schema),
     defaultValues,
   });
 
@@ -51,9 +52,9 @@ export default function TechnologyDeleteForm({ technology, onClose, ...other }: 
 
   const handleFormError = useFormErrorHandler(methods);
 
-  const onSubmit = handleSubmit(async () => {
+  const onSubmit = handleSubmit(async (data) => {
     try {
-      await deleteTechnology({});
+      await editTechnology(data);
       reset();
       onClose();
     } catch (error) {
@@ -61,13 +62,15 @@ export default function TechnologyDeleteForm({ technology, onClose, ...other }: 
     }
   });
 
+  const { fields } = useTechnologyFields();
+
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń technologię</DialogTitle>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj technologię</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
-          <Typography>{`Czy na pewno chcesz usunąć technologię ${technology.name}?`}</Typography>
+          <Stack spacing={1}>{fields.name}</Stack>
         </DialogContent>
 
         <DialogActions>
@@ -75,8 +78,8 @@ export default function TechnologyDeleteForm({ technology, onClose, ...other }: 
             Anuluj
           </Button>
 
-          <LoadingButton color="error" type="submit" variant="contained" loading={isSubmitting}>
-            Usuń
+          <LoadingButton color="inherit" type="submit" variant="contained" loading={isSubmitting}>
+            Zapisz
           </LoadingButton>
         </DialogActions>
       </FormProvider>

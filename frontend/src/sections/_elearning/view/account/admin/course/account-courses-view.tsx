@@ -13,27 +13,27 @@ import TableContainer from "@mui/material/TableContainer";
 import { tableCellClasses } from "@mui/material/TableCell";
 import TablePagination from "@mui/material/TablePagination";
 
-import { paths } from "src/routes/paths";
-import { useRouter } from "src/routes/hooks";
-
 import { useBoolean } from "src/hooks/use-boolean";
 import { useQueryParams } from "src/hooks/use-query-params";
 
-import { useLessons, useLessonsPagesCount } from "src/api/lessons/lessons";
+import { useCourses, useCoursesPagesCount } from "src/api/courses/courses";
 
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
 
-import { ICourseLessonProp } from "src/types/course";
+import FilterLevel from "src/sections/_elearning/filters/filter-level";
+import AccountCoursesTableRow from "src/sections/_elearning/account/admin/account-courses-table-row";
+
+import { ICourseProps } from "src/types/course";
 import { IQueryParamValue } from "src/types/query-params";
 
-import LessonNewForm from "./lesson-new-form";
-import LessonEditForm from "./lesson-edit-form";
-import FilterPrice from "../../../filters/filter-price";
-import FilterSearch from "../../../filters/filter-search";
-import FilterDuration from "../../../filters/filter-duration";
-import AccountTableHead from "../../../account/account-table-head";
-import AccountLessonsTableRow from "../../../account/admin/account-lessons-table-row";
+import CourseNewForm from "./course-new-form";
+import CourseEditForm from "./course-edit-form";
+import CourseDeleteForm from "./course-delete-form";
+import FilterPrice from "../../../../filters/filter-price";
+import FilterSearch from "../../../../filters/filter-search";
+import FilterDuration from "../../../../filters/filter-duration";
+import AccountTableHead from "../../../../account/account-table-head";
 
 // ----------------------------------------------------------------------
 
@@ -45,20 +45,27 @@ const DURATION_OPTIONS = [
   { value: "(duration_from=120)", label: "120+ minut" },
 ];
 
+const LEVEL_OPTIONS = [
+  { value: "P", label: "Podstawowy" },
+  { value: "Ś", label: "Średniozaawansowany" },
+  { value: "Z", label: "Zaawansowany" },
+  { value: "E", label: "Ekspert" },
+];
+
 // ----------------------------------------------------------------------
 
 const TABS = [
-  { id: "", label: "Wszystkie lekcje" },
+  { id: "", label: "Wszystkie kursy" },
   { id: "True", label: "Aktywne" },
   { id: "False", label: "Nieaktywne" },
 ];
 
 const TABLE_HEAD = [
-  { id: "title", label: "Nazwa lekcji", minWidth: 200 },
+  { id: "title", label: "Nazwa kursu", minWidth: 200 },
   { id: "duration", label: "Czas", width: 100 },
   { id: "active", label: "Status", width: 100 },
   { id: "price", label: "Cena", width: 50 },
-  { id: "github_url", label: "Repozytorium", width: 100 },
+  { id: "level", label: "Poziom", width: 100 },
   { id: "", width: 25 },
 ];
 
@@ -66,18 +73,17 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
 
 // ----------------------------------------------------------------------
 
-export default function AccountLessonsView() {
-  const router = useRouter();
-
-  const newLessonFormOpen = useBoolean();
-  const editLessonFormOpen = useBoolean();
+export default function AccountCoursesView() {
+  const newCourseFormOpen = useBoolean();
+  const editCourseFormOpen = useBoolean();
+  const deleteCourseFormOpen = useBoolean();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const { data: pagesCount } = useLessonsPagesCount(filters);
-  const { data: lessons } = useLessons(filters);
+  const { data: pagesCount } = useCoursesPagesCount(filters);
+  const { data: courses } = useCourses(filters);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
@@ -85,7 +91,8 @@ export default function AccountLessonsView() {
   const order = filters?.sort_by && filters.sort_by.startsWith("-") ? "desc" : "asc";
   const tab = filters?.active ? filters.active : "";
 
-  const [editedLesson, setEditedLesson] = useState<ICourseLessonProp>();
+  const [editedCourse, setEditedCourse] = useState<ICourseProps>();
+  const [deletedCourse, setDeletedCourse] = useState<ICourseProps>();
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -128,26 +135,27 @@ export default function AccountLessonsView() {
     [handleChange],
   );
 
-  const handlePriceHistoryView = useCallback(
-    (lesson: ICourseLessonProp) => {
-      router.push(`${paths.account.admin.lessonsPriceHistory}/?lesson_name=${lesson.title}`);
+  const handleEditCourse = useCallback(
+    (course: ICourseProps) => {
+      setEditedCourse(course);
+      editCourseFormOpen.onToggle();
     },
-    [router],
+    [editCourseFormOpen],
   );
 
-  const handleEditLesson = useCallback(
-    (lesson: ICourseLessonProp) => {
-      setEditedLesson(lesson);
-      editLessonFormOpen.onToggle();
+  const handleDeleteCourse = useCallback(
+    (course: ICourseProps) => {
+      setDeletedCourse(course);
+      deleteCourseFormOpen.onToggle();
     },
-    [editLessonFormOpen],
+    [deleteCourseFormOpen],
   );
 
   return (
     <>
       <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
         <Typography variant="h5" sx={{ mb: 3 }}>
-          Spis lekcji
+          Spis kursów
         </Typography>
         <LoadingButton
           component="label"
@@ -155,7 +163,7 @@ export default function AccountLessonsView() {
           size="small"
           color="success"
           loading={false}
-          onClick={newLessonFormOpen.onToggle}
+          onClick={newCourseFormOpen.onToggle}
         >
           <Iconify icon="carbon:add" />
         </LoadingButton>
@@ -177,7 +185,7 @@ export default function AccountLessonsView() {
         <FilterSearch
           value={filters?.title ?? ""}
           onChangeSearch={(value) => handleChange("title", value)}
-          placeholder="Nazwa lekcji..."
+          placeholder="Nazwa kursu..."
         />
 
         <FilterDuration
@@ -186,11 +194,19 @@ export default function AccountLessonsView() {
           onChangeDuration={(value) => handleChange("filters", value)}
         />
 
-        <FilterPrice
-          valuePriceFrom={filters?.price_from ?? ""}
-          valuePriceTo={filters?.price_to ?? ""}
-          onChangeStartPrice={(value) => handleChange("price_from", value)}
-          onChangeEndPrice={(value) => handleChange("price_to", value)}
+        <Box sx={{ width: 1 }}>
+          <FilterPrice
+            valuePriceFrom={filters?.price_from ?? ""}
+            valuePriceTo={filters?.price_to ?? ""}
+            onChangeStartPrice={(value) => handleChange("price_from", value)}
+            onChangeEndPrice={(value) => handleChange("price_to", value)}
+          />
+        </Box>
+
+        <FilterLevel
+          value={filters?.level_in ?? ""}
+          options={LEVEL_OPTIONS}
+          onChangeLevel={(value) => handleChange("level_in", value)}
         />
       </Stack>
 
@@ -220,14 +236,14 @@ export default function AccountLessonsView() {
               headCells={TABLE_HEAD}
             />
 
-            {lessons && (
+            {courses && (
               <TableBody>
-                {lessons.map((row) => (
-                  <AccountLessonsTableRow
+                {courses.map((row) => (
+                  <AccountCoursesTableRow
                     key={row.id}
                     row={row}
-                    onEdit={handleEditLesson}
-                    onPriceHistoryView={handlePriceHistoryView}
+                    onEdit={handleEditCourse}
+                    onDelete={handleDeleteCourse}
                   />
                 ))}
               </TableBody>
@@ -250,12 +266,19 @@ export default function AccountLessonsView() {
         />
       </Box>
 
-      <LessonNewForm open={newLessonFormOpen.value} onClose={newLessonFormOpen.onFalse} />
-      {editedLesson && (
-        <LessonEditForm
-          lesson={editedLesson}
-          open={editLessonFormOpen.value}
-          onClose={editLessonFormOpen.onFalse}
+      <CourseNewForm open={newCourseFormOpen.value} onClose={newCourseFormOpen.onFalse} />
+      {editedCourse && (
+        <CourseEditForm
+          course={editedCourse}
+          open={editCourseFormOpen.value}
+          onClose={editCourseFormOpen.onFalse}
+        />
+      )}
+      {deletedCourse && (
+        <CourseDeleteForm
+          course={deletedCourse}
+          open={deleteCourseFormOpen.value}
+          onClose={deleteCourseFormOpen.onFalse}
         />
       )}
     </>

@@ -1,4 +1,4 @@
-import * as Yup from "yup";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -12,34 +12,29 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useCreateTechnology } from "src/api/technologies/technologies";
+import { useEditSkill } from "src/api/skills/skill";
 
-import { useToastContext } from "src/components/toast";
-import FormProvider, { RHFTextField } from "src/components/hook-form";
+import FormProvider from "src/components/hook-form";
+
+import { ICourseBySkillProps } from "src/types/course";
+
+import { schema, defaultValues } from "./skill";
+import { useSkillFields } from "./skill-fields";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
+  skill: ICourseBySkillProps;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function TechnologyNewForm({ onClose, ...other }: Props) {
-  const { enqueueSnackbar } = useToastContext();
-
-  const { mutateAsync: createTechnology } = useCreateTechnology();
-
-  const defaultValues = {
-    name: "",
-  };
-
-  const NewTechnologySchema = Yup.object().shape({
-    name: Yup.string().required("Nazwa jest wymagana"),
-  });
+export default function SkillEditForm({ skill, onClose, ...other }: Props) {
+  const { mutateAsync: editSkill } = useEditSkill(skill.id);
 
   const methods = useForm({
-    resolver: yupResolver(NewTechnologySchema),
+    resolver: yupResolver(schema),
     defaultValues,
   });
 
@@ -49,28 +44,33 @@ export default function TechnologyNewForm({ onClose, ...other }: Props) {
     formState: { isSubmitting },
   } = methods;
 
+  useEffect(() => {
+    if (skill) {
+      reset(skill);
+    }
+  }, [reset, skill]);
+
   const handleFormError = useFormErrorHandler(methods);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await createTechnology(data);
+      await editSkill(data);
       reset();
       onClose();
-      enqueueSnackbar("Technologia została dodana", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }
   });
 
+  const { fields } = useSkillFields();
+
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nową technologię</DialogTitle>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj umiejętność</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
-          <Stack spacing={1}>
-            <RHFTextField name="name" label="Nazwa" />
-          </Stack>
+          <Stack spacing={1}>{fields.name}</Stack>
         </DialogContent>
 
         <DialogActions>
@@ -78,8 +78,8 @@ export default function TechnologyNewForm({ onClose, ...other }: Props) {
             Anuluj
           </Button>
 
-          <LoadingButton color="success" type="submit" variant="contained" loading={isSubmitting}>
-            Dodaj
+          <LoadingButton color="inherit" type="submit" variant="contained" loading={isSubmitting}>
+            Zapisz
           </LoadingButton>
         </DialogActions>
       </FormProvider>

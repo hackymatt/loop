@@ -1,10 +1,7 @@
-import * as Yup from "yup";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 
-import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import { Typography } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -13,34 +10,27 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useEditTopic } from "src/api/topics/topic";
+import { useDeleteSkill } from "src/api/skills/skill";
 
-import FormProvider, { RHFTextField } from "src/components/hook-form";
+import FormProvider from "src/components/hook-form";
 
-import { ICourseByTopicProps } from "src/types/course";
+import { ICourseBySkillProps } from "src/types/course";
+
+import { defaultValues } from "./skill";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  topic: ICourseByTopicProps;
+  skill: ICourseBySkillProps;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function TopicEditForm({ topic, onClose, ...other }: Props) {
-  const { mutateAsync: editTopic } = useEditTopic(topic.id);
-
-  const defaultValues = {
-    name: "",
-  };
-
-  const EditTopicSchema = Yup.object().shape({
-    name: Yup.string().required("Nazwa jest wymagana"),
-  });
+export default function SkillDeleteForm({ skill, onClose, ...other }: Props) {
+  const { mutateAsync: deleteSkill } = useDeleteSkill(skill.id);
 
   const methods = useForm({
-    resolver: yupResolver(EditTopicSchema),
     defaultValues,
   });
 
@@ -50,17 +40,11 @@ export default function TopicEditForm({ topic, onClose, ...other }: Props) {
     formState: { isSubmitting },
   } = methods;
 
-  useEffect(() => {
-    if (topic) {
-      reset(topic);
-    }
-  }, [reset, topic]);
-
   const handleFormError = useFormErrorHandler(methods);
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async () => {
     try {
-      await editTopic(data);
+      await deleteSkill({});
       reset();
       onClose();
     } catch (error) {
@@ -71,12 +55,10 @@ export default function TopicEditForm({ topic, onClose, ...other }: Props) {
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj temat</DialogTitle>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń umiejętność</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
-          <Stack spacing={1}>
-            <RHFTextField name="name" label="Nazwa" multiline minRows={3} />
-          </Stack>
+          <Typography>{`Czy na pewno chcesz usunąć umiejętność ${skill.name}?`}</Typography>
         </DialogContent>
 
         <DialogActions>
@@ -84,8 +66,8 @@ export default function TopicEditForm({ topic, onClose, ...other }: Props) {
             Anuluj
           </Button>
 
-          <LoadingButton color="inherit" type="submit" variant="contained" loading={isSubmitting}>
-            Zapisz
+          <LoadingButton color="error" type="submit" variant="contained" loading={isSubmitting}>
+            Usuń
           </LoadingButton>
         </DialogActions>
       </FormProvider>

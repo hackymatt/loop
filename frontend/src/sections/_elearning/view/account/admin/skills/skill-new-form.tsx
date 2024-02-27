@@ -1,5 +1,3 @@
-import * as Yup from "yup";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -13,34 +11,29 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useEditSkill } from "src/api/skills/skill";
+import { useCreateSkill } from "src/api/skills/skills";
 
-import FormProvider, { RHFTextField } from "src/components/hook-form";
+import FormProvider from "src/components/hook-form";
+import { useToastContext } from "src/components/toast";
 
-import { ICourseBySkillProps } from "src/types/course";
+import { schema, defaultValues } from "./skill";
+import { useSkillFields } from "./skill-fields";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  skill: ICourseBySkillProps;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function SkillEditForm({ skill, onClose, ...other }: Props) {
-  const { mutateAsync: editSkill } = useEditSkill(skill.id);
+export default function SkillNewForm({ onClose, ...other }: Props) {
+  const { enqueueSnackbar } = useToastContext();
 
-  const defaultValues = {
-    name: "",
-  };
-
-  const EditSkillSchema = Yup.object().shape({
-    name: Yup.string().required("Nazwa jest wymagana"),
-  });
+  const { mutateAsync: createSkill } = useCreateSkill();
 
   const methods = useForm({
-    resolver: yupResolver(EditSkillSchema),
+    resolver: yupResolver(schema),
     defaultValues,
   });
 
@@ -50,33 +43,28 @@ export default function SkillEditForm({ skill, onClose, ...other }: Props) {
     formState: { isSubmitting },
   } = methods;
 
-  useEffect(() => {
-    if (skill) {
-      reset(skill);
-    }
-  }, [reset, skill]);
-
   const handleFormError = useFormErrorHandler(methods);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await editSkill(data);
+      await createSkill(data);
       reset();
       onClose();
+      enqueueSnackbar("Temat został dodany", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }
   });
 
+  const { fields } = useSkillFields();
+
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj umiejętność</DialogTitle>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nową umiejętność</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
-          <Stack spacing={1}>
-            <RHFTextField name="name" label="Nazwa" multiline minRows={3} />
-          </Stack>
+          <Stack spacing={1}>{fields.name}</Stack>
         </DialogContent>
 
         <DialogActions>
@@ -84,8 +72,8 @@ export default function SkillEditForm({ skill, onClose, ...other }: Props) {
             Anuluj
           </Button>
 
-          <LoadingButton color="inherit" type="submit" variant="contained" loading={isSubmitting}>
-            Zapisz
+          <LoadingButton color="success" type="submit" variant="contained" loading={isSubmitting}>
+            Dodaj
           </LoadingButton>
         </DialogActions>
       </FormProvider>

@@ -1,70 +1,59 @@
 "use client";
 
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
-import { LoadingButton } from "@mui/lab";
 import TableBody from "@mui/material/TableBody";
 import Typography from "@mui/material/Typography";
 import TableContainer from "@mui/material/TableContainer";
 import { tableCellClasses } from "@mui/material/TableCell";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TablePagination from "@mui/material/TablePagination";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-import { useBoolean } from "src/hooks/use-boolean";
 import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
 
-import { useTopics, useTopicsPagesCount } from "src/api/topics/topics";
+import {
+  useLessonsPriceHistory,
+  useLessonsPriceHistoryPagesCount,
+} from "src/api/lessons/lessons-price-history";
 
-import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
 
-import AccountTopicsTableRow from "src/sections/_elearning/account/admin/account-topics-table-row";
-
-import { ICourseByTopicProps } from "src/types/course";
 import { IQueryParamValue } from "src/types/query-params";
 
-import TopicNewForm from "./topic-new-form";
-import TopicEditForm from "./topic-edit-form";
-import TopicDeleteForm from "./topic-delete-form";
-import FilterSearch from "../../../filters/filter-search";
-import AccountTableHead from "../../../account/account-table-head";
+import FilterPrice from "../../../../filters/filter-price";
+import FilterSearch from "../../../../filters/filter-search";
+import AccountTableHead from "../../../../account/account-table-head";
+import AccountLessonsPriceHistoryTableRow from "../../../../account/admin/account-lessons-table-price-history-row";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: "name", label: "Nazwa tematu", minWidth: 200 },
-  { id: "created_at", label: "Data utworzenia", width: 200 },
-  { id: "", width: 25 },
+  { id: "lesson_name", label: "Nazwa lekcji", minWidth: 200 },
+  { id: "price", label: "Cena", width: 50 },
+  { id: "created_at", label: "Data zmiany", width: 150 },
 ];
 
 const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
 
 // ----------------------------------------------------------------------
 
-export default function AccountCoursesTopicsView() {
-  const newTopicFormOpen = useBoolean();
-  const editTopicFormOpen = useBoolean();
-  const deleteTopicFormOpen = useBoolean();
-
+export default function AdminLessonsPriceHistoryView() {
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const { data: pagesCount } = useTopicsPagesCount(filters);
-  const { data: topics } = useTopics(filters);
+  const { data: pagesCount } = useLessonsPriceHistoryPagesCount(filters);
+  const { data: lessonsPriceHistories } = useLessonsPriceHistory(filters);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
   const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "title";
   const order = filters?.sort_by && filters.sort_by.startsWith("-") ? "desc" : "asc";
-
-  const [editedTopic, setEditedTopic] = useState<ICourseByTopicProps>();
-  const [deletedTopic, setDeletedTopic] = useState<ICourseByTopicProps>();
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -100,45 +89,26 @@ export default function AccountCoursesTopicsView() {
     [handleChange],
   );
 
-  const handleEditTopic = useCallback(
-    (topic: ICourseByTopicProps) => {
-      setEditedTopic(topic);
-      editTopicFormOpen.onToggle();
-    },
-    [editTopicFormOpen],
-  );
-
-  const handleDeleteTopic = useCallback(
-    (topic: ICourseByTopicProps) => {
-      setDeletedTopic(topic);
-      deleteTopicFormOpen.onToggle();
-    },
-    [deleteTopicFormOpen],
-  );
-
   return (
     <>
       <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
         <Typography variant="h5" sx={{ mb: 3 }}>
-          Tematy
+          Historia cen
         </Typography>
-        <LoadingButton
-          component="label"
-          variant="contained"
-          size="small"
-          color="success"
-          loading={false}
-          onClick={newTopicFormOpen.onToggle}
-        >
-          <Iconify icon="carbon:add" />
-        </LoadingButton>
       </Stack>
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={1} sx={{ mt: 5, mb: 3 }}>
         <FilterSearch
-          value={filters?.name ?? ""}
-          onChangeSearch={(value) => handleChange("name", value)}
-          placeholder="Nazwa tematu..."
+          value={filters?.lesson_name ?? ""}
+          onChangeSearch={(value) => handleChange("lesson_name", value)}
+          placeholder="Nazwa lekcji..."
+        />
+
+        <FilterPrice
+          valuePriceFrom={filters?.price_from ?? ""}
+          valuePriceTo={filters?.price_to ?? ""}
+          onChangeStartPrice={(value) => handleChange("price_from", value)}
+          onChangeEndPrice={(value) => handleChange("price_to", value)}
         />
 
         <DatePicker
@@ -148,7 +118,7 @@ export default function AccountCoursesTopicsView() {
           }
           sx={{ width: 1, minWidth: 180 }}
           slotProps={{
-            textField: { size: "small", hiddenLabel: true, placeholder: "Data utworzenia" },
+            textField: { size: "small", hiddenLabel: true, placeholder: "Data zmiany" },
           }}
         />
       </Stack>
@@ -179,15 +149,10 @@ export default function AccountCoursesTopicsView() {
               headCells={TABLE_HEAD}
             />
 
-            {topics && (
+            {lessonsPriceHistories && (
               <TableBody>
-                {topics.map((row) => (
-                  <AccountTopicsTableRow
-                    key={row.id}
-                    row={row}
-                    onEdit={handleEditTopic}
-                    onDelete={handleDeleteTopic}
-                  />
+                {lessonsPriceHistories.map((row) => (
+                  <AccountLessonsPriceHistoryTableRow key={row.id} row={row} />
                 ))}
               </TableBody>
             )}
@@ -208,22 +173,6 @@ export default function AccountCoursesTopicsView() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Box>
-
-      <TopicNewForm open={newTopicFormOpen.value} onClose={newTopicFormOpen.onFalse} />
-      {editedTopic && (
-        <TopicEditForm
-          topic={editedTopic}
-          open={editTopicFormOpen.value}
-          onClose={editTopicFormOpen.onFalse}
-        />
-      )}
-      {deletedTopic && (
-        <TopicDeleteForm
-          topic={deletedTopic}
-          open={deleteTopicFormOpen.value}
-          onClose={deleteTopicFormOpen.onFalse}
-        />
-      )}
     </>
   );
 }

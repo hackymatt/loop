@@ -23,14 +23,14 @@ export type ICourseLessonProp = {
   videoPath?: string;
   unLocked?: boolean;
   description: string;
-  price?: number;
+  price: number;
   priceSale?: number;
   lowest30DaysPrice?: number;
   ratingNumber?: number;
   totalReviews?: number;
   totalStudents?: number;
   teachers?: ICourseTeacherProp[];
-  githubUrl?: string;
+  githubUrl: string;
   active?: boolean;
 };
 
@@ -60,29 +60,32 @@ export type ICourseBySkillProps = {
   createdAt: Date;
 };
 
+export type ILevel = "P" | "Ś" | "Z" | "E";
+
 export type ICourseProps = {
   id: string;
   slug: string;
   price: number;
-  level: string;
+  level: ILevel;
   createdAt?: Date;
   coverUrl: string;
   bestSeller: boolean;
   video?: string;
   category: string[];
-  skills?: string[];
+  skills: string[];
   priceSale: number;
   lowest30DaysPrice?: number;
   resources?: number;
   totalHours: number;
   description?: string;
   languages?: string[];
-  learnList?: string[];
+  learnList: string[];
   ratingNumber: number;
   totalQuizzes?: number;
   totalReviews: number;
   totalStudents: number;
   shareLinks?: ISocialLinks;
-  lessons?: ICourseLessonProp[];
+  lessons: ICourseLessonProp[];
   teachers: ICourseTeacherProp[];
+  active: boolean;
 };

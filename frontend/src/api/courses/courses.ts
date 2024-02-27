@@ -1,17 +1,17 @@
+import { AxiosError } from "axios";
 import { compact } from "lodash-es";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
-import { ICourseProps } from "src/types/course";
 import { IGender } from "src/types/testimonial";
 import { IQueryParams } from "src/types/query-params";
+import { ILevel, ICourseProps } from "src/types/course";
 
 import { Api } from "../service";
+import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/courses" as const;
-
-type ILevel = "P" | "Ś" | "Z" | "E";
 
 type ILecturer = {
   full_name: string;
@@ -21,9 +21,29 @@ type ILecturer = {
   gender: IGender | null;
 };
 
-type ITechnology = {
-  id: number;
+export type ITechnology = {
+  id: string;
   name: string;
+};
+
+type ISkill = {
+  id: string;
+  name: string;
+};
+
+type ITopic = {
+  id: string;
+  name: string;
+};
+
+type ILesson = {
+  id: string;
+  title: string;
+  description: string;
+  duration: number;
+  github_url: string;
+  price: number;
+  technologies: ITechnology[];
 };
 
 type ICourse = {
@@ -42,7 +62,25 @@ type ICourse = {
   level: ILevel;
   title: string;
   description: string;
+  active: boolean;
 };
+
+type ICreateCourse = Omit<
+  ICourse,
+  | "id"
+  | "price"
+  | "previous_price"
+  | "lowest_30_days_price"
+  | "is_bestseller"
+  | "duration"
+  | "technologies"
+  | "lecturers"
+  | "students_count"
+  | "rating"
+  | "rating_count"
+> & { lessons: ILesson[]; skills: ISkill[]; topics: ITopic[]; video?: string };
+
+type ICreateCourseReturn = ICreateCourse;
 
 export const coursesQuery = (query?: IQueryParams) => {
   const url = endpoint;
@@ -77,6 +115,7 @@ export const coursesQuery = (query?: IQueryParams) => {
         rating_count,
         students_count,
         lecturers,
+        active,
       }: ICourse) => ({
         id,
         description,
@@ -98,6 +137,7 @@ export const coursesQuery = (query?: IQueryParams) => {
           avatarUrl: lecturerImage,
           gender,
         })),
+        active,
       }),
     );
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };
@@ -116,4 +156,23 @@ export const useCoursesPagesCount = (query?: IQueryParams) => {
   const { queryKey, queryFn } = coursesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.pagesCount, ...rest };
+};
+
+export const useCreateCourse = () => {
+  const queryClient = useQueryClient();
+  return useMutation<ICreateCourseReturn, AxiosError, ICreateCourse>(
+    async (variables) => {
+      const result = await Api.post(endpoint, variables, {
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      });
+      return result.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [endpoint] });
+      },
+    },
+  );
 };

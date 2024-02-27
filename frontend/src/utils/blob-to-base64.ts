@@ -5,3 +5,9 @@ export async function blobToBase64(blob: Blob) {
     reader.readAsDataURL(blob);
   });
 }
+
+export async function urlToBlob(url: string) {
+  const result = await fetch(url);
+  const blob = await result.blob();
+  return blobToBase64(blob);
+}

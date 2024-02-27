@@ -69,7 +69,7 @@ export default function AccountLayout({ children }: Props) {
           <Box
             sx={{
               flexGrow: 1,
-              pl: { md: 8 },
+              pl: { md: 4 },
               width: { md: `calc(100% - ${280}px)` },
             }}
           >

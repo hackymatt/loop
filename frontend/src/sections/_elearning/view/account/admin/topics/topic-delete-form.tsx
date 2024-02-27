@@ -1,10 +1,7 @@
-import * as Yup from "yup";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 
-import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import { Typography } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -13,34 +10,27 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useEditTechnology } from "src/api/technologies/technology";
+import { useDeleteTopic } from "src/api/topics/topic";
 
-import FormProvider, { RHFTextField } from "src/components/hook-form";
+import FormProvider from "src/components/hook-form";
 
-import { ICourseByCategoryProps } from "src/types/course";
+import { ICourseByTopicProps } from "src/types/course";
+
+import { defaultValues } from "./topic";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  technology: ICourseByCategoryProps;
+  topic: ICourseByTopicProps;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function TechnologyEditForm({ technology, onClose, ...other }: Props) {
-  const { mutateAsync: editTechnology } = useEditTechnology(technology.id);
-
-  const defaultValues = {
-    name: "",
-  };
-
-  const EditTechnologySchema = Yup.object().shape({
-    name: Yup.string().required("Nazwa jest wymagana"),
-  });
+export default function TopicDeleteForm({ topic, onClose, ...other }: Props) {
+  const { mutateAsync: deleteTopic } = useDeleteTopic(topic.id);
 
   const methods = useForm({
-    resolver: yupResolver(EditTechnologySchema),
     defaultValues,
   });
 
@@ -50,17 +40,11 @@ export default function TechnologyEditForm({ technology, onClose, ...other }: Pr
     formState: { isSubmitting },
   } = methods;
 
-  useEffect(() => {
-    if (technology) {
-      reset(technology);
-    }
-  }, [reset, technology]);
-
   const handleFormError = useFormErrorHandler(methods);
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async () => {
     try {
-      await editTechnology(data);
+      await deleteTopic({});
       reset();
       onClose();
     } catch (error) {
@@ -71,12 +55,10 @@ export default function TechnologyEditForm({ technology, onClose, ...other }: Pr
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj technologię</DialogTitle>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń temat</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
-          <Stack spacing={1}>
-            <RHFTextField name="name" label="Nazwa" />
-          </Stack>
+          <Typography>{`Czy na pewno chcesz usunąć temat ${topic.name}?`}</Typography>
         </DialogContent>
 
         <DialogActions>
@@ -84,8 +66,8 @@ export default function TechnologyEditForm({ technology, onClose, ...other }: Pr
             Anuluj
           </Button>
 
-          <LoadingButton color="inherit" type="submit" variant="contained" loading={isSubmitting}>
-            Zapisz
+          <LoadingButton color="error" type="submit" variant="contained" loading={isSubmitting}>
+            Usuń
           </LoadingButton>
         </DialogActions>
       </FormProvider>

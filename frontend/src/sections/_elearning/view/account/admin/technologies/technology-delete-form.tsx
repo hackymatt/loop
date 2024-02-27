@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import Button from "@mui/material/Button";
@@ -11,27 +10,25 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useDeleteTopic } from "src/api/topics/topic";
+import { useDeleteTechnology } from "src/api/technologies/technology";
 
 import FormProvider from "src/components/hook-form";
 
-import { ICourseByTopicProps } from "src/types/course";
+import { ICourseByCategoryProps } from "src/types/course";
+
+import { defaultValues } from "./technology";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  topic: ICourseByTopicProps;
+  technology: ICourseByCategoryProps;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function TopicDeleteForm({ topic, onClose, ...other }: Props) {
-  const { mutateAsync: deleteTopic } = useDeleteTopic(topic.id);
-
-  const defaultValues = {
-    name: "",
-  };
+export default function TechnologyDeleteForm({ technology, onClose, ...other }: Props) {
+  const { mutateAsync: deleteTechnology } = useDeleteTechnology(technology.id);
 
   const methods = useForm({
     defaultValues,
@@ -43,17 +40,11 @@ export default function TopicDeleteForm({ topic, onClose, ...other }: Props) {
     formState: { isSubmitting },
   } = methods;
 
-  useEffect(() => {
-    if (topic) {
-      reset(topic);
-    }
-  }, [reset, topic]);
-
   const handleFormError = useFormErrorHandler(methods);
 
   const onSubmit = handleSubmit(async () => {
     try {
-      await deleteTopic({});
+      await deleteTechnology({});
       reset();
       onClose();
     } catch (error) {
@@ -64,10 +55,10 @@ export default function TopicDeleteForm({ topic, onClose, ...other }: Props) {
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń temat</DialogTitle>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń technologię</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
-          <Typography>{`Czy na pewno chcesz usunąć temat ${topic.name}?`}</Typography>
+          <Typography>{`Czy na pewno chcesz usunąć technologię ${technology.name}?`}</Typography>
         </DialogContent>
 
         <DialogActions>

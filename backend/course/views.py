@@ -44,6 +44,10 @@ class CourseViewSet(ModelViewSet):
 
     def get_queryset(self):
         if self.action == "list":
+            user = self.request.user
+            if user.is_superuser:
+                return self.queryset.distinct()
+
             active = self.request.query_params.get("active", None)
             if not active:
                 return self.queryset.filter(active=True).all().distinct()
@@ -62,6 +66,10 @@ class CourseViewSet(ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         course = super().get_object()
+
+        user = self.request.user
+        if user.is_superuser:
+            return super().retrieve(request, *args, **kwargs)
 
         if not course.active:
             return Response(
