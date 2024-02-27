@@ -1,3 +1,4 @@
+from profile.users.views import UserViewSet
 from profile.register.views import ProfileRegisterViewSet
 from profile.verify.views import ProfileVerificationCodeViewSet, ProfileVerifyViewSet
 from profile.login.views import ProfileLoginViewSet
@@ -40,6 +41,7 @@ from contact.views import ContactViewSet
 
 
 router = DefaultRouter(trailing_slash=False)
+router.register(r"users", UserViewSet, basename="users")
 router.register(r"register", ProfileRegisterViewSet, basename="user_register")
 router.register(r"verify", ProfileVerifyViewSet, basename="user_verification")
 router.register(r"login", ProfileLoginViewSet, basename="user_login")
