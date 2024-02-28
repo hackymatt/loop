@@ -50,6 +50,13 @@ def create_profile(
     verification_code_created_at: datetime = make_aware(datetime.now()),
     user_type: str = "S",
     user_title: str = "",
+    gender: str = "M",
+    phone_number: str = "123456789",
+    dob: str = "1999-12-31",
+    street_address: str = "Street",
+    zip_code: str = "ZipCode",
+    city: str = "City",
+    country: str = "Country",
 ):
     return Profile.objects.create(
         user=user,
@@ -57,6 +64,13 @@ def create_profile(
         verification_code_created_at=verification_code_created_at,
         user_type=user_type,
         user_title=user_title,
+        gender=gender,
+        phone_number=phone_number,
+        dob=dob,
+        street_address=street_address,
+        zip_code=zip_code,
+        city=city,
+        country=country,
     )
 
 

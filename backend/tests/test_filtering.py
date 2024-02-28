@@ -2124,3 +2124,276 @@ class LessonFilterTest(APITestCase):
         actives = list(set([record["active"] for record in results]))
         self.assertTrue(len(actives) == 1)
         self.assertTrue(actives[0])
+
+
+class UsersFilerTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/users"
+        self.admin_data = {
+            "email": "admin_test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.admin_data["email"],
+            password=self.admin_data["password"],
+            is_active=True,
+            is_staff=True,
+        )
+        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.student_user_1 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="student_1@example.com",
+            password="TestPassword123",
+            is_active=True,
+        )
+        self.student_user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="student_2@example.com",
+            password="TestPassword123",
+            is_active=True,
+        )
+        self.lecturer_user_1 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_1@example.com",
+            password="TestPassword123",
+            is_active=True,
+        )
+        self.lecturer_user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_2@example.com",
+            password="TestPassword123",
+            is_active=True,
+        )
+        self.student_profile_1 = create_profile(user=self.student_user_1)
+        self.student_profile_2 = create_profile(user=self.student_user_2)
+        self.lecturer_profile_1 = create_profile(
+            user=self.lecturer_user_1, user_type="W", user_title="soft"
+        )
+        self.lecturer_profile_2 = create_profile(
+            user=self.lecturer_user_2, user_type="W"
+        )
+
+    def test_first_name_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "first_name"
+        variable = "first"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 5)
+        values = list(set([variable in record[column].lower() for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_last_name_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "last_name"
+        variable = "last"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 5)
+        values = list(set([variable in record[column].lower() for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_email_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "email"
+        variable = "student_2"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        values = list(set([variable in record[column].lower() for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_gender_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "gender"
+        variable = "m"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 5)
+        values = list(set([variable in record[column].lower() for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_user_type_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "user_type"
+        variable = "w"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 2)
+        values = list(set([variable in record[column].lower() for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_created_at_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "created_at"
+        variable = str(self.admin_profile.created_at)[0:10]
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 6)
+        values = list(set([variable in record[column].lower() for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_user_title_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "user_title"
+        variable = "soft"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        values = list(set([variable in record[column].lower() for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_phone_number_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "phone_number"
+        variable = "123"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 5)
+        values = list(set([variable in record[column].lower() for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_dob_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "dob"
+        variable = "1999"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 5)
+        values = list(set([variable in record[column].lower() for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_street_address_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "street_address"
+        variable = "tree"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 5)
+        values = list(set([variable in record[column].lower() for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_zip_code_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "zip_code"
+        variable = "zip"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 5)
+        values = list(set([variable in record[column].lower() for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_city_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "city"
+        variable = "ty"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 5)
+        values = list(set([variable in record[column].lower() for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_country_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "country"
+        variable = "try"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 5)
+        values = list(set([variable in record[column].lower() for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])

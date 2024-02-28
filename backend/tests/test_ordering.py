@@ -2141,3 +2141,128 @@ class LessonOrderTest(APITestCase):
                     for field_value in field_values
                 ]
                 self.assertEqual(field_values, sorted(field_values, reverse=True))
+
+
+class UsersOrderTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/users"
+        self.admin_data = {
+            "email": "admin_test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.admin_data["email"],
+            password=self.admin_data["password"],
+            is_active=True,
+            is_staff=True,
+        )
+        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.student_user_1 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="student_1@example.com",
+            password="TestPassword123",
+            is_active=True,
+        )
+        self.student_user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="student_2@example.com",
+            password="TestPassword123",
+            is_active=True,
+        )
+        self.lecturer_user_1 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_1@example.com",
+            password="TestPassword123",
+            is_active=True,
+        )
+        self.lecturer_user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_2@example.com",
+            password="TestPassword123",
+            is_active=True,
+        )
+        self.student_profile_1 = create_profile(user=self.student_user_1)
+        self.student_profile_2 = create_profile(user=self.student_user_2)
+        self.lecturer_profile_1 = create_profile(
+            user=self.lecturer_user_1, user_type="W"
+        )
+        self.lecturer_profile_2 = create_profile(
+            user=self.lecturer_user_2, user_type="W"
+        )
+
+        self.fields = [
+            "first_name",
+            "last_name",
+            "email",
+            "gender",
+            "user_type",
+            "created_at",
+            "user_title",
+            "phone_number",
+            "dob",
+            "street_address",
+            "zip_code",
+            "city",
+            "country",
+        ]
+
+    def test_ordering(self):
+        for field in self.fields:
+            login(self, self.admin_data["email"], self.admin_data["password"])
+            self.assertTrue(auth.get_user(self.client).is_authenticated)
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by={field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 6)
+            field_values = [user[field] for user in results]
+            field_values = [value for value in field_values if value is not None]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values, sorted(field_values, key=lambda d: d["name"])
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values))
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by=-{field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 6)
+            field_values = [user[field] for user in results]
+            field_values = [value for value in field_values if value is not None]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values,
+                    sorted(field_values, key=lambda d: d["name"], reverse=True),
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values, reverse=True))

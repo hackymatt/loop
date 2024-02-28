@@ -21,7 +21,10 @@ class OrderFilter(OrderingFilter):
                 "email",
                 "-email",
             ]:
-                value_modified = "user__" + value
+                desc = value[0] == "-"
+                value_modified = value.replace("-", "")
+                value_modified = "user__" + value_modified
+                value_modified = f"-{value_modified}" if desc else value_modified
                 queryset = queryset.order_by(value_modified)
             else:
                 queryset = queryset.order_by(value)
@@ -31,20 +34,19 @@ class OrderFilter(OrderingFilter):
 
 class UserFilter(FilterSet):
     first_name = CharFilter(
-        field_name="user.first_name",
+        field_name="user__first_name",
         lookup_expr="icontains",
         label="First name zawiera",
     )
     last_name = CharFilter(
-        field_name="user.last_name", lookup_expr="icontains", label="Last name zawiera"
+        field_name="user__last_name", lookup_expr="icontains", label="Last name zawiera"
     )
     email = CharFilter(
-        field_name="user.email", lookup_expr="icontains", label="Email zawiera"
+        field_name="user__email", lookup_expr="icontains", label="Email zawiera"
     )
     gender = CharFilter(field_name="gender", lookup_expr="icontains")
     user_type = CharFilter(field_name="user_type", lookup_expr="icontains")
-    created_at_from = DateFilter(field_name="created_at", lookup_expr="gte")
-    created_at_to = DateFilter(field_name="created_at", lookup_expr="lte")
+    created_at = DateFilter(field_name="created_at", lookup_expr="contains")
     user_title = CharFilter(field_name="user_title", lookup_expr="icontains")
     phone_number = CharFilter(field_name="phone_number", lookup_expr="icontains")
     dob = CharFilter(field_name="dob", lookup_expr="icontains")
