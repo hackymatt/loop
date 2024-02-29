@@ -2,9 +2,12 @@ import { useSkills } from "src/api/skills/skills";
 import { useTopics } from "src/api/topics/topics";
 import { useLessons } from "src/api/lessons/lessons";
 
-import RHFVideoUpload from "src/components/hook-form/rhf-video-upload";
-import RHFImageUpload from "src/components/hook-form/rhf-image-upload";
-import { RHFTextField, RHFAutocomplete } from "src/components/hook-form";
+import {
+  RHFTextField,
+  RHFImageUpload,
+  RHFVideoUpload,
+  RHFAutocomplete,
+} from "src/components/hook-form";
 
 import { ICourseLessonProp, ICourseBySkillProps, ICourseByTopicProps } from "src/types/course";
 

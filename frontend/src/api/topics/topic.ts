@@ -35,7 +35,7 @@ export const useEditTopic = (id: string) => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [endpoint] });
+        queryClient.invalidateQueries({ queryKey: [endpoint, id] });
       },
     },
   );

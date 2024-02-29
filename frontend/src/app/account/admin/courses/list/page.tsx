@@ -5,7 +5,7 @@ import AccountCoursesView from "src/sections/_elearning/view/account/admin/cours
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: `${packageInfo.name}: Konto - Lekcje`,
+  title: `${packageInfo.name}: Konto - Kursy`,
 };
 
 export default function AccountLessonsPage() {

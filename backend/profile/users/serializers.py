@@ -18,7 +18,6 @@ class UserSerializer(ModelSerializer):
     class Meta:
         model = Profile
         exclude = (
-            "id",
             "modified_at",
             "uuid",
             "verification_code",

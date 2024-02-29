@@ -35,7 +35,7 @@ export const useEditTechnology = (id: string) => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [endpoint] });
+        queryClient.invalidateQueries({ queryKey: [endpoint, id] });
       },
     },
   );
