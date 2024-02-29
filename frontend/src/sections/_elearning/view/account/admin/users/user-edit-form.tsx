@@ -1,6 +1,6 @@
-import { useForm } from "react-hook-form";
 import { useMemo, useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm, useController } from "react-hook-form";
 
 import { Box } from "@mui/material";
 import Stack from "@mui/material/Stack";
@@ -21,7 +21,7 @@ import { useUser, useEditUser } from "src/api/users/user";
 import FormProvider from "src/components/hook-form";
 
 import { IGender } from "src/types/testimonial";
-import { UserType, IUserDetailsProps } from "src/types/user";
+import { UserType, IUserType, IUserDetailsProps } from "src/types/user";
 
 import { useUserFields } from "./user-fields";
 import { schema, defaultValues } from "./user";
@@ -35,12 +35,11 @@ interface Props extends DialogProps {
 
 // ----------------------------------------------------------------------
 
-export default function UserDetailsEditForm({ user, onClose, ...other }: Props) {
+export default function UserEditForm({ user, onClose, ...other }: Props) {
   const { data: userData } = useUser(user.id!);
   const { mutateAsync: editUser } = useEditUser(user.id!);
 
   const date18YearsAgo = useMemo(() => new Date().setFullYear(new Date().getFullYear() - 18), []);
-  const isTeacher = useMemo(() => user.user_type === UserType.Wykładowca, [user.user_type]);
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -72,6 +71,7 @@ export default function UserDetailsEditForm({ user, onClose, ...other }: Props) 
         phone_number: data.phone_number ?? "",
         dob: fDate(data.dob, "yyyy-MM-dd") ?? "",
         gender: data.gender as IGender,
+        user_type: data.user_type as IUserType,
         street_address: data.street_address ?? "",
         zip_code: data.zip_code ?? "",
         city: data.city ?? "",
@@ -86,6 +86,12 @@ export default function UserDetailsEditForm({ user, onClose, ...other }: Props) 
   });
 
   const { fields } = useUserFields();
+
+  // const {
+  //   field: { value: userType },
+  // } = useController({ name: "user_type", control });
+
+  const isTeacher = useMemo(() => user.user_type === UserType.Wykładowca, [user.user_type]);
 
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
@@ -103,6 +109,8 @@ export default function UserDetailsEditForm({ user, onClose, ...other }: Props) 
             {fields.email}
             {fields.gender}
             {isTeacher && fields.user_title}
+            {isTeacher && fields.rate}
+            {isTeacher && fields.commission}
             {fields.phone_number}
             {fields.dob}
             {fields.street_address}

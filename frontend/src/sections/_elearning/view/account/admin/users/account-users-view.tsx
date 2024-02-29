@@ -27,19 +27,9 @@ import AccountUsersTableRow from "src/sections/_elearning/account/admin/account-
 import { IQueryParamValue } from "src/types/query-params";
 import { UserType, IUserDetailsProps } from "src/types/user";
 
-import UserDetailsEditForm from "./user-edit-details-form";
+import UserEditForm from "./user-edit-form";
 import FilterSearch from "../../../../filters/filter-search";
 import AccountTableHead from "../../../../account/account-table-head";
-
-// ----------------------------------------------------------------------
-
-const DURATION_OPTIONS = [
-  { value: "(duration_to=30)", label: "0 - 30 minut" },
-  { value: "(duration_from=30)&(duration_to=60)", label: "30 - 60 minut" },
-  { value: "(duration_from=60)&(duration_to=90)", label: "60 - 90 minut" },
-  { value: "(duration_from=90)&(duration_to=120)", label: "90 - 120 minut" },
-  { value: "(duration_from=120)", label: "120+ minut" },
-];
 
 // ----------------------------------------------------------------------
 
@@ -66,8 +56,7 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
 // ----------------------------------------------------------------------
 
 export default function AccountUsersView() {
-  const editDetailsFormOpen = useBoolean();
-  const editFinancialFormOpen = useBoolean();
+  const editFormOpen = useBoolean();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
@@ -82,8 +71,7 @@ export default function AccountUsersView() {
   const order = filters?.sort_by && filters.sort_by.startsWith("-") ? "desc" : "asc";
   const tab = filters?.user_type ? filters.user_type : "";
 
-  const [editedDetailsUser, setEditedDetailsUser] = useState<IUserDetailsProps>();
-  const [editedFinancialUser, setEditedFinancialUser] = useState<IUserDetailsProps>();
+  const [editedUser, setEditedUser] = useState<IUserDetailsProps>();
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -126,20 +114,12 @@ export default function AccountUsersView() {
     [handleChange],
   );
 
-  const handleEditDetailsUser = useCallback(
+  const handleEditUser = useCallback(
     (user: IUserDetailsProps) => {
-      setEditedDetailsUser(user);
-      editDetailsFormOpen.onToggle();
+      setEditedUser(user);
+      editFormOpen.onToggle();
     },
-    [editDetailsFormOpen],
-  );
-
-  const handleEditFinancialUser = useCallback(
-    (user: IUserDetailsProps) => {
-      setEditedFinancialUser(user);
-      editFinancialFormOpen.onToggle();
-    },
-    [editFinancialFormOpen],
+    [editFormOpen],
   );
 
   return (
@@ -228,12 +208,7 @@ export default function AccountUsersView() {
             {users && (
               <TableBody>
                 {users.map((row) => (
-                  <AccountUsersTableRow
-                    key={row.id}
-                    row={row}
-                    onEditDetails={handleEditDetailsUser}
-                    onEditFinancial={handleEditFinancialUser}
-                  />
+                  <AccountUsersTableRow key={row.id} row={row} onEdit={handleEditUser} />
                 ))}
               </TableBody>
             )}
@@ -255,12 +230,8 @@ export default function AccountUsersView() {
         />
       </Box>
 
-      {editedDetailsUser && (
-        <UserDetailsEditForm
-          user={editedDetailsUser}
-          open={editDetailsFormOpen.value}
-          onClose={editDetailsFormOpen.onFalse}
-        />
+      {editedUser && (
+        <UserEditForm user={editedUser} open={editFormOpen.value} onClose={editFormOpen.onFalse} />
       )}
     </>
   );

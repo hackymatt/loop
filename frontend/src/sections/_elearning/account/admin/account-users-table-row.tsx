@@ -19,11 +19,10 @@ import { UserType, IUserDetailsProps } from "src/types/user";
 
 type Props = {
   row: IUserDetailsProps;
-  onEditDetails: (user: IUserDetailsProps) => void;
-  onEditFinancial: (user: IUserDetailsProps) => void;
+  onEdit: (user: IUserDetailsProps) => void;
 };
 
-export default function AccountUsersTableRow({ row, onEditDetails, onEditFinancial }: Props) {
+export default function AccountUsersTableRow({ row, onEdit }: Props) {
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
 
   const handleOpen = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -36,13 +35,8 @@ export default function AccountUsersTableRow({ row, onEditDetails, onEditFinanci
 
   const handleEditDetails = useCallback(() => {
     handleClose();
-    onEditDetails(row);
-  }, [handleClose, onEditDetails, row]);
-
-  const handleEditFinancial = useCallback(() => {
-    handleClose();
-    onEditFinancial(row);
-  }, [handleClose, onEditFinancial, row]);
+    onEdit(row);
+  }, [handleClose, onEdit, row]);
 
   const inputStyles = {
     pl: 1,
@@ -114,13 +108,6 @@ export default function AccountUsersTableRow({ row, onEditDetails, onEditFinanci
           <Iconify icon="carbon:edit" sx={{ mr: 0.5 }} />
           <Typography variant="body2">Edytuj dane</Typography>
         </MenuItem>
-
-        {isTeacher && (
-          <MenuItem onClick={handleEditFinancial} sx={{ mr: 1, width: "fit-content" }}>
-            <Iconify icon="carbon:finance" sx={{ mr: 0.5 }} />
-            <Typography variant="body2">Edytuj dane finansowe</Typography>
-          </MenuItem>
-        )}
       </Popover>
     </>
   );

@@ -1,5 +1,6 @@
 import { Controller } from "react-hook-form";
 
+import { InputAdornment } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 
 import { countries } from "src/assets/data";
@@ -29,6 +30,30 @@ export const useUserFields = () => {
     email: <RHFTextField name="email" label="Adres e-mail" disabled />,
 
     user_title: <RHFTextField name="user_title" label="Tytuł zawodowy" disabled />,
+
+    commission: (
+      <RHFTextField
+        name="commission"
+        label="Prowizja"
+        type="number"
+        InputProps={{
+          inputProps: { min: 0, max: 100, step: "1" },
+          endAdornment: <InputAdornment position="end">%</InputAdornment>,
+        }}
+      />
+    ),
+
+    rate: (
+      <RHFTextField
+        name="rate"
+        label="Stawka godzinowa"
+        type="number"
+        InputProps={{
+          inputProps: { min: 0, step: ".01" },
+          endAdornment: <InputAdornment position="end">zł</InputAdornment>,
+        }}
+      />
+    ),
 
     user_type: (
       <RHFSelect
