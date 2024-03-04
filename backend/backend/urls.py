@@ -38,6 +38,7 @@ from teaching.views import TeachingViewSet
 from reservation.views import ReservationViewSet
 from csrf.views import CsrfViewSet
 from contact.views import ContactViewSet
+from finance.views import FinanceDetailsViewSet
 
 
 router = DefaultRouter(trailing_slash=False)
@@ -88,6 +89,10 @@ urlpatterns = [
     path("", include(router.urls)),
     path("admin", admin.site.urls),
     path("details", ProfileDetailsViewSet.as_view({"get": "list", "put": "update"})),
+    path(
+        "finance-details",
+        FinanceDetailsViewSet.as_view({"get": "list", "put": "update"}),
+    ),
     path("stats", StatsViewSet.as_view({"get": "get_stats"})),
     path("csrf", CsrfViewSet.as_view({"get": "get_csrf"})),
     path("newsletter-unsubscribe/<str:uuid>", NewsletterUnsubscribeViewSet.unsubscribe),

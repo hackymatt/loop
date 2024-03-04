@@ -12,7 +12,7 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useEditSkill } from "src/api/skills/skill";
+import { useSkill, useEditSkill } from "src/api/skills/skill";
 
 import FormProvider from "src/components/hook-form";
 
@@ -31,6 +31,7 @@ interface Props extends DialogProps {
 // ----------------------------------------------------------------------
 
 export default function SkillEditForm({ skill, onClose, ...other }: Props) {
+  const { data: skillData } = useSkill(skill.id);
   const { mutateAsync: editSkill } = useEditSkill(skill.id);
 
   const methods = useForm({
@@ -45,10 +46,10 @@ export default function SkillEditForm({ skill, onClose, ...other }: Props) {
   } = methods;
 
   useEffect(() => {
-    if (skill) {
-      reset(skill);
+    if (skillData) {
+      reset(skillData);
     }
-  }, [reset, skill]);
+  }, [reset, skillData]);
 
   const handleFormError = useFormErrorHandler(methods);
 

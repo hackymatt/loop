@@ -1,7 +1,8 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useMemo, useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 
+import { Box } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -12,11 +13,15 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useEditUser } from "src/api/users/user";
+import { fDate } from "src/utils/format-time";
+import { urlToBlob } from "src/utils/blob-to-base64";
 
-import FormProvider, { RHFSwitch } from "src/components/hook-form";
+import { useUser, useEditUser } from "src/api/users/user";
 
-import { IUserDetailsProps } from "src/types/user";
+import FormProvider from "src/components/hook-form";
+
+import { IGender } from "src/types/testimonial";
+import { UserType, IUserDetailsProps } from "src/types/user";
 
 import { useUserFields } from "./user-fields";
 import { schema, defaultValues } from "./user";
@@ -30,8 +35,12 @@ interface Props extends DialogProps {
 
 // ----------------------------------------------------------------------
 
-export default function UserEditForm({ user, onClose, ...other }: Props) {
-  const { mutateAsync: editUser } = useEditUser(user.id);
+export default function UserDetailsEditForm({ user, onClose, ...other }: Props) {
+  const { data: userData } = useUser(user.id!);
+  const { mutateAsync: editUser } = useEditUser(user.id!);
+
+  const date18YearsAgo = useMemo(() => new Date().setFullYear(new Date().getFullYear() - 18), []);
+  const isTeacher = useMemo(() => user.user_type === UserType.Wykładowca, [user.user_type]);
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -45,16 +54,30 @@ export default function UserEditForm({ user, onClose, ...other }: Props) {
   } = methods;
 
   useEffect(() => {
-    if (user) {
-      reset(user);
+    if (userData) {
+      reset({
+        ...userData,
+        dob: userData?.dob ? new Date(userData?.dob) : date18YearsAgo,
+        gender: userData?.gender !== null ? userData.gender : "Mężczyzna",
+      });
     }
-  }, [reset, user]);
+  }, [userData, reset, date18YearsAgo]);
 
   const handleFormError = useFormErrorHandler(methods);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await editUser(data);
+      await editUser({
+        ...data,
+        phone_number: data.phone_number ?? "",
+        dob: fDate(data.dob, "yyyy-MM-dd") ?? "",
+        gender: data.gender as IGender,
+        street_address: data.street_address ?? "",
+        zip_code: data.zip_code ?? "",
+        city: data.city ?? "",
+        country: data.country ?? "",
+        image: (await urlToBlob(data.image ?? "")) as string,
+      });
       reset();
       onClose();
     } catch (error) {
@@ -68,7 +91,8 @@ export default function UserEditForm({ user, onClose, ...other }: Props) {
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj dane</DialogTitle>
+          <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj użytkownika</DialogTitle>
+          <Box sx={{ p: 3 }}>{fields.image}</Box>
         </Stack>
 
         <DialogContent sx={{ py: 0 }}>
@@ -78,6 +102,7 @@ export default function UserEditForm({ user, onClose, ...other }: Props) {
             {fields.last_name}
             {fields.email}
             {fields.gender}
+            {isTeacher && fields.user_title}
             {fields.phone_number}
             {fields.dob}
             {fields.street_address}

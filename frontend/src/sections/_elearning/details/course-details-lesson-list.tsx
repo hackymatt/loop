@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 
 import Typography from "@mui/material/Typography";
 
-import { useLesson } from "src/api/lesson/lesson";
+import { useLesson } from "src/api/lessons/lesson";
 
 import { ICourseLessonProp } from "src/types/course";
 

@@ -78,10 +78,6 @@ export default function AccountUsersTableRow({ row, onEdit }: Props) {
         </TableCell>
 
         <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.user_title} sx={inputStyles} />
-        </TableCell>
-
-        <TableCell sx={{ px: 1 }}>
           <InputBase value={fDate(row.created_at)} />
         </TableCell>
 

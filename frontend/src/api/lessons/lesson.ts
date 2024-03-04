@@ -100,7 +100,7 @@ export const lessonQuery = (id: string) => {
     return { results: modifiedResults };
   };
 
-  return { url, queryFn, queryKey: compact([endpoint, id]) };
+  return { url, queryFn, queryKey: compact([endpoint]) };
 };
 
 export const useLesson = (id: string) => {

@@ -37,7 +37,7 @@ class Profile(BaseModel):
     verification_code_created_at = DateTimeField(null=True)
     phone_number = CharField(null=True, blank=True)
     dob = DateField(null=True, blank=True)
-    gender = CharField(choices=GENDER_CHOICES, null=True, blank=True)
+    gender = CharField(choices=GENDER_CHOICES, default="I", blank=True)
     street_address = CharField(null=True, blank=True)
     zip_code = CharField(null=True, blank=True)
     city = CharField(null=True, blank=True)

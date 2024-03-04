@@ -208,7 +208,7 @@ export const useEditCourse = (id: string) => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [endpoint, id] });
+        queryClient.invalidateQueries({ queryKey: [endpoint] });
       },
     },
   );

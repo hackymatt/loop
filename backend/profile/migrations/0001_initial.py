@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
                     models.CharField(
                         blank=True,
                         choices=[("M", "Mężczyzna"), ("K", "Kobieta"), ("I", "Inne")],
-                        null=True,
+                        default="I",
                     ),
                 ),
                 ("street_address", models.CharField(blank=True, null=True)),

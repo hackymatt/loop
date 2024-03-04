@@ -1,5 +1,8 @@
 import { AxiosError } from "axios";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { compact } from "lodash-es";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { ICourseBySkillProps } from "src/types/course";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
@@ -8,7 +11,6 @@ const endpoint = "/skills" as const;
 
 type ISkill = {
   id: number;
-  modified_at: string;
   created_at: string;
   name: string;
 };
@@ -20,6 +22,32 @@ type IEditSkillReturn = IEditSkill;
 type IDeleteSkill = {};
 
 type IDeleteSkillReturn = {};
+
+export const skillQuery = (id: string) => {
+  const url = endpoint;
+  const queryUrl = `${url}/${id}`;
+
+  const queryFn = async () => {
+    const response = await Api.get<ISkill>(queryUrl);
+    const { data } = response;
+    const { id: skillId, name, created_at } = data;
+
+    const modifiedResults = {
+      id: skillId,
+      name,
+      createdAt: created_at,
+    };
+    return { results: modifiedResults };
+  };
+
+  return { url, queryFn, queryKey: compact([endpoint]) };
+};
+
+export const useSkill = (id: string) => {
+  const { queryKey, queryFn } = skillQuery(id);
+  const { data, ...rest } = useQuery({ queryKey, queryFn });
+  return { data: data?.results as any as ICourseBySkillProps, ...rest };
+};
 
 export const useEditSkill = (id: string) => {
   const queryClient = useQueryClient();
@@ -35,7 +63,7 @@ export const useEditSkill = (id: string) => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [endpoint, id] });
+        queryClient.invalidateQueries({ queryKey: [endpoint] });
       },
     },
   );

@@ -18,7 +18,7 @@ import { urlToBlob } from "src/utils/blob-to-base64";
 import { useSkills } from "src/api/skills/skills";
 import { useTopics } from "src/api/topics/topics";
 import { useLessons } from "src/api/lessons/lessons";
-import { useCourse, useEditCourse } from "src/api/course/course";
+import { useCourse, useEditCourse } from "src/api/courses/course";
 import { useTechnologies } from "src/api/technologies/technologies";
 
 import { isStepFailed } from "src/components/stepper/step";

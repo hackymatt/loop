@@ -18,20 +18,20 @@ export const userQuery = (id: string) => {
   const queryUrl = `${url}/${id}`;
 
   const queryFn = async () => {
-    let modifiedResults;
+    let data;
     try {
-      const response = await Api.get<IUserDetailsProps>(queryUrl);
-      const { data } = response;
-      modifiedResults = data;
+      const response = await Api.get(queryUrl);
+      ({ data } = response);
     } catch (error) {
       if (error.response && (error.response.status === 400 || error.response.status === 404)) {
-        modifiedResults = {};
+        data = { results: [], records_count: 0, pages_count: 0 };
       }
     }
-    return { results: modifiedResults };
+    const { results } = data;
+    return { results };
   };
 
-  return { url, queryFn, queryKey: compact([endpoint, id]) };
+  return { url, queryFn, queryKey: compact([endpoint]) };
 };
 
 export const useUser = (id: string) => {

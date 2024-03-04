@@ -46,8 +46,7 @@ const TABLE_HEAD = [
   { id: "email", label: "Email", minWidth: 200 },
   { id: "gender", label: "Płeć", minWidth: 100 },
   { id: "user_type", label: "Typ" },
-  { id: "user_title", label: "Tytuł" },
-  { id: "created_at", label: "Data", width: 200 },
+  { id: "created_at", label: "Data" },
   { id: "", width: 25 },
 ];
 
@@ -159,12 +158,6 @@ export default function AccountUsersView() {
           value={filters?.email ?? ""}
           onChangeSearch={(value) => handleChange("email", value)}
           placeholder="Email..."
-        />
-
-        <FilterSearch
-          value={filters?.user_title ?? ""}
-          onChangeSearch={(value) => handleChange("user_title", value)}
-          placeholder="Tytuł..."
         />
 
         <DatePicker

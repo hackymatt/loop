@@ -1,5 +1,8 @@
 import { AxiosError } from "axios";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { compact } from "lodash-es";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { ICourseByTopicProps } from "src/types/course";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
@@ -21,6 +24,31 @@ type IDeleteTopic = {};
 
 type IDeleteTopicReturn = {};
 
+export const topicQuery = (id: string) => {
+  const url = endpoint;
+  const queryUrl = `${url}/${id}`;
+
+  const queryFn = async () => {
+    const response = await Api.get<ITopic>(queryUrl);
+    const { data } = response;
+    const { id: skillId, name, created_at } = data;
+
+    const modifiedResults = {
+      id: skillId,
+      name,
+      createdAt: created_at,
+    };
+    return { results: modifiedResults };
+  };
+
+  return { url, queryFn, queryKey: compact([endpoint]) };
+};
+
+export const useTopic = (id: string) => {
+  const { queryKey, queryFn } = topicQuery(id);
+  const { data, ...rest } = useQuery({ queryKey, queryFn });
+  return { data: data?.results as any as ICourseByTopicProps, ...rest };
+};
 export const useEditTopic = (id: string) => {
   const queryClient = useQueryClient();
   const url = `${endpoint}/${id}`;
@@ -35,7 +63,7 @@ export const useEditTopic = (id: string) => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [endpoint, id] });
+        queryClient.invalidateQueries({ queryKey: [endpoint] });
       },
     },
   );

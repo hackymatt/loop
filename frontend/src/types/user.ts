@@ -9,7 +9,7 @@ export enum UserType {
 export type IUserType = keyof typeof UserType;
 
 export type IUserDetailsProps = {
-  id?: string;
+  id: string;
   first_name: string;
   last_name: string;
   email: string;

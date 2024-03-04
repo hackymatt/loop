@@ -5,6 +5,7 @@ from rest_framework.serializers import (
 )
 from drf_extra_fields.fields import Base64ImageField
 from profile.models import Profile
+from finance.models import Finance
 
 
 class UserSerializer(ModelSerializer):
@@ -26,6 +27,13 @@ class UserSerializer(ModelSerializer):
         )
 
     def update(self, instance, validated_data):
+        print("XXXXXXX")
+        print(validated_data)
+        user_type = validated_data.get("get_user_type_display")
+
+        if user_type == "W":
+            finance = Finance.objects.get_or_create(lecturer=instance)
+
         user = validated_data.pop("user")
         user.pop("email")
         first_name = user.pop("first_name", instance.user.first_name)
