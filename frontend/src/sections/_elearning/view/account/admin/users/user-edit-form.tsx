@@ -2,7 +2,6 @@ import { useMemo, useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, useController } from "react-hook-form";
 
-import { Avatar } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -82,13 +81,6 @@ export default function UserEditForm({ user, onClose, ...other }: Props) {
 
   const { fields } = useUserFields();
 
-  const genderAvatarUrl =
-    userData?.gender === "Kobieta"
-      ? "/assets/images/avatar/avatar_female.jpg"
-      : "/assets/images/avatar/avatar_male.jpg";
-
-  const avatarUrl = userData?.image || genderAvatarUrl;
-
   const {
     field: { value: userType },
   } = useController({ name: "user_type", control });
@@ -100,7 +92,7 @@ export default function UserEditForm({ user, onClose, ...other }: Props) {
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj użytkownika</DialogTitle>
-          {userData && <Avatar src={avatarUrl} sx={{ width: 48, height: 48 }} />}
+          {fields.image}
         </Stack>
 
         <DialogContent sx={{ py: 0 }}>
