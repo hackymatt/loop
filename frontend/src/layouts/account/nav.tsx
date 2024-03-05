@@ -76,15 +76,21 @@ const teacherNavigations = [
       children: [],
     },
     {
-      title: "Lekcje",
+      title: "Terminarz",
+      path: paths.account.teacher.calendar,
+      icon: <Iconify icon="carbon:calendar" />,
+      children: [],
+    },
+    {
+      title: "Prowadzone lekcje",
       path: paths.account.teacher.lessons,
       icon: <Iconify icon="carbon:notebook" />,
       children: [],
     },
     {
-      title: "Terminarz",
-      path: paths.account.teacher.calendar,
-      icon: <Iconify icon="carbon:calendar" />,
+      title: "Rezerwacje",
+      path: paths.account.teacher.lessons,
+      icon: <Iconify icon="carbon:order-details" />,
       children: [],
     },
     {

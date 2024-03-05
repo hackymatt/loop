@@ -10,7 +10,7 @@ from .factory import (
     create_topic,
     create_teaching,
 )
-from .helpers import login
+from .helpers import login, teaching_number
 from django.contrib import auth
 import json
 
@@ -120,7 +120,7 @@ class TeachingTest(APITestCase):
         self.teaching.append(
             create_teaching(
                 lecturer=self.profile,
-                lesson=self.course_2.lessons.all()[1],
+                lesson=self.lesson_4,
             )
         )
 
@@ -148,7 +148,7 @@ class TeachingTest(APITestCase):
         self.teaching.append(
             create_teaching(
                 lecturer=self.profile,
-                lesson=self.course_3.lessons.all()[0],
+                lesson=self.lesson_6,
             )
         )
 
@@ -167,63 +167,55 @@ class TeachingTest(APITestCase):
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
+        results = data["results"]
         count = data["records_count"]
-        self.assertEqual(count, 4)
+        self.assertEqual(count, 6)
+
+        teaching = [r.lesson.id for r in self.teaching]
+        for result in results:
+            exists = result["id"] in teaching
+            if exists:
+                index = teaching.index(result["id"])
+                self.assertEqual(result["teaching"], {"id": self.teaching[index].id})
+            else:
+                self.assertEqual(result["teaching"], {})
 
     def test_add_to_teaching_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         data = {
-            "lesson": self.course_2.lessons.all()[0].id,
+            "lesson": self.lesson_3.id,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(teaching_number(), 4)
 
-    def test_add_to_teaching_single_lesson_authenticated(self):
-        # login
-        login(self, self.data["email"], self.data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        data = {
-            "lesson": self.course_2.lessons.all()[0].id,
-        }
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(len(data), 5)
-
-    def test_add_to_teaching_whole_course_authenticated(self):
-        # login
-        login(self, self.data["email"], self.data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        data = {
-            "course": self.course_2.id,
-        }
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(len(data), 6)
-
-    def test_delete_single_lesson_from_teaching(self):
+    def test_add_to_teaching_authenticated(self):
         # no login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        data = {"lesson": self.course_1.lessons.all()[0].id}
+        data = {
+            "lesson": self.lesson_3.id,
+        }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(len(data), 3)
+        self.assertEqual(teaching_number(), 5)
 
-    def test_delete_whole_course_from_teaching(self):
+    def test_delete_from_teaching_unauthenticated(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.delete(f"{self.endpoint}/{self.teaching[0].id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(teaching_number(), 4)
+
+    def test_delete_from_teaching_authenticated(self):
         # no login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        data = {"course": self.course_1.id}
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(len(data), 2)
+        response = self.client.delete(f"{self.endpoint}/{self.teaching[0].id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(teaching_number(), 3)
