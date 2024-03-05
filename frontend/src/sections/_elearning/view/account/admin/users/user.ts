@@ -26,9 +26,12 @@ export const schema = Yup.object().shape({
   gender: Yup.string().required("Płeć jest wymagana"),
   user_type: Yup.string().required("Typ jest wymagany"),
   user_title: Yup.string().nullable(),
-  rate: Yup.number().nullable(),
-  commission: Yup.number().nullable(),
-  account: Yup.string().nullable(),
+  account: Yup.string().nullable().length(26, "Numer konta musi mieć 26 znaków"),
+  rate: Yup.number().nullable().min(0, "Stawka musi wynosić min 0 zł"),
+  commission: Yup.number()
+    .nullable()
+    .min(0, "Prowizja musi wynosić min 0 %")
+    .max(100, "Prowizja musi wynosić max 100 %"),
   image: Yup.string().nullable(),
   phone_number: Yup.string().nullable(),
   dob: Yup.mixed<any>().nullable(),
