@@ -1,5 +1,8 @@
 import { AxiosError } from "axios";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { compact } from "lodash-es";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { ICourseByCategoryProps } from "src/types/course";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
@@ -20,6 +23,32 @@ type IEditTechnologyReturn = IEditTechnology;
 type IDeleteTechnology = {};
 
 type IDeleteTechnologyReturn = {};
+
+export const technologyQuery = (id: string) => {
+  const url = endpoint;
+  const queryUrl = `${url}/${id}`;
+
+  const queryFn = async () => {
+    const response = await Api.get<ITechnology>(queryUrl);
+    const { data } = response;
+    const { id: technologyId, name, created_at } = data;
+
+    const modifiedResults = {
+      id: technologyId,
+      name,
+      createdAt: created_at,
+    };
+    return { results: modifiedResults };
+  };
+
+  return { url, queryFn, queryKey: compact([endpoint]) };
+};
+
+export const useTechnology = (id: string) => {
+  const { queryKey, queryFn } = technologyQuery(id);
+  const { data, ...rest } = useQuery({ queryKey, queryFn });
+  return { data: data?.results as any as ICourseByCategoryProps, ...rest };
+};
 
 export const useEditTechnology = (id: string) => {
   const queryClient = useQueryClient();

@@ -12,7 +12,7 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useEditTopic } from "src/api/topics/topic";
+import { useTopic, useEditTopic } from "src/api/topics/topic";
 
 import FormProvider from "src/components/hook-form";
 
@@ -31,6 +31,7 @@ interface Props extends DialogProps {
 // ----------------------------------------------------------------------
 
 export default function TopicEditForm({ topic, onClose, ...other }: Props) {
+  const { data: topicData } = useTopic(topic.id);
   const { mutateAsync: editTopic } = useEditTopic(topic.id);
 
   const methods = useForm({
@@ -45,10 +46,10 @@ export default function TopicEditForm({ topic, onClose, ...other }: Props) {
   } = methods;
 
   useEffect(() => {
-    if (topic) {
-      reset(topic);
+    if (topicData) {
+      reset(topicData);
     }
-  }, [reset, topic]);
+  }, [reset, topicData]);
 
   const handleFormError = useFormErrorHandler(methods);
 

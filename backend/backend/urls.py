@@ -1,3 +1,4 @@
+from profile.users.views import UserViewSet
 from profile.register.views import ProfileRegisterViewSet
 from profile.verify.views import ProfileVerificationCodeViewSet, ProfileVerifyViewSet
 from profile.login.views import ProfileLoginViewSet
@@ -37,9 +38,11 @@ from teaching.views import TeachingViewSet
 from reservation.views import ReservationViewSet
 from csrf.views import CsrfViewSet
 from contact.views import ContactViewSet
+from finance.views import FinanceDetailsViewSet
 
 
 router = DefaultRouter(trailing_slash=False)
+router.register(r"users", UserViewSet, basename="users")
 router.register(r"register", ProfileRegisterViewSet, basename="user_register")
 router.register(r"verify", ProfileVerifyViewSet, basename="user_verification")
 router.register(r"login", ProfileLoginViewSet, basename="user_login")
@@ -86,6 +89,10 @@ urlpatterns = [
     path("", include(router.urls)),
     path("admin", admin.site.urls),
     path("details", ProfileDetailsViewSet.as_view({"get": "list", "put": "update"})),
+    path(
+        "finance-details",
+        FinanceDetailsViewSet.as_view({"get": "list", "put": "update"}),
+    ),
     path("stats", StatsViewSet.as_view({"get": "get_stats"})),
     path("csrf", CsrfViewSet.as_view({"get": "get_csrf"})),
     path("newsletter-unsubscribe/<str:uuid>", NewsletterUnsubscribeViewSet.unsubscribe),

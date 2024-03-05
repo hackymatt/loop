@@ -13,7 +13,7 @@ import { Step, Stepper, StepLabel, StepContent } from "@mui/material";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useLesson, useEditLesson } from "src/api/lesson/lesson";
+import { useLesson, useEditLesson } from "src/api/lessons/lesson";
 import { useTechnologies } from "src/api/technologies/technologies";
 
 import { isStepFailed } from "src/components/stepper/step";

@@ -1,0 +1,100 @@
+from rest_framework.serializers import (
+    ModelSerializer,
+    EmailField,
+    CharField,
+    SerializerMethodField,
+)
+from drf_extra_fields.fields import Base64ImageField
+from profile.models import Profile
+from finance.models import Finance
+
+
+def get_finance(profile):
+    if profile.user_type[0] != "W":
+        return None
+
+    finance = Finance.objects.filter(lecturer=profile)
+
+    if not finance.exists():
+        return None
+
+    return finance.first()
+
+
+class FinanceSerializer(ModelSerializer):
+    class Meta:
+        model = Finance
+        fields = ("account",)
+
+
+class UserSerializer(ModelSerializer):
+    first_name = CharField(source="user.first_name")
+    last_name = CharField(source="user.last_name")
+    email = EmailField(source="user.email")
+    gender = CharField(source="get_gender_display", allow_blank=True)
+    user_type = CharField(source="get_user_type_display", allow_blank=True)
+    image = Base64ImageField(required=False)
+    rate = SerializerMethodField("get_rate")
+    commission = SerializerMethodField("get_commission")
+    account = SerializerMethodField("get_account")
+
+    def get_rate(self, profile):
+        finance = get_finance(profile=profile)
+        if not finance:
+            return None
+        return finance.rate
+
+    def get_commission(self, profile):
+        finance = get_finance(profile=profile)
+        if not finance:
+            return None
+        return finance.commission
+
+    def get_account(self, profile):
+        finance = get_finance(profile=profile)
+        if not finance:
+            return None
+        return finance.account
+
+    class Meta:
+        model = Profile
+        exclude = (
+            "modified_at",
+            "uuid",
+            "verification_code",
+            "verification_code_created_at",
+            "user",
+        )
+
+    def update(self, instance, validated_data):
+        user_type = validated_data.get("get_user_type_display")
+
+        if user_type[0] == "W":
+            data = self.context["request"].data
+            rate = data["rate"]
+            commission = data["commission"]
+            finance, _ = Finance.objects.get_or_create(lecturer=instance)
+            finance.rate = rate
+            finance.commission = commission
+            finance.save()
+
+        user = validated_data.pop("user")
+        user.pop("email")
+        first_name = user.pop("first_name", instance.user.first_name)
+        last_name = user.pop("last_name", instance.user.last_name)
+        instance.user.first_name = first_name
+        instance.user.last_name = last_name
+        instance.user.save()
+
+        gender = validated_data.pop("get_gender_display", instance.gender)
+        image = validated_data.pop("image", instance.image)
+        user_type = validated_data.pop("get_user_type_display", instance.user_type)
+        instance.gender = gender
+        instance.image = image
+        instance.user_type = user_type
+        instance.save()
+
+        Profile.objects.filter(pk=instance.pk).update(**validated_data)
+        instance = Profile.objects.get(pk=instance.pk)
+
+        return instance

@@ -10,7 +10,7 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useDeleteCourse } from "src/api/course/course";
+import { useDeleteCourse } from "src/api/courses/course";
 
 import FormProvider from "src/components/hook-form";
 

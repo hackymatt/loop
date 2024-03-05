@@ -7,7 +7,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 
 import { useResponsive } from "src/hooks/use-responsive";
 
-import { useCourse } from "src/api/course/course";
+import { useCourse } from "src/api/courses/course";
 import { useBestCourses } from "src/api/courses/best-courses";
 
 import { SplashScreen } from "src/components/loading-screen";

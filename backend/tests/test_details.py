@@ -92,6 +92,8 @@ class DetailsTest(APITestCase):
         results = json.loads(response.content)
         user_data = filter_dict(results, self.user_columns)
         profile_data = filter_dict(results, self.profile_columns)
+        gender = profile_data.pop("gender")
+        self.assertEqual(get_profile(get_user(self.data["email"])).gender, gender[0])
         self.assertTrue(is_data_match(get_user(self.data["email"]), user_data))
         self.assertTrue(
             is_data_match(get_profile(get_user(self.data["email"])), profile_data)

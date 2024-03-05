@@ -12,7 +12,7 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useEditTechnology } from "src/api/technologies/technology";
+import { useTechnology, useEditTechnology } from "src/api/technologies/technology";
 
 import FormProvider from "src/components/hook-form";
 
@@ -31,6 +31,7 @@ interface Props extends DialogProps {
 // ----------------------------------------------------------------------
 
 export default function TechnologyEditForm({ technology, onClose, ...other }: Props) {
+  const { data: technologyData } = useTechnology(technology.id);
   const { mutateAsync: editTechnology } = useEditTechnology(technology.id);
 
   const methods = useForm({
@@ -45,10 +46,10 @@ export default function TechnologyEditForm({ technology, onClose, ...other }: Pr
   } = methods;
 
   useEffect(() => {
-    if (technology) {
-      reset(technology);
+    if (technologyData) {
+      reset(technologyData);
     }
-  }, [reset, technology]);
+  }, [reset, technologyData]);
 
   const handleFormError = useFormErrorHandler(methods);
 

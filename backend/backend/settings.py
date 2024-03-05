@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     "cart",
     "teaching",
     "reservation",
+    "finance",
 ]
 
 MIDDLEWARE = [
