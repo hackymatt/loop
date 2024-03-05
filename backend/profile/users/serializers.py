@@ -2,10 +2,29 @@ from rest_framework.serializers import (
     ModelSerializer,
     EmailField,
     CharField,
+    SerializerMethodField,
 )
 from drf_extra_fields.fields import Base64ImageField
 from profile.models import Profile
 from finance.models import Finance
+
+
+def get_finance(profile):
+    if profile.user_type[0] != "W":
+        return None
+
+    finance = Finance.objects.filter(lecturer=profile)
+
+    if not finance.exists():
+        return None
+
+    return finance.first()
+
+
+class FinanceSerializer(ModelSerializer):
+    class Meta:
+        model = Finance
+        fields = ("account",)
 
 
 class UserSerializer(ModelSerializer):
@@ -15,6 +34,27 @@ class UserSerializer(ModelSerializer):
     gender = CharField(source="get_gender_display", allow_blank=True)
     user_type = CharField(source="get_user_type_display", allow_blank=True)
     image = Base64ImageField(required=False)
+    rate = SerializerMethodField("get_rate")
+    commission = SerializerMethodField("get_commission")
+    account = SerializerMethodField("get_account")
+
+    def get_rate(self, profile):
+        finance = get_finance(profile=profile)
+        if not finance:
+            return None
+        return finance.rate
+
+    def get_commission(self, profile):
+        finance = get_finance(profile=profile)
+        if not finance:
+            return None
+        return finance.commission
+
+    def get_account(self, profile):
+        finance = get_finance(profile=profile)
+        if not finance:
+            return None
+        return finance.account
 
     class Meta:
         model = Profile
@@ -27,12 +67,16 @@ class UserSerializer(ModelSerializer):
         )
 
     def update(self, instance, validated_data):
-        print("XXXXXXX")
-        print(validated_data)
         user_type = validated_data.get("get_user_type_display")
 
-        if user_type == "W":
-            finance = Finance.objects.get_or_create(lecturer=instance)
+        if user_type[0] == "W":
+            data = self.context["request"].data
+            rate = data["rate"]
+            commission = data["commission"]
+            finance, _ = Finance.objects.get_or_create(lecturer=instance)
+            finance.rate = rate
+            finance.commission = commission
+            finance.save()
 
         user = validated_data.pop("user")
         user.pop("email")

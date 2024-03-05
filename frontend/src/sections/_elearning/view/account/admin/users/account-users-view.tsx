@@ -46,7 +46,7 @@ const TABLE_HEAD = [
   { id: "email", label: "Email", minWidth: 200 },
   { id: "gender", label: "Płeć", minWidth: 100 },
   { id: "user_type", label: "Typ" },
-  { id: "created_at", label: "Data" },
+  { id: "created_at", label: "Data", minWidth: 100 },
   { id: "", width: 25 },
 ];
 

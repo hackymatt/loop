@@ -9,7 +9,7 @@ import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/users" as const;
 
-type IEditUser = IUserDetailsProps;
+type IEditUser = Omit<IUserDetailsProps, "id" | "image">;
 
 type IEditUserReturn = IEditUser;
 
@@ -18,20 +18,16 @@ export const userQuery = (id: string) => {
   const queryUrl = `${url}/${id}`;
 
   const queryFn = async () => {
-    let data;
-    try {
-      const response = await Api.get(queryUrl);
-      ({ data } = response);
-    } catch (error) {
-      if (error.response && (error.response.status === 400 || error.response.status === 404)) {
-        data = { results: [], records_count: 0, pages_count: 0 };
-      }
-    }
-    const { results } = data;
-    return { results };
+    const response = await Api.get<IUserDetailsProps>(queryUrl);
+    const { data } = response;
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id: userId, ...modifiedResults } = data;
+
+    return { results: modifiedResults };
   };
 
-  return { url, queryFn, queryKey: compact([endpoint]) };
+  return { url, queryFn, queryKey: compact([endpoint, id]) };
 };
 
 export const useUser = (id: string) => {

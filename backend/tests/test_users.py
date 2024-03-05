@@ -222,7 +222,46 @@ class UsersTest(APITestCase):
             "phone_number": "999888777",
             "dob": "1900-01-01",
             "gender": "M",
+            "user_type": "S",
+            "street_address": "abc",
+            "zip_code": "30-100",
+            "city": "Miasto",
+            "country": "Polska",
+            "image": "",
+        }
+        response = self.client.put(
+            f"{self.endpoint}/{self.lecturer_profile_1.id}", new_data
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
+        user_data = filter_dict(results, self.user_columns)
+        profile_data = filter_dict(results, self.profile_columns)
+        gender = profile_data.pop("gender")
+        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender[0])
+        self.assertTrue(is_data_match(get_user(user_data["email"]), user_data))
+        self.assertTrue(
+            is_data_match(get_profile(get_user(user_data["email"])), profile_data)
+        )
+        self.assertEqual(
+            get_profile(get_user(user_data["email"])).user_type, results["user_type"][0]
+        )
+        self.assertFalse(get_profile(get_user(user_data["email"])).image)
+
+    def test_amend_financial_details_authenticated(self):
+        # no login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # new data
+        new_data = {
+            "first_name": "Name",
+            "last_name": "LastName",
+            "email": "student_1@example.com",
+            "phone_number": "999888777",
+            "dob": "1900-01-01",
+            "gender": "M",
             "user_type": "W",
+            "rate": 100,
+            "commission": 1,
             "street_address": "abc",
             "zip_code": "30-100",
             "city": "Miasto",

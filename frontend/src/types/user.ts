@@ -23,5 +23,7 @@ export type IUserDetailsProps = {
   image: string;
   user_type?: IUserType;
   user_title?: string;
+  rate?: number;
+  commission?: number;
   created_at?: string;
 };
