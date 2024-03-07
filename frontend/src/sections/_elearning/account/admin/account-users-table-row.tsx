@@ -100,7 +100,7 @@ export default function AccountUsersTableRow({ row, onEdit }: Props) {
           },
         }}
       >
-        <MenuItem onClick={handleEditDetails} sx={{ mr: 1, width: "fit-content" }}>
+        <MenuItem onClick={handleEditDetails} sx={{ mr: 1, width: "100%" }}>
           <Iconify icon="carbon:edit" sx={{ mr: 0.5 }} />
           <Typography variant="body2">Edytuj dane</Typography>
         </MenuItem>

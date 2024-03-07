@@ -15,6 +15,17 @@ export type ICourseTeacherProp = {
   gender?: IGender;
 };
 
+export type ITeachingProp = {
+  id: string;
+  title: string;
+  duration: number;
+  price: number;
+  githubUrl: string;
+  active?: boolean;
+  teaching: boolean;
+  teachingId: number | null;
+};
+
 export type ICourseLessonProp = {
   id: string;
   title: string;
