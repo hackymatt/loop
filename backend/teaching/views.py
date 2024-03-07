@@ -2,8 +2,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from utils.permissions.permissions import IsLecturer
 from teaching.serializers import TeachingSerializer, TeachingGetSerializer
+from teaching.filters import TeachingFilter
 from lesson.models import Lesson
-from profile.models import Profile
 from teaching.models import Teaching
 
 
@@ -11,6 +11,7 @@ class TeachingViewSet(ModelViewSet):
     http_method_names = ["get", "post", "delete"]
     queryset = Lesson.objects.all()
     serializer_class = TeachingGetSerializer
+    filterset_class = TeachingFilter
     permission_classes = [IsAuthenticated, IsLecturer]
 
     def get_queryset(self):

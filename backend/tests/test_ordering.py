@@ -2143,6 +2143,188 @@ class LessonOrderTest(APITestCase):
                 self.assertEqual(field_values, sorted(field_values, reverse=True))
 
 
+class TeachingOrderTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/teaching"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_profile(user=self.user, user_type="W")
+
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
+
+        # course 1
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[self.technology_1],
+        )
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[self.technology_1],
+        )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
+        self.course_1 = create_course(
+            title="Python Beginner",
+            description="Learn Python today",
+            level="Podstawowy",
+            skills=[self.skill_1, self.skill_2],
+            topics=[
+                self.topic_1,
+                self.topic_2,
+            ],
+            lessons=[self.lesson_1, self.lesson_2],
+        )
+
+        self.teaching = []
+        for lesson in self.course_1.lessons.all():
+            self.teaching.append(
+                create_teaching(
+                    lecturer=self.profile,
+                    lesson=lesson,
+                )
+            )
+
+        # course 2
+        self.lesson_3 = create_lesson(
+            title="JS lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[self.technology_2],
+        )
+        self.lesson_4 = create_lesson(
+            title="JS lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[self.technology_2],
+        )
+        self.lesson_5 = create_lesson(
+            title="JS lesson 3",
+            description="bbbb",
+            duration="120",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[self.technology_2],
+        )
+        self.course_2 = create_course(
+            title="Javascript course for Advanced",
+            description="Course for programmers",
+            level="Zaawansowany",
+            skills=[self.skill_1, self.skill_2],
+            topics=[
+                self.topic_1,
+                self.topic_2,
+            ],
+            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+        )
+
+        self.teaching.append(
+            create_teaching(
+                lecturer=self.profile,
+                lesson=self.lesson_4,
+            )
+        )
+
+        # course 3
+        self.lesson_6 = create_lesson(
+            title="VBA lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[self.technology_3],
+        )
+        self.course_3 = create_course(
+            title="VBA course for Expert",
+            description="Course for programmers",
+            level="Ekspert",
+            skills=[self.skill_1, self.skill_2],
+            topics=[
+                self.topic_1,
+                self.topic_2,
+            ],
+            lessons=[self.lesson_6],
+        )
+
+        self.teaching.append(
+            create_teaching(
+                lecturer=self.profile,
+                lesson=self.lesson_6,
+            )
+        )
+
+        self.fields = ["title", "duration", "price", "github_url", "active"]
+
+    def test_ordering(self):
+        for field in self.fields:
+            login(self, self.data["email"], self.data["password"])
+            self.assertTrue(auth.get_user(self.client).is_authenticated)
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by={field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 6)
+            field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values, sorted(field_values, key=lambda d: d["name"])
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values))
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by=-{field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 6)
+            field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values,
+                    sorted(field_values, key=lambda d: d["name"], reverse=True),
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values, reverse=True))
+
+
 class UsersOrderTest(APITestCase):
     def setUp(self):
         self.endpoint = "/users"

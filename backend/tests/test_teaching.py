@@ -176,9 +176,11 @@ class TeachingTest(APITestCase):
             exists = result["id"] in teaching
             if exists:
                 index = teaching.index(result["id"])
-                self.assertEqual(result["teaching"], {"id": self.teaching[index].id})
+                self.assertEqual(result["teaching"], True)
+                self.assertEqual(result["teaching_id"], self.teaching[index].id)
             else:
-                self.assertEqual(result["teaching"], {})
+                self.assertEqual(result["teaching"], False)
+                self.assertEqual(result["teaching_id"], None)
 
     def test_add_to_teaching_unauthenticated(self):
         # no login
