@@ -20,6 +20,7 @@ class TeachingViewSet(ModelViewSet):
             or self.action == "create"
             or self.action == "destroy"
         ):
+            self.filterset_class = None
             return Teaching.objects.all()
         else:
             return self.queryset
@@ -33,3 +34,4 @@ class TeachingViewSet(ModelViewSet):
             return TeachingSerializer
         else:
             return self.serializer_class
+        

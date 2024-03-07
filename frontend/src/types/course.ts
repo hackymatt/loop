@@ -21,9 +21,9 @@ export type ITeachingProp = {
   duration: number;
   price: number;
   githubUrl: string;
-  active?: boolean;
+  active: boolean;
   teaching: boolean;
-  teachingId: number | null;
+  teachingId?: string;
 };
 
 export type ICourseLessonProp = {

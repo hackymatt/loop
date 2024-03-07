@@ -12,10 +12,10 @@ export const defaultValues = {
 
 export const steps = [
   {
-    label: "Uzupełnij podstawowe informacje",
+    label: "Podstawowe informacje",
     fields: ["title", "description", "price", "duration", "github_url"],
   },
-  { label: "Wybierz technologie", fields: ["technologies"] },
+  { label: "Technologie", fields: ["technologies"] },
 ];
 
 export const schema = Yup.object().shape({

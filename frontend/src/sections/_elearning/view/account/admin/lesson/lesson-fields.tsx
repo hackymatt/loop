@@ -2,7 +2,7 @@ import { InputAdornment } from "@mui/material";
 
 import { useTechnologies } from "src/api/technologies/technologies";
 
-import { RHFTextField, RHFAutocomplete } from "src/components/hook-form";
+import { RHFSwitch, RHFTextField, RHFAutocomplete } from "src/components/hook-form";
 
 import { ICourseByCategoryProps } from "src/types/course";
 
@@ -53,6 +53,7 @@ export const useLessonFields = () => {
         isOptionEqualToValue={(a, b) => a.name === b.name}
       />
     ),
+    active: <RHFSwitch name="active" label="Status" />,
   };
   return { fields };
 };

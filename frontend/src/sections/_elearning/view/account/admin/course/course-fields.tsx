@@ -3,6 +3,7 @@ import { useTopics } from "src/api/topics/topics";
 import { useLessons } from "src/api/lessons/lessons";
 
 import {
+  RHFSwitch,
   RHFTextField,
   RHFImageUpload,
   RHFVideoUpload,
@@ -79,6 +80,7 @@ export const useCourseFields = () => {
         loading={isLoadingTopics}
       />
     ),
+    active: <RHFSwitch name="active" label="Status" />,
   };
   return { fields };
 };

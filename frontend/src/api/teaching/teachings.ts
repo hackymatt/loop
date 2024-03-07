@@ -23,17 +23,9 @@ type ITeaching = {
   active: boolean;
 };
 
-type ICreateTeaching = Omit<
-  ITeaching,
-  | "id"
-  | "lecturers"
-  | "students_count"
-  | "rating"
-  | "rating_count"
-  | "previous_price"
-  | "lowest_30_days_price"
->;
+type ICreateTeaching = { lesson: string };
 type ICreateTeachingReturn = ICreateTeaching;
+
 export const teachingsQuery = (query?: IQueryParams) => {
   const url = endpoint;
   const urlParams = formatQueryParams(query);

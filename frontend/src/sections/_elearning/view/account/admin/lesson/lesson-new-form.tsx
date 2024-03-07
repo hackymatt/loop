@@ -15,9 +15,9 @@ import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import { useCreateLesson } from "src/api/lessons/lessons";
 
+import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
 import { isStepFailed } from "src/components/stepper/step";
-import FormProvider, { RHFSwitch } from "src/components/hook-form";
 
 import { useLessonFields } from "./lesson-fields";
 import { steps, schema, defaultValues } from "./lesson";
@@ -70,7 +70,7 @@ export default function LessonNewForm({ onClose, ...other }: Props) {
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nową lekcję</DialogTitle>
-          <RHFSwitch name="active" label="Status" />
+          {fields.active}
         </Stack>
 
         <DialogContent sx={{ py: 0 }}>

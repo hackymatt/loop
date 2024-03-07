@@ -16,9 +16,9 @@ import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 import { useTechnologies } from "src/api/technologies/technologies";
 import { ITechnology, useCreateCourse } from "src/api/courses/courses";
 
+import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
 import { isStepFailed } from "src/components/stepper/step";
-import FormProvider, { RHFSwitch } from "src/components/hook-form";
 
 import { ILevel, ICourseLessonProp, ICourseByCategoryProps } from "src/types/course";
 
@@ -91,7 +91,7 @@ export default function CourseNewForm({ onClose, ...other }: Props) {
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nowy kurs</DialogTitle>
-          <RHFSwitch name="active" label="Status" />
+          {fields.active}
         </Stack>
 
         <DialogContent sx={{ py: 0 }}>

@@ -2,27 +2,22 @@ import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-import LoadingButton from "@mui/lab/LoadingButton";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
-import { Step, Stepper, StepLabel, StepContent } from "@mui/material";
+import { Step, Stack, Stepper, StepLabel, StepContent } from "@mui/material";
 
-import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
-
-import { useLesson, useEditLesson } from "src/api/lessons/lesson";
+import { useLesson } from "src/api/lessons/lesson";
 import { useTechnologies } from "src/api/technologies/technologies";
 
-import { isStepFailed } from "src/components/stepper/step";
-import FormProvider, { RHFSwitch } from "src/components/hook-form";
+import FormProvider from "src/components/hook-form";
 
-import { ICourseLessonProp, ICourseByCategoryProps, ITeachingProp } from "src/types/course";
+import { ITeachingProp, ICourseByCategoryProps } from "src/types/course";
 
-import { useLessonFields } from "./lesson-fields";
-import { steps, schema, defaultValues } from "./lesson";
+import { useTeachingFields } from "./teaching-fields";
+import { steps, schema, defaultValues } from "./teaching";
 
 // ----------------------------------------------------------------------
 
@@ -33,24 +28,19 @@ interface Props extends DialogProps {
 
 // ----------------------------------------------------------------------
 
-export default function LessonEditForm({ teaching, onClose, ...other }: Props) {
+export default function TeachingViewForm({ teaching, onClose, ...other }: Props) {
   const { data: availableTechnologies } = useTechnologies({
     sort_by: "name",
   });
 
   const { data: lessonData } = useLesson(teaching.id);
-  const { mutateAsync: editLesson } = useEditLesson(teaching.id);
 
   const methods = useForm({
     resolver: yupResolver(schema),
     defaultValues,
   });
 
-  const {
-    reset,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = methods;
+  const { reset } = methods;
 
   useEffect(() => {
     if (lessonData && availableTechnologies) {
@@ -66,51 +56,31 @@ export default function LessonEditForm({ teaching, onClose, ...other }: Props) {
     }
   }, [availableTechnologies, lessonData, reset]);
 
-  const handleFormError = useFormErrorHandler(methods);
-
-  const onSubmit = handleSubmit(async (data) => {
-    try {
-      await editLesson(data);
-      reset();
-      onClose();
-    } catch (error) {
-      handleFormError(error);
-    }
-  });
-
   const [activeStep, setActiveStep] = useState(0);
 
-  const { fields } = useLessonFields();
+  const { fields } = useTeachingFields();
 
   const stepContent = steps[activeStep].fields.map((field: string) => fields[field]);
 
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
-      <FormProvider methods={methods} onSubmit={onSubmit}>
+      <FormProvider methods={methods}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj lekcję</DialogTitle>
-          <RHFSwitch name="active" label="Status" />
+          {fields.active}
         </Stack>
 
         <DialogContent sx={{ py: 0 }}>
           <Stack spacing={1}>
             <Stepper activeStep={activeStep} orientation="vertical">
-              {steps.map((step, index) => {
-                const labelProps: {
-                  optional?: React.ReactNode;
-                  error?: boolean;
-                } = {};
-                labelProps.error = isStepFailed(steps[index].fields, errors);
-
-                return (
-                  <Step key={step.label}>
-                    <StepLabel {...labelProps}>{step.label}</StepLabel>
-                    <StepContent>
-                      <Stack spacing={1}>{stepContent}</Stack>
-                    </StepContent>
-                  </Step>
-                );
-              })}
+              {steps.map((step, index) => (
+                <Step key={step.label}>
+                  <StepLabel>{step.label}</StepLabel>
+                  <StepContent>
+                    <Stack spacing={1}>{stepContent}</Stack>
+                  </StepContent>
+                </Step>
+              ))}
             </Stepper>
           </Stack>
         </DialogContent>
@@ -157,14 +127,9 @@ export default function LessonEditForm({ teaching, onClose, ...other }: Props) {
               >
                 Wstecz
               </Button>
-              <LoadingButton
-                color="success"
-                type="submit"
-                variant="contained"
-                loading={isSubmitting}
-              >
-                Zapisz
-              </LoadingButton>
+              <Button variant="outlined" onClick={onClose} color="success">
+                Zamknij
+              </Button>
             </>
           )}
         </DialogActions>

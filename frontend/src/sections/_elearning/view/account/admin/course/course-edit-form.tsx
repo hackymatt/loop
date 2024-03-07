@@ -21,8 +21,8 @@ import { useLessons } from "src/api/lessons/lessons";
 import { useCourse, useEditCourse } from "src/api/courses/course";
 import { useTechnologies } from "src/api/technologies/technologies";
 
+import FormProvider from "src/components/hook-form";
 import { isStepFailed } from "src/components/stepper/step";
-import FormProvider, { RHFSwitch } from "src/components/hook-form";
 
 import {
   ILevel,
@@ -142,7 +142,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj kurs</DialogTitle>
-          <RHFSwitch name="active" label="Status" />
+          {fields.active}
         </Stack>
 
         <DialogContent sx={{ py: 0 }}>

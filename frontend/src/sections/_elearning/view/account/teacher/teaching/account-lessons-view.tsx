@@ -28,8 +28,9 @@ import AccountTeachingsTableRow from "src/sections/_elearning/account/teacher/ac
 import { ITeachingProp } from "src/types/course";
 import { IQueryParamValue } from "src/types/query-params";
 
-import TeachingNewForm from "./teaching-new-form";
-import TeachingEditForm from "./teaching-edit-form";
+import TeachingAddForm from "./teaching-add-form";
+import TeachingViewForm from "./teaching-view-form";
+import TeachingDeleteForm from "./teaching-delete-form";
 
 // ----------------------------------------------------------------------
 
@@ -64,8 +65,9 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
 // ----------------------------------------------------------------------
 
 export default function AccountTeachingView() {
-  const newTeachingFormOpen = useBoolean();
-  const editTeachingFormOpen = useBoolean();
+  const viewTeachingFormOpen = useBoolean();
+  const addTeachingFormOpen = useBoolean();
+  const deleteTeachingFormOpen = useBoolean();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
@@ -80,7 +82,9 @@ export default function AccountTeachingView() {
   const order = filters?.sort_by && filters.sort_by.startsWith("-") ? "desc" : "asc";
   const tab = filters?.teaching ? filters.teaching : "";
 
-  const [editedTeaching, setEditedTeaching] = useState<ITeachingProp>();
+  const [viewedTeaching, setViewedTeaching] = useState<ITeachingProp>();
+  const [addedTeaching, setAddedTeaching] = useState<ITeachingProp>();
+  const [deletedTeaching, setDeletedTeaching] = useState<ITeachingProp>();
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -123,14 +127,28 @@ export default function AccountTeachingView() {
     [handleChange],
   );
 
-  const handleViewTeaching = useCallback((teaching: ITeachingProp) => {}, []);
-
-  const handleEditTeaching = useCallback(
+  const handleViewTeaching = useCallback(
     (teaching: ITeachingProp) => {
-      setEditedTeaching(teaching);
-      editTeachingFormOpen.onToggle();
+      setViewedTeaching(teaching);
+      viewTeachingFormOpen.onToggle();
     },
-    [editTeachingFormOpen],
+    [viewTeachingFormOpen],
+  );
+
+  const handleAddTeaching = useCallback(
+    (teaching: ITeachingProp) => {
+      setAddedTeaching(teaching);
+      addTeachingFormOpen.onToggle();
+    },
+    [addTeachingFormOpen],
+  );
+
+  const handleDeleteTeaching = useCallback(
+    (teaching: ITeachingProp) => {
+      setDeletedTeaching(teaching);
+      deleteTeachingFormOpen.onToggle();
+    },
+    [deleteTeachingFormOpen],
   );
 
   return (
@@ -207,8 +225,8 @@ export default function AccountTeachingView() {
                     key={row.id}
                     row={row}
                     onView={handleViewTeaching}
-                    onAdd={handleEditTeaching}
-                    onDelete={handleEditTeaching}
+                    onAdd={handleAddTeaching}
+                    onDelete={handleDeleteTeaching}
                   />
                 ))}
               </TableBody>
@@ -231,12 +249,25 @@ export default function AccountTeachingView() {
         />
       </Box>
 
-      <TeachingNewForm open={newTeachingFormOpen.value} onClose={newTeachingFormOpen.onFalse} />
-      {editedTeaching && (
-        <TeachingEditForm
-          teaching={editedTeaching}
-          open={editTeachingFormOpen.value}
-          onClose={editTeachingFormOpen.onFalse}
+      {viewedTeaching && (
+        <TeachingViewForm
+          teaching={viewedTeaching}
+          open={viewTeachingFormOpen.value}
+          onClose={viewTeachingFormOpen.onFalse}
+        />
+      )}
+      {addedTeaching && (
+        <TeachingAddForm
+          teaching={addedTeaching}
+          open={addTeachingFormOpen.value}
+          onClose={addTeachingFormOpen.onFalse}
+        />
+      )}
+      {deletedTeaching && (
+        <TeachingDeleteForm
+          teaching={deletedTeaching}
+          open={deleteTeachingFormOpen.value}
+          onClose={deleteTeachingFormOpen.onFalse}
         />
       )}
     </>
