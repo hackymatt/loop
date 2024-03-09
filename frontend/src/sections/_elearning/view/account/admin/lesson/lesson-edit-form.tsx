@@ -16,8 +16,8 @@ import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 import { useLesson, useEditLesson } from "src/api/lessons/lesson";
 import { useTechnologies } from "src/api/technologies/technologies";
 
+import FormProvider from "src/components/hook-form";
 import { isStepFailed } from "src/components/stepper/step";
-import FormProvider, { RHFSwitch } from "src/components/hook-form";
 
 import { ICourseLessonProp, ICourseByCategoryProps } from "src/types/course";
 
@@ -89,7 +89,7 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj lekcję</DialogTitle>
-          <RHFSwitch name="active" label="Status" />
+          {fields.active}
         </Stack>
 
         <DialogContent sx={{ py: 0 }}>

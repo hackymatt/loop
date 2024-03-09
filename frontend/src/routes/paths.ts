@@ -37,7 +37,7 @@ export const paths = {
     },
     teacher: {
       finance: "/account/teacher/finance",
-      lessons: "/account/teacher/lessons",
+      teaching: "/account/teacher/teaching",
       earnings: "/account/teacher/earnings",
       reviews: "/account/teacher/reviews",
       calendar: "/account/teacher/calendar",

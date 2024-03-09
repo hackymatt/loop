@@ -1,35 +1,36 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
-from utils.permissions.permissions import IsStudent
+from utils.permissions.permissions import IsLecturer
 from teaching.serializers import TeachingSerializer, TeachingGetSerializer
+from teaching.filters import TeachingFilter, get_teaching
+from lesson.models import Lesson
 from teaching.models import Teaching
-from profile.models import Profile
 
 
 class TeachingViewSet(ModelViewSet):
-    http_method_names = ["get", "post"]
-    queryset = Teaching.objects.all()
+    http_method_names = ["get", "post", "delete"]
+    queryset = Lesson.objects.all()
     serializer_class = TeachingGetSerializer
-    permission_classes = [IsAuthenticated & ~IsStudent]
+    filterset_class = TeachingFilter
+    permission_classes = [IsAuthenticated, IsLecturer]
 
     def get_queryset(self):
-        user = self.request.user
-        lecturer = Profile.objects.get(user=user)
-        return self.queryset.filter(lecturer=lecturer)
+        if (
+            self.action == "retrieve"
+            or self.action == "create"
+            or self.action == "destroy"
+        ):
+            self.filterset_class = None
+            return Teaching.objects.all()
+        else:
+            return get_teaching(self, self.queryset)
 
-    def create(self, request, *args, **kwargs):
-        user = request.user
-        data = request.data
-
-        lecturer = Profile.objects.get(user=user)
-        data["lecturer"] = lecturer.id
-        serializer = TeachingSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        records = serializer.create(serializer.data)
-
-        return Response(
-            status=status.HTTP_201_CREATED,
-            data=TeachingGetSerializer(records, many=True).data,
-        )
+    def get_serializer_class(self):
+        if (
+            self.action == "retrieve"
+            or self.action == "create"
+            or self.action == "destroy"
+        ):
+            return TeachingSerializer
+        else:
+            return self.serializer_class

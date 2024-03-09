@@ -9,6 +9,7 @@ from review.models import Review
 from newsletter.models import Newsletter
 from schedule.models import Schedule
 from reservation.models import Reservation
+from teaching.models import Teaching
 from cart.models import Cart
 from django.core import mail
 
@@ -158,3 +159,7 @@ def is_reservation_found(id: int):
 
 def cart_number():
     return Cart.objects.count()
+
+
+def teaching_number():
+    return Teaching.objects.count()

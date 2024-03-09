@@ -81,7 +81,7 @@ export default function AccountTopicsTableRow({ row, onEdit, onDelete }: Props) 
           },
         }}
       >
-        <MenuItem onClick={handleEdit} sx={{ mr: 1, width: "fit-content" }}>
+        <MenuItem onClick={handleEdit} sx={{ mr: 1, width: "100%" }}>
           <Iconify icon="carbon:edit" sx={{ mr: 0.5 }} />
           <Typography variant="body2">Edytuj temat</Typography>
         </MenuItem>

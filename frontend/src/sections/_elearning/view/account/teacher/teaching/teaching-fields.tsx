@@ -2,19 +2,19 @@ import { InputAdornment } from "@mui/material";
 
 import { useTechnologies } from "src/api/technologies/technologies";
 
-import { RHFSwitch, RHFTextField, RHFAutocomplete } from "src/components/hook-form";
+import { RHFTextField, RHFAutocomplete } from "src/components/hook-form";
 
 import { ICourseByCategoryProps } from "src/types/course";
 
-export const useLessonFields = () => {
+export const useTeachingFields = () => {
   const { data: availableTechnologies, isLoading: isLoadingTechnologies } = useTechnologies({
     sort_by: "name",
   });
 
   const fields: { [key: string]: JSX.Element } = {
-    title: <RHFTextField key="title" name="title" label="Nazwa" />,
+    title: <RHFTextField key="title" name="title" label="Nazwa" disabled />,
     description: (
-      <RHFTextField key="description" name="description" label="Opis" multiline rows={5} />
+      <RHFTextField key="description" name="description" label="Opis" multiline rows={5} disabled />
     ),
     price: (
       <RHFTextField
@@ -26,6 +26,7 @@ export const useLessonFields = () => {
           inputProps: { min: 0, step: ".01" },
           endAdornment: <InputAdornment position="end">zł</InputAdornment>,
         }}
+        disabled
       />
     ),
     duration: (
@@ -38,9 +39,12 @@ export const useLessonFields = () => {
           inputProps: { min: 15 },
           endAdornment: <InputAdornment position="end">min</InputAdornment>,
         }}
+        disabled
       />
     ),
-    github_url: <RHFTextField key="github_url" name="github_url" label="Repozytorium" type="url" />,
+    github_url: (
+      <RHFTextField key="github_url" name="github_url" label="Repozytorium" type="url" disabled />
+    ),
     technologies: (
       <RHFAutocomplete
         key="technologies"
@@ -51,9 +55,9 @@ export const useLessonFields = () => {
         getOptionLabel={(option) => (option as ICourseByCategoryProps).name}
         loading={isLoadingTechnologies}
         isOptionEqualToValue={(a, b) => a.name === b.name}
+        disabled
       />
     ),
-    active: <RHFSwitch name="active" label="Status" />,
   };
   return { fields };
 };
