@@ -84,7 +84,7 @@ const teacherNavigations = [
     {
       title: "Nauczanie",
       path: `${paths.account.teacher.teaching}/?sort_by=title`,
-      icon: <Iconify icon="carbon:notebook" />,
+      icon: <Iconify icon="carbon:education" />,
       children: [],
     },
     {
