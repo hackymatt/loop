@@ -64,6 +64,8 @@ class TeachingFilter(FilterSet):
             ("-github_url", "Github Url DESC"),
             ("active", "Active ASC"),
             ("-active", "Active DESC"),
+            ("teaching", "Teaching ASC"),
+            ("-teaching", "Teaching DESC"),
         ),
         fields={
             "title": "title",
@@ -76,6 +78,8 @@ class TeachingFilter(FilterSet):
             "-github_url": "-github_url",
             "active": "active",
             "-active": "-active",
+            "teaching": "is_teaching",
+            "-teaching": "-is_teaching",
         },
     )
 

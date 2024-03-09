@@ -2,7 +2,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from utils.permissions.permissions import IsLecturer
 from teaching.serializers import TeachingSerializer, TeachingGetSerializer
-from teaching.filters import TeachingFilter
+from teaching.filters import TeachingFilter, get_teaching
 from lesson.models import Lesson
 from teaching.models import Teaching
 
@@ -23,7 +23,7 @@ class TeachingViewSet(ModelViewSet):
             self.filterset_class = None
             return Teaching.objects.all()
         else:
-            return self.queryset
+            return get_teaching(self, self.queryset)
 
     def get_serializer_class(self):
         if (
@@ -34,4 +34,3 @@ class TeachingViewSet(ModelViewSet):
             return TeachingSerializer
         else:
             return self.serializer_class
-        
