@@ -1,13 +1,13 @@
 import packageInfo from "package.json";
 
-import AccountReviewsView from "src/sections/_elearning/view/account/student/account-reviews-view";
+import AccountCalendarView from "src/sections/_elearning/view/account/teacher/calendar/account-calendar-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: `${packageInfo.name}: Konto - Recenzje`,
+  title: `${packageInfo.name}: Konto - Terminarz`,
 };
 
-export default function AccountReviewsPage() {
-  return <AccountReviewsView />;
+export default function AccountCalendarPage() {
+  return <AccountCalendarView />;
 }
