@@ -77,7 +77,7 @@ const teacherNavigations = [
     },
     {
       title: "Terminarz",
-      path: paths.account.teacher.calendar,
+      path: paths.account.teacher.schedule,
       icon: <Iconify icon="carbon:calendar" />,
       children: [],
     },

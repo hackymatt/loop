@@ -40,7 +40,7 @@ export const paths = {
       teaching: "/account/teacher/teaching",
       earnings: "/account/teacher/earnings",
       reviews: "/account/teacher/reviews",
-      calendar: "/account/teacher/calendar",
+      schedule: "/account/teacher/schedule",
     },
     lessons: "/account/lessons",
     reviews: "/account/reviews",
