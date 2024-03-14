@@ -12,13 +12,12 @@ from profile.models import Profile
 class ScheduleViewSet(ModelViewSet):
     http_method_names = ["get", "post", "delete"]
     queryset = Schedule.objects.all()
-    serializer_class = ScheduleGetSerializer
+    serializer_class = ScheduleSerializer
     filterset_class = ScheduleFilter
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated, IsLecturer]
 
-    def get_permissions(self):
-        if self.action == "create":
-            permission_classes = [IsAuthenticated & IsLecturer]
+    def get_serializer_class(self):
+        if self.action == "list" or self.action == "retrieve":
+            return ScheduleGetSerializer
         else:
-            permission_classes = self.permission_classes
-        return [permission() for permission in permission_classes]
+            return self.serializer_class

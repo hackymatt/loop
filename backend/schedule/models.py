@@ -14,7 +14,7 @@ class Schedule(BaseModel):
     lecturer = ForeignKey(Profile, on_delete=CASCADE, related_name="schedule_lecturer")
     start_time = DateTimeField()
     end_time = DateTimeField()
-    lesson = ForeignKey(Lesson, on_delete=CASCADE, related_name="schedule_lesson")
+    lesson = ForeignKey(Lesson, on_delete=CASCADE, related_name="schedule_lesson", null=True)
 
     class Meta:
         db_table = "schedule"

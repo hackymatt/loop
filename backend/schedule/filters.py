@@ -1,4 +1,4 @@
-from django_filters import FilterSet, OrderingFilter, NumberFilter
+from django_filters import FilterSet, OrderingFilter, NumberFilter, UUIDFilter, DateFilter
 from schedule.models import Schedule
 
 
@@ -15,7 +15,9 @@ class OrderFilter(OrderingFilter):
 
 class ScheduleFilter(FilterSet):
     lesson_id = NumberFilter(field_name="lesson__id", lookup_expr="exact")
-    lecturer_id = NumberFilter(field_name="lecturer__id", lookup_expr="exact")
+    lecturer_id = UUIDFilter(field_name="lecturer__uuid", lookup_expr="exact")
+    time_from = DateFilter(field_name="start_time", lookup_expr="gte")
+    time_to = DateFilter(field_name="end_time", lookup_expr="lte")
     sort_by = OrderFilter(
         choices=(
             ("time", "Time ASC"),
@@ -32,5 +34,7 @@ class ScheduleFilter(FilterSet):
         fields = (
             "lesson_id",
             "lecturer_id",
+            "time_from",
+            "time_to",
             "sort_by",
         )

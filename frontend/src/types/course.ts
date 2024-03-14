@@ -26,6 +26,12 @@ export type ITeachingProp = {
   teachingId?: string;
 };
 
+export type IScheduleProp = {
+  id: string;
+  startTime: string;
+  endTime: string;
+};
+
 export type ICourseLessonProp = {
   id: string;
   title: string;

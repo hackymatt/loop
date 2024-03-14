@@ -7,7 +7,7 @@ class IsStudent(BasePermission):
         user = request.user
         profile = Profile.objects.get(user=user)
 
-        return profile.user_type == "S"
+        return profile.user_type[0] == "S"
 
 
 class IsLecturer(BasePermission):
@@ -15,4 +15,4 @@ class IsLecturer(BasePermission):
         user = request.user
         profile = Profile.objects.get(user=user)
 
-        return profile.user_type == "W"
+        return profile.user_type[0] == "W"

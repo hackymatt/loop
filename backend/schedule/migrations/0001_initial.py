@@ -39,6 +39,7 @@ class Migration(migrations.Migration):
                 (
                     "lesson",
                     models.ForeignKey(
+                        null=True,
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="schedule_lesson",
                         to="lesson.lesson",
