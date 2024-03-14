@@ -35,6 +35,9 @@ export default function Calendar(props: CalendarOptions) {
       background: ${theme.palette.primary.lighter}; 
       cursor: pointer;
     }
+    .fc-event {
+      cursor: pointer;
+    }
     .fc-toolbar-title {
       font-family: ${theme.typography.h4.fontFamily};
       font-size: ${theme.typography.h4.fontSize};

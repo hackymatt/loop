@@ -1,16 +1,21 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
 import { format, startOfDay } from "date-fns";
-import { DatesSetArg, DateSelectArg } from "@fullcalendar/core";
+import { useMemo, useState, useCallback } from "react";
+import { DatesSetArg, DateSelectArg, EventClickArg } from "@fullcalendar/core";
 
 import { useQueryParams } from "src/hooks/use-query-params";
 
+import { useDeleteSchedule } from "src/api/schedule/schedule";
 import { useSchedules, useCreateSchedule } from "src/api/schedule/schedules";
 
 import Calendar from "src/components/calendar/calendar";
 
 import { IScheduleProp } from "src/types/course";
+
+// ----------------------------------------------------------------------
+
+const AVAILABLE_STATUS = "Dostępny" as const;
 
 // ----------------------------------------------------------------------
 export default function AccountScheduleView() {
@@ -53,31 +58,41 @@ export default function AccountScheduleView() {
     }
   }, []);
 
+  const getTime = useCallback((datePoint: Date): string => {
+    datePoint.setHours(datePoint.getHours() - 3);
+    return format(datePoint, "HH:mm:ss");
+  }, []);
+
+  const [scrollTime, setScrollTime] = useState<string>();
+  const [eventId, setEventId] = useState<string>();
+
   const { setQueryParam, getQueryParams } = useQueryParams();
 
   const allFilters = useMemo(() => getQueryParams(), [getQueryParams]);
 
   const { view, ...filters } = allFilters;
 
+  const slotsCount = useMemo(() => getSlotsCount(view), [getSlotsCount, view]);
+
   const { data: schedules } = useSchedules({
     ...filters,
-    page_size: getSlotsCount(view) * 4 * 24,
+    page_size: slotsCount * 4 * 24,
     sort_by: "start_time",
   });
   const { mutateAsync: addTimeSlot } = useCreateSchedule();
+  const { mutateAsync: deleteTimeSlot } = useDeleteSchedule(eventId!);
 
-  console.log(schedules);
-
-  const events = useMemo(
-    () =>
-      schedules?.map((schedule: IScheduleProp) => ({
-        id: schedule.id,
-        title: schedule.lesson?.title ?? "Dostępny",
-        start: schedule.startTime,
-        end: schedule.endTime,
-      })),
-    [schedules],
-  );
+  const events = useMemo(() => {
+    const allEvents = schedules?.map((schedule: IScheduleProp) => ({
+      id: schedule.id,
+      title: schedule.lesson?.title ?? AVAILABLE_STATUS,
+      start: schedule.startTime,
+      end: schedule.endTime,
+    }));
+    return view === "month"
+      ? allEvents?.filter((event) => event.title !== AVAILABLE_STATUS)
+      : allEvents;
+  }, [schedules, view]);
 
   const handleTimeChange = useCallback(
     (dateInfo: DatesSetArg) => {
@@ -103,6 +118,7 @@ export default function AccountScheduleView() {
 
   const handleChange = useCallback(
     (dateInfo: DatesSetArg) => {
+      console.log("changing");
       handleTimeChange(dateInfo);
       handleViewChange(dateInfo);
     },
@@ -111,6 +127,15 @@ export default function AccountScheduleView() {
 
   const handleAddTimeSlot = async (selectionInfo: DateSelectArg) => {
     await addTimeSlot({ start_time: selectionInfo.startStr, end_time: selectionInfo.endStr });
+    setScrollTime(getTime(selectionInfo.start));
+  };
+
+  const handleDeleteTimeSlot = async (eventInfo: EventClickArg) => {
+    if (eventInfo.event.title === AVAILABLE_STATUS) {
+      setEventId(eventInfo.event.id);
+      await deleteTimeSlot({});
+      setScrollTime(getTime(new Date(eventInfo.event.start!)));
+    }
   };
 
   return (
@@ -126,10 +151,11 @@ export default function AccountScheduleView() {
       selectable
       select={handleAddTimeSlot}
       initialDate={filters?.time_from ?? undefined}
-      // datesSet={handleChange}
+      datesSet={handleChange}
       events={events}
+      eventClick={handleDeleteTimeSlot}
       displayEventTime={view === "month"}
-      scrollTimeReset={false}
+      scrollTime={scrollTime}
       slotMinTime="06:00:00"
       slotMaxTime="22:00:00"
     />
