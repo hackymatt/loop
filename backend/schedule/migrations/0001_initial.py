@@ -26,13 +26,22 @@ class Migration(migrations.Migration):
                 ),
                 ("modified_at", models.DateTimeField(auto_now=True)),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
-                ("time", models.DateTimeField()),
+                ("start_time", models.DateTimeField()),
+                ("end_time", models.DateTimeField()),
                 (
                     "lecturer",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="schedule_lecturer",
                         to="profile.profile",
+                    ),
+                ),
+                (
+                    "lesson",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="schedule_lesson",
+                        to="lesson.lesson",
                     ),
                 ),
             ],
@@ -44,13 +53,18 @@ class Migration(migrations.Migration):
                     models.Index(
                         fields=["lecturer"], name="schedule_lecture_c3815b_idx"
                     ),
+                    models.Index(fields=["lesson"], name="schedule_lesson__82919a_idx"),
+                    models.Index(
+                        fields=["lesson", "lecturer"],
+                        name="schedule_lesson__c6746c_idx",
+                    ),
                 ],
             },
         ),
         migrations.AddConstraint(
             model_name="schedule",
             constraint=models.UniqueConstraint(
-                fields=("lecturer", "time"),
+                fields=("lecturer", "start_time", "end_time"),
                 name="schedule_lecturer_time_unique_together",
             ),
         ),
