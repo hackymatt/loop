@@ -1,4 +1,12 @@
-from django_filters import FilterSet, OrderingFilter, NumberFilter, UUIDFilter, DateFilter
+from django_filters import (
+    FilterSet,
+    OrderingFilter,
+    NumberFilter,
+    UUIDFilter,
+    DateFilter,
+    BooleanFilter,
+    CharFilter
+)
 from schedule.models import Schedule
 
 
@@ -14,6 +22,7 @@ class OrderFilter(OrderingFilter):
 
 
 class ScheduleFilter(FilterSet):
+    reserved = BooleanFilter(field_name='lesson', method='filter_reserved')
     lesson_id = NumberFilter(field_name="lesson__id", lookup_expr="exact")
     lecturer_id = UUIDFilter(field_name="lecturer__uuid", lookup_expr="exact")
     time_from = DateFilter(field_name="start_time", lookup_expr="gte")
@@ -38,3 +47,7 @@ class ScheduleFilter(FilterSet):
             "time_to",
             "sort_by",
         )
+
+    def filter_reserved(self, queryset, name, value):
+        lookup = '__'.join([name, 'isnull'])
+        return queryset.exclude(**{lookup: value})

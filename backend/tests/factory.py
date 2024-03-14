@@ -253,10 +253,11 @@ def create_newsletter(email: str, active: bool = True):
 
 
 def create_schedule(
-    lecturer: Profile,
-    time: str,
+    lecturer: Profile, start_time: str, end_time: str, lesson: Lesson = None
 ):
-    return Schedule.objects.create(lecturer=lecturer, time=time)
+    return Schedule.objects.create(
+        lecturer=lecturer, start_time=start_time, end_time=end_time, lesson=lesson
+    )
 
 
 def create_lesson_price_history(lesson: Lesson, price: float):

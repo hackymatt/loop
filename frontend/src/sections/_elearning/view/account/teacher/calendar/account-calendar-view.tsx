@@ -76,23 +76,24 @@ export default function AccountScheduleView() {
 
   const { data: schedules } = useSchedules({
     ...filters,
+    reserved: (view === "month").toString(),
     page_size: slotsCount * 4 * 24,
     sort_by: "start_time",
   });
   const { mutateAsync: addTimeSlot } = useCreateSchedule();
   const { mutateAsync: deleteTimeSlot } = useDeleteSchedule(eventId!);
 
-  const events = useMemo(() => {
-    const allEvents = schedules?.map((schedule: IScheduleProp) => ({
-      id: schedule.id,
-      title: schedule.lesson?.title ?? AVAILABLE_STATUS,
-      start: schedule.startTime,
-      end: schedule.endTime,
-    }));
-    return view === "month"
-      ? allEvents?.filter((event) => event.title !== AVAILABLE_STATUS)
-      : allEvents;
-  }, [schedules, view]);
+  const events = useMemo(
+    () =>
+      schedules?.map((schedule: IScheduleProp) => ({
+        id: schedule.id,
+        groupId: "1",
+        title: schedule.lesson?.title ?? AVAILABLE_STATUS,
+        start: schedule.startTime,
+        end: schedule.endTime,
+      })),
+    [schedules],
+  );
 
   const handleTimeChange = useCallback(
     (dateInfo: DatesSetArg) => {
@@ -118,7 +119,6 @@ export default function AccountScheduleView() {
 
   const handleChange = useCallback(
     (dateInfo: DatesSetArg) => {
-      console.log("changing");
       handleTimeChange(dateInfo);
       handleViewChange(dateInfo);
     },

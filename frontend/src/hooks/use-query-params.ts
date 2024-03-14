@@ -12,8 +12,13 @@ export function useQueryParams() {
 
   const setQueryParam = useCallback(
     (name: string, value?: IQueryParamValue) => {
+      const currentParams = params.toString();
       params.set(name, value ? value.toString() : "");
-      replace(`${pathname}?${params.toString()}`);
+      const newParams = params.toString();
+      if (currentParams !== newParams) {
+        console.log(params.toString());
+        replace(`${pathname}?${params.toString()}`);
+      }
     },
     [params, pathname, replace],
   );
