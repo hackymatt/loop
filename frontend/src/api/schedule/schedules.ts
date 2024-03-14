@@ -4,7 +4,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
-import { IGender } from "src/types/testimonial";
 import { IScheduleProp } from "src/types/course";
 import { IQueryParams } from "src/types/query-params";
 
@@ -13,13 +12,19 @@ import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/schedules" as const;
 
+type ILesson = {
+  id: number;
+  title: string;
+};
+
 type ISchedule = {
   id: number;
   start_time: string;
   end_time: string;
+  lesson: ILesson | null;
 };
 
-type ICreateSchedule = Omit<ISchedule, "id">;
+type ICreateSchedule = Omit<ISchedule, "id" | "lesson">;
 type ICreateScheduleReturn = ICreateSchedule;
 export const schedulesQuery = (query?: IQueryParams) => {
   const url = endpoint;
@@ -37,10 +42,11 @@ export const schedulesQuery = (query?: IQueryParams) => {
       }
     }
     const { results, records_count, pages_count } = data;
-    const modifiedResults = results.map(({ id, start_time, end_time }: ISchedule) => ({
+    const modifiedResults = results.map(({ id, start_time, end_time, lesson }: ISchedule) => ({
       id,
       startTime: start_time,
       endTime: end_time,
+      lesson,
     }));
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };
   };
@@ -52,12 +58,6 @@ export const useSchedules = (query?: IQueryParams) => {
   const { queryKey, queryFn } = schedulesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.results as IScheduleProp[], ...rest };
-};
-
-export const useSchedulesPagesCount = (query?: IQueryParams) => {
-  const { queryKey, queryFn } = schedulesQuery(query);
-  const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.pagesCount, ...rest };
 };
 
 export const useCreateSchedule = () => {

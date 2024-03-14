@@ -20,12 +20,12 @@ class ScheduleFilter(FilterSet):
     time_to = DateFilter(field_name="end_time", lookup_expr="lte")
     sort_by = OrderFilter(
         choices=(
-            ("time", "Time ASC"),
-            ("-time", "Time DESC"),
+            ("start_time", "Start Time ASC"),
+            ("-start_time", "Start Time DESC"),
         ),
         fields={
-            "time": "time",
-            "time": "-time",
+            "start_time": "start_time",
+            "start_time": "-start_time",
         },
     )
 

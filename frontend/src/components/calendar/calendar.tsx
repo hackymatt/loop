@@ -65,6 +65,11 @@ export default function Calendar(props: CalendarOptions) {
           minute: "2-digit",
           omitZeroMinute: false,
         }}
+        eventTimeFormat={{
+          hour: "numeric",
+          minute: "2-digit",
+          omitZeroMinute: false,
+        }}
         nowIndicator
         navLinks
         {...props}

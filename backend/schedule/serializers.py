@@ -5,7 +5,7 @@ from rest_framework.serializers import (
 )
 from schedule.models import Schedule
 from profile.models import Profile
-
+from lesson.models import Lesson
 class ProfileSerializer(ModelSerializer):
     first_name = CharField(source="user.first_name")
     last_name = CharField(source="user.last_name")
@@ -21,7 +21,13 @@ class ProfileSerializer(ModelSerializer):
         )
 
 
+class LessonSerializer(ModelSerializer):
+    class Meta:
+        model = Lesson
+        fields = ("id", "title", )
+
 class ScheduleGetSerializer(ModelSerializer):
+    lesson = LessonSerializer()
     class Meta:
         model = Schedule
         exclude = (

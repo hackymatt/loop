@@ -1,26 +1,20 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import { format, startOfDay } from "date-fns";
-import { DatesSetArg } from "@fullcalendar/core";
+import { DatesSetArg, DateSelectArg } from "@fullcalendar/core";
 
 import { useQueryParams } from "src/hooks/use-query-params";
 
-import { useSchedules } from "src/api/schedule/schedules";
+import { useSchedules, useCreateSchedule } from "src/api/schedule/schedules";
 
 import Calendar from "src/components/calendar/calendar";
 
+import { IScheduleProp } from "src/types/course";
+
 // ----------------------------------------------------------------------
 export default function AccountScheduleView() {
-  const { setQueryParam, getQueryParams } = useQueryParams();
-
-  const allFilters = useMemo(() => getQueryParams(), [getQueryParams]);
-
-  const { view, ...filters } = allFilters;
-
-  const { data: schedules } = useSchedules(filters);
-
-  const getViewName = (dateInfo: DatesSetArg): string | undefined => {
+  const getViewName = useCallback((dateInfo: DatesSetArg): string | undefined => {
     switch (dateInfo.view.type) {
       case "dayGridMonth":
         return "month";
@@ -31,9 +25,9 @@ export default function AccountScheduleView() {
       default:
         return undefined;
     }
-  };
+  }, []);
 
-  const getViewType = (viewName: string | undefined): string | undefined => {
+  const getViewType = useCallback((viewName: string | undefined): string | undefined => {
     switch (viewName) {
       case "month":
         return "dayGridMonth";
@@ -44,22 +38,79 @@ export default function AccountScheduleView() {
       default:
         return undefined;
     }
-  };
+  }, []);
 
-  const handleTimeChange = (dateInfo: DatesSetArg) => {
-    const dateStart = dateInfo.start;
-    if (dateInfo.view.type === "dayGridMonth") {
-      if (dateStart.getDate() !== 1) {
-        dateStart.setMonth(dateStart.getMonth() + 1, 1);
-        setQueryParam("time_from", format(startOfDay(dateStart), "yyyy-MM-dd"));
-        return;
-      }
+  const getSlotsCount = useCallback((viewName: string | undefined): number => {
+    switch (viewName) {
+      case "month":
+        return 31;
+      case "week":
+        return 7;
+      case "day":
+        return 1;
+      default:
+        return 10;
     }
-    setQueryParam("time_from", dateInfo.startStr.slice(0, 10));
-  };
+  }, []);
 
-  const handleViewChange = (dateInfo: DatesSetArg) => {
-    setQueryParam("view", getViewName(dateInfo));
+  const { setQueryParam, getQueryParams } = useQueryParams();
+
+  const allFilters = useMemo(() => getQueryParams(), [getQueryParams]);
+
+  const { view, ...filters } = allFilters;
+
+  const { data: schedules } = useSchedules({
+    ...filters,
+    page_size: getSlotsCount(view) * 4 * 24,
+    sort_by: "start_time",
+  });
+  const { mutateAsync: addTimeSlot } = useCreateSchedule();
+
+  console.log(schedules);
+
+  const events = useMemo(
+    () =>
+      schedules?.map((schedule: IScheduleProp) => ({
+        id: schedule.id,
+        title: schedule.lesson?.title ?? "Dostępny",
+        start: schedule.startTime,
+        end: schedule.endTime,
+      })),
+    [schedules],
+  );
+
+  const handleTimeChange = useCallback(
+    (dateInfo: DatesSetArg) => {
+      const dateStart = dateInfo.start;
+      if (dateInfo.view.type === "dayGridMonth") {
+        if (dateStart.getDate() !== 1) {
+          dateStart.setMonth(dateStart.getMonth() + 1, 1);
+          setQueryParam("time_from", format(startOfDay(dateStart), "yyyy-MM-dd"));
+          return;
+        }
+      }
+      setQueryParam("time_from", dateInfo.startStr.slice(0, 10));
+    },
+    [setQueryParam],
+  );
+
+  const handleViewChange = useCallback(
+    (dateInfo: DatesSetArg) => {
+      setQueryParam("view", getViewName(dateInfo));
+    },
+    [getViewName, setQueryParam],
+  );
+
+  const handleChange = useCallback(
+    (dateInfo: DatesSetArg) => {
+      handleTimeChange(dateInfo);
+      handleViewChange(dateInfo);
+    },
+    [handleTimeChange, handleViewChange],
+  );
+
+  const handleAddTimeSlot = async (selectionInfo: DateSelectArg) => {
+    await addTimeSlot({ start_time: selectionInfo.startStr, end_time: selectionInfo.endStr });
   };
 
   return (
@@ -73,16 +124,14 @@ export default function AccountScheduleView() {
         right: "today dayGridMonth,timeGridWeek,timeGridDay",
       }}
       selectable
-      select={(selectionInfo) => {
-        if (selectionInfo.view.type !== "dayGridMonth") {
-          console.log(selectionInfo);
-        }
-      }}
+      select={handleAddTimeSlot}
       initialDate={filters?.time_from ?? undefined}
-      datesSet={(dateInfo) => {
-        handleTimeChange(dateInfo);
-        handleViewChange(dateInfo);
-      }}
+      // datesSet={handleChange}
+      events={events}
+      displayEventTime={view === "month"}
+      scrollTimeReset={false}
+      slotMinTime="06:00:00"
+      slotMaxTime="22:00:00"
     />
   );
 }

@@ -26,12 +26,6 @@ export type ITeachingProp = {
   teachingId?: string;
 };
 
-export type IScheduleProp = {
-  id: string;
-  startTime: string;
-  endTime: string;
-};
-
 export type ICourseLessonProp = {
   id: string;
   title: string;
@@ -49,6 +43,13 @@ export type ICourseLessonProp = {
   teachers?: ICourseTeacherProp[];
   githubUrl: string;
   active?: boolean;
+};
+
+export type IScheduleProp = {
+  id: string;
+  startTime: string;
+  endTime: string;
+  lesson: Pick<ICourseLessonProp, "id" | "title">;
 };
 
 export type ICourseLessonPriceHistoryProp = {
