@@ -1,8 +1,8 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from utils.permissions.permissions import IsStudent
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from utils.permissions.permissions import IsLecturer
 from schedule.serializers import ScheduleSerializer, ScheduleGetSerializer
 from schedule.filters import ScheduleFilter
 from schedule.models import Schedule
@@ -10,30 +10,26 @@ from profile.models import Profile
 
 
 class ScheduleViewSet(ModelViewSet):
-    http_method_names = ["get", "post"]
+    http_method_names = ["get", "post", "delete"]
     queryset = Schedule.objects.all()
-    serializer_class = ScheduleGetSerializer
+    serializer_class = ScheduleSerializer
     filterset_class = ScheduleFilter
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated, IsLecturer]
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return ScheduleGetSerializer
+        else:
+            return self.serializer_class
 
     def get_permissions(self):
-        if self.action == "create":
-            permission_classes = [IsAuthenticated & ~IsStudent]
+        if self.action == "retrieve":
+            permission_classes = [IsAdminUser]
         else:
             permission_classes = self.permission_classes
         return [permission() for permission in permission_classes]
 
-    def create(self, request, *args, **kwargs):
-        user = request.user
-        data = request.data
-        profile = Profile.objects.get(user=user)
-
-        data["lecturer"] = profile.id
-        serializer = ScheduleSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        records = serializer.create(serializer.data)
-
-        return Response(
-            status=status.HTTP_201_CREATED,
-            data=ScheduleGetSerializer(records, many=True).data,
-        )
+    def get_queryset(self):
+        user = self.request.user
+        lecturer = Profile.objects.get(user=user)
+        return self.queryset.filter(lecturer=lecturer)

@@ -885,18 +885,27 @@ class ScheduleFilterTest(APITestCase):
             self.schedules.append(
                 create_schedule(
                     lecturer=self.lecturer_profile_1,
-                    time=make_aware(
-                        datetime.now().replace(minute=15, second=0, microsecond=0)
-                        + timedelta(minutes=15 * i)
+                    start_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * i)
                     ),
+                    end_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * (i + 1))
+                    ),
+                    lesson=self.lesson_1,
                 )
             )
             self.schedules.append(
                 create_schedule(
                     lecturer=self.lecturer_profile_2,
-                    time=make_aware(
-                        datetime.now().replace(minute=15, second=0, microsecond=0)
-                        + timedelta(minutes=15 * i)
+                    start_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * (i + 10))
+                    ),
+                    end_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * (i + 10))
                     ),
                 )
             )
@@ -912,23 +921,60 @@ class ScheduleFilterTest(APITestCase):
             schedule=self.schedules[1],
         )
 
+    def test_reserved_filter(self):
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}?reserved=True")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 10)
+
     def test_lesson_id_filter(self):
-        # no login
-        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(f"{self.endpoint}?lesson_id={self.lesson_1.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 19)
+        self.assertEqual(count, 10)
 
     def test_lecturer_id_filter(self):
-        # no login
-        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(
-            f"{self.endpoint}?lecturer_id={self.lecturer_profile_1.id}"
+            f"{self.endpoint}?lecturer_id={self.lecturer_profile_1.uuid}"
         )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 10)
+
+    def test_time_from_filter(self):
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        time = str(self.schedules[0].start_time)[0:10]
+        response = self.client.get(f"{self.endpoint}?time_from={time}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 10)
+
+    def test_time_to_filter(self):
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        time = str(self.schedules[len(self.schedules) - 1].start_time)[0:10]
+        response = self.client.get(f"{self.endpoint}?time_to={time}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
@@ -1530,9 +1576,13 @@ class PurchaseFilterTest(APITestCase):
             self.schedules.append(
                 create_schedule(
                     lecturer=self.lecturer_profile,
-                    time=make_aware(
-                        datetime.now().replace(minute=15, second=0, microsecond=0)
-                        + timedelta(minutes=15 * i)
+                    start_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * i)
+                    ),
+                    end_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * (i + 1))
                     ),
                 )
             )

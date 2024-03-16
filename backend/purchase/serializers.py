@@ -106,7 +106,7 @@ class PurchaseGetSerializer(ModelSerializer):
         reservation = get_reservation(purchase=purchase)
 
         if reservation.exists():
-            schedule_time = reservation.first().schedule.time
+            schedule_time = reservation.first().schedule.start_time
             if make_aware(datetime.now()) >= schedule_time:
                 return LessonStatus.COMPLETED
             else:

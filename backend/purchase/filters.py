@@ -57,7 +57,7 @@ def get_lesson_lecturer(queryset):
 def get_lesson_status(queryset):
     schedule = (
         Schedule.objects.filter(pk=OuterRef("schedule"))
-        .annotate(diff=datetime.now().date() - F("time"))
+        .annotate(diff=datetime.now().date() - F("start_time"))
         .values("diff")
     )
 

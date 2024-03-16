@@ -25,11 +25,11 @@ export const schema = Yup.object().shape({
   price: Yup.number().required("Cena jest wymagana").min(0, "Cena musi być większa bądź równa 0"),
   duration: Yup.number()
     .required("Czas trwania jest wymagany")
-    .min(15, "Czas trwania musi być większa bądź równa 15 minut")
+    .min(30, "Czas trwania musi być większa bądź równa 30 minut")
     .test(
       "by15minutes",
-      "Czas trwania musi być wielokrotnością 15 minut",
-      (number) => number % 15 === 0,
+      "Czas trwania musi być wielokrotnością 30 minut",
+      (number) => number % 30 === 0,
     ),
   github_url: Yup.string().url().required("Link dla repozytorium jest wymagany"),
   technologies: Yup.array()

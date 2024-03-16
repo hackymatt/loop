@@ -7,18 +7,23 @@ from django.db.models import (
     Index,
 )
 from profile.models import Profile
+from lesson.models import Lesson
 
 
 class Schedule(BaseModel):
     lecturer = ForeignKey(Profile, on_delete=CASCADE, related_name="schedule_lecturer")
-    time = DateTimeField()
+    start_time = DateTimeField()
+    end_time = DateTimeField()
+    lesson = ForeignKey(
+        Lesson, on_delete=CASCADE, related_name="schedule_lesson", null=True
+    )
 
     class Meta:
         db_table = "schedule"
         ordering = ["id"]
         constraints = [
             UniqueConstraint(
-                fields=["lecturer", "time"],
+                fields=["lecturer", "start_time", "end_time"],
                 name="schedule_lecturer_time_unique_together",
             )
         ]
@@ -30,6 +35,17 @@ class Schedule(BaseModel):
             ),
             Index(
                 fields=[
+                    "lecturer",
+                ]
+            ),
+            Index(
+                fields=[
+                    "lesson",
+                ]
+            ),
+            Index(
+                fields=[
+                    "lesson",
                     "lecturer",
                 ]
             ),

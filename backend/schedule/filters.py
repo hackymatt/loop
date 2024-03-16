@@ -1,7 +1,13 @@
-from django_filters import FilterSet, OrderingFilter, NumberFilter
+from django_filters import (
+    FilterSet,
+    OrderingFilter,
+    NumberFilter,
+    UUIDFilter,
+    DateFilter,
+    BooleanFilter,
+    CharFilter,
+)
 from schedule.models import Schedule
-from teaching.models import Teaching
-from reservation.models import Reservation
 
 
 class OrderFilter(OrderingFilter):
@@ -16,36 +22,33 @@ class OrderFilter(OrderingFilter):
 
 
 class ScheduleFilter(FilterSet):
-    lesson_id = NumberFilter(
-        label="Id lekcji równe",
-        field_name="lesson",
-        method="filter_lesson_id",
-    )
-    lecturer_id = NumberFilter(field_name="lecturer__id", lookup_expr="exact")
+    reserved = BooleanFilter(field_name="lesson", method="filter_reserved")
+    lesson_id = NumberFilter(field_name="lesson__id", lookup_expr="exact")
+    lecturer_id = UUIDFilter(field_name="lecturer__uuid", lookup_expr="exact")
+    time_from = DateFilter(field_name="start_time", lookup_expr="gte")
+    time_to = DateFilter(field_name="end_time", lookup_expr="lte")
     sort_by = OrderFilter(
         choices=(
-            ("time", "Time ASC"),
-            ("-time", "Time DESC"),
+            ("start_time", "Start Time ASC"),
+            ("-start_time", "Start Time DESC"),
         ),
         fields={
-            "time": "time",
-            "time": "-time",
+            "start_time": "start_time",
+            "start_time": "-start_time",
         },
     )
 
     class Meta:
         model = Schedule
         fields = (
+            "reserved",
             "lesson_id",
             "lecturer_id",
+            "time_from",
+            "time_to",
             "sort_by",
         )
 
-    def filter_lesson_id(self, queryset, field_name, value):
-        lecturers = Teaching.objects.filter(lesson_id=value).values("lecturer")
-        not_available_times = Reservation.objects.exclude(lesson_id=value).values(
-            "schedule"
-        )
-        return queryset.filter(lecturer__in=lecturers).exclude(
-            id__in=not_available_times
-        )
+    def filter_reserved(self, queryset, name, value):
+        lookup = "__".join([name, "isnull"])
+        return queryset.exclude(**{lookup: value})

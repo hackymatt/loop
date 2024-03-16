@@ -88,12 +88,6 @@ const teacherNavigations = [
       children: [],
     },
     {
-      title: "Rezerwacje",
-      path: paths.account.teacher.teaching,
-      icon: <Iconify icon="carbon:order-details" />,
-      children: [],
-    },
-    {
       title: "Recenzje",
       path: paths.account.teacher.reviews,
       icon: <Iconify icon="carbon:review" />,

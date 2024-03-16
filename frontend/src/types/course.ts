@@ -45,6 +45,13 @@ export type ICourseLessonProp = {
   active?: boolean;
 };
 
+export type IScheduleProp = {
+  id: string;
+  startTime: string;
+  endTime: string;
+  lesson: Pick<ICourseLessonProp, "id" | "title">;
+};
+
 export type ICourseLessonPriceHistoryProp = {
   id: string;
   lesson: ICourseLessonProp;

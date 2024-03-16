@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 import { IQueryParamValue } from "src/types/query-params";
@@ -10,19 +10,30 @@ export function useQueryParams() {
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const setQueryParam = (name: string, value?: IQueryParamValue) => {
-    params.set(name, value ? value.toString() : "");
-    replace(`${pathname}?${params.toString()}`);
-  };
+  const setQueryParam = useCallback(
+    (name: string, value?: IQueryParamValue) => {
+      const currentParams = params.toString();
+      params.set(name, value ? value.toString() : "");
+      const newParams = params.toString();
+      if (currentParams !== newParams) {
+        console.log(params.toString());
+        replace(`${pathname}?${params.toString()}`);
+      }
+    },
+    [params, pathname, replace],
+  );
 
-  const removeQueryParam = (name: string) => {
-    params.delete(name);
-    replace(`${pathname}?${params.toString()}`);
-  };
+  const removeQueryParam = useCallback(
+    (name: string) => {
+      params.delete(name);
+      replace(`${pathname}?${params.toString()}`);
+    },
+    [params, pathname, replace],
+  );
 
-  const getQueryParam = (name: string) => params.get(name);
+  const getQueryParam = useCallback((name: string) => params.get(name), [params]);
 
-  const getQueryParams = () => Object.fromEntries(params);
+  const getQueryParams = useCallback(() => Object.fromEntries(params), [params]);
 
   return { getQueryParam, setQueryParam, removeQueryParam, getQueryParams };
 }

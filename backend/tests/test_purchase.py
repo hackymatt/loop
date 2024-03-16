@@ -109,9 +109,13 @@ class PurchaseTest(APITestCase):
             self.schedules.append(
                 create_schedule(
                     lecturer=self.lecturer_profile,
-                    time=make_aware(
-                        datetime.now().replace(minute=15, second=0, microsecond=0)
-                        + timedelta(minutes=15 * i)
+                    start_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * i)
+                    ),
+                    end_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * (i + 1))
                     ),
                 )
             )

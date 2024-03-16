@@ -755,32 +755,41 @@ class ScheduleOrderTest(APITestCase):
         for i in range(10):
             create_schedule(
                 lecturer=self.lecturer_profile_1,
-                time=make_aware(
-                    datetime.now().replace(minute=15, second=0, microsecond=0)
-                    + timedelta(minutes=15 * i)
+                start_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * i)
+                ),
+                end_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * (i + 1))
                 ),
             )
             create_schedule(
                 lecturer=self.lecturer_profile_2,
-                time=make_aware(
-                    datetime.now().replace(minute=15, second=0, microsecond=0)
-                    + timedelta(minutes=15 * i)
+                start_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * i)
+                ),
+                end_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * (i + 1))
                 ),
             )
 
-        self.fields = ["time"]
+        self.fields = ["start_time"]
 
     def test_ordering(self):
         for field in self.fields:
-            # no login
-            self.assertFalse(auth.get_user(self.client).is_authenticated)
+            # login
+            login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+            self.assertTrue(auth.get_user(self.client).is_authenticated)
             # get data
             response = self.client.get(f"{self.endpoint}?sort_by={field}")
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             data = json.loads(response.content)
             count = data["records_count"]
             results = data["results"]
-            self.assertEqual(count, 20)
+            self.assertEqual(count, 10)
             field_values = [course[field] for course in results]
             if isinstance(field_values[0], dict):
                 self.assertEqual(
@@ -798,7 +807,7 @@ class ScheduleOrderTest(APITestCase):
             data = json.loads(response.content)
             count = data["records_count"]
             results = data["results"]
-            self.assertEqual(count, 20)
+            self.assertEqual(count, 10)
             field_values = [course[field] for course in results]
             if isinstance(field_values[0], dict):
                 self.assertEqual(
@@ -1654,9 +1663,13 @@ class PurchaseOrderTest(APITestCase):
             self.schedules.append(
                 create_schedule(
                     lecturer=self.lecturer_profile,
-                    time=make_aware(
-                        datetime.now().replace(minute=15, second=0, microsecond=0)
-                        + timedelta(minutes=15 * i)
+                    start_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * i)
+                    ),
+                    end_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * (i + 1))
                     ),
                 )
             )
