@@ -260,6 +260,10 @@ def create_schedule(
     )
 
 
+def create_schedule_obj(start_time: str, end_time: str):
+    return {"start_time": start_time, "end_time": end_time}
+
+
 def create_lesson_price_history(lesson: Lesson, price: float):
     return LessonPriceHistory.objects.create(lesson=lesson, price=price)
 

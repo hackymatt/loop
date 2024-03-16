@@ -36,7 +36,7 @@ export const useTeachingFields = () => {
         label="Czas trwania"
         type="number"
         InputProps={{
-          inputProps: { min: 15 },
+          inputProps: { min: 30 },
           endAdornment: <InputAdornment position="end">min</InputAdornment>,
         }}
         disabled

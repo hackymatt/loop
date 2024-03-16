@@ -17,6 +17,8 @@ import { IScheduleProp } from "src/types/course";
 
 const AVAILABLE_STATUS = "Dostępny" as const;
 
+const SLOT_SIZE = 30 as number;
+
 // ----------------------------------------------------------------------
 export default function AccountScheduleView() {
   const getViewName = useCallback((dateInfo: DatesSetArg): string | undefined => {
@@ -77,7 +79,7 @@ export default function AccountScheduleView() {
   const { data: schedules } = useSchedules({
     ...filters,
     reserved: (view === "month").toString(),
-    page_size: slotsCount * 4 * 24,
+    page_size: slotsCount * (60 / SLOT_SIZE) * 24,
     sort_by: "start_time",
   });
   const { mutateAsync: addTimeSlot } = useCreateSchedule();
@@ -141,8 +143,8 @@ export default function AccountScheduleView() {
   return (
     <Calendar
       initialView={getViewType(view) || "timeGridWeek"}
-      slotDuration="00:15:00"
-      slotLabelInterval="00:15"
+      slotDuration={`00:${SLOT_SIZE}:00`}
+      slotLabelInterval={`00:${SLOT_SIZE}`}
       headerToolbar={{
         left: "prev,next",
         center: "title",

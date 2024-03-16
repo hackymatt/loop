@@ -9,6 +9,7 @@ from .factory import (
     create_skill,
     create_topic,
     create_schedule,
+    create_schedule_obj,
     create_teaching,
 )
 from .helpers import login, get_schedules
@@ -21,6 +22,19 @@ from django.utils.timezone import make_aware
 class ScheduleTest(APITestCase):
     def setUp(self):
         self.endpoint = "/schedules"
+        self.admin_data = {
+            "email": "admin_test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.admin_data["email"],
+            password=self.admin_data["password"],
+            is_active=True,
+            is_staff=True,
+        )
+        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -194,59 +208,113 @@ class ScheduleTest(APITestCase):
                 lesson=lesson,
             )
 
-        for i in range(10):
+        self.schedules = []
+
+        self.schedules.append(
             create_schedule(
-                lecturer=self.lecturer_profile_1,
-                time=make_aware(
-                    datetime.now().replace(minute=15, second=0, microsecond=0)
-                    + timedelta(minutes=15 * i)
+                lecturer=self.admin_profile,
+                start_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                ),
+                end_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
                 ),
             )
-            create_schedule(
-                lecturer=self.lecturer_profile_2,
-                time=make_aware(
-                    datetime.now().replace(minute=15, second=0, microsecond=0)
-                    + timedelta(minutes=15 * i)
-                ),
+        )
+
+        for i in range(10):
+            self.schedules.append(
+                create_schedule(
+                    lecturer=self.lecturer_profile_1,
+                    start_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * i)
+                    ),
+                    end_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * (i + 1))
+                    ),
+                )
+            )
+            self.schedules.append(
+                create_schedule(
+                    lecturer=self.lecturer_profile_2,
+                    start_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * i)
+                    ),
+                    end_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * (i + 1))
+                    ),
+                )
             )
 
-    def test_get_schedule_for_lesson_unauthenticated(self):
+        self.new_schedule = create_schedule_obj(
+            start_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 100)
+            ),
+            end_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 101)
+            ),
+        )
+
+    def test_get_schedules_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
-        response = self.client.get(
-            f"{self.endpoint}?lesson_id={self.course_1.lessons.all()[0].id}&sort_by=time"
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
-        count = data["records_count"]
-        self.assertEqual(count, 20)
+        response = self.client.get(self.endpoint)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_get_schedule_for_lesson_authenticated(self):
+    def test_get_schedules_not_lecturer(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        response = self.client.get(
-            f"{self.endpoint}?lesson_id={self.course_1.lessons.all()[0].id}"
-        )
+        response = self.client.get(self.endpoint)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_schedules_authenticated(self):
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 20)
+        self.assertEqual(count, 10)
+
+    def test_get_schedule_unauthenticated(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.schedules[0].id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_schedule_not_admin(self):
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.schedules[0].id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_schedule_authenticated(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.schedules[0].id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_create_schedule_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
-        available_times = [
-            datetime.now().replace(second=0, microsecond=0) + timedelta(hours=i)
-            for i in range(5)
-        ]
-        data = {
-            "times": available_times,
-        }
-        response = self.client.post(self.endpoint, data)
+        response = self.client.post(self.endpoint, self.new_schedule)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_create_schedule_not_lecturer(self):
@@ -254,113 +322,26 @@ class ScheduleTest(APITestCase):
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        available_times = [
-            datetime.now().replace(second=0, microsecond=0) + timedelta(hours=i)
-            for i in range(5)
-        ]
-        data = {
-            "times": available_times,
-        }
-        response = self.client.post(self.endpoint, data)
+        response = self.client.post(self.endpoint, self.new_schedule)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_create_schedule_incorrect_time(self):
+    def test_create_schedule_authenticated(self):
         # login
         login(self, self.lecturer_data["email"], self.lecturer_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        available_times = [
-            datetime.now().replace(minute=5 * i, second=0, microsecond=0)
-            + timedelta(hours=i)
-            for i in range(5)
-        ]
-        data = {
-            "times": available_times,
-        }
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_create_schedule(self):
-        # login
-        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        available_times = [
-            datetime.now().replace(minute=15, second=0, microsecond=0)
-            + timedelta(hours=i)
-            for i in range(5)
-        ]
-        data = {
-            "times": available_times,
-        }
-        response = self.client.post(self.endpoint, data)
+        response = self.client.post(self.endpoint, self.new_schedule)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         data = json.loads(response.content)
-        self.assertEqual(len(data), 5)
-        times = [
-            datetime.strptime(time["time"], "%Y-%m-%dT%H:%M:%fZ").strftime(
+        self.assertEqual(
+            datetime.strptime(data["start_time"], "%Y-%m-%dT%H:%M:%fZ").strftime(
                 "%Y-%m-%dT%H:%M"
-            )
-            for time in data
-        ]
-        self.assertEqual(
-            times,
-            [
-                available_time.strftime("%Y-%m-%dT%H:%M")
-                for available_time in available_times
-            ],
+            ),
+            self.new_schedule["start_time"].strftime("%Y-%m-%dT%H:%M"),
         )
-
-    def test_update_schedule(self):
-        # login
-        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        available_times = [
-            datetime.now().replace(minute=15, second=0, microsecond=0)
-            + timedelta(hours=i)
-            for i in range(5)
-        ]
-        data = {
-            "times": available_times
-            + [
-                get_schedules(
-                    lecturer=self.lecturer_profile_1,
-                )[0].time
-            ],
-        }
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(len(data), 5)
-        times = [
-            datetime.strptime(time["time"], "%Y-%m-%dT%H:%M:%fZ").strftime(
+        self.assertEqual(
+            datetime.strptime(data["end_time"], "%Y-%m-%dT%H:%M:%fZ").strftime(
                 "%Y-%m-%dT%H:%M"
-            )
-            for time in data
-        ]
-        self.assertEqual(
-            times,
-            [
-                available_time.strftime("%Y-%m-%dT%H:%M")
-                for available_time in available_times
-            ],
-        )
-
-    def test_delete_schedule(self):
-        # no login
-        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        available_times = []
-        data = {
-            "times": available_times,
-        }
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(len(data), 0)
-        self.assertEqual(
-            data,
-            [],
+            ),
+            self.new_schedule["end_time"].strftime("%Y-%m-%dT%H:%M"),
         )

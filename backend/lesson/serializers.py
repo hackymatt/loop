@@ -20,7 +20,7 @@ from django.db.models.functions import Concat
 from django.db.models import Avg, Value
 
 
-MIN_LESSON_DURATION_MINS = 15
+MIN_LESSON_DURATION_MINS = 30
 
 
 def get_lecturers(self, lessons):
