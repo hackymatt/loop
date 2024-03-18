@@ -32,6 +32,7 @@ export default function Review({ courseId, ratingNumber, reviewNumber, lessons, 
     lecturer_id: "",
     rating: "",
     sort_by: "-created_at",
+    page: "1",
   });
 
   const { data: pagesCount, isLoading: isLoadingReviewsPageCount } = useReviewsPageCount(query);
@@ -81,7 +82,12 @@ export default function Review({ courseId, ratingNumber, reviewNumber, lessons, 
             </Grid>
 
             <Grid xs={12} md={7} lg={8}>
-              <ReviewList reviews={reviews} pagesCount={pagesCount} />
+              <ReviewList
+                reviews={reviews}
+                pagesCount={pagesCount}
+                page={parseInt(query.page ?? "1", 10) ?? 1}
+                onPageChange={(selectedPage: number) => handleChange("page", selectedPage)}
+              />
             </Grid>
           </Grid>
         </Container>

@@ -12,7 +12,7 @@ from random import sample
 
 class LecturerViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Profile.objects.filter(user_type="W").all()
+    queryset = Profile.objects.filter(user_type__startswith="W").all()
     serializer_class = LecturerSerializer
     filterset_class = LecturerFilter
     search_fields = [

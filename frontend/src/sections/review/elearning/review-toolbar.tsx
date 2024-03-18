@@ -41,7 +41,7 @@ export default function ReviewToolbar({
 }: Props) {
   return (
     <Stack spacing={1} alignItems="left" direction="column" sx={{ mb: 3 }}>
-      <Typography variant="h4" sx={{ width: 1 }}>
+      <Typography variant="h5" sx={{ width: 1 }}>
         Recenzje
       </Typography>
 
@@ -52,7 +52,9 @@ export default function ReviewToolbar({
         gridTemplateColumns={{ xs: "repeat(1, 1fr)", md: "repeat(3, 1fr)" }}
       >
         <FilterLesson value={lesson} options={lessonOptions} onChange={onChangeLesson} />
-        <FilterTeacher value={teacher} options={teacherOptions} onChange={onChangeTeacher} />
+        {teacherOptions.length > 0 && (
+          <FilterTeacher value={teacher} options={teacherOptions} onChange={onChangeTeacher} />
+        )}
         <Sorting value={sort} options={SORT_OPTIONS} onChange={onChangeSort} />
       </Box>
     </Stack>

@@ -5,7 +5,7 @@ export const defaultValues = {
   title: "",
   description: "",
   price: 0,
-  duration: 15,
+  duration: 30,
   github_url: "",
   technologies: [],
 };
@@ -25,7 +25,7 @@ export const schema = Yup.object().shape({
   price: Yup.number().required("Cena jest wymagana").min(0, "Cena musi być większa bądź równa 0"),
   duration: Yup.number()
     .required("Czas trwania jest wymagany")
-    .min(30, "Czas trwania musi być większa bądź równa 30 minut")
+    .min(30, "Czas trwania musi być większy bądź równy 30 minut")
     .test(
       "by30minutes",
       "Czas trwania musi być wielokrotnością 30 minut",

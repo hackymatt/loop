@@ -141,15 +141,15 @@ export default function AccountTeachingsTableRow({ row, onView, onAdd, onDelete 
 
         {isNotTeaching && (
           <MenuItem onClick={handleAdd} sx={{ mr: 1, width: "100%", color: "success.main" }}>
-            <Iconify icon="carbon:edit" sx={{ mr: 0.5 }} />
-            <Typography variant="body2">Zacznij</Typography>
+            <Iconify icon="carbon:add" sx={{ mr: 0.5 }} />
+            <Typography variant="body2">Zacznij uczyć</Typography>
           </MenuItem>
         )}
 
         {isTeaching && (
           <MenuItem onClick={handleDelete} sx={{ mr: 1, width: "100%", color: "error.main" }}>
-            <Iconify icon="carbon:trash-can" sx={{ mr: 0.5 }} />
-            <Typography variant="body2">Przestań</Typography>
+            <Iconify icon="carbon:subtract" sx={{ mr: 0.5 }} />
+            <Typography variant="body2">Przestań uczyć</Typography>
           </MenuItem>
         )}
       </Popover>

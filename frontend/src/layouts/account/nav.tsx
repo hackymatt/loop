@@ -93,12 +93,6 @@ const teacherNavigations = [
       icon: <Iconify icon="carbon:review" />,
       children: [],
     },
-    {
-      title: "Zarobki",
-      path: paths.account.teacher.earnings,
-      icon: <Iconify icon="carbon:currency-dollar" />,
-      children: [],
-    },
   ],
 ];
 

@@ -1,8 +1,4 @@
-from django_filters import (
-    FilterSet,
-    OrderingFilter,
-    NumberFilter,
-)
+from django_filters import FilterSet, OrderingFilter, NumberFilter, UUIDFilter
 from review.models import Review
 from profile.models import Profile
 from django.db.models.functions import Concat
@@ -48,6 +44,7 @@ class OrderFilter(OrderingFilter):
 
 
 class LecturerFilter(FilterSet):
+    id = UUIDFilter(field_name="uuid", lookup_expr="exact")
     rating_from = NumberFilter(
         label="Rating powyżej lub równe",
         field_name="rating",
@@ -73,6 +70,7 @@ class LecturerFilter(FilterSet):
     class Meta:
         model = Profile
         fields = (
+            "id",
             "rating_from",
             "sort_by",
         )

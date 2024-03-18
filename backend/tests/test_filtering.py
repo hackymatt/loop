@@ -881,17 +881,21 @@ class ScheduleFilterTest(APITestCase):
             )
 
         self.schedules = []
-        for i in range(10):
+        for i in range(50):
             self.schedules.append(
                 create_schedule(
                     lecturer=self.lecturer_profile_1,
                     start_time=make_aware(
-                        datetime.now().replace(minute=30, second=0, microsecond=0)
-                        + timedelta(minutes=30 * i)
+                        datetime.now().replace(
+                            hour=0, minute=30, second=0, microsecond=0
+                        )
+                        + timedelta(minutes=30 * (i + 10))
                     ),
                     end_time=make_aware(
-                        datetime.now().replace(minute=30, second=0, microsecond=0)
-                        + timedelta(minutes=30 * (i + 1))
+                        datetime.now().replace(
+                            hour=0, minute=30, second=0, microsecond=0
+                        )
+                        + timedelta(minutes=30 * (i + 11))
                     ),
                     lesson=self.lesson_1,
                 )
@@ -900,12 +904,16 @@ class ScheduleFilterTest(APITestCase):
                 create_schedule(
                     lecturer=self.lecturer_profile_2,
                     start_time=make_aware(
-                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        datetime.now().replace(
+                            hour=0, minute=30, second=0, microsecond=0
+                        )
                         + timedelta(minutes=30 * (i + 10))
                     ),
                     end_time=make_aware(
-                        datetime.now().replace(minute=30, second=0, microsecond=0)
-                        + timedelta(minutes=30 * (i + 10))
+                        datetime.now().replace(
+                            hour=0, minute=30, second=0, microsecond=0
+                        )
+                        + timedelta(minutes=30 * (i + 11))
                     ),
                 )
             )
@@ -930,7 +938,7 @@ class ScheduleFilterTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 10)
+        self.assertEqual(count, 50)
 
     def test_lesson_id_filter(self):
         # login
@@ -941,7 +949,7 @@ class ScheduleFilterTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 10)
+        self.assertEqual(count, 50)
 
     def test_lecturer_id_filter(self):
         # login
@@ -954,7 +962,7 @@ class ScheduleFilterTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 10)
+        self.assertEqual(count, 50)
 
     def test_time_from_filter(self):
         # login
@@ -966,7 +974,7 @@ class ScheduleFilterTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 10)
+        self.assertEqual(count, 50)
 
     def test_time_to_filter(self):
         # login
@@ -978,7 +986,7 @@ class ScheduleFilterTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 10)
+        self.assertEqual(count, 37)
 
 
 class LessonPriceHistoryFilterTest(APITestCase):
@@ -1460,6 +1468,18 @@ class LecturerFilterTest(APITestCase):
         data = json.loads(response.content)
         count = data["records_count"]
         self.assertEqual(count, 1)
+
+    def test_id_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}?id={self.lecturer_profile_1.uuid}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        uuids = [record["uuid"] for record in results]
+        self.assertEqual(uuids, [str(self.lecturer_profile_1.uuid)])
 
     def test_rating_filter(self):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
