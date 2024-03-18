@@ -105,6 +105,7 @@ export default function AccountFinanceView() {
           InputProps={{
             startAdornment: <InputAdornment position="start">PL</InputAdornment>,
           }}
+          InputLabelProps={{ shrink: true }}
         />
       </Box>
 

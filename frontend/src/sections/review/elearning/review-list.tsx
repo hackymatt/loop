@@ -9,10 +9,19 @@ import ReviewItem from "./review-item";
 
 type Props = {
   reviews: IReviewItemProp[];
-  pagesCount: number;
+  showTeacher?: boolean;
+  pagesCount?: number;
+  page: number;
+  onPageChange: (selectedPage: number) => void;
 };
 
-export default function ReviewList({ reviews, pagesCount }: Props) {
+export default function ReviewList({
+  reviews,
+  showTeacher = true,
+  pagesCount,
+  page,
+  onPageChange,
+}: Props) {
   return (
     <>
       {reviews?.map((review) => {
@@ -39,6 +48,7 @@ export default function ReviewList({ reviews, pagesCount }: Props) {
               rating={rating}
               lessonTitle={lessonTitle}
               teacherName={teacherName}
+              showTeacher={showTeacher}
             />
           </Box>
         );
@@ -46,7 +56,8 @@ export default function ReviewList({ reviews, pagesCount }: Props) {
 
       {reviews?.length > 0 && (
         <Pagination
-          count={pagesCount}
+          count={pagesCount ?? 0}
+          page={page}
           color="primary"
           sx={{
             mt: 5,
@@ -55,6 +66,7 @@ export default function ReviewList({ reviews, pagesCount }: Props) {
               justifyContent: "center",
             },
           }}
+          onChange={(event, selectedPage: number) => onPageChange(selectedPage)}
         />
       )}
     </>

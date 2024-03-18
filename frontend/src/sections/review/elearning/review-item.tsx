@@ -15,7 +15,7 @@ const AVATAR_SIZE = 64;
 
 const WIDTH = `calc(100% - ${AVATAR_SIZE + 20}px)`;
 
-type IProps = Partial<IReviewItemProp>;
+type IProps = Partial<IReviewItemProp> & { showTeacher?: boolean };
 
 export default function ReviewItem({
   name,
@@ -26,6 +26,7 @@ export default function ReviewItem({
   avatarUrl,
   lessonTitle,
   teacherName,
+  showTeacher = true,
 }: IProps) {
   const genderAvatarUrl =
     gender === "Kobieta"
@@ -72,25 +73,28 @@ export default function ReviewItem({
               {lessonTitle}
             </Typography>
 
-            <Box
-              sx={{
-                width: 4,
-                height: 4,
-                bgcolor: "text.disabled",
-                borderRadius: "50%",
-              }}
-            />
-
-            <Typography
-              variant="body2"
-              sx={{
-                mb: 1,
-                mt: { xs: 1, sm: 0.5 },
-                color: "text.disabled",
-              }}
-            >
-              {teacherName}
-            </Typography>
+            {showTeacher && (
+              <>
+                <Box
+                  sx={{
+                    width: 4,
+                    height: 4,
+                    bgcolor: "text.disabled",
+                    borderRadius: "50%",
+                  }}
+                />
+                <Typography
+                  variant="body2"
+                  sx={{
+                    mb: 1,
+                    mt: { xs: 1, sm: 0.5 },
+                    color: "text.disabled",
+                  }}
+                >
+                  {teacherName}
+                </Typography>
+              </>
+            )}
 
             <Box
               sx={{
