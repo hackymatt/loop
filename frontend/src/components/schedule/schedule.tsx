@@ -14,6 +14,7 @@ const MAX_WIDTH: number = 325 as const;
 
 const TABS_STYLE = {
   "& .MuiTab-root": {
+    color: (theme: Theme) => theme.palette.text.primary,
     "&:not(:last-of-type)": { marginRight: (theme: Theme) => theme.spacing(1) },
   },
 };
@@ -28,7 +29,7 @@ type Props = {
   onDateChange: (value: Date) => void;
   availableTimeSlots: string[];
   currentSlot: string;
-  onSlotChange: (event: React.SyntheticEvent, slot: string) => void;
+  onSlotChange?: (event: React.SyntheticEvent, slot: string) => void;
 };
 
 export default function Schedule({
@@ -93,7 +94,16 @@ export default function Schedule({
             variant="scrollable"
             allowScrollButtonsMobile
             onChange={onSlotChange}
-            sx={TABS_STYLE}
+            sx={
+              onSlotChange
+                ? TABS_STYLE
+                : {
+                    ...TABS_STYLE,
+                    "& .MuiTabs-indicator": {
+                      display: "none",
+                    },
+                  }
+            }
           >
             {availableTimeSlots?.map((ts: string) => <Tab key={ts} value={ts} label={ts} />)}
           </Tabs>
