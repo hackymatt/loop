@@ -2,7 +2,7 @@ from rest_framework.serializers import (
     ModelSerializer,
     SerializerMethodField,
     EmailField,
-    IntegerField,
+    CharField,
     ValidationError,
 )
 from drf_extra_fields.fields import Base64ImageField
@@ -52,7 +52,7 @@ def get_students_count(lessons):
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
     email = EmailField(source="user.email")
-    gender = EmailField(source="get_gender_display")
+    gender = CharField(source="get_gender_display")
     image = Base64ImageField(required=True)
 
     class Meta:

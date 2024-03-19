@@ -1,10 +1,12 @@
 "use client";
 
-import React, { useCallback } from "react";
-import { format, parseISO } from "date-fns";
+import React from "react";
+import { parseISO } from "date-fns";
 
 import { StaticDatePicker } from "@mui/x-date-pickers";
 import { Box, Tab, Tabs, Stack, Theme, Avatar, Typography } from "@mui/material";
+
+import { ITeamMemberProps } from "src/types/team";
 
 // ----------------------------------------------------------------------
 
@@ -18,12 +20,10 @@ const TABS_STYLE = {
 
 // ----------------------------------------------------------------------
 
-type User = { id: number; image: string; name: string };
 type Props = {
-  availableUsers: User[];
-  currentUser: User;
-  onUserChange: (event: React.SyntheticEvent, userId: number) => void;
-  availableDates: string[];
+  availableUsers: ITeamMemberProps[];
+  currentUser: ITeamMemberProps;
+  onUserChange: (event: React.SyntheticEvent, userId: string) => void;
   currentDate: string;
   onDateChange: (value: Date) => void;
   availableTimeSlots: string[];
@@ -35,23 +35,12 @@ export default function Schedule({
   availableUsers,
   currentUser,
   onUserChange,
-  availableDates,
   currentDate,
   onDateChange,
   availableTimeSlots,
   currentSlot,
   onSlotChange,
 }: Props) {
-  const handleDisableDates = useCallback(
-    (date: Date | null) => {
-      if (date) {
-        return !availableDates.includes(format(date, "yyyy-MM-dd"));
-      }
-      return false;
-    },
-    [availableDates],
-  );
-
   return (
     <Stack direction="column" alignItems="center">
       <Box sx={{ maxWidth: MAX_WIDTH }}>
@@ -63,11 +52,11 @@ export default function Schedule({
           onChange={onUserChange}
           sx={TABS_STYLE}
         >
-          {availableUsers?.map((u: User) => (
+          {availableUsers?.map((u: ITeamMemberProps) => (
             <Tab
               key={u.id}
               value={u.id}
-              icon={<Avatar key={u.id} src={u.image} />}
+              icon={<Avatar key={u.id} src={u.avatarUrl} />}
               label={
                 <Typography
                   sx={{
@@ -94,20 +83,23 @@ export default function Schedule({
           }
         }}
         slotProps={{ actionBar: { actions: [] }, toolbar: { hidden: true } }}
-        shouldDisableDate={(value: Date | null) => handleDisableDates(value)}
       />
 
       <Box sx={{ maxWidth: MAX_WIDTH }}>
-        <Tabs
-          value={currentSlot}
-          scrollButtons="auto"
-          variant="scrollable"
-          allowScrollButtonsMobile
-          onChange={onSlotChange}
-          sx={TABS_STYLE}
-        >
-          {availableTimeSlots?.map((ts: string) => <Tab key={ts} value={ts} label={ts} />)}
-        </Tabs>
+        {availableTimeSlots.length > 0 ? (
+          <Tabs
+            value={currentSlot ?? availableTimeSlots[0]}
+            scrollButtons="auto"
+            variant="scrollable"
+            allowScrollButtonsMobile
+            onChange={onSlotChange}
+            sx={TABS_STYLE}
+          >
+            {availableTimeSlots?.map((ts: string) => <Tab key={ts} value={ts} label={ts} />)}
+          </Tabs>
+        ) : (
+          <Typography variant="body2">Brak dostępnych terminów</Typography>
+        )}
       </Box>
     </Stack>
   );

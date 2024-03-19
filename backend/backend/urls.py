@@ -29,12 +29,12 @@ from newsletter.views import (
     NewsletterSubscribeViewSet,
     NewsletterUnsubscribeViewSet,
 )
-from schedule.views import ScheduleViewSet
+from schedule.views import ManageScheduleViewSet, ScheduleViewSet
 from stats.views import StatsViewSet
 from wishlist.views import WishlistViewSet
 from cart.views import CartViewSet
 from purchase.views import PurchaseViewSet
-from teaching.views import TeachingViewSet
+from teaching.views import ManageTeachingViewSet, TeachingViewSet
 from reservation.views import ReservationViewSet
 from csrf.views import CsrfViewSet
 from contact.views import ContactViewSet
@@ -73,7 +73,8 @@ router.register(r"lecturers", LecturerViewSet, basename="lecturers")
 router.register(r"reviews", ReviewViewSet, basename="reviews")
 router.register(r"reviews-stats", ReviewStatsViewSet, basename="reviews-stats")
 router.register(r"best-reviews", BestReviewViewSet, basename="best_reviews")
-router.register(r"schedules", ScheduleViewSet, basename="schedules")
+router.register(r"schedules", ManageScheduleViewSet, basename="schedules")
+router.register(r"lesson-schedules", ScheduleViewSet, basename="lesson_schedules")
 router.register(r"newsletter", NewsletterEntriesViewSet, basename="newsletter")
 router.register(
     r"newsletter-subscribe", NewsletterSubscribeViewSet, basename="newsletter_subscribe"
@@ -81,7 +82,8 @@ router.register(
 router.register(r"wishlist", WishlistViewSet, basename="wishlist")
 router.register(r"cart", CartViewSet, basename="cart")
 router.register(r"purchase", PurchaseViewSet, basename="purchase")
-router.register(r"teaching", TeachingViewSet, basename="teaching")
+router.register(r"teaching", ManageTeachingViewSet, basename="teaching")
+router.register(r"lesson-lecturers", TeachingViewSet, basename="lesson_lecturers")
 router.register(r"reservation", ReservationViewSet, basename="reservation")
 
 

@@ -237,7 +237,7 @@ class TopicSerializer(ModelSerializer):
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
     email = EmailField(source="user.email")
-    gender = EmailField(source="get_gender_display")
+    gender = CharField(source="get_gender_display")
     image = Base64ImageField(required=True)
 
     class Meta:
@@ -257,7 +257,7 @@ class LecturerSerializer(ModelSerializer):
 class LecturerDetailsSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
     email = EmailField(source="user.email")
-    gender = EmailField(source="get_gender_display")
+    gender = CharField(source="get_gender_display")
     rating = SerializerMethodField("get_user_rating")
     rating_count = SerializerMethodField("get_lecturer_rating_count")
     lessons_count = SerializerMethodField("get_lessons_count")

@@ -13,7 +13,7 @@ class LessonSerializer(ModelSerializer):
         )
 
 
-class ScheduleGetSerializer(ModelSerializer):
+class ManageScheduleGetSerializer(ModelSerializer):
     lesson = LessonSerializer()
 
     class Meta:
@@ -25,7 +25,7 @@ class ScheduleGetSerializer(ModelSerializer):
         )
 
 
-class ScheduleSerializer(ModelSerializer):
+class ManageScheduleSerializer(ModelSerializer):
     class Meta:
         model = Schedule
         exclude = (
@@ -38,3 +38,13 @@ class ScheduleSerializer(ModelSerializer):
         lecturer = Profile.objects.get(user=user)
 
         return Schedule.objects.create(lecturer=lecturer, **validated_data)
+
+class ScheduleSerializer(ModelSerializer):
+    class Meta:
+        model = Schedule
+        exclude = (
+            "lesson",
+            "lecturer",
+            "modified_at",
+            "created_at",
+        )

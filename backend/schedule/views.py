@@ -1,24 +1,22 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from utils.permissions.permissions import IsLecturer
-from schedule.serializers import ScheduleSerializer, ScheduleGetSerializer
+from schedule.serializers import ManageScheduleSerializer, ManageScheduleGetSerializer, ScheduleSerializer
 from schedule.filters import ScheduleFilter
 from schedule.models import Schedule
 from profile.models import Profile
 
 
-class ScheduleViewSet(ModelViewSet):
+class ManageScheduleViewSet(ModelViewSet):
     http_method_names = ["get", "post", "delete"]
     queryset = Schedule.objects.all()
-    serializer_class = ScheduleSerializer
+    serializer_class = ManageScheduleSerializer
     filterset_class = ScheduleFilter
     permission_classes = [IsAuthenticated, IsLecturer]
 
     def get_serializer_class(self):
         if self.action == "list":
-            return ScheduleGetSerializer
+            return ManageScheduleGetSerializer
         else:
             return self.serializer_class
 
@@ -33,3 +31,11 @@ class ScheduleViewSet(ModelViewSet):
         user = self.request.user
         lecturer = Profile.objects.get(user=user)
         return self.queryset.filter(lecturer=lecturer)
+
+
+class ScheduleViewSet(ModelViewSet):
+    http_method_names = ["get"]
+    queryset = Schedule.objects.all()
+    serializer_class = ScheduleSerializer
+    filterset_class = ScheduleFilter
+    permission_classes = [AllowAny]

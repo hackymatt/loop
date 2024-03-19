@@ -25,6 +25,7 @@ class ScheduleFilter(FilterSet):
     reserved = BooleanFilter(field_name="lesson", method="filter_reserved")
     lesson_id = NumberFilter(field_name="lesson__id", lookup_expr="exact")
     lecturer_id = UUIDFilter(field_name="lecturer__uuid", lookup_expr="exact")
+    time = DateFilter(field_name="start_time", lookup_expr="contains")
     time_from = DateFilter(field_name="start_time", lookup_expr="gte")
     time_to = DateFilter(field_name="end_time", lookup_expr="lte")
     sort_by = OrderFilter(
@@ -44,6 +45,7 @@ class ScheduleFilter(FilterSet):
             "reserved",
             "lesson_id",
             "lecturer_id",
+            "time",
             "time_from",
             "time_to",
             "sort_by",

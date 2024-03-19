@@ -1,5 +1,6 @@
 from rest_framework.serializers import (
     ModelSerializer,
+    CharField,
     EmailField,
     SerializerMethodField,
 )
@@ -19,7 +20,7 @@ def get_lessons(lecturer):
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
-    gender = EmailField(source="get_gender_display")
+    gender = CharField(source="get_gender_display")
     email = EmailField(source="user.email")
     rating = SerializerMethodField("get_lecturer_rating")
     rating_count = SerializerMethodField("get_lecturer_rating_count")
@@ -54,7 +55,7 @@ class LecturerSerializer(ModelSerializer):
 
 class BestLecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
-    gender = EmailField(source="get_gender_display")
+    gender = CharField(source="get_gender_display")
 
     class Meta:
         model = Profile
