@@ -41,9 +41,9 @@ const TABS = [
 ];
 
 const TABLE_HEAD = [
-  { id: "course_title", label: "Nazwa kursu" },
-  { id: "lesson_title", label: "Nazwa lekcji" },
+  { id: "lesson_title", label: "Nazwa lekcji", minWidth: 250 },
   { id: "lesson_status", label: "Status" },
+  { id: "reservation_date", label: "Termin" },
   { id: "lecturer_uuid", label: "Instruktor" },
   { id: "created_at", label: "Data zakupu" },
   { id: "" },
@@ -60,6 +60,8 @@ export default function AccountLessonsPage() {
 
   const { data: pagesCount } = usePurchasePageCount(filters);
   const { data: lessons } = usePurchase(filters);
+
+  console.log(lessons);
 
   const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: 1000 });
 

@@ -9,10 +9,12 @@ import AccordionSummary, { accordionSummaryClasses } from "@mui/material/Accordi
 import { fCurrency, fShortenNumber } from "src/utils/format-number";
 
 import Iconify from "src/components/iconify";
+import Schedule from "src/components/schedule";
 
 import { ICourseLessonProp } from "src/types/course";
 
 import Repository from "../repository/repository";
+import { useMemo, useState } from "react";
 
 // ----------------------------------------------------------------------
 
@@ -22,6 +24,47 @@ type LessonItemProps = {
   expanded: boolean;
   onExpanded: (event: React.SyntheticEvent, isExpanded: boolean) => void;
   loading: boolean;
+};
+
+const Test = () => {
+  const DEFAULT_USER = useMemo(() => ({ id: 1, image: "", name: "Wszyscy" }), []);
+  const users = useMemo(
+    () => [
+      DEFAULT_USER,
+      { id: 2, image: "/assets/images/avatar/avatar_female.jpg", name: "Mateusz" },
+      { id: 3, image: "/assets/images/avatar/avatar_female.jpg", name: "Mateusz" },
+      { id: 4, image: "/assets/images/avatar/avatar_female.jpg", name: "Mateusz" },
+      { id: 5, image: "/assets/images/avatar/avatar_female.jpg", name: "Mateusz" },
+      { id: 6, image: "/assets/images/avatar/avatar_female.jpg", name: "Mateusz" },
+      { id: 7, image: "/assets/images/avatar/avatar_female.jpg", name: "Mateusz" },
+      { id: 8, image: "/assets/images/avatar/avatar_female.jpg", name: "Mateusz" },
+      { id: 9, image: "/assets/images/avatar/avatar_female.jpg", name: "Mateusz" },
+      { id: 10, image: "/assets/images/avatar/avatar_female.jpg", name: "Mateusz" },
+    ],
+    [DEFAULT_USER],
+  );
+
+  const dates = ["2024-03-18", "2024-03-19", "2024-03-20"];
+
+  const slots = ["08:00", "09:00", "14:00", "18:00"];
+
+  const [user, setUser] = useState(users[0]);
+  const [date, setDate] = useState(dates[0]);
+  const [slot, setSlot] = useState(slots[0]);
+
+  return (
+    <Schedule
+      availableUsers={users}
+      currentUser={user}
+      onUserChange={(event, userId) => setUser(users.find((u) => u.id === userId)!)}
+      availableDates={dates}
+      currentDate={date}
+      onDateChange={(selectedDate) => setDate(selectedDate)}
+      availableTimeSlots={slots}
+      currentSlot={slot}
+      onSlotChange={(event, selectedSlot) => setSlot(selectedSlot)}
+    />
+  );
 };
 
 export default function CourseDetailsLessonItem({
@@ -218,6 +261,7 @@ export default function CourseDetailsLessonItem({
               <Button variant="text" size="large" color="info">
                 Sprawdź terminy
               </Button>
+              <Test />
 
               <Button
                 size="large"

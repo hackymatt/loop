@@ -19,11 +19,6 @@ type ILecturer = {
   image: string | null;
 };
 
-type ICourse = {
-  id: number;
-  title: string;
-};
-
 type ILesson = {
   id: number;
   title: string;
@@ -37,9 +32,9 @@ type IReview = {
 
 type IPurchase = {
   id: number;
-  course: ICourse;
   lesson: ILesson;
   lesson_status: ILessonStatus;
+  reservation_date: string | null;
   lecturer: ILecturer | null;
   review_status: IReviewStatus;
   review: IReview | null;
@@ -58,21 +53,20 @@ export const purchaseQuery = (query?: IQueryParams) => {
     const modifiedResults = results.map(
       ({
         id,
-        course,
         lesson,
         lesson_status,
+        reservation_date,
         lecturer,
         review_status,
         review,
         created_at,
       }: IPurchase) => {
-        const { title: courseTitle } = course;
         const { title: lessonTitle } = lesson;
         return {
           id,
-          courseTitle,
           lessonTitle,
           lessonStatus: lesson_status,
+          lessonSlot: reservation_date,
           teacher: lecturer
             ? {
                 id: lecturer.uuid,

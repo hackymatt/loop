@@ -20,9 +20,9 @@ export type IReviewStatus = keyof typeof ReviewStatus;
 
 export type IPurchaseItemProp = {
   id: string;
-  courseTitle: string;
   lessonTitle: string;
   lessonStatus: ILessonStatus;
+  lessonSlot: string;
   teacher: ITeamMemberProps;
   reviewStatus: IReviewStatus;
   ratingNumber: number;

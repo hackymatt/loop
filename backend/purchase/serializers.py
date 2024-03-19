@@ -91,6 +91,7 @@ class ReviewSerializer(ModelSerializer):
 class PurchaseGetSerializer(ModelSerializer):
     lesson = LessonSerializer()
     lesson_status = SerializerMethodField("get_lesson_status")
+    reservation_date = SerializerMethodField("get_reservation_date")
     lecturer = SerializerMethodField("get_lecturer")
     review_status = SerializerMethodField("get_review_status")
     review = SerializerMethodField("get_review_details")
@@ -127,6 +128,14 @@ class PurchaseGetSerializer(ModelSerializer):
         else:
             return ReviewStatus.NONE
 
+    def get_reservation_date(self, purchase):
+        reservation = get_reservation(purchase=purchase)
+
+        if reservation.exists():
+            return reservation.first().schedule.start_time
+        else:
+            return None
+        
     def get_lecturer(self, purchase):
         reservation = get_reservation(purchase=purchase)
 

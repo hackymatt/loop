@@ -14,13 +14,13 @@ export function fDate(date: InputValue, newFormat?: string) {
 export function fTime(date: InputValue, newFormat?: string) {
   const fm = newFormat || "p";
 
-  return date ? format(new Date(date), fm) : "";
+  return date ? format(new Date(date), fm, { locale: pl }) : "";
 }
 
 export function fDateTime(date: InputValue, newFormat?: string) {
   const fm = newFormat || "dd MMM yyyy p";
 
-  return date ? format(new Date(date), fm) : "";
+  return date ? format(new Date(date), fm, { locale: pl }) : "";
 }
 
 export function fTimestamp(date: InputValue) {
