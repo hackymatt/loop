@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 import { LoadingButton } from "@mui/lab";
 import {
@@ -31,8 +31,8 @@ const DEFAULT_USER = { id: "", avatarUrl: "", name: "Wszyscy" } as const;
 
 // ----------------------------------------------------------------------
 
-export default function NewReservationForm({ purchase, onClose, ...other }: Props) {
-  const { data: lessonLecturers } = useLessonLecturers({
+export default function AddReservationForm({ purchase, onClose, ...other }: Props) {
+  const { data: lessonLecturers, isLoading: isLoadingUsers } = useLessonLecturers({
     lesson_id: purchase?.id,
     page_size: 1000,
   });
@@ -57,7 +57,7 @@ export default function NewReservationForm({ purchase, onClose, ...other }: Prop
   const [user, setUser] = useState<ITeamMemberProps>(DEFAULT_USER);
   const [date, setDate] = useState<string>(format(new Date(), "yyyy-MM-dd"));
 
-  const { data: lessonSchedules } = useLessonSchedules({
+  const { data: lessonSchedules, isLoading: isLoadingTimeSlots } = useLessonSchedules({
     lecturer_id: user.id,
     lesson_id: purchase?.id,
     time: date,
@@ -76,12 +76,20 @@ export default function NewReservationForm({ purchase, onClose, ...other }: Prop
 
   const [slot, setSlot] = useState<string>(slots?.[0]);
 
+  useEffect(() => {
+    if (slots) {
+      setSlot(slots[0]);
+    }
+  }, [slots]);
+
   const handleSubmit = async () => {
-    const startTime = `${date}T${slot}:00Z`;
-    const schedule = lessonSchedules.find(
-      (lessonSchedule: IScheduleProp) => lessonSchedule.startTime === startTime,
-    );
-    console.log(schedule);
+    if (date && slot) {
+      const startTime = `${date}T${slot}:00Z`;
+      const schedule = lessonSchedules.find(
+        (lessonSchedule: IScheduleProp) => lessonSchedule.startTime === startTime,
+      );
+      console.log(schedule);
+    }
   };
 
   return (
@@ -98,14 +106,22 @@ export default function NewReservationForm({ purchase, onClose, ...other }: Prop
           availableTimeSlots={slots ?? []}
           currentSlot={slot}
           onSlotChange={(event, selectedSlot) => setSlot(selectedSlot)}
+          isLoadingUsers={isLoadingUsers}
+          isLoadingTimeSlots={isLoadingTimeSlots}
         />
       </DialogContent>
 
       <DialogActions>
         <Button variant="outlined" onClick={onClose} color="inherit">
-          Zamknij
+          Anuluj
         </Button>
-        <LoadingButton color="success" type="submit" variant="contained" onClick={handleSubmit}>
+        <LoadingButton
+          color="success"
+          type="submit"
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={!slot}
+        >
           Zarezerwuj
         </LoadingButton>
       </DialogActions>

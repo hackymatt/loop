@@ -4,7 +4,7 @@ import React from "react";
 import { parseISO } from "date-fns";
 
 import { StaticDatePicker } from "@mui/x-date-pickers";
-import { Box, Tab, Tabs, Stack, Theme, Avatar, Typography } from "@mui/material";
+import { Box, Tab, Tabs, Stack, Theme, Avatar, Typography, CircularProgress } from "@mui/material";
 
 import { ITeamMemberProps } from "src/types/team";
 
@@ -30,6 +30,8 @@ type Props = {
   availableTimeSlots: string[];
   currentSlot: string;
   onSlotChange?: (event: React.SyntheticEvent, slot: string) => void;
+  isLoadingUsers?: boolean;
+  isLoadingTimeSlots?: boolean;
 };
 
 export default function Schedule({
@@ -41,38 +43,44 @@ export default function Schedule({
   availableTimeSlots,
   currentSlot,
   onSlotChange,
+  isLoadingUsers,
+  isLoadingTimeSlots,
 }: Props) {
   return (
     <Stack direction="column" alignItems="center">
       <Box sx={{ maxWidth: MAX_WIDTH }}>
-        <Tabs
-          value={currentUser?.id ?? ""}
-          scrollButtons="auto"
-          variant="scrollable"
-          allowScrollButtonsMobile
-          onChange={onUserChange}
-          sx={TABS_STYLE}
-        >
-          {availableUsers?.map((u: ITeamMemberProps) => (
-            <Tab
-              key={u.id}
-              value={u.id}
-              icon={<Avatar key={u.id} src={u.avatarUrl} />}
-              label={
-                <Typography
-                  sx={{
-                    fontSize: 12,
-                    maxWidth: 50,
-                    overflow: "hidden",
-                  }}
-                >
-                  {u.name}
-                </Typography>
-              }
-              iconPosition="top"
-            />
-          ))}
-        </Tabs>
+        {isLoadingUsers ? (
+          <CircularProgress size={20} />
+        ) : (
+          <Tabs
+            value={currentUser?.id ?? ""}
+            scrollButtons="auto"
+            variant="scrollable"
+            allowScrollButtonsMobile
+            onChange={onUserChange}
+            sx={TABS_STYLE}
+          >
+            {availableUsers?.map((u: ITeamMemberProps) => (
+              <Tab
+                key={u.id}
+                value={u.id}
+                icon={<Avatar key={u.id} src={u.avatarUrl} />}
+                label={
+                  <Typography
+                    sx={{
+                      fontSize: 12,
+                      maxWidth: 50,
+                      overflow: "hidden",
+                    }}
+                  >
+                    {u.name}
+                  </Typography>
+                }
+                iconPosition="top"
+              />
+            ))}
+          </Tabs>
+        )}
       </Box>
       <StaticDatePicker
         defaultValue={parseISO(currentDate)}
@@ -87,7 +95,9 @@ export default function Schedule({
       />
 
       <Box sx={{ maxWidth: MAX_WIDTH }}>
-        {availableTimeSlots.length > 0 ? (
+        {isLoadingTimeSlots ? (
+          <CircularProgress size={20} />
+        ) : (
           <Tabs
             value={currentSlot ?? availableTimeSlots[0]}
             scrollButtons="auto"
@@ -105,10 +115,12 @@ export default function Schedule({
                   }
             }
           >
-            {availableTimeSlots?.map((ts: string) => <Tab key={ts} value={ts} label={ts} />)}
+            {availableTimeSlots.length > 0 ? (
+              availableTimeSlots?.map((ts: string) => <Tab key={ts} value={ts} label={ts} />)
+            ) : (
+              <Typography variant="body2">Brak dostępnych terminów</Typography>
+            )}
           </Tabs>
-        ) : (
-          <Typography variant="body2">Brak dostępnych terminów</Typography>
         )}
       </Box>
     </Stack>
