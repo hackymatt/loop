@@ -988,6 +988,29 @@ class ScheduleFilterTest(APITestCase):
         count = data["records_count"]
         self.assertEqual(count, 37)
 
+    def test_time_filter(self):
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        time = str(self.schedules[len(self.schedules) - 1].start_time)[0:10]
+        response = self.client.get(f"{self.endpoint}?time={time}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 13)
+
+    def test_duration_filter(self):
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}?duration=60")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 49)
+
 
 class LessonPriceHistoryFilterTest(APITestCase):
     def setUp(self):

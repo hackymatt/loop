@@ -8,7 +8,6 @@ from django_filters import (
 )
 from schedule.models import Schedule
 from django.db.models.expressions import RawSQL
-from django.db.models import Subquery
 
 
 def get_duration(queryset):
@@ -74,7 +73,11 @@ class OrderFilter(OrderingFilter):
 
 class ScheduleFilter(FilterSet):
     reserved = BooleanFilter(field_name="lesson", method="filter_reserved")
-    lesson_id = NumberFilter(field_name="lesson__id", lookup_expr="exact")
+    lesson_id = NumberFilter(
+        label="Lesson Id",
+        field_name="lesson",
+        method="filter_lesson",
+    )
     lecturer_id = UUIDFilter(field_name="lecturer__uuid", lookup_expr="exact")
     time = DateFilter(field_name="start_time", lookup_expr="contains")
     time_from = DateFilter(field_name="start_time", lookup_expr="gte")
@@ -108,11 +111,16 @@ class ScheduleFilter(FilterSet):
             "sort_by",
         )
 
+    def filter_lesson(self, queryset, field_name, value):
+        lookup_field_name = "__".join([field_name, "isnull"])
+        lesson_records = queryset.filter(**{field_name: value})
+        empty_records = queryset.filter(**{lookup_field_name: True})
+        return lesson_records | empty_records
+
     def filter_reserved(self, queryset, field_name, value):
         lookup_field_name = "__".join([field_name, "isnull"])
         return queryset.exclude(**{lookup_field_name: value})
 
     def filter_duration(self, queryset, field_name, value):
         lookup_field_name = f"{field_name}__gte"
-        print(get_duration(queryset).values())
         return get_duration(queryset).filter(**{lookup_field_name: value})

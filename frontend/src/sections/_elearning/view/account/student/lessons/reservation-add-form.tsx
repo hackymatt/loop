@@ -58,7 +58,10 @@ export default function AddReservationForm({ purchase, onClose, ...other }: Prop
   const [date, setDate] = useState<string>(format(new Date(), "yyyy-MM-dd"));
 
   const { data: lessonSchedules, isLoading: isLoadingTimeSlots } = useLessonSchedules({
-    filters: `(duration=${purchase.lessonDuration})&(time=${date})&(lecturer_id=${user.id})&(reserved=False)|(lesson_id=${purchase.id})`,
+    lecturer_id: user.id,
+    lesson_id: purchase?.id,
+    duration: purchase?.lessonDuration,
+    time: date,
     page_size: 48,
   });
 

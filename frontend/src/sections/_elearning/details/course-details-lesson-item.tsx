@@ -82,9 +82,10 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
   const [date, setDate] = useState<string>(format(new Date(), "yyyy-MM-dd"));
 
   const { data: lessonSchedules, isLoading: isLoadingTimeSlots } = useLessonSchedules({
-    filters: `(duration=${lesson?.duration ?? ""})&(time=${date})&(lecturer_id=${
-      user.id
-    })&(reserved=False)|(lesson_id=${lesson?.id ?? ""})`,
+    lecturer_id: user.id,
+    lesson_id: lesson?.id,
+    duration: lesson?.duration,
+    time: date,
     page_size: 48,
   });
 
