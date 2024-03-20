@@ -62,6 +62,7 @@ export default function AddReservationForm({ purchase, onClose, ...other }: Prop
     lesson_id: purchase?.id,
     duration: purchase?.lessonDuration,
     time: date,
+    sort_by: "start_time",
     page_size: 48,
   });
 

@@ -86,6 +86,7 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
     lesson_id: lesson?.id,
     duration: lesson?.duration,
     time: date,
+    sort_by: "start_time",
     page_size: 48,
   });
 
