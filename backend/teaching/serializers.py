@@ -70,8 +70,10 @@ class LecturerSerializer(ModelSerializer):
             "image",
         )
 
+
 class TeachingSerializer(ModelSerializer):
     lecturer = LecturerSerializer()
+
     class Meta:
         model = Teaching
         exclude = (

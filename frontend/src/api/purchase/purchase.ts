@@ -22,6 +22,7 @@ type ILecturer = {
 type ILesson = {
   id: number;
   title: string;
+  duration: number;
 };
 
 type IReview = {
@@ -61,10 +62,11 @@ export const purchaseQuery = (query?: IQueryParams) => {
         review,
         created_at,
       }: IPurchase) => {
-        const { title: lessonTitle } = lesson;
+        const { title: lessonTitle, duration } = lesson;
         return {
           id,
           lessonTitle,
+          lessonDuration: duration,
           lessonStatus: lesson_status,
           lessonSlot: reservation_date,
           teacher: lecturer

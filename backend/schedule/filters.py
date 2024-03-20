@@ -5,9 +5,60 @@ from django_filters import (
     UUIDFilter,
     DateFilter,
     BooleanFilter,
-    CharFilter,
 )
 from schedule.models import Schedule
+from django.db.models.expressions import RawSQL
+from django.db.models import Subquery
+
+
+def get_duration(queryset):
+    total_duration = RawSQL(
+        """
+SELECT EXTRACT(EPOCH FROM (islandenddate - start_time)) / 60 AS difference
+ FROM ( SELECT
+ id,
+ lecturer_id,
+ start_time,
+ end_time,
+ SUM (CASE WHEN Grouping.PreviousEndDate >= start_time THEN 0 ELSE 1 END) OVER (ORDER BY Grouping.RN) AS IslandId
+FROM
+ (SELECT
+  ROW_NUMBER () OVER (ORDER BY lecturer_id, start_time, end_time) AS RN,
+  ID,
+  lecturer_id,
+  start_time,
+  end_time,
+  MAX(end_time) OVER (PARTITION BY lecturer_id ORDER BY start_time, end_time ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS PreviousEndDate
+FROM
+  schedule) Grouping) AS original LEFT JOIN ( SELECT
+  IslandId,
+  MAX (end_time) AS IslandEndDate
+ FROM
+  (SELECT
+ *,
+ CASE WHEN Grouping.PreviousEndDate >= start_time THEN 0 ELSE 1 END AS IslandStartInd,
+ SUM (CASE WHEN Grouping.PreviousEndDate >= start_time THEN 0 ELSE 1 END) OVER (ORDER BY Grouping.RN) AS IslandId
+FROM
+ (SELECT
+  ROW_NUMBER () OVER (ORDER BY lecturer_id, start_time, end_time) AS RN,
+  lecturer_id,
+  start_time,
+  end_time,
+  MAX(end_time) OVER (PARTITION BY lecturer_id ORDER BY start_time, end_time ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS PreviousEndDate
+FROM
+  schedule) Grouping
+  ) Islands
+ GROUP BY
+  lecturer_id,
+  IslandId
+ ORDER BY
+  IslandId) AS islands 
+  ON original.IslandId = islands.IslandId
+  WHERE id = ("schedule"."id")""",
+        (),
+    )
+
+    return queryset.annotate(duration=total_duration)
 
 
 class OrderFilter(OrderingFilter):
@@ -28,6 +79,11 @@ class ScheduleFilter(FilterSet):
     time = DateFilter(field_name="start_time", lookup_expr="contains")
     time_from = DateFilter(field_name="start_time", lookup_expr="gte")
     time_to = DateFilter(field_name="end_time", lookup_expr="lte")
+    duration = NumberFilter(
+        label="Lesson duration",
+        field_name="duration",
+        method="filter_duration",
+    )
     sort_by = OrderFilter(
         choices=(
             ("start_time", "Start Time ASC"),
@@ -45,12 +101,18 @@ class ScheduleFilter(FilterSet):
             "reserved",
             "lesson_id",
             "lecturer_id",
+            "duration",
             "time",
             "time_from",
             "time_to",
             "sort_by",
         )
 
-    def filter_reserved(self, queryset, name, value):
-        lookup = "__".join([name, "isnull"])
-        return queryset.exclude(**{lookup: value})
+    def filter_reserved(self, queryset, field_name, value):
+        lookup_field_name = "__".join([field_name, "isnull"])
+        return queryset.exclude(**{lookup_field_name: value})
+
+    def filter_duration(self, queryset, field_name, value):
+        lookup_field_name = f"{field_name}__gte"
+        print(get_duration(queryset).values())
+        return get_duration(queryset).filter(**{lookup_field_name: value})

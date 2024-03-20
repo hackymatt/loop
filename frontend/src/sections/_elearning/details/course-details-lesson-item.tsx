@@ -56,7 +56,10 @@ const DEFAULT_USER = { id: "", avatarUrl: "", name: "Wszyscy" } as const;
 // ----------------------------------------------------------------------
 
 function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
-  const { data: lessonLecturers } = useLessonLecturers({ lesson_id: lesson?.id, page_size: 1000 });
+  const { data: lessonLecturers, isLoading: isLoadingUsers } = useLessonLecturers({
+    lesson_id: lesson?.id,
+    page_size: 1000,
+  });
 
   const users = useMemo(
     () =>
@@ -78,10 +81,10 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
   const [user, setUser] = useState<ITeamMemberProps>(DEFAULT_USER);
   const [date, setDate] = useState<string>(format(new Date(), "yyyy-MM-dd"));
 
-  const { data: lessonSchedules } = useLessonSchedules({
-    lecturer_id: user.id,
-    lesson_id: lesson?.id,
-    time: date,
+  const { data: lessonSchedules, isLoading: isLoadingTimeSlots } = useLessonSchedules({
+    filters: `(duration=${lesson?.duration ?? ""})&(time=${date})&(lecturer_id=${
+      user.id
+    })&(reserved=False)|(lesson_id=${lesson?.id ?? ""})`,
     page_size: 48,
   });
 
@@ -108,6 +111,8 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
           onDateChange={(selectedDate) => setDate(format(selectedDate, "yyyy-MM-dd"))}
           availableTimeSlots={slots ?? []}
           currentSlot={slots?.[0]}
+          isLoadingUsers={isLoadingUsers}
+          isLoadingTimeSlots={isLoadingTimeSlots}
         />
       </DialogContent>
 

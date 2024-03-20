@@ -1,7 +1,11 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from utils.permissions.permissions import IsLecturer
-from schedule.serializers import ManageScheduleSerializer, ManageScheduleGetSerializer, ScheduleSerializer
+from schedule.serializers import (
+    ManageScheduleSerializer,
+    ManageScheduleGetSerializer,
+    ScheduleSerializer,
+)
 from schedule.filters import ScheduleFilter
 from schedule.models import Schedule
 from profile.models import Profile

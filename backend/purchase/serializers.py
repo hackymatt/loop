@@ -48,8 +48,10 @@ class LessonSerializer(ModelSerializer):
     class Meta:
         model = Lesson
         exclude = (
+            "github_url",
+            "active",
+            "technologies",
             "description",
-            "duration",
             "price",
             "modified_at",
             "created_at",
@@ -135,7 +137,7 @@ class PurchaseGetSerializer(ModelSerializer):
             return reservation.first().schedule.start_time
         else:
             return None
-        
+
     def get_lecturer(self, purchase):
         reservation = get_reservation(purchase=purchase)
 

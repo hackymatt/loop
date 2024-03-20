@@ -21,6 +21,7 @@ export type IReviewStatus = keyof typeof ReviewStatus;
 export type IPurchaseItemProp = {
   id: string;
   lessonTitle: string;
+  lessonDuration: number;
   lessonStatus: ILessonStatus;
   lessonSlot: string;
   teacher: ITeamMemberProps;

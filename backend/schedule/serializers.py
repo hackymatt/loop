@@ -39,6 +39,7 @@ class ManageScheduleSerializer(ModelSerializer):
 
         return Schedule.objects.create(lecturer=lecturer, **validated_data)
 
+
 class ScheduleSerializer(ModelSerializer):
     class Meta:
         model = Schedule

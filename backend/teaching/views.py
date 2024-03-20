@@ -1,7 +1,11 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from utils.permissions.permissions import IsLecturer
-from teaching.serializers import ManageTeachingSerializer, ManageTeachingGetSerializer, TeachingSerializer
+from teaching.serializers import (
+    ManageTeachingSerializer,
+    ManageTeachingGetSerializer,
+    TeachingSerializer,
+)
 from teaching.filters import ManageTeachingFilter, get_teaching, TeachingFilter
 from lesson.models import Lesson
 from teaching.models import Teaching
@@ -34,6 +38,7 @@ class ManageTeachingViewSet(ModelViewSet):
             return ManageTeachingSerializer
         else:
             return self.serializer_class
+
 
 class TeachingViewSet(ModelViewSet):
     http_method_names = ["get"]

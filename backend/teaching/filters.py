@@ -106,6 +106,4 @@ class TeachingFilter(FilterSet):
 
     class Meta:
         model = Teaching
-        fields = (
-            "lesson_id",
-        )
+        fields = ("lesson_id",)
