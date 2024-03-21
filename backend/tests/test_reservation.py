@@ -15,6 +15,9 @@ from .factory import (
 )
 from .helpers import (
     login,
+    get_schedule,
+    schedule_number,
+    is_schedule_found,
     reservation_number,
     is_reservation_found,
 )
@@ -153,16 +156,105 @@ class ReservationTest(APITestCase):
                 )
             )
 
+        self.schedules.append(
+            create_schedule(
+                lecturer=self.lecturer_profile,
+                start_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * 100)
+                ),
+                end_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * (100 + 1))
+                ),
+            )
+        )
+
+        self.schedules.append(
+            create_schedule(
+                lecturer=self.lecturer_profile,
+                start_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * 102)
+                ),
+                end_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * (102 + 1))
+                ),
+            )
+        )
+
+        self.schedules.append(
+            create_schedule(
+                lecturer=self.lecturer_profile,
+                start_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * 103)
+                ),
+                end_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * (103 + 1))
+                ),
+            )
+        )
+        self.long_timeslot = create_schedule(
+            lecturer=self.lecturer_profile,
+            start_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 50)
+            ),
+            end_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 53)
+            ),
+            lesson=self.lesson_1,
+        )
+        self.long_timeslot_2 = create_schedule(
+            lecturer=self.lecturer_profile,
+            start_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 30)
+            ),
+            end_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 33)
+            ),
+            lesson=self.lesson_1,
+        )
+
         self.reservation_1 = create_reservation(
             student=self.profile_1,
             lesson=self.lesson_1,
             schedule=self.schedules[0],
         )
+        self.schedules[0].lesson = self.lesson_1
+        self.schedules[0].save()
         self.reservation_2 = create_reservation(
-            student=self.profile_1,
-            lesson=self.lesson_3,
-            schedule=self.schedules[1],
+            student=self.profile_2,
+            lesson=self.lesson_2,
+            schedule=self.schedules[2],
         )
+        self.schedules[2].lesson = self.lesson_2
+        self.schedules[2].save()
+        self.reservation_3 = create_reservation(
+            student=self.profile_2,
+            lesson=self.lesson_1,
+            schedule=self.schedules[0],
+        )
+        self.reservation_4 = create_reservation(
+            student=self.profile_1,
+            lesson=self.lesson_2,
+            schedule=self.schedules[6],
+        )
+        self.schedules[6].lesson = self.lesson_2
+        self.schedules[6].save()
+        self.reservation_5 = create_reservation(
+            student=self.profile_1,
+            lesson=self.lesson_1,
+            schedule=self.long_timeslot_2,
+        )
+        self.long_timeslot_2.lesson = self.lesson_1
+        self.long_timeslot_2.save()
 
     def test_get_reservation_unauthenticated(self):
         # no login
@@ -180,7 +272,7 @@ class ReservationTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 2)
+        self.assertEqual(count, 3)
 
     def test_create_reservation_unauthenticated(self):
         # no login
@@ -192,7 +284,7 @@ class ReservationTest(APITestCase):
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(reservation_number(), 2)
+        self.assertEqual(reservation_number(), 5)
 
     def test_create_reservation_authenticated_not_purchased(self):
         # login
@@ -205,7 +297,7 @@ class ReservationTest(APITestCase):
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(reservation_number(), 2)
+        self.assertEqual(reservation_number(), 5)
 
     def test_create_reservation_authenticated_time_not_available(self):
         # login
@@ -213,25 +305,87 @@ class ReservationTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
-            "lesson": self.lesson_2.id,
-            "schedule": self.schedules[1].id,
+            "lesson": self.lesson_1.id,
+            "schedule": self.schedules[len(self.schedules) - 3].id,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(reservation_number(), 2)
+        self.assertEqual(reservation_number(), 5)
 
-    def test_create_reservation_authenticated(self):
+    def test_create_reservation_authenticated_first_reservation_single_slot(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
             "lesson": self.lesson_2.id,
+            "schedule": self.schedules[len(self.schedules) - 1].id,
+        }
+        response = self.client.post(self.endpoint, data)
+        data = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(reservation_number(), 6)
+        self.assertEqual(data["lesson"], self.lesson_2.id)
+        self.assertEqual(data["schedule"], self.schedules[len(self.schedules) - 1].id)
+        self.assertEqual(
+            get_schedule(self.schedules[len(self.schedules) - 1].id).lesson,
+            self.lesson_2,
+        )
+        self.assertEqual(schedule_number(), 15)
+
+    def test_create_reservation_authenticated_other_reservation_single_slot(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "lesson": self.lesson_2.id,
+            "schedule": self.schedules[2].id,
+        }
+        response = self.client.post(self.endpoint, data)
+        data = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(reservation_number(), 6)
+        self.assertEqual(data["lesson"], self.lesson_2.id)
+        self.assertEqual(data["schedule"], self.schedules[2].id)
+        self.assertEqual(get_schedule(self.schedules[2].id).lesson, self.lesson_2)
+        self.assertEqual(schedule_number(), 15)
+
+    def test_create_reservation_authenticated_first_reservation_multiple_slot(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "lesson": self.lesson_1.id,
             "schedule": self.schedules[3].id,
         }
         response = self.client.post(self.endpoint, data)
+        data = json.loads(response.content)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(reservation_number(), 3)
+        self.assertEqual(reservation_number(), 6)
+        self.assertEqual(data["lesson"], self.lesson_1.id)
+        self.assertNotEqual(data["schedule"], self.schedules[3].id)
+        self.assertEqual(get_schedule(data["schedule"]).lesson, self.lesson_1)
+        self.assertEqual(schedule_number(), 13)
+
+    def test_create_reservation_authenticated_other_reservation_multiple_slot(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "lesson": self.lesson_1.id,
+            "schedule": self.long_timeslot.id,
+        }
+        response = self.client.post(self.endpoint, data)
+        data = json.loads(response.content)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(reservation_number(), 6)
+        self.assertEqual(data["lesson"], self.lesson_1.id)
+        self.assertEqual(data["schedule"], self.long_timeslot.id)
+        self.assertEqual(get_schedule(data["schedule"]).lesson, self.lesson_1)
+        self.assertEqual(schedule_number(), 15)
 
     def test_delete_reservation_unauthenticated(self):
         # no login
@@ -239,15 +393,44 @@ class ReservationTest(APITestCase):
         # delete data
         response = self.client.delete(f"{self.endpoint}/{self.reservation_1.id}")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(reservation_number(), 2)
+        self.assertEqual(reservation_number(), 5)
         self.assertTrue(is_reservation_found(self.reservation_1.id))
 
-    def test_delete_reservation_authenticated(self):
+    def test_delete_reservation_authenticated_shared(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # delete data
         response = self.client.delete(f"{self.endpoint}/{self.reservation_1.id}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(reservation_number(), 1)
+        self.assertEqual(reservation_number(), 4)
         self.assertFalse(is_reservation_found(self.reservation_1.id))
+        self.assertEqual(
+            get_schedule(self.reservation_1.schedule.id).lesson,
+            self.reservation_1.lesson,
+        )
+        self.assertEqual(schedule_number(), 15)
+
+    def test_delete_reservation_authenticated_not_shared_single_slot(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # delete data
+        response = self.client.delete(f"{self.endpoint}/{self.reservation_4.id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(reservation_number(), 4)
+        self.assertFalse(is_reservation_found(self.reservation_4.id))
+        self.assertEqual(get_schedule(self.reservation_4.schedule.id).lesson, None)
+        self.assertEqual(schedule_number(), 15)
+
+    def test_delete_reservation_authenticated_not_shared_multi_slot(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # delete data
+        response = self.client.delete(f"{self.endpoint}/{self.reservation_5.id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(reservation_number(), 4)
+        self.assertFalse(is_reservation_found(self.reservation_5.id))
+        self.assertFalse(is_schedule_found(self.reservation_5.schedule.id))
+        self.assertEqual(schedule_number(), 17)

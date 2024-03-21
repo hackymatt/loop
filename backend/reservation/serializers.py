@@ -6,10 +6,13 @@ from rest_framework.serializers import (
 )
 from reservation.models import Reservation
 from profile.models import Profile
-from course.models import Course
 from lesson.models import Lesson, Technology
 from purchase.models import Purchase
 from schedule.models import Schedule
+from datetime import timedelta
+
+
+MIN_LESSON_DURATION_MINS = 30
 
 
 class ProfileSerializer(ModelSerializer):
@@ -63,7 +66,7 @@ class ReservationSerializer(ModelSerializer):
         model = Reservation
         exclude = ("student",)
 
-    def validate_lesson(self, lesson):
+    def check_lesson(self, lesson):
         user = self.context["request"].user
         profile = Profile.objects.get(user=user)
 
@@ -72,13 +75,75 @@ class ReservationSerializer(ModelSerializer):
 
         return lesson
 
-    def validate_schedule(self, schedule):
-        if Reservation.objects.filter(schedule=schedule).exists():
+    def get_timeslots(self, schedule, lesson):
+        duration = lesson.duration
+        required_timeslots = duration / MIN_LESSON_DURATION_MINS
+        lecturer = schedule.lecturer
+        start_time = schedule.start_time
+        end_time = start_time + timedelta(minutes=30 * required_timeslots)
+
+        lecturer_timeslots = Schedule.objects.filter(
+            lecturer=lecturer,
+            start_time__gte=start_time,
+            end_time__lte=end_time,
+        ).all()
+        timeslots = (
+            lecturer_timeslots.filter(
+                lesson=lesson,
+            ).all()
+            | lecturer_timeslots.filter(
+                lesson__isnull=True,
+            ).all()
+        )
+
+        if timeslots.count() == (duration / MIN_LESSON_DURATION_MINS):
+            return timeslots
+        elif timeslots.count() == 1 and timeslots.first().lesson == lesson:
+            return timeslots
+        else:
+            return None
+
+    def check_schedule(self, schedule, lesson):
+        if not self.get_timeslots(schedule, lesson):
             raise ValidationError({"schedule": "Wybrany termin jest niedostępny."})
 
         return schedule
 
+    def validate(self, data):
+        self.check_lesson(lesson=data["lesson"])
+        self.check_schedule(schedule=data["schedule"], lesson=data["lesson"])
+
+        return data
+
     def create(self, validated_data):
         user = self.context["request"].user
         profile = Profile.objects.get(user=user)
-        return Reservation.objects.create(**validated_data, student=profile)
+
+        schedule = validated_data["schedule"]
+        lesson = validated_data["lesson"]
+
+        timeslots = self.get_timeslots(schedule=schedule, lesson=lesson).order_by(
+            "start_time"
+        )
+        start_time = timeslots.first().start_time
+        end_time = timeslots.last().end_time
+        lecturer = timeslots.first().lecturer
+
+        if timeslots.count() == 1:
+            timeslot = timeslots.first()
+            if timeslot.lesson is None:
+                timeslot.lesson = lesson
+                timeslot.save()
+            lesson_schedule = timeslot
+        else:
+            lesson_schedule, _ = Schedule.objects.get_or_create(
+                lecturer=lecturer,
+                start_time=start_time,
+                end_time=end_time,
+                lesson=lesson,
+            )
+            timeslots.exclude(id=lesson_schedule.id).delete()
+
+        return Reservation.objects.create(
+            student=profile, lesson=lesson, schedule=lesson_schedule
+        )

@@ -149,6 +149,18 @@ def get_schedules(lecturer: Profile):
     return Schedule.objects.filter(lecturer=lecturer).all()
 
 
+def get_schedule(id: int):
+    return Schedule.objects.get(pk=id)
+
+
+def schedule_number():
+    return Schedule.objects.count()
+
+
+def is_schedule_found(id: int):
+    return Schedule.objects.filter(id=id).exists()
+
+
 def reservation_number():
     return Reservation.objects.count()
 

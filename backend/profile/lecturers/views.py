@@ -25,7 +25,7 @@ class LecturerViewSet(ModelViewSet):
 
 class BestLecturerViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Profile.objects.filter(user_type="W").all()
+    queryset = Profile.objects.filter(user_type__startswith="W").all()
     serializer_class = BestLecturerSerializer
 
     def get_rating(self, queryset):

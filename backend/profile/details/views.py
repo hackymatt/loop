@@ -18,7 +18,7 @@ class ProfileDetailsViewSet(ModelViewSet):
     def get_serializer_class(self):
         user = self.request.user
         profile = Profile.objects.get(user=user)
-        if profile.user_type == "S":
+        if profile.user_type[0] == "S":
             return ProfileDetailsSerializer
         else:
             return LecturerDetailsSerializer
@@ -26,7 +26,7 @@ class ProfileDetailsViewSet(ModelViewSet):
     def list(self, request, *args, **kwargs):
         user = request.user
         profile = Profile.objects.get(user=user)
-        if profile.user_type == "S":
+        if profile.user_type[0] == "S":
             serializer = ProfileDetailsSerializer(profile, context={"request": request})
         else:
             serializer = LecturerDetailsSerializer(
