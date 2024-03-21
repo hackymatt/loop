@@ -31,12 +31,23 @@ type IReview = {
   review: string;
 };
 
+type ISchedule = {
+  id: number;
+  lecturer: ILecturer;
+  start_time: string;
+  end_time: string;
+};
+
+type IReservation = {
+  id: number;
+  schedule: ISchedule;
+};
+
 type IPurchase = {
   id: number;
   lesson: ILesson;
   lesson_status: ILessonStatus;
-  reservation_date: string | null;
-  lecturer: ILecturer | null;
+  reservation: IReservation;
   review_status: IReviewStatus;
   review: IReview | null;
   created_at: string;
@@ -56,8 +67,7 @@ export const purchaseQuery = (query?: IQueryParams) => {
         id,
         lesson,
         lesson_status,
-        reservation_date,
-        lecturer,
+        reservation,
         review_status,
         review,
         created_at,
@@ -68,14 +78,17 @@ export const purchaseQuery = (query?: IQueryParams) => {
           lessonTitle,
           lessonDuration: duration,
           lessonStatus: lesson_status,
-          lessonSlot: reservation_date,
-          teacher: lecturer
+          lessonSlot: reservation
+            ? [reservation.schedule.start_time, reservation.schedule.end_time]
+            : [null, null],
+          reservationId: reservation?.id,
+          teacher: reservation?.schedule.lecturer
             ? {
-                id: lecturer.uuid,
-                name: lecturer.full_name,
-                email: lecturer.email,
-                avatarUrl: lecturer.image,
-                gender: lecturer.gender,
+                id: reservation?.schedule.lecturer.uuid,
+                name: reservation?.schedule.lecturer.full_name,
+                email: reservation?.schedule.lecturer.email,
+                avatarUrl: reservation?.schedule.lecturer.image,
+                gender: reservation?.schedule.lecturer.gender,
               }
             : {},
           reviewStatus: review_status,

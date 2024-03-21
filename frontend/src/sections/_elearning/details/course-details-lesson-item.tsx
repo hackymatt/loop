@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import { useMemo, useState } from "react";
 import { polishPlurals } from "polish-plurals";
+import { formatInTimeZone } from "date-fns-tz";
 
 import Typography from "@mui/material/Typography";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -23,6 +24,7 @@ import {
 
 import { useBoolean } from "src/hooks/use-boolean";
 
+import { getTimezone } from "src/utils/get-timezone";
 import { fCurrency, fShortenNumber } from "src/utils/format-number";
 
 import { useLessonLecturers } from "src/api/lesson-lecturers/lesson-lecturers";
@@ -94,8 +96,7 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
     () =>
       lessonSchedules?.map((lessonSchedule: IScheduleProp) => {
         const dt = new Date(lessonSchedule.startTime);
-        const time = new Date(dt.valueOf() + dt.getTimezoneOffset() * 60 * 1000);
-        return format(time, "HH:mm");
+        return formatInTimeZone(dt, getTimezone(), "HH:mm");
       }),
     [lessonSchedules],
   );

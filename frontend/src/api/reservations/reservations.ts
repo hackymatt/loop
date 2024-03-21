@@ -4,8 +4,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
 import { purchaseQuery } from "../purchase/purchase";
+import { lessonSchedulesQuery } from "../lesson-schedules/lesson-schedules";
 
-const endpoint = "/reservations" as const;
+const endpoint = "/reservation" as const;
 
 type ICreateReservation = { lesson: string; schedule: string };
 type ICreateReservationReturn = ICreateReservation;
@@ -24,6 +25,7 @@ export const useCreateReservation = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: purchaseQuery().queryKey });
+        queryClient.invalidateQueries({ queryKey: lessonSchedulesQuery().queryKey });
       },
     },
   );

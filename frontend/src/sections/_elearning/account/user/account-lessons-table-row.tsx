@@ -94,7 +94,7 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
         </TableCell>
 
         <TableCell sx={{ px: 1 }}>
-          <InputBase value={fDateTime(row.lessonSlot)} />
+          <InputBase value={fDateTime(row.lessonSlot[0])} />
         </TableCell>
 
         <TableCell>
@@ -137,7 +137,7 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
         {isPlanned && (
           <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
             <Iconify icon="carbon:trash-can" sx={{ mr: 0.5 }} />
-            <Typography variant="body2">Odwołaj rezerwację</Typography>
+            <Typography variant="body2">Usuń rezerwację</Typography>
           </MenuItem>
         )}
       </Popover>

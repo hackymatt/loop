@@ -27,8 +27,9 @@ import Scrollbar from "src/components/scrollbar";
 import { IQueryParamValue } from "src/types/query-params";
 import { LessonStatus, IPurchaseItemProp } from "src/types/purchase";
 
-import AddReservationForm from "./reservation-add-form";
+import ReservationAddForm from "./reservation-add-form";
 import FilterSearch from "../../../../filters/filter-search";
+import ReservationDeleteForm from "./reservation-delete-form";
 import FilterTeacher from "../../../../filters/filter-teacher";
 import AccountTableHead from "../../../../account/account-table-head";
 import AccountLessonsTableRow from "../../../../account/user/account-lessons-table-row";
@@ -57,8 +58,10 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
 
 export default function AccountLessonsPage() {
   const addReservationFormOpen = useBoolean();
+  const deleteReservationFormOpen = useBoolean();
 
   const [addedPurchase, setAddedPurchase] = useState<IPurchaseItemProp>();
+  const [deletedPurchase, setDeletedPurchase] = useState<IPurchaseItemProp>();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
@@ -66,8 +69,6 @@ export default function AccountLessonsPage() {
 
   const { data: pagesCount } = usePurchasePageCount(filters);
   const { data: lessons } = usePurchase(filters);
-
-  console.log(lessons);
 
   const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: 1000 });
 
@@ -124,6 +125,14 @@ export default function AccountLessonsPage() {
       addReservationFormOpen.onToggle();
     },
     [addReservationFormOpen],
+  );
+
+  const handleDeleteReservation = useCallback(
+    (purchase: IPurchaseItemProp) => {
+      setDeletedPurchase(purchase);
+      deleteReservationFormOpen.onToggle();
+    },
+    [deleteReservationFormOpen],
   );
 
   return (
@@ -210,7 +219,7 @@ export default function AccountLessonsPage() {
                     key={row.id}
                     row={row}
                     onAdd={handleAddReservation}
-                    onDelete={() => {}}
+                    onDelete={handleDeleteReservation}
                   />
                 ))}
               </TableBody>
@@ -234,10 +243,18 @@ export default function AccountLessonsPage() {
       </Box>
 
       {addedPurchase && (
-        <AddReservationForm
+        <ReservationAddForm
           purchase={addedPurchase}
           open={addReservationFormOpen.value}
           onClose={addReservationFormOpen.onFalse}
+        />
+      )}
+
+      {deletedPurchase && (
+        <ReservationDeleteForm
+          purchase={deletedPurchase}
+          open={deleteReservationFormOpen.value}
+          onClose={deleteReservationFormOpen.onFalse}
         />
       )}
     </>

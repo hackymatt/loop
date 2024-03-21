@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import { AxiosError } from "axios";
+import { formatInTimeZone } from "date-fns-tz";
 import { useMemo, useState, useEffect } from "react";
 
 import { LoadingButton } from "@mui/lab";
@@ -11,6 +12,8 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
+
+import { getTimezone } from "src/utils/get-timezone";
 
 import { useCreateReservation } from "src/api/reservations/reservations";
 import { useLessonLecturers } from "src/api/lesson-lecturers/lesson-lecturers";
@@ -34,7 +37,7 @@ const DEFAULT_USER = { id: "", avatarUrl: "", name: "Wszyscy" } as const;
 
 // ----------------------------------------------------------------------
 
-export default function AddReservationForm({ purchase, onClose, ...other }: Props) {
+export default function ReservationAddForm({ purchase, onClose, ...other }: Props) {
   const { enqueueSnackbar } = useToastContext();
 
   const { mutateAsync: createReservation, isLoading: isSubmitting } = useCreateReservation();
@@ -77,8 +80,7 @@ export default function AddReservationForm({ purchase, onClose, ...other }: Prop
     () =>
       lessonSchedules?.map((lessonSchedule: IScheduleProp) => {
         const dt = new Date(lessonSchedule.startTime);
-        const time = new Date(dt.valueOf() + dt.getTimezoneOffset() * 60 * 1000);
-        return format(time, "HH:mm");
+        return formatInTimeZone(dt, getTimezone(), "HH:mm");
       }),
     [lessonSchedules],
   );
@@ -93,7 +95,9 @@ export default function AddReservationForm({ purchase, onClose, ...other }: Prop
 
   const onSubmit = async () => {
     if (date && slot) {
-      const startTime = `${date}T${slot}:00Z`;
+      const dt = new Date(`${date}T${slot}:00Z`);
+      const time = new Date(dt.valueOf() + dt.getTimezoneOffset() * 60 * 1000);
+      const startTime = formatInTimeZone(time, "UTC", "yyyy-MM-dd'T'HH:mm:ss'Z'");
       const schedule = lessonSchedules.find(
         (lessonSchedule: IScheduleProp) => lessonSchedule.startTime === startTime,
       );

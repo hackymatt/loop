@@ -23,7 +23,8 @@ export type IPurchaseItemProp = {
   lessonTitle: string;
   lessonDuration: number;
   lessonStatus: ILessonStatus;
-  lessonSlot: string;
+  lessonSlot: string[];
+  reservationId: string;
   teacher: ITeamMemberProps;
   reviewStatus: IReviewStatus;
   ratingNumber: number;

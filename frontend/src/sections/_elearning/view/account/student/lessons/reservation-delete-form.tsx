@@ -21,11 +21,11 @@ interface Props extends DialogProps {
 
 // ----------------------------------------------------------------------
 
-export default function TeachingDeleteForm({ purchase, onClose, ...other }: Props) {
+export default function ReservationDeleteForm({ purchase, onClose, ...other }: Props) {
   const { enqueueSnackbar } = useToastContext();
 
   const { mutateAsync: deleteReservation, isLoading: isSubmitting } = useDeleteReservation(
-    purchase.id,
+    purchase.reservationId,
   );
 
   const onSubmit = async () => {
@@ -34,13 +34,13 @@ export default function TeachingDeleteForm({ purchase, onClose, ...other }: Prop
       onClose();
       enqueueSnackbar("Rezerwacja została usunięta", { variant: "success" });
     } catch (error) {
-      // enqueueSnackbar("Lekcja została oznaczona jako nieprowadzona", { variant: "success" });
+      enqueueSnackbar("Wystąpił błąd podczas usuwania rezerwacji", { variant: "error" });
     }
   };
 
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
-      <DialogTitle sx={{ typography: "h3", pb: 3 }}>Przestań prowadzić lekcję</DialogTitle>
+      <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń rezerwację</DialogTitle>
 
       <DialogContent sx={{ py: 0 }}>
         <Typography>{`Czy na pewno chcesz usunąć rezerwację dla lekcji ${purchase.lessonTitle}?`}</Typography>

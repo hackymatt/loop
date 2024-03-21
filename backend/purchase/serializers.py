@@ -10,6 +10,7 @@ from purchase.models import Purchase
 from lesson.models import Lesson, Technology
 from profile.models import Profile
 from reservation.models import Reservation
+from schedule.models import Schedule
 from review.models import Review
 from datetime import datetime
 from django.utils.timezone import make_aware
@@ -89,12 +90,22 @@ class ReviewSerializer(ModelSerializer):
             "lesson",
         )
 
+class ScheduleSerializer(ModelSerializer):
+    lecturer = ProfileSerializer()
+    class Meta:
+        model = Schedule
+        exclude = ("lesson", "created_at", "modified_at", )
+
+class ReservationSerializer(ModelSerializer):
+    schedule = ScheduleSerializer()
+    class Meta:
+        model = Reservation
+        exclude = ("student", "lesson", "created_at", "modified_at", )
 
 class PurchaseGetSerializer(ModelSerializer):
     lesson = LessonSerializer()
     lesson_status = SerializerMethodField("get_lesson_status")
-    reservation_date = SerializerMethodField("get_reservation_date")
-    lecturer = SerializerMethodField("get_lecturer")
+    reservation = SerializerMethodField("get_reservation_details")
     review_status = SerializerMethodField("get_review_status")
     review = SerializerMethodField("get_review_details")
 
@@ -130,22 +141,11 @@ class PurchaseGetSerializer(ModelSerializer):
         else:
             return ReviewStatus.NONE
 
-    def get_reservation_date(self, purchase):
+    def get_reservation_details(self, purchase):
         reservation = get_reservation(purchase=purchase)
 
         if reservation.exists():
-            return reservation.first().schedule.start_time
-        else:
-            return None
-
-    def get_lecturer(self, purchase):
-        reservation = get_reservation(purchase=purchase)
-
-        if reservation.exists():
-            return ProfileSerializer(
-                reservation.first().schedule.lecturer,
-                context={"request": self.context.get("request")},
-            ).data
+            return ReservationSerializer(reservation.first()).data
         else:
             return None
 
