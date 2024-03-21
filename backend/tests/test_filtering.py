@@ -1815,7 +1815,13 @@ class PurchaseFilterTest(APITestCase):
         results = data["results"]
         self.assertEqual(records_count, 3)
         uuids = list(
-            set([str(record["lecturer"]["uuid"]) == str(uuid) for record in results])
+            set(
+                [
+                    str(record["reservation"]["schedule"]["lecturer"]["uuid"])
+                    == str(uuid)
+                    for record in results
+                ]
+            )
         )
         self.assertTrue(len(uuids) == 1)
         self.assertTrue(uuids[0])

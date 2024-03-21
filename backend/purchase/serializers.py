@@ -90,17 +90,31 @@ class ReviewSerializer(ModelSerializer):
             "lesson",
         )
 
+
 class ScheduleSerializer(ModelSerializer):
     lecturer = ProfileSerializer()
+
     class Meta:
         model = Schedule
-        exclude = ("lesson", "created_at", "modified_at", )
+        exclude = (
+            "lesson",
+            "created_at",
+            "modified_at",
+        )
+
 
 class ReservationSerializer(ModelSerializer):
     schedule = ScheduleSerializer()
+
     class Meta:
         model = Reservation
-        exclude = ("student", "lesson", "created_at", "modified_at", )
+        exclude = (
+            "student",
+            "lesson",
+            "created_at",
+            "modified_at",
+        )
+
 
 class PurchaseGetSerializer(ModelSerializer):
     lesson = LessonSerializer()
