@@ -1789,7 +1789,19 @@ class PurchaseOrderTest(APITestCase):
             elif "_uuid" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
-                    course[field1] for course in results if course[field1] is not None
+                    course["reservation"]
+                    for course in results
+                    if course["reservation"] is not None
+                ]
+                parent_objects = [
+                    course["schedule"]
+                    for course in parent_objects
+                    if course["schedule"] is not None
+                ]
+                parent_objects = [
+                    course[field1]
+                    for course in parent_objects
+                    if course[field1] is not None
                 ]
                 field_values = [
                     parent_object[field2] for parent_object in parent_objects
@@ -1819,7 +1831,19 @@ class PurchaseOrderTest(APITestCase):
             elif "_uuid" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
-                    course[field1] for course in results if course[field1] is not None
+                    course["reservation"]
+                    for course in results
+                    if course["reservation"] is not None
+                ]
+                parent_objects = [
+                    course["schedule"]
+                    for course in parent_objects
+                    if course["schedule"] is not None
+                ]
+                parent_objects = [
+                    course[field1]
+                    for course in parent_objects
+                    if course[field1] is not None
                 ]
                 field_values = [
                     parent_object[field2] for parent_object in parent_objects

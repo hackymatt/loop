@@ -9,7 +9,6 @@ from review.serializers import (
 )
 from review.filters import ReviewFilter
 from review.models import Review
-from profile.models import Profile
 from random import sample
 from django.db.models import Count
 

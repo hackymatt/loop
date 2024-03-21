@@ -9,7 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import { Avatar, Typography } from "@mui/material";
 import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
-import { fDate } from "src/utils/format-time";
+import { fDate, fDateTime } from "src/utils/format-time";
 
 import Label from "src/components/label";
 import Iconify from "src/components/iconify";
@@ -50,6 +50,7 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
     [`&.${inputBaseClasses.focused}`]: {
       bgcolor: "action.selected",
     },
+    width: 1,
   };
 
   const genderAvatarUrl =
@@ -75,10 +76,6 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
     <>
       <TableRow hover>
         <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.courseTitle} sx={inputStyles} />
-        </TableCell>
-
-        <TableCell sx={{ px: 1 }}>
           <InputBase value={row.lessonTitle} sx={inputStyles} />
         </TableCell>
 
@@ -94,6 +91,10 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
           >
             {row.lessonStatus}
           </Label>
+        </TableCell>
+
+        <TableCell sx={{ px: 1 }}>
+          <InputBase value={fDateTime(row.lessonSlot[0])} />
         </TableCell>
 
         <TableCell>
@@ -136,7 +137,7 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
         {isPlanned && (
           <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
             <Iconify icon="carbon:trash-can" sx={{ mr: 0.5 }} />
-            <Typography variant="body2">Odwołaj rezerwację</Typography>
+            <Typography variant="body2">Usuń rezerwację</Typography>
           </MenuItem>
         )}
       </Popover>

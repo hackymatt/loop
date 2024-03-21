@@ -19,14 +19,10 @@ type ILecturer = {
   image: string | null;
 };
 
-type ICourse = {
-  id: number;
-  title: string;
-};
-
 type ILesson = {
   id: number;
   title: string;
+  duration: number;
 };
 
 type IReview = {
@@ -35,12 +31,23 @@ type IReview = {
   review: string;
 };
 
+type ISchedule = {
+  id: number;
+  lecturer: ILecturer;
+  start_time: string;
+  end_time: string;
+};
+
+type IReservation = {
+  id: number;
+  schedule: ISchedule;
+};
+
 type IPurchase = {
   id: number;
-  course: ICourse;
   lesson: ILesson;
   lesson_status: ILessonStatus;
-  lecturer: ILecturer | null;
+  reservation: IReservation;
   review_status: IReviewStatus;
   review: IReview | null;
   created_at: string;
@@ -58,28 +65,30 @@ export const purchaseQuery = (query?: IQueryParams) => {
     const modifiedResults = results.map(
       ({
         id,
-        course,
         lesson,
         lesson_status,
-        lecturer,
+        reservation,
         review_status,
         review,
         created_at,
       }: IPurchase) => {
-        const { title: courseTitle } = course;
-        const { title: lessonTitle } = lesson;
+        const { title: lessonTitle, duration } = lesson;
         return {
           id,
-          courseTitle,
           lessonTitle,
+          lessonDuration: duration,
           lessonStatus: lesson_status,
-          teacher: lecturer
+          lessonSlot: reservation
+            ? [reservation.schedule.start_time, reservation.schedule.end_time]
+            : [null, null],
+          reservationId: reservation?.id,
+          teacher: reservation?.schedule.lecturer
             ? {
-                id: lecturer.uuid,
-                name: lecturer.full_name,
-                email: lecturer.email,
-                avatarUrl: lecturer.image,
-                gender: lecturer.gender,
+                id: reservation?.schedule.lecturer.uuid,
+                name: reservation?.schedule.lecturer.full_name,
+                email: reservation?.schedule.lecturer.email,
+                avatarUrl: reservation?.schedule.lecturer.image,
+                gender: reservation?.schedule.lecturer.gender,
               }
             : {},
           reviewStatus: review_status,

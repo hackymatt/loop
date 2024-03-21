@@ -13,11 +13,11 @@ class StatsViewSet(ViewSet):
     http_method_names = ["get"]
 
     def get_stats(self, request):
-        students_count = Profile.objects.filter(user_type="S").count()
+        students_count = Profile.objects.filter(user_type__startswith="S").count()
         course_count = Course.objects.count()
         lessons_count = Lesson.objects.count()
         technology_count = Technology.objects.count()
-        lecturers_count = Profile.objects.filter(user_type="W").count()
+        lecturers_count = Profile.objects.filter(user_type__startswith="W").count()
         purchase_count = Purchase.objects.count()
         hours_sum = Lesson.objects.aggregate(Sum("duration"))["duration__sum"]
         rating = Review.objects.aggregate(Avg("rating"))["rating__avg"]

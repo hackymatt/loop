@@ -16,7 +16,6 @@ export function useQueryParams() {
       params.set(name, value ? value.toString() : "");
       const newParams = params.toString();
       if (currentParams !== newParams) {
-        console.log(params.toString());
         replace(`${pathname}?${params.toString()}`);
       }
     },

@@ -39,7 +39,7 @@ class OrderFilter(OrderingFilter):
         return queryset
 
 
-class TeachingFilter(FilterSet):
+class ManageTeachingFilter(FilterSet):
     title = CharFilter(field_name="title", lookup_expr="icontains")
     duration_from = NumberFilter(field_name="duration", lookup_expr="gte")
     duration_to = NumberFilter(field_name="duration", lookup_expr="lte")
@@ -99,3 +99,11 @@ class TeachingFilter(FilterSet):
     def filter_teaching(self, queryset, field_name, value):
         lookup_field_name = field_name
         return get_teaching(self, queryset).filter(**{lookup_field_name: value})
+
+
+class TeachingFilter(FilterSet):
+    lesson_id = NumberFilter(field_name="lesson__id", lookup_expr="exact")
+
+    class Meta:
+        model = Teaching
+        fields = ("lesson_id",)

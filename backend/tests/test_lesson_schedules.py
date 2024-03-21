@@ -19,9 +19,9 @@ from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 
 
-class ScheduleTest(APITestCase):
+class LessonSchedulesTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/schedules"
+        self.endpoint = "/lesson-schedules"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",
@@ -266,15 +266,10 @@ class ScheduleTest(APITestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(self.endpoint)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_get_schedules_not_lecturer(self):
-        # login
-        login(self, self.data["email"], self.data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        response = self.client.get(self.endpoint)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 21)
 
     def test_get_schedules_authenticated(self):
         # login
@@ -285,63 +280,4 @@ class ScheduleTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 10)
-
-    def test_get_schedule_unauthenticated(self):
-        # no login
-        self.assertFalse(auth.get_user(self.client).is_authenticated)
-        # get data
-        response = self.client.get(f"{self.endpoint}/{self.schedules[0].id}")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_get_schedule_not_admin(self):
-        # login
-        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        response = self.client.get(f"{self.endpoint}/{self.schedules[0].id}")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_get_schedule_authenticated(self):
-        # login
-        login(self, self.admin_data["email"], self.admin_data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        response = self.client.get(f"{self.endpoint}/{self.schedules[0].id}")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_create_schedule_unauthenticated(self):
-        # no login
-        self.assertFalse(auth.get_user(self.client).is_authenticated)
-        # get data
-        response = self.client.post(self.endpoint, self.new_schedule)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_create_schedule_not_lecturer(self):
-        # login
-        login(self, self.data["email"], self.data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        response = self.client.post(self.endpoint, self.new_schedule)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_create_schedule_authenticated(self):
-        # login
-        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        response = self.client.post(self.endpoint, self.new_schedule)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(
-            datetime.strptime(data["start_time"], "%Y-%m-%dT%H:%M:%fZ").strftime(
-                "%Y-%m-%dT%H:%M"
-            ),
-            self.new_schedule["start_time"].strftime("%Y-%m-%dT%H:%M"),
-        )
-        self.assertEqual(
-            datetime.strptime(data["end_time"], "%Y-%m-%dT%H:%M:%fZ").strftime(
-                "%Y-%m-%dT%H:%M"
-            ),
-            self.new_schedule["end_time"].strftime("%Y-%m-%dT%H:%M"),
-        )
+        self.assertEqual(count, 21)

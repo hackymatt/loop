@@ -1,10 +1,10 @@
 from rest_framework.serializers import (
     ModelSerializer,
-    IntegerField,
+    CharField,
+    EmailField,
     SerializerMethodField,
 )
-from course.models import Course
-from lesson.models import Lesson, Technology
+from lesson.models import Lesson
 from teaching.models import Teaching
 from profile.models import Profile
 
@@ -17,18 +17,7 @@ def get_teaching_instance(self, lesson):
     return teaching
 
 
-class TeachingInstanceSerializer(ModelSerializer):
-    class Meta:
-        model = Teaching
-        exclude = (
-            "lecturer",
-            "lesson",
-            "modified_at",
-            "created_at",
-        )
-
-
-class TeachingGetSerializer(ModelSerializer):
+class ManageTeachingGetSerializer(ModelSerializer):
     teaching = SerializerMethodField("get_teaching")
     teaching_id = SerializerMethodField("get_teaching_id")
 
@@ -52,7 +41,7 @@ class TeachingGetSerializer(ModelSerializer):
         return None
 
 
-class TeachingSerializer(ModelSerializer):
+class ManageTeachingSerializer(ModelSerializer):
     class Meta:
         model = Teaching
         exclude = ("lecturer",)
@@ -64,3 +53,31 @@ class TeachingSerializer(ModelSerializer):
         lesson = validated_data.pop("lesson")
 
         return Teaching.objects.create(lecturer=lecturer, lesson=lesson)
+
+
+class LecturerSerializer(ModelSerializer):
+    gender = CharField(source="get_gender_display")
+    first_name = CharField(source="user.first_name")
+    email = EmailField(source="user.email")
+
+    class Meta:
+        model = Profile
+        fields = (
+            "uuid",
+            "first_name",
+            "gender",
+            "email",
+            "image",
+        )
+
+
+class TeachingSerializer(ModelSerializer):
+    lecturer = LecturerSerializer()
+
+    class Meta:
+        model = Teaching
+        exclude = (
+            "lesson",
+            "modified_at",
+            "created_at",
+        )

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
+import { useMemo, useState, useCallback } from "react";
 
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -14,6 +14,7 @@ import { tableCellClasses } from "@mui/material/TableCell";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TablePagination from "@mui/material/TablePagination";
 
+import { useBoolean } from "src/hooks/use-boolean";
 import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
@@ -23,13 +24,15 @@ import { usePurchase, usePurchasePageCount } from "src/api/purchase/purchase";
 
 import Scrollbar from "src/components/scrollbar";
 
-import { LessonStatus } from "src/types/purchase";
 import { IQueryParamValue } from "src/types/query-params";
+import { LessonStatus, IPurchaseItemProp } from "src/types/purchase";
 
-import FilterSearch from "../../../filters/filter-search";
-import FilterTeacher from "../../../filters/filter-teacher";
-import AccountTableHead from "../../../account/account-table-head";
-import AccountLessonsTableRow from "../../../account/user/account-lessons-table-row";
+import ReservationAddForm from "./reservation-add-form";
+import FilterSearch from "../../../../filters/filter-search";
+import ReservationDeleteForm from "./reservation-delete-form";
+import FilterTeacher from "../../../../filters/filter-teacher";
+import AccountTableHead from "../../../../account/account-table-head";
+import AccountLessonsTableRow from "../../../../account/user/account-lessons-table-row";
 
 // ----------------------------------------------------------------------
 
@@ -41,9 +44,9 @@ const TABS = [
 ];
 
 const TABLE_HEAD = [
-  { id: "course_title", label: "Nazwa kursu" },
-  { id: "lesson_title", label: "Nazwa lekcji" },
+  { id: "lesson_title", label: "Nazwa lekcji", minWidth: 250 },
   { id: "lesson_status", label: "Status" },
+  { id: "reservation_date", label: "Termin" },
   { id: "lecturer_uuid", label: "Instruktor" },
   { id: "created_at", label: "Data zakupu" },
   { id: "" },
@@ -54,6 +57,12 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
 // ----------------------------------------------------------------------
 
 export default function AccountLessonsPage() {
+  const addReservationFormOpen = useBoolean();
+  const deleteReservationFormOpen = useBoolean();
+
+  const [addedPurchase, setAddedPurchase] = useState<IPurchaseItemProp>();
+  const [deletedPurchase, setDeletedPurchase] = useState<IPurchaseItemProp>();
+
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
@@ -108,6 +117,22 @@ export default function AccountLessonsPage() {
       handleChange("page", 1);
     },
     [handleChange],
+  );
+
+  const handleAddReservation = useCallback(
+    (purchase: IPurchaseItemProp) => {
+      setAddedPurchase(purchase);
+      addReservationFormOpen.onToggle();
+    },
+    [addReservationFormOpen],
+  );
+
+  const handleDeleteReservation = useCallback(
+    (purchase: IPurchaseItemProp) => {
+      setDeletedPurchase(purchase);
+      deleteReservationFormOpen.onToggle();
+    },
+    [deleteReservationFormOpen],
   );
 
   return (
@@ -193,8 +218,8 @@ export default function AccountLessonsPage() {
                   <AccountLessonsTableRow
                     key={row.id}
                     row={row}
-                    onAdd={() => {}}
-                    onDelete={() => {}}
+                    onAdd={handleAddReservation}
+                    onDelete={handleDeleteReservation}
                   />
                 ))}
               </TableBody>
@@ -216,6 +241,22 @@ export default function AccountLessonsPage() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Box>
+
+      {addedPurchase && (
+        <ReservationAddForm
+          purchase={addedPurchase}
+          open={addReservationFormOpen.value}
+          onClose={addReservationFormOpen.onFalse}
+        />
+      )}
+
+      {deletedPurchase && (
+        <ReservationDeleteForm
+          purchase={deletedPurchase}
+          open={deleteReservationFormOpen.value}
+          onClose={deleteReservationFormOpen.onFalse}
+        />
+      )}
     </>
   );
 }

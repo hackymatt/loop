@@ -54,7 +54,7 @@ export default function CourseDetailsInfo({ course }: Props) {
               <Box component="strong" sx={{ mr: 0.5 }}>
                 {course.lessons?.length}
               </Box>
-              {polishPlurals("lekcja", "lekcje", "lekcji", course.lessons?.length)}
+              {polishPlurals("lekcję", "lekcje", "lekcji", course.lessons?.length)}
             </Stack>
           )}
 

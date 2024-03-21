@@ -1,18 +1,22 @@
 "use client";
 
 import { format, startOfDay } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 import { useMemo, useState, useCallback } from "react";
 import { DatesSetArg, DateSelectArg, EventClickArg } from "@fullcalendar/core";
 
+import { useTheme } from "@mui/material/styles";
+
 import { useQueryParams } from "src/hooks/use-query-params";
 
-import { useDeleteSchedule } from "src/api/schedule/schedule";
-import { useSchedules, useCreateSchedule } from "src/api/schedule/schedules";
+import { getTimezone } from "src/utils/get-timezone";
+
+import { useDeleteSchedule } from "src/api/schedules/schedule";
+import { useSchedules, useCreateSchedule } from "src/api/schedules/schedules";
 
 import Calendar from "src/components/calendar/calendar";
 
 import { IScheduleProp } from "src/types/course";
-
 // ----------------------------------------------------------------------
 
 const AVAILABLE_STATUS = "Dostępny" as const;
@@ -21,6 +25,8 @@ const SLOT_SIZE = 30 as number;
 
 // ----------------------------------------------------------------------
 export default function AccountScheduleView() {
+  const theme = useTheme();
+
   const getViewName = useCallback((dateInfo: DatesSetArg): string | undefined => {
     switch (dateInfo.view.type) {
       case "dayGridMonth":
@@ -62,7 +68,7 @@ export default function AccountScheduleView() {
 
   const getTime = useCallback((datePoint: Date): string => {
     datePoint.setHours(datePoint.getHours() - 3);
-    return format(datePoint, "HH:mm:ss");
+    return formatInTimeZone(datePoint, getTimezone(), "HH:mm:ss");
   }, []);
 
   const [scrollTime, setScrollTime] = useState<string>();
@@ -78,7 +84,7 @@ export default function AccountScheduleView() {
 
   const { data: schedules } = useSchedules({
     ...filters,
-    reserved: (view === "month").toString(),
+    reserved: view === "month" ? "True" : "",
     page_size: slotsCount * (60 / SLOT_SIZE) * 24,
     sort_by: "start_time",
   });
@@ -93,8 +99,9 @@ export default function AccountScheduleView() {
         title: schedule.lesson?.title ?? AVAILABLE_STATUS,
         start: schedule.startTime,
         end: schedule.endTime,
+        color: schedule.lesson?.title ? theme.palette.primary.main : "",
       })),
-    [schedules],
+    [schedules, theme.palette.primary.main],
   );
 
   const handleTimeChange = useCallback(

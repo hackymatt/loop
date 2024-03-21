@@ -23,7 +23,7 @@ import Iconify from "src/components/iconify";
 import { PlayerDialog } from "src/components/player";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
-import { ICourseProps } from "src/types/course";
+import { ILevel, ICourseProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -245,9 +245,11 @@ export default function CourseDetailsHero({ course }: Props) {
                     <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
                       <Iconify
                         icon={
-                          (level === "Podstawowy" && "carbon:skill-level") ||
-                          (level === "Średniozaawansowany" && "carbon:skill-level-basic") ||
-                          (level === "Zaawansowany" && "carbon:skill-level-intermediate") ||
+                          (level === ("Podstawowy" as ILevel) && "carbon:skill-level") ||
+                          (level === ("Średniozaawansowany" as ILevel) &&
+                            "carbon:skill-level-basic") ||
+                          (level === ("Zaawansowany" as ILevel) &&
+                            "carbon:skill-level-intermediate") ||
                           "carbon:skill-level-advanced"
                         }
                         sx={{ mr: 1 }}
