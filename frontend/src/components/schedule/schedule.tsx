@@ -32,6 +32,7 @@ type Props = {
   onSlotChange?: (event: React.SyntheticEvent, slot: string) => void;
   isLoadingUsers?: boolean;
   isLoadingTimeSlots?: boolean;
+  error?: string;
 };
 
 export default function Schedule({
@@ -45,6 +46,7 @@ export default function Schedule({
   onSlotChange,
   isLoadingUsers,
   isLoadingTimeSlots,
+  error,
 }: Props) {
   return (
     <Stack direction="column" alignItems="center">
@@ -123,6 +125,12 @@ export default function Schedule({
           </Tabs>
         )}
       </Box>
+
+      {error && (
+        <Typography variant="body2" color="error">
+          {error}
+        </Typography>
+      )}
     </Stack>
   );
 }

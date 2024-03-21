@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { AxiosError } from "axios";
 import { useMemo, useState, useEffect } from "react";
 
 import { LoadingButton } from "@mui/lab";
@@ -11,10 +12,12 @@ import {
   DialogActions,
 } from "@mui/material";
 
+import { useCreateReservation } from "src/api/reservations/reservations";
 import { useLessonLecturers } from "src/api/lesson-lecturers/lesson-lecturers";
 import { useLessonSchedules } from "src/api/lesson-schedules/lesson-schedules";
 
 import Schedule from "src/components/schedule";
+import { useToastContext } from "src/components/toast";
 
 import { IScheduleProp } from "src/types/course";
 import { ITeamMemberProps } from "src/types/team";
@@ -32,6 +35,9 @@ const DEFAULT_USER = { id: "", avatarUrl: "", name: "Wszyscy" } as const;
 // ----------------------------------------------------------------------
 
 export default function AddReservationForm({ purchase, onClose, ...other }: Props) {
+  const { enqueueSnackbar } = useToastContext();
+
+  const { mutateAsync: createReservation, isLoading: isSubmitting } = useCreateReservation();
   const { data: lessonLecturers, isLoading: isLoadingUsers } = useLessonLecturers({
     lesson_id: purchase?.id,
     page_size: 1000,
@@ -54,6 +60,7 @@ export default function AddReservationForm({ purchase, onClose, ...other }: Prop
     [lessonLecturers],
   );
 
+  const [error, setError] = useState<string | undefined>();
   const [user, setUser] = useState<ITeamMemberProps>(DEFAULT_USER);
   const [date, setDate] = useState<string>(format(new Date(), "yyyy-MM-dd"));
 
@@ -84,13 +91,22 @@ export default function AddReservationForm({ purchase, onClose, ...other }: Prop
     }
   }, [slots]);
 
-  const handleSubmit = async () => {
+  const onSubmit = async () => {
     if (date && slot) {
       const startTime = `${date}T${slot}:00Z`;
       const schedule = lessonSchedules.find(
         (lessonSchedule: IScheduleProp) => lessonSchedule.startTime === startTime,
       );
-      console.log(schedule);
+      if (schedule) {
+        try {
+          await createReservation({ lesson: purchase.id, schedule: schedule.id });
+          setError(undefined);
+          onClose();
+          enqueueSnackbar("Rezerwacja została dodana", { variant: "success" });
+        } catch (err) {
+          setError((err as AxiosError).message);
+        }
+      }
     }
   };
 
@@ -110,6 +126,7 @@ export default function AddReservationForm({ purchase, onClose, ...other }: Prop
           onSlotChange={(event, selectedSlot) => setSlot(selectedSlot)}
           isLoadingUsers={isLoadingUsers}
           isLoadingTimeSlots={isLoadingTimeSlots}
+          error={error}
         />
       </DialogContent>
 
@@ -121,8 +138,9 @@ export default function AddReservationForm({ purchase, onClose, ...other }: Prop
           color="success"
           type="submit"
           variant="contained"
-          onClick={handleSubmit}
+          onClick={onSubmit}
           disabled={!slot}
+          loading={isSubmitting}
         >
           Zarezerwuj
         </LoadingButton>

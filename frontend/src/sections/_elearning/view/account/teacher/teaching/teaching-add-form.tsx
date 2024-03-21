@@ -13,6 +13,7 @@ import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 import { useCreateTeaching } from "src/api/teaching/teachings";
 
 import FormProvider from "src/components/hook-form";
+import { useToastContext } from "src/components/toast";
 
 import { ITeachingProp } from "src/types/course";
 
@@ -28,6 +29,8 @@ interface Props extends DialogProps {
 // ----------------------------------------------------------------------
 
 export default function TeachingAddForm({ teaching, onClose, ...other }: Props) {
+  const { enqueueSnackbar } = useToastContext();
+
   const { mutateAsync: createTeaching } = useCreateTeaching();
 
   const methods = useForm({
@@ -47,6 +50,7 @@ export default function TeachingAddForm({ teaching, onClose, ...other }: Props) 
       await createTeaching({ lesson: teaching.id });
       reset();
       onClose();
+      enqueueSnackbar("Lekcja została oznaczona jako prowadzona", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }

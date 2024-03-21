@@ -13,6 +13,7 @@ import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 import { useDeleteTeaching } from "src/api/teaching/teaching";
 
 import FormProvider from "src/components/hook-form";
+import { useToastContext } from "src/components/toast";
 
 import { ITeachingProp } from "src/types/course";
 
@@ -28,6 +29,8 @@ interface Props extends DialogProps {
 // ----------------------------------------------------------------------
 
 export default function TeachingDeleteForm({ teaching, onClose, ...other }: Props) {
+  const { enqueueSnackbar } = useToastContext();
+
   const { mutateAsync: deleteTeaching } = useDeleteTeaching(teaching.teachingId!);
 
   const methods = useForm({
@@ -47,6 +50,7 @@ export default function TeachingDeleteForm({ teaching, onClose, ...other }: Prop
       await deleteTeaching({});
       reset();
       onClose();
+      enqueueSnackbar("Lekcja została oznaczona jako nieprowadzona", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }
