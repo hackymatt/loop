@@ -27,12 +27,12 @@ import Scrollbar from "src/components/scrollbar";
 import { IQueryParamValue } from "src/types/query-params";
 import { LessonStatus, IPurchaseItemProp } from "src/types/purchase";
 
-import ReservationAddForm from "./reservation-add-form";
+import ReservationNewForm from "./reservation-new-form";
 import FilterSearch from "../../../../filters/filter-search";
 import ReservationDeleteForm from "./reservation-delete-form";
 import FilterTeacher from "../../../../filters/filter-teacher";
 import AccountTableHead from "../../../../account/account-table-head";
-import AccountLessonsTableRow from "../../../../account/user/account-lessons-table-row";
+import AccountLessonsTableRow from "../../../../account/student/account-lessons-table-row";
 
 // ----------------------------------------------------------------------
 
@@ -243,7 +243,7 @@ export default function AccountLessonsPage() {
       </Box>
 
       {addedPurchase && (
-        <ReservationAddForm
+        <ReservationNewForm
           purchase={addedPurchase}
           open={addReservationFormOpen.value}
           onClose={addReservationFormOpen.onFalse}

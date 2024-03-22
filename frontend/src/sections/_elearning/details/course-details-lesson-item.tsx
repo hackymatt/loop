@@ -92,14 +92,14 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
     page_size: 48,
   });
 
-  const slots = useMemo(
-    () =>
-      lessonSchedules?.map((lessonSchedule: IScheduleProp) => {
-        const dt = new Date(lessonSchedule.startTime);
-        return formatInTimeZone(dt, getTimezone(), "HH:mm");
-      }),
-    [lessonSchedules],
-  );
+  const slots = useMemo(() => {
+    const allSlots = lessonSchedules?.map((lessonSchedule: IScheduleProp) => {
+      const dt = new Date(lessonSchedule.startTime);
+      return formatInTimeZone(dt, getTimezone(), "HH:mm");
+    });
+
+    return Array.from(new Set(allSlots)).sort();
+  }, [lessonSchedules]);
 
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>

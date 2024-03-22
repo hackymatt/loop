@@ -92,8 +92,9 @@ export const purchaseQuery = (query?: IQueryParams) => {
               }
             : {},
           reviewStatus: review_status,
+          reviewId: review?.id,
           ratingNumber: review?.rating,
-          message: review?.review,
+          review: review?.review,
           createdAt: created_at,
         };
       },

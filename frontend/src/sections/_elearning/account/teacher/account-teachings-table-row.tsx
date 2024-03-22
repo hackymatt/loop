@@ -128,7 +128,7 @@ export default function AccountTeachingsTableRow({ row, onView, onAdd, onDelete 
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         slotProps={{
           paper: {
-            sx: { width: 160 },
+            sx: { width: "fit-content" },
           },
         }}
       >

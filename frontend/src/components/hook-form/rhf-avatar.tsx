@@ -1,6 +1,6 @@
 import { Controller, useFormContext } from "react-hook-form";
 
-import { Avatar, AvatarProps, FormHelperText } from "@mui/material";
+import { Box, Avatar, AvatarProps, FormHelperText } from "@mui/material";
 
 // ----------------------------------------------------------------------
 
@@ -16,13 +16,13 @@ export default function RHFAvatar({ name, ...other }: Props) {
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <div>
+        <Box>
           <Avatar {...field} src={field.value} {...other} />
 
           {!!error && (
             <FormHelperText error={!!error}>{error ? error?.message : null}</FormHelperText>
           )}
-        </div>
+        </Box>
       )}
     />
   );

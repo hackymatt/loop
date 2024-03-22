@@ -27,7 +27,8 @@ export type IPurchaseItemProp = {
   reservationId: string;
   teacher: ITeamMemberProps;
   reviewStatus: IReviewStatus;
+  reviewId: string;
   ratingNumber: number;
-  message: string;
+  review: string;
   createdAt: Date;
 };

@@ -109,7 +109,7 @@ export default function AccountLessonsTableRow({ row, onEdit, onPriceHistoryView
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         slotProps={{
           paper: {
-            sx: { width: 160 },
+            sx: { width: "fit-content" },
           },
         }}
       >

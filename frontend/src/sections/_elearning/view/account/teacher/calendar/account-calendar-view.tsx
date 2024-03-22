@@ -1,11 +1,10 @@
 "use client";
 
+import stc from "string-to-color";
 import { format, startOfDay } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 import { useMemo, useState, useCallback } from "react";
 import { DatesSetArg, DateSelectArg, EventClickArg } from "@fullcalendar/core";
-
-import { useTheme } from "@mui/material/styles";
 
 import { useQueryParams } from "src/hooks/use-query-params";
 
@@ -25,8 +24,6 @@ const SLOT_SIZE = 30 as number;
 
 // ----------------------------------------------------------------------
 export default function AccountScheduleView() {
-  const theme = useTheme();
-
   const getViewName = useCallback((dateInfo: DatesSetArg): string | undefined => {
     switch (dateInfo.view.type) {
       case "dayGridMonth":
@@ -99,9 +96,9 @@ export default function AccountScheduleView() {
         title: schedule.lesson?.title ?? AVAILABLE_STATUS,
         start: schedule.startTime,
         end: schedule.endTime,
-        color: schedule.lesson?.title ? theme.palette.primary.main : "",
+        color: schedule.lesson?.title ? stc(schedule.lesson.title) : "",
       })),
-    [schedules, theme.palette.primary.main],
+    [schedules],
   );
 
   const handleTimeChange = useCallback(
