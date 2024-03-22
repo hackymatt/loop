@@ -1,12 +1,11 @@
 import { useMemo, useState, useCallback } from "react";
 
-import { Stack } from "@mui/system";
 import Popover from "@mui/material/Popover";
 import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import IconButton from "@mui/material/IconButton";
-import { Avatar, Typography } from "@mui/material";
+import { Stack, Avatar, Divider, Typography } from "@mui/material";
 import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
 import { fDate, fDateTime } from "src/utils/format-time";
@@ -14,17 +13,18 @@ import { fDate, fDateTime } from "src/utils/format-time";
 import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 
-import { LessonStatus, IPurchaseItemProp } from "src/types/purchase";
+import { ReviewStatus, IPurchaseItemProp } from "src/types/purchase";
 
 // ----------------------------------------------------------------------
 
 type Props = {
   row: IPurchaseItemProp;
   onAdd: (purchase: IPurchaseItemProp) => void;
+  onEdit: (purchase: IPurchaseItemProp) => void;
   onDelete: (purchase: IPurchaseItemProp) => void;
 };
 
-export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) {
+export default function AccountLessonsTableRow({ row, onAdd, onEdit, onDelete }: Props) {
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
 
   const handleOpen = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -40,6 +40,11 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
     onAdd(row);
   }, [handleClose, onAdd, row]);
 
+  const handleEdit = useCallback(() => {
+    handleClose();
+    onEdit(row);
+  }, [handleClose, onEdit, row]);
+
   const handleDelete = useCallback(() => {
     handleClose();
     onDelete(row);
@@ -50,7 +55,6 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
     [`&.${inputBaseClasses.focused}`]: {
       bgcolor: "action.selected",
     },
-    width: 1,
   };
 
   const genderAvatarUrl =
@@ -61,16 +65,11 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
   const avatarUrl = row?.teacher.avatarUrl || genderAvatarUrl;
 
   const isCompleted = useMemo(
-    () => row.lessonStatus === LessonStatus.zakończona,
-    [row.lessonStatus],
+    () => row.reviewStatus === ReviewStatus.ukończone,
+    [row.reviewStatus],
   );
 
-  const isPlanned = useMemo(
-    () => row.lessonStatus === LessonStatus.zaplanowana,
-    [row.lessonStatus],
-  );
-
-  const isNew = useMemo(() => row.lessonStatus === LessonStatus.nowa, [row.lessonStatus]);
+  const isPending = useMemo(() => row.reviewStatus === ReviewStatus.oczekujące, [row.reviewStatus]);
 
   return (
     <>
@@ -82,14 +81,9 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
         <TableCell sx={{ px: 1 }}>
           <Label
             sx={{ textTransform: "uppercase" }}
-            color={
-              (isCompleted && "success") ||
-              (isPlanned && "warning") ||
-              (isNew && "info") ||
-              "default"
-            }
+            color={(isCompleted && "success") || (isPending && "warning") || "default"}
           >
-            {row.lessonStatus}
+            {row.reviewStatus}
           </Label>
         </TableCell>
 
@@ -109,7 +103,7 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
         </TableCell>
 
         <TableCell align="right" padding="none">
-          <IconButton onClick={handleOpen} disabled={isCompleted}>
+          <IconButton onClick={handleOpen}>
             <Iconify icon="carbon:overflow-menu-vertical" />
           </IconButton>
         </TableCell>
@@ -123,22 +117,29 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         slotProps={{
           paper: {
-            sx: { width: 160 },
+            sx: { width: "fit-content" },
           },
         }}
       >
-        {isNew && (
-          <MenuItem onClick={handleAdd} sx={{ mr: 1, color: "success.main" }}>
+        {isPending && (
+          <MenuItem onClick={handleAdd} sx={{ mr: 1, width: "100%", color: "success.main" }}>
             <Iconify icon="carbon:add" sx={{ mr: 0.5 }} />
-            <Typography variant="body2">Dodaj rezerwację</Typography>
+            <Typography variant="body2">Dodaj recenzję</Typography>
           </MenuItem>
         )}
 
-        {isPlanned && (
-          <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
-            <Iconify icon="carbon:trash-can" sx={{ mr: 0.5 }} />
-            <Typography variant="body2">Usuń rezerwację</Typography>
-          </MenuItem>
+        {isCompleted && (
+          <>
+            <MenuItem onClick={handleEdit} sx={{ mr: 1, width: "100%" }}>
+              <Iconify icon="carbon:edit" sx={{ mr: 0.5 }} />
+              <Typography variant="body2">Edytuj recenzję</Typography>
+            </MenuItem>
+            <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
+            <MenuItem onClick={handleDelete} sx={{ mr: 1, width: "100%", color: "error.main" }}>
+              <Iconify icon="carbon:trash-can" sx={{ mr: 0.5 }} />
+              <Typography variant="body2">Usuń recenzję</Typography>
+            </MenuItem>
+          </>
         )}
       </Popover>
     </>

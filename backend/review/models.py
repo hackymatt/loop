@@ -20,7 +20,7 @@ class Review(BaseModel):
         decimal_places=1,
         validators=[MinValueValidator(1), MaxValueValidator(5)],
     )
-    review = TextField(null=True)
+    review = TextField(null=True, blank=True)
 
     class Meta:
         db_table = "review"

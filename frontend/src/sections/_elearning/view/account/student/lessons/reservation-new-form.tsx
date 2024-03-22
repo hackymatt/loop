@@ -37,7 +37,7 @@ const DEFAULT_USER = { id: "", avatarUrl: "", name: "Wszyscy" } as const;
 
 // ----------------------------------------------------------------------
 
-export default function ReservationAddForm({ purchase, onClose, ...other }: Props) {
+export default function ReservationNewForm({ purchase, onClose, ...other }: Props) {
   const { enqueueSnackbar } = useToastContext();
 
   const { mutateAsync: createReservation, isLoading: isSubmitting } = useCreateReservation();
@@ -76,14 +76,14 @@ export default function ReservationAddForm({ purchase, onClose, ...other }: Prop
     page_size: 48,
   });
 
-  const slots = useMemo(
-    () =>
-      lessonSchedules?.map((lessonSchedule: IScheduleProp) => {
-        const dt = new Date(lessonSchedule.startTime);
-        return formatInTimeZone(dt, getTimezone(), "HH:mm");
-      }),
-    [lessonSchedules],
-  );
+  const slots = useMemo(() => {
+    const allSlots = lessonSchedules?.map((lessonSchedule: IScheduleProp) => {
+      const dt = new Date(lessonSchedule.startTime);
+      return formatInTimeZone(dt, getTimezone(), "HH:mm");
+    });
+
+    return Array.from(new Set(allSlots)).sort();
+  }, [lessonSchedules]);
 
   const [slot, setSlot] = useState<string>(slots?.[0]);
 

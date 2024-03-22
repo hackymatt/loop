@@ -77,7 +77,7 @@ export default function AccountSkillsTableRow({ row, onEdit, onDelete }: Props) 
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         slotProps={{
           paper: {
-            sx: { width: 160 },
+            sx: { width: "fit-content" },
           },
         }}
       >

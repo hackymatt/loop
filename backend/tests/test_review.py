@@ -219,7 +219,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.lesson_1.id,
-            "lecturer": self.lecturer_profile.id,
+            "lecturer": self.lecturer_profile.uuid,
             "rating": 3,
             "review": "Good lesson.",
         }
@@ -234,7 +234,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.course.lessons.all()[3].id,
-            "lecturer": self.lecturer_profile.id,
+            "lecturer": self.lecturer_profile.uuid,
             "rating": 3,
             "review": "Good lesson.",
         }
@@ -249,7 +249,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.lesson_1.id,
-            "lecturer": self.lecturer_profile.id,
+            "lecturer": self.lecturer_profile.uuid,
             "rating": 3,
             "review": "Good lesson.",
         }
@@ -264,7 +264,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.lesson_1.id,
-            "lecturer": self.lecturer_profile.id,
+            "lecturer": self.lecturer_profile.uuid,
             "rating": 3.4,
             "review": "Good lesson.",
         }
@@ -279,7 +279,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.lesson_3.id,
-            "lecturer": self.lecturer_profile.id,
+            "lecturer": self.lecturer_profile.uuid,
             "rating": 3.5,
             "review": "Good lesson.",
         }
@@ -293,7 +293,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.lesson_1.id,
-            "lecturer": self.lecturer_profile.id,
+            "lecturer": self.lecturer_profile.uuid,
             "rating": 3,
             "review": "Good lesson.",
         }
@@ -308,7 +308,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.lesson_3.id,
-            "lecturer": self.lecturer_profile.id,
+            "lecturer": self.lecturer_profile.uuid,
             "rating": 4,
             "review": "Good lesson.",
         }
@@ -323,7 +323,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.lesson_1.id,
-            "lecturer": self.lecturer_profile.id,
+            "lecturer": self.lecturer_profile.uuid,
             "rating": 4,
             "review": "Good lesson.",
         }

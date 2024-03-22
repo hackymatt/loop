@@ -9,6 +9,7 @@ from review.serializers import (
 )
 from review.filters import ReviewFilter
 from review.models import Review
+from profile.models import Profile
 from random import sample
 from django.db.models import Count
 
@@ -33,6 +34,22 @@ class ReviewViewSet(ModelViewSet):
         else:
             permission_classes = self.permission_classes
         return [permission() for permission in permission_classes]
+
+    def set_lecturer(self, request):
+        data = request.data
+        lecturer_uuid = data["lecturer"]
+        lecturer = Profile.objects.get(uuid=lecturer_uuid)
+        data["lecturer"] = lecturer.id
+
+        return request
+
+    def create(self, request, *args, **kwargs):
+        request = self.set_lecturer(request)
+        return super().create(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        request = self.set_lecturer(request)
+        return super().update(request, *args, **kwargs)
 
 
 class ReviewStatsViewSet(ModelViewSet):

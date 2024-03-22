@@ -77,7 +77,7 @@ export default function AccountTechnologiesTableRow({ row, onEdit, onDelete }: P
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         slotProps={{
           paper: {
-            sx: { width: 160 },
+            sx: { width: "fit-content" },
           },
         }}
       >

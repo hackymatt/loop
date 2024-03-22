@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
+import { useMemo, useState, useCallback } from "react";
 
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -24,15 +24,16 @@ import { usePurchase, usePurchasePageCount } from "src/api/purchase/purchase";
 
 import Scrollbar from "src/components/scrollbar";
 
-import ReviewNewForm from "src/sections/review/common/review-new-form";
-
-import { ReviewStatus } from "src/types/purchase";
 import { IQueryParamValue } from "src/types/query-params";
+import { ReviewStatus, IPurchaseItemProp } from "src/types/purchase";
 
-import FilterSearch from "../../../filters/filter-search";
-import FilterTeacher from "../../../filters/filter-teacher";
-import AccountTableHead from "../../../account/account-table-head";
-import AccountReviewsTableRow from "../../../account/user/account-reviews-table-row";
+import ReviewNewForm from "./review-new-form";
+import ReviewEditForm from "./review-edit-form";
+import ReviewDeleteForm from "./review-delete-form";
+import FilterSearch from "../../../../filters/filter-search";
+import FilterTeacher from "../../../../filters/filter-teacher";
+import AccountTableHead from "../../../../account/account-table-head";
+import AccountReviewsTableRow from "../../../../account/student/account-reviews-table-row";
 
 // ----------------------------------------------------------------------
 
@@ -43,9 +44,9 @@ const TABS = [
 ];
 
 const TABLE_HEAD = [
-  { id: "course_title", label: "Nazwa kursu" },
-  { id: "lesson_title", label: "Nazwa lekcji" },
-  { id: "review_status", label: "Status" },
+  { id: "lesson_title", label: "Nazwa lekcji", minWidth: 250 },
+  { id: "lesson_status", label: "Status" },
+  { id: "reservation_date", label: "Termin" },
   { id: "lecturer_uuid", label: "Instruktor" },
   { id: "created_at", label: "Data zakupu" },
   { id: "" },
@@ -56,7 +57,13 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
 // ----------------------------------------------------------------------
 
 export default function AccountReviewsView() {
-  const formOpen = useBoolean();
+  const addReviewFormOpen = useBoolean();
+  const editReviewFormOpen = useBoolean();
+  const deleteReviewFormOpen = useBoolean();
+
+  const [addedPurchase, setAddedPurchase] = useState<IPurchaseItemProp>();
+  const [editedPurchase, setEditedPurchase] = useState<IPurchaseItemProp>();
+  const [deletedPurchase, setDeletedPurchase] = useState<IPurchaseItemProp>();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
@@ -125,6 +132,30 @@ export default function AccountReviewsView() {
       handleChange("page", 1);
     },
     [handleChange],
+  );
+
+  const handleAddReview = useCallback(
+    (purchase: IPurchaseItemProp) => {
+      setAddedPurchase(purchase);
+      addReviewFormOpen.onToggle();
+    },
+    [addReviewFormOpen],
+  );
+
+  const handleEditReview = useCallback(
+    (purchase: IPurchaseItemProp) => {
+      setEditedPurchase(purchase);
+      editReviewFormOpen.onToggle();
+    },
+    [editReviewFormOpen],
+  );
+
+  const handleDeleteReview = useCallback(
+    (purchase: IPurchaseItemProp) => {
+      setDeletedPurchase(purchase);
+      deleteReviewFormOpen.onToggle();
+    },
+    [deleteReviewFormOpen],
   );
 
   return (
@@ -210,9 +241,9 @@ export default function AccountReviewsView() {
                   <AccountReviewsTableRow
                     key={row.id}
                     row={row}
-                    onAdd={(purchase) => {}}
-                    onEdit={(purchase) => {}}
-                    onDelete={(purchase) => {}}
+                    onAdd={handleAddReview}
+                    onEdit={handleEditReview}
+                    onDelete={handleDeleteReview}
                   />
                 ))}
               </TableBody>
@@ -235,7 +266,29 @@ export default function AccountReviewsView() {
         />
       </Box>
 
-      <ReviewNewForm open={formOpen.value} onClose={formOpen.onFalse} />
+      {addedPurchase && (
+        <ReviewNewForm
+          purchase={addedPurchase}
+          open={addReviewFormOpen.value}
+          onClose={addReviewFormOpen.onFalse}
+        />
+      )}
+
+      {editedPurchase && (
+        <ReviewEditForm
+          purchase={editedPurchase}
+          open={editReviewFormOpen.value}
+          onClose={editReviewFormOpen.onFalse}
+        />
+      )}
+
+      {deletedPurchase && (
+        <ReviewDeleteForm
+          purchase={deletedPurchase}
+          open={deleteReviewFormOpen.value}
+          onClose={deleteReviewFormOpen.onFalse}
+        />
+      )}
     </>
   );
 }

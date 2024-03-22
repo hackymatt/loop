@@ -39,7 +39,7 @@ class Migration(migrations.Migration):
                         ],
                     ),
                 ),
-                ("review", models.TextField(null=True)),
+                ("review", models.TextField(null=True, blank=True)),
                 (
                     "lecturer",
                     models.ForeignKey(

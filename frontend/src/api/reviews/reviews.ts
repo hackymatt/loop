@@ -1,5 +1,6 @@
+import { AxiosError } from "axios";
 import { compact } from "lodash-es";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
@@ -8,6 +9,8 @@ import { IReviewItemProp } from "src/types/review";
 import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
+import { getCsrfToken } from "../utils/csrf";
+import { purchaseQuery } from "../purchase/purchase";
 
 const endpoint = "/reviews" as const;
 
@@ -24,10 +27,12 @@ type IReview = {
   student: IProfile;
   lecturer: IProfile;
   created_at: string;
-  review: string;
-  rating: string;
+  review?: string | null;
+  rating: number;
 };
 
+type ICreateReview = Pick<IReview, "rating" | "review"> & { lesson: string; lecturer: string };
+type ICreateReviewReturn = ICreateReview;
 export const reviewsQuery = (query?: IQueryParams) => {
   const url = endpoint;
   const urlParams = formatQueryParams(query);
@@ -43,7 +48,7 @@ export const reviewsQuery = (query?: IQueryParams) => {
         return {
           id,
           name: studentFullName,
-          rating: parseFloat(rating),
+          rating: parseFloat(rating.toString()),
           createdAt: created_at,
           gender: studentGender,
           message: review,
@@ -69,4 +74,24 @@ export const useReviewsPageCount = (query?: IQueryParams) => {
   const { queryKey, queryFn } = reviewsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.pagesCount, ...rest };
+};
+
+export const useCreateReview = () => {
+  const queryClient = useQueryClient();
+  return useMutation<ICreateReviewReturn, AxiosError, ICreateReview>(
+    async (variables) => {
+      const result = await Api.post(endpoint, variables, {
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      });
+      return result.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [endpoint] });
+        queryClient.invalidateQueries({ queryKey: purchaseQuery().queryKey });
+      },
+    },
+  );
 };
