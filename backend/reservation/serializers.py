@@ -160,7 +160,6 @@ class ReservationSerializer(ModelSerializer):
         data = {
             **{
                 "lesson_title": lesson.title,
-                "lesson_start_time": lesson_schedule.start_time,
                 "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
                 "meeting_url": "",
             }
@@ -176,7 +175,6 @@ class ReservationSerializer(ModelSerializer):
         data = {
             **{
                 "lesson_title": lesson.title,
-                "lesson_start_time": lesson_schedule.start_time,
                 "meeting_url": "",
                 "student_full_name": f"{profile.user.first_name} {profile.user.last_name}",
                 "students_count": students_count,

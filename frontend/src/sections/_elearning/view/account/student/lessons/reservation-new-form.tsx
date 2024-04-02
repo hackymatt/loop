@@ -63,18 +63,26 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
     [lessonLecturers],
   );
 
+  const today = useMemo(() => format(new Date(), "yyyy-MM-dd"), []);
   const [error, setError] = useState<string | undefined>();
   const [user, setUser] = useState<ITeamMemberProps>(DEFAULT_USER);
-  const [date, setDate] = useState<string>(format(new Date(), "yyyy-MM-dd"));
+  const [date, setDate] = useState<string>(today);
 
-  const { data: lessonSchedules, isLoading: isLoadingTimeSlots } = useLessonSchedules({
-    lecturer_id: user.id,
-    lesson_id: purchase?.id,
-    duration: purchase?.lessonDuration,
-    time: date,
-    sort_by: "start_time",
-    page_size: 48,
-  });
+  const queryParams = useMemo(
+    () => ({
+      lecturer_id: user.id,
+      lesson_id: purchase?.id,
+      duration: purchase?.lessonDuration,
+      time: date,
+      sort_by: "start_time",
+      page_size: 48,
+    }),
+    [date, purchase?.id, purchase?.lessonDuration, user.id],
+  );
+
+  const { data: lessonSchedules, isLoading: isLoadingTimeSlots } = useLessonSchedules(
+    date === today ? { ...queryParams, reserved: "True" } : queryParams,
+  );
 
   const slots = useMemo(() => {
     const allSlots = lessonSchedules?.map((lessonSchedule: IScheduleProp) => {

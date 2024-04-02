@@ -228,11 +228,11 @@ class ReservationTest(APITestCase):
             lecturer=self.lecturer_profile,
             start_time=make_aware(
                 datetime.now().replace(minute=30, second=0, microsecond=0)
-                + timedelta(minutes=30 * 40)
+                + timedelta(minutes=30 * 400)
             ),
             end_time=make_aware(
                 datetime.now().replace(minute=30, second=0, microsecond=0)
-                + timedelta(minutes=30 * 43)
+                + timedelta(minutes=30 * 403)
             ),
             lesson=self.lesson_4,
         )
@@ -516,11 +516,32 @@ class ReservationTest(APITestCase):
         self.assertTrue(is_reservation_found(self.reservation_1.id))
         self.assertEqual(emails_sent_number(), 0)
 
+    def test_delete_reservation_authenticated_cancellation(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # delete data
+        response = self.client.delete(f"{self.endpoint}/{self.reservation_1.id}")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(reservation_number(), 6)
+        self.assertTrue(is_reservation_found(self.reservation_1.id))
+        self.assertEqual(emails_sent_number(), 0)
+
     def test_delete_reservation_authenticated_shared(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # delete data
+        self.reservation_1.schedule.start_time = make_aware(
+            datetime.now().replace(minute=30, second=0, microsecond=0)
+            + timedelta(minutes=30 * 250)
+        )
+        self.reservation_1.schedule.end_time = make_aware(
+            datetime.now().replace(minute=30, second=0, microsecond=0)
+            + timedelta(minutes=30 * 251)
+        )
+        self.reservation_1.schedule.save()
+
         response = self.client.delete(f"{self.endpoint}/{self.reservation_1.id}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(reservation_number(), 5)
@@ -543,6 +564,16 @@ class ReservationTest(APITestCase):
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # delete data
+        self.reservation_4.schedule.start_time = make_aware(
+            datetime.now().replace(minute=30, second=0, microsecond=0)
+            + timedelta(minutes=30 * 250)
+        )
+        self.reservation_4.schedule.end_time = make_aware(
+            datetime.now().replace(minute=30, second=0, microsecond=0)
+            + timedelta(minutes=30 * 251)
+        )
+        self.reservation_4.schedule.save()
+
         response = self.client.delete(f"{self.endpoint}/{self.reservation_4.id}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(reservation_number(), 5)

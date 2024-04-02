@@ -1,4 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from reservation.serializers import (
     ReservationSerializer,
@@ -7,11 +9,13 @@ from reservation.serializers import (
 from reservation.models import Reservation
 from profile.models import Profile
 from schedule.models import Schedule
-from datetime import timedelta
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
 from mailer.mailer import Mailer
 
 
 MIN_LESSON_DURATION_MINS = 30
+CANCELLATION_TIME = 24
 
 
 class ReservationViewSet(ModelViewSet):
@@ -36,6 +40,14 @@ class ReservationViewSet(ModelViewSet):
 
         reservation = super().get_object()
         schedule = reservation.schedule
+
+        if (schedule.start_time - make_aware(datetime.now())) < timedelta(
+            hours=CANCELLATION_TIME
+        ):
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={"detail": "Nie można odwołać rezerwacji."},
+            )
 
         other_reservations = (
             Reservation.objects.filter(schedule=schedule).exclude(student=student).all()
@@ -69,7 +81,6 @@ class ReservationViewSet(ModelViewSet):
         data = {
             **{
                 "lesson_title": reservation.lesson.title,
-                "lesson_start_time": schedule.start_time,
                 "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
             }
         }
@@ -84,7 +95,6 @@ class ReservationViewSet(ModelViewSet):
         data = {
             **{
                 "lesson_title": reservation.lesson.title,
-                "lesson_start_time": schedule.start_time,
             }
         }
         if other_reservations.count() == 0:
