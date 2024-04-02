@@ -8,6 +8,7 @@ from reservation.models import Reservation
 from profile.models import Profile
 from schedule.models import Schedule
 from datetime import timedelta
+from mailer.mailer import Mailer
 
 
 MIN_LESSON_DURATION_MINS = 30
@@ -61,5 +62,37 @@ class ReservationViewSet(ModelViewSet):
                 schedule.delete()
         else:
             deletion = super().destroy(request, *args, **kwargs)
+
+        mailer = Mailer()
+
+        # notify student
+        data = {
+            **{
+                "lesson_title": reservation.lesson.title,
+                "lesson_start_time": schedule.start_time,
+                "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
+            }
+        }
+        mailer.send(
+            email_template="remove_reservation.html",
+            to=[student.user.email],
+            subject=f"Odwołanie rezerwacji na lekcję {reservation.lesson.title}.",
+            data=data,
+        )
+
+        # notify lecturer
+        data = {
+            **{
+                "lesson_title": reservation.lesson.title,
+                "lesson_start_time": schedule.start_time,
+            }
+        }
+        if other_reservations.count() == 0:
+            mailer.send(
+                email_template="unreserve_timeslot.html",
+                to=[schedule.lecturer.user.email],
+                subject="Odwołanie rezerwacji terminu.",
+                data=data,
+            )
 
         return deletion

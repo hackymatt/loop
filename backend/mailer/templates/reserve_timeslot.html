@@ -36,7 +36,7 @@
         }
 
 	.sub-text {
-            margin: 16px 0px 40px;
+            margin: 16px 0px 0px;
             line-height: 22px;
             font-size: 14px;
             font-family: __Public_Sans_66e638, __Public_Sans_Fallback_66e638, Helvetica, Arial, sans-serif;
@@ -44,10 +44,11 @@
             color: rgb(99, 115, 129);
             box-sizing: border-box;
         }
-
+		
 	a:link { 
         text-decoration: none; 
         } 
+
 		
 	</style>
 	</head>
@@ -55,9 +56,10 @@
 		<div>
 			<main">
 				<div class="container">
-					<h3 class="text">Dziękujemy za rejestrację w naszym newsletterze</h3>
-					<p class="sub-text">Od teraz będziesz otrzymywał informację na temat naszych aktualnych ofert i promocji</p>
-					<p class="sub-text">W celu anulowania subskrypcji kliknij w ten link: <a href={{unsubscribe_url}}>Wyrejestruj</a></p>
+					<h3 class="text">Nowa rezerwacja</h3>
+					<p class="sub-text">Nazwa lekcji: {{lesson_title}}</p>
+					<p class="sub-text">Data rozpoczęcia: {{lesson_start_time}}</p>
+					<p class="sub-text">Spotkanie: <a href={{meeting_url}}>{{meeting_url}}</a></p>
 				</div>
 			</main>
 		</div>
