@@ -48,10 +48,11 @@ services:
       - 8002:8002
 
   db:
+    container_name: database
+    image: postgres:latest
     restart: always
-    image: postgres:15
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=loop
       - POSTGRES_USER=loop_dev
