@@ -48,7 +48,7 @@
 	.warning-text {
             margin: 32px 0px;
             line-height: 22px;
-            font-size: 10px;
+            font-size: 15px;
             font-family: __Public_Sans_66e638, __Public_Sans_Fallback_66e638, Helvetica, Arial, sans-serif;
             font-weight: 400;
             color: rgb(99, 115, 129);
@@ -69,6 +69,7 @@
 					<h3 class="text">Potwierdzenie rezerwacji</h3>
 					<p class="sub-text">Nazwa lekcji: {{lesson_title}}</p>
 					<p class="sub-text">Prowadzący: {{lecturer_full_name}}</p>
+                                        <p class="sub-text">Data rozpoczęcia: {{lesson_start_time}} (PL)</p>
 					<p class="sub-text">Spotkanie: <a href={{meeting_url}}>{{meeting_url}}</a></p>
 					<p class="warning-text">Pamiętaj, że odwołanie rezerwacji jest możliwe do <b>24 godzin</b> przed rozpoczęciem zajęć. W celu odwołania rezerwacji zaloguj się do swojego konta.</p>
 				</div>

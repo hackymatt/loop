@@ -11,6 +11,7 @@ from profile.models import Profile
 from schedule.models import Schedule
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
+from pytz import timezone, utc
 from mailer.mailer import Mailer
 
 
@@ -82,6 +83,9 @@ class ReservationViewSet(ModelViewSet):
             **{
                 "lesson_title": reservation.lesson.title,
                 "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
+                "lesson_start_time": schedule.start_time.replace(tzinfo=utc).astimezone(
+                    timezone("Europe/Warsaw")
+                ),
             }
         }
         mailer.send(
@@ -95,6 +99,9 @@ class ReservationViewSet(ModelViewSet):
         data = {
             **{
                 "lesson_title": reservation.lesson.title,
+                "lesson_start_time": schedule.start_time.replace(tzinfo=utc).astimezone(
+                    timezone("Europe/Warsaw")
+                ),
             }
         }
         if other_reservations.count() == 0:

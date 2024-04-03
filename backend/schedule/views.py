@@ -9,6 +9,9 @@ from schedule.serializers import (
 from schedule.filters import ScheduleFilter
 from schedule.models import Schedule
 from profile.models import Profile
+from reservation.models import Reservation
+from pytz import timezone, utc
+from mailer.mailer import Mailer
 
 
 class ManageScheduleViewSet(ModelViewSet):
@@ -35,6 +38,38 @@ class ManageScheduleViewSet(ModelViewSet):
         user = self.request.user
         lecturer = Profile.objects.get(user=user)
         return self.queryset.filter(lecturer=lecturer)
+
+    def destroy(self, request, *args, **kwargs):
+        schedule = super().get_object()
+        lesson = schedule.lesson
+        emails = [
+            reservation.student.user.email
+            for reservation in Reservation.objects.filter(schedule=schedule).all()
+        ]
+
+        deletion = super().destroy(request, *args, **kwargs)
+
+        if lesson is not None:
+            mailer = Mailer()
+            # notify students
+            data = {
+                **{
+                    "lesson_title": lesson.title,
+                    "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
+                    "lesson_start_time": schedule.start_time.replace(
+                        tzinfo=utc
+                    ).astimezone(timezone("Europe/Warsaw")),
+                }
+            }
+            for email in emails:
+                mailer.send(
+                    email_template="lesson_cancel.html",
+                    to=[email],
+                    subject="Twoja lekcja została odwołana.",
+                    data=data,
+                )
+
+        return deletion
 
 
 class ScheduleViewSet(ModelViewSet):

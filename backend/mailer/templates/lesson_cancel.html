@@ -34,6 +34,15 @@
             font-family: __Barlow_5868ee, __Barlow_Fallback_5868ee, Helvetica, Arial, sans-serif;
             box-sizing: border-box;
         }
+		
+	.text2 {
+            font-size: 20px;
+            margin: 16px 0px 40px;
+            font-weight: 700;
+            line-height: 45px;
+            font-family: __Barlow_5868ee, __Barlow_Fallback_5868ee, Helvetica, Arial, sans-serif;
+            box-sizing: border-box;
+        }
 
 	.sub-text {
             margin: 16px 0px 0px;
@@ -45,10 +54,16 @@
             box-sizing: border-box;
         }
 		
-	a:link { 
-        text-decoration: none; 
-        } 
-
+	.warning-text {
+            margin: 32px 0px;
+            line-height: 22px;
+            font-size: 15px;
+            font-family: __Public_Sans_66e638, __Public_Sans_Fallback_66e638, Helvetica, Arial, sans-serif;
+            font-weight: 400;
+            color: rgb(99, 115, 129);
+            box-sizing: border-box;
+        }
+		
 		
 	</style>
 	</head>
@@ -56,10 +71,12 @@
 		<div>
 			<main">
 				<div class="container">
-					<h3 class="text">Nowa rezerwacja</h3>
+					<h5 class="text2">Przepraszamy za zmianę planów</h3>
+					<h3 class="text">Lekcja została odwołana przez prowadzącego</h3>
 					<p class="sub-text">Nazwa lekcji: {{lesson_title}}</p>
-                                        <p class="sub-text">Data rozpoczęcia: {{lesson_start_time}} (PL)</p>
-					<p class="sub-text">Spotkanie: <a href={{meeting_url}}>{{meeting_url}}</a></p>
+                    <p class="sub-text">Prowadzący: {{lecturer_full_name}}</p>
+                    <p class="sub-text">Data rozpoczęcia: {{lesson_start_time}} (PL)</p>
+					<p class="warning-text">Możesz ponownie zarezerwować termin. W celu rezerwacji zaloguj się do swojego konta.</p>
 				</div>
 			</main>
 		</div>

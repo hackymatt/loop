@@ -10,8 +10,8 @@ from lesson.models import Lesson, Technology
 from purchase.models import Purchase
 from schedule.models import Schedule
 from datetime import timedelta
+from pytz import timezone, utc
 from mailer.mailer import Mailer
-
 
 MIN_LESSON_DURATION_MINS = 30
 
@@ -161,6 +161,9 @@ class ReservationSerializer(ModelSerializer):
             **{
                 "lesson_title": lesson.title,
                 "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
+                "lesson_start_time": schedule.start_time.replace(tzinfo=utc).astimezone(
+                    timezone("Europe/Warsaw")
+                ),
                 "meeting_url": "",
             }
         }
@@ -175,6 +178,9 @@ class ReservationSerializer(ModelSerializer):
         data = {
             **{
                 "lesson_title": lesson.title,
+                "lesson_start_time": schedule.start_time.replace(tzinfo=utc).astimezone(
+                    timezone("Europe/Warsaw")
+                ),
                 "meeting_url": "",
                 "student_full_name": f"{profile.user.first_name} {profile.user.last_name}",
                 "students_count": students_count,
