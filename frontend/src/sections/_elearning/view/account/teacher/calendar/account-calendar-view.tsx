@@ -6,6 +6,7 @@ import { formatInTimeZone } from "date-fns-tz";
 import { useMemo, useState, useCallback } from "react";
 import { DatesSetArg, DateSelectArg, EventClickArg } from "@fullcalendar/core";
 
+import { useBoolean } from "src/hooks/use-boolean";
 import { useQueryParams } from "src/hooks/use-query-params";
 
 import { getTimezone } from "src/utils/get-timezone";
@@ -16,6 +17,8 @@ import { useSchedules, useCreateSchedule } from "src/api/schedules/schedules";
 import Calendar from "src/components/calendar/calendar";
 
 import { IScheduleProp } from "src/types/course";
+
+import LessonCancelForm from "./lesson-cancel-form";
 // ----------------------------------------------------------------------
 
 const AVAILABLE_STATUS = "Dostępny" as const;
@@ -68,8 +71,10 @@ export default function AccountScheduleView() {
     return formatInTimeZone(datePoint, getTimezone(), "HH:mm:ss");
   }, []);
 
+  const confirmCancellationFormOpen = useBoolean();
+
   const [scrollTime, setScrollTime] = useState<string>();
-  const [eventId, setEventId] = useState<string>();
+  const [eventDetails, setEventDetails] = useState<EventClickArg>();
 
   const { setQueryParam, getQueryParams } = useQueryParams();
 
@@ -86,7 +91,9 @@ export default function AccountScheduleView() {
     sort_by: "start_time",
   });
   const { mutateAsync: addTimeSlot } = useCreateSchedule();
-  const { mutateAsync: deleteTimeSlot } = useDeleteSchedule(eventId!);
+  const { mutateAsync: deleteTimeSlot, isLoading: isSubmitting } = useDeleteSchedule(
+    eventDetails?.event.id ?? "0",
+  );
 
   const events = useMemo(
     () =>
@@ -131,39 +138,67 @@ export default function AccountScheduleView() {
     [handleTimeChange, handleViewChange],
   );
 
-  const handleAddTimeSlot = async (selectionInfo: DateSelectArg) => {
-    await addTimeSlot({ start_time: selectionInfo.startStr, end_time: selectionInfo.endStr });
-    setScrollTime(getTime(selectionInfo.start));
-  };
+  const handleAddTimeSlot = useCallback(
+    async (selectionInfo: DateSelectArg) => {
+      await addTimeSlot({ start_time: selectionInfo.startStr, end_time: selectionInfo.endStr });
+      setScrollTime(getTime(selectionInfo.start));
+    },
+    [addTimeSlot, getTime],
+  );
 
-  const handleDeleteTimeSlot = async (eventInfo: EventClickArg) => {
-    if (eventInfo.event.title === AVAILABLE_STATUS) {
-      setEventId(eventInfo.event.id);
-      await deleteTimeSlot({});
-      setScrollTime(getTime(new Date(eventInfo.event.start!)));
+  const handleDeleteTimeSlot = useCallback(async () => {
+    await deleteTimeSlot({});
+    if (eventDetails) {
+      setScrollTime(getTime(new Date(eventDetails.event.start!)));
     }
-  };
+  }, [deleteTimeSlot, eventDetails, getTime]);
+
+  const handleEventClick = useCallback(
+    async (eventInfo: EventClickArg) => {
+      setEventDetails(eventInfo);
+      if (eventInfo.event.title === AVAILABLE_STATUS) {
+        handleDeleteTimeSlot();
+      } else {
+        confirmCancellationFormOpen.onToggle();
+      }
+    },
+    [confirmCancellationFormOpen, handleDeleteTimeSlot],
+  );
+
+  const handleLessonCancel = useCallback(async () => {
+    await handleDeleteTimeSlot();
+    confirmCancellationFormOpen.onFalse();
+  }, [confirmCancellationFormOpen, handleDeleteTimeSlot]);
 
   return (
-    <Calendar
-      initialView={getViewType(view) || "timeGridWeek"}
-      slotDuration={`00:${SLOT_SIZE}:00`}
-      slotLabelInterval={`00:${SLOT_SIZE}`}
-      headerToolbar={{
-        left: "prev,next",
-        center: "title",
-        right: "today dayGridMonth,timeGridWeek,timeGridDay",
-      }}
-      selectable
-      select={handleAddTimeSlot}
-      initialDate={filters?.time_from ?? undefined}
-      datesSet={handleChange}
-      events={events}
-      eventClick={handleDeleteTimeSlot}
-      displayEventTime={view === "month"}
-      scrollTime={scrollTime}
-      slotMinTime="06:00:00"
-      slotMaxTime="22:00:00"
-    />
+    <>
+      <Calendar
+        initialView={getViewType(view) || "timeGridWeek"}
+        slotDuration={`00:${SLOT_SIZE}:00`}
+        slotLabelInterval={`00:${SLOT_SIZE}`}
+        headerToolbar={{
+          left: "prev,next",
+          center: "title",
+          right: "today dayGridMonth,timeGridWeek,timeGridDay",
+        }}
+        selectable
+        select={handleAddTimeSlot}
+        initialDate={filters?.time_from ?? undefined}
+        datesSet={handleChange}
+        events={events}
+        eventClick={handleEventClick}
+        displayEventTime={view === "month"}
+        scrollTime={scrollTime}
+        slotMinTime="06:00:00"
+        slotMaxTime="22:00:00"
+      />
+
+      <LessonCancelForm
+        loading={isSubmitting}
+        open={confirmCancellationFormOpen.value}
+        onConfirm={handleLessonCancel}
+        onClose={confirmCancellationFormOpen.onFalse}
+      />
+    </>
   );
 }
