@@ -4,7 +4,7 @@ from course.models import Course
 from lesson.models import Lesson, LessonPriceHistory
 from technology.models import Technology
 from topic.models import Topic
-from finance.models import Finance
+from finance.models import Finance, FinanceHistory
 from skill.models import Skill
 from review.models import Review
 from purchase.models import Purchase
@@ -288,5 +288,13 @@ def create_finance(
     lecturer: Profile, account: str = None, rate: float = None, commission: int = None
 ):
     return Finance.objects.create(
+        lecturer=lecturer, account=account, rate=rate, commission=commission
+    )
+
+
+def create_finance_history(
+    lecturer: Profile, account: str = None, rate: float = None, commission: int = None
+):
+    return FinanceHistory.objects.create(
         lecturer=lecturer, account=account, rate=rate, commission=commission
     )
