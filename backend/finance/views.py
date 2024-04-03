@@ -1,9 +1,10 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from utils.permissions.permissions import IsLecturer
-from finance.serializers import FinanceSerializer
-from finance.models import Finance
+from finance.serializers import FinanceSerializer, FinanceHistorySerializer
+from finance.models import Finance, FinanceHistory
+from finance.filters import FinanceHistoryFilter
 from profile.models import Profile
 
 
@@ -26,3 +27,11 @@ class FinanceDetailsViewSet(ModelViewSet):
         user = self.request.user
         profile = Profile.objects.get(user=user)
         return Finance.objects.filter(lecturer=profile).first()
+
+
+class FinanceHistoryViewSet(ModelViewSet):
+    http_method_names = ["get"]
+    queryset = FinanceHistory.objects.all()
+    serializer_class = FinanceHistorySerializer
+    filterset_class = FinanceHistoryFilter
+    permission_classes = [IsAuthenticated, IsAdminUser]

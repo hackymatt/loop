@@ -151,9 +151,22 @@ const adminNavigations = [
     },
     {
       title: "Użytkownicy",
-      path: paths.account.admin.users,
+      path: paths.account.admin.users.list,
       icon: <Iconify icon="carbon:user-multiple" />,
-      children: [],
+      children: [
+        {
+          title: "Spis użytkowników",
+          path: paths.account.admin.users.list,
+          icon: <Iconify icon="carbon:list" />,
+          children: [],
+        },
+        {
+          title: "Historia danych finansowych",
+          path: `${paths.account.admin.users.financeHistory}/?sort_by=-created_at`,
+          icon: <Iconify icon="carbon:finance" />,
+          children: [],
+        },
+      ],
     },
   ],
 ];

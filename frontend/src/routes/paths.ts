@@ -32,7 +32,10 @@ export const paths = {
         purchases: "/account/admin/lessons/purchases",
         reviews: "/account/admin/lessons/reviews",
       },
-      users: "/account/admin/users",
+      users: {
+        list: "/account/admin/users/list",
+        financeHistory: "/account/admin/users/finance-history",
+      },
       earnings: "/account/admin/earnings",
     },
     teacher: {

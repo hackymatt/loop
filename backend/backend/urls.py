@@ -38,7 +38,7 @@ from teaching.views import ManageTeachingViewSet, TeachingViewSet
 from reservation.views import ReservationViewSet
 from csrf.views import CsrfViewSet
 from contact.views import ContactViewSet
-from finance.views import FinanceDetailsViewSet
+from finance.views import FinanceDetailsViewSet, FinanceHistoryViewSet
 
 
 router = DefaultRouter(trailing_slash=False)
@@ -85,6 +85,7 @@ router.register(r"purchase", PurchaseViewSet, basename="purchase")
 router.register(r"teaching", ManageTeachingViewSet, basename="teaching")
 router.register(r"lesson-lecturers", TeachingViewSet, basename="lesson_lecturers")
 router.register(r"reservation", ReservationViewSet, basename="reservation")
+router.register(r"finance-history", FinanceHistoryViewSet, basename="finance_history")
 
 
 urlpatterns = [
