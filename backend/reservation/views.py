@@ -83,9 +83,9 @@ class ReservationViewSet(ModelViewSet):
             **{
                 "lesson_title": reservation.lesson.title,
                 "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
-                "lesson_start_time": schedule.start_time.replace(tzinfo=utc).astimezone(
-                    timezone("Europe/Warsaw")
-                ).strftime("%d-%m-%Y %H:%M"),
+                "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
+                .astimezone(timezone("Europe/Warsaw"))
+                .strftime("%d-%m-%Y %H:%M"),
             }
         }
         mailer.send(
@@ -99,9 +99,9 @@ class ReservationViewSet(ModelViewSet):
         data = {
             **{
                 "lesson_title": reservation.lesson.title,
-                "lesson_start_time": schedule.start_time.replace(tzinfo=utc).astimezone(
-                    timezone("Europe/Warsaw")
-                ).strftime("%d-%m-%Y %H:%M"),
+                "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
+                .astimezone(timezone("Europe/Warsaw"))
+                .strftime("%d-%m-%Y %H:%M"),
             }
         }
         if other_reservations.count() == 0:
