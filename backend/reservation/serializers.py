@@ -163,7 +163,7 @@ class ReservationSerializer(ModelSerializer):
                 "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
                 "lesson_start_time": schedule.start_time.replace(tzinfo=utc).astimezone(
                     timezone("Europe/Warsaw")
-                ),
+                ).strftime("%d-%m-%Y %H:%M"),
                 "meeting_url": "",
             }
         }
@@ -180,7 +180,7 @@ class ReservationSerializer(ModelSerializer):
                 "lesson_title": lesson.title,
                 "lesson_start_time": schedule.start_time.replace(tzinfo=utc).astimezone(
                     timezone("Europe/Warsaw")
-                ),
+                ).strftime("%d-%m-%Y %H:%M"),
                 "meeting_url": "",
                 "student_full_name": f"{profile.user.first_name} {profile.user.last_name}",
                 "students_count": students_count,
