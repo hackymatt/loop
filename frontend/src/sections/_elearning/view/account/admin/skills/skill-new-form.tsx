@@ -50,7 +50,7 @@ export default function SkillNewForm({ onClose, ...other }: Props) {
       await createSkill(data);
       reset();
       onClose();
-      enqueueSnackbar("Temat został dodany", { variant: "success" });
+      enqueueSnackbar("Umiejętność została dodana", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }

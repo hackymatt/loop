@@ -18,6 +18,10 @@ import { LessonStatus, IPurchaseItemProp } from "src/types/purchase";
 
 // ----------------------------------------------------------------------
 
+const CANCELLATION_TIME = 24 as const; // 24 hours
+
+// ----------------------------------------------------------------------
+
 type Props = {
   row: IPurchaseItemProp;
   onAdd: (purchase: IPurchaseItemProp) => void;
@@ -71,6 +75,13 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
   );
 
   const isNew = useMemo(() => row.lessonStatus === LessonStatus.nowa, [row.lessonStatus]);
+
+  const canCancel = useMemo(
+    () =>
+      (new Date(row.lessonSlot[0]).getTime() - new Date().getTime()) / (60 * 60 * 1000) >=
+      CANCELLATION_TIME,
+    [row.lessonSlot],
+  );
 
   return (
     <>
@@ -135,7 +146,7 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
         )}
 
         {isPlanned && (
-          <MenuItem onClick={handleDelete} sx={{ color: "error.main" }}>
+          <MenuItem onClick={handleDelete} sx={{ color: "error.main" }} disabled={!canCancel}>
             <Iconify icon="carbon:trash-can" sx={{ mr: 0.5 }} />
             <Typography variant="body2">Usuń rezerwację</Typography>
           </MenuItem>

@@ -11,8 +11,16 @@ from .factory import (
     create_schedule,
     create_schedule_obj,
     create_teaching,
+    create_reservation,
 )
-from .helpers import login
+from .helpers import (
+    login,
+    schedule_number,
+    is_schedule_found,
+    emails_sent_number,
+    get_mail,
+    reservation_number,
+)
 from django.contrib import auth
 import json
 from datetime import datetime, timedelta
@@ -250,6 +258,19 @@ class ScheduleTest(APITestCase):
                 )
             )
 
+        self.delete_schedule = create_schedule(
+            lecturer=self.lecturer_profile_1,
+            start_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 10)
+            ),
+            end_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 11)
+            ),
+            lesson=self.lesson_1,
+        )
+
         self.new_schedule = create_schedule_obj(
             start_time=make_aware(
                 datetime.now().replace(minute=30, second=0, microsecond=0)
@@ -259,6 +280,18 @@ class ScheduleTest(APITestCase):
                 datetime.now().replace(minute=30, second=0, microsecond=0)
                 + timedelta(minutes=30 * 101)
             ),
+        )
+
+        create_reservation(
+            student=self.profile,
+            lesson=self.lesson_1,
+            schedule=self.delete_schedule,
+        )
+
+        create_reservation(
+            student=self.profile_2,
+            lesson=self.lesson_1,
+            schedule=self.delete_schedule,
         )
 
     def test_get_schedules_unauthenticated(self):
@@ -285,7 +318,7 @@ class ScheduleTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 10)
+        self.assertEqual(count, 11)
 
     def test_get_schedule_unauthenticated(self):
         # no login
@@ -344,4 +377,53 @@ class ScheduleTest(APITestCase):
                 "%Y-%m-%dT%H:%M"
             ),
             self.new_schedule["end_time"].strftime("%Y-%m-%dT%H:%M"),
+        )
+
+    def test_delete_schedule_unauthenticated(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.delete(f"{self.endpoint}/{self.delete_schedule.id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_schedule_not_lecturer(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.delete(f"{self.endpoint}/{self.delete_schedule.id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_schedule_authenticated_no_lesson(self):
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.delete(f"{self.endpoint}/{self.schedules[1].id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(is_schedule_found(self.schedules[1].id))
+        self.assertEqual(schedule_number(), 21)
+        self.assertEqual(emails_sent_number(), 0)
+
+    def test_delete_schedule_authenticated_lesson(self):
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.delete(f"{self.endpoint}/{self.delete_schedule.id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(is_schedule_found(self.delete_schedule.id))
+        self.assertEqual(schedule_number(), 21)
+        self.assertEqual(emails_sent_number(), 2)
+        email = get_mail(0)
+        self.assertEqual(email.to, [self.profile.user.email])
+        self.assertEqual(
+            email.subject,
+            "Twoja lekcja została odwołana.",
+        )
+        email = get_mail(1)
+        self.assertEqual(email.to, [self.profile_2.user.email])
+        self.assertEqual(
+            email.subject,
+            "Twoja lekcja została odwołana.",
         )

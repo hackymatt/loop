@@ -10,7 +10,8 @@ from lesson.models import Lesson, Technology
 from purchase.models import Purchase
 from schedule.models import Schedule
 from datetime import timedelta
-
+from pytz import timezone, utc
+from mailer.mailer import Mailer
 
 MIN_LESSON_DURATION_MINS = 30
 
@@ -144,6 +145,60 @@ class ReservationSerializer(ModelSerializer):
             )
             timeslots.exclude(id=lesson_schedule.id).delete()
 
-        return Reservation.objects.create(
+        previous_students_count = Reservation.objects.filter(
+            schedule=lesson_schedule
+        ).count()
+
+        reservation = Reservation.objects.create(
             student=profile, lesson=lesson, schedule=lesson_schedule
         )
+
+        mailer = Mailer()
+        students_count = Reservation.objects.filter(schedule=lesson_schedule).count()
+
+        # notify student
+        data = {
+            **{
+                "lesson_title": lesson.title,
+                "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
+                "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
+                .astimezone(timezone("Europe/Warsaw"))
+                .strftime("%d-%m-%Y %H:%M"),
+                "meeting_url": "",
+            }
+        }
+        mailer.send(
+            email_template="add_reservation.html",
+            to=[profile.user.email],
+            subject=f"Potwierdzenie rezerwacji na lekcję {lesson.title}.",
+            data=data,
+        )
+
+        # notify lecturer
+        data = {
+            **{
+                "lesson_title": lesson.title,
+                "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
+                .astimezone(timezone("Europe/Warsaw"))
+                .strftime("%d-%m-%Y %H:%M"),
+                "meeting_url": "",
+                "student_full_name": f"{profile.user.first_name} {profile.user.last_name}",
+                "students_count": students_count,
+            }
+        }
+        if previous_students_count == 0:
+            mailer.send(
+                email_template="reserve_timeslot.html",
+                to=[schedule.lecturer.user.email],
+                subject="Nowa rezerwacja terminu.",
+                data=data,
+            )
+
+        mailer.send(
+            email_template="new_reservation.html",
+            to=[schedule.lecturer.user.email],
+            subject=f"Nowy zapis na lekcję {lesson.title}.",
+            data=data,
+        )
+
+        return reservation

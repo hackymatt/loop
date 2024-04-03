@@ -3,7 +3,6 @@ import { AxiosError } from "axios";
 import { formatInTimeZone } from "date-fns-tz";
 import { useMemo, useState, useEffect } from "react";
 
-import { LoadingButton } from "@mui/lab";
 import {
   Dialog,
   Button,
@@ -12,6 +11,8 @@ import {
   DialogContent,
   DialogActions,
 } from "@mui/material";
+
+import { useBoolean } from "src/hooks/use-boolean";
 
 import { getTimezone } from "src/utils/get-timezone";
 
@@ -26,6 +27,8 @@ import { IScheduleProp } from "src/types/course";
 import { ITeamMemberProps } from "src/types/team";
 import { IPurchaseItemProp } from "src/types/purchase";
 
+import ReservationConfirmForm from "./reservation-confirm-form";
+
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
@@ -38,6 +41,8 @@ const DEFAULT_USER = { id: "", avatarUrl: "", name: "Wszyscy" } as const;
 // ----------------------------------------------------------------------
 
 export default function ReservationNewForm({ purchase, onClose, ...other }: Props) {
+  const confirmReservationFormOpen = useBoolean();
+
   const { enqueueSnackbar } = useToastContext();
 
   const { mutateAsync: createReservation, isLoading: isSubmitting } = useCreateReservation();
@@ -63,18 +68,26 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
     [lessonLecturers],
   );
 
+  const today = useMemo(() => format(new Date(), "yyyy-MM-dd"), []);
   const [error, setError] = useState<string | undefined>();
   const [user, setUser] = useState<ITeamMemberProps>(DEFAULT_USER);
-  const [date, setDate] = useState<string>(format(new Date(), "yyyy-MM-dd"));
+  const [date, setDate] = useState<string>(today);
 
-  const { data: lessonSchedules, isLoading: isLoadingTimeSlots } = useLessonSchedules({
-    lecturer_id: user.id,
-    lesson_id: purchase?.id,
-    duration: purchase?.lessonDuration,
-    time: date,
-    sort_by: "start_time",
-    page_size: 48,
-  });
+  const queryParams = useMemo(
+    () => ({
+      lecturer_id: user.id,
+      lesson_id: purchase?.id,
+      duration: purchase?.lessonDuration,
+      time: date,
+      sort_by: "start_time",
+      page_size: 48,
+    }),
+    [date, purchase?.id, purchase?.lessonDuration, user.id],
+  );
+
+  const { data: lessonSchedules, isLoading: isLoadingTimeSlots } = useLessonSchedules(
+    date === today ? { ...queryParams, reserved: "True" } : queryParams,
+  );
 
   const slots = useMemo(() => {
     const allSlots = lessonSchedules?.map((lessonSchedule: IScheduleProp) => {
@@ -105,6 +118,7 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
         try {
           await createReservation({ lesson: purchase.id, schedule: schedule.id });
           setError(undefined);
+          confirmReservationFormOpen.onFalse();
           onClose();
           enqueueSnackbar("Rezerwacja została dodana", { variant: "success" });
         } catch (err) {
@@ -115,40 +129,48 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
   };
 
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
-      <DialogTitle sx={{ typography: "h5", pb: 3 }}>{purchase?.lessonTitle}</DialogTitle>
+    <>
+      <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
+        <DialogTitle sx={{ typography: "h5", pb: 3 }}>{purchase?.lessonTitle}</DialogTitle>
 
-      <DialogContent sx={{ py: 0 }}>
-        <Schedule
-          availableUsers={users}
-          currentUser={user}
-          onUserChange={(event, userId) => setUser(users.find((u) => u.id === userId)!)}
-          currentDate={date}
-          onDateChange={(selectedDate) => setDate(format(selectedDate, "yyyy-MM-dd"))}
-          availableTimeSlots={slots ?? []}
-          currentSlot={slot}
-          onSlotChange={(event, selectedSlot) => setSlot(selectedSlot)}
-          isLoadingUsers={isLoadingUsers}
-          isLoadingTimeSlots={isLoadingTimeSlots}
-          error={error}
-        />
-      </DialogContent>
+        <DialogContent sx={{ py: 0 }}>
+          <Schedule
+            availableUsers={users}
+            currentUser={user}
+            onUserChange={(event, userId) => setUser(users.find((u) => u.id === userId)!)}
+            currentDate={date}
+            onDateChange={(selectedDate) => setDate(format(selectedDate, "yyyy-MM-dd"))}
+            availableTimeSlots={slots ?? []}
+            currentSlot={slot}
+            onSlotChange={(event, selectedSlot) => setSlot(selectedSlot)}
+            isLoadingUsers={isLoadingUsers}
+            isLoadingTimeSlots={isLoadingTimeSlots}
+            error={error}
+          />
+        </DialogContent>
 
-      <DialogActions>
-        <Button variant="outlined" onClick={onClose} color="inherit">
-          Anuluj
-        </Button>
-        <LoadingButton
-          color="success"
-          type="submit"
-          variant="contained"
-          onClick={onSubmit}
-          disabled={!slot}
-          loading={isSubmitting}
-        >
-          Zarezerwuj
-        </LoadingButton>
-      </DialogActions>
-    </Dialog>
+        <DialogActions>
+          <Button variant="outlined" onClick={onClose} color="inherit">
+            Anuluj
+          </Button>
+          <Button
+            color="success"
+            type="submit"
+            variant="contained"
+            onClick={() => confirmReservationFormOpen.onToggle()}
+            disabled={!slot}
+          >
+            Zarezerwuj
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <ReservationConfirmForm
+        loading={isSubmitting}
+        open={confirmReservationFormOpen.value}
+        onConfirm={onSubmit}
+        onClose={confirmReservationFormOpen.onFalse}
+      />
+    </>
   );
 }

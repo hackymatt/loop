@@ -1,4 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from reservation.serializers import (
     ReservationSerializer,
@@ -7,10 +9,14 @@ from reservation.serializers import (
 from reservation.models import Reservation
 from profile.models import Profile
 from schedule.models import Schedule
-from datetime import timedelta
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
+from pytz import timezone, utc
+from mailer.mailer import Mailer
 
 
 MIN_LESSON_DURATION_MINS = 30
+CANCELLATION_TIME = 24
 
 
 class ReservationViewSet(ModelViewSet):
@@ -35,6 +41,14 @@ class ReservationViewSet(ModelViewSet):
 
         reservation = super().get_object()
         schedule = reservation.schedule
+
+        if (schedule.start_time - make_aware(datetime.now())) < timedelta(
+            hours=CANCELLATION_TIME
+        ):
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={"detail": "Nie można odwołać rezerwacji."},
+            )
 
         other_reservations = (
             Reservation.objects.filter(schedule=schedule).exclude(student=student).all()
@@ -61,5 +75,41 @@ class ReservationViewSet(ModelViewSet):
                 schedule.delete()
         else:
             deletion = super().destroy(request, *args, **kwargs)
+
+        mailer = Mailer()
+
+        # notify student
+        data = {
+            **{
+                "lesson_title": reservation.lesson.title,
+                "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
+                "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
+                .astimezone(timezone("Europe/Warsaw"))
+                .strftime("%d-%m-%Y %H:%M"),
+            }
+        }
+        mailer.send(
+            email_template="remove_reservation.html",
+            to=[student.user.email],
+            subject=f"Odwołanie rezerwacji na lekcję {reservation.lesson.title}.",
+            data=data,
+        )
+
+        # notify lecturer
+        data = {
+            **{
+                "lesson_title": reservation.lesson.title,
+                "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
+                .astimezone(timezone("Europe/Warsaw"))
+                .strftime("%d-%m-%Y %H:%M"),
+            }
+        }
+        if other_reservations.count() == 0:
+            mailer.send(
+                email_template="unreserve_timeslot.html",
+                to=[schedule.lecturer.user.email],
+                subject="Odwołanie rezerwacji terminu.",
+                data=data,
+            )
 
         return deletion
