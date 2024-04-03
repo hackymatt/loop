@@ -1274,7 +1274,6 @@ class TechnologyFilterTest(APITestCase):
         prices = [record["name"] for record in results]
         self.assertEqual(prices, ["Python"])
 
-        
     def test_courses_count_from_filter(self):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
@@ -1283,6 +1282,7 @@ class TechnologyFilterTest(APITestCase):
         data = json.loads(response.content)
         records_count = data["records_count"]
         self.assertEqual(records_count, 2)
+
     def test_created_at_filter(self):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data

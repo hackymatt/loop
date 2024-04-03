@@ -6,7 +6,7 @@ from rest_framework.serializers import (
 )
 from drf_extra_fields.fields import Base64ImageField
 from profile.models import Profile
-from finance.models import Finance
+from finance.models import Finance, FinanceHistory
 
 
 def get_finance(profile):
@@ -74,6 +74,17 @@ class UserSerializer(ModelSerializer):
             rate = data["rate"]
             commission = data["commission"]
             finance, _ = Finance.objects.get_or_create(lecturer=instance)
+            current_rate = finance.rate
+            current_commission = finance.commission
+
+            if current_rate != rate or current_commission != commission:
+                FinanceHistory.objects.create(
+                    lecturer=instance,
+                    account=finance.account,
+                    rate=current_rate,
+                    commission=current_commission,
+                )
+
             finance.rate = rate
             finance.commission = commission
             finance.save()

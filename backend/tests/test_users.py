@@ -3,6 +3,7 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
+    create_finance,
 )
 from .helpers import login, filter_dict, get_profile, get_user, is_data_match
 from django.contrib import auth
@@ -50,11 +51,15 @@ class UsersTest(APITestCase):
             password="TestPassword123",
             is_active=True,
         )
+        self.lecturer_data = {
+            "email": "lecturer_1@example.com",
+            "password": "TestPassword123",
+        }
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
-            email="lecturer_1@example.com",
-            password="TestPassword123",
+            email=self.lecturer_data["email"],
+            password=self.lecturer_data["password"],
             is_active=True,
         )
         self.lecturer_user_2 = create_user(
@@ -67,7 +72,11 @@ class UsersTest(APITestCase):
         self.student_profile_1 = create_profile(user=self.student_user_1)
         self.student_profile_2 = create_profile(user=self.student_user_2)
         self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+            user=self.lecturer_user_1,
+            user_type="W",
+        )
+        create_finance(
+            lecturer=self.lecturer_profile_1, account="", rate=125, commission=4
         )
         self.lecturer_profile_2 = create_profile(
             user=self.lecturer_user_2, user_type="W"
@@ -247,7 +256,7 @@ class UsersTest(APITestCase):
         )
         self.assertFalse(get_profile(get_user(user_data["email"])).image)
 
-    def test_amend_financial_details_authenticated(self):
+    def test_amend_financial_details_authenticated_change(self):
         # no login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -255,7 +264,7 @@ class UsersTest(APITestCase):
         new_data = {
             "first_name": "Name",
             "last_name": "LastName",
-            "email": "student_1@example.com",
+            "email": "lecturer_1@example.com",
             "phone_number": "999888777",
             "dob": "1900-01-01",
             "gender": "M",
@@ -269,7 +278,46 @@ class UsersTest(APITestCase):
             "image": "",
         }
         response = self.client.put(
-            f"{self.endpoint}/{self.student_profile_1.id}", new_data
+            f"{self.endpoint}/{self.lecturer_profile_1.id}", new_data
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
+        user_data = filter_dict(results, self.user_columns)
+        profile_data = filter_dict(results, self.profile_columns)
+        gender = profile_data.pop("gender")
+        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender[0])
+        self.assertTrue(is_data_match(get_user(user_data["email"]), user_data))
+        self.assertTrue(
+            is_data_match(get_profile(get_user(user_data["email"])), profile_data)
+        )
+        self.assertEqual(
+            get_profile(get_user(user_data["email"])).user_type, results["user_type"][0]
+        )
+        self.assertFalse(get_profile(get_user(user_data["email"])).image)
+
+    def test_amend_financial_details_authenticated_no_change(self):
+        # no login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # new data
+        new_data = {
+            "first_name": "Name",
+            "last_name": "LastName",
+            "email": "lecturer_1@example.com",
+            "phone_number": "999888777",
+            "dob": "1900-01-01",
+            "gender": "M",
+            "user_type": "W",
+            "rate": 125,
+            "commission": 4,
+            "street_address": "abc",
+            "zip_code": "30-100",
+            "city": "Miasto",
+            "country": "Polska",
+            "image": "",
+        }
+        response = self.client.put(
+            f"{self.endpoint}/{self.lecturer_profile_1.id}", new_data
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         results = json.loads(response.content)
