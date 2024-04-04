@@ -63,7 +63,7 @@ class Migration(migrations.Migration):
         migrations.AddConstraint(
             model_name="reservation",
             constraint=models.UniqueConstraint(
-                fields=("student", "schedule"),
+                fields=("student", "lesson", "schedule", "purchase"),
                 name="reservation_student_lesson_schedule_purchase_unique_together",
             ),
         ),

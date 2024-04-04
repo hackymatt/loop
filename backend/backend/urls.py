@@ -38,6 +38,7 @@ from teaching.views import ManageTeachingViewSet, TeachingViewSet
 from reservation.views import ReservationViewSet
 from contact.views import ContactViewSet
 from finance.views import FinanceDetailsViewSet, FinanceHistoryViewSet
+from profile.earnings.views import EarningViewSet
 
 
 router = DefaultRouter(trailing_slash=False)
@@ -85,7 +86,7 @@ router.register(r"teaching", ManageTeachingViewSet, basename="teaching")
 router.register(r"lesson-lecturers", TeachingViewSet, basename="lesson_lecturers")
 router.register(r"reservation", ReservationViewSet, basename="reservation")
 router.register(r"finance-history", FinanceHistoryViewSet, basename="finance_history")
-
+router.register(r"earnings", EarningViewSet, basename="earnings")
 
 urlpatterns = [
     path("", include(router.urls)),

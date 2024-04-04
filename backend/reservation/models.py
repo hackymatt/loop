@@ -26,7 +26,7 @@ class Reservation(BaseModel):
         ordering = ["id"]
         constraints = [
             UniqueConstraint(
-                fields=["student", "schedule"],
+                fields=["student", "lesson", "schedule", "purchase"],
                 name="reservation_student_lesson_schedule_purchase_unique_together",
             )
         ]
