@@ -13,6 +13,9 @@ import TableContainer from "@mui/material/TableContainer";
 import { tableCellClasses } from "@mui/material/TableCell";
 import TablePagination from "@mui/material/TablePagination";
 
+import { paths } from "src/routes/paths";
+import { useRouter } from "src/routes/hooks/use-router";
+
 import { useBoolean } from "src/hooks/use-boolean";
 import { useQueryParams } from "src/hooks/use-query-params";
 
@@ -44,9 +47,9 @@ const TABLE_HEAD = [
   { id: "first_name", label: "Imię" },
   { id: "last_name", label: "Nazwisko" },
   { id: "email", label: "Email", minWidth: 200 },
-  { id: "gender", label: "Płeć", minWidth: 100 },
+  { id: "gender", label: "Płeć", maxWidth: 100 },
   { id: "user_type", label: "Typ" },
-  { id: "created_at", label: "Data", minWidth: 100 },
+  { id: "created_at", label: "Data", minWidth: 110 },
   { id: "", width: 25 },
 ];
 
@@ -55,6 +58,7 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
 // ----------------------------------------------------------------------
 
 export default function AccountUsersView() {
+  const router = useRouter();
   const editFormOpen = useBoolean();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
@@ -119,6 +123,13 @@ export default function AccountUsersView() {
       editFormOpen.onToggle();
     },
     [editFormOpen],
+  );
+
+  const handleFinanceHistoryView = useCallback(
+    (user: IUserDetailsProps) => {
+      router.push(`${paths.account.admin.users.financeHistory}/?lecturer_id=${user.uuid}`);
+    },
+    [router],
   );
 
   return (
@@ -201,7 +212,12 @@ export default function AccountUsersView() {
             {users && (
               <TableBody>
                 {users.map((row) => (
-                  <AccountUsersTableRow key={row.id} row={row} onEdit={handleEditUser} />
+                  <AccountUsersTableRow
+                    key={row.id}
+                    row={row}
+                    onEdit={handleEditUser}
+                    onFinanceHistoryView={handleFinanceHistoryView}
+                  />
                 ))}
               </TableBody>
             )}

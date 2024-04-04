@@ -25,7 +25,7 @@ class OrderFilter(OrderingFilter):
 
 
 class FinanceHistoryFilter(FilterSet):
-    lecturer = UUIDFilter(field_name="lecturer__uuid", lookup_expr="exact")
+    lecturer_id = UUIDFilter(field_name="lecturer__uuid", lookup_expr="exact")
     account = CharFilter(field_name="account", lookup_expr="contains")
     rate_from = NumberFilter(field_name="rate", lookup_expr="gte")
     rate_to = NumberFilter(field_name="rate", lookup_expr="lte")
@@ -62,7 +62,7 @@ class FinanceHistoryFilter(FilterSet):
     class Meta:
         model = FinanceHistory
         fields = (
-            "lecturer",
+            "lecturer_id",
             "account",
             "rate_from",
             "rate_to",

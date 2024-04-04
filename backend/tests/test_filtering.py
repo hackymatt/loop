@@ -3028,7 +3028,7 @@ class FinanceHistoryFilterTest(APITestCase):
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        column = "lecturer"
+        column = "lecturer_id"
         variable = str(self.lecturer_profile_1.uuid)
         response = self.client.get(f"{self.endpoint}?{column}={variable}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -3036,7 +3036,7 @@ class FinanceHistoryFilterTest(APITestCase):
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 1)
-        values = list(set([variable in record[column]["uuid"] for record in results]))
+        values = list(set([variable in record["lecturer"]["uuid"] for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
 

@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import AccountUsersView from "src/sections/_elearning/view/account/admin/users/account-users-view";
+import AdminFinanceHistoryView from "src/sections/_elearning/view/account/admin/finance-history/account-finance-history-view";
 
 // ----------------------------------------------------------------------
 
@@ -9,5 +9,5 @@ export const metadata = {
 };
 
 export default function AccountFinanceHistoryPage() {
-  return <AccountUsersView />;
+  return <AdminFinanceHistoryView />;
 }

@@ -10,6 +10,7 @@ export type IUserType = keyof typeof UserType;
 
 export type IUserDetailsProps = {
   id: string;
+  uuid: string;
   first_name: string;
   last_name: string;
   email: string;
