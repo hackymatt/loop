@@ -1,7 +1,10 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from utils.permissions.permissions import IsStudent
-from profile.earnings.serializers import EarningSerializer
+from profile.earnings.serializers import (
+    LecturerEarningSerializer,
+    AdminEarningSerializer,
+)
 from reservation.models import Reservation
 from profile.models import Profile
 from schedule.models import Schedule
@@ -19,16 +22,23 @@ from django.db.models import (
     When,
     Exists,
     FloatField,
-    CharField
 )
-from django.db.models.functions import Cast, Concat
+from django.db.models.functions import Cast
 
 
 class EarningViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = Schedule.objects.filter(lesson__isnull=False).all()
-    serializer_class = EarningSerializer
+    serializer_class = LecturerEarningSerializer
     permission_classes = [IsAuthenticated, ~IsStudent]
+
+    def get_serializer_class(self):
+        user = self.request.user
+        profile = Profile.objects.get(user=user)
+        if profile.user_type[0] == "A":
+            return AdminEarningSerializer
+        else:
+            return self.serializer_class
 
     def get_queryset(self):
         user = self.request.user
@@ -91,11 +101,13 @@ class EarningViewSet(ModelViewSet):
                 )
             )
             .annotate(
-                total=Cast(F("hours") * F("rate"), FloatField())
+                total_cost=Cast(F("hours") * F("rate"), FloatField())
                 + Cast(F("price") * F("commission") / 100, FloatField())
             )
-            .values("month", "year")                          
-            .annotate(earnings=Sum('total'))                  
-            .values('month', "year", 'earnings') 
-            .order_by("-year", "-month") 
+            .annotate(total_profit=F("price"))
+            .values("month", "year")
+            .annotate(cost=Sum("total_cost"))
+            .annotate(profit=Sum("total_profit"))
+            .values("month", "year", "cost", "profit")
+            .order_by("-year", "-month")
         )
