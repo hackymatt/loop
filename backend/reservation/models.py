@@ -8,13 +8,15 @@ from django.db.models import (
 from profile.models import Profile
 from course.models import Lesson
 from schedule.models import Schedule
-
+from purchase.models import Purchase
 
 class Reservation(BaseModel):
     student = ForeignKey(Profile, on_delete=CASCADE, related_name="reservation_student")
     lesson = ForeignKey(Lesson, on_delete=CASCADE, related_name="reservation_lesson")
     schedule = ForeignKey(
         Schedule, on_delete=CASCADE, related_name="reservation_schedule"
+    )
+    purchase = ForeignKey(Purchase, on_delete=CASCADE, related_name="reservation_purchase"
     )
 
     class Meta:
@@ -23,7 +25,7 @@ class Reservation(BaseModel):
         constraints = [
             UniqueConstraint(
                 fields=["student", "schedule"],
-                name="reservation_student_lesson_schedule_unique_together",
+                name="reservation_student_lesson_schedule_purchase_unique_together",
             )
         ]
         indexes = [
@@ -35,6 +37,16 @@ class Reservation(BaseModel):
             Index(
                 fields=[
                     "student",
+                ]
+            ),
+            Index(
+                fields=[
+                    "schedule",
+                ]
+            ),
+            Index(
+                fields=[
+                    "purchase",
                 ]
             ),
             Index(
