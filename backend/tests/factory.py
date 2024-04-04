@@ -280,8 +280,12 @@ def create_teaching(lecturer: Profile, lesson: Lesson):
     return Teaching.objects.create(lecturer=lecturer, lesson=lesson)
 
 
-def create_reservation(student: Profile, lesson: Lesson, schedule: Schedule):
-    return Reservation.objects.create(student=student, lesson=lesson, schedule=schedule)
+def create_reservation(
+    student: Profile, lesson: Lesson, schedule: Schedule, purchase: Purchase
+):
+    return Reservation.objects.create(
+        student=student, lesson=lesson, schedule=schedule, purchase=purchase
+    )
 
 
 def create_finance(

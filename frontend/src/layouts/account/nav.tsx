@@ -59,7 +59,7 @@ const studentNavigations = [
     },
     {
       title: "Recenzje",
-      path: `${paths.account.reviews}?review_status_exclude=${ReviewStatus.brak}`,
+      path: `${paths.account.reviews}/?review_status_exclude=${ReviewStatus.brak}`,
       icon: <Iconify icon="carbon:review" />,
       children: [],
     },

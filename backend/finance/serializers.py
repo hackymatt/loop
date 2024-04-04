@@ -64,6 +64,4 @@ class FinanceHistorySerializer(ModelSerializer):
 
     class Meta:
         model = FinanceHistory
-        exclude = (
-            "modified_at",
-        )
+        exclude = ("modified_at",)

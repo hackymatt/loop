@@ -119,17 +119,27 @@ class PurchaseTest(APITestCase):
                     ),
                 )
             )
-
+        self.purchase_1 = create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile,
+            price=self.lesson_1.price,
+        )
         create_reservation(
             student=self.profile,
             lesson=self.lesson_1,
             schedule=self.schedules[len(self.schedules) - 3],
+            purchase=self.purchase_1,
         )
-
+        self.purchase_2 = create_purchase(
+            lesson=self.lesson_2,
+            student=self.profile,
+            price=self.lesson_2.price,
+        )
         create_reservation(
             student=self.profile,
             lesson=self.lesson_2,
             schedule=self.schedules[0],
+            purchase=self.purchase_2,
         )
 
         # course 2
@@ -225,7 +235,7 @@ class PurchaseTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
-        self.assertEqual(records_count, 4)
+        self.assertEqual(records_count, 6)
 
     def test_create_purchase_unauthenticated(self):
         # login

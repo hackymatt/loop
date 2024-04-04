@@ -125,17 +125,6 @@ class ReservationTest(APITestCase):
             lessons=[self.lesson_1, self.lesson_2, self.lesson_3, self.lesson_4],
         )
 
-        create_purchase(
-            lesson=self.lesson_1,
-            student=self.profile_1,
-            price=self.lesson_1.price,
-        )
-        create_purchase(
-            lesson=self.lesson_2,
-            student=self.profile_1,
-            price=self.lesson_2.price,
-        )
-
         for lesson in self.course.lessons.all():
             create_teaching(
                 lecturer=self.lecturer_profile,
@@ -237,45 +226,79 @@ class ReservationTest(APITestCase):
             lesson=self.lesson_4,
         )
 
+        self.purchase_1 = create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile_1,
+            price=self.lesson_1.price,
+        )
         self.reservation_1 = create_reservation(
             student=self.profile_1,
             lesson=self.lesson_1,
             schedule=self.schedules[0],
+            purchase=self.purchase_1,
         )
         self.schedules[0].lesson = self.lesson_1
         self.schedules[0].save()
+        self.purchase_2 = create_purchase(
+            lesson=self.lesson_2,
+            student=self.profile_2,
+            price=self.lesson_2.price,
+        )
         self.reservation_2 = create_reservation(
             student=self.profile_2,
             lesson=self.lesson_2,
             schedule=self.schedules[2],
+            purchase=self.purchase_2,
         )
         self.schedules[2].lesson = self.lesson_2
         self.schedules[2].save()
+        self.purchase_3 = create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile_2,
+            price=self.lesson_1.price,
+        )
         self.reservation_3 = create_reservation(
             student=self.profile_2,
             lesson=self.lesson_1,
             schedule=self.schedules[0],
+            purchase=self.purchase_3,
+        )
+        self.purchase_4 = create_purchase(
+            lesson=self.lesson_2,
+            student=self.profile_1,
+            price=self.lesson_2.price,
         )
         self.reservation_4 = create_reservation(
             student=self.profile_1,
             lesson=self.lesson_2,
             schedule=self.schedules[6],
+            purchase=self.purchase_4,
         )
         self.schedules[6].lesson = self.lesson_2
         self.schedules[6].save()
-
+        self.purchase_5 = create_purchase(
+            lesson=self.lesson_2,
+            student=self.profile_2,
+            price=self.lesson_2.price,
+        )
         self.reservation_5 = create_reservation(
             student=self.profile_2,
             lesson=self.lesson_2,
             schedule=self.long_timeslot_2,
+            purchase=self.purchase_5,
         )
         self.long_timeslot_2.lesson = self.lesson_1
         self.long_timeslot_2.save()
-
+        self.purchase_6 = create_purchase(
+            lesson=self.lesson_4,
+            student=self.profile_1,
+            price=self.lesson_4.price,
+        )
         self.reservation_6 = create_reservation(
             student=self.profile_1,
             lesson=self.lesson_4,
             schedule=self.long_timeslot_3,
+            purchase=self.purchase_6,
         )
         self.long_timeslot_3.lesson = self.lesson_4
         self.long_timeslot_3.save()
@@ -305,6 +328,7 @@ class ReservationTest(APITestCase):
         data = {
             "lesson": self.lesson_1.id,
             "schedule": self.schedules[2].id,
+            "purchase": self.purchase_1.id,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -319,6 +343,7 @@ class ReservationTest(APITestCase):
         data = {
             "lesson": self.course.lessons.all()[3].id,
             "schedule": self.schedules[2].id,
+            "purchase": self.purchase_1.id,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -333,6 +358,7 @@ class ReservationTest(APITestCase):
         data = {
             "lesson": self.lesson_1.id,
             "schedule": self.schedules[len(self.schedules) - 3].id,
+            "purchase": self.purchase_1.id,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -347,6 +373,7 @@ class ReservationTest(APITestCase):
         data = {
             "lesson": self.lesson_2.id,
             "schedule": self.schedules[len(self.schedules) - 1].id,
+            "purchase": self.purchase_4.id,
         }
         response = self.client.post(self.endpoint, data)
         data = json.loads(response.content)
@@ -398,6 +425,7 @@ class ReservationTest(APITestCase):
         data = {
             "lesson": self.lesson_2.id,
             "schedule": self.schedules[2].id,
+            "purchase": self.purchase_4.id,
         }
         response = self.client.post(self.endpoint, data)
         data = json.loads(response.content)
@@ -432,6 +460,7 @@ class ReservationTest(APITestCase):
         data = {
             "lesson": self.lesson_1.id,
             "schedule": self.schedules[3].id,
+            "purchase": self.purchase_1.id,
         }
         response = self.client.post(self.endpoint, data)
         data = json.loads(response.content)
@@ -480,6 +509,7 @@ class ReservationTest(APITestCase):
         data = {
             "lesson": self.lesson_1.id,
             "schedule": self.long_timeslot_2.id,
+            "purchase": self.purchase_1.id,
         }
         response = self.client.post(self.endpoint, data)
         data = json.loads(response.content)

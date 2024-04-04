@@ -918,16 +918,27 @@ class ScheduleFilterTest(APITestCase):
                     ),
                 )
             )
-
+        self.purchase_1 = create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile,
+            price=self.lesson_1.price,
+        )
         create_reservation(
             student=self.profile,
             lesson=self.lesson_1,
             schedule=self.schedules[0],
+            purchase=self.purchase_1,
+        )
+        self.purchase_2 = create_purchase(
+            lesson=self.lesson_2,
+            student=self.profile,
+            price=self.lesson_2.price,
         )
         create_reservation(
             student=self.profile,
             lesson=self.lesson_2,
             schedule=self.schedules[1],
+            purchase=self.purchase_2,
         )
 
     def test_reserved_filter(self):
@@ -1674,23 +1685,38 @@ class PurchaseFilterTest(APITestCase):
                     ),
                 )
             )
-
+        self.purchase_1 = create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile,
+            price=self.lesson_1.price,
+        )
         create_reservation(
             student=self.profile,
             lesson=self.lesson_1,
             schedule=self.schedules[len(self.schedules) - 3],
+            purchase=self.purchase_1,
         )
-
+        self.purchase_2 = create_purchase(
+            lesson=self.lesson_2,
+            student=self.profile,
+            price=self.lesson_2.price,
+        )
         create_reservation(
             student=self.profile,
             lesson=self.lesson_2,
             schedule=self.schedules[0],
+            purchase=self.purchase_2,
         )
-
+        self.purchase_3 = create_purchase(
+            lesson=self.lesson_3,
+            student=self.profile,
+            price=self.lesson_3.price,
+        )
         create_reservation(
             student=self.profile,
             lesson=self.lesson_3,
             schedule=self.schedules[1],
+            purchase=self.purchase_3,
         )
 
         create_review(
@@ -1788,7 +1814,7 @@ class PurchaseFilterTest(APITestCase):
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 3)
+        self.assertEqual(records_count, 6)
         titles = list(
             set([lesson_title in record["lesson"]["title"] for record in results])
         )
@@ -1881,7 +1907,7 @@ class PurchaseFilterTest(APITestCase):
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 5)
+        self.assertEqual(records_count, 8)
         dates = list(set([date in record["created_at"] for record in results]))
         self.assertTrue(len(dates) == 1)
         self.assertTrue(dates[0])
@@ -3036,7 +3062,9 @@ class FinanceHistoryFilterTest(APITestCase):
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 1)
-        values = list(set([variable in record["lecturer"]["uuid"] for record in results]))
+        values = list(
+            set([variable in record["lecturer"]["uuid"] for record in results])
+        )
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
 

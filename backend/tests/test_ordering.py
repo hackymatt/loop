@@ -1674,17 +1674,27 @@ class PurchaseOrderTest(APITestCase):
                     ),
                 )
             )
-
+        self.purchase_1 = create_purchase(
+            lesson=self.course_1.lessons.all()[0],
+            student=self.profile,
+            price=self.course_1.lessons.all()[0].price,
+        )
         create_reservation(
             student=self.profile,
             lesson=self.course_1.lessons.all()[0],
             schedule=self.schedules[len(self.schedules) - 3],
+            purchase=self.purchase_1,
         )
-
+        self.purchase_2 = create_purchase(
+            lesson=self.course_1.lessons.all()[1],
+            student=self.profile,
+            price=self.course_1.lessons.all()[1].price,
+        )
         create_reservation(
             student=self.profile,
             lesson=self.course_1.lessons.all()[1],
             schedule=self.schedules[0],
+            purchase=self.purchase_2,
         )
 
         # course 2
@@ -1783,7 +1793,7 @@ class PurchaseOrderTest(APITestCase):
             data = json.loads(response.content)
             count = data["records_count"]
             results = data["results"]
-            self.assertEqual(count, 4)
+            self.assertEqual(count, 6)
             if "_title" in field:
                 field1, field2 = field.split("_")
                 field_values = [course[field1][field2] for course in results]
@@ -1825,7 +1835,7 @@ class PurchaseOrderTest(APITestCase):
             data = json.loads(response.content)
             count = data["records_count"]
             results = data["results"]
-            self.assertEqual(count, 4)
+            self.assertEqual(count, 6)
             if "_title" in field:
                 field1, field2 = field.split("_")
                 field_values = [course[field1][field2] for course in results]
