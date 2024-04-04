@@ -18,8 +18,11 @@ from django.db.models import (
     Case,
     When,
     Exists,
-    FloatField
+    FloatField,
+    CharField
 )
+from django.db.models.functions import Cast, Concat
+
 
 class EarningViewSet(ModelViewSet):
     http_method_names = ["get"]
@@ -67,7 +70,7 @@ class EarningViewSet(ModelViewSet):
             queryset.annotate(
                 month=ExtractMonth("end_time"), year=ExtractYear("end_time")
             )
-            .annotate(hours=Subquery(hours) / 60)
+            .annotate(hours=Cast(Subquery(hours), FloatField()) / 60)
             .annotate(price=Subquery(price))
             .annotate(
                 rate=Case(
@@ -87,5 +90,12 @@ class EarningViewSet(ModelViewSet):
                     default=Subquery(current_commission.values("commission")),
                 )
             )
-            # .annotate(total=F("hours") * F("rate") + F("price") * F("commission") / 100)
+            .annotate(
+                total=Cast(F("hours") * F("rate"), FloatField())
+                + Cast(F("price") * F("commission") / 100, FloatField())
+            )
+            .values("month", "year")                          
+            .annotate(earnings=Sum('total'))                  
+            .values('month', "year", 'earnings') 
+            .order_by("-year", "-month") 
         )
