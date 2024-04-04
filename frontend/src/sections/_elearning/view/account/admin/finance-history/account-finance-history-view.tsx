@@ -103,7 +103,7 @@ export default function AdminFinanceHistoryView() {
       <Stack direction={{ xs: "column", md: "column" }} spacing={1} sx={{ mt: 2, mb: 3 }}>
         <FilterTeacher
           value={filters?.lecturer_id ?? ""}
-          options={teachers}
+          options={teachers ?? []}
           onChange={(value) => handleChange("lecturer_id", value)}
         />
 

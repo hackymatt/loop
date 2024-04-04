@@ -130,7 +130,9 @@ export default function AccountLessonsView() {
 
   const handlePriceHistoryView = useCallback(
     (lesson: ICourseLessonProp) => {
-      router.push(`${paths.account.admin.lessons.priceHistory}/?lesson_name=${lesson.title}`);
+      router.push(
+        `${paths.account.admin.lessons.priceHistory}/?lesson_name=${lesson.title}&sort_by=-created_at`,
+      );
     },
     [router],
   );

@@ -8,7 +8,7 @@ import { lessonSchedulesQuery } from "../lesson-schedules/lesson-schedules";
 
 const endpoint = "/reservation" as const;
 
-type ICreateReservation = { lesson: string; schedule: string };
+type ICreateReservation = { lesson: string; schedule: string; purchase: string };
 type ICreateReservationReturn = ICreateReservation;
 
 export const useCreateReservation = () => {

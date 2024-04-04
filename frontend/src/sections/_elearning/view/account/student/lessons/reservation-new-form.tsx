@@ -116,7 +116,11 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
       );
       if (schedule) {
         try {
-          await createReservation({ lesson: purchase.id, schedule: schedule.id });
+          await createReservation({
+            lesson: purchase.id,
+            schedule: schedule.id,
+            purchase: purchase.id,
+          });
           setError(undefined);
           confirmReservationFormOpen.onFalse();
           onClose();
