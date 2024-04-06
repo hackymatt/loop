@@ -10,7 +10,7 @@ from django.contrib import auth
 import json
 
 
-class LecturersTest(APITestCase):
+class FinanceTest(APITestCase):
     def setUp(self):
         self.endpoint = "/finance-details"
         self.data = {
@@ -65,8 +65,8 @@ class LecturersTest(APITestCase):
 
         self.update_data = {
             "account": "28109024022757215857957768",
-            "commission": 100,
-            "rate": 100,
+            "commission": 10,
+            "rate": 110,
         }
 
     def test_get_finance_unauthenticated(self):
@@ -110,11 +110,24 @@ class LecturersTest(APITestCase):
         response = self.client.put(self.endpoint, self.update_data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_update_lecturers_authenticated(self):
+    def test_update_lecturers_authenticated_change(self):
         # login
         login(self, self.lecturer_data["email"], self.lecturer_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
+        response = self.client.put(self.endpoint, self.update_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        self.assertEqual(data["account"], self.update_data["account"])
+        self.assertNotEqual(data["rate"], self.update_data["rate"])
+        self.assertNotEqual(data["commission"], self.update_data["commission"])
+
+    def test_update_lecturers_authenticated_no_change(self):
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        self.update_data["account"] = None
         response = self.client.put(self.endpoint, self.update_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)

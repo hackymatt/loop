@@ -9,10 +9,10 @@ import { visuallyHidden } from "./utils";
 // ----------------------------------------------------------------------
 
 interface Prop {
-  order: "asc" | "desc";
-  orderBy: string;
+  order?: "asc" | "desc";
+  orderBy?: string;
   headCells: any[];
-  onSort: (id: string) => void;
+  onSort?: (id: string) => void;
 }
 
 export default function AccountTableHead({ order, onSort, orderBy, headCells }: Prop) {
@@ -27,20 +27,23 @@ export default function AccountTableHead({ order, onSort, orderBy, headCells }: 
             sortDirection={orderBy === headCell.id ? order : false}
             sx={{ width: headCell.width, minWidth: headCell.minWidth }}
           >
-            {headCell.id && (
-              <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : "asc"}
-                onClick={() => onSort(headCell.id)}
-              >
-                {headCell.label}
-                {orderBy === headCell.id ? (
-                  <Box component="span" sx={visuallyHidden}>
-                    {order === "desc" ? "sorted descending" : "sorted ascending"}
-                  </Box>
-                ) : null}
-              </TableSortLabel>
-            )}
+            {headCell.id &&
+              (orderBy ? (
+                <TableSortLabel
+                  active={orderBy === headCell.id}
+                  direction={orderBy === headCell.id ? order : "asc"}
+                  onClick={() => onSort && onSort(headCell.id)}
+                >
+                  {headCell.label}
+                  {orderBy === headCell.id ? (
+                    <Box component="span" sx={visuallyHidden}>
+                      {order === "desc" ? "sorted descending" : "sorted ascending"}
+                    </Box>
+                  ) : null}
+                </TableSortLabel>
+              ) : (
+                headCell.label
+              ))}
           </TableCell>
         ))}
       </TableRow>

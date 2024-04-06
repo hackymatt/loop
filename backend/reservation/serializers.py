@@ -67,11 +67,11 @@ class ReservationSerializer(ModelSerializer):
         model = Reservation
         exclude = ("student",)
 
-    def check_lesson(self, lesson):
+    def check_lesson(self, lesson, purchase):
         user = self.context["request"].user
         profile = Profile.objects.get(user=user)
 
-        if not Purchase.objects.filter(student=profile, lesson=lesson).exists():
+        if not (purchase.student == profile and purchase.lesson == lesson):
             raise ValidationError({"lesson": "Lekcja nie została zakupiona."})
 
         return lesson
@@ -111,7 +111,7 @@ class ReservationSerializer(ModelSerializer):
         return schedule
 
     def validate(self, data):
-        self.check_lesson(lesson=data["lesson"])
+        self.check_lesson(lesson=data["lesson"], purchase=data["purchase"])
         self.check_schedule(schedule=data["schedule"], lesson=data["lesson"])
 
         return data
@@ -122,6 +122,7 @@ class ReservationSerializer(ModelSerializer):
 
         schedule = validated_data["schedule"]
         lesson = validated_data["lesson"]
+        purchase = validated_data["purchase"]
 
         timeslots = self.get_timeslots(schedule=schedule, lesson=lesson).order_by(
             "start_time"
@@ -150,7 +151,7 @@ class ReservationSerializer(ModelSerializer):
         ).count()
 
         reservation = Reservation.objects.create(
-            student=profile, lesson=lesson, schedule=lesson_schedule
+            student=profile, lesson=lesson, schedule=lesson_schedule, purchase=purchase
         )
 
         mailer = Mailer()

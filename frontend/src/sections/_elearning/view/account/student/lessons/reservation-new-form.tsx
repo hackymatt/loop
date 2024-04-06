@@ -76,13 +76,13 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
   const queryParams = useMemo(
     () => ({
       lecturer_id: user.id,
-      lesson_id: purchase?.id,
+      lesson_id: purchase?.lessonId,
       duration: purchase?.lessonDuration,
       time: date,
       sort_by: "start_time",
       page_size: 48,
     }),
-    [date, purchase?.id, purchase?.lessonDuration, user.id],
+    [date, purchase?.lessonDuration, purchase?.lessonId, user.id],
   );
 
   const { data: lessonSchedules, isLoading: isLoadingTimeSlots } = useLessonSchedules(
@@ -116,7 +116,11 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
       );
       if (schedule) {
         try {
-          await createReservation({ lesson: purchase.id, schedule: schedule.id });
+          await createReservation({
+            lesson: purchase.lessonId,
+            schedule: schedule.id,
+            purchase: purchase.id,
+          });
           setError(undefined);
           confirmReservationFormOpen.onFalse();
           onClose();

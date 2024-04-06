@@ -53,13 +53,13 @@ const studentNavigations = [
   ...[
     {
       title: "Lekcje",
-      path: paths.account.lessons,
+      path: `${paths.account.lessons}/?sort_by=-created_at&page_size=10`,
       icon: <Iconify icon="carbon:book" />,
       children: [],
     },
     {
       title: "Recenzje",
-      path: `${paths.account.reviews}?review_status_exclude=${ReviewStatus.brak}`,
+      path: `${paths.account.reviews}/?review_status_exclude=${ReviewStatus.brak}&page_size=10`,
       icon: <Iconify icon="carbon:review" />,
       children: [],
     },
@@ -83,14 +83,20 @@ const teacherNavigations = [
     },
     {
       title: "Nauczanie",
-      path: `${paths.account.teacher.teaching}/?sort_by=title`,
+      path: `${paths.account.teacher.teaching}/?sort_by=title&page_size=10`,
       icon: <Iconify icon="carbon:education" />,
       children: [],
     },
     {
       title: "Recenzje",
-      path: paths.account.teacher.reviews,
+      path: `${paths.account.teacher.reviews}/?sort_by=-created_at&page_size=10`,
       icon: <Iconify icon="carbon:review" />,
+      children: [],
+    },
+    {
+      title: "Zarobki",
+      path: `${paths.account.teacher.earnings}/?page_size=12`,
+      icon: <Iconify icon="carbon:currency-dollar" />,
       children: [],
     },
   ],
@@ -106,19 +112,19 @@ const adminNavigations = [
       children: [
         {
           title: "Spis kursów",
-          path: `${paths.account.admin.courses.list}/?sort_by=title`,
+          path: `${paths.account.admin.courses.list}/?sort_by=title&page_size=10`,
           icon: <Iconify icon="carbon:list" />,
           children: [],
         },
         {
           title: "Umiejętności",
-          path: `${paths.account.admin.courses.skills}/?sort_by=name`,
+          path: `${paths.account.admin.courses.skills}/?sort_by=name&page_size=10`,
           icon: <Iconify icon="carbon:policy" />,
           children: [],
         },
         {
           title: "Tematy",
-          path: `${paths.account.admin.courses.topics}/?sort_by=name`,
+          path: `${paths.account.admin.courses.topics}/?sort_by=name&page_size=10`,
           icon: <Iconify icon="carbon:query" />,
           children: [],
         },
@@ -131,19 +137,19 @@ const adminNavigations = [
       children: [
         {
           title: "Spis lekcji",
-          path: `${paths.account.admin.lessons.list}/?sort_by=title`,
+          path: `${paths.account.admin.lessons.list}/?sort_by=title&page_size=10`,
           icon: <Iconify icon="carbon:list" />,
           children: [],
         },
         {
           title: "Historia cen",
-          path: `${paths.account.admin.lessons.priceHistory}/?sort_by=-created_at`,
+          path: `${paths.account.admin.lessons.priceHistory}/?sort_by=-created_at&page_size=10`,
           icon: <Iconify icon="carbon:chart-line" />,
           children: [],
         },
         {
           title: "Technologie",
-          path: `${paths.account.admin.lessons.technologies}/?sort_by=name`,
+          path: `${paths.account.admin.lessons.technologies}/?sort_by=name&page_size=10`,
           icon: <Iconify icon="carbon:code" />,
           children: [],
         },
@@ -151,8 +157,27 @@ const adminNavigations = [
     },
     {
       title: "Użytkownicy",
-      path: paths.account.admin.users,
+      path: paths.account.admin.users.list,
       icon: <Iconify icon="carbon:user-multiple" />,
+      children: [
+        {
+          title: "Spis użytkowników",
+          path: `${paths.account.admin.users.list}/?sort_by=email&page_size=10`,
+          icon: <Iconify icon="carbon:list" />,
+          children: [],
+        },
+        {
+          title: "Historia danych finansowych",
+          path: `${paths.account.admin.users.financeHistory}/?sort_by=-created_at&page_size=10`,
+          icon: <Iconify icon="carbon:finance" />,
+          children: [],
+        },
+      ],
+    },
+    {
+      title: "Zarobki",
+      path: `${paths.account.admin.earnings}/?page_size=12`,
+      icon: <Iconify icon="carbon:currency-dollar" />,
       children: [],
     },
   ],

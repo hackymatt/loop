@@ -226,7 +226,7 @@ export default function CourseDetailsHero({ course }: Props) {
                   >
                     <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
                       <Iconify icon="carbon:time" sx={{ mr: 1 }} />{" "}
-                      {fShortenNumber(Math.floor(totalHours), 0)}+{" "}
+                      {totalHours < 1 ? totalHours : fShortenNumber(Math.floor(totalHours), 0)}+{" "}
                       {polishPlurals("godzina", "godziny", "godzin", totalHours)}
                     </Stack>
 

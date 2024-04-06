@@ -192,7 +192,7 @@ export default function AccountReviewsView() {
         {teachers && (
           <FilterTeacher
             value={filters?.lecturer_id ?? ""}
-            options={teachers}
+            options={teachers ?? []}
             onChange={(value) => handleChange("lecturer_id", value)}
           />
         )}

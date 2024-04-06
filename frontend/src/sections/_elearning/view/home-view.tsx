@@ -19,7 +19,10 @@ import LandingFeaturedCourses from "../landing/landing-featured-courses";
 export default function HomeView() {
   const { data: bestReviews } = useBestReviews();
   const { data: bestCourses } = useBestCourses();
-  const { data: technologies } = useBestTechnologies({ sort_by: "-courses_count" });
+  const { data: technologies } = useBestTechnologies({
+    courses_count_from: 1,
+    sort_by: "-courses_count",
+  });
   const { data: bestLecturers } = useBestLecturers();
 
   return (

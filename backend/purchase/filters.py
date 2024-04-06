@@ -35,9 +35,9 @@ def get_lesson_lecturer(queryset):
         .values("lecturer_uuid")
     )
 
-    reservation = Reservation.objects.filter(
-        student=OuterRef("student"), lesson=OuterRef("lesson")
-    ).annotate(lecturer_uuid=Subquery(schedule))
+    reservation = Reservation.objects.filter(purchase__pk=OuterRef("pk")).annotate(
+        lecturer_uuid=Subquery(schedule)
+    )
 
     purchase = queryset.annotate(
         lecturer_exists=Subquery(Exists(reservation))
@@ -61,9 +61,9 @@ def get_lesson_status(queryset):
         .values("diff")
     )
 
-    reservation = Reservation.objects.filter(
-        student=OuterRef("student"), lesson=OuterRef("lesson")
-    ).annotate(diff=Extract(Subquery(schedule), "epoch"))
+    reservation = Reservation.objects.filter(purchase__pk=OuterRef("pk")).annotate(
+        diff=Extract(Subquery(schedule), "epoch")
+    )
 
     purchase = (
         queryset.annotate(reservation_exists=Subquery(Exists(reservation)))

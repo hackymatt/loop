@@ -72,9 +72,10 @@ export const purchaseQuery = (query?: IQueryParams) => {
         review,
         created_at,
       }: IPurchase) => {
-        const { title: lessonTitle, duration } = lesson;
+        const { id: lessonId, title: lessonTitle, duration } = lesson;
         return {
           id,
+          lessonId,
           lessonTitle,
           lessonDuration: duration,
           lessonStatus: lesson_status,

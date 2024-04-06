@@ -5,9 +5,9 @@ import AccountUsersView from "src/sections/_elearning/view/account/admin/users/a
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: `${packageInfo.name}: Konto - Użytkownicy`,
+  title: `${packageInfo.name}: Konto - Spis użytkowników`,
 };
 
-export default function AccountReviewsPage() {
+export default function AccountUsersPage() {
   return <AccountUsersView />;
 }

@@ -52,7 +52,9 @@ export default function Schedule({
     <Stack direction="column" alignItems="center">
       <Box sx={{ maxWidth: MAX_WIDTH }}>
         {isLoadingUsers ? (
-          <CircularProgress size={20} />
+          <Box sx={{ p: 0.7 }}>
+            <CircularProgress size={30} />
+          </Box>
         ) : (
           <Tabs
             value={currentUser?.id ?? ""}
@@ -98,10 +100,12 @@ export default function Schedule({
 
       <Box sx={{ maxWidth: MAX_WIDTH }}>
         {isLoadingTimeSlots ? (
-          <CircularProgress size={20} />
+          <Box sx={{ p: 0.7 }}>
+            <CircularProgress size={30} />
+          </Box>
         ) : (
           <Tabs
-            value={currentSlot ?? availableTimeSlots[0]}
+            value={currentSlot ?? false}
             scrollButtons="auto"
             variant="scrollable"
             allowScrollButtonsMobile

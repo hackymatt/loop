@@ -81,11 +81,7 @@ export default function Filters({ open, onClose }: Props) {
         onChangeSearch={(value) => handleChange("search", value)}
       />
 
-      <Block
-        title="Ocena"
-        clear={!!filters?.rating_from}
-        onClear={() => handleChange("rating_from", null)}
-      >
+      <Block title="Ocena">
         <FilterRating
           value={filters?.rating_from ?? null}
           options={RATING_OPTIONS}

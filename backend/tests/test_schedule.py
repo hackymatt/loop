@@ -8,6 +8,7 @@ from .factory import (
     create_technology,
     create_skill,
     create_topic,
+    create_purchase,
     create_schedule,
     create_schedule_obj,
     create_teaching,
@@ -281,17 +282,27 @@ class ScheduleTest(APITestCase):
                 + timedelta(minutes=30 * 101)
             ),
         )
-
+        self.purchase_1 = create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile,
+            price=self.lesson_1.price,
+        )
         create_reservation(
             student=self.profile,
             lesson=self.lesson_1,
             schedule=self.delete_schedule,
+            purchase=self.purchase_1,
         )
-
+        self.purchase_2 = create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile_2,
+            price=self.lesson_1.price,
+        )
         create_reservation(
             student=self.profile_2,
             lesson=self.lesson_1,
             schedule=self.delete_schedule,
+            purchase=self.purchase_2,
         )
 
     def test_get_schedules_unauthenticated(self):

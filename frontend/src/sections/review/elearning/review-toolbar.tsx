@@ -53,7 +53,11 @@ export default function ReviewToolbar({
       >
         <FilterLesson value={lesson} options={lessonOptions} onChange={onChangeLesson} />
         {teacherOptions.length > 0 && (
-          <FilterTeacher value={teacher} options={teacherOptions} onChange={onChangeTeacher} />
+          <FilterTeacher
+            value={teacher}
+            options={teacherOptions ?? []}
+            onChange={onChangeTeacher}
+          />
         )}
         <Sorting value={sort} options={SORT_OPTIONS} onChange={onChangeSort} />
       </Box>

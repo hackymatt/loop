@@ -7,6 +7,7 @@ from profile.password_change.views import ProfilePasswordChangeViewSet
 from profile.password_reset.views import ProfilePasswordResetViewSet
 from profile.details.views import ProfileDetailsViewSet
 from profile.lecturers.views import LecturerViewSet, BestLecturerViewSet
+from profile.earnings.views import EarningViewSet
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
@@ -36,9 +37,8 @@ from cart.views import CartViewSet
 from purchase.views import PurchaseViewSet
 from teaching.views import ManageTeachingViewSet, TeachingViewSet
 from reservation.views import ReservationViewSet
-from csrf.views import CsrfViewSet
 from contact.views import ContactViewSet
-from finance.views import FinanceDetailsViewSet
+from finance.views import FinanceDetailsViewSet, FinanceHistoryViewSet
 
 
 router = DefaultRouter(trailing_slash=False)
@@ -85,7 +85,8 @@ router.register(r"purchase", PurchaseViewSet, basename="purchase")
 router.register(r"teaching", ManageTeachingViewSet, basename="teaching")
 router.register(r"lesson-lecturers", TeachingViewSet, basename="lesson_lecturers")
 router.register(r"reservation", ReservationViewSet, basename="reservation")
-
+router.register(r"finance-history", FinanceHistoryViewSet, basename="finance_history")
+router.register(r"earnings", EarningViewSet, basename="earnings")
 
 urlpatterns = [
     path("", include(router.urls)),
@@ -96,7 +97,6 @@ urlpatterns = [
         FinanceDetailsViewSet.as_view({"get": "list", "put": "update"}),
     ),
     path("stats", StatsViewSet.as_view({"get": "get_stats"})),
-    path("csrf", CsrfViewSet.as_view({"get": "get_csrf"})),
     path("newsletter-unsubscribe/<str:uuid>", NewsletterUnsubscribeViewSet.unsubscribe),
     path("contact", ContactViewSet.as_view({"post": "contact"})),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

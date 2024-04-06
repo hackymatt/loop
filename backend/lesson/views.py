@@ -24,9 +24,9 @@ class LessonViewSet(ModelViewSet):
 
     def get_permissions(self):
         if self.action == "list":
-            permission_classes = [IsAuthenticated & ~IsStudent]
+            permission_classes = [IsAuthenticated, ~IsStudent]
         elif self.action == "create" or self.action == "update":
-            permission_classes = [IsAuthenticated & IsAdminUser]
+            permission_classes = [IsAuthenticated, IsAdminUser]
         else:
             permission_classes = self.permission_classes
         return [permission() for permission in permission_classes]

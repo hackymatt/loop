@@ -14,6 +14,7 @@ from .factory import (
     create_lesson_price_history,
     create_reservation,
     create_technology,
+    create_finance_history,
 )
 from .helpers import login
 from django.contrib import auth
@@ -917,16 +918,27 @@ class ScheduleFilterTest(APITestCase):
                     ),
                 )
             )
-
+        self.purchase_1 = create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile,
+            price=self.lesson_1.price,
+        )
         create_reservation(
             student=self.profile,
             lesson=self.lesson_1,
             schedule=self.schedules[0],
+            purchase=self.purchase_1,
+        )
+        self.purchase_2 = create_purchase(
+            lesson=self.lesson_2,
+            student=self.profile,
+            price=self.lesson_2.price,
         )
         create_reservation(
             student=self.profile,
             lesson=self.lesson_2,
             schedule=self.schedules[1],
+            purchase=self.purchase_2,
         )
 
     def test_reserved_filter(self):
@@ -1222,10 +1234,45 @@ class TechnologyFilterTest(APITestCase):
             is_active=True,
         )
         self.technology = create_technology(name="Python")
-        create_technology(name="JavaScript")
+        self.technology_2 = create_technology(name="JavaScript")
         create_technology(name="C++")
         create_technology(name="C#")
         create_technology(name="VBA")
+
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/hackymatt/lesson",
+            price="9.99",
+            technologies=[self.technology],
+        )
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/hackymatt/lesson",
+            price="2.99",
+            technologies=[self.technology_2],
+        )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
+        self.course = create_course(
+            title="course_title",
+            description="course_description",
+            level="Podstawowy",
+            skills=[self.skill_1, self.skill_2],
+            topics=[
+                self.topic_1,
+                self.topic_2,
+            ],
+            lessons=[self.lesson_1, self.lesson_2],
+        )
 
     def test_name_filter(self):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -1238,6 +1285,15 @@ class TechnologyFilterTest(APITestCase):
         self.assertEqual(records_count, 1)
         prices = [record["name"] for record in results]
         self.assertEqual(prices, ["Python"])
+
+    def test_courses_count_from_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}?courses_count_from=1")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        self.assertEqual(records_count, 2)
 
     def test_created_at_filter(self):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -1629,23 +1685,38 @@ class PurchaseFilterTest(APITestCase):
                     ),
                 )
             )
-
+        self.purchase_1 = create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile,
+            price=self.lesson_1.price,
+        )
         create_reservation(
             student=self.profile,
             lesson=self.lesson_1,
             schedule=self.schedules[len(self.schedules) - 3],
+            purchase=self.purchase_1,
         )
-
+        self.purchase_2 = create_purchase(
+            lesson=self.lesson_2,
+            student=self.profile,
+            price=self.lesson_2.price,
+        )
         create_reservation(
             student=self.profile,
             lesson=self.lesson_2,
             schedule=self.schedules[0],
+            purchase=self.purchase_2,
         )
-
+        self.purchase_3 = create_purchase(
+            lesson=self.lesson_3,
+            student=self.profile,
+            price=self.lesson_3.price,
+        )
         create_reservation(
             student=self.profile,
             lesson=self.lesson_3,
             schedule=self.schedules[1],
+            purchase=self.purchase_3,
         )
 
         create_review(
@@ -1743,7 +1814,7 @@ class PurchaseFilterTest(APITestCase):
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 3)
+        self.assertEqual(records_count, 6)
         titles = list(
             set([lesson_title in record["lesson"]["title"] for record in results])
         )
@@ -1836,7 +1907,7 @@ class PurchaseFilterTest(APITestCase):
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 5)
+        self.assertEqual(records_count, 8)
         dates = list(set([date in record["created_at"] for record in results]))
         self.assertTrue(len(dates) == 1)
         self.assertTrue(dates[0])
@@ -2909,5 +2980,186 @@ class UsersFilerTest(APITestCase):
         results = data["results"]
         self.assertEqual(records_count, 5)
         values = list(set([variable in record[column].lower() for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+
+class FinanceHistoryFilterTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/finance-history"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.lecturer_data = {
+            "email": "lecturer_1@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_data = {
+            "email": "admin@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.admin_data["email"],
+            password=self.admin_data["password"],
+            is_active=True,
+            is_staff=True,
+        )
+        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.student_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.lecturer_user_1 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.lecturer_data["email"],
+            password=self.lecturer_data["password"],
+            is_active=True,
+        )
+        self.lecturer_user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_2@example.com",
+            password="TestPassword123",
+            is_active=True,
+        )
+        self.student_profile = create_profile(user=self.student_user)
+        self.lecturer_profile_1 = create_profile(
+            user=self.lecturer_user_1, user_type="W"
+        )
+        self.lecturer_profile_2 = create_profile(
+            user=self.lecturer_user_2, user_type="W"
+        )
+
+        self.finance_1 = create_finance_history(
+            lecturer=self.lecturer_profile_1,
+            rate=150.00,
+            commission=1,
+        )
+
+        self.finance_2 = create_finance_history(
+            lecturer=self.lecturer_profile_2,
+            account="48109024021679815769434176",
+            rate=100,
+            commission=5,
+        )
+
+    def test_lecturer_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "lecturer_id"
+        variable = str(self.lecturer_profile_1.uuid)
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        values = list(
+            set([variable in record["lecturer"]["uuid"] for record in results])
+        )
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_account_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "account"
+        variable = "48"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        values = list(set([variable in record[column].lower() for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_rate_from_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "rate_from"
+        variable = "120"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        values = list(set([variable <= record["rate"] for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_rate_to_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "rate_to"
+        variable = "120"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        values = list(set([variable >= record["rate"] for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_commission_from_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "commission_from"
+        variable = 2
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        values = list(set([variable <= record["commission"] for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_commission_to_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "commission_to"
+        variable = 2
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        values = list(set([variable >= record["commission"] for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_created_at_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "created_at"
+        variable = str(self.finance_1.created_at)[0:10]
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 2)
+        values = list(set([variable in record[column] for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])

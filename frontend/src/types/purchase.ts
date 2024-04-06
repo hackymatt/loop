@@ -20,6 +20,7 @@ export type IReviewStatus = keyof typeof ReviewStatus;
 
 export type IPurchaseItemProp = {
   id: string;
+  lessonId: string;
   lessonTitle: string;
   lessonDuration: number;
   lessonStatus: ILessonStatus;

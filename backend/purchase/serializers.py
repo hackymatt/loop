@@ -21,7 +21,7 @@ def get_review(purchase):
 
 
 def get_reservation(purchase):
-    return Reservation.objects.filter(student=purchase.student, lesson=purchase.lesson)
+    return Reservation.objects.filter(purchase=purchase)
 
 
 class LessonStatus:
