@@ -147,6 +147,7 @@ export default function AccountEarningsView() {
               itemMarkHeight: 2,
               markGap: 5,
               itemGap: 10,
+              labelStyle: { fontSize: 12 },
             },
           }}
         />
