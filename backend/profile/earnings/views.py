@@ -68,7 +68,7 @@ class EarningViewSet(ModelViewSet):
 
         history_rate = FinanceHistory.objects.filter(
             lecturer=OuterRef("lecturer"), created_at__gte=OuterRef("end_time")
-        ).order_by("-created_at")
+        ).order_by("created_at")
         current_rate = Finance.objects.filter(lecturer=OuterRef("lecturer"))
 
         history_commission = FinanceHistory.objects.filter(

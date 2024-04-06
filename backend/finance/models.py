@@ -20,13 +20,13 @@ class Finance(BaseModel):
     lecturer = ForeignKey(Profile, on_delete=CASCADE, related_name="finance_lecturer")
     account = CharField(max_length=26, validators=[MinLengthValidator(26)], null=True)
     commission = IntegerField(
-        validators=[MaxValueValidator(100), MinValueValidator(0)], null=True
+        validators=[MaxValueValidator(100), MinValueValidator(0)], default=0
     )
     rate = DecimalField(
         max_digits=7,
         decimal_places=2,
         validators=[MinValueValidator(Decimal("0.00"))],
-        null=True,
+        default=0,
     )
 
     class Meta:
@@ -52,13 +52,13 @@ class FinanceHistory(BaseModel):
     )
     account = CharField(max_length=26, validators=[MinLengthValidator(26)], null=True)
     commission = IntegerField(
-        validators=[MaxValueValidator(100), MinValueValidator(0)], null=True
+        validators=[MaxValueValidator(100), MinValueValidator(0)], default=0
     )
     rate = DecimalField(
         max_digits=7,
         decimal_places=2,
         validators=[MinValueValidator(Decimal("0.00"))],
-        null=True,
+        default=0,
     )
 
     class Meta:
