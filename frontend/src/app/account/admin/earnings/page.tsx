@@ -1,13 +1,13 @@
 import packageInfo from "package.json";
 
-import AccountReviewsView from "src/sections/_elearning/view/account/student/reviews/account-reviews-view";
+import AccountEarningsView from "src/sections/_elearning/view/account/admin/earnings/account-earnings-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: `${packageInfo.name}: Konto - Recenzje`,
+  title: `${packageInfo.name}: Konto - Zarobki`,
 };
 
-export default function AccountReviewsPage() {
-  return <AccountReviewsView />;
+export default function AccountEarningsPage() {
+  return <AccountEarningsView />;
 }

@@ -8,3 +8,11 @@ export type IFinanceHistoryProp = {
   commission: number;
   createdAt: Date;
 };
+
+export type IEarningProp = {
+  year: number;
+  month: number;
+  earnings?: number;
+  cost?: number;
+  profit?: number;
+};
