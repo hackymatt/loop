@@ -24,6 +24,8 @@ from django.db.models import (
     FloatField,
 )
 from django.db.models.functions import Cast
+from datetime import datetime, timedelta
+from pytz import utc
 
 
 class EarningViewSet(ModelViewSet):
@@ -78,8 +80,14 @@ class EarningViewSet(ModelViewSet):
 
         return (
             queryset.annotate(
-                month=ExtractMonth("end_time"), year=ExtractYear("end_time")
+                billing_date=Value(
+                    datetime.now().replace(
+                        day=1, hour=0, minute=0, second=0, microsecond=0, tzinfo=utc
+                    )
+                    - timedelta(days=1)
+                )
             )
+            .annotate(month=ExtractMonth("end_time"), year=ExtractYear("end_time"))
             .annotate(hours=Cast(Subquery(hours), FloatField()) / 60)
             .annotate(price=Subquery(price))
             .annotate(
@@ -105,9 +113,9 @@ class EarningViewSet(ModelViewSet):
                 + Cast(F("price") * F("commission") / 100, FloatField())
             )
             .annotate(total_profit=F("price"))
-            .values("month", "year")
+            .values("billing_date", "month", "year")
             .annotate(cost=Sum("total_cost"))
             .annotate(profit=Sum("total_profit"))
-            .values("month", "year", "cost", "profit")
+            .values("month", "year", "cost", "profit", "billing_date")
             .order_by("-year", "-month")
         )

@@ -91,9 +91,28 @@ export default function AccountEarningsView() {
         : [],
     [earnings],
   );
-  const earningsData = useMemo(
+
+  const forecastEarnings = useMemo(
     () =>
-      earnings ? earnings.map((earning: IEarningProp) => earning.earnings ?? 0).reverse() : [],
+      earnings
+        ? earnings.filter(
+            (earning: IEarningProp) =>
+              new Date(earning.billing_date).getTime() <
+              new Date(earning.year, earning.month - 1, 1).getTime(),
+          )
+        : [],
+    [earnings],
+  );
+
+  const actualEarnings = useMemo(
+    () =>
+      earnings
+        ? earnings.filter(
+            (earning: IEarningProp) =>
+              new Date(earning.billing_date).getTime() >=
+              new Date(earning.year, earning.month - 1, 1).getTime(),
+          )
+        : [],
     [earnings],
   );
 
@@ -121,13 +140,35 @@ export default function AccountEarningsView() {
           ]}
           series={[
             {
-              data: earningsData,
+              data: [
+                ...actualEarnings.map((earning: IEarningProp) => earning.earnings ?? 0).reverse(),
+                ...Array(forecastEarnings.length).fill(null),
+              ],
               color: palette.success.main,
-              valueFormatter: (value) => fCurrency(value),
+              valueFormatter: (value) => (value === null ? "0,00 zł" : fCurrency(value)),
+              label: "wartość rzeczywista",
+            },
+            {
+              data: [
+                ...Array(actualEarnings.length).fill(null),
+                ...forecastEarnings.map((earning: IEarningProp) => earning.earnings ?? 0).reverse(),
+              ],
+              color: palette.success.light,
+              valueFormatter: (value) => (value === null ? "0,00 zł" : fCurrency(value)),
+              label: "wartość szacowana",
             },
           ]}
           width={500}
           height={300}
+          slotProps={{
+            legend: {
+              itemMarkWidth: 20,
+              itemMarkHeight: 2,
+              markGap: 5,
+              itemGap: 10,
+              labelStyle: { fontSize: 12 },
+            },
+          }}
         />
       </Stack>
 

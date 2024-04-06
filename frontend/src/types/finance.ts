@@ -10,6 +10,7 @@ export type IFinanceHistoryProp = {
 };
 
 export type IEarningProp = {
+  billing_date: string;
   year: number;
   month: number;
   earnings?: number;

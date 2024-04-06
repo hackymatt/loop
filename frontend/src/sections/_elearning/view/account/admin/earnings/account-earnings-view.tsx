@@ -93,13 +93,28 @@ export default function AccountEarningsView() {
         : [],
     [earnings],
   );
-  const cost = useMemo(
-    () => (earnings ? earnings.map((earning: IEarningProp) => earning.cost ?? 0).reverse() : []),
+
+  const forecastEarnings = useMemo(
+    () =>
+      earnings
+        ? earnings.filter(
+            (earning: IEarningProp) =>
+              new Date(earning.billing_date).getTime() <
+              new Date(earning.year, earning.month - 1, 1).getTime(),
+          )
+        : [],
     [earnings],
   );
 
-  const profit = useMemo(
-    () => (earnings ? earnings.map((earning: IEarningProp) => earning.profit ?? 0).reverse() : []),
+  const actualEarnings = useMemo(
+    () =>
+      earnings
+        ? earnings.filter(
+            (earning: IEarningProp) =>
+              new Date(earning.billing_date).getTime() >=
+              new Date(earning.year, earning.month - 1, 1).getTime(),
+          )
+        : [],
     [earnings],
   );
 
@@ -127,16 +142,40 @@ export default function AccountEarningsView() {
           ]}
           series={[
             {
-              data: cost,
+              data: [
+                ...actualEarnings.map((earning: IEarningProp) => earning.cost ?? 0).reverse(),
+                ...Array(forecastEarnings.length).fill(null),
+              ],
               color: palette.error.main,
-              valueFormatter: (value) => fCurrency(value),
-              label: "Koszt",
+              valueFormatter: (value) => (value === null ? "0,00 zł" : fCurrency(value)),
+              label: "Koszt (wartość aktualna)",
             },
             {
-              data: profit,
+              data: [
+                ...forecastEarnings.map((earning: IEarningProp) => earning.cost ?? 0).reverse(),
+                ...Array(actualEarnings.length).fill(null),
+              ],
+              color: palette.error.light,
+              valueFormatter: (value) => (value === null ? "0,00 zł" : fCurrency(value)),
+              label: "Koszt (wartość szacowana)",
+            },
+            {
+              data: [
+                ...actualEarnings.map((earning: IEarningProp) => earning.profit ?? 0).reverse(),
+                ...Array(forecastEarnings.length).fill(null),
+              ],
               color: palette.success.main,
-              valueFormatter: (value) => fCurrency(value),
-              label: "Przychód",
+              valueFormatter: (value) => (value === null ? "0,00 zł" : fCurrency(value)),
+              label: "Przychód (wartość aktualna)",
+            },
+            {
+              data: [
+                ...forecastEarnings.map((earning: IEarningProp) => earning.profit ?? 0).reverse(),
+                ...Array(actualEarnings.length).fill(null),
+              ],
+              color: palette.success.light,
+              valueFormatter: (value) => (value === null ? "0,00 zł" : fCurrency(value)),
+              label: "Przychód (wartość szacowana)",
             },
           ]}
           width={500}
