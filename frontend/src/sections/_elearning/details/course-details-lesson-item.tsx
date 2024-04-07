@@ -103,7 +103,10 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
   const slots = useMemo(() => {
     const allSlots = lessonSchedules?.map((lessonSchedule: IScheduleProp) => {
       const dt = new Date(lessonSchedule.startTime);
-      return formatInTimeZone(dt, getTimezone(), "HH:mm");
+      return {
+        time: formatInTimeZone(dt, getTimezone(), "HH:mm"),
+        studentsCount: lessonSchedule.studentsCount,
+      };
     });
 
     return Array.from(new Set(allSlots)).sort();
@@ -121,7 +124,7 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
           currentDate={date}
           onDateChange={(selectedDate) => setDate(format(selectedDate, "yyyy-MM-dd"))}
           availableTimeSlots={slots ?? []}
-          currentSlot={slots?.[0]}
+          currentSlot={slots?.[0]?.time}
           isLoadingUsers={isLoadingUsers}
           isLoadingTimeSlots={isLoadingTimeSlots}
         />

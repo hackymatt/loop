@@ -1,7 +1,8 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from schedule.models import Schedule
 from profile.models import Profile
 from lesson.models import Lesson
+from reservation.models import Reservation
 
 
 class LessonSerializer(ModelSerializer):
@@ -41,6 +42,8 @@ class ManageScheduleSerializer(ModelSerializer):
 
 
 class ScheduleSerializer(ModelSerializer):
+    students_count = SerializerMethodField("get_students_count")
+
     class Meta:
         model = Schedule
         exclude = (
@@ -49,3 +52,6 @@ class ScheduleSerializer(ModelSerializer):
             "modified_at",
             "created_at",
         )
+
+    def get_students_count(self, schedule):
+        return Reservation.objects.filter(schedule=schedule).count()

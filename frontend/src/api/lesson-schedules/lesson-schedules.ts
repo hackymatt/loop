@@ -14,6 +14,7 @@ type ILessonSchedule = {
   id: number;
   start_time: string;
   end_time: string;
+  students_count: number;
 };
 
 export const lessonSchedulesQuery = (query?: IQueryParams) => {
@@ -32,11 +33,14 @@ export const lessonSchedulesQuery = (query?: IQueryParams) => {
       }
     }
     const { results, records_count, pages_count } = data;
-    const modifiedResults = results.map(({ id, start_time, end_time }: ILessonSchedule) => ({
-      id,
-      startTime: start_time,
-      endTime: end_time,
-    }));
+    const modifiedResults = results.map(
+      ({ id, start_time, end_time, students_count }: ILessonSchedule) => ({
+        id,
+        startTime: start_time,
+        endTime: end_time,
+        studentsCount: students_count,
+      }),
+    );
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };
   };
 

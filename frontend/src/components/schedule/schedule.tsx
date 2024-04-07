@@ -3,8 +3,21 @@
 import React from "react";
 import { parseISO } from "date-fns";
 
+import styled from "@mui/system/styled";
 import { StaticDatePicker } from "@mui/x-date-pickers";
-import { Box, Tab, Tabs, Stack, Theme, Avatar, Typography, CircularProgress } from "@mui/material";
+import {
+  Box,
+  Tab,
+  Tabs,
+  Stack,
+  Theme,
+  Badge,
+  Avatar,
+  Tooltip,
+  Typography,
+  BadgeProps,
+  CircularProgress,
+} from "@mui/material";
 
 import { ITeamMemberProps } from "src/types/team";
 
@@ -27,7 +40,7 @@ type Props = {
   onUserChange: (event: React.SyntheticEvent, userId: string) => void;
   currentDate: string;
   onDateChange: (value: Date) => void;
-  availableTimeSlots: string[];
+  availableTimeSlots: { time: string; studentsCount: number }[];
   currentSlot: string;
   onSlotChange?: (event: React.SyntheticEvent, slot: string) => void;
   isLoadingUsers?: boolean;
@@ -48,6 +61,14 @@ export default function Schedule({
   isLoadingTimeSlots,
   error,
 }: Props) {
+  const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
+    "& .MuiBadge-badge": {
+      right: 4,
+      border: `2px solid ${theme.palette.background.paper}`,
+      padding: "4px",
+    },
+  }));
+
   return (
     <Stack direction="column" alignItems="center">
       <Box sx={{ maxWidth: MAX_WIDTH }}>
@@ -122,7 +143,29 @@ export default function Schedule({
             }
           >
             {availableTimeSlots.length > 0 ? (
-              availableTimeSlots?.map((ts: string) => <Tab key={ts} value={ts} label={ts} />)
+              availableTimeSlots?.map((ts: { time: string; studentsCount: number }) => (
+                <Tab
+                  key={ts.time}
+                  value={ts.time}
+                  label={
+                    <Tooltip title={`Liczba zapisów: ${ts.studentsCount}`} placement="top">
+                      <StyledBadge badgeContent={ts.studentsCount} color="primary">
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            border: (theme) => `solid 1px ${theme.palette.grey[500]}`,
+                            p: 0.5,
+                            borderRadius: 1,
+                          }}
+                        >
+                          {ts.time}
+                        </Typography>
+                      </StyledBadge>
+                    </Tooltip>
+                  }
+                  sx={{ p: 1 }}
+                />
+              ))
             ) : (
               <Typography variant="body2">Brak dostępnych terminów</Typography>
             )}
