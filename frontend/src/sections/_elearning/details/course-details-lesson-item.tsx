@@ -110,7 +110,7 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
   }, [lessonSchedules]);
 
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
+    <Dialog fullWidth maxWidth="sm" onClose={onClose} sx={{ height: "fit-content" }} {...other}>
       <DialogTitle sx={{ typography: "h5", pb: 3 }}>{lesson?.title}</DialogTitle>
 
       <DialogContent sx={{ py: 0 }}>

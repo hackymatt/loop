@@ -134,7 +134,7 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
 
   return (
     <>
-      <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
+      <Dialog fullWidth maxWidth="sm" onClose={onClose} sx={{ height: "fit-content" }} {...other}>
         <DialogTitle sx={{ typography: "h5", pb: 3 }}>{purchase?.lessonTitle}</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
