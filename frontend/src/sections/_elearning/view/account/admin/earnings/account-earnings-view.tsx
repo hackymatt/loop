@@ -95,26 +95,12 @@ export default function AccountEarningsView() {
   );
 
   const forecastEarnings = useMemo(
-    () =>
-      earnings
-        ? earnings.filter(
-            (earning: IEarningProp) =>
-              new Date(earning.billing_date).getTime() <
-              new Date(earning.year, earning.month - 1, 1).getTime(),
-          )
-        : [],
+    () => (earnings ? earnings.filter((earning: IEarningProp) => !earning.actual) : []),
     [earnings],
   );
 
   const actualEarnings = useMemo(
-    () =>
-      earnings
-        ? earnings.filter(
-            (earning: IEarningProp) =>
-              new Date(earning.billing_date).getTime() >=
-              new Date(earning.year, earning.month - 1, 1).getTime(),
-          )
-        : [],
+    () => (earnings ? earnings.filter((earning: IEarningProp) => earning.actual) : []),
     [earnings],
   );
 
@@ -143,12 +129,12 @@ export default function AccountEarningsView() {
           series={[
             {
               data: [
-                ...actualEarnings.map((earning: IEarningProp) => earning.cost ?? 0).reverse(),
+                ...actualEarnings.map((earning: IEarningProp) => earning ?? 0).reverse(),
                 ...Array(forecastEarnings.length).fill(null),
               ],
               color: palette.error.main,
               valueFormatter: (value) => (value === null ? "0,00 zł" : fCurrency(value)),
-              label: "Koszt (wartość aktualna)",
+              label: "Koszt (wartość rzeczywista)",
             },
             {
               data: [
@@ -157,7 +143,7 @@ export default function AccountEarningsView() {
               ],
               color: palette.error.light,
               valueFormatter: (value) => (value === null ? "0,00 zł" : fCurrency(value)),
-              label: "Koszt (wartość szacowana)",
+              label: "Koszt (wartość szacunkowa)",
             },
             {
               data: [
@@ -166,7 +152,7 @@ export default function AccountEarningsView() {
               ],
               color: palette.success.main,
               valueFormatter: (value) => (value === null ? "0,00 zł" : fCurrency(value)),
-              label: "Przychód (wartość aktualna)",
+              label: "Przychód (wartość rzeczywista)",
             },
             {
               data: [
@@ -175,7 +161,7 @@ export default function AccountEarningsView() {
               ],
               color: palette.success.light,
               valueFormatter: (value) => (value === null ? "0,00 zł" : fCurrency(value)),
-              label: "Przychód (wartość szacowana)",
+              label: "Przychód (wartość szacunkowa)",
             },
           ]}
           width={500}
