@@ -87,7 +87,7 @@ export default function Header({ headerOnDark }: Props) {
         <Badge badgeContent={2} color="primary">
           <IconButton
             component={RouterLink}
-            href={paths.wishlist}
+            href={isLoggedIn ? paths.wishlist : paths.login}
             size="small"
             color="inherit"
             sx={{ p: 0 }}
@@ -99,7 +99,7 @@ export default function Header({ headerOnDark }: Props) {
         <Badge badgeContent={4} color="primary">
           <IconButton
             component={RouterLink}
-            href={paths.cart}
+            href={isLoggedIn ? paths.cart : paths.login}
             size="small"
             color="inherit"
             sx={{ p: 0 }}

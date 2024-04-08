@@ -1,9 +1,11 @@
+import packageInfo from "package.json";
+
 import EcommerceCartView from "src/sections/_ecommerce/view/ecommerce-cart-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: "E-commerce: Cart",
+  title: `${packageInfo.name}: Koszyk`,
 };
 
 export default function EcommerceCartPage() {

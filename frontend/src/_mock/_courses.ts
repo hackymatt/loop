@@ -14,13 +14,16 @@ const TEACHERS = [...Array(5)].map((_, index) => ({
   ratingNumber: _mock.number.rating(index),
 }));
 
-const LESSONS = [...Array(9)].map((_, index) => ({
+export const LESSONS = [...Array(9)].map((_, index) => ({
   id: _mock.id(index),
   duration: 60 - index,
   title: `Lesson ${index + 1}`,
   videoPath: _mock.video(index),
   description: _mock.sentence(index),
   unLocked: [0, 1, 2].includes(index),
+  category: [_tags[index]],
+  price: (index % 2 && 159.99) || 269.99,
+  teachers: TEACHERS,
 }));
 
 export const _courses = [...Array(12)].map((_, index) => {
