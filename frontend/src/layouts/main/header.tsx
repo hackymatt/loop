@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { Badge } from "@mui/material";
@@ -44,8 +46,14 @@ export default function Header({ headerOnDark }: Props) {
 
   const { isLoggedIn } = useUserContext();
 
-  const { data: wishlistRecords } = useWishlistsRecordsCount({ page_size: -1 });
-  const { data: cartRecords } = useCartsRecordsCount({ page_size: -1 });
+  const { data: wishlistRecords } = useWishlistsRecordsCount({ page_size: -1 }, isLoggedIn);
+  const { data: cartRecords } = useCartsRecordsCount({ page_size: -1 }, isLoggedIn);
+
+  const wishlistItems = useMemo(
+    () => (isLoggedIn ? wishlistRecords : 0),
+    [isLoggedIn, wishlistRecords],
+  );
+  const cartItems = useMemo(() => (isLoggedIn ? cartRecords : 0), [isLoggedIn, cartRecords]);
 
   const renderContent = (
     <>
@@ -89,7 +97,7 @@ export default function Header({ headerOnDark }: Props) {
       {!mdUp && <NavMobile data={navConfig} />}
 
       <Stack spacing={3} direction="row" alignItems="center" flexGrow={1} justifyContent="flex-end">
-        <Badge badgeContent={wishlistRecords} color="primary">
+        <Badge badgeContent={wishlistItems} color="primary">
           <IconButton
             component={RouterLink}
             href={isLoggedIn ? paths.wishlist : paths.login}
@@ -101,7 +109,7 @@ export default function Header({ headerOnDark }: Props) {
           </IconButton>
         </Badge>
 
-        <Badge badgeContent={cartRecords} color="primary">
+        <Badge badgeContent={cartItems} color="primary">
           <IconButton
             component={RouterLink}
             href={isLoggedIn ? paths.cart : paths.login}

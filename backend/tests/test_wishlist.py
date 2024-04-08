@@ -9,8 +9,9 @@ from .factory import (
     create_skill,
     create_topic,
     create_wishlist,
+    create_teaching,
 )
-from .helpers import login
+from .helpers import login, wishlist_number
 from django.contrib import auth
 import json
 
@@ -30,6 +31,15 @@ class WishlistTest(APITestCase):
             is_active=True,
         )
         self.profile = create_profile(user=self.user)
+
+        self.lecturer_user = create_user(
+            first_name="l1_first_name",
+            last_name="l1_last_name",
+            email="lecturer_1@example.com",
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -51,6 +61,11 @@ class WishlistTest(APITestCase):
             github_url="https://github.com/hackymatt/lesson",
             price="2.99",
             technologies=[self.technology_1],
+        )
+
+        create_teaching(
+            lesson=self.lesson_1,
+            lecturer=self.lecturer_profile,
         )
 
         self.topic_1 = create_topic(name="You will learn how to code")
@@ -120,7 +135,7 @@ class WishlistTest(APITestCase):
         self.wishlist.append(
             create_wishlist(
                 student=self.profile,
-                lesson=self.course_2.lessons.all()[1],
+                lesson=self.lesson_4,
             )
         )
 
@@ -148,7 +163,7 @@ class WishlistTest(APITestCase):
         self.wishlist.append(
             create_wishlist(
                 student=self.profile,
-                lesson=self.course_3.lessons.all()[0],
+                lesson=self.lesson_6,
             )
         )
 
@@ -180,50 +195,30 @@ class WishlistTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_add_to_wishlist_single_lesson_authenticated(self):
+    def test_add_to_wishlist_authenticated(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         data = {
-            "lesson": self.course_2.lessons.all()[0].id,
+            "lesson": self.lesson_3.id,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(len(data), 5)
+        self.assertEqual(wishlist_number(), 5)
 
-    def test_add_to_wishlist_whole_course_authenticated(self):
-        # login
-        login(self, self.data["email"], self.data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
+    def test_delete_from_wishlist_unauthenticated(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
-        data = {
-            "course": self.course_2.id,
-        }
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(len(data), 6)
+        response = self.client.delete(f"{self.endpoint}/{self.wishlist[0].id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_delete_single_lesson_from_wishlist(self):
+    def test_delete_from_wishlist_authenticated(self):
         # no login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        data = {"lesson": self.course_1.lessons.all()[0].id}
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(len(data), 3)
-
-    def test_delete_whole_course_from_wishlist(self):
-        # no login
-        login(self, self.data["email"], self.data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        data = {"course": self.course_1.id}
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(len(data), 2)
+        response = self.client.delete(f"{self.endpoint}/{self.wishlist[0].id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(wishlist_number(), 3)

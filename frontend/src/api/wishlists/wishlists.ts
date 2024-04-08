@@ -70,15 +70,15 @@ export const wishlistsQuery = (query?: IQueryParams) => {
   return { url, queryFn, queryKey: compact([endpoint, urlParams]) };
 };
 
-export const useWishlists = (query?: IQueryParams) => {
+export const useWishlists = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = wishlistsQuery(query);
-  const { data, ...rest } = useQuery({ queryKey, queryFn });
+  const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
   return { data: data?.results as ICartProp[], ...rest };
 };
 
-export const useWishlistsRecordsCount = (query?: IQueryParams) => {
+export const useWishlistsRecordsCount = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = wishlistsQuery(query);
-  const { data, ...rest } = useQuery({ queryKey, queryFn });
+  const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
   return { data: data?.count, ...rest };
 };
 

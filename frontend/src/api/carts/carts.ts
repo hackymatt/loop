@@ -70,15 +70,15 @@ export const cartsQuery = (query?: IQueryParams) => {
   return { url, queryFn, queryKey: compact([endpoint, urlParams]) };
 };
 
-export const useCarts = (query?: IQueryParams) => {
+export const useCarts = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = cartsQuery(query);
-  const { data, ...rest } = useQuery({ queryKey, queryFn });
+  const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
   return { data: data?.results as ICartProp[], ...rest };
 };
 
-export const useCartsRecordsCount = (query?: IQueryParams) => {
+export const useCartsRecordsCount = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = cartsQuery(query);
-  const { data, ...rest } = useQuery({ queryKey, queryFn });
+  const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
   return { data: data?.count, ...rest };
 };
 
