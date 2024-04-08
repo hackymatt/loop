@@ -243,8 +243,11 @@ class EarningsTest(APITestCase):
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
+        results = data["results"]
         count = data["records_count"]
         self.assertEqual(count, 9)
+        sample = results[0]
+        self.assertEqual(list(sample.keys()), ["actual", "year", "month", "earnings"])
 
     def test_get_earnings_admin(self):
         # login
@@ -254,5 +257,10 @@ class EarningsTest(APITestCase):
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
+        results = data["results"]
         count = data["records_count"]
         self.assertEqual(count, 9)
+        sample = results[0]
+        self.assertEqual(
+            list(sample.keys()), ["actual", "year", "month", "cost", "profit"]
+        )

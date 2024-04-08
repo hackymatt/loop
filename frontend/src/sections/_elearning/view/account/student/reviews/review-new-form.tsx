@@ -36,7 +36,7 @@ export default function ReviewNewForm({ purchase, onClose, ...other }: Props) {
   const { mutateAsync: createReview } = useCreateReview();
 
   const constValues = {
-    lesson: purchase.id,
+    lesson: purchase.lessonId,
     lecturer: purchase.teacher.id,
   };
 

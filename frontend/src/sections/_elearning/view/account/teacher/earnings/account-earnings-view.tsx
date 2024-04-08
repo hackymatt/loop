@@ -93,26 +93,12 @@ export default function AccountEarningsView() {
   );
 
   const forecastEarnings = useMemo(
-    () =>
-      earnings
-        ? earnings.filter(
-            (earning: IEarningProp) =>
-              new Date(earning.billing_date).getTime() <
-              new Date(earning.year, earning.month - 1, 1).getTime(),
-          )
-        : [],
+    () => (earnings ? earnings.filter((earning: IEarningProp) => !earning.actual) : []),
     [earnings],
   );
 
   const actualEarnings = useMemo(
-    () =>
-      earnings
-        ? earnings.filter(
-            (earning: IEarningProp) =>
-              new Date(earning.billing_date).getTime() >=
-              new Date(earning.year, earning.month - 1, 1).getTime(),
-          )
-        : [],
+    () => (earnings ? earnings.filter((earning: IEarningProp) => earning.actual) : []),
     [earnings],
   );
 
@@ -155,7 +141,7 @@ export default function AccountEarningsView() {
               ],
               color: palette.success.light,
               valueFormatter: (value) => (value === null ? "0,00 zł" : fCurrency(value)),
-              label: "wartość szacowana",
+              label: "wartość szacunkowa",
             },
           ]}
           width={500}

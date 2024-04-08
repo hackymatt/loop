@@ -74,14 +74,24 @@ export default function CourseDetailsInfo({ course }: Props) {
           </Stack>
         </Stack>
 
-        <Button
-          size="large"
-          color="inherit"
-          variant="contained"
-          startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
-        >
-          Dodaj do koszyka
-        </Button>
+        <Stack spacing={0.5}>
+          <Button
+            size="large"
+            color="error"
+            variant="contained"
+            startIcon={<Iconify icon="carbon:favorite-filled" />}
+          >
+            Dodaj do ulubionych
+          </Button>
+          <Button
+            size="large"
+            color="inherit"
+            variant="contained"
+            startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
+          >
+            Dodaj do koszyka
+          </Button>
+        </Stack>
       </Stack>
     </Card>
   );

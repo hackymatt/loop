@@ -103,14 +103,17 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
   const slots = useMemo(() => {
     const allSlots = lessonSchedules?.map((lessonSchedule: IScheduleProp) => {
       const dt = new Date(lessonSchedule.startTime);
-      return formatInTimeZone(dt, getTimezone(), "HH:mm");
+      return {
+        time: formatInTimeZone(dt, getTimezone(), "HH:mm"),
+        studentsCount: lessonSchedule.studentsCount,
+      };
     });
 
     return Array.from(new Set(allSlots)).sort();
   }, [lessonSchedules]);
 
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
+    <Dialog fullWidth maxWidth="sm" onClose={onClose} sx={{ height: "fit-content" }} {...other}>
       <DialogTitle sx={{ typography: "h5", pb: 3 }}>{lesson?.title}</DialogTitle>
 
       <DialogContent sx={{ py: 0 }}>
@@ -121,7 +124,7 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
           currentDate={date}
           onDateChange={(selectedDate) => setDate(format(selectedDate, "yyyy-MM-dd"))}
           availableTimeSlots={slots ?? []}
-          currentSlot={slots?.[0]}
+          currentSlot={slots?.[0]?.time}
           isLoadingUsers={isLoadingUsers}
           isLoadingTimeSlots={isLoadingTimeSlots}
         />
@@ -332,23 +335,20 @@ export default function CourseDetailsLessonItem({
 
               <Divider sx={{ borderStyle: "dashed" }} />
 
-              <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="right">
+              <Stack direction="row" spacing={0.5} flexWrap="wrap" justifyContent="right">
                 <Button
-                  variant="text"
                   size="medium"
-                  color="primary"
+                  color="info"
+                  variant="contained"
                   onClick={() => checkTimeSlotsForm.onToggle()}
                 >
-                  Sprawdź terminy
+                  <Iconify icon="carbon:calendar" />
                 </Button>
-
-                <Button
-                  size="large"
-                  color="inherit"
-                  variant="contained"
-                  startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
-                >
-                  Dodaj do koszyka
+                <Button size="medium" color="error" variant="contained">
+                  <Iconify icon="carbon:favorite" />
+                </Button>
+                <Button size="medium" color="inherit" variant="contained">
+                  <Iconify icon="carbon:shopping-cart-plus" />
                 </Button>
               </Stack>
             </Stack>

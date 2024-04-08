@@ -7,10 +7,13 @@ from django_filters import (
     BooleanFilter,
 )
 from schedule.models import Schedule
+from lesson.models import Lesson
+from django.db.models import OuterRef, Subquery, IntegerField
 from django.db.models.expressions import RawSQL
+from django.db.models.functions import Cast
 
 
-def get_duration(queryset):
+def get_free_slots_duration(queryset):
     total_duration = RawSQL(
         """
 SELECT EXTRACT(EPOCH FROM (islandenddate - start_time)) / 60 AS difference
@@ -29,7 +32,7 @@ FROM
   end_time,
   MAX(end_time) OVER (PARTITION BY lecturer_id ORDER BY start_time, end_time ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS PreviousEndDate
 FROM
-  schedule) Grouping) AS original LEFT JOIN ( SELECT
+  schedule WHERE lesson_id IS NULL) Grouping) AS original LEFT JOIN ( SELECT
   IslandId,
   MAX (end_time) AS IslandEndDate
  FROM
@@ -45,7 +48,7 @@ FROM
   end_time,
   MAX(end_time) OVER (PARTITION BY lecturer_id ORDER BY start_time, end_time ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING) AS PreviousEndDate
 FROM
-  schedule) Grouping
+  schedule WHERE lesson_id IS NULL) Grouping
   ) Islands
  GROUP BY
   lecturer_id,
@@ -57,7 +60,13 @@ FROM
         (),
     )
 
-    return queryset.annotate(duration=total_duration)
+    return queryset.annotate(duration=Cast(total_duration, IntegerField()))
+
+
+def get_reserved_slots_duration(queryset):
+    total_duration = Lesson.objects.filter(pk=OuterRef("lesson")).values("duration")
+
+    return queryset.annotate(duration=Cast(Subquery(total_duration), IntegerField()))
 
 
 class OrderFilter(OrderingFilter):
@@ -123,4 +132,16 @@ class ScheduleFilter(FilterSet):
 
     def filter_duration(self, queryset, field_name, value):
         lookup_field_name = f"{field_name}__gte"
-        return get_duration(queryset).filter(**{lookup_field_name: value})
+        empty_records = queryset.filter(**{"lesson__isnull": True})
+        reserved_records = queryset.filter(**{"lesson__isnull": False})
+
+        empty_records_duration = get_free_slots_duration(empty_records).filter(
+            **{lookup_field_name: value}
+        )
+        reserved_records_duration = get_reserved_slots_duration(
+            reserved_records
+        ).filter(**{lookup_field_name: value})
+
+        records = empty_records_duration | reserved_records_duration
+
+        return records

@@ -38,8 +38,7 @@ export default function AccountEarningsTableRow({ row }: Props) {
       <TableCell sx={{ px: 1 }}>
         <Stack direction="row" alignItems="center">
           <InputBase value={fCurrency(row.earnings ?? 0)} sx={inputStyles} />
-          {new Date(row.billing_date).getTime() <
-            new Date(row.year, row.month - 1, 1).getTime() && (
+          {!row.actual && (
             <Tooltip title="Wartość szacunkowa">
               <Iconify icon="carbon:information-filled" />
             </Tooltip>

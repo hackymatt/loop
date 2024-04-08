@@ -92,17 +92,20 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
   const slots = useMemo(() => {
     const allSlots = lessonSchedules?.map((lessonSchedule: IScheduleProp) => {
       const dt = new Date(lessonSchedule.startTime);
-      return formatInTimeZone(dt, getTimezone(), "HH:mm");
+      return {
+        time: formatInTimeZone(dt, getTimezone(), "HH:mm"),
+        studentsCount: lessonSchedule.studentsCount,
+      };
     });
 
     return Array.from(new Set(allSlots)).sort();
   }, [lessonSchedules]);
 
-  const [slot, setSlot] = useState<string>(slots?.[0]);
+  const [slot, setSlot] = useState<string>(slots?.[0]?.time);
 
   useEffect(() => {
     if (slots) {
-      setSlot(slots[0]);
+      setSlot(slots[0]?.time);
     }
   }, [slots]);
 
@@ -134,7 +137,7 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
 
   return (
     <>
-      <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
+      <Dialog fullWidth maxWidth="sm" onClose={onClose} sx={{ height: "fit-content" }} {...other}>
         <DialogTitle sx={{ typography: "h5", pb: 3 }}>{purchase?.lessonTitle}</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>

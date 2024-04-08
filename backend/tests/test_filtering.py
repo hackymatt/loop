@@ -1021,7 +1021,7 @@ class ScheduleFilterTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 49)
+        self.assertEqual(count, 50)
 
 
 class LessonPriceHistoryFilterTest(APITestCase):

@@ -37,7 +37,7 @@ export default function ReviewEditForm({ purchase, onClose, ...other }: Props) {
   const { mutateAsync: editReview } = useEditReview(purchase.reviewId);
 
   const constValues = {
-    lesson: purchase.id,
+    lesson: purchase.lessonId,
     lecturer: purchase.teacher.id,
   };
 

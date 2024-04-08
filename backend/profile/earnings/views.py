@@ -11,7 +11,7 @@ from schedule.models import Schedule
 from purchase.models import Purchase
 from lesson.models import Lesson
 from finance.models import Finance, FinanceHistory
-from django.db.models.functions.datetime import ExtractMonth, ExtractYear
+from django.db.models.functions.datetime import ExtractMonth, ExtractYear, TruncDay
 from django.db.models import (
     OuterRef,
     Subquery,
@@ -22,8 +22,11 @@ from django.db.models import (
     When,
     Exists,
     FloatField,
+    Func,
+    DateTimeField,
 )
 from django.db.models.functions import Cast
+from django.db.models.lookups import GreaterThan
 from datetime import datetime, timedelta
 from pytz import utc
 
@@ -80,6 +83,9 @@ class EarningViewSet(ModelViewSet):
 
         return (
             queryset.annotate(
+                month=ExtractMonth("end_time"), year=ExtractYear("end_time")
+            )
+            .annotate(
                 billing_date=Value(
                     datetime.now().replace(
                         day=1, hour=0, minute=0, second=0, microsecond=0, tzinfo=utc
@@ -87,7 +93,19 @@ class EarningViewSet(ModelViewSet):
                     - timedelta(days=1)
                 )
             )
-            .annotate(month=ExtractMonth("end_time"), year=ExtractYear("end_time"))
+            .annotate(
+                earning_date=Func(
+                    F("end_time"),
+                    Value("yyyy-MM-01T00:00:00Z"),
+                    function="to_char",
+                    output_field=DateTimeField(),
+                )
+            )
+            .annotate(
+                actual=GreaterThan(
+                    F("billing_date"), Cast(F("earning_date"), DateTimeField())
+                )
+            )
             .annotate(hours=Cast(Subquery(hours), FloatField()) / 60)
             .annotate(price=Subquery(price))
             .annotate(
@@ -113,9 +131,9 @@ class EarningViewSet(ModelViewSet):
                 + Cast(F("price") * F("commission") / 100, FloatField())
             )
             .annotate(total_profit=F("price"))
-            .values("billing_date", "month", "year")
+            .values("actual", "month", "year")
             .annotate(cost=Sum("total_cost"))
             .annotate(profit=Sum("total_profit"))
-            .values("month", "year", "cost", "profit", "billing_date")
+            .values("month", "year", "cost", "profit", "actual")
             .order_by("-year", "-month")
         )
