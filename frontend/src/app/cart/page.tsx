@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import EcommerceCartView from "src/sections/_ecommerce/view/ecommerce-cart-view";
+import CartView from "src/sections/_elearning/view/cart-view";
 
 // ----------------------------------------------------------------------
 
@@ -8,6 +8,6 @@ export const metadata = {
   title: `${packageInfo.name}: Koszyk`,
 };
 
-export default function EcommerceCartPage() {
-  return <EcommerceCartView />;
+export default function CartPage() {
+  return <CartView />;
 }

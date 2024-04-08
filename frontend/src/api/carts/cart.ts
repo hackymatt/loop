@@ -4,17 +4,18 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
 
-const endpoint = "/wishlist" as const;
+const endpoint = "/cart" as const;
 
-type IDeleteWishlist = { id: string };
+type IDeleteCart = {};
 
-type IDeleteWishlistReturn = {};
+type IDeleteCartReturn = {};
 
-export const useDeleteWishlist = () => {
+export const useDeleteCart = (id: string) => {
   const queryClient = useQueryClient();
-  return useMutation<IDeleteWishlistReturn, AxiosError, IDeleteWishlist>(
-    async ({ id }) => {
-      const result = await Api.delete(`${endpoint}/${id}`, {
+  const url = `${endpoint}/${id}`;
+  return useMutation<IDeleteCartReturn, AxiosError, IDeleteCart>(
+    async () => {
+      const result = await Api.delete(url, {
         headers: {
           "X-CSRFToken": getCsrfToken(),
         },

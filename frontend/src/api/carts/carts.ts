@@ -10,7 +10,7 @@ import { IQueryParams } from "src/types/query-params";
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
 
-const endpoint = "/wishlist" as const;
+const endpoint = "/cart" as const;
 
 type ILecturer = {
   full_name: string;
@@ -29,11 +29,11 @@ type ILesson = {
   price: number;
 };
 
-type IWishlist = { id: number; lesson: ILesson };
+type ICart = { id: number; lesson: ILesson };
 
-type ICreateWishlist = { lesson: string };
-type ICreateWishlistReturn = ICreateWishlist;
-export const wishlistsQuery = (query?: IQueryParams) => {
+type ICreateCart = { lesson: string };
+type ICreateCartReturn = ICreateCart;
+export const cartsQuery = (query?: IQueryParams) => {
   const url = endpoint;
   const urlParams = formatQueryParams(query);
   const queryUrl = urlParams ? `${url}?${urlParams}` : url;
@@ -49,7 +49,7 @@ export const wishlistsQuery = (query?: IQueryParams) => {
       }
     }
     const { results, records_count, pages_count } = data;
-    const modifiedResults = results.map(({ id, lesson }: IWishlist) => {
+    const modifiedResults = results.map(({ id, lesson }: ICart) => {
       const { id: lessonId, title, duration, price, lecturers, technologies } = lesson;
       return {
         id,
@@ -70,21 +70,21 @@ export const wishlistsQuery = (query?: IQueryParams) => {
   return { url, queryFn, queryKey: compact([endpoint, urlParams]) };
 };
 
-export const useWishlists = (query?: IQueryParams) => {
-  const { queryKey, queryFn } = wishlistsQuery(query);
+export const useCarts = (query?: IQueryParams) => {
+  const { queryKey, queryFn } = cartsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.results as ICartProp[], ...rest };
 };
 
-export const useWishlistsRecordsCount = (query?: IQueryParams) => {
-  const { queryKey, queryFn } = wishlistsQuery(query);
+export const useCartsRecordsCount = (query?: IQueryParams) => {
+  const { queryKey, queryFn } = cartsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.count, ...rest };
 };
 
-export const useCreateWishlist = () => {
+export const useCreateCart = () => {
   const queryClient = useQueryClient();
-  return useMutation<ICreateWishlistReturn, AxiosError, ICreateWishlist>(
+  return useMutation<ICreateCartReturn, AxiosError, ICreateCart>(
     async (variables) => {
       const result = await Api.post(endpoint, variables, {
         headers: {

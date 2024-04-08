@@ -1,7 +1,6 @@
 from rest_framework.serializers import (
     ModelSerializer,
     SerializerMethodField,
-    IntegerField,
 )
 from lesson.models import Lesson, Technology
 from wishlist.models import Wishlist
@@ -39,8 +38,10 @@ class LessonSerializer(ModelSerializer):
     class Meta:
         model = Lesson
         fields = (
+            "id",
             "title",
             "duration",
+            "price",
             "technologies",
             "lecturers",
         )

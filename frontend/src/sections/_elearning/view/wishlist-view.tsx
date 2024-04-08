@@ -4,6 +4,7 @@ import { useMemo, useEffect } from "react";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import { LoadingButton } from "@mui/lab";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -14,10 +15,13 @@ import { useRouter } from "src/routes/hooks/use-router";
 
 import { fCurrency } from "src/utils/format-number";
 
+import { useCreateCart } from "src/api/carts/carts";
 import { useWishlists } from "src/api/wishlists/wishlists";
+import { useDeleteWishlist } from "src/api/wishlists/wishlist";
 
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
+import { useToastContext } from "src/components/toast";
 
 import { ICartProp } from "src/types/cart";
 
@@ -26,10 +30,13 @@ import CartList from "../cart/cart-list";
 // ----------------------------------------------------------------------
 
 export default function WishlistView() {
+  const { enqueueSnackbar } = useToastContext();
   const { isLoggedIn } = useUserContext();
   const { push } = useRouter();
 
   const { data: wishlistItems } = useWishlists({ page_size: -1 });
+  const { mutateAsync: createCartItem, isLoading: isAddingToCart } = useCreateCart();
+  const { mutateAsync: deleteWishlist, isLoading: isDeletingWishlist } = useDeleteWishlist();
 
   const prices = useMemo(
     () => wishlistItems?.map((wishlistItem: ICartProp) => wishlistItem.lesson.price),
@@ -38,7 +45,22 @@ export default function WishlistView() {
 
   const total = prices?.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    if (!isLoggedIn) {
+      push(paths.login);
+      return;
+    }
+    try {
+      const cartItems = wishlistItems.map((wishlistItem: ICartProp) => [
+        createCartItem({ lesson: wishlistItem.lesson.id }),
+        deleteWishlist({ id: wishlistItem.id }),
+      ]);
+      await Promise.allSettled(cartItems);
+      enqueueSnackbar("Ulubione zostały dodane do koszyka", { variant: "success" });
+    } catch (error) {
+      enqueueSnackbar("Wystąpił błąd podczas dodawania do koszyka", { variant: "error" });
+    }
+  };
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -94,15 +116,16 @@ export default function WishlistView() {
                 {total === 0 ? "0,00 zł" : fCurrency(total)}
               </Stack>
 
-              <Button
+              <LoadingButton
                 size="large"
                 color="inherit"
                 variant="contained"
                 startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
                 onClick={handleSubmit}
+                loading={isAddingToCart || isDeletingWishlist}
               >
                 Dodaj do koszyka
-              </Button>
+              </LoadingButton>
             </Stack>
           </Stack>
         </>

@@ -10,19 +10,17 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
-import { fPercent, fCurrency } from "src/utils/format-number";
+import { fCurrency } from "src/utils/format-number";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  tax: number;
   total: number;
   subtotal: number;
-  shipping: number;
   discount: number;
 };
 
-export default function CartSummary({ tax, total, subtotal, shipping, discount }: Props) {
+export default function CartSummary({ total, subtotal, discount }: Props) {
   return (
     <Stack
       spacing={3}
@@ -32,25 +30,21 @@ export default function CartSummary({ tax, total, subtotal, shipping, discount }
         border: (theme) => `solid 1px ${alpha(theme.palette.grey[500], 0.24)}`,
       }}
     >
-      <Typography variant="h6"> Summary </Typography>
+      <Typography variant="h6">Podsumowanie</Typography>
 
       <Stack spacing={2}>
-        <Row label="Subtotal" value={fCurrency(subtotal)} />
+        <Row label="Wartość koszyka" value={fCurrency(subtotal)} />
 
-        <Row label="Shipping" value={fCurrency(shipping)} />
-
-        <Row label="Discount (15%)" value={`-${fCurrency(discount)}`} />
-
-        <Row label="Tax" value={fPercent(tax)} />
+        {discount !== 0 && <Row label="Zniżka" value={`-${fCurrency(discount)}`} />}
       </Stack>
 
       <TextField
         hiddenLabel
-        placeholder="Discount Code"
+        placeholder="Kod zniżkowy"
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <Button>Apply</Button>
+              <Button>Zastosuj</Button>
             </InputAdornment>
           ),
         }}
@@ -59,7 +53,7 @@ export default function CartSummary({ tax, total, subtotal, shipping, discount }
       <Divider sx={{ borderStyle: "dashed" }} />
 
       <Row
-        label="Total"
+        label="Razem"
         value={fCurrency(total)}
         sx={{
           typography: "h6",
@@ -74,7 +68,7 @@ export default function CartSummary({ tax, total, subtotal, shipping, discount }
         variant="contained"
         color="inherit"
       >
-        Checkout
+        Przejdź do kasy
       </Button>
     </Stack>
   );

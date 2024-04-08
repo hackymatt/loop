@@ -11,6 +11,7 @@ import { useRouter } from "src/routes/hooks";
 
 import { fCurrency } from "src/utils/format-number";
 
+import { useCreateCart } from "src/api/carts/carts";
 import { useCreateWishlist } from "src/api/wishlists/wishlists";
 
 import Iconify from "src/components/iconify";
@@ -31,6 +32,7 @@ export default function CourseDetailsInfo({ course }: Props) {
   const { push } = useRouter();
 
   const { mutateAsync: createWishlistItem, isLoading: isAddingToFavorites } = useCreateWishlist();
+  const { mutateAsync: createCartItem, isLoading: isAddingToCart } = useCreateCart();
 
   const handleAddToFavorites = async () => {
     if (!isLoggedIn) {
@@ -45,6 +47,22 @@ export default function CourseDetailsInfo({ course }: Props) {
       enqueueSnackbar("Kurs został dodany do ulubionych", { variant: "success" });
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd podczas dodawania do ulubionych", { variant: "error" });
+    }
+  };
+
+  const handleAddToCart = async () => {
+    if (!isLoggedIn) {
+      push(paths.login);
+      return;
+    }
+    try {
+      const cartItems = course.lessons.map((lesson: ICourseLessonProp) =>
+        createCartItem({ lesson: lesson.id }),
+      );
+      await Promise.allSettled(cartItems);
+      enqueueSnackbar("Kurs został dodany do koszyka", { variant: "success" });
+    } catch (error) {
+      enqueueSnackbar("Wystąpił błąd podczas dodawania do koszyka", { variant: "error" });
     }
   };
 
@@ -119,7 +137,8 @@ export default function CourseDetailsInfo({ course }: Props) {
             color="inherit"
             variant="contained"
             startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
-            loading={isAddingToFavorites}
+            loading={isAddingToCart}
+            onClick={handleAddToCart}
           >
             Dodaj do koszyka
           </LoadingButton>

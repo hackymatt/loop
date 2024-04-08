@@ -27,7 +27,7 @@ export default function CartList({ cartItems, wishlist = false }: Props) {
         }}
       >
         <Stack flexGrow={1}>Lekcja</Stack>
-        <Stack sx={{ width: 120 }}>Cena</Stack>
+        <Stack sx={{ width: wishlist ? 200 : 175 }}>Cena</Stack>
         <Stack sx={{ width: 36 }} />
         {wishlist && <Stack sx={{ width: 36 }} />}
       </Stack>

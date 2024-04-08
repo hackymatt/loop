@@ -15,6 +15,7 @@ import { useOffSetTop } from "src/hooks/use-off-set-top";
 import { useResponsive } from "src/hooks/use-responsive";
 
 import { bgBlur } from "src/theme/css";
+import { useCartsRecordsCount } from "src/api/carts/carts";
 import { useWishlistsRecordsCount } from "src/api/wishlists/wishlists";
 
 import Logo from "src/components/logo";
@@ -44,6 +45,7 @@ export default function Header({ headerOnDark }: Props) {
   const { isLoggedIn } = useUserContext();
 
   const { data: wishlistRecords } = useWishlistsRecordsCount({ page_size: -1 });
+  const { data: cartRecords } = useCartsRecordsCount({ page_size: -1 });
 
   const renderContent = (
     <>
@@ -99,7 +101,7 @@ export default function Header({ headerOnDark }: Props) {
           </IconButton>
         </Badge>
 
-        <Badge badgeContent={4} color="primary">
+        <Badge badgeContent={cartRecords} color="primary">
           <IconButton
             component={RouterLink}
             href={isLoggedIn ? paths.cart : paths.login}

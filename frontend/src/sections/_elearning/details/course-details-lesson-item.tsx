@@ -31,6 +31,7 @@ import { useBoolean } from "src/hooks/use-boolean";
 import { getTimezone } from "src/utils/get-timezone";
 import { fCurrency, fShortenNumber } from "src/utils/format-number";
 
+import { useCreateCart } from "src/api/carts/carts";
 import { useCreateWishlist } from "src/api/wishlists/wishlists";
 import { useLessonLecturers } from "src/api/lesson-lecturers/lesson-lecturers";
 import { useLessonSchedules } from "src/api/lesson-schedules/lesson-schedules";
@@ -160,6 +161,7 @@ export default function CourseDetailsLessonItem({
   const checkTimeSlotsForm = useBoolean();
 
   const { mutateAsync: createWishlistItem, isLoading: isAddingToFavorites } = useCreateWishlist();
+  const { mutateAsync: createCartItem, isLoading: isAddingToCart } = useCreateCart();
 
   const genderAvatarUrl =
     details?.teachers?.[0]?.gender === "Kobieta"
@@ -178,6 +180,19 @@ export default function CourseDetailsLessonItem({
       enqueueSnackbar("Lekcja została dodana do ulubionych", { variant: "success" });
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd podczas dodawania do ulubionych", { variant: "error" });
+    }
+  };
+
+  const handleAddToCart = async () => {
+    if (!isLoggedIn) {
+      push(paths.login);
+      return;
+    }
+    try {
+      await createCartItem({ lesson: lesson.id });
+      enqueueSnackbar("Lekcja została dodana do koszyka", { variant: "success" });
+    } catch (error) {
+      enqueueSnackbar("Wystąpił błąd podczas dodawania do koszyka", { variant: "error" });
     }
   };
 
@@ -380,7 +395,13 @@ export default function CourseDetailsLessonItem({
                 >
                   <Iconify icon="carbon:favorite" />
                 </LoadingButton>
-                <LoadingButton size="medium" color="inherit" variant="contained">
+                <LoadingButton
+                  size="medium"
+                  color="inherit"
+                  variant="contained"
+                  onClick={handleAddToCart}
+                  loading={isAddingToCart}
+                >
                   <Iconify icon="carbon:shopping-cart-plus" />
                 </LoadingButton>
               </Stack>

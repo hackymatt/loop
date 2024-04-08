@@ -6,6 +6,8 @@ import Typography from "@mui/material/Typography";
 
 import { fCurrency } from "src/utils/format-number";
 
+import { useDeleteCart } from "src/api/carts/cart";
+import { useCreateCart } from "src/api/carts/carts";
 import { useDeleteWishlist } from "src/api/wishlists/wishlist";
 
 import Iconify from "src/components/iconify";
@@ -24,16 +26,37 @@ type Props = {
 export default function CartItem({ cartItem, wishlist }: Props) {
   const { enqueueSnackbar } = useToastContext();
 
-  const { mutateAsync: deleteWishlist, isLoading: isDeletingWishlist } = useDeleteWishlist(
-    cartItem.id,
-  );
+  const { mutateAsync: deleteWishlist, isLoading: isDeletingWishlist } = useDeleteWishlist();
+  const { mutateAsync: deleteCart, isLoading: isDeletingCart } = useDeleteCart(cartItem.id);
+  const { mutateAsync: createCartItem, isLoading: isCreatingCart } = useCreateCart();
 
   const handleDeleteFromWishlist = async () => {
     try {
-      await deleteWishlist({});
+      await deleteWishlist({ id: cartItem.id });
       enqueueSnackbar("Lekcja została usunięta z ulubionych", { variant: "success" });
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd podczas usuwania z ulubionych", { variant: "error" });
+    }
+  };
+
+  const handleDeleteFromCart = async () => {
+    try {
+      await deleteCart({});
+      enqueueSnackbar("Lekcja została usunięta z koszyka", { variant: "success" });
+    } catch (error) {
+      enqueueSnackbar("Wystąpił błąd podczas usuwania z koszyka", { variant: "error" });
+    }
+  };
+
+  const handleAddToCart = async () => {
+    try {
+      await Promise.allSettled([
+        createCartItem({ lesson: cartItem.lesson.id }),
+        deleteWishlist({ id: cartItem.id }),
+      ]);
+      enqueueSnackbar("Lekcja została dodana do koszyka", { variant: "success" });
+    } catch (error) {
+      enqueueSnackbar("Wystąpił błąd podczas dodawania do koszyka", { variant: "error" });
     }
   };
 
@@ -79,8 +102,8 @@ export default function CartItem({ cartItem, wishlist }: Props) {
         size="small"
         color="error"
         variant="text"
-        onClick={handleDeleteFromWishlist}
-        loading={isDeletingWishlist}
+        onClick={wishlist ? handleDeleteFromWishlist : handleDeleteFromCart}
+        loading={wishlist ? isDeletingWishlist : isDeletingCart}
       >
         <Iconify icon="carbon:trash-can" />
       </LoadingButton>
@@ -90,8 +113,8 @@ export default function CartItem({ cartItem, wishlist }: Props) {
           size="small"
           color="success"
           variant="text"
-          onClick={handleDeleteFromWishlist}
-          loading={isDeletingWishlist}
+          onClick={handleAddToCart}
+          loading={isCreatingCart}
         >
           <Iconify icon="carbon:shopping-cart-plus" />
         </LoadingButton>
