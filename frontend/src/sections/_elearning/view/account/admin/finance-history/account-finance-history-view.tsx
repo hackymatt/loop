@@ -51,7 +51,7 @@ export default function AdminFinanceHistoryView() {
 
   const { data: pagesCount } = useFinanceHistoryPagesCount(filters);
   const { data: financeHistories } = useFinanceHistory(filters);
-  const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: 1000 });
+  const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: -1 });
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;

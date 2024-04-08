@@ -60,7 +60,7 @@ const DEFAULT_USER = { id: "", avatarUrl: "", name: "Wszyscy" } as const;
 function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
   const { data: lessonLecturers, isLoading: isLoadingUsers } = useLessonLecturers({
     lesson_id: lesson?.id,
-    page_size: 1000,
+    page_size: -1,
   });
 
   const users = useMemo(
