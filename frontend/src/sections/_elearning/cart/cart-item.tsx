@@ -1,24 +1,42 @@
 import { polishPlurals } from "polish-plurals";
 
 import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
+import { LoadingButton } from "@mui/lab";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
 
 import { fCurrency } from "src/utils/format-number";
 
-import Iconify from "src/components/iconify";
+import { useDeleteWishlist } from "src/api/wishlists/wishlist";
 
-import { ICourseLessonProp, ICourseTeacherProp } from "src/types/course";
+import Iconify from "src/components/iconify";
+import { useToastContext } from "src/components/toast";
+
+import { ICartProp } from "src/types/cart";
+import { ICourseTeacherProp } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  lesson: ICourseLessonProp;
+  cartItem: ICartProp;
   wishlist: boolean;
 };
 
-export default function CartItem({ lesson, wishlist }: Props) {
+export default function CartItem({ cartItem, wishlist }: Props) {
+  const { enqueueSnackbar } = useToastContext();
+
+  const { mutateAsync: deleteWishlist, isLoading: isDeletingWishlist } = useDeleteWishlist(
+    cartItem.id,
+  );
+
+  const handleDeleteFromWishlist = async () => {
+    try {
+      await deleteWishlist({});
+      enqueueSnackbar("Lekcja została usunięta z ulubionych", { variant: "success" });
+    } catch (error) {
+      enqueueSnackbar("Wystąpił błąd podczas usuwania z ulubionych", { variant: "error" });
+    }
+  };
+
   return (
     <Stack
       direction="row"
@@ -31,53 +49,52 @@ export default function CartItem({ lesson, wishlist }: Props) {
     >
       <Stack direction="row" alignItems="center" flexGrow={1}>
         <Stack spacing={0.5} sx={{ p: 2 }}>
-          <Typography variant="subtitle2">{lesson.title}</Typography>
+          <Typography variant="subtitle2">{cartItem.lesson.title}</Typography>
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            Czas trwania: {lesson.duration}{" "}
-            {polishPlurals("minuta", "minuty", "minut", lesson.duration)}
+            Czas trwania: {cartItem.lesson.duration}{" "}
+            {polishPlurals("minuta", "minuty", "minut", cartItem.lesson.duration)}
           </Typography>
-          {lesson.category && lesson.category.length > 0 && (
+          {cartItem.lesson.category && cartItem.lesson.category.length > 0 && (
             <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              Technologie: {lesson.category.join(", ")}{" "}
+              Technologie: {cartItem.lesson.category.join(", ")}{" "}
             </Typography>
           )}
-          {lesson.teachers && lesson.teachers.length > 0 && (
+          {cartItem.lesson.teachers && cartItem.lesson.teachers.length > 0 && (
             <Typography variant="body2" sx={{ color: "text.secondary" }}>
               Nauczyciele:{" "}
-              {lesson.teachers?.map((teacher: ICourseTeacherProp) => teacher.name).join(", ")}{" "}
+              {cartItem.lesson.teachers
+                ?.map((teacher: ICourseTeacherProp) => teacher.name)
+                .join(", ")}{" "}
             </Typography>
           )}
         </Stack>
       </Stack>
 
-      <Stack sx={{ width: 120 }}>
-        <TextField
-          select
-          size="small"
-          variant="outlined"
-          SelectProps={{
-            native: true,
-          }}
-          sx={{ width: 80 }}
-        >
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </TextField>
+      <Stack sx={{ width: 120, typography: "subtitle2" }}>
+        {" "}
+        {fCurrency(cartItem.lesson.price)}{" "}
       </Stack>
 
-      <Stack sx={{ width: 120, typography: "subtitle2" }}> {fCurrency(lesson.price)} </Stack>
-
-      <IconButton>
+      <LoadingButton
+        size="small"
+        color="error"
+        variant="text"
+        onClick={handleDeleteFromWishlist}
+        loading={isDeletingWishlist}
+      >
         <Iconify icon="carbon:trash-can" />
-      </IconButton>
+      </LoadingButton>
 
       {wishlist && (
-        <IconButton>
+        <LoadingButton
+          size="small"
+          color="success"
+          variant="text"
+          onClick={handleDeleteFromWishlist}
+          loading={isDeletingWishlist}
+        >
           <Iconify icon="carbon:shopping-cart-plus" />
-        </IconButton>
+        </LoadingButton>
       )}
     </Stack>
   );

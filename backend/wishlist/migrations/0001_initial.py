@@ -28,17 +28,17 @@ class Migration(migrations.Migration):
                 ("modified_at", models.DateTimeField(auto_now=True)),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 (
-                    "lesson",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="lesson.lesson"
-                    ),
-                ),
-                (
                     "student",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="wishlist_student",
                         to="profile.profile",
+                    ),
+                ),
+                (
+                    "lesson",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="lesson.lesson"
                     ),
                 ),
             ],

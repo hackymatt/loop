@@ -2,18 +2,18 @@ import Stack from "@mui/material/Stack";
 
 import Scrollbar from "src/components/scrollbar";
 
-import { ICourseLessonProp } from "src/types/course";
+import { ICartProp } from "src/types/cart";
 
 import CartItem from "./cart-item";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  lessons: ICourseLessonProp[];
+  cartItems: ICartProp[];
   wishlist?: boolean;
 };
 
-export default function CartList({ lessons, wishlist = false }: Props) {
+export default function CartList({ cartItems, wishlist = false }: Props) {
   return (
     <Scrollbar>
       <Stack
@@ -27,14 +27,13 @@ export default function CartList({ lessons, wishlist = false }: Props) {
         }}
       >
         <Stack flexGrow={1}>Lekcja</Stack>
-        <Stack sx={{ width: 120 }}>Ilość</Stack>
         <Stack sx={{ width: 120 }}>Cena</Stack>
         <Stack sx={{ width: 36 }} />
         {wishlist && <Stack sx={{ width: 36 }} />}
       </Stack>
 
-      {lessons.map((lesson) => (
-        <CartItem key={lesson.id} lesson={lesson} wishlist={wishlist} />
+      {cartItems?.map((cartItem) => (
+        <CartItem key={cartItem.id} cartItem={cartItem} wishlist={wishlist} />
       ))}
     </Scrollbar>
   );

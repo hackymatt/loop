@@ -1,23 +1,62 @@
 from rest_framework.serializers import (
     ModelSerializer,
+    SerializerMethodField,
     IntegerField,
 )
-from course.models import Course
 from lesson.models import Lesson, Technology
 from wishlist.models import Wishlist
 from profile.models import Profile
+from teaching.models import Teaching
+from django.db.models.functions import Concat
+from django.db.models import Value
+
+
+class LecturerSerializer(ModelSerializer):
+    full_name = SerializerMethodField("get_full_name")
+
+    class Meta:
+        model = Profile
+        fields = ("full_name",)
+
+    def get_full_name(self, profile):
+        return profile.user.first_name + " " + profile.user.last_name
 
 
 class TechnologySerializer(ModelSerializer):
     class Meta:
         model = Technology
-        fields = "__all__"
+        exclude = (
+            "id",
+            "modified_at",
+            "created_at",
+        )
 
 
 class LessonSerializer(ModelSerializer):
+    technologies = TechnologySerializer(many=True)
+    lecturers = SerializerMethodField("get_lesson_lecturers")
+
     class Meta:
         model = Lesson
-        fields = "__all__"
+        fields = (
+            "title",
+            "duration",
+            "technologies",
+            "lecturers",
+        )
+
+    def get_lesson_lecturers(self, lesson):
+        lecturer_ids = Teaching.objects.filter(lesson=lesson).values("lecturer")
+        lecturers = (
+            Profile.objects.filter(id__in=lecturer_ids)
+            .annotate(
+                full_name=Concat("user__first_name", Value(" "), "user__last_name")
+            )
+            .order_by("full_name")
+        )
+        return LecturerSerializer(
+            lecturers, many=True, context={"request": self.context.get("request")}
+        ).data
 
 
 class WishlistGetSerializer(ModelSerializer):
@@ -29,54 +68,14 @@ class WishlistGetSerializer(ModelSerializer):
 
 
 class WishlistSerializer(ModelSerializer):
-    course = IntegerField(required=False)
-    lesson = IntegerField(required=False)
-
     class Meta:
         model = Wishlist
-        fields = (
-            "student",
-            "course",
-            "lesson",
-        )
+        fields = ("lesson",)
 
     def create(self, validated_data):
-        student_id = validated_data.pop("student")
-        student = Profile.objects.get(pk=student_id)
+        user = self.context["request"].user
+        student = Profile.objects.get(user=user)
 
-        course_id = validated_data.get("course", None)
-        lesson_id = validated_data.get("lesson", None)
+        obj, _ = Wishlist.objects.get_or_create(student=student, **validated_data)
 
-        if course_id:
-            # manage whole course
-            course = Course.objects.get(pk=course_id)
-            course_lessons = course.lessons.all()
-            wishlist_items = Wishlist.objects.filter(
-                student=student, lesson__in=course_lessons
-            ).all()
-
-            if course_lessons.count() == wishlist_items.count():
-                # delete whole course
-                wishlist_items.delete()
-            else:
-                # add missing lessons
-                for course_lesson in course_lessons:
-                    Wishlist.objects.get_or_create(
-                        student=student, lesson=course_lesson
-                    )
-
-        else:
-            # manage specific lesson
-            lesson = Lesson.objects.get(pk=lesson_id)
-            wishlist_item = Wishlist.objects.filter(
-                student=student, lesson=lesson
-            ).all()
-
-            if wishlist_item.exists():
-                # delete lesson
-                wishlist_item.delete()
-            else:
-                # add lesson
-                Wishlist.objects.create(student=student, lesson=lesson)
-
-        return Wishlist.objects.filter(student=student).all()
+        return obj

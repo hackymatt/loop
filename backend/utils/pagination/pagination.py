@@ -12,7 +12,9 @@ class CustomPagination(PageNumberPagination):
     page_size_query_param = "page_size"
 
     def get_paginated_response(self, data):
-        page_size = int(self.request.GET.get(self.page_size_query_param, self.page_size))
+        page_size = int(
+            self.request.GET.get(self.page_size_query_param, self.page_size)
+        )
         if page_size == -1:
             page_size = self.page.paginator.count
         return Response(

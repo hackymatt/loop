@@ -3,14 +3,21 @@ import { polishPlurals } from "polish-plurals";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
+import { LoadingButton } from "@mui/lab";
 import Typography from "@mui/material/Typography";
+
+import { paths } from "src/routes/paths";
+import { useRouter } from "src/routes/hooks";
 
 import { fCurrency } from "src/utils/format-number";
 
-import Iconify from "src/components/iconify";
+import { useCreateWishlist } from "src/api/wishlists/wishlists";
 
-import { ICourseProps } from "src/types/course";
+import Iconify from "src/components/iconify";
+import { useUserContext } from "src/components/user";
+import { useToastContext } from "src/components/toast";
+
+import { ICourseProps, ICourseLessonProp } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -19,6 +26,28 @@ type Props = {
 };
 
 export default function CourseDetailsInfo({ course }: Props) {
+  const { enqueueSnackbar } = useToastContext();
+  const { isLoggedIn } = useUserContext();
+  const { push } = useRouter();
+
+  const { mutateAsync: createWishlistItem, isLoading: isAddingToFavorites } = useCreateWishlist();
+
+  const handleAddToFavorites = async () => {
+    if (!isLoggedIn) {
+      push(paths.login);
+      return;
+    }
+    try {
+      const wishlistItems = course.lessons.map((lesson: ICourseLessonProp) =>
+        createWishlistItem({ lesson: lesson.id }),
+      );
+      await Promise.allSettled(wishlistItems);
+      enqueueSnackbar("Kurs został dodany do ulubionych", { variant: "success" });
+    } catch (error) {
+      enqueueSnackbar("Wystąpił błąd podczas dodawania do ulubionych", { variant: "error" });
+    }
+  };
+
   return (
     <Card sx={{ p: 3, borderRadius: 2 }}>
       <Stack spacing={3}>
@@ -75,22 +104,25 @@ export default function CourseDetailsInfo({ course }: Props) {
         </Stack>
 
         <Stack spacing={0.5}>
-          <Button
+          <LoadingButton
             size="large"
             color="error"
             variant="contained"
             startIcon={<Iconify icon="carbon:favorite-filled" />}
+            loading={isAddingToFavorites}
+            onClick={handleAddToFavorites}
           >
             Dodaj do ulubionych
-          </Button>
-          <Button
+          </LoadingButton>
+          <LoadingButton
             size="large"
             color="inherit"
             variant="contained"
             startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
+            loading={isAddingToFavorites}
           >
             Dodaj do koszyka
-          </Button>
+          </LoadingButton>
         </Stack>
       </Stack>
     </Card>

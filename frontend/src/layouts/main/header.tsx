@@ -15,6 +15,7 @@ import { useOffSetTop } from "src/hooks/use-off-set-top";
 import { useResponsive } from "src/hooks/use-responsive";
 
 import { bgBlur } from "src/theme/css";
+import { useWishlistsRecordsCount } from "src/api/wishlists/wishlists";
 
 import Logo from "src/components/logo";
 import Label from "src/components/label";
@@ -41,6 +42,8 @@ export default function Header({ headerOnDark }: Props) {
   const mdUp = useResponsive("up", "md");
 
   const { isLoggedIn } = useUserContext();
+
+  const { data: wishlistRecords } = useWishlistsRecordsCount({ page_size: -1 });
 
   const renderContent = (
     <>
@@ -84,7 +87,7 @@ export default function Header({ headerOnDark }: Props) {
       {!mdUp && <NavMobile data={navConfig} />}
 
       <Stack spacing={3} direction="row" alignItems="center" flexGrow={1} justifyContent="flex-end">
-        <Badge badgeContent={2} color="primary">
+        <Badge badgeContent={wishlistRecords} color="primary">
           <IconButton
             component={RouterLink}
             href={isLoggedIn ? paths.wishlist : paths.login}

@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { polishPlurals } from "polish-plurals";
 import { formatInTimeZone } from "date-fns-tz";
 
+import { LoadingButton } from "@mui/lab";
 import Typography from "@mui/material/Typography";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Accordion, { accordionClasses } from "@mui/material/Accordion";
@@ -22,16 +23,22 @@ import {
   LinearProgress,
 } from "@mui/material";
 
+import { paths } from "src/routes/paths";
+import { useRouter } from "src/routes/hooks/use-router";
+
 import { useBoolean } from "src/hooks/use-boolean";
 
 import { getTimezone } from "src/utils/get-timezone";
 import { fCurrency, fShortenNumber } from "src/utils/format-number";
 
+import { useCreateWishlist } from "src/api/wishlists/wishlists";
 import { useLessonLecturers } from "src/api/lesson-lecturers/lesson-lecturers";
 import { useLessonSchedules } from "src/api/lesson-schedules/lesson-schedules";
 
 import Iconify from "src/components/iconify";
 import Schedule from "src/components/schedule";
+import { useUserContext } from "src/components/user";
+import { useToastContext } from "src/components/toast";
 
 import { ITeamMemberProps } from "src/types/team";
 import { IScheduleProp, ICourseLessonProp } from "src/types/course";
@@ -146,7 +153,13 @@ export default function CourseDetailsLessonItem({
   onExpanded,
   loading,
 }: LessonItemProps) {
+  const { enqueueSnackbar } = useToastContext();
+  const { isLoggedIn } = useUserContext();
+  const { push } = useRouter();
+
   const checkTimeSlotsForm = useBoolean();
+
+  const { mutateAsync: createWishlistItem, isLoading: isAddingToFavorites } = useCreateWishlist();
 
   const genderAvatarUrl =
     details?.teachers?.[0]?.gender === "Kobieta"
@@ -154,6 +167,20 @@ export default function CourseDetailsLessonItem({
       : "/assets/images/avatar/avatar_male.jpg";
 
   const avatarUrl = details?.teachers?.[0]?.avatarUrl || genderAvatarUrl;
+
+  const handleAddToFavorites = async () => {
+    if (!isLoggedIn) {
+      push(paths.login);
+      return;
+    }
+    try {
+      await createWishlistItem({ lesson: lesson.id });
+      enqueueSnackbar("Lekcja została dodana do ulubionych", { variant: "success" });
+    } catch (error) {
+      enqueueSnackbar("Wystąpił błąd podczas dodawania do ulubionych", { variant: "error" });
+    }
+  };
+
   return (
     <>
       <Accordion
@@ -344,12 +371,18 @@ export default function CourseDetailsLessonItem({
                 >
                   <Iconify icon="carbon:calendar" />
                 </Button>
-                <Button size="medium" color="error" variant="contained">
+                <LoadingButton
+                  size="medium"
+                  color="error"
+                  variant="contained"
+                  onClick={handleAddToFavorites}
+                  loading={isAddingToFavorites}
+                >
                   <Iconify icon="carbon:favorite" />
-                </Button>
-                <Button size="medium" color="inherit" variant="contained">
+                </LoadingButton>
+                <LoadingButton size="medium" color="inherit" variant="contained">
                   <Iconify icon="carbon:shopping-cart-plus" />
-                </Button>
+                </LoadingButton>
               </Stack>
             </Stack>
           )}
