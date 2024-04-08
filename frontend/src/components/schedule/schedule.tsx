@@ -154,7 +154,7 @@ export default function Schedule({
                           variant="body2"
                           sx={{
                             border: (theme) => `solid 1px ${theme.palette.grey[500]}`,
-                            p: 0.5,
+                            p: 1,
                             borderRadius: 1,
                           }}
                         >

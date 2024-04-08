@@ -335,23 +335,20 @@ export default function CourseDetailsLessonItem({
 
               <Divider sx={{ borderStyle: "dashed" }} />
 
-              <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="right">
+              <Stack direction="row" spacing={0.5} flexWrap="wrap" justifyContent="right">
                 <Button
-                  variant="text"
                   size="medium"
-                  color="primary"
+                  color="info"
+                  variant="contained"
                   onClick={() => checkTimeSlotsForm.onToggle()}
                 >
-                  Sprawdź terminy
+                  <Iconify icon="carbon:calendar" />
                 </Button>
-
-                <Button
-                  size="large"
-                  color="inherit"
-                  variant="contained"
-                  startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
-                >
-                  Dodaj do koszyka
+                <Button size="medium" color="error" variant="contained">
+                  <Iconify icon="carbon:favorite" />
+                </Button>
+                <Button size="medium" color="inherit" variant="contained">
+                  <Iconify icon="carbon:shopping-cart-plus" />
                 </Button>
               </Stack>
             </Stack>
