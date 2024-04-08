@@ -10,8 +10,8 @@ from profile.models import Profile
 
 
 class Wishlist(BaseModel):
-    lesson = ForeignKey(Lesson, on_delete=CASCADE)
     student = ForeignKey(Profile, on_delete=CASCADE, related_name="wishlist_student")
+    lesson = ForeignKey(Lesson, on_delete=CASCADE)
 
     class Meta:
         db_table = "wishlist"

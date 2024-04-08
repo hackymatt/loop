@@ -15,7 +15,6 @@ from profile.models import Profile
 from review.models import Review
 from purchase.models import Purchase
 from teaching.models import Teaching
-from course.models import Course
 from django.db.models.functions import Concat
 from django.db.models import Avg, Value
 

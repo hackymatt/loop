@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import { Badge } from "@mui/material";
@@ -15,6 +17,8 @@ import { useOffSetTop } from "src/hooks/use-off-set-top";
 import { useResponsive } from "src/hooks/use-responsive";
 
 import { bgBlur } from "src/theme/css";
+import { useCartsRecordsCount } from "src/api/carts/carts";
+import { useWishlistsRecordsCount } from "src/api/wishlists/wishlists";
 
 import Logo from "src/components/logo";
 import Label from "src/components/label";
@@ -41,6 +45,15 @@ export default function Header({ headerOnDark }: Props) {
   const mdUp = useResponsive("up", "md");
 
   const { isLoggedIn } = useUserContext();
+
+  const { data: wishlistRecords } = useWishlistsRecordsCount({ page_size: -1 }, isLoggedIn);
+  const { data: cartRecords } = useCartsRecordsCount({ page_size: -1 }, isLoggedIn);
+
+  const wishlistItems = useMemo(
+    () => (isLoggedIn ? wishlistRecords : 0),
+    [isLoggedIn, wishlistRecords],
+  );
+  const cartItems = useMemo(() => (isLoggedIn ? cartRecords : 0), [isLoggedIn, cartRecords]);
 
   const renderContent = (
     <>
@@ -84,10 +97,10 @@ export default function Header({ headerOnDark }: Props) {
       {!mdUp && <NavMobile data={navConfig} />}
 
       <Stack spacing={3} direction="row" alignItems="center" flexGrow={1} justifyContent="flex-end">
-        <Badge badgeContent={2} color="primary">
+        <Badge badgeContent={wishlistItems} color="primary">
           <IconButton
             component={RouterLink}
-            href={paths.wishlist}
+            href={isLoggedIn ? paths.wishlist : paths.login}
             size="small"
             color="inherit"
             sx={{ p: 0 }}
@@ -96,10 +109,10 @@ export default function Header({ headerOnDark }: Props) {
           </IconButton>
         </Badge>
 
-        <Badge badgeContent={4} color="primary">
+        <Badge badgeContent={cartItems} color="primary">
           <IconButton
             component={RouterLink}
-            href={paths.cart}
+            href={isLoggedIn ? paths.cart : paths.login}
             size="small"
             color="inherit"
             sx={{ p: 0 }}

@@ -11,6 +11,7 @@ from schedule.models import Schedule
 from reservation.models import Reservation
 from teaching.models import Teaching
 from cart.models import Cart
+from wishlist.models import Wishlist
 from django.core import mail
 
 
@@ -167,6 +168,10 @@ def reservation_number():
 
 def is_reservation_found(id: int):
     return Reservation.objects.filter(id=id).exists()
+
+
+def wishlist_number():
+    return Wishlist.objects.count()
 
 
 def cart_number():

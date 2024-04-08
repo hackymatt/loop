@@ -53,7 +53,7 @@ export default function Filters({ open, onClose }: Props) {
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
   const { data: technologies } = useTechnologies({ sort_by: "name" });
-  const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: 1000 });
+  const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: -1 });
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 

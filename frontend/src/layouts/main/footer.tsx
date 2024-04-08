@@ -13,7 +13,7 @@ export default function Footer() {
         <Logo single />
 
         <Typography variant="caption" component="div" sx={{ color: "text.secondary" }}>
-          {`© ${currentYear}. All rights reserved`}
+          {`© ${currentYear}. Wszelkie prawa zastrzeżone`}
         </Typography>
       </Container>
     </footer>

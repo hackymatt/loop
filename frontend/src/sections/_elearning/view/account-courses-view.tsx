@@ -48,7 +48,7 @@ const TABLE_HEAD = [
   { id: "" },
 ];
 
-const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
+const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, { label: "Wszystkie", value: -1 }];
 
 // ----------------------------------------------------------------------
 
@@ -60,7 +60,7 @@ export default function AccountCoursesView() {
   const { data: pagesCount } = usePurchasePageCount(filters);
   const { data: lessons } = usePurchase(filters);
 
-  const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: 1000 });
+  const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: -1 });
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;

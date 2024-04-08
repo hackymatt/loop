@@ -1,11 +1,13 @@
-import EcommerceWishlistView from "src/sections/_ecommerce/view/ecommerce-wishlist-view";
+import packageInfo from "package.json";
+
+import WishlistView from "src/sections/_elearning/view/wishlist-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: "E-commerce: Wishlist",
+  title: `${packageInfo.name}: Ulubione`,
 };
 
-export default function EcommerceWishlistPage() {
-  return <EcommerceWishlistView />;
+export default function WishlistPage() {
+  return <WishlistView />;
 }
