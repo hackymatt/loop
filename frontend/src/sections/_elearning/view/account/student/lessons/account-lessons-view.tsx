@@ -52,7 +52,7 @@ const TABLE_HEAD = [
   { id: "" },
 ];
 
-const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
+const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, { label: "Wszystkie", value: -1 }];
 
 // ----------------------------------------------------------------------
 

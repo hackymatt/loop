@@ -38,7 +38,7 @@ const TABLE_HEAD = [
   { id: "created_at", label: "Data zmiany", width: 150 },
 ];
 
-const ROWS_PER_PAGE_OPTIONS = [5, 10, 25];
+const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, { label: "Wszystkie", value: -1 }];
 
 // ----------------------------------------------------------------------
 

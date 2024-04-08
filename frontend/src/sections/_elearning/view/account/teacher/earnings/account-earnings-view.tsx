@@ -36,7 +36,7 @@ const TABLE_HEAD = [
   { id: "earnings", label: "Zarobki" },
 ];
 
-const ROWS_PER_PAGE_OPTIONS = [3, 6, 12, 24, 36, 60];
+const ROWS_PER_PAGE_OPTIONS = [3, 6, 12, 24, 36, 60, { label: "Wszystkie", value: -1 }];
 
 // ----------------------------------------------------------------------
 
