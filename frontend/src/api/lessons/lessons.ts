@@ -52,7 +52,8 @@ type ICreateLesson = Omit<
   | "rating_count"
   | "previous_price"
   | "lowest_30_days_price"
->;
+  | "technologies"
+> & { technologies: string[] };
 type ICreateLessonReturn = ICreateLesson;
 export const lessonsQuery = (query?: IQueryParams) => {
   const url = endpoint;

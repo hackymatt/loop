@@ -70,7 +70,10 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await editLesson(data);
+      await editLesson({
+        ...data,
+        technologies: data.technologies.map((technology: ICourseByCategoryProps) => technology.id),
+      });
       reset();
       onClose();
     } catch (error) {

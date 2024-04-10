@@ -6,16 +6,15 @@ import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/teaching" as const;
 
-type IDeleteTechnology = {};
+type IDeleteTechnology = { id: string };
 
 type IDeleteTechnologyReturn = {};
 
-export const useDeleteTeaching = (id: string) => {
+export const useDeleteTeaching = () => {
   const queryClient = useQueryClient();
-  const url = `${endpoint}/${id}`;
   return useMutation<IDeleteTechnologyReturn, AxiosError, IDeleteTechnology>(
-    async () => {
-      const result = await Api.delete(url, {
+    async ({ id }) => {
+      const result = await Api.delete(`${endpoint}/${id}`, {
         headers: {
           "X-CSRFToken": getCsrfToken(),
         },

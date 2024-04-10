@@ -91,9 +91,7 @@ export default function AccountScheduleView() {
     sort_by: "start_time",
   });
   const { mutateAsync: addTimeSlot } = useCreateSchedule();
-  const { mutateAsync: deleteTimeSlot, isLoading: isSubmitting } = useDeleteSchedule(
-    eventDetails?.event.id ?? "0",
-  );
+  const { mutateAsync: deleteTimeSlot, isLoading: isSubmitting } = useDeleteSchedule();
 
   const events = useMemo(
     () =>
@@ -146,18 +144,19 @@ export default function AccountScheduleView() {
     [addTimeSlot, getTime],
   );
 
-  const handleDeleteTimeSlot = useCallback(async () => {
-    await deleteTimeSlot({});
-    if (eventDetails) {
-      setScrollTime(getTime(new Date(eventDetails.event.start!)));
-    }
-  }, [deleteTimeSlot, eventDetails, getTime]);
+  const handleDeleteTimeSlot = useCallback(
+    async (eventInfo: EventClickArg) => {
+      await deleteTimeSlot({ id: eventInfo.event.id });
+      setScrollTime(getTime(new Date(eventInfo.event.start!)));
+    },
+    [deleteTimeSlot, getTime],
+  );
 
   const handleEventClick = useCallback(
     async (eventInfo: EventClickArg) => {
       setEventDetails(eventInfo);
       if (eventInfo.event.title === AVAILABLE_STATUS) {
-        handleDeleteTimeSlot();
+        handleDeleteTimeSlot(eventInfo);
       } else {
         confirmCancellationFormOpen.onToggle();
       }
@@ -166,9 +165,9 @@ export default function AccountScheduleView() {
   );
 
   const handleLessonCancel = useCallback(async () => {
-    await handleDeleteTimeSlot();
+    await handleDeleteTimeSlot(eventDetails!);
     confirmCancellationFormOpen.onFalse();
-  }, [confirmCancellationFormOpen, handleDeleteTimeSlot]);
+  }, [confirmCancellationFormOpen, eventDetails, handleDeleteTimeSlot]);
 
   return (
     <>

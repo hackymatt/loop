@@ -28,7 +28,7 @@ interface Props extends DialogProps {
 // ----------------------------------------------------------------------
 
 export default function TechnologyDeleteForm({ technology, onClose, ...other }: Props) {
-  const { mutateAsync: deleteTechnology } = useDeleteTechnology(technology.id);
+  const { mutateAsync: deleteTechnology } = useDeleteTechnology();
 
   const methods = useForm({
     defaultValues,
@@ -44,7 +44,7 @@ export default function TechnologyDeleteForm({ technology, onClose, ...other }: 
 
   const onSubmit = handleSubmit(async () => {
     try {
-      await deleteTechnology({});
+      await deleteTechnology({ id: technology.id });
       reset();
       onClose();
     } catch (error) {

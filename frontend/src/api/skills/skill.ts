@@ -19,7 +19,7 @@ type IEditSkill = Pick<ISkill, "name">;
 
 type IEditSkillReturn = IEditSkill;
 
-type IDeleteSkill = {};
+type IDeleteSkill = { id: string };
 
 type IDeleteSkillReturn = {};
 
@@ -69,12 +69,11 @@ export const useEditSkill = (id: string) => {
   );
 };
 
-export const useDeleteSkill = (id: string) => {
+export const useDeleteSkill = () => {
   const queryClient = useQueryClient();
-  const url = `${endpoint}/${id}`;
   return useMutation<IDeleteSkillReturn, AxiosError, IDeleteSkill>(
-    async () => {
-      const result = await Api.delete(url, {
+    async ({ id }) => {
+      const result = await Api.delete(`${endpoint}/${id}`, {
         headers: {
           "X-CSRFToken": getCsrfToken(),
         },

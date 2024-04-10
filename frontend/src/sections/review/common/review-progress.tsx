@@ -1,5 +1,4 @@
 import Stack from "@mui/material/Stack";
-import RadioGroup from "@mui/material/RadioGroup";
 
 import { IReviewStatistic } from "src/types/review";
 
@@ -18,18 +17,16 @@ export default function ReviewProgress({ value, options, onChange }: Props) {
     .reduce((accumulator: number, curr: number) => accumulator + curr);
 
   return (
-    <RadioGroup onChange={(event) => onChange(event.target.value)}>
-      <Stack spacing={2}>
-        {options.map((option, index) => (
-          <ReviewProgressItem
-            key={option.rating}
-            rating={option}
-            index={index}
-            totals={totals}
-            selected={option.rating === value}
-          />
-        ))}
-      </Stack>
-    </RadioGroup>
+    <Stack spacing={2}>
+      {options.map((option, index) => (
+        <ReviewProgressItem
+          key={option.rating}
+          rating={option}
+          totals={totals}
+          value={value}
+          onChange={onChange}
+        />
+      ))}
+    </Stack>
   );
 }

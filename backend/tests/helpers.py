@@ -94,6 +94,18 @@ def is_course_found(id: int):
     return Course.objects.filter(id=id).exists()
 
 
+def get_course_lessons(id: int):
+    return Course.lessons.through.objects.filter(course_id=id)
+
+
+def get_course_skills(id: int):
+    return Course.skills.through.objects.filter(course_id=id)
+
+
+def get_course_topics(id: int):
+    return Course.topics.through.objects.filter(course_id=id)
+
+
 def lessons_number():
     return Lesson.objects.count()
 

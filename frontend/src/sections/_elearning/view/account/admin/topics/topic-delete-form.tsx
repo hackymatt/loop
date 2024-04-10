@@ -28,7 +28,7 @@ interface Props extends DialogProps {
 // ----------------------------------------------------------------------
 
 export default function TopicDeleteForm({ topic, onClose, ...other }: Props) {
-  const { mutateAsync: deleteTopic } = useDeleteTopic(topic.id);
+  const { mutateAsync: deleteTopic } = useDeleteTopic();
 
   const methods = useForm({
     defaultValues,
@@ -44,7 +44,7 @@ export default function TopicDeleteForm({ topic, onClose, ...other }: Props) {
 
   const onSubmit = handleSubmit(async () => {
     try {
-      await deleteTopic({});
+      await deleteTopic({ id: topic.id });
       reset();
       onClose();
     } catch (error) {

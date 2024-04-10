@@ -1,10 +1,11 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.response import Response
-from rest_framework import status
+from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from rest_framework.decorators import api_view
 from newsletter.serializers import NewsletterEntrySerializer, NewsletterSerializer
 from newsletter.models import Newsletter
+from django.views.decorators.csrf import csrf_exempt
+from mailer.mailer import Mailer
+import json
 
 
 class NewsletterEntriesViewSet(ModelViewSet):
@@ -17,20 +18,39 @@ class NewsletterEntriesViewSet(ModelViewSet):
 
 class NewsletterSubscribeViewSet(ModelViewSet):
     http_method_names = ["post"]
-    queryset = Newsletter.objects.all()
-    serializer_class = NewsletterSerializer
+
+    @csrf_exempt
+    def subscribe(request):
+        data = json.loads(request.body)
+        instance, created = Newsletter.objects.get_or_create(**data)
+        if not created:
+            instance.active = True
+            instance.save()
+
+        mailer = Mailer()
+        data = {
+            **{
+                "unsubscribe_url": "http://localhost:8002/newsletter-unsubscribe/"
+                + str(instance.uuid),
+            }
+        }
+        mailer.send(
+            email_template="subscribe.html",
+            to=[instance.email],
+            subject="Potwierdzenie rejestracji w newsletterze.",
+            data=data,
+        )
+
+        return JsonResponse(NewsletterSerializer(instance).data)
 
 
 class NewsletterUnsubscribeViewSet(ModelViewSet):
     http_method_names = ["put"]
 
-    @api_view(["PUT"])
+    @csrf_exempt
     def unsubscribe(request, uuid):
         instance = Newsletter.objects.get(uuid=uuid)
         instance.active = False
         instance.save()
 
-        return Response(
-            status=status.HTTP_200_OK,
-            data=NewsletterSerializer(instance).data,
-        )
+        return JsonResponse(NewsletterSerializer(instance).data)

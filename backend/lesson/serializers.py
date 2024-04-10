@@ -77,7 +77,7 @@ class TechnologySerializer(ModelSerializer):
         )
 
 
-class LessonSerializer(ModelSerializer):
+class LessonGetSerializer(ModelSerializer):
     lecturers = SerializerMethodField("get_lesson_lecturers")
     students_count = SerializerMethodField("get_lesson_students_count")
     rating = SerializerMethodField("get_lesson_rating")
@@ -103,6 +103,15 @@ class LessonSerializer(ModelSerializer):
             "modified_at",
         )
 
+
+class LessonSerializer(ModelSerializer):
+    class Meta:
+        model = Lesson
+        exclude = (
+            "created_at",
+            "modified_at",
+        )
+
     def validate_duration(self, duration):
         if duration % MIN_LESSON_DURATION_MINS != 0:
             raise ValidationError(
@@ -112,12 +121,7 @@ class LessonSerializer(ModelSerializer):
         return duration
 
     def add_technology(self, lesson, technologies):
-        objs = []
-        for technology in technologies:
-            obj = Technology.objects.get(name=technology["name"])
-            objs.append(obj)
-
-        lesson.technologies.add(*objs)
+        lesson.technologies.add(*technologies)
 
         return lesson
 

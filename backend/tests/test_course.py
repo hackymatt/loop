@@ -6,13 +6,9 @@ from .factory import (
     create_course,
     create_course_obj,
     create_lesson,
-    create_lesson_obj,
     create_technology,
-    create_technology_obj,
     create_skill,
-    create_skill_obj,
     create_topic,
-    create_topic_obj,
     create_review,
     create_purchase,
     create_teaching,
@@ -23,15 +19,15 @@ from .factory import (
 from .helpers import (
     login,
     is_data_match,
-    get_user,
-    get_profile,
     get_course,
     get_lesson,
     get_technology,
     get_skill,
     get_topic,
     courses_number,
-    filter_dict,
+    get_course_lessons,
+    get_course_skills,
+    get_course_topics,
 )
 from django.contrib import auth
 import json
@@ -270,27 +266,11 @@ class CourseTest(APITestCase):
             title="Javascript course",
             description="course_description",
             level="E",
-            lessons=[
-                create_lesson_obj(
-                    id=self.lesson_3.id,
-                    title=self.lesson_3.title,
-                    description=self.lesson_3.description,
-                    duration=self.lesson_3.duration,
-                    github_url=self.lesson_3.github_url,
-                    price=self.lesson_3.price,
-                    technologies=[
-                        create_technology_obj(name=technology.name)
-                        for technology in self.lesson_3.technologies.all()
-                    ],
-                ),
-            ],
-            skills=[
-                create_skill_obj(name=self.skill_1.name),
-                create_skill_obj(name=self.skill_2.name),
-            ],
+            lessons=[self.lesson_3.id],
+            skills=[self.skill_1.id, self.skill_2.id],
             topics=[
-                create_topic_obj(name=self.topic_1.name),
-                create_topic_obj(name=self.topic_2.name),
+                self.topic_1.id,
+                self.topic_2.id,
             ],
             image=b64encode(create_image().read()),
             video=b64encode(create_video().read()),
@@ -300,22 +280,9 @@ class CourseTest(APITestCase):
             title="Python for beginners course",
             description="course_description_other",
             level="Z",
-            lessons=[
-                create_lesson_obj(
-                    id=self.lesson_1.id,
-                    title=self.lesson_1.title,
-                    description=self.lesson_1.description,
-                    duration=self.lesson_1.duration,
-                    github_url=self.lesson_1.github_url,
-                    price=self.lesson_1.price,
-                    technologies=[
-                        create_technology_obj(name=technology.name)
-                        for technology in self.lesson_1.technologies.all()
-                    ],
-                ),
-            ],
-            skills=[create_skill_obj(name=self.skill_1.name)],
-            topics=[create_topic_obj(name=self.topic_2.name)],
+            lessons=[self.lesson_1.id],
+            skills=[self.skill_1.id],
+            topics=[self.topic_2.id],
             image=b64encode(create_image().read()),
             video=b64encode(create_video().read()),
         )
@@ -599,76 +566,28 @@ class CourseTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(courses_number(), 4)
         course_data = json.loads(response.content)
-        lessons_data = course_data.pop("lessons")
-        technology_data = course_data.pop("technologies")
-        skills_data = course_data.pop("skills")
-        topics_data = course_data.pop("topics")
-        duration = course_data.pop("duration")
-        lecturers = course_data.pop("lecturers")
-        course_data.pop("price")
-        rating = course_data.pop("rating")
-        rating_count = course_data.pop("rating_count")
-        students_count = course_data.pop("students_count")
+        lessons_ids = course_data.pop("lessons")
+        skills_ids = course_data.pop("skills")
+        topics_ids = course_data.pop("topics")
         self.assertTrue(is_data_match(get_course(course_data["id"]), course_data))
         self.assertEqual(
-            duration, sum(lesson_data["duration"] for lesson_data in lessons_data)
+            sorted(
+                [record.lesson.id for record in get_course_lessons(course_data["id"])]
+            ),
+            sorted(lessons_ids),
         )
         self.assertEqual(
-            lecturers,
             sorted(
-                [
-                    dict(y)
-                    for y in set(
-                        tuple(x.items())
-                        for x in sum(
-                            [lesson["lecturers"] for lesson in lessons_data], []
-                        )
-                    )
-                ],
-                key=lambda d: d["uuid"],
+                [record.skill.id for record in get_course_skills(course_data["id"])]
             ),
+            sorted(skills_ids),
         )
-        self.assertEqual(rating, None)
-        self.assertEqual(rating_count, 0)
-        self.assertEqual(students_count, 0)
-        for lesson_data in lessons_data:
-            technology_data = lesson_data.pop("technologies")
-            lecturers_data = lesson_data.pop("lecturers")
-            rating = lesson_data.pop("rating")
-            rating_count = lesson_data.pop("rating_count")
-            students_count = lesson_data.pop("students_count")
-            previous_price = lesson_data.pop("previous_price")
-            lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
-
-            self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
-            self.assertEqual(rating, None)
-            self.assertEqual(rating_count, 0)
-            self.assertEqual(students_count, 0)
-            self.assertEqual(previous_price, None)
-            self.assertEqual(lowest_30_days_price, None)
-
-            for technology in technology_data:
-                self.assertTrue(
-                    is_data_match(get_technology(technology["id"]), technology)
-                )
-
-            for lecturer_data in lecturers_data:
-                user_data = filter_dict(lecturer_data, self.user_columns)
-                profile_data = filter_dict(lecturer_data, self.profile_columns)
-                self.assertTrue(
-                    is_data_match(get_user(lecturer_data["email"]), user_data)
-                )
-                self.assertTrue(
-                    is_data_match(
-                        get_profile(get_user(lecturer_data["email"])), profile_data
-                    )
-                )
-        for technology in technology_data:
-            self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
-        for skill_data in skills_data:
-            self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
-        for topic_data in topics_data:
-            self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
+        self.assertEqual(
+            sorted(
+                [record.topic.id for record in get_course_topics(course_data["id"])]
+            ),
+            sorted(topics_ids),
+        )
 
     def test_create_course_without_lesson(self):
         # login
@@ -738,76 +657,28 @@ class CourseTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(courses_number(), 3)
         course_data = json.loads(response.content)
-        lessons_data = course_data.pop("lessons")
-        technology_data = course_data.pop("technologies")
-        skills_data = course_data.pop("skills")
-        topics_data = course_data.pop("topics")
-        duration = course_data.pop("duration")
-        lecturers = course_data.pop("lecturers")
-        course_data.pop("price")
-        rating = course_data.pop("rating")
-        rating_count = course_data.pop("rating_count")
-        students_count = course_data.pop("students_count")
+        lessons_ids = course_data.pop("lessons")
+        skills_ids = course_data.pop("skills")
+        topics_ids = course_data.pop("topics")
         self.assertTrue(is_data_match(get_course(course_data["id"]), course_data))
         self.assertEqual(
-            duration, sum(lesson_data["duration"] for lesson_data in lessons_data)
+            sorted(
+                [record.lesson.id for record in get_course_lessons(course_data["id"])]
+            ),
+            sorted(lessons_ids),
         )
         self.assertEqual(
-            lecturers,
             sorted(
-                [
-                    dict(y)
-                    for y in set(
-                        tuple(x.items())
-                        for x in sum(
-                            [lesson["lecturers"] for lesson in lessons_data], []
-                        )
-                    )
-                ],
-                key=lambda d: d["full_name"],
+                [record.skill.id for record in get_course_skills(course_data["id"])]
             ),
+            sorted(skills_ids),
         )
-        self.assertEqual(rating, 4.5)
-        self.assertEqual(rating_count, 2)
-        self.assertEqual(students_count, 1)
-        for lesson_data in lessons_data:
-            technology_data = lesson_data.pop("technologies")
-            lecturers_data = lesson_data.pop("lecturers")
-            rating = lesson_data.pop("rating")
-            rating_count = lesson_data.pop("rating_count")
-            students_count = lesson_data.pop("students_count")
-            previous_price = lesson_data.pop("previous_price")
-            lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
-
-            self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
-            self.assertEqual(rating, 4.5)
-            self.assertEqual(rating_count, 2)
-            self.assertEqual(students_count, 1)
-            self.assertEqual(previous_price, None)
-            self.assertEqual(lowest_30_days_price, None)
-
-            for technology in technology_data:
-                self.assertTrue(
-                    is_data_match(get_technology(technology["id"]), technology)
-                )
-
-            for lecturer_data in lecturers_data:
-                user_data = filter_dict(lecturer_data, self.user_columns)
-                profile_data = filter_dict(lecturer_data, self.profile_columns)
-                self.assertTrue(
-                    is_data_match(get_user(lecturer_data["email"]), user_data)
-                )
-                self.assertTrue(
-                    is_data_match(
-                        get_profile(get_user(lecturer_data["email"])), profile_data
-                    )
-                )
-        for technology in technology_data:
-            self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
-        for skill_data in skills_data:
-            self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
-        for topic_data in topics_data:
-            self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
+        self.assertEqual(
+            sorted(
+                [record.topic.id for record in get_course_topics(course_data["id"])]
+            ),
+            sorted(topics_ids),
+        )
 
     def test_update_course_without_lesson(self):
         # login

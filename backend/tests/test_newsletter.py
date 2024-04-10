@@ -133,7 +133,7 @@ class NewsletterSubscribeTest(APITestCase):
         # post data
         data = {"email": "test@example.com"}
         response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(newsletters_number(), 1)
         self.assertEqual(emails_sent_number(), 1)
         email = get_mail(0)
@@ -145,7 +145,7 @@ class NewsletterSubscribeTest(APITestCase):
         create_newsletter(email=data["email"], active=False)
         # post data
         response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(newsletters_number(), 1)
         self.assertEqual(emails_sent_number(), 1)
         email = get_mail(0)

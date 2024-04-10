@@ -28,7 +28,7 @@ interface Props extends DialogProps {
 // ----------------------------------------------------------------------
 
 export default function SkillDeleteForm({ skill, onClose, ...other }: Props) {
-  const { mutateAsync: deleteSkill } = useDeleteSkill(skill.id);
+  const { mutateAsync: deleteSkill } = useDeleteSkill();
 
   const methods = useForm({
     defaultValues,
@@ -44,7 +44,7 @@ export default function SkillDeleteForm({ skill, onClose, ...other }: Props) {
 
   const onSubmit = handleSubmit(async () => {
     try {
-      await deleteSkill({});
+      await deleteSkill({ id: skill.id });
       reset();
       onClose();
     } catch (error) {

@@ -76,9 +76,6 @@ router.register(r"best-reviews", BestReviewViewSet, basename="best_reviews")
 router.register(r"schedules", ManageScheduleViewSet, basename="schedules")
 router.register(r"lesson-schedules", ScheduleViewSet, basename="lesson_schedules")
 router.register(r"newsletter", NewsletterEntriesViewSet, basename="newsletter")
-router.register(
-    r"newsletter-subscribe", NewsletterSubscribeViewSet, basename="newsletter_subscribe"
-)
 router.register(r"wishlist", WishlistViewSet, basename="wishlist")
 router.register(r"cart", CartViewSet, basename="cart")
 router.register(r"purchase", PurchaseViewSet, basename="purchase")
@@ -97,6 +94,7 @@ urlpatterns = [
         FinanceDetailsViewSet.as_view({"get": "list", "put": "update"}),
     ),
     path("stats", StatsViewSet.as_view({"get": "get_stats"})),
+    path("newsletter-subscribe", NewsletterSubscribeViewSet.subscribe),
     path("newsletter-unsubscribe/<str:uuid>", NewsletterUnsubscribeViewSet.unsubscribe),
     path("contact", ContactViewSet.as_view({"post": "contact"})),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

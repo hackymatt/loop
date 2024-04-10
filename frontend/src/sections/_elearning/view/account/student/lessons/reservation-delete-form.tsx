@@ -24,13 +24,11 @@ interface Props extends DialogProps {
 export default function ReservationDeleteForm({ purchase, onClose, ...other }: Props) {
   const { enqueueSnackbar } = useToastContext();
 
-  const { mutateAsync: deleteReservation, isLoading: isSubmitting } = useDeleteReservation(
-    purchase.reservationId,
-  );
+  const { mutateAsync: deleteReservation, isLoading: isSubmitting } = useDeleteReservation();
 
   const onSubmit = async () => {
     try {
-      await deleteReservation({});
+      await deleteReservation({ id: purchase.reservationId });
       onClose();
       enqueueSnackbar("Rezerwacja została usunięta", { variant: "success" });
     } catch (error) {

@@ -27,7 +27,7 @@ export default function CartItem({ cartItem, wishlist }: Props) {
   const { enqueueSnackbar } = useToastContext();
 
   const { mutateAsync: deleteWishlist, isLoading: isDeletingWishlist } = useDeleteWishlist();
-  const { mutateAsync: deleteCart, isLoading: isDeletingCart } = useDeleteCart(cartItem.id);
+  const { mutateAsync: deleteCart, isLoading: isDeletingCart } = useDeleteCart();
   const { mutateAsync: createCartItem, isLoading: isCreatingCart } = useCreateCart();
 
   const handleDeleteFromWishlist = async () => {
@@ -41,7 +41,7 @@ export default function CartItem({ cartItem, wishlist }: Props) {
 
   const handleDeleteFromCart = async () => {
     try {
-      await deleteCart({});
+      await deleteCart({ id: cartItem.id });
       enqueueSnackbar("Lekcja została usunięta z koszyka", { variant: "success" });
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd podczas usuwania z koszyka", { variant: "error" });

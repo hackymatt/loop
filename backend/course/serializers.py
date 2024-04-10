@@ -296,37 +296,37 @@ class LecturerDetailsSerializer(ModelSerializer):
         )
 
 
-class LessonSerializer(ModelSerializer):
-    id = IntegerField()
-    technologies = TechnologySerializer(many=True)
-    previous_price = SerializerMethodField("get_lesson_previous_price")
-    lowest_30_days_price = SerializerMethodField("get_lesson_lowest_30_days_price")
-    lecturers = SerializerMethodField("get_lesson_lecturers")
-    students_count = SerializerMethodField("get_lesson_students_count")
-    rating = SerializerMethodField("get_lesson_rating")
-    rating_count = SerializerMethodField("get_lesson_rating_count")
+# class LessonSerializer(ModelSerializer):
+#     id = IntegerField()
+#     technologies = TechnologySerializer(many=True)
+#     previous_price = SerializerMethodField("get_lesson_previous_price")
+#     lowest_30_days_price = SerializerMethodField("get_lesson_lowest_30_days_price")
+#     lecturers = SerializerMethodField("get_lesson_lecturers")
+#     students_count = SerializerMethodField("get_lesson_students_count")
+#     rating = SerializerMethodField("get_lesson_rating")
+#     rating_count = SerializerMethodField("get_lesson_rating_count")
 
-    def get_lesson_previous_price(self, lesson):
-        return get_previous_price(instance=lesson)
+#     def get_lesson_previous_price(self, lesson):
+#         return get_previous_price(instance=lesson)
 
-    def get_lesson_lowest_30_days_price(self, lesson):
-        return get_lowest_30_days_price(instance=lesson)
+#     def get_lesson_lowest_30_days_price(self, lesson):
+#         return get_lowest_30_days_price(instance=lesson)
 
-    def get_lesson_lecturers(self, lesson):
-        return get_lecturers(self, lessons=[lesson])
+#     def get_lesson_lecturers(self, lesson):
+#         return get_lecturers(self, lessons=[lesson])
 
-    def get_lesson_rating(self, lesson):
-        return get_rating(lessons=[lesson])
+#     def get_lesson_rating(self, lesson):
+#         return get_rating(lessons=[lesson])
 
-    def get_lesson_rating_count(self, lesson):
-        return get_rating_count(lessons=[lesson])
+#     def get_lesson_rating_count(self, lesson):
+#         return get_rating_count(lessons=[lesson])
 
-    def get_lesson_students_count(self, lesson):
-        return get_students_count(lessons=[lesson])
+#     def get_lesson_students_count(self, lesson):
+#         return get_students_count(lessons=[lesson])
 
-    class Meta:
-        model = Lesson
-        fields = "__all__"
+#     class Meta:
+#         model = Lesson
+#         fields = "__all__"
 
 
 class LessonShortSerializer(ModelSerializer):
@@ -477,98 +477,25 @@ class CourseGetSerializer(ModelSerializer):
 
 
 class CourseSerializer(ModelSerializer):
-    price = SerializerMethodField("get_course_price")
-    duration = SerializerMethodField("get_course_duration")
-    lessons = LessonSerializer(many=True)
-    technologies = SerializerMethodField("get_course_technologies")
-    skills = SkillSerializer(many=True)
-    topics = TopicSerializer(many=True)
-    lecturers = SerializerMethodField("get_course_lecturers")
-    students_count = SerializerMethodField("get_course_students_count")
-    rating = SerializerMethodField("get_course_rating")
-    rating_count = SerializerMethodField("get_course_rating_count")
     image = Base64ImageField(required=True)
     video = VideoBase64File(required=False)
-
-    def get_course_price(self, course):
-        return get_price(course=course)
-
-    def get_course_technologies(self, course):
-        lessons = get_course_lessons(course=course)
-        return get_technologies(lessons=lessons)
-
-    def get_course_duration(self, course):
-        return get_duration(course)
-
-    def get_course_lecturers(self, course):
-        lessons = get_course_lessons(course=course)
-        return get_lecturers(self, lessons=lessons)
-
-    def get_course_rating(self, course):
-        lessons = get_course_lessons(course=course)
-        return get_rating(lessons=lessons)
-
-    def get_course_rating_count(self, course):
-        lessons = get_course_lessons(course=course)
-        return get_rating_count(lessons=lessons)
-
-    def get_course_students_count(self, course):
-        lessons = get_course_lessons(course=course)
-        return get_students_count(lessons=lessons)
 
     class Meta:
         model = Course
         fields = "__all__"
 
-    def validate_lessons(self, lessons):
-        if len(lessons) == 0:
-            raise ValidationError({"lessons": "Kurs musi posiadać minimum 1 lekcję."})
-
-        return lessons
-
-    def validate_skills(self, skills):
-        if len(skills) == 0:
-            raise ValidationError(
-                {"skills": "Kurs musi posiadać minimum 1 umiejętność."}
-            )
-
-        return skills
-
-    def validate_topics(self, topic):
-        if len(topic) == 0:
-            raise ValidationError(
-                {"topic": "Kurs musi posiadać minimum 1 rezultat nauki."}
-            )
-
-        return topic
-
     def add_lessons(self, course, lessons):
-        objs = []
-        for lesson in lessons:
-            obj = Lesson.objects.get(pk=lesson["id"])
-            objs.append(obj)
-
-        course.lessons.add(*objs)
+        course.lessons.add(*lessons)
 
         return course
 
     def add_skills(self, course, skills):
-        objs = []
-        for skill in skills:
-            obj = Skill.objects.get(name=skill["name"])
-            objs.append(obj)
-
-        course.skills.add(*objs)
+        course.skills.add(*skills)
 
         return course
 
     def add_topics(self, course, topics):
-        objs = []
-        for topic in topics:
-            obj = Topic.objects.get(name=topic["name"])
-            objs.append(obj)
-
-        course.topics.add(*objs)
+        course.topics.add(*topics)
 
         return course
 

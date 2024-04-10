@@ -31,7 +31,7 @@ export default function CartView() {
   const { data: cartItems } = useCarts({ page_size: -1 });
 
   const prices = useMemo(
-    () => cartItems?.map((wishlistItem: ICartProp) => wishlistItem.lesson.price),
+    () => cartItems?.map((wishlistItem: ICartProp) => Number(wishlistItem.lesson.price)),
     [cartItems],
   );
 
