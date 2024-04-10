@@ -6,16 +6,15 @@ import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/cart" as const;
 
-type IDeleteCart = {};
+type IDeleteCart = { id: string };
 
 type IDeleteCartReturn = {};
 
-export const useDeleteCart = (id: string) => {
+export const useDeleteCart = () => {
   const queryClient = useQueryClient();
-  const url = `${endpoint}/${id}`;
   return useMutation<IDeleteCartReturn, AxiosError, IDeleteCart>(
-    async () => {
-      const result = await Api.delete(url, {
+    async ({ id }) => {
+      const result = await Api.delete(`${endpoint}/${id}`, {
         headers: {
           "X-CSRFToken": getCsrfToken(),
         },

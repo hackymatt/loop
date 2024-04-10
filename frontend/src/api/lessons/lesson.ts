@@ -40,14 +40,8 @@ type ILesson = {
 
 type IEditLesson = Omit<
   ILesson,
-  | "id"
-  | "lecturers"
-  | "students_count"
-  | "rating"
-  | "rating_count"
-  | "previous_price"
-  | "lowest_30_days_price"
->;
+  "id" | "lecturers" | "students_count" | "rating" | "rating_count" | "technologies"
+> & { technologies: string[] };
 type IEditLessonReturn = IEditLesson;
 export const lessonQuery = (id: string) => {
   const url = endpoint;

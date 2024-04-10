@@ -120,6 +120,9 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
     try {
       await editCourse({
         ...data,
+        lessons: data.lessons.map((lesson: ICourseLessonProp) => lesson.id),
+        skills: data.skills.map((skill: ICourseBySkillProps) => skill.id),
+        topics: data.topics.map((topic: ICourseByTopicProps) => topic.id),
         level: data.level.slice(0, 1) as ILevel,
         image: (await urlToBlob(data.image)) as string,
         video: data.video ? ((await urlToBlob(data.video)) as string) : "",

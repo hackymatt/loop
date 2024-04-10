@@ -26,26 +26,6 @@ export type ITechnology = {
   name: string;
 };
 
-type ISkill = {
-  id: string;
-  name: string;
-};
-
-type ITopic = {
-  id: string;
-  name: string;
-};
-
-type ILesson = {
-  id: string;
-  title: string;
-  description: string;
-  duration: number;
-  github_url: string;
-  price: number;
-  technologies: ITechnology[];
-};
-
 type ICourse = {
   id: number;
   price: number;
@@ -78,7 +58,10 @@ type ICreateCourse = Omit<
   | "students_count"
   | "rating"
   | "rating_count"
-> & { lessons: ILesson[]; skills: ISkill[]; topics: ITopic[]; video?: string };
+  | "lessons"
+  | "skills"
+  | "topics"
+> & { lessons: string[]; skills: string[]; topics: string[] };
 
 type ICreateCourseReturn = ICreateCourse;
 

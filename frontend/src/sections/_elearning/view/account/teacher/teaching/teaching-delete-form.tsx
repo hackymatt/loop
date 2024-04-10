@@ -31,7 +31,7 @@ interface Props extends DialogProps {
 export default function TeachingDeleteForm({ teaching, onClose, ...other }: Props) {
   const { enqueueSnackbar } = useToastContext();
 
-  const { mutateAsync: deleteTeaching } = useDeleteTeaching(teaching.teachingId!);
+  const { mutateAsync: deleteTeaching } = useDeleteTeaching();
 
   const methods = useForm({
     defaultValues,
@@ -47,7 +47,7 @@ export default function TeachingDeleteForm({ teaching, onClose, ...other }: Prop
 
   const onSubmit = handleSubmit(async () => {
     try {
-      await deleteTeaching({});
+      await deleteTeaching({ id: teaching.teachingId! });
       reset();
       onClose();
       enqueueSnackbar("Lekcja została oznaczona jako nieprowadzona", { variant: "success" });

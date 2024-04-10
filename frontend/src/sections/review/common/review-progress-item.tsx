@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
-import Radio from "@mui/material/Radio";
 import Stack from "@mui/material/Stack";
+import { Checkbox } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import LinearProgress from "@mui/material/LinearProgress";
@@ -16,16 +16,22 @@ import { IReviewStatistic } from "src/types/review";
 
 type Props = {
   rating: IReviewStatistic;
-  index: number;
   totals: number;
-  selected: boolean;
+  value: string;
+  onChange: (rating: string) => void;
 };
 
-export default function ReviewProgressItem({ rating, totals, index, selected }: Props) {
+export default function ReviewProgressItem({ rating, totals, value, onChange }: Props) {
   return (
     <FormControlLabel
       value={rating.rating}
-      control={<Radio sx={{ display: "none" }} />}
+      control={
+        <Checkbox
+          checked={value === rating.rating}
+          onClick={() => (rating.rating !== value ? onChange(rating.rating) : onChange(""))}
+          sx={{ display: "none" }}
+        />
+      }
       label={
         <Stack alignItems="center" direction="row">
           <Stack direction="row" alignItems="center">
@@ -54,7 +60,7 @@ export default function ReviewProgressItem({ rating, totals, index, selected }: 
                 opacity: 1,
                 bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
               },
-              ...(selected && {
+              ...(value === rating.rating && {
                 opacity: 0.48,
               }),
             }}

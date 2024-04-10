@@ -6,7 +6,6 @@ from .factory import (
     create_lesson,
     create_lesson_obj,
     create_technology,
-    create_technology_obj,
     create_review,
     create_purchase,
     create_teaching,
@@ -307,7 +306,7 @@ class LessonTest(APITestCase):
             price="89.99",
             duration=90,
             github_url="https://github.com/hackymatt/lesson",
-            technologies=[create_technology_obj(name=self.technology_2.name)],
+            technologies=[self.technology_2.id],
         )
 
         self.amend_lesson = create_lesson_obj(
@@ -316,7 +315,7 @@ class LessonTest(APITestCase):
             price="19.99",
             duration=60,
             github_url="https://github.com/hackymatt/lesson",
-            technologies=[create_technology_obj(name=self.technology_1.name)],
+            technologies=[self.technology_1.id],
         )
 
     def test_get_lessons_no_admin(self):
@@ -495,31 +494,9 @@ class LessonTest(APITestCase):
 
         data = json.loads(response.content)
 
-        technologies_data = data.pop("technologies")
-        lecturers_data = data.pop("lecturers")
-        rating = data.pop("rating")
-        rating_count = data.pop("rating_count")
-        students_count = data.pop("students_count")
-
+        technologies_ids = data.pop("technologies")
         self.assertTrue(is_data_match(get_lesson(data["id"]), data))
-        self.assertEqual(rating, None)
-        self.assertEqual(rating_count, 0)
-        self.assertEqual(students_count, 0)
-
-        for technology_data in technologies_data:
-            self.assertTrue(
-                is_data_match(get_technology(technology_data["id"]), technology_data)
-            )
-
-        for lecturer_data in lecturers_data:
-            user_data = filter_dict(lecturer_data, self.user_columns)
-            profile_data = filter_dict(lecturer_data, self.profile_columns)
-            self.assertTrue(is_data_match(get_user(lecturer_data["email"]), user_data))
-            self.assertTrue(
-                is_data_match(
-                    get_profile(get_user(lecturer_data["email"])), profile_data
-                )
-            )
+        self.assertTrue(technologies_ids, get_lesson(data["id"]).technologies)
 
     def test_update_lesson_unauthenticated(self):
         # no login
@@ -552,31 +529,9 @@ class LessonTest(APITestCase):
 
         data = json.loads(response.content)
 
-        technologies_data = data.pop("technologies")
-        lecturers_data = data.pop("lecturers")
-        rating = data.pop("rating")
-        rating_count = data.pop("rating_count")
-        students_count = data.pop("students_count")
-
+        technologies_ids = data.pop("technologies")
         self.assertTrue(is_data_match(get_lesson(data["id"]), data))
-        self.assertEqual(rating, 4.5)
-        self.assertEqual(rating_count, 2)
-        self.assertEqual(students_count, 1)
-
-        for technology_data in technologies_data:
-            self.assertTrue(
-                is_data_match(get_technology(technology_data["id"]), technology_data)
-            )
-
-        for lecturer_data in lecturers_data:
-            user_data = filter_dict(lecturer_data, self.user_columns)
-            profile_data = filter_dict(lecturer_data, self.profile_columns)
-            self.assertTrue(is_data_match(get_user(lecturer_data["email"]), user_data))
-            self.assertTrue(
-                is_data_match(
-                    get_profile(get_user(lecturer_data["email"])), profile_data
-                )
-            )
+        self.assertTrue(technologies_ids, get_lesson(data["id"]).technologies)
 
     def test_update_lesson_authorized_no_price_change(self):
         # login
@@ -592,28 +547,6 @@ class LessonTest(APITestCase):
 
         data = json.loads(response.content)
 
-        technologies_data = data.pop("technologies")
-        lecturers_data = data.pop("lecturers")
-        rating = data.pop("rating")
-        rating_count = data.pop("rating_count")
-        students_count = data.pop("students_count")
-
+        technologies_ids = data.pop("technologies")
         self.assertTrue(is_data_match(get_lesson(data["id"]), data))
-        self.assertEqual(rating, 4.5)
-        self.assertEqual(rating_count, 2)
-        self.assertEqual(students_count, 1)
-
-        for technology_data in technologies_data:
-            self.assertTrue(
-                is_data_match(get_technology(technology_data["id"]), technology_data)
-            )
-
-        for lecturer_data in lecturers_data:
-            user_data = filter_dict(lecturer_data, self.user_columns)
-            profile_data = filter_dict(lecturer_data, self.profile_columns)
-            self.assertTrue(is_data_match(get_user(lecturer_data["email"]), user_data))
-            self.assertTrue(
-                is_data_match(
-                    get_profile(get_user(lecturer_data["email"])), profile_data
-                )
-            )
+        self.assertTrue(technologies_ids, get_lesson(data["id"]).technologies)

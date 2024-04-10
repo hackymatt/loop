@@ -5,15 +5,16 @@ import { Api } from "../service";
 
 const endpoint = "/contact" as const;
 
-type IContact = {
+type ICreateContact = {
   full_name: string;
   email: string;
   subject: string;
   message: string;
 };
+type ICreateContactrReturn = ICreateContact;
 
 export const useContact = () =>
-  useMutation<IContact, AxiosError, IContact>(async (variables) => {
+  useMutation<ICreateContactrReturn, AxiosError, ICreateContact>(async (variables) => {
     const result = await Api.post(endpoint, variables);
-    return result.data as IContact;
+    return result.data;
   });

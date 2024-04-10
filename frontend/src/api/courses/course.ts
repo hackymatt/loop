@@ -40,11 +40,11 @@ type ITopic = {
 };
 
 type ILesson = {
-  id: number;
+  id: string;
   title: string;
   price: number;
-  previous_price: number | null;
-  lowest_30_days_price: number | null;
+  previous_price?: number | null;
+  lowest_30_days_price?: number | null;
 };
 
 type ICourse = {
@@ -83,11 +83,14 @@ type IEditCourse = Omit<
   | "students_count"
   | "rating"
   | "rating_count"
-> & { lessons: ILesson[]; skills: ISkill[]; topics: ITopic[]; video?: string };
+  | "lessons"
+  | "skills"
+  | "topics"
+> & { lessons: string[]; skills: string[]; topics: string[] };
 
 type IEditCourseReturn = IEditCourse;
 
-type IDeleteCourse = {};
+type IDeleteCourse = { id: string };
 
 type IDeleteCourseReturn = {};
 
@@ -214,12 +217,11 @@ export const useEditCourse = (id: string) => {
   );
 };
 
-export const useDeleteCourse = (id: string) => {
+export const useDeleteCourse = () => {
   const queryClient = useQueryClient();
-  const url = `${endpoint}/${id}`;
   return useMutation<IDeleteCourseReturn, AxiosError, IDeleteCourse>(
-    async () => {
-      const result = await Api.delete(url, {
+    async ({ id }) => {
+      const result = await Api.delete(`${endpoint}/${id}`, {
         headers: {
           "X-CSRFToken": getCsrfToken(),
         },

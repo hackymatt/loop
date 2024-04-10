@@ -30,7 +30,7 @@ type IEditReview = Pick<IReview, "rating" | "review"> & { lesson: string; lectur
 
 type IEditReviewReturn = IEditReview;
 
-type IDeleteReview = {};
+type IDeleteReview = { id: string };
 
 type IDeleteReviewReturn = {};
 
@@ -55,12 +55,11 @@ export const useEditReview = (id: string) => {
   );
 };
 
-export const useDeleteReview = (id: string) => {
+export const useDeleteReview = () => {
   const queryClient = useQueryClient();
-  const url = `${endpoint}/${id}`;
   return useMutation<IDeleteReviewReturn, AxiosError, IDeleteReview>(
-    async () => {
-      const result = await Api.delete(url, {
+    async ({ id }) => {
+      const result = await Api.delete(`${endpoint}/${id}`, {
         headers: {
           "X-CSRFToken": getCsrfToken(),
         },

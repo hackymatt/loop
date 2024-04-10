@@ -13,14 +13,19 @@ import { Step, Stepper, StepLabel, StepContent } from "@mui/material";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
+import { useCreateCourse } from "src/api/courses/courses";
 import { useTechnologies } from "src/api/technologies/technologies";
-import { ITechnology, useCreateCourse } from "src/api/courses/courses";
 
 import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
 import { isStepFailed } from "src/components/stepper/step";
 
-import { ILevel, ICourseLessonProp, ICourseByCategoryProps } from "src/types/course";
+import {
+  ILevel,
+  ICourseLessonProp,
+  ICourseBySkillProps,
+  ICourseByTopicProps,
+} from "src/types/course";
 
 import { useCourseFields } from "./course-fields";
 import { steps, schema, defaultValues } from "./course";
@@ -61,15 +66,9 @@ export default function CourseNewForm({ onClose, ...other }: Props) {
         await createCourse({
           ...data,
           level: data.level.slice(0, 1) as ILevel,
-          lessons: data.lessons.map((lesson: ICourseLessonProp) => ({
-            ...lesson,
-            github_url: lesson.githubUrl,
-            technologies: lesson.category.map((category: string) =>
-              availableTechnologies.find(
-                (technology: ICourseByCategoryProps) => technology.name === category,
-              ),
-            ) as ITechnology[],
-          })),
+          lessons: data.lessons.map((lesson: ICourseLessonProp) => lesson.id),
+          skills: data.skills.map((skill: ICourseBySkillProps) => skill.id),
+          topics: data.topics.map((topic: ICourseByTopicProps) => topic.id),
         });
       }
       reset();

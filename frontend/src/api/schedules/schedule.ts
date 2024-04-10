@@ -6,16 +6,15 @@ import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/schedules" as const;
 
-type IDeleteSchedule = {};
+type IDeleteSchedule = { id: string };
 
 type IDeleteScheduleReturn = {};
 
-export const useDeleteSchedule = (id: string) => {
+export const useDeleteSchedule = () => {
   const queryClient = useQueryClient();
-  const url = `${endpoint}/${id}`;
   return useMutation<IDeleteScheduleReturn, AxiosError, IDeleteSchedule>(
-    async () => {
-      const result = await Api.delete(url, {
+    async ({ id }) => {
+      const result = await Api.delete(`${endpoint}/${id}`, {
         headers: {
           "X-CSRFToken": getCsrfToken(),
         },

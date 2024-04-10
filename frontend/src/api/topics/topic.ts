@@ -20,7 +20,7 @@ type IEditTopic = Pick<ITopic, "name">;
 
 type IEditTopicReturn = IEditTopic;
 
-type IDeleteTopic = {};
+type IDeleteTopic = { id: string };
 
 type IDeleteTopicReturn = {};
 
@@ -69,12 +69,11 @@ export const useEditTopic = (id: string) => {
   );
 };
 
-export const useDeleteTopic = (id: string) => {
+export const useDeleteTopic = () => {
   const queryClient = useQueryClient();
-  const url = `${endpoint}/${id}`;
   return useMutation<IDeleteTopicReturn, AxiosError, IDeleteTopic>(
-    async () => {
-      const result = await Api.delete(url, {
+    async ({ id }) => {
+      const result = await Api.delete(`${endpoint}/${id}`, {
         headers: {
           "X-CSRFToken": getCsrfToken(),
         },

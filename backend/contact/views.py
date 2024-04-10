@@ -3,11 +3,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from mailer.mailer import Mailer
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
 
 class ContactViewSet(ViewSet):
     http_method_names = ["post"]
 
+    @csrf_exempt
     def contact(self, request):
         contact_data = request.data
 

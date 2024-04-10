@@ -28,7 +28,7 @@ interface Props extends DialogProps {
 // ----------------------------------------------------------------------
 
 export default function CourseDeleteForm({ course, onClose, ...other }: Props) {
-  const { mutateAsync: deleteCourse } = useDeleteCourse(course.id);
+  const { mutateAsync: deleteCourse } = useDeleteCourse();
 
   const methods = useForm({
     defaultValues,
@@ -44,7 +44,7 @@ export default function CourseDeleteForm({ course, onClose, ...other }: Props) {
 
   const onSubmit = handleSubmit(async () => {
     try {
-      await deleteCourse({});
+      await deleteCourse({ id: course.id });
       reset();
       onClose();
     } catch (error) {

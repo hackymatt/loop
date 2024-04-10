@@ -20,7 +20,7 @@ type IEditTechnology = Pick<ITechnology, "name">;
 
 type IEditTechnologyReturn = IEditTechnology;
 
-type IDeleteTechnology = {};
+type IDeleteTechnology = { id: string };
 
 type IDeleteTechnologyReturn = {};
 
@@ -70,12 +70,11 @@ export const useEditTechnology = (id: string) => {
   );
 };
 
-export const useDeleteTechnology = (id: string) => {
+export const useDeleteTechnology = () => {
   const queryClient = useQueryClient();
-  const url = `${endpoint}/${id}`;
   return useMutation<IDeleteTechnologyReturn, AxiosError, IDeleteTechnology>(
-    async () => {
-      const result = await Api.delete(url, {
+    async ({ id }) => {
+      const result = await Api.delete(`${endpoint}/${id}`, {
         headers: {
           "X-CSRFToken": getCsrfToken(),
         },

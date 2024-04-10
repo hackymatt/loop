@@ -8,16 +8,15 @@ import { lessonSchedulesQuery } from "../lesson-schedules/lesson-schedules";
 
 const endpoint = "/reservation" as const;
 
-type IDeleteReservation = {};
+type IDeleteReservation = { id: string };
 
 type IDeleteReservationReturn = {};
 
-export const useDeleteReservation = (id: string) => {
+export const useDeleteReservation = () => {
   const queryClient = useQueryClient();
-  const url = `${endpoint}/${id}`;
   return useMutation<IDeleteReservationReturn, AxiosError, IDeleteReservation>(
-    async () => {
-      const result = await Api.delete(url, {
+    async ({ id }) => {
+      const result = await Api.delete(`${endpoint}/${id}`, {
         headers: {
           "X-CSRFToken": getCsrfToken(),
         },

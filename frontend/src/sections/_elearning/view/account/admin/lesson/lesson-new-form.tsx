@@ -19,6 +19,8 @@ import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
 import { isStepFailed } from "src/components/stepper/step";
 
+import { ICourseByCategoryProps } from "src/types/course";
+
 import { useLessonFields } from "./lesson-fields";
 import { steps, schema, defaultValues } from "./lesson";
 
@@ -50,7 +52,10 @@ export default function LessonNewForm({ onClose, ...other }: Props) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await createLesson(data);
+      await createLesson({
+        ...data,
+        technologies: data.technologies.map((technology: ICourseByCategoryProps) => technology.id),
+      });
       reset();
       onClose();
       enqueueSnackbar("Lekcja została dodana", { variant: "success" });

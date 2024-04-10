@@ -33,7 +33,7 @@ interface Props extends DialogProps {
 export default function ReviewDeleteForm({ purchase, onClose, ...other }: Props) {
   const { enqueueSnackbar } = useToastContext();
 
-  const { mutateAsync: deleteReview } = useDeleteReview(purchase.reviewId);
+  const { mutateAsync: deleteReview } = useDeleteReview();
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -56,7 +56,7 @@ export default function ReviewDeleteForm({ purchase, onClose, ...other }: Props)
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await deleteReview({});
+      await deleteReview({ id: purchase.reviewId });
       reset();
       onClose();
       enqueueSnackbar("Recenzja została usunięta", { variant: "success" });

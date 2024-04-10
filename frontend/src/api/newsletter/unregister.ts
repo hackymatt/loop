@@ -5,12 +5,12 @@ import { Api } from "../service";
 
 const endpoint = "/newsletter-unsubscribe" as const;
 
-type INewsletter = {
-  uuid: string;
-};
-
+type IEditNewsletter = { uuid: string };
+type IEditNewsletterReturn = IEditNewsletter;
 export const useUnregisterNewsletter = () =>
-  useMutation<INewsletter, AxiosError, INewsletter>(async ({ uuid, ...variables }) => {
-    const result = await Api.put(`${endpoint}/${uuid}`, variables);
-    return result.data as INewsletter;
-  });
+  useMutation<IEditNewsletterReturn, AxiosError, IEditNewsletter>(
+    async ({ uuid, ...variables }) => {
+      const result = await Api.put(`${endpoint}/${uuid}`, variables);
+      return result.data;
+    },
+  );
