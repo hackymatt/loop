@@ -43,7 +43,7 @@ export default function Error500View() {
         </m.div>
 
         <Button component={RouterLink} href="/" size="large" color="inherit" variant="contained">
-          Wróć do strony głownej
+          Wróć do strony głównej
         </Button>
       </MotionContainer>
     </CompactLayout>

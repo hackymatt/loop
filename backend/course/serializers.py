@@ -28,7 +28,31 @@ class VideoBase64File(Base64FileField):
 
 
 def get_course_lessons(course):
-    return course.lessons.all()
+    course_lessons = (
+        course.lessons.through.objects.filter(course=course).all().order_by("id")
+    )
+    return [
+        Lesson.objects.get(id=course_lesson.lesson_id)
+        for course_lesson in course_lessons
+    ]
+
+
+def get_course_skills(course):
+    course_skills = (
+        course.skills.through.objects.filter(course=course).all().order_by("id")
+    )
+    return [
+        Skill.objects.get(id=course_skill.skill_id) for course_skill in course_skills
+    ]
+
+
+def get_course_topics(course):
+    course_topics = (
+        course.topics.through.objects.filter(course=course).all().order_by("id")
+    )
+    return [
+        Topic.objects.get(id=course_topic.topic_id) for course_topic in course_topics
+    ]
 
 
 def get_price(course):
@@ -200,7 +224,7 @@ def get_is_bestseller(instance):
         lessons = Lesson.objects.filter(id__in=lessons_ids).all()
         students[course.id] = get_students_count(lessons=lessons)
 
-    students = dict(sorted(students.items(), key=lambda item: item[1]))
+    students = dict(sorted(students.items(), key=lambda item: item[1], reverse=True))
 
     bestseller_id = list(students.keys())[0]
 
@@ -296,39 +320,6 @@ class LecturerDetailsSerializer(ModelSerializer):
         )
 
 
-# class LessonSerializer(ModelSerializer):
-#     id = IntegerField()
-#     technologies = TechnologySerializer(many=True)
-#     previous_price = SerializerMethodField("get_lesson_previous_price")
-#     lowest_30_days_price = SerializerMethodField("get_lesson_lowest_30_days_price")
-#     lecturers = SerializerMethodField("get_lesson_lecturers")
-#     students_count = SerializerMethodField("get_lesson_students_count")
-#     rating = SerializerMethodField("get_lesson_rating")
-#     rating_count = SerializerMethodField("get_lesson_rating_count")
-
-#     def get_lesson_previous_price(self, lesson):
-#         return get_previous_price(instance=lesson)
-
-#     def get_lesson_lowest_30_days_price(self, lesson):
-#         return get_lowest_30_days_price(instance=lesson)
-
-#     def get_lesson_lecturers(self, lesson):
-#         return get_lecturers(self, lessons=[lesson])
-
-#     def get_lesson_rating(self, lesson):
-#         return get_rating(lessons=[lesson])
-
-#     def get_lesson_rating_count(self, lesson):
-#         return get_rating_count(lessons=[lesson])
-
-#     def get_lesson_students_count(self, lesson):
-#         return get_students_count(lessons=[lesson])
-
-#     class Meta:
-#         model = Lesson
-#         fields = "__all__"
-
-
 class LessonShortSerializer(ModelSerializer):
     id = IntegerField()
     previous_price = SerializerMethodField("get_lesson_previous_price")
@@ -421,8 +412,8 @@ class CourseGetSerializer(ModelSerializer):
     duration = SerializerMethodField("get_course_duration")
     lessons = SerializerMethodField("get_lessons")
     technologies = SerializerMethodField("get_course_technologies")
-    skills = SkillSerializer(many=True)
-    topics = TopicSerializer(many=True)
+    skills = SerializerMethodField("get_skills")
+    topics = SerializerMethodField("get_topics")
     lecturers = SerializerMethodField("get_course_lecturers")
     students_count = SerializerMethodField("get_course_students_count")
     rating = SerializerMethodField("get_course_rating")
@@ -448,6 +439,12 @@ class CourseGetSerializer(ModelSerializer):
 
     def get_lessons(self, course):
         return LessonShortSerializer(get_course_lessons(course=course), many=True).data
+
+    def get_skills(self, course):
+        return SkillSerializer(get_course_skills(course=course), many=True).data
+
+    def get_topics(self, course):
+        return TopicSerializer(get_course_topics(course=course), many=True).data
 
     def get_course_duration(self, course):
         return get_duration(course)
@@ -485,17 +482,20 @@ class CourseSerializer(ModelSerializer):
         fields = "__all__"
 
     def add_lessons(self, course, lessons):
-        course.lessons.add(*lessons)
+        for lesson in lessons:
+            course.lessons.add(lesson)
 
         return course
 
     def add_skills(self, course, skills):
-        course.skills.add(*skills)
+        for skill in skills:
+            course.skills.add(skill)
 
         return course
 
     def add_topics(self, course, topics):
-        course.topics.add(*topics)
+        for topic in topics:
+            course.topics.add(topic)
 
         return course
 
