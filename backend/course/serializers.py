@@ -29,7 +29,7 @@ class VideoBase64File(Base64FileField):
 
 def get_course_lessons(course):
     course_lessons = (
-        course.lessons.through.objects.filter(course=course).all().order_by("id")
+        Course.lessons.through.objects.filter(course=course).all().order_by("id")
     )
     return [
         Lesson.objects.get(id=course_lesson.lesson_id)
@@ -39,7 +39,7 @@ def get_course_lessons(course):
 
 def get_course_skills(course):
     course_skills = (
-        course.skills.through.objects.filter(course=course).all().order_by("id")
+        Course.skills.through.objects.filter(course=course).all().order_by("id")
     )
     return [
         Skill.objects.get(id=course_skill.skill_id) for course_skill in course_skills
@@ -48,7 +48,7 @@ def get_course_skills(course):
 
 def get_course_topics(course):
     course_topics = (
-        course.topics.through.objects.filter(course=course).all().order_by("id")
+        Course.topics.through.objects.filter(course=course).all().order_by("id")
     )
     return [
         Topic.objects.get(id=course_topic.topic_id) for course_topic in course_topics
@@ -171,6 +171,8 @@ def get_lecturers(self, lessons):
 def get_technologies(lessons):
     ids = (
         Lesson.technologies.through.objects.filter(lesson__in=lessons)
+        .all()
+        .order_by("id")
         .all()
         .distinct()
         .values("technology_id")

@@ -50,8 +50,9 @@ def get_students_count(lessons):
 
 def get_lesson_technologies(lesson):
     lesson_technologies = (
-        lesson.technologies.through.objects.filter(lesson=lesson).all().order_by("id")
+        Lesson.technologies.through.objects.filter(lesson=lesson).all().order_by("id")
     )
+
     return [
         Technology.objects.get(id=lesson_technology.technology_id)
         for lesson_technology in lesson_technologies
@@ -137,6 +138,7 @@ class LessonSerializer(ModelSerializer):
 
     def add_technology(self, lesson, technologies):
         for technology in technologies:
+            print(technology.name)
             lesson.technologies.add(technology)
 
         return lesson
@@ -162,6 +164,7 @@ class LessonSerializer(ModelSerializer):
         Lesson.objects.filter(pk=instance.pk).update(**validated_data)
 
         instance = Lesson.objects.get(pk=instance.pk)
+        instance.technologies.clear()
         instance = self.add_technology(lesson=instance, technologies=technologies)
         instance.save()
 

@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 
 import { countries } from "src/assets/data";
 
-import { RHFTextField, RHFAutocomplete, RHFAutocompleteCountry } from "src/components/hook-form";
+import { RHFTextField, RHFAutocompleteCountry } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 

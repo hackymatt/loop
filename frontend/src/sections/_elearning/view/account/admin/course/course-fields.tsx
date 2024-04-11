@@ -8,6 +8,7 @@ import {
   RHFImageUpload,
   RHFVideoUpload,
   RHFAutocomplete,
+  RHFAutocompleteDnd,
 } from "src/components/hook-form";
 
 import { ICourseLessonProp, ICourseBySkillProps, ICourseByTopicProps } from "src/types/course";
@@ -45,7 +46,7 @@ export const useCourseFields = () => {
     image: <RHFImageUpload key="image" name="image" label="" />,
     video: <RHFVideoUpload key="video" name="video" label="" />,
     lessons: (
-      <RHFAutocomplete
+      <RHFAutocompleteDnd
         key="lessons"
         name="lessons"
         label="Lekcje"
@@ -57,7 +58,7 @@ export const useCourseFields = () => {
       />
     ),
     skills: (
-      <RHFAutocomplete
+      <RHFAutocompleteDnd
         key="skills"
         name="skills"
         label="Umiejętności"
@@ -69,7 +70,7 @@ export const useCourseFields = () => {
       />
     ),
     topics: (
-      <RHFAutocomplete
+      <RHFAutocompleteDnd
         key="topics"
         name="topics"
         label="Tematy"
