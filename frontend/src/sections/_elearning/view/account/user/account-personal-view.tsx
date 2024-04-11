@@ -18,7 +18,11 @@ import { countries } from "src/assets/data";
 import { useUserDetails, useUpdateUserDetails } from "src/api/auth/details";
 
 import { useToastContext } from "src/components/toast";
-import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from "src/components/hook-form";
+import FormProvider, {
+  RHFSelect,
+  RHFTextField,
+  RHFAutocompleteCountry,
+} from "src/components/hook-form";
 
 import { UserType } from "src/types/user";
 import { IGender } from "src/types/testimonial";
@@ -72,6 +76,13 @@ export default function AccountPersonalView() {
 
   const defaultValues = {
     ...userDetails,
+    first_name: userDetails.first_name ?? "",
+    last_name: userDetails.last_name ?? "",
+    phone_number: userDetails.phone_number ?? "",
+    street_address: userDetails.street_address ?? "",
+    zip_code: userDetails.zip_code ?? "",
+    city: userDetails.city ?? "",
+    country: userDetails.country ?? "",
     dob: userDetails?.dob ? new Date(userDetails?.dob) : date18YearsAgo,
     gender: userDetails?.gender ? userDetails.gender : "Mężczyzna",
   };
@@ -93,6 +104,13 @@ export default function AccountPersonalView() {
     if (userDetails) {
       reset({
         ...userDetails,
+        first_name: userDetails.first_name ?? "",
+        last_name: userDetails.last_name ?? "",
+        phone_number: userDetails.phone_number ?? "",
+        street_address: userDetails.street_address ?? "",
+        zip_code: userDetails.zip_code ?? "",
+        city: userDetails.city ?? "",
+        country: userDetails.country ?? "",
         dob: userDetails?.dob ? new Date(userDetails?.dob) : date18YearsAgo,
         gender: userDetails?.gender !== null ? userDetails.gender : "Mężczyzna",
       });
@@ -168,9 +186,8 @@ export default function AccountPersonalView() {
 
         <RHFTextField name="city" label="Miasto" />
 
-        <RHFAutocomplete
+        <RHFAutocompleteCountry
           name="country"
-          type="country"
           label="Państwo"
           placeholder="Wybierz państwo"
           fullWidth
