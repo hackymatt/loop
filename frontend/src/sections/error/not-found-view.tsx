@@ -46,7 +46,7 @@ export default function NotFoundView() {
           </m.div>
 
           <Button component={RouterLink} href="/" size="large" color="inherit" variant="contained">
-            Wróć do strony głownej
+            Wróć do strony głównej
           </Button>
         </MotionContainer>
       </CompactLayout>

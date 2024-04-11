@@ -2,7 +2,7 @@ import { InputAdornment } from "@mui/material";
 
 import { useTechnologies } from "src/api/technologies/technologies";
 
-import { RHFSwitch, RHFTextField, RHFAutocomplete } from "src/components/hook-form";
+import { RHFSwitch, RHFTextField, RHFAutocompleteDnd } from "src/components/hook-form";
 
 import { ICourseByCategoryProps } from "src/types/course";
 
@@ -42,7 +42,7 @@ export const useLessonFields = () => {
     ),
     github_url: <RHFTextField key="github_url" name="github_url" label="Repozytorium" type="url" />,
     technologies: (
-      <RHFAutocomplete
+      <RHFAutocompleteDnd
         key="technologies"
         name="technologies"
         label="Technologie"

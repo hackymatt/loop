@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 
 import { countries } from "src/assets/data";
 
-import { RHFTextField, RHFAutocomplete } from "src/components/hook-form";
+import { RHFTextField, RHFAutocompleteCountry } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
@@ -20,9 +20,8 @@ export default function EcommerceCheckoutShippingDetails() {
 
       <RHFTextField name="city" label="City" />
 
-      <RHFAutocomplete
+      <RHFAutocompleteCountry
         name="country"
-        type="country"
         label="Country"
         placeholder="Choose a country"
         fullWidth

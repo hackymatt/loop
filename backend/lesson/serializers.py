@@ -48,6 +48,17 @@ def get_students_count(lessons):
     return Purchase.objects.filter(lesson__in=lessons).count()
 
 
+def get_lesson_technologies(lesson):
+    lesson_technologies = (
+        Lesson.technologies.through.objects.filter(lesson=lesson).all().order_by("id")
+    )
+
+    return [
+        Technology.objects.get(id=lesson_technology.technology_id)
+        for lesson_technology in lesson_technologies
+    ]
+
+
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
     email = EmailField(source="user.email")
@@ -82,7 +93,7 @@ class LessonGetSerializer(ModelSerializer):
     students_count = SerializerMethodField("get_lesson_students_count")
     rating = SerializerMethodField("get_lesson_rating")
     rating_count = SerializerMethodField("get_lesson_rating_count")
-    technologies = TechnologySerializer(many=True)
+    technologies = SerializerMethodField("get_technologies")
 
     def get_lesson_lecturers(self, lesson):
         return get_lecturers(self, lessons=[lesson])
@@ -95,6 +106,11 @@ class LessonGetSerializer(ModelSerializer):
 
     def get_lesson_students_count(self, lesson):
         return get_students_count(lessons=[lesson])
+
+    def get_technologies(self, lesson):
+        return TechnologySerializer(
+            get_lesson_technologies(lesson=lesson), many=True
+        ).data
 
     class Meta:
         model = Lesson
@@ -121,7 +137,9 @@ class LessonSerializer(ModelSerializer):
         return duration
 
     def add_technology(self, lesson, technologies):
-        lesson.technologies.add(*technologies)
+        for technology in technologies:
+            print(technology.name)
+            lesson.technologies.add(technology)
 
         return lesson
 
@@ -146,6 +164,7 @@ class LessonSerializer(ModelSerializer):
         Lesson.objects.filter(pk=instance.pk).update(**validated_data)
 
         instance = Lesson.objects.get(pk=instance.pk)
+        instance.technologies.clear()
         instance = self.add_technology(lesson=instance, technologies=technologies)
         instance.save()
 

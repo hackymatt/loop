@@ -17,7 +17,11 @@ import { useBoolean } from "src/hooks/use-boolean";
 import { countries } from "src/assets/data";
 
 import Iconify from "src/components/iconify";
-import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from "src/components/hook-form";
+import FormProvider, {
+  RHFSelect,
+  RHFTextField,
+  RHFAutocompleteCountry,
+} from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
@@ -128,9 +132,8 @@ export default function EcommerceAccountPersonalView() {
 
         <RHFTextField name="city" label="City" />
 
-        <RHFAutocomplete
+        <RHFAutocompleteCountry
           name="country"
-          type="country"
           label="Country"
           placeholder="Choose a country"
           fullWidth

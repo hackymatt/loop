@@ -40,7 +40,7 @@ export default function MaintenanceView() {
       </m.div>
 
       <Button component={RouterLink} href="/" size="large" color="inherit" variant="contained">
-        Wróć do strony głownej
+        Wróć do strony głównej
       </Button>
     </MotionContainer>
   );

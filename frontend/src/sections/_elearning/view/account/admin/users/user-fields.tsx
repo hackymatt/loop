@@ -5,7 +5,12 @@ import { DatePicker } from "@mui/x-date-pickers";
 
 import { countries } from "src/assets/data";
 
-import { RHFSelect, RHFAvatar, RHFTextField, RHFAutocomplete } from "src/components/hook-form";
+import {
+  RHFSelect,
+  RHFAvatar,
+  RHFTextField,
+  RHFAutocompleteCountry,
+} from "src/components/hook-form";
 
 import { UserType } from "src/types/user";
 
@@ -110,9 +115,8 @@ export const useUserFields = () => {
     city: <RHFTextField name="city" label="Miasto" disabled />,
 
     country: (
-      <RHFAutocomplete
+      <RHFAutocompleteCountry
         name="country"
-        type="country"
         label="Państwo"
         placeholder="Wybierz państwo"
         fullWidth
