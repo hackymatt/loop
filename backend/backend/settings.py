@@ -98,7 +98,7 @@ TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [
-            os.path.join(BASE_DIR, "mailer", "templates"),
+            os.path.join(BASE_DIR, "utils", "mailer", "templates"),
             os.path.join(BASE_DIR, "utils", "filtering", "templates"),
         ],
         "APP_DIRS": True,
@@ -180,3 +180,7 @@ EMAIL_HOST = os.getenv("EMAIL_HOST", "")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+
+ZOOM_CLIENT_ID = os.getenv("ZOOM_CLIENT_ID", "")
+ZOOM_CLIENT_SECRET = os.getenv("ZOOM_CLIENT_SECRET", "")
+ZOOM_ACCOUNT_ID = os.getenv("ZOOM_ACCOUNT_ID", "")

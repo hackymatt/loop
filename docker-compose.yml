@@ -26,6 +26,9 @@ services:
       - EMAIL_HOST_USER=matios94@gmail.com
       - EMAIL_HOST_PASSWORD=bvmanocbsnyxozuf
       - EMAIL_PORT=587
+      - ZOOM_CLIENT_ID=kTr2rMdvSuBhJvetBEZgw
+      - ZOOM_CLIENT_SECRET=qwAfi4mI7REj7Yx4LjFdKzS2yMDptV8Q
+      - ZOOM_ACCOUNT_ID=C264F_BSQh-zN3eIeA9OhQ
     depends_on:
       - db
 
