@@ -11,7 +11,7 @@ from schedule.models import Schedule
 from profile.models import Profile
 from reservation.models import Reservation
 from pytz import timezone, utc
-from mailer.mailer import Mailer
+from utils.mailer.mailer import Mailer
 
 
 class ManageScheduleViewSet(ModelViewSet):

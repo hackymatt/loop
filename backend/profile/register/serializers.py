@@ -12,7 +12,7 @@ from datetime import datetime
 from django.utils.timezone import make_aware
 from profile.validators import validate_password_match, validate_password_strength
 from profile.verify.utils import VerificationCode
-from mailer.mailer import Mailer
+from utils.mailer.mailer import Mailer
 
 
 class ProfileRegisterSerializer(ModelSerializer):

@@ -11,7 +11,7 @@ from purchase.models import Purchase
 from schedule.models import Schedule
 from datetime import timedelta
 from pytz import timezone, utc
-from mailer.mailer import Mailer
+from utils.mailer.mailer import Mailer
 
 MIN_LESSON_DURATION_MINS = 30
 

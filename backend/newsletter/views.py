@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from newsletter.serializers import NewsletterEntrySerializer, NewsletterSerializer
 from newsletter.models import Newsletter
 from django.views.decorators.csrf import csrf_exempt
-from mailer.mailer import Mailer
+from utils.mailer.mailer import Mailer
 import json
 
 

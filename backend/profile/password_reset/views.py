@@ -7,7 +7,7 @@ from profile.models import Profile
 from datetime import datetime
 from django.utils.timezone import make_aware
 from profile.verify.utils import VerificationCode
-from mailer.mailer import Mailer
+from utils.mailer.mailer import Mailer
 
 
 class ProfilePasswordResetViewSet(ModelViewSet):

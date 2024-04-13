@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from newsletter.models import Newsletter
-from mailer.mailer import Mailer
+from utils.mailer.mailer import Mailer
 
 
 class NewsletterEntrySerializer(ModelSerializer):

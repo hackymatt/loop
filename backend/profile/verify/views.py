@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from profile.verify.utils import VerificationCode
-from mailer.mailer import Mailer
+from utils.mailer.mailer import Mailer
 
 
 class ProfileVerifyViewSet(ModelViewSet):
