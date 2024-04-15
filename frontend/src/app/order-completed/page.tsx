@@ -1,11 +1,13 @@
-import EcommerceOrderCompletedView from "src/sections/_ecommerce/view/ecommerce-order-completed-view";
+import packageInfo from "package.json";
+
+import OrderCompletedView from "src/sections/_elearning/view/order-completed-view";
 
 // ----------------------------------------------------------------------
 
 export const metadata = {
-  title: "E-commerce: Order Completed",
+  title: `${packageInfo.name}: Zakup ukończony`,
 };
 
-export default function EcommerceOrderCompletedPage() {
-  return <EcommerceOrderCompletedView />;
+export default function OrderCompletedPage() {
+  return <OrderCompletedView />;
 }

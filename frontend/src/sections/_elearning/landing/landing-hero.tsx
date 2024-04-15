@@ -63,7 +63,7 @@ export default function LandingHero() {
           py: 15,
           display: { md: "flex" },
           alignItems: { md: "center" },
-          height: { md: `100vh` },
+          minHeight: { md: `100vh` },
         }}
       >
         <Grid container spacing={3}>

@@ -117,7 +117,6 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
   const handleFormError = useFormErrorHandler(methods);
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data.lessons);
     try {
       await editCourse({
         ...data,

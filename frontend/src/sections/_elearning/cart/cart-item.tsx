@@ -1,8 +1,12 @@
 import { polishPlurals } from "polish-plurals";
 
+import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import { LoadingButton } from "@mui/lab";
 import Typography from "@mui/material/Typography";
+
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
 import { fCurrency } from "src/utils/format-number";
 
@@ -12,18 +16,19 @@ import { useDeleteWishlist } from "src/api/wishlists/wishlist";
 
 import Iconify from "src/components/iconify";
 import { useToastContext } from "src/components/toast";
+import TextMaxLine from "src/components/text-max-line";
 
 import { ICartProp } from "src/types/cart";
 import { ICourseTeacherProp } from "src/types/course";
-
 // ----------------------------------------------------------------------
 
 type Props = {
   cartItem: ICartProp;
+  error?: string;
   wishlist: boolean;
 };
 
-export default function CartItem({ cartItem, wishlist }: Props) {
+export default function CartItem({ cartItem, error, wishlist }: Props) {
   const { enqueueSnackbar } = useToastContext();
 
   const { mutateAsync: deleteWishlist, isLoading: isDeletingWishlist } = useDeleteWishlist();
@@ -34,7 +39,7 @@ export default function CartItem({ cartItem, wishlist }: Props) {
     try {
       await deleteWishlist({ id: cartItem.id });
       enqueueSnackbar("Lekcja została usunięta z ulubionych", { variant: "success" });
-    } catch (error) {
+    } catch (err) {
       enqueueSnackbar("Wystąpił błąd podczas usuwania z ulubionych", { variant: "error" });
     }
   };
@@ -43,7 +48,7 @@ export default function CartItem({ cartItem, wishlist }: Props) {
     try {
       await deleteCart({ id: cartItem.id });
       enqueueSnackbar("Lekcja została usunięta z koszyka", { variant: "success" });
-    } catch (error) {
+    } catch (err) {
       enqueueSnackbar("Wystąpił błąd podczas usuwania z koszyka", { variant: "error" });
     }
   };
@@ -55,7 +60,7 @@ export default function CartItem({ cartItem, wishlist }: Props) {
         deleteWishlist({ id: cartItem.id }),
       ]);
       enqueueSnackbar("Lekcja została dodana do koszyka", { variant: "success" });
-    } catch (error) {
+    } catch (err) {
       enqueueSnackbar("Wystąpił błąd podczas dodawania do koszyka", { variant: "error" });
     }
   };
@@ -72,7 +77,15 @@ export default function CartItem({ cartItem, wishlist }: Props) {
     >
       <Stack direction="row" alignItems="center" flexGrow={1}>
         <Stack spacing={0.5} sx={{ p: 2 }}>
-          <Typography variant="subtitle2">{cartItem.lesson.title}</Typography>
+          <Link
+            component={RouterLink}
+            href={`${paths.course}/${cartItem.lesson.id}`}
+            color="inherit"
+          >
+            <TextMaxLine variant="subtitle2" line={1}>
+              {cartItem.lesson.title}
+            </TextMaxLine>
+          </Link>
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
             Czas trwania: {cartItem.lesson.duration}{" "}
             {polishPlurals("minuta", "minuty", "minut", cartItem.lesson.duration)}
@@ -90,6 +103,9 @@ export default function CartItem({ cartItem, wishlist }: Props) {
                 .join(", ")}{" "}
             </Typography>
           )}
+          <Typography variant="body2" sx={{ color: "error.main" }}>
+            {error}
+          </Typography>
         </Stack>
       </Stack>
 

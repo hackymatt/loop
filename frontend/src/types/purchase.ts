@@ -33,3 +33,5 @@ export type IPurchaseItemProp = {
   review: string;
   createdAt: Date;
 };
+
+export type IPurchaseError = { lessons: { lesson: string }[]; coupon: string };

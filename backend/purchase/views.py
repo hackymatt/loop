@@ -75,7 +75,8 @@ class PurchaseViewSet(ModelViewSet):
             data=lessons, many=True, context={"request": request}
         )
         if not serializer.is_valid():
-            raise ValidationError(serializer.errors)
+            raise ValidationError({"lessons": serializer.errors})
+        
         lessons_data = [dict(item) for item in serializer.data]
         self.validate_coupon(coupon=coupon)
 
