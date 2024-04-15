@@ -3,6 +3,7 @@ import Stack from "@mui/material/Stack";
 import Scrollbar from "src/components/scrollbar";
 
 import { ICartProp } from "src/types/cart";
+import { IPurchaseError } from "src/types/purchase";
 
 import CartItem from "./cart-item";
 
@@ -10,10 +11,11 @@ import CartItem from "./cart-item";
 
 type Props = {
   cartItems: ICartProp[];
+  error?: Pick<IPurchaseError, "lessons">;
   wishlist?: boolean;
 };
 
-export default function CartList({ cartItems, wishlist = false }: Props) {
+export default function CartList({ cartItems, error, wishlist = false }: Props) {
   return (
     <Scrollbar>
       <Stack
@@ -32,8 +34,13 @@ export default function CartList({ cartItems, wishlist = false }: Props) {
         {wishlist && <Stack sx={{ width: 36 }} />}
       </Stack>
 
-      {cartItems?.map((cartItem) => (
-        <CartItem key={cartItem.id} cartItem={cartItem} wishlist={wishlist} />
+      {cartItems?.map((cartItem, index) => (
+        <CartItem
+          key={cartItem.id}
+          cartItem={cartItem}
+          error={error?.lessons?.[index].lesson}
+          wishlist={wishlist}
+        />
       ))}
     </Scrollbar>
   );

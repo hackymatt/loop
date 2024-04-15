@@ -1,5 +1,6 @@
+import { AxiosError } from "axios";
 import { compact } from "lodash-es";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
@@ -8,6 +9,7 @@ import { IQueryParams } from "src/types/query-params";
 import { ILessonStatus, IReviewStatus, IPurchaseItemProp } from "src/types/purchase";
 
 import { Api } from "../service";
+import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/purchase" as const;
 
@@ -53,6 +55,13 @@ type IPurchase = {
   created_at: string;
   price: number;
 };
+
+type ICreatePurchase = {
+  lessons: { lesson: string }[];
+  coupon: string;
+};
+
+type ICreatePurchaseReturn = IPurchase[];
 
 export const purchaseQuery = (query?: IQueryParams) => {
   const url = endpoint;
@@ -116,4 +125,23 @@ export const usePurchasePageCount = (query?: IQueryParams) => {
   const { queryKey, queryFn } = purchaseQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.pagesCount, ...rest };
+};
+
+export const useCreatePurchase = () => {
+  const queryClient = useQueryClient();
+  return useMutation<ICreatePurchaseReturn, AxiosError, ICreatePurchase>(
+    async (variables) => {
+      const result = await Api.post(endpoint, variables, {
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      });
+      return result.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [endpoint] });
+      },
+    },
+  );
 };

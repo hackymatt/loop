@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useEffect } from "react";
+import { AxiosError } from "axios";
+import { useMemo, useState, useEffect } from "react";
 
 import { Stack } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -13,11 +14,15 @@ import { useRouter } from "src/routes/hooks";
 import { RouterLink } from "src/routes/components";
 
 import { useCarts } from "src/api/carts/carts";
+import { useDeleteCart } from "src/api/carts/cart";
+import { useCreatePurchase } from "src/api/purchase/purchase";
 
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
+import { useToastContext } from "src/components/toast";
 
 import { ICartProp } from "src/types/cart";
+import { IPurchaseError } from "src/types/purchase";
 
 import CartList from "../cart/cart-list";
 import CartSummary from "../cart/cart-summary";
@@ -25,8 +30,11 @@ import CartSummary from "../cart/cart-summary";
 // ----------------------------------------------------------------------
 
 export default function CartView() {
+  const { enqueueSnackbar } = useToastContext();
   const { isLoggedIn } = useUserContext();
   const { push } = useRouter();
+
+  const [error, setError] = useState<IPurchaseError | undefined>();
 
   const { data: cartItems } = useCarts({ page_size: -1 });
 
@@ -37,11 +45,30 @@ export default function CartView() {
 
   const total = prices?.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
+  const { mutateAsync: deleteCart, isLoading: isDeletingCart } = useDeleteCart();
+  const { mutateAsync: createPurchase, isLoading: isSubmitting } = useCreatePurchase();
+
+  const handlePurchase = async (coupon: string) => {
+    try {
+      await createPurchase({
+        lessons: cartItems.map((cItem: ICartProp) => ({ lesson: cItem.lesson.id })),
+        coupon,
+      });
+      await Promise.allSettled(cartItems.map((cItem: ICartProp) => deleteCart({ id: cItem.id })));
+      push(paths.orderCompleted);
+    } catch (err) {
+      setError((err as AxiosError).response?.data as IPurchaseError);
+      enqueueSnackbar("Wystąpił błąd podczas zakupu", { variant: "error" });
+    }
+  };
+
   useEffect(() => {
     if (!isLoggedIn) {
       push(paths.login);
     }
   }, [isLoggedIn, push]);
+
+  useEffect(() => console.log(error), [error]);
 
   return (
     <Container
@@ -65,11 +92,16 @@ export default function CartView() {
         <>
           <Grid container spacing={{ xs: 5, md: 8 }}>
             <Grid xs={12} md={8}>
-              <CartList cartItems={cartItems} />
+              <CartList cartItems={cartItems} error={error} />
             </Grid>
 
             <Grid xs={12} md={4}>
-              <CartSummary total={total} subtotal={total} discount={0} />
+              <CartSummary
+                total={total}
+                onPurchase={handlePurchase}
+                isLoading={isDeletingCart || isSubmitting}
+                error={error?.coupon}
+              />
             </Grid>
           </Grid>
           <Button
