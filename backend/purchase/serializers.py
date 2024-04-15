@@ -179,7 +179,7 @@ class PurchaseSerializer(ModelSerializer):
 
     def validate_lesson(self, lesson):
         if not lesson.active:
-            raise ValidationError({"lesson": "Lekcja jest nieaktywna."})
+            raise ValidationError("Lekcja jest nieaktywna.")
 
         return lesson
 
@@ -187,7 +187,14 @@ class PurchaseSerializer(ModelSerializer):
         user = self.context["request"].user
         student = Profile.objects.get(user=user)
 
-        return Purchase.objects.create(
-            **validated_data,
-            student=student,
-        )
+        objs = []
+        for data in validated_data:
+            lesson = Lesson.objects.get(id=data["lesson"])
+            obj = Purchase.objects.create(
+                lesson=lesson,
+                price=data["price"],
+                student=student,
+            )
+            objs.append(obj)
+
+        return objs

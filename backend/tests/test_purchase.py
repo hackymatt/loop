@@ -242,8 +242,12 @@ class PurchaseTest(APITestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
-            "lesson": self.lesson_6.id,
-            "price": self.lesson_1.price,
+            "lessons": [
+                {
+                    "lesson": self.lesson_6.id,
+                }
+            ],
+            "coupon": "",
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -254,23 +258,111 @@ class PurchaseTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
-            "lesson": self.lesson_6.id,
-            "price": self.lesson_1.price,
+            "lessons": [
+                {
+                    "lesson": self.lesson_6.id,
+                },
+                {
+                    "lesson": self.lesson_5.id,
+                },
+            ],
+            "coupon": "",
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_create_purchase_authenticated(self):
+    def test_create_purchase_incorrect_coupon(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
+        self.lesson_5.active = True
+        self.lesson_5.save()
+        self.lesson_6.active = True
+        self.lesson_6.save()
+        data = {
+            "lessons": [
+                {
+                    "lesson": self.lesson_6.id,
+                },
+                {
+                    "lesson": self.lesson_5.id,
+                },
+            ],
+            "coupon": "incorrect",
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_purchase_payment_error(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        self.lesson_5.active = True
+        self.lesson_5.price = 1
+        self.lesson_5.save()
+        self.lesson_6.active = True
+        self.lesson_6.price = 0
+        self.lesson_6.save()
+        data = {
+            "lessons": [
+                {
+                    "lesson": self.lesson_6.id,
+                },
+                {
+                    "lesson": self.lesson_5.id,
+                },
+            ],
+            "coupon": "",
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_purchase_1_authenticated(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        self.lesson_5.active = True
+        self.lesson_5.save()
         self.lesson_6.active = True
         self.lesson_6.save()
 
         data = {
-            "lesson": self.lesson_6.id,
-            "price": self.lesson_1.price,
+            "lessons": [
+                {
+                    "lesson": self.lesson_6.id,
+                },
+                {
+                    "lesson": self.lesson_5.id,
+                },
+            ],
+            "coupon": "value",
         }
         response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_create_purchase_2_authenticated(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        self.lesson_5.active = True
+        self.lesson_5.save()
+        self.lesson_6.active = True
+        self.lesson_6.save()
+
+        data = {
+            "lessons": [
+                {
+                    "lesson": self.lesson_6.id,
+                },
+                {
+                    "lesson": self.lesson_5.id,
+                },
+            ],
+            "coupon": "perc",
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

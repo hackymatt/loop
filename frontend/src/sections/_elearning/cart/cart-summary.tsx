@@ -7,9 +7,6 @@ import Typography from "@mui/material/Typography";
 import Stack, { StackProps } from "@mui/material/Stack";
 import InputAdornment from "@mui/material/InputAdornment";
 
-import { paths } from "src/routes/paths";
-import { RouterLink } from "src/routes/components";
-
 import { fCurrency } from "src/utils/format-number";
 
 // ----------------------------------------------------------------------
@@ -61,14 +58,8 @@ export default function CartSummary({ total, subtotal, discount }: Props) {
         }}
       />
 
-      <Button
-        component={RouterLink}
-        href={paths.eCommerce.checkout}
-        size="large"
-        variant="contained"
-        color="inherit"
-      >
-        Przejdź do kasy
+      <Button size="large" variant="contained" color="inherit">
+        Przejdź do płatności
       </Button>
     </Stack>
   );

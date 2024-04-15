@@ -138,7 +138,6 @@ class LessonSerializer(ModelSerializer):
 
     def add_technology(self, lesson, technologies):
         for technology in technologies:
-            print(technology.name)
             lesson.technologies.add(technology)
 
         return lesson
