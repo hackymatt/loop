@@ -22,7 +22,7 @@ import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
 
-import { useUsers, useUsersPagesCount } from "src/api/users/users";
+import { useCoupons, useCouponsPagesCount } from "src/api/coupons/coupons";
 
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
@@ -36,6 +36,7 @@ import { IQueryParamValue } from "src/types/query-params";
 
 import FilterSearch from "../../../../filters/filter-search";
 import AccountTableHead from "../../../../account/account-table-head";
+import CouponNewForm from "./coupon-new-form";
 
 // ----------------------------------------------------------------------
 
@@ -68,8 +69,8 @@ export default function AccountCouponsView() {
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const { data: pagesCount } = useUsersPagesCount(filters);
-  const { data: users } = useUsers(filters);
+  const { data: pagesCount } = useCouponsPagesCount(filters);
+  const { data: coupons } = useCoupons(filters);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
@@ -93,7 +94,7 @@ export default function AccountCouponsView() {
 
   const handleChangeTab = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
-      handleChange("user_type", newValue);
+      handleChange("active", newValue);
     },
     [handleChange],
   );
@@ -188,17 +189,10 @@ export default function AccountCouponsView() {
           onChangeEnd={(value) => handleChange("discount_to", value)}
         />
 
-        <FilterBoolean
-          leftLabel="Wartość"
-          rightLabel="Procent"
-          value={filters?.is_percentage === "True" ?? false}
-          onChange={(value) => handleChange("is_percentage", value === true ? "True" : "False")}
-        />
-
         <DatePicker
-          value={filters?.expiration_date ? new Date(filters.expiration_date) : null}
+          value={filters?.expiration_date_to ? new Date(filters.expiration_date_to) : null}
           onChange={(value: Date | null) =>
-            handleChange("expiration_date", value ? fDate(value, "yyyy-MM-dd") : "")
+            handleChange("expiration_date_to", value ? fDate(value, "yyyy-MM-dd") : "")
           }
           sx={{ width: 1, minWidth: 180 }}
           slotProps={{
@@ -233,9 +227,9 @@ export default function AccountCouponsView() {
               headCells={TABLE_HEAD}
             />
 
-            {users && (
+            {coupons && (
               <TableBody>
-                {users.map((row) => (
+                {coupons.map((row) => (
                   <AccountCouponsTableRow
                     key={row.id}
                     row={row}
@@ -263,6 +257,8 @@ export default function AccountCouponsView() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Box>
+
+      <CouponNewForm open={newCouponFormOpen.value} onClose={newCouponFormOpen.onFalse} />
 
       {/* {editedCoupon && (
         <UserEditForm user={editedUser} open={editFormOpen.value} onClose={editFormOpen.onFalse} />

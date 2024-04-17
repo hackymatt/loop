@@ -1,3 +1,28 @@
-from django.test import TestCase
+from rest_framework.serializers import ModelSerializer
+from coupon.models import Coupon
 
-# Create your tests here.
+
+class CouponListSerializer(ModelSerializer):
+    class Meta:
+        model = Coupon
+        fields = (
+            "id",
+            "code",
+            "discount",
+            "is_percentage",
+            "active",
+            "expiration_date",
+        )
+
+
+class CouponSerializer(ModelSerializer):
+    class Meta:
+        model = Coupon
+        fields = (
+            "id",
+            "code",
+            "discount",
+            "is_percentage",
+            "active",
+            "expiration_date",
+        )

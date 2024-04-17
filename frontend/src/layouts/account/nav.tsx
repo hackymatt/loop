@@ -181,7 +181,7 @@ const adminNavigations = [
       children: [
         {
           title: "Spis kuponów",
-          path: `${paths.account.admin.coupons.list}/?sort_by=-expiration_date&is_percentage=False&page_size=10`,
+          path: `${paths.account.admin.coupons.list}/?sort_by=-expiration_date&page_size=10`,
           icon: <Iconify icon="carbon:list" />,
           children: [],
         },

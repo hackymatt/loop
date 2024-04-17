@@ -80,7 +80,7 @@ export default function AccountCouponsTableRow({ row, onEdit, onDelete, onViewUs
             sx={{ textTransform: "uppercase" }}
             color={(isActive && "success") || (!isActive && "error") || "default"}
           >
-            {row.active}
+            {row.active ? "Aktywny" : "Nieaktywny"}
           </Label>
         </TableCell>
 
@@ -107,7 +107,7 @@ export default function AccountCouponsTableRow({ row, onEdit, onDelete, onViewUs
           },
         }}
       >
-        <MenuItem onClick={handleViewUsage} sx={{ mr: 1, width: "100%" }}>
+        <MenuItem onClick={handleViewUsage} sx={{ mr: 1, width: "100%", color: "success.main" }}>
           <Iconify icon="carbon:user-activity" sx={{ mr: 0.5 }} />
           <Typography variant="body2">Wykorzystanie kuponu</Typography>
         </MenuItem>

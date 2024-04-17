@@ -22,12 +22,15 @@ const LEVEL_OPTIONS = ["Podstawowy", "Średniozaawansowany", "Zaawansowany", "Ek
 export const useCourseFields = () => {
   const { data: availableLessons, isLoading: isLoadingLessons } = useLessons({
     sort_by: "title",
+    page_size: -1,
   });
   const { data: availableSkills, isLoading: isLoadingSkills } = useSkills({
     sort_by: "name",
+    page_size: -1,
   });
   const { data: availableTopics, isLoading: isLoadingTopics } = useTopics({
     sort_by: "name",
+    page_size: -1,
   });
   const fields: { [key: string]: JSX.Element } = {
     title: <RHFTextField key="title" name="title" label="Nazwa" />,

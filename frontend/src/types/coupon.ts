@@ -1,6 +1,7 @@
 import { IUserDetailsProps } from "./user";
 
 export type ICouponProps = {
+  id: string;
   code: string;
   discount: number;
   is_percentage: boolean;
