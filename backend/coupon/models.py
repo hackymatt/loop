@@ -12,16 +12,14 @@ from django.db.models import (
 )
 from django.core.validators import (
     MinValueValidator,
+    MinLengthValidator,
 )
 from decimal import Decimal
 from profile.models import Profile
 
 
 class Coupon(BaseModel):
-    code = CharField(
-        max_length=36,
-        unique=True,
-    )
+    code = CharField(max_length=36, unique=True, validators=[MinLengthValidator(6)])
     discount = IntegerField(default=0)
     is_percentage = BooleanField(default=False)
     users = ManyToManyField(Profile, blank=True)
