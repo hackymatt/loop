@@ -5,8 +5,9 @@ from django_filters import (
     DateFilter,
     NumberFilter,
     BooleanFilter,
+    UUIDFilter,
 )
-from coupon.models import Coupon
+from coupon.models import Coupon, CouponUser
 
 
 class OrderFilter(OrderingFilter):
@@ -15,7 +16,14 @@ class OrderFilter(OrderingFilter):
             return super().filter(queryset, values)
 
         for value in values:
-            queryset = queryset.order_by(value)
+            if value in ["coupon_code", "-coupon_code"]:
+                modified_value = value.replace("_", "__")
+                queryset = queryset.order_by(modified_value)
+            elif value in ["user_email", "-user_email"]:
+                modified_value = value.replace("user_", "user__user__")
+                queryset = queryset.order_by(modified_value)
+            else:
+                queryset = queryset.order_by(value)
 
         return queryset
 
@@ -57,5 +65,39 @@ class CouponFilter(FilterSet):
             "discount_from",
             "discount_to",
             "expiration_date_to",
+            "sort_by",
+        )
+
+
+class CouponUserFilter(FilterSet):
+    coupon_code = CharFilter(field_name="coupon__code", lookup_expr="icontains")
+    user_uuid = UUIDFilter(field_name="user__uuid", lookup_expr="exact")
+    created_at = DateFilter(field_name="created_at", lookup_expr="icontains")
+
+    sort_by = OrderFilter(
+        choices=(
+            ("coupon_code", "Coupon code ASC"),
+            ("-coupon_code", "Coupon code DESC"),
+            ("user_email", "User email ASC"),
+            ("-user_email", "User email DESC"),
+            ("created_at", "Created At ASC"),
+            ("-created_at", "Created At DESC"),
+        ),
+        fields={
+            "coupon_code": "coupon_code",
+            "coupon_code": "-coupon_code",
+            "user_email": "user_email",
+            "user_email": "-user_email",
+            "created_at": "created_at",
+            "created_at": "-created_at",
+        },
+    )
+
+    class Meta:
+        model = CouponUser
+        fields = (
+            "coupon_code",
+            "user_uuid",
+            "created_at",
             "sort_by",
         )

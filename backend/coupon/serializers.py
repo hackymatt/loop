@@ -1,5 +1,11 @@
-from rest_framework.serializers import ModelSerializer
-from coupon.models import Coupon
+from rest_framework.serializers import (
+    ModelSerializer,
+    SerializerMethodField,
+    EmailField,
+    CharField,
+)
+from coupon.models import Coupon, CouponUser
+from profile.models import Profile
 
 
 class CouponListSerializer(ModelSerializer):
@@ -15,14 +21,70 @@ class CouponListSerializer(ModelSerializer):
         )
 
 
+class ProfileSerializer(ModelSerializer):
+    full_name = SerializerMethodField("get_full_name")
+    email = EmailField(source="user.email")
+    gender = CharField(source="get_gender_display")
+
+    class Meta:
+        model = Profile
+        fields = (
+            "id",
+            "uuid",
+            "full_name",
+            "email",
+            "gender",
+        )
+
+    def get_full_name(self, profile):
+        return profile.user.first_name + " " + profile.user.last_name
+
+
+class CouponGetSerializer(ModelSerializer):
+    users = ProfileSerializer(many=True)
+
+    class Meta:
+        model = Coupon
+        fields = "__all__"
+
+
 class CouponSerializer(ModelSerializer):
     class Meta:
         model = Coupon
-        fields = (
-            "id",
-            "code",
-            "discount",
-            "is_percentage",
-            "active",
-            "expiration_date",
-        )
+        fields = "__all__"
+
+    def add_users(self, coupon, users):
+        for user in users:
+            coupon.users.add(user)
+
+        return coupon
+
+    def create(self, validated_data):
+        users = validated_data.pop("users")
+
+        coupon = Coupon.objects.create(**validated_data)
+        coupon = self.add_users(coupon=coupon, users=users)
+        coupon.save()
+
+        return coupon
+
+    def update(self, instance, validated_data):
+        users = validated_data.pop("users", instance.users)
+
+        Coupon.objects.filter(pk=instance.pk).update(**validated_data)
+
+        instance = Coupon.objects.get(pk=instance.pk)
+        instance.users.clear()
+        instance = self.add_users(coupon=instance, users=users)
+        instance.save()
+
+        return instance
+
+
+class CouponUserSerializer(ModelSerializer):
+    user = ProfileSerializer()
+    coupon = CouponListSerializer()
+
+    class Meta:
+        model = CouponUser
+        fields = "__all__"

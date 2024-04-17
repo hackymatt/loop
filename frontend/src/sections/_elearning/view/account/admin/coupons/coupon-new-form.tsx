@@ -13,12 +13,14 @@ import { Step, Stepper, StepLabel, StepContent } from "@mui/material";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useCreateCourse } from "src/api/courses/courses";
+import { useCreateCoupon } from "src/api/coupons/coupons";
 import { useTechnologies } from "src/api/technologies/technologies";
 
 import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
 import { isStepFailed } from "src/components/stepper/step";
+
+import { IUserDetailsProps } from "src/types/user";
 
 import { useCouponFields } from "./coupon-fields";
 import { steps, schema, defaultValues } from "./coupon";
@@ -38,7 +40,7 @@ export default function CouponNewForm({ onClose, ...other }: Props) {
     sort_by: "name",
   });
 
-  const { mutateAsync: createCourse } = useCreateCourse();
+  const { mutateAsync: createCoupon } = useCreateCoupon();
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -57,17 +59,14 @@ export default function CouponNewForm({ onClose, ...other }: Props) {
   const onSubmit = handleSubmit(async (data) => {
     try {
       if (availableTechnologies) {
-        // await createCourse({
-        //   ...data,
-        //   level: data.level.slice(0, 1) as ILevel,
-        //   lessons: data.lessons.map((lesson: ICourseLessonProp) => lesson.id),
-        //   skills: data.skills.map((skill: ICourseBySkillProps) => skill.id),
-        //   topics: data.topics.map((topic: ICourseByTopicProps) => topic.id),
-        // });
+        await createCoupon({
+          ...data,
+          users: data.users.map((user: IUserDetailsProps) => user.id),
+        });
       }
       reset();
       onClose();
-      enqueueSnackbar("Kurs został dodany", { variant: "success" });
+      enqueueSnackbar("Kupon został dodany", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }

@@ -1,20 +1,22 @@
 import { Control, Controller, useController } from "react-hook-form";
 
-import { DatePicker } from "@mui/x-date-pickers";
-import { Stack, InputAdornment } from "@mui/material";
+import { DateTimePicker } from "@mui/x-date-pickers";
+import { Stack, Button, InputAdornment } from "@mui/material";
+
+import { generateCode } from "src/utils/generateCode";
 
 import { useUsers } from "src/api/users/users";
 
 import { RHFSwitch, RHFTextField, RHFAutocomplete } from "src/components/hook-form";
 
-import { IUserDetailsProps } from "src/types/user";
+import { UserType, IUserDetailsProps } from "src/types/user";
 
 // ----------------------------------------------------------------------
 
 export const useCouponFields = (control: Control<any>) => {
   const { data: availableUsers, isLoading: isLoadingUsers } = useUsers({
     sort_by: "email",
-    user_type: "S",
+    user_type: UserType.Student[0],
     page_size: -1,
   });
 
@@ -30,8 +32,30 @@ export const useCouponFields = (control: Control<any>) => {
     field: { value: isInfinite },
   } = useController({ name: "is_infinite", control });
 
+  const {
+    field: { onChange: setCode },
+  } = useController({ name: "code", control });
+
+  const handleGenerateCode = () => {
+    const code = generateCode(16);
+    setCode(code);
+  };
+
   const fields: { [key: string]: JSX.Element } = {
-    code: <RHFTextField key="code" name="code" label="Kod" />,
+    code: (
+      <RHFTextField
+        key="code"
+        name="code"
+        label="Kod"
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <Button onClick={handleGenerateCode}>Wygeneruj</Button>
+            </InputAdornment>
+          ),
+        }}
+      />
+    ),
     discount_with_type: (
       <Stack spacing={1} direction="row" alignItems="center">
         <RHFTextField
@@ -58,7 +82,7 @@ export const useCouponFields = (control: Control<any>) => {
         multiple
         options={availableUsers}
         getOptionLabel={(option) => (option as IUserDetailsProps).email}
-        isOptionEqualToValue={(a, b) => a.id === b.id}
+        isOptionEqualToValue={(a, b) => a.email === b.email}
         loading={isLoadingUsers}
         disabled={isAllUsers}
       />
@@ -91,7 +115,7 @@ export const useCouponFields = (control: Control<any>) => {
       <Controller
         name="expiration_date"
         render={({ field, fieldState: { error } }) => (
-          <DatePicker
+          <DateTimePicker
             label="Data ważności"
             slotProps={{
               textField: {

@@ -8,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import { Divider, Typography } from "@mui/material";
 import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
-import { fDate } from "src/utils/format-time";
+import { fDateTime } from "src/utils/format-time";
 import { fPercent, fCurrency } from "src/utils/format-number";
 
 import Label from "src/components/label";
@@ -85,7 +85,7 @@ export default function AccountCouponsTableRow({ row, onEdit, onDelete, onViewUs
         </TableCell>
 
         <TableCell sx={{ px: 1 }}>
-          <InputBase value={fDate(row.expiration_date)} sx={inputStyles} />
+          <InputBase value={fDateTime(row.expiration_date)} sx={inputStyles} />
         </TableCell>
 
         <TableCell align="right" padding="none">

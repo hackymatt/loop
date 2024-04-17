@@ -13,54 +13,29 @@ import { Step, Stepper, StepLabel, StepContent } from "@mui/material";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { urlToBlob } from "src/utils/blob-to-base64";
-
-import { useSkills } from "src/api/skills/skills";
-import { useTopics } from "src/api/topics/topics";
-import { useLessons } from "src/api/lessons/lessons";
-import { useCourse, useEditCourse } from "src/api/courses/course";
-import { useTechnologies } from "src/api/technologies/technologies";
+import { useCoupon, useEditCoupon } from "src/api/coupons/coupon";
 
 import FormProvider from "src/components/hook-form";
 import { isStepFailed } from "src/components/stepper/step";
 
-import {
-  ILevel,
-  ICourseProps,
-  ICourseLessonProp,
-  ICourseBySkillProps,
-  ICourseByTopicProps,
-  ICourseByCategoryProps,
-} from "src/types/course";
+import { ICouponProps } from "src/types/coupon";
+import { IUserDetailsProps } from "src/types/user";
 
-import { useCourseFields } from "./coupon-fields";
+import { useCouponFields } from "./coupon-fields";
 import { steps, schema, defaultValues } from "./coupon";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  course: ICourseProps;
+  coupon: ICouponProps;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function CourseEditForm({ course, onClose, ...other }: Props) {
-  const { data: availableLessons } = useLessons({
-    sort_by: "title",
-  });
-  const { data: availableSkills } = useSkills({
-    sort_by: "name",
-  });
-  const { data: availableTopics } = useTopics({
-    sort_by: "name",
-  });
-  const { data: availableTechnologies } = useTechnologies({
-    sort_by: "name",
-  });
-
-  const { data: courseData } = useCourse(course.id);
-  const { mutateAsync: editCourse } = useEditCourse(course.id);
+export default function CouponEditForm({ coupon, onClose, ...other }: Props) {
+  const { data: couponData } = useCoupon(coupon.id);
+  const { mutateAsync: editCoupon } = useEditCoupon(coupon.id);
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -71,61 +46,26 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
     reset,
     handleSubmit,
     formState: { errors, isSubmitting },
+    control,
   } = methods;
 
   useEffect(() => {
-    if (courseData) {
+    if (couponData) {
       reset({
-        ...courseData,
-        title: courseData.slug,
-        skills: courseData.skills.map((skill: string) =>
-          availableSkills.find((s: ICourseBySkillProps) => s.name === skill),
-        ),
-        topics: courseData.learnList.map((topic: string) =>
-          availableTopics.find((t: ICourseByTopicProps) => t.name === topic),
-        ),
-        lessons: courseData.lessons.map((lesson: ICourseLessonProp) => {
-          const lessonData = availableLessons.find((l: ICourseLessonProp) => l.id === lesson.id);
-
-          if (!lessonData) {
-            return lessonData;
-          }
-
-          return {
-            ...lessonData,
-            github_url: lessonData.githubUrl,
-            technologies: lessonData.category.map((category: string) =>
-              availableTechnologies.find(
-                (technology: ICourseByCategoryProps) => technology.name === category,
-              ),
-            ),
-          };
-        }),
-        image: courseData.coverUrl ?? "",
-        video: courseData.video ?? "",
+        ...couponData,
+        expiration_date: new Date(couponData.expiration_date),
       });
     }
-  }, [
-    availableLessons,
-    availableSkills,
-    availableTechnologies,
-    availableTopics,
-    courseData,
-    reset,
-  ]);
+  }, [couponData, reset]);
 
   const handleFormError = useFormErrorHandler(methods);
 
   const onSubmit = handleSubmit(async (data) => {
+    console.log(data);
     try {
-      await editCourse({
+      await editCoupon({
         ...data,
-        lessons: data.lessons.map((lesson: ICourseLessonProp) => lesson.id),
-        skills: data.skills.map((skill: ICourseBySkillProps) => skill.id),
-        topics: data.topics.map((topic: ICourseByTopicProps) => topic.id),
-        level: data.level.slice(0, 1) as ILevel,
-        image: (await urlToBlob(data.image)) as string,
-        video: data.video ? ((await urlToBlob(data.video)) as string) : "",
+        users: data.users.map((user: IUserDetailsProps) => user.id),
       });
       reset();
       onClose();
@@ -136,7 +76,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
 
   const [activeStep, setActiveStep] = useState(0);
 
-  const { fields } = useCourseFields();
+  const { fields } = useCouponFields(control);
 
   const stepContent = steps[activeStep].fields.map((field: string) => fields[field]);
 
@@ -144,7 +84,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj kurs</DialogTitle>
+          <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj kupon</DialogTitle>
           {fields.active}
         </Stack>
 

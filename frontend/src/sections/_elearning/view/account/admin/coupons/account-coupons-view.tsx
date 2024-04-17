@@ -28,15 +28,16 @@ import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
 
 import FilterValue from "src/sections/_elearning/filters/filter-value";
-import FilterBoolean from "src/sections/_elearning/filters/filter-boolean";
 import AccountCouponsTableRow from "src/sections/_elearning/account/admin/account-coupons-table-row";
 
 import { ICouponProps } from "src/types/coupon";
 import { IQueryParamValue } from "src/types/query-params";
 
+import CouponNewForm from "./coupon-new-form";
+import CouponEditForm from "./coupon-edit-form";
+import CouponDeleteForm from "./coupon-delete-form";
 import FilterSearch from "../../../../filters/filter-search";
 import AccountTableHead from "../../../../account/account-table-head";
-import CouponNewForm from "./coupon-new-form";
 
 // ----------------------------------------------------------------------
 
@@ -74,7 +75,7 @@ export default function AccountCouponsView() {
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
-  const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "title";
+  const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "-expiration_date";
   const order = filters?.sort_by && filters.sort_by.startsWith("-") ? "desc" : "asc";
   const tab = filters?.active ? filters.active : "";
 
@@ -140,7 +141,9 @@ export default function AccountCouponsView() {
 
   const handleViewUsage = useCallback(
     (coupon: ICouponProps) => {
-      router.push(`${paths.account.admin.coupons.usage}/?code=${coupon.code}&sort_by=-created_at`);
+      router.push(
+        `${paths.account.admin.coupons.usage}/?coupon_code=${coupon.code}&sort_by=-created_at`,
+      );
     },
     [router],
   );
@@ -260,13 +263,21 @@ export default function AccountCouponsView() {
 
       <CouponNewForm open={newCouponFormOpen.value} onClose={newCouponFormOpen.onFalse} />
 
-      {/* {editedCoupon && (
-        <UserEditForm user={editedUser} open={editFormOpen.value} onClose={editFormOpen.onFalse} />
+      {editedCoupon && (
+        <CouponEditForm
+          coupon={editedCoupon}
+          open={editCouponFormOpen.value}
+          onClose={editCouponFormOpen.onFalse}
+        />
       )}
 
-{deletedCoupon && (
-        <UserEditForm user={editedUser} open={editFormOpen.value} onClose={editFormOpen.onFalse} />
-      )} */}
+      {deletedCoupon && (
+        <CouponDeleteForm
+          coupon={deletedCoupon}
+          open={deleteCouponFormOpen.value}
+          onClose={deleteCouponFormOpen.onFalse}
+        />
+      )}
     </>
   );
 }

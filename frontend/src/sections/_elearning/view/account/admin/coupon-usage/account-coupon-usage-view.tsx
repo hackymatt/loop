@@ -6,38 +6,36 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
+import { DatePicker } from "@mui/x-date-pickers";
 import Typography from "@mui/material/Typography";
 import TableContainer from "@mui/material/TableContainer";
 import { tableCellClasses } from "@mui/material/TableCell";
 import TablePagination from "@mui/material/TablePagination";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
 
-import { useLecturers } from "src/api/lecturers/lecturers";
-import { useFinanceHistory, useFinanceHistoryPagesCount } from "src/api/finance/finance-history";
+import { useUsers } from "src/api/users/users";
+import { useCouponUsage, useCouponUsagePagesCount } from "src/api/coupons/coupon-usage";
 
 import Scrollbar from "src/components/scrollbar";
 
-import FilterTeacher from "src/sections/_elearning/filters/filter-teacher";
+import FilterUser from "src/sections/_elearning/filters/filter-user";
+import AccountCouponUsageTableRow from "src/sections/_elearning/account/admin/account-finance-table-usage-row";
 
+import { UserType } from "src/types/user";
 import { IQueryParamValue } from "src/types/query-params";
 
-import FilterPrice from "../../../../filters/filter-price";
 import FilterSearch from "../../../../filters/filter-search";
 import AccountTableHead from "../../../../account/account-table-head";
-import AccountFinanceHistoryTableRow from "../../../../account/admin/account-finance-table-history-row";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: "lecturer_uuid", label: "Wykładowca", minWidth: 200 },
-  { id: "account", label: "Konto" },
-  { id: "rate", label: "Stawka h" },
-  { id: "commission", label: "Prowizja" },
-  { id: "created_at", label: "Data zmiany", width: 150 },
+  { id: "user_email", label: "Email użytkownika", minWidth: 200 },
+  { id: "coupon_code", label: "Kupon" },
+  { id: "created_at", label: "Data wykorzystania" },
 ];
 
 const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, { label: "Wszystkie", value: -1 }];
@@ -49,13 +47,17 @@ export default function AdminCouponUsageView() {
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const { data: pagesCount } = useFinanceHistoryPagesCount(filters);
-  const { data: financeHistories } = useFinanceHistory(filters);
-  const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: -1 });
+  const { data: pagesCount } = useCouponUsagePagesCount(filters);
+  const { data: couponUsages } = useCouponUsage(filters);
+  const { data: users } = useUsers({
+    user_type: UserType.Student[0],
+    sort_by: "email",
+    page_size: -1,
+  });
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
-  const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "lecturer";
+  const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "-created_at";
   const order = filters?.sort_by && filters.sort_by.startsWith("-") ? "desc" : "asc";
 
   const handleChange = useCallback(
@@ -96,48 +98,33 @@ export default function AdminCouponUsageView() {
     <>
       <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
         <Typography variant="h5" sx={{ mb: 3 }}>
-          Historia danych finansowych
+          Wykorzystanie kuponów
         </Typography>
       </Stack>
 
-      <Stack direction={{ xs: "column", md: "column" }} spacing={1} sx={{ mt: 2, mb: 3 }}>
-        <FilterTeacher
-          value={filters?.lecturer_id ?? ""}
-          options={teachers ?? []}
-          onChange={(value) => handleChange("lecturer_id", value)}
+      <Stack direction={{ xs: "column", md: "row" }} spacing={1} sx={{ mt: 2, mb: 3 }}>
+        <FilterUser
+          value={filters?.user_uuid ?? ""}
+          options={users ?? []}
+          onChange={(value) => handleChange("user_uuid", value)}
         />
 
         <FilterSearch
-          value={filters?.account ?? ""}
-          onChangeSearch={(value) => handleChange("account", value)}
-          placeholder="Numer konta..."
+          value={filters?.coupon_code ?? ""}
+          onChangeSearch={(value) => handleChange("coupon_code", value)}
+          placeholder="Kupon..."
         />
-        <Stack direction={{ xs: "column", md: "row" }} spacing={1}>
-          <FilterPrice
-            valuePriceFrom={filters?.rate_from ?? ""}
-            valuePriceTo={filters?.rate_to ?? ""}
-            onChangeStartPrice={(value) => handleChange("rate_from", value)}
-            onChangeEndPrice={(value) => handleChange("rate_to", value)}
-          />
 
-          <FilterPrice
-            valuePriceFrom={filters?.commission_from ?? ""}
-            valuePriceTo={filters?.commission_to ?? ""}
-            onChangeStartPrice={(value) => handleChange("commission_from", value)}
-            onChangeEndPrice={(value) => handleChange("commission_to", value)}
-          />
-
-          <DatePicker
-            value={filters?.created_at ? new Date(filters.created_at) : null}
-            onChange={(value: Date | null) =>
-              handleChange("created_at", value ? fDate(value, "yyyy-MM-dd") : "")
-            }
-            sx={{ width: 1, minWidth: 180 }}
-            slotProps={{
-              textField: { size: "small", hiddenLabel: true, placeholder: "Data zmiany" },
-            }}
-          />
-        </Stack>
+        <DatePicker
+          value={filters?.created_at ? new Date(filters.created_at) : null}
+          onChange={(value: Date | null) =>
+            handleChange("created_at", value ? fDate(value, "yyyy-MM-dd") : "")
+          }
+          sx={{ width: 1, minWidth: 180 }}
+          slotProps={{
+            textField: { size: "small", hiddenLabel: true, placeholder: "Data wykorzystania" },
+          }}
+        />
       </Stack>
 
       <TableContainer
@@ -166,10 +153,10 @@ export default function AdminCouponUsageView() {
               headCells={TABLE_HEAD}
             />
 
-            {financeHistories && (
+            {couponUsages && (
               <TableBody>
-                {financeHistories.map((row) => (
-                  <AccountFinanceHistoryTableRow key={row.id} row={row} />
+                {couponUsages.map((row) => (
+                  <AccountCouponUsageTableRow key={row.id} row={row} />
                 ))}
               </TableBody>
             )}

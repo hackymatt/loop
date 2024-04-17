@@ -14,3 +14,10 @@ export type ICouponProps = {
   active: boolean;
   min_total: number;
 };
+
+export type ICouponUsageProps = {
+  id: string;
+  coupon: ICouponProps;
+  user: IUserDetailsProps;
+  created_at: Date;
+};
