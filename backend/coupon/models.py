@@ -28,7 +28,7 @@ class Coupon(BaseModel):
     is_infinite = BooleanField(default=False)
     uses_per_user = IntegerField(default=1)
     expiration_date = DateTimeField()
-    is_active = BooleanField(default=False)
+    active = BooleanField(default=False)
     min_total = DecimalField(
         max_digits=7,
         decimal_places=2,
