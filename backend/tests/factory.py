@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from profile.models import Profile
 from course.models import Course
-from coupon.models import Coupon
+from coupon.models import Coupon, CouponUser
 from lesson.models import Lesson, LessonPriceHistory
 from technology.models import Technology
 from topic.models import Topic
@@ -351,3 +351,13 @@ def create_coupon_obj(
         "expiration_date": expiration_date,
         "min_total": min_total,
     }
+
+
+def create_coupon_user(
+    coupon: Coupon,
+    user: Profile,
+):
+    return CouponUser.objects.create(
+        coupon=coupon,
+        user=user,
+    )
