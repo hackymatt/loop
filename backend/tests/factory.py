@@ -312,17 +312,28 @@ def create_coupon(
     all_users: bool,
     is_infinite: bool,
     active: bool,
-    expiration_date,
+    expiration_date: datetime,
+    users: List[int] = [],
+    max_uses: int = 1,
+    uses_per_user: int = 1,
+    min_total: int = 100,
 ):
-    return Coupon.objects.create(
+    coupon = Coupon.objects.create(
         code=code,
         discount=discount,
         is_percentage=is_percentage,
         all_users=all_users,
         is_infinite=is_infinite,
+        max_uses=max_uses,
+        uses_per_user=uses_per_user,
         active=active,
         expiration_date=expiration_date,
+        min_total=min_total,
     )
+
+    coupon.users.add(*users)
+
+    return coupon
 
 
 def create_coupon_obj(

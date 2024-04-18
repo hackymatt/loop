@@ -3,12 +3,6 @@ from django.utils import timezone
 
 
 def validate_coupon(coupon_code, user, total):
-    if not coupon_code:
-        return False, "Kupon jest pusty."
-
-    if not user:
-        return False, "Użytkownik jest niedostępny."
-
     coupon = Coupon.objects.filter(code=coupon_code)
 
     if not coupon.exists():

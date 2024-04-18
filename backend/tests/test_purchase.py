@@ -221,22 +221,24 @@ class PurchaseTest(APITestCase):
         )
 
         self.coupon_1 = create_coupon(
-            "aaaaaaaaa",
-            1,
-            False,
-            True,
-            True,
-            True,
-            make_aware(datetime.now() + timedelta(days=10)),
+            code="aaaaaaaaa",
+            discount=1,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=10)),
+            min_total=0,
         )
         self.coupon_2 = create_coupon(
-            "bbbbbbbbb",
-            1,
-            True,
-            True,
-            True,
-            True,
-            make_aware(datetime.now() + timedelta(days=10)),
+            code="bbbbbbbbb",
+            discount=1,
+            is_percentage=True,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=10)),
+            min_total=0,
         )
 
     def test_get_purchase_unauthenticated(self):
@@ -334,7 +336,7 @@ class PurchaseTest(APITestCase):
                     "lesson": self.lesson_5.id,
                 },
             ],
-            "coupon": "",
+            "coupon": self.coupon_1.code,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

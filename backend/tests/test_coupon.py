@@ -44,58 +44,58 @@ class CouponTest(APITestCase):
         self.profile = create_profile(user=self.user)
 
         self.coupon = create_coupon(
-            "aaaaaaa",
-            10,
-            False,
-            True,
-            True,
-            True,
-            make_aware(datetime.now() + timedelta(days=10)),
+            code="aaaaaaa",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=10)),
         )
         create_coupon(
-            "aaaaaab",
-            10,
-            False,
-            True,
-            True,
-            True,
-            make_aware(datetime.now() + timedelta(days=11)),
+            code="aaaaaab",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=11)),
         )
         create_coupon(
-            "aaaaaav",
-            10,
-            False,
-            True,
-            True,
-            True,
-            make_aware(datetime.now() + timedelta(days=22)),
+            code="aaaaaav",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=22)),
         )
         create_coupon(
-            "aaaaaad",
-            10,
-            False,
-            True,
-            True,
-            True,
-            make_aware(datetime.now() + timedelta(days=33)),
+            code="aaaaaad",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=33)),
         )
         create_coupon(
-            "aaaaaae",
-            10,
-            False,
-            True,
-            True,
-            True,
-            make_aware(datetime.now() + timedelta(days=4)),
+            code="aaaaaae",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=4)),
         )
         create_coupon(
-            "aaaaaag",
-            10,
-            False,
-            True,
-            True,
-            True,
-            make_aware(datetime.now() + timedelta(days=5)),
+            code="aaaaaag",
+            discount=10,
+            is_infinite=False,
+            all_users=True,
+            is_percentage=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=5)),
         )
 
         self.new_coupon = create_coupon_obj(
@@ -296,58 +296,58 @@ class CouponUserTest(APITestCase):
         self.profile = create_profile(user=self.user)
 
         self.coupon_1 = create_coupon(
-            "aaaaaaa",
-            10,
-            False,
-            True,
-            True,
-            True,
-            make_aware(datetime.now() + timedelta(days=10)),
+            code="aaaaaaa",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=10)),
         )
         self.coupon_2 = create_coupon(
-            "aaaaaab",
-            10,
-            False,
-            True,
-            True,
-            True,
-            make_aware(datetime.now() + timedelta(days=11)),
+            code="aaaaaab",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=11)),
         )
         self.coupon_3 = create_coupon(
-            "aaaaaav",
-            10,
-            False,
-            True,
-            True,
-            True,
-            make_aware(datetime.now() + timedelta(days=22)),
+            code="aaaaaav",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=22)),
         )
         create_coupon(
-            "aaaaaad",
-            10,
-            False,
-            True,
-            True,
-            True,
-            make_aware(datetime.now() + timedelta(days=33)),
+            code="aaaaaad",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=33)),
         )
         create_coupon(
-            "aaaaaae",
-            10,
-            False,
-            True,
-            True,
-            True,
-            make_aware(datetime.now() + timedelta(days=4)),
+            code="aaaaaae",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=4)),
         )
         create_coupon(
-            "aaaaaag",
-            10,
-            False,
-            True,
-            True,
-            True,
-            make_aware(datetime.now() + timedelta(days=5)),
+            code="aaaaaag",
+            discount=10,
+            is_infinite=False,
+            all_users=True,
+            is_percentage=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=5)),
         )
 
         self.coupon_user_1 = create_coupon_user(self.coupon_1, self.profile)
@@ -402,3 +402,176 @@ class CouponUserTest(APITestCase):
         # get data
         response = self.client.get(f"{self.endpoint}/{self.coupon_user_1.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class CouponValidationTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/coupon-validate"
+        self.admin_data = {
+            "email": "admin_test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.admin_data["email"],
+            password=self.admin_data["password"],
+            is_active=True,
+            is_staff=True,
+        )
+        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_profile(user=self.user)
+        self.user_2 = create_user(
+            first_name="first_name_2",
+            last_name="last_name_2",
+            email="email_2@example.com",
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile_2 = create_profile(user=self.user_2)
+
+        self.coupon_1 = create_coupon(
+            code="aaaaaaa",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=10)),
+        )
+        self.coupon_2 = create_coupon(
+            code="aaaaaab",
+            discount=10,
+            is_percentage=False,
+            all_users=False,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=10)),
+            users=[self.profile_2.id],
+        )
+
+        self.coupon_3 = create_coupon(
+            code="aaaaaac",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=False,
+            max_uses=1,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=10)),
+        )
+        create_coupon_user(coupon=self.coupon_3, user=self.profile_2)
+
+        self.coupon_4 = create_coupon(
+            code="aaaaaae",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=10)),
+        )
+        create_coupon_user(coupon=self.coupon_4, user=self.profile)
+
+        self.coupon_5 = create_coupon(
+            code="aaaaaaf",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() - timedelta(days=10)),
+        )
+
+        self.coupon_6 = create_coupon(
+            code="aaaaaag",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=False,
+            expiration_date=make_aware(datetime.now() + timedelta(days=10)),
+        )
+
+    def test_correct_validation(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.coupon_1.code}/200")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        self.assertEqual(
+            data,
+            {
+                "discount": self.coupon_1.discount,
+                "is_percentage": self.coupon_1.is_percentage,
+            },
+        )
+
+    def test_coupon_not_found(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/notfound/200")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_coupon_not_for_user(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.coupon_2.code}/200")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_coupon_poll_empty(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.coupon_3.code}/200")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_coupon_user_max_usage(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.coupon_4.code}/200")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_coupon_expired(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.coupon_5.code}/200")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_coupon_inactive(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.coupon_6.code}/200")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_coupon_min_total(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.coupon_1.code}/50")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
