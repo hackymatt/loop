@@ -11,6 +11,8 @@ import InputAdornment from "@mui/material/InputAdornment";
 
 import { fCurrency } from "src/utils/format-number";
 
+import { validateCoupon } from "src/api/coupons/coupon-validation";
+
 import Iconify from "src/components/iconify";
 
 // ----------------------------------------------------------------------
@@ -28,6 +30,7 @@ type IDiscount = {
 };
 
 export default function CartSummary({ total, onPurchase, isLoading, error }: Props) {
+  const [couponError, setCouponError] = useState<string>(error ?? "");
   const [coupon, setCoupon] = useState<string>();
   const [selectedCoupon, setSelectedCoupon] = useState<string>();
 
@@ -35,15 +38,21 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
   const [discountedValue, setDiscountedValue] = useState<number>(total);
 
   const handleApplyCoupon = async () => {
+    setCouponError("");
     if (coupon) {
+      const validatedCoupon = await validateCoupon(coupon, total);
+      const { status, data } = validatedCoupon;
+
+      if (status !== 200) {
+        setCouponError(data.code);
+        return;
+      }
+
       setSelectedCoupon(coupon);
       setCoupon("");
-      const discountReturn: IDiscount = { discount: 10, is_percentage: false };
-      setDiscount(discountReturn);
+      setDiscount(data);
       setDiscountedValue(
-        discountReturn.is_percentage
-          ? total * (1 - discountReturn.discount / 100)
-          : total - (discountReturn.discount ?? 0),
+        data.is_percentage ? total * (1 - data.discount / 100) : total - (data.discount ?? 0),
       );
     }
   };
@@ -85,6 +94,8 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
         onChange={(event) => setCoupon(event.target.value)}
         hiddenLabel
         placeholder="Kod zniżkowy"
+        error={!!couponError}
+        helperText={couponError}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -97,20 +108,15 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
       />
 
       {selectedCoupon && (
-        <>
-          <LoadingButton
-            size="small"
-            color="primary"
-            variant="text"
-            onClick={handleDeleteCoupon}
-            endIcon={<Iconify icon="carbon:trash-can" />}
-          >
-            {selectedCoupon}
-          </LoadingButton>
-          <Typography variant="body2" sx={{ color: "error.main" }}>
-            {error}
-          </Typography>
-        </>
+        <LoadingButton
+          size="small"
+          color="primary"
+          variant="text"
+          onClick={handleDeleteCoupon}
+          endIcon={<Iconify icon="carbon:trash-can" />}
+        >
+          {selectedCoupon}
+        </LoadingButton>
       )}
 
       <Divider sx={{ borderStyle: "dashed" }} />

@@ -39,7 +39,7 @@ from teaching.views import ManageTeachingViewSet, TeachingViewSet
 from reservation.views import ReservationViewSet
 from contact.views import ContactViewSet
 from finance.views import FinanceDetailsViewSet, FinanceHistoryViewSet
-from coupon.views import CouponViewSet, CouponUserViewSet
+from coupon.views import CouponViewSet, CouponUserViewSet, CouponValidationViewSet
 
 router = DefaultRouter(trailing_slash=False)
 router.register(r"users", UserViewSet, basename="users")
@@ -99,4 +99,8 @@ urlpatterns = [
     path("newsletter-subscribe", NewsletterSubscribeViewSet.subscribe),
     path("newsletter-unsubscribe/<str:uuid>", NewsletterUnsubscribeViewSet.unsubscribe),
     path("contact", ContactViewSet.as_view({"post": "contact"})),
+    path(
+        "coupon-validate/<str:coupon_code>/<str:total>",
+        CouponValidationViewSet.validate,
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
