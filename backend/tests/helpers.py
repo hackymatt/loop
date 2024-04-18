@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from profile.models import Profile
 from course.models import Course
+from coupon.models import Coupon
 from lesson.models import Lesson
 from technology.models import Technology
 from topic.models import Topic
@@ -48,7 +49,7 @@ def is_data_match(obj, data):
         data_value = str(value)
         obj_value = str(getattr(obj, key))
         if not data_value == obj_value:
-            if key in ["modified_at", "created_at"]:
+            if key in ["modified_at", "created_at", "expiration_date"]:
                 modified_value = data_value.replace("T", " ")
                 return modified_value[0:26] == obj_value[0:26]
             elif key in ["image", "video"]:
@@ -192,3 +193,11 @@ def cart_number():
 
 def teaching_number():
     return Teaching.objects.count()
+
+
+def coupons_number():
+    return Coupon.objects.count()
+
+
+def get_coupon(id: int):
+    return Coupon.objects.get(pk=id)

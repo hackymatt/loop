@@ -13,6 +13,7 @@ from .factory import (
     create_schedule,
     create_reservation,
     create_review,
+    create_coupon,
 )
 from .helpers import login
 import json
@@ -219,6 +220,25 @@ class PurchaseTest(APITestCase):
             lessons=[self.lesson_6],
         )
 
+        self.coupon_1 = create_coupon(
+            "aaaaaaaaa",
+            1,
+            False,
+            True,
+            True,
+            True,
+            make_aware(datetime.now() + timedelta(days=10)),
+        )
+        self.coupon_2 = create_coupon(
+            "bbbbbbbbb",
+            1,
+            True,
+            True,
+            True,
+            True,
+            make_aware(datetime.now() + timedelta(days=10)),
+        )
+
     def test_get_purchase_unauthenticated(self):
         # login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -338,7 +358,7 @@ class PurchaseTest(APITestCase):
                     "lesson": self.lesson_5.id,
                 },
             ],
-            "coupon": "value",
+            "coupon": self.coupon_1.code,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -362,7 +382,7 @@ class PurchaseTest(APITestCase):
                     "lesson": self.lesson_5.id,
                 },
             ],
-            "coupon": "perc",
+            "coupon": self.coupon_2.code,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

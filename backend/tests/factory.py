@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from profile.models import Profile
 from course.models import Course
+from coupon.models import Coupon
 from lesson.models import Lesson, LessonPriceHistory
 from technology.models import Technology
 from topic.models import Topic
@@ -302,3 +303,51 @@ def create_finance_history(
     return FinanceHistory.objects.create(
         lecturer=lecturer, account=account, rate=rate, commission=commission
     )
+
+
+def create_coupon(
+    code: str,
+    discount: float,
+    is_percentage: bool,
+    all_users: bool,
+    is_infinite: bool,
+    active: bool,
+    expiration_date,
+):
+    return Coupon.objects.create(
+        code=code,
+        discount=discount,
+        is_percentage=is_percentage,
+        all_users=all_users,
+        is_infinite=is_infinite,
+        active=active,
+        expiration_date=expiration_date,
+    )
+
+
+def create_coupon_obj(
+    code: str,
+    discount: float,
+    is_percentage: bool,
+    all_users: bool,
+    users: List[int],
+    is_infinite: bool,
+    max_uses: int,
+    uses_per_user: int,
+    active: bool,
+    expiration_date,
+    min_total: float,
+):
+    return {
+        "code": code,
+        "discount": discount,
+        "is_percentage": is_percentage,
+        "all_users": all_users,
+        "users": users,
+        "is_infinite": is_infinite,
+        "max_uses": max_uses,
+        "uses_per_user": uses_per_user,
+        "active": active,
+        "expiration_date": expiration_date,
+        "min_total": min_total,
+    }

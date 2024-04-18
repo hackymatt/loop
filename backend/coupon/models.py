@@ -36,6 +36,10 @@ class Coupon(BaseModel):
         default=0,
     )
 
+    class Meta:
+        db_table = "coupon"
+        ordering = ["id"]
+
 
 class CouponUser(BaseModel):
     user = ForeignKey(Profile, on_delete=CASCADE)
