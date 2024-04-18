@@ -15,6 +15,8 @@ from .factory import (
     create_teaching,
     create_reservation,
     create_finance_history,
+    create_coupon,
+    create_coupon_user,
 )
 from .helpers import login
 from django.contrib import auth
@@ -2620,6 +2622,327 @@ class FinanceHistoryOrderTest(APITestCase):
                 field_values = [
                     parent_object[field2] for parent_object in parent_objects
                 ]
+            else:
+                field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values,
+                    sorted(field_values, key=lambda d: d["name"], reverse=True),
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values, reverse=True))
+
+
+class CouponOrderingTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/coupons"
+        self.admin_data = {
+            "email": "admin_test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.admin_data["email"],
+            password=self.admin_data["password"],
+            is_active=True,
+            is_staff=True,
+        )
+        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_profile(user=self.user)
+
+        self.coupon = create_coupon(
+            "aaaaaaa",
+            10,
+            False,
+            True,
+            True,
+            True,
+            make_aware(datetime.now() + timedelta(days=10)),
+        )
+        create_coupon(
+            "aaaaaab",
+            11,
+            False,
+            True,
+            True,
+            True,
+            make_aware(datetime.now() + timedelta(days=11)),
+        )
+        create_coupon(
+            "aaaaaav",
+            12,
+            False,
+            True,
+            True,
+            True,
+            make_aware(datetime.now() + timedelta(days=22)),
+        )
+        create_coupon(
+            "aaaaaad",
+            14,
+            False,
+            True,
+            True,
+            False,
+            make_aware(datetime.now() + timedelta(days=33)),
+        )
+        create_coupon(
+            "aaaaaae",
+            41,
+            False,
+            True,
+            True,
+            True,
+            make_aware(datetime.now() + timedelta(days=4)),
+        )
+        create_coupon(
+            "aaaaaag",
+            4,
+            False,
+            True,
+            True,
+            False,
+            make_aware(datetime.now() + timedelta(days=5)),
+        )
+
+        self.fields = [
+            "code",
+            "discount",
+            "active",
+            "expiration_date",
+        ]
+
+    def test_ordering(self):
+        for field in self.fields:
+            login(self, self.admin_data["email"], self.admin_data["password"])
+            self.assertTrue(auth.get_user(self.client).is_authenticated)
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by={field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 6)
+            if "_uuid" in field:
+                field1, field2 = field.split("_")
+                parent_objects = [
+                    course[field1] for course in results if course[field1] is not None
+                ]
+                field_values = [
+                    parent_object[field2] for parent_object in parent_objects
+                ]
+            else:
+                field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values, sorted(field_values, key=lambda d: d["name"])
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values))
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by=-{field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 6)
+            if "_uuid" in field:
+                field1, field2 = field.split("_")
+                parent_objects = [
+                    course[field1] for course in results if course[field1] is not None
+                ]
+                field_values = [
+                    parent_object[field2] for parent_object in parent_objects
+                ]
+            else:
+                field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values,
+                    sorted(field_values, key=lambda d: d["name"], reverse=True),
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values, reverse=True))
+
+
+class CouponUserOrderingTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/coupon-usage"
+        self.admin_data = {
+            "email": "admin_test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.admin_data["email"],
+            password=self.admin_data["password"],
+            is_active=True,
+            is_staff=True,
+        )
+        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_profile(user=self.user)
+
+        self.coupon_1 = create_coupon(
+            "aaaaaaa",
+            10,
+            False,
+            True,
+            True,
+            True,
+            make_aware(datetime.now() + timedelta(days=10)),
+        )
+        self.coupon_2 = create_coupon(
+            "aaaaaab",
+            10,
+            False,
+            True,
+            True,
+            True,
+            make_aware(datetime.now() + timedelta(days=11)),
+        )
+        self.coupon_3 = create_coupon(
+            "aaaaaav",
+            10,
+            False,
+            True,
+            True,
+            True,
+            make_aware(datetime.now() + timedelta(days=22)),
+        )
+        create_coupon(
+            "aaaaaad",
+            10,
+            False,
+            True,
+            True,
+            True,
+            make_aware(datetime.now() + timedelta(days=33)),
+        )
+        create_coupon(
+            "aaaaaae",
+            10,
+            False,
+            True,
+            True,
+            True,
+            make_aware(datetime.now() + timedelta(days=4)),
+        )
+        create_coupon(
+            "aaaaaag",
+            10,
+            False,
+            True,
+            True,
+            True,
+            make_aware(datetime.now() + timedelta(days=5)),
+        )
+
+        self.coupon_user_1 = create_coupon_user(self.coupon_1, self.profile)
+        self.coupon_user_2 = create_coupon_user(self.coupon_2, self.profile)
+        self.coupon_user_3 = create_coupon_user(self.coupon_3, self.profile)
+
+        self.fields = [
+            "coupon_code",
+            "user_email",
+            "created_at",
+        ]
+
+    def test_ordering(self):
+        for field in self.fields:
+            login(self, self.admin_data["email"], self.admin_data["password"])
+            self.assertTrue(auth.get_user(self.client).is_authenticated)
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by={field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 3)
+            if "_uuid" in field:
+                field1, field2 = field.split("_")
+                parent_objects = [
+                    course[field1] for course in results if course[field1] is not None
+                ]
+                field_values = [
+                    parent_object[field2] for parent_object in parent_objects
+                ]
+            elif "coupon_code" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            elif "user_email" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            else:
+                field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values, sorted(field_values, key=lambda d: d["name"])
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values))
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by=-{field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 3)
+            if "_uuid" in field:
+                field1, field2 = field.split("_")
+                parent_objects = [
+                    course[field1] for course in results if course[field1] is not None
+                ]
+                field_values = [
+                    parent_object[field2] for parent_object in parent_objects
+                ]
+            elif "coupon_code" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            elif "user_email" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
             else:
                 field_values = [course[field] for course in results]
             if isinstance(field_values[0], dict):
