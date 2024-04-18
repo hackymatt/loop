@@ -48,8 +48,7 @@ class EarningByLecturerSerializer(Serializer):
     actual = BooleanField()
     year = IntegerField()
     month = IntegerField()
-    cost = FloatField()
-    profit = FloatField()
+    earnings = FloatField(source="cost")
 
     def get_lecturer(self, obj):
         return LecturerSerializer(Profile.objects.get(id=obj["lecturer"])).data

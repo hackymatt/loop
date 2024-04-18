@@ -38,16 +38,31 @@ class EarningViewSet(ModelViewSet):
     serializer_class = LecturerEarningSerializer
     permission_classes = [IsAuthenticated, ~IsStudent]
 
-    def is_total_earnings(self):
+    def total(self):
         query_params = self.request.query_params
-        total = query_params.get("total", True)
-        return bool(total)
+        total = query_params.get("total", "True")
+        return total == "True"
+
+    def lecturer(self):
+        query_params = self.request.query_params
+        lecturer = query_params.get("lecturer", "")
+        return lecturer
+
+    def year(self):
+        query_params = self.request.query_params
+        year = query_params.get("year", "")
+        return year
+
+    def month(self):
+        query_params = self.request.query_params
+        month = query_params.get("month", "")
+        return month
 
     def get_serializer_class(self):
         user = self.request.user
         profile = Profile.objects.get(user=user)
         if profile.user_type[0] == "A":
-            if self.is_total_earnings():
+            if self.total():
                 return AdminEarningLecturerSerializer
             return EarningByLecturerSerializer
         else:
@@ -62,7 +77,7 @@ class EarningViewSet(ModelViewSet):
             total_earnings = True
         else:
             queryset = self.queryset
-            total_earnings = self.is_total_earnings()
+            total_earnings = self.total()
 
         purchases = (
             Reservation.objects.filter(schedule=OuterRef(OuterRef("pk")))
@@ -159,4 +174,19 @@ class EarningViewSet(ModelViewSet):
         else:
             queryset = queryset.values("month", "year", "cost", "profit", "actual")
 
-        return queryset.order_by("-year", "-month")
+        queryset = queryset.order_by("-year", "-month")
+
+        lecturer = self.lecturer()
+        year = self.year()
+        month = self.month()
+
+        if lecturer != "":
+            queryset = queryset.filter(lecturer__uuid=lecturer)
+
+        if year != "":
+            queryset = queryset.filter(year=year)
+
+        if month != "":
+            queryset = queryset.filter(month=month)
+
+        return queryset
