@@ -175,6 +175,25 @@ const adminNavigations = [
       ],
     },
     {
+      title: "Kupony",
+      path: paths.account.admin.users.list,
+      icon: <Iconify icon="carbon:cut-out" />,
+      children: [
+        {
+          title: "Spis kuponów",
+          path: `${paths.account.admin.coupons.list}/?sort_by=-expiration_date&page_size=10`,
+          icon: <Iconify icon="carbon:list" />,
+          children: [],
+        },
+        {
+          title: "Wykorzystanie kuponów",
+          path: `${paths.account.admin.coupons.usage}/?sort_by=-created_at&page_size=10`,
+          icon: <Iconify icon="carbon:user-activity" />,
+          children: [],
+        },
+      ],
+    },
+    {
       title: "Zarobki",
       path: `${paths.account.admin.earnings}/?page_size=12`,
       icon: <Iconify icon="carbon:currency-dollar" />,

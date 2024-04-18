@@ -36,6 +36,10 @@ export const paths = {
         list: "/account/admin/users/list",
         financeHistory: "/account/admin/users/finance-history",
       },
+      coupons: {
+        list: "/account/admin/coupons/list",
+        usage: "/account/admin/coupons/usage",
+      },
       earnings: "/account/admin/earnings",
     },
     teacher: {

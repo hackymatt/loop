@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "teaching",
     "reservation",
     "finance",
+    "coupon",
 ]
 
 MIDDLEWARE = [

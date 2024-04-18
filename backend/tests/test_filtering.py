@@ -15,6 +15,8 @@ from .factory import (
     create_reservation,
     create_technology,
     create_finance_history,
+    create_coupon,
+    create_coupon_user,
 )
 from .helpers import login
 from django.contrib import auth
@@ -3161,5 +3163,295 @@ class FinanceHistoryFilterTest(APITestCase):
         results = data["results"]
         self.assertEqual(records_count, 2)
         values = list(set([variable in record[column] for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+
+class CouponFilteringTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/coupons"
+        self.admin_data = {
+            "email": "admin_test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.admin_data["email"],
+            password=self.admin_data["password"],
+            is_active=True,
+            is_staff=True,
+        )
+        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_profile(user=self.user)
+
+        self.coupon = create_coupon(
+            code="aaaaaaa",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=10)),
+        )
+        create_coupon(
+            code="aaaaaab",
+            discount=11,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=11)),
+        )
+        create_coupon(
+            code="aaaaaav",
+            discount=12,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=22)),
+        )
+        create_coupon(
+            code="aaaaaad",
+            discount=14,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=False,
+            expiration_date=make_aware(datetime.now() + timedelta(days=33)),
+        )
+        create_coupon(
+            code="aaaaaae",
+            discount=41,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=4)),
+        )
+        create_coupon(
+            code="aaaaaag",
+            discount=4,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=False,
+            expiration_date=make_aware(datetime.now() + timedelta(days=5)),
+        )
+
+    def test_code_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "code"
+        variable = str(self.coupon.code)
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        values = list(set([variable in record[column].lower() for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_active_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "active"
+        variable = True
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 4)
+        values = list(set([variable == record[column] for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_discount_from_from_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "discount_from"
+        variable = 10
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 5)
+        values = list(set([variable <= record["discount"] for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_discount_to_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "discount_to"
+        variable = 10
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 2)
+        values = list(set([variable >= record["discount"] for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_expiration_date_to_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "expiration_date_to"
+        variable = str(self.coupon.expiration_date)[0:10]
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 2)
+        values = list(
+            set([variable >= record["expiration_date"] for record in results])
+        )
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+
+class CouponUserFilteringTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/coupon-usage"
+        self.admin_data = {
+            "email": "admin_test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.admin_data["email"],
+            password=self.admin_data["password"],
+            is_active=True,
+            is_staff=True,
+        )
+        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_profile(user=self.user)
+
+        self.coupon_1 = create_coupon(
+            code="aaaaaaa",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=10)),
+        )
+        self.coupon_2 = create_coupon(
+            code="aaaaaab",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=11)),
+        )
+        self.coupon_3 = create_coupon(
+            code="aaaaaav",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=22)),
+        )
+        create_coupon(
+            code="aaaaaad",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=33)),
+        )
+        create_coupon(
+            code="aaaaaae",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=4)),
+        )
+        create_coupon(
+            code="aaaaaag",
+            discount=10,
+            is_infinite=False,
+            all_users=True,
+            is_percentage=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=5)),
+        )
+
+        self.coupon_user_1 = create_coupon_user(self.coupon_1, self.profile)
+        self.coupon_user_2 = create_coupon_user(self.coupon_2, self.profile)
+        self.coupon_user_3 = create_coupon_user(self.coupon_3, self.profile)
+
+    def test_user_uuid_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "user_uuid"
+        variable = str(self.coupon_user_1.user.uuid)
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 3)
+        values = list(set([variable in record["user"]["uuid"] for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_coupon_code_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "coupon_code"
+        variable = self.coupon_1.code
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        values = list(
+            set([variable in record["coupon"]["code"].lower() for record in results])
+        )
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])

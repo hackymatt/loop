@@ -8,6 +8,8 @@ from purchase.models import Purchase
 from purchase.filters import PurchaseFilter
 from profile.models import Profile
 from lesson.models import Lesson
+from coupon.models import Coupon
+from coupon.validation import validate_coupon
 
 
 class PurchaseViewSet(ModelViewSet):
@@ -29,14 +31,6 @@ class PurchaseViewSet(ModelViewSet):
             lesson_data["price"] = lesson.price
 
         return lessons
-
-    def validate_coupon(self, coupon):
-        if coupon != "":
-            is_valid = coupon != "incorrect"
-            if not is_valid:
-                raise ValidationError({"coupon": "Kod zniżkowy jest niepoprawny."})
-
-        return coupon
 
     def get_total_price(self, lessons):
         return sum([float(lesson["price"]) for lesson in lessons])
@@ -64,12 +58,14 @@ class PurchaseViewSet(ModelViewSet):
         return lessons
 
     def create(self, request, *args, **kwargs):
+        user = request.user
+        profile = Profile.objects.get(user=user)
         data = request.data
 
         lessons = data.pop("lessons")
         lessons = self.get_lessons_price(lessons=lessons)
 
-        coupon = data.pop("coupon")
+        coupon_code = data.pop("coupon")
 
         serializer = PurchaseSerializer(
             data=lessons, many=True, context={"request": request}
@@ -78,13 +74,20 @@ class PurchaseViewSet(ModelViewSet):
             raise ValidationError({"lessons": serializer.errors})
 
         lessons_data = [dict(item) for item in serializer.data]
-        self.validate_coupon(coupon=coupon)
+        valid, error_message = validate_coupon(
+            coupon_code=coupon_code,
+            user=profile,
+            total=self.get_total_price(lessons=lessons),
+        )
+        if not valid:
+            raise ValidationError({"coupon": error_message})
 
         # use coupon
-        if coupon == "value":
-            coupon_details = {"discount": 1.3, "is_percentage": False}
-        else:
-            coupon_details = {"discount": 10, "is_percentage": True}
+        coupon_obj = Coupon.objects.get(code=coupon_code)
+        coupon_details = {
+            "discount": coupon_obj.discount,
+            "is_percentage": coupon_obj.is_percentage,
+        }
 
         discount_percentage = self.get_discount_percentage(
             lessons=lessons_data, coupon_details=coupon_details

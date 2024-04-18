@@ -39,7 +39,7 @@ export default function WishlistView() {
   const { mutateAsync: deleteWishlist, isLoading: isDeletingWishlist } = useDeleteWishlist();
 
   const prices = useMemo(
-    () => wishlistItems?.map((wishlistItem: ICartProp) => wishlistItem.lesson.price),
+    () => wishlistItems?.map((wishlistItem: ICartProp) => Number(wishlistItem.lesson.price)),
     [wishlistItems],
   );
 

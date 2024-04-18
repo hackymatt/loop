@@ -9,6 +9,7 @@ import { ICourseByCategoryProps } from "src/types/course";
 export const useLessonFields = () => {
   const { data: availableTechnologies, isLoading: isLoadingTechnologies } = useTechnologies({
     sort_by: "name",
+    page_size: -1,
   });
 
   const fields: { [key: string]: JSX.Element } = {

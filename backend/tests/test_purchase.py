@@ -13,6 +13,7 @@ from .factory import (
     create_schedule,
     create_reservation,
     create_review,
+    create_coupon,
 )
 from .helpers import login
 import json
@@ -219,6 +220,27 @@ class PurchaseTest(APITestCase):
             lessons=[self.lesson_6],
         )
 
+        self.coupon_1 = create_coupon(
+            code="aaaaaaaaa",
+            discount=1,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=10)),
+            min_total=0,
+        )
+        self.coupon_2 = create_coupon(
+            code="bbbbbbbbb",
+            discount=1,
+            is_percentage=True,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=10)),
+            min_total=0,
+        )
+
     def test_get_purchase_unauthenticated(self):
         # login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -314,7 +336,7 @@ class PurchaseTest(APITestCase):
                     "lesson": self.lesson_5.id,
                 },
             ],
-            "coupon": "",
+            "coupon": self.coupon_1.code,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -338,7 +360,7 @@ class PurchaseTest(APITestCase):
                     "lesson": self.lesson_5.id,
                 },
             ],
-            "coupon": "value",
+            "coupon": self.coupon_1.code,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -362,7 +384,7 @@ class PurchaseTest(APITestCase):
                     "lesson": self.lesson_5.id,
                 },
             ],
-            "coupon": "perc",
+            "coupon": self.coupon_2.code,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
