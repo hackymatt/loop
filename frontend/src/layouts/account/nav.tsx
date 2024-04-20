@@ -41,8 +41,8 @@ const userNavigations = [
     children: [],
   },
   {
-    title: "Zarządzaj hasłem",
-    path: paths.account.password,
+    title: "Zarządzaj kontem",
+    path: paths.account.manage,
     icon: <Iconify icon="carbon:password" />,
     children: [],
   },

@@ -1,6 +1,7 @@
 // ----------------------------------------------------------------------
 
 import { ILogin, ILoginReturn } from "src/api/auth/login";
+import { IUnregisterReturn } from "src/api/auth/unregister";
 import { ILogout, ILogoutReturn } from "src/api/auth/logout";
 import { IVerify, IVerifyReturn } from "src/api/auth/verify";
 import { IRegister, IRegisterReturn } from "src/api/auth/register";
@@ -15,6 +16,7 @@ export type UserContextProps = {
   isPasswordReset: boolean;
   email: string;
   registerUser: (variables: IRegister) => Promise<IRegisterReturn>;
+  unregisterUser: () => Promise<IUnregisterReturn>;
   verifyUser: (variables: IVerify) => Promise<IVerifyReturn>;
   loginUser: (variables: ILogin) => Promise<ILoginReturn>;
   logoutUser: (variables: ILogout) => Promise<ILogoutReturn>;

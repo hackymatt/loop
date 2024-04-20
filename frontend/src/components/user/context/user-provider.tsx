@@ -6,6 +6,7 @@ import { useMemo, useState, useEffect } from "react";
 import { useVerify } from "src/api/auth/verify";
 import { useLogout } from "src/api/auth/logout";
 import { useRegister } from "src/api/auth/register";
+import { useUnregister } from "src/api/auth/unregister";
 import { useVerifyCode } from "src/api/auth/resend-code";
 import { useLogin, ILoginReturn } from "src/api/auth/login";
 import { usePasswordReset } from "src/api/auth/password-reset";
@@ -32,6 +33,11 @@ export function UserProvider({ children }: Props) {
     isLoading: isLoadingRegister,
   } = useRegister();
   const {
+    mutateAsync: unregister,
+    isSuccess: isSuccessUnregister,
+    isLoading: isLoadingUnregister,
+  } = useUnregister();
+  const {
     mutateAsync: verify,
     isSuccess: isSuccessVerify,
     isLoading: isLoadingVerify,
@@ -57,6 +63,7 @@ export function UserProvider({ children }: Props) {
 
   const isLoading =
     isLoadingRegister ||
+    isLoadingUnregister ||
     isLoadingVerify ||
     isLoadingVerifyCode ||
     isLoadingLogin ||
@@ -70,6 +77,14 @@ export function UserProvider({ children }: Props) {
       setEmail(registerData.email);
     }
   }, [isSuccessRegister, registerData?.email]);
+
+  useEffect(() => {
+    if (isSuccessUnregister) {
+      setIsUnverified(true);
+      setIsRegistered(false);
+      setIsLoggedIn(false);
+    }
+  }, [isSuccessUnregister]);
 
   useEffect(() => {
     if (isSuccessVerify) {
@@ -116,6 +131,7 @@ export function UserProvider({ children }: Props) {
       isPasswordReset,
       email,
       registerUser: register,
+      unregisterUser: unregister,
       verifyUser: verify,
       loginUser: login,
       logoutUser: logout,
@@ -132,6 +148,7 @@ export function UserProvider({ children }: Props) {
       login,
       logout,
       register,
+      unregister,
       resetPassword,
       verify,
       verifyCode,
