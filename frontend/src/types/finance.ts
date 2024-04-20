@@ -10,6 +10,7 @@ export type IFinanceHistoryProp = {
 };
 
 type ILecturer = {
+  uuid: string;
   email: string;
   full_name: string;
   account: string;

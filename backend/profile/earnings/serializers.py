@@ -20,6 +20,7 @@ class LecturerSerializer(ModelSerializer):
     class Meta:
         model = Profile
         fields = (
+            "uuid",
             "email",
             "full_name",
             "street_address",
