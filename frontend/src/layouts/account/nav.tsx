@@ -195,9 +195,22 @@ const adminNavigations = [
     },
     {
       title: "Zarobki",
-      path: `${paths.account.admin.earnings}/?page_size=12`,
+      path: `${paths.account.admin.earnings.company}/?page_size=12`,
       icon: <Iconify icon="carbon:currency-dollar" />,
-      children: [],
+      children: [
+        {
+          title: "Zarobki firmy",
+          path: `${paths.account.admin.earnings.company}/?total=True&page_size=12`,
+          icon: <Iconify icon="carbon:building" />,
+          children: [],
+        },
+        {
+          title: "Zarobki instruktorów",
+          path: `${paths.account.admin.earnings.teachers}/?total=False&page_size=12`,
+          icon: <Iconify icon="carbon:education" />,
+          children: [],
+        },
+      ],
     },
   ],
 ];

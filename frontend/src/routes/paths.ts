@@ -40,7 +40,10 @@ export const paths = {
         list: "/account/admin/coupons/list",
         usage: "/account/admin/coupons/usage",
       },
-      earnings: "/account/admin/earnings",
+      earnings: {
+        company: "/account/admin/earnings/company",
+        teachers: "/account/admin/earnings/teachers",
+      },
     },
     teacher: {
       finance: "/account/teacher/finance",

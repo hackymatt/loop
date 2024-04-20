@@ -16,7 +16,7 @@ type Props = {
   row: IEarningProp;
 };
 
-export default function AccountEarningsTableRow({ row }: Props) {
+export default function AccountEarningsTeachersTableRow({ row }: Props) {
   const inputStyles = {
     pl: 1,
     [`&.${inputBaseClasses.focused}`]: {
@@ -32,20 +32,20 @@ export default function AccountEarningsTableRow({ row }: Props) {
       </TableCell>
 
       <TableCell sx={{ px: 1 }}>
-        <InputBase value={fDate(new Date(2000, row.month, 1), "LLLL")} sx={inputStyles} />
+        <InputBase value={fDate(new Date(2000, row.month - 1, 1), "LLLL")} sx={inputStyles} />
       </TableCell>
 
       <TableCell sx={{ px: 1 }}>
-        <InputBase value={fCurrency(row.cost ?? 0)} sx={inputStyles} />
+        <InputBase value={row.lecturer?.full_name} sx={inputStyles} />
       </TableCell>
 
       <TableCell sx={{ px: 1 }}>
-        <InputBase value={fCurrency(row.profit ?? 0)} sx={inputStyles} />
+        <InputBase value={row.lecturer?.account ?? null} sx={inputStyles} />
       </TableCell>
 
       <TableCell sx={{ px: 1 }}>
         <Stack direction="row" alignItems="center">
-          <InputBase value={fCurrency((row.profit ?? 0) - (row.cost ?? 0))} sx={inputStyles} />
+          <InputBase value={fCurrency(row.earnings ?? 0)} sx={inputStyles} />
           {!row.actual && (
             <Tooltip title="Wartość szacunkowa">
               <Iconify icon="carbon:information-filled" />
