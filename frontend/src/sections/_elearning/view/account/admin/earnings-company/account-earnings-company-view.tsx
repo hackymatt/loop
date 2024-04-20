@@ -23,7 +23,7 @@ import { useEarnings, useEarningsPagesCount } from "src/api/earnings/earnings";
 import Scrollbar from "src/components/scrollbar";
 
 import AccountTableHead from "src/sections/_elearning/account/account-table-head";
-import AccountEarningsTableRow from "src/sections/_elearning/account/admin/account-earnings-table-row";
+import AccountEarningsCompanyTableRow from "src/sections/_elearning/account/admin/account-earnings-table-company-row";
 
 import { IEarningProp } from "src/types/finance";
 import { IQueryParamValue } from "src/types/query-params";
@@ -42,7 +42,7 @@ const ROWS_PER_PAGE_OPTIONS = [3, 6, 12, 24, 36, 60];
 
 // ----------------------------------------------------------------------
 
-export default function AccountEarningsView() {
+export default function AccountEarningsCompanyView() {
   const { palette } = useTheme();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
@@ -108,7 +108,7 @@ export default function AccountEarningsView() {
     <>
       <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
         <Typography variant="h5" sx={{ mb: 3 }}>
-          Zarobki
+          Zarobki firmy
         </Typography>
       </Stack>
 
@@ -202,7 +202,7 @@ export default function AccountEarningsView() {
             {earnings && (
               <TableBody>
                 {earnings.map((row) => (
-                  <AccountEarningsTableRow key={`${row.year}${row.month}`} row={row} />
+                  <AccountEarningsCompanyTableRow key={`${row.year}${row.month}`} row={row} />
                 ))}
               </TableBody>
             )}

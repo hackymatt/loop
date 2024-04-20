@@ -16,7 +16,7 @@ type Props = {
   row: IEarningProp;
 };
 
-export default function AccountEarningsTableRow({ row }: Props) {
+export default function AccountEarningsCompanyTableRow({ row }: Props) {
   const inputStyles = {
     pl: 1,
     [`&.${inputBaseClasses.focused}`]: {
@@ -36,8 +36,16 @@ export default function AccountEarningsTableRow({ row }: Props) {
       </TableCell>
 
       <TableCell sx={{ px: 1 }}>
+        <InputBase value={fCurrency(row.cost ?? 0)} sx={inputStyles} />
+      </TableCell>
+
+      <TableCell sx={{ px: 1 }}>
+        <InputBase value={fCurrency(row.profit ?? 0)} sx={inputStyles} />
+      </TableCell>
+
+      <TableCell sx={{ px: 1 }}>
         <Stack direction="row" alignItems="center">
-          <InputBase value={fCurrency(row.earnings ?? 0)} sx={inputStyles} />
+          <InputBase value={fCurrency((row.profit ?? 0) - (row.cost ?? 0))} sx={inputStyles} />
           {!row.actual && (
             <Tooltip title="Wartość szacunkowa">
               <Iconify icon="carbon:information-filled" />
