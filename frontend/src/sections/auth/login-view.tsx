@@ -36,7 +36,7 @@ export default function LoginView() {
 
   const passwordShow = useBoolean();
 
-  const { loginUser, isUnverified, isLoggedIn } = useUserContext();
+  const { loginUser, isRegistered, isUnverified, isLoggedIn } = useUserContext();
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().required("Adres e-mail jest wymagany").email("Podaj poprawny adres e-mail"),
@@ -74,10 +74,10 @@ export default function LoginView() {
   });
 
   useEffect(() => {
-    if (isUnverified) {
+    if (isRegistered && isUnverified) {
       push(paths.verify);
     }
-  }, [isUnverified, push]);
+  }, [isRegistered, isUnverified, push]);
 
   useEffect(() => {
     if (isLoggedIn) {

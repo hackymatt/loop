@@ -1,5 +1,6 @@
 from profile.users.views import UserViewSet
 from profile.register.views import ProfileRegisterViewSet
+from profile.unregister.views import ProfileUnregisterViewSet
 from profile.verify.views import ProfileVerificationCodeViewSet, ProfileVerifyViewSet
 from profile.login.views import ProfileLoginViewSet
 from profile.logout.views import ProfileLogoutViewSet
@@ -91,6 +92,10 @@ urlpatterns = [
     path("", include(router.urls)),
     path("admin", admin.site.urls),
     path("details", ProfileDetailsViewSet.as_view({"get": "list", "put": "update"})),
+    path(
+        "unregister",
+        ProfileUnregisterViewSet.as_view({"delete": "destroy", "put": "update"}),
+    ),
     path(
         "finance-details",
         FinanceDetailsViewSet.as_view({"get": "list", "put": "update"}),
