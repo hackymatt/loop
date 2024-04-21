@@ -7,6 +7,8 @@ from profile.lecturers.filters import LecturerFilter
 from profile.models import Profile
 from review.models import Review
 from django.db.models import OuterRef, Subquery, Value, Avg
+from django.contrib.auth.models import User
+from django.conf import settings
 from random import sample
 
 
@@ -21,6 +23,10 @@ class LecturerViewSet(ModelViewSet):
         "user__email",
         "user_title",
     ]
+
+    def get_queryset(self):
+        dummy_user = User.objects.get(email=settings.DUMMY_LECTURER_EMAIL)
+        return self.queryset.exclude(user=dummy_user)
 
 
 class BestLecturerViewSet(ModelViewSet):
@@ -42,7 +48,9 @@ class BestLecturerViewSet(ModelViewSet):
         return lecturers
 
     def get_queryset(self):
-        queryset = self.queryset
+        dummy_user = User.objects.get(email=settings.DUMMY_LECTURER_EMAIL)
+
+        queryset = self.queryset.exclude(user=dummy_user)
         queryset = self.get_rating(queryset=queryset).filter(rating__gte=4)
 
         ids = queryset.values_list("id", flat=True)

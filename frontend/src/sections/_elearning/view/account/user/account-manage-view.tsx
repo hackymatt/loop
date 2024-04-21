@@ -18,12 +18,15 @@ import { useRouter } from "src/routes/hooks/use-router";
 import { useBoolean } from "src/hooks/use-boolean";
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
+import { useUserDetails } from "src/api/auth/details";
 import { usePasswordChange } from "src/api/auth/password-change";
 
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
+
+import { UserType } from "src/types/user";
 
 import AccountDeleteForm from "./account-delete-form";
 
@@ -33,6 +36,8 @@ export default function AccountManageView() {
   const { enqueueSnackbar } = useToastContext();
   const { push } = useRouter();
   const { logoutUser, isLoggedIn } = useUserContext();
+
+  const { data: userDetails } = useUserDetails();
 
   const passwordShow = useBoolean();
   const deleteAccountFormOpen = useBoolean();
@@ -162,6 +167,7 @@ export default function AccountManageView() {
           size="medium"
           variant="contained"
           onClick={deleteAccountFormOpen.onToggle}
+          disabled={userDetails?.user_type === UserType.Admin}
         >
           Usuń konto
         </Button>
