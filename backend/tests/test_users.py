@@ -119,7 +119,7 @@ class UsersTest(APITestCase):
         data = json.loads(response.content)
         count = data["records_count"]
         results = data["results"]
-        self.assertEqual(count, 6)
+        self.assertEqual(count, 8)
         for data in results:
             user_data = filter_dict(data, self.user_columns)
             profile_data = filter_dict(data, self.profile_columns)

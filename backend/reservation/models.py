@@ -3,6 +3,7 @@ from django.db.models import (
     UniqueConstraint,
     ForeignKey,
     CASCADE,
+    PROTECT,
     Index,
 )
 from profile.models import Profile
@@ -13,7 +14,7 @@ from purchase.models import Purchase
 
 class Reservation(BaseModel):
     student = ForeignKey(Profile, on_delete=CASCADE, related_name="reservation_student")
-    lesson = ForeignKey(Lesson, on_delete=CASCADE, related_name="reservation_lesson")
+    lesson = ForeignKey(Lesson, on_delete=PROTECT, related_name="reservation_lesson")
     schedule = ForeignKey(
         Schedule, on_delete=CASCADE, related_name="reservation_schedule"
     )

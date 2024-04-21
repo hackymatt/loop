@@ -2854,7 +2854,7 @@ class UsersFilerTest(APITestCase):
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 2)
+        self.assertEqual(records_count, 3)
         values = list(set([variable in record[column].lower() for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
@@ -2870,7 +2870,7 @@ class UsersFilerTest(APITestCase):
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 6)
+        self.assertEqual(records_count, 8)
         values = list(set([variable in record[column].lower() for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])

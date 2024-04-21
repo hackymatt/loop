@@ -174,6 +174,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "")
 
+DUMMY_STUDENT_EMAIL = os.getenv("DUMMY_STUDENT_EMAIL", "")
+DUMMY_STUDENT_PASSWORD = os.getenv("DUMMY_STUDENT_PASSWORD", "")
+DUMMY_LECTURER_EMAIL = os.getenv("DUMMY_LECTURER_EMAIL", "")
+DUMMY_LECTURER_PASSWORD = os.getenv("DUMMY_LECTURER_PASSWORD", "")
+
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = bool(os.getenv("EMAIL_USE_TLS", "True"))
 EMAIL_FROM = os.getenv("EMAIL_FROM", "")

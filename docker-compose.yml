@@ -20,6 +20,10 @@ services:
       - DB_PORT=5432
       - ADMIN_EMAIL=matios94@gmail.com
       - ADMIN_PASSWORD=19Mateusz94!
+      - DUMMY_STUDENT_EMAIL=dummy_student@example.com
+      - DUMMY_STUDENT_PASSWORD=19Mateusz94!
+      - DUMMY_LECTURER_EMAIL=dummy_lecturer@example.com
+      - DUMMY_LECTURER_PASSWORD=19Mateusz94!
       - EMAIL_USE_TLS=True
       - EMAIL_FROM=matios94@gmail.com
       - EMAIL_HOST=smtp.gmail.com

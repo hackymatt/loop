@@ -38,7 +38,7 @@ class RegisterTest(APITestCase):
         data["email"] = "email@example.com"
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(users_number(), 2)
+        self.assertEqual(users_number(), 4)
         self.assertEqual(emails_sent_number(), 0)
         self.assertEqual(newsletters_number(), 0)
 
@@ -49,7 +49,7 @@ class RegisterTest(APITestCase):
         data["password"] = new_password
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(users_number(), 2)
+        self.assertEqual(users_number(), 4)
         self.assertEqual(emails_sent_number(), 0)
         self.assertEqual(newsletters_number(), 0)
 
@@ -59,7 +59,7 @@ class RegisterTest(APITestCase):
         data["password"] = new_password
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(users_number(), 2)
+        self.assertEqual(users_number(), 4)
         self.assertEqual(emails_sent_number(), 0)
         self.assertEqual(newsletters_number(), 0)
 
@@ -69,7 +69,7 @@ class RegisterTest(APITestCase):
         data["password"] = new_password
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(users_number(), 2)
+        self.assertEqual(users_number(), 4)
         self.assertEqual(emails_sent_number(), 0)
         self.assertEqual(newsletters_number(), 0)
 
@@ -79,7 +79,7 @@ class RegisterTest(APITestCase):
         data["password"] = new_password
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(users_number(), 2)
+        self.assertEqual(users_number(), 4)
         self.assertEqual(emails_sent_number(), 0)
         self.assertEqual(newsletters_number(), 0)
 
@@ -89,7 +89,7 @@ class RegisterTest(APITestCase):
         data["password"] = new_password
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(users_number(), 2)
+        self.assertEqual(users_number(), 4)
         self.assertEqual(emails_sent_number(), 0)
         self.assertEqual(newsletters_number(), 0)
 
@@ -100,15 +100,15 @@ class RegisterTest(APITestCase):
         data["password2"] = new_password_2
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(users_number(), 2)
+        self.assertEqual(users_number(), 4)
         self.assertEqual(emails_sent_number(), 0)
         self.assertEqual(newsletters_number(), 0)
 
     def test_register_success_without_newsletter(self):
         response = self.client.post(self.endpoint, self.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(users_number(), 3)
-        self.assertEqual(profiles_number(), 2)
+        self.assertEqual(users_number(), 5)
+        self.assertEqual(profiles_number(), 4)
         self.assertTrue(is_user_found(self.data["email"]))
 
         user = get_user(self.data["email"])
@@ -139,8 +139,8 @@ class RegisterTest(APITestCase):
         create_newsletter(email=self.data["email"], active=False)
         response = self.client.post(self.endpoint, self.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(users_number(), 3)
-        self.assertEqual(profiles_number(), 2)
+        self.assertEqual(users_number(), 5)
+        self.assertEqual(profiles_number(), 4)
         self.assertTrue(is_user_found(self.data["email"]))
 
         user = get_user(self.data["email"])

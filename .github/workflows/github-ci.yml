@@ -2,20 +2,19 @@ name: GithubCI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
 
 jobs:
-
   lint_backend:
-    runs-on: ubuntu-latest 
-    
+    runs-on: ubuntu-latest
+
     defaults:
       run:
         shell: bash
         working-directory: ${{ github.workspace }}/backend
-    
+
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v4
@@ -24,23 +23,22 @@ jobs:
       - name: Upgrade pip
         run: pip install --upgrade pip
       - name: Install lint requirements
-        run: pip install -r requirements_lint.txt 
+        run: pip install -r requirements_lint.txt
       - name: Install requirements
-        run: pip install -r requirements.txt 
+        run: pip install -r requirements.txt
       - name: Test code quality
         run: pylint backend --recursive=true --fail-under=10
       - name: Test code formatting
         run: black . --check
 
-
   lint_frontend:
-    runs-on: ubuntu-latest 
-    
+    runs-on: ubuntu-latest
+
     defaults:
       run:
         shell: bash
         working-directory: ${{ github.workspace }}/frontend
-    
+
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v4
@@ -52,16 +50,15 @@ jobs:
         run: npm run lint:check
       - name: Test code formatting
         run: npm run prettier:check
-      
 
   test_backend:
-    runs-on: ubuntu-latest 
-    
+    runs-on: ubuntu-latest
+
     defaults:
       run:
         shell: bash
         working-directory: ${{ github.workspace }}/backend
-    
+
     env:
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_HOST: ${{ secrets.DB_HOST }}
@@ -70,6 +67,12 @@ jobs:
 
       ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+
+      DUMMY_STUDENT_EMAIL: ${{ secrets.DUMMY_STUDENT_EMAIL }}
+      DUMMY_STUDENT_PASSWORD: ${{ secrets.DUMMY_STUDENT_PASSWORD }}
+
+      DUMMY_LECTURER_EMAIL: ${{ secrets.DUMMY_LECTURER_EMAIL }}
+      DUMMY_LECTURER_PASSWORD: ${{ secrets.DUMMY_LECTURER_PASSWORD }}
 
       EMAIL_USE_TLS: ${{ secrets.EMAIL_USE_TLS }}
       EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
@@ -97,22 +100,22 @@ jobs:
       - name: Upgrade pip
         run: pip install --upgrade pip
       - name: Install test requirements
-        run: pip install -r requirements_test.txt 
+        run: pip install -r requirements_test.txt
       - name: Install requirements
-        run: pip install -r requirements.txt 
+        run: pip install -r requirements.txt
       - name: Run tests
         run: coverage run manage.py test
       - name: Print report
         run: coverage report
 
   test_frontend:
-    runs-on: ubuntu-latest 
-    
+    runs-on: ubuntu-latest
+
     defaults:
       run:
         shell: bash
         working-directory: ${{ github.workspace }}/frontend
-    
+
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v4
@@ -122,4 +125,3 @@ jobs:
         run: npm install
       - name: Run tests
         run: npm run test:coverage
-      
