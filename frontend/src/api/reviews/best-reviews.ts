@@ -8,7 +8,7 @@ import { Api } from "../service";
 const endpoint = "/best-reviews" as const;
 
 type IStudent = {
-  full_name: string;
+  first_name: string;
   email: string;
   gender: IGender | null;
   image: string | null;
@@ -27,10 +27,10 @@ export const bestReviewsQuery = () => {
     const { data } = await Api.get(url);
     const { results, records_count } = data;
     const modifiedResults = results.map(({ id, student, review }: IReview) => {
-      const { full_name, gender, image } = student;
+      const { first_name, gender, image } = student;
       return {
         id,
-        name: full_name,
+        name: first_name,
         gender,
         review,
         avatarUrl: image,

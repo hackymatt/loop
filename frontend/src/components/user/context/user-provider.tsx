@@ -116,6 +116,7 @@ export function UserProvider({ children }: Props) {
       if (loginError) {
         if ((loginError as AxiosError).response?.status === 403) {
           setEmail(((loginError as AxiosError).response?.data as ILoginReturn).email);
+          setIsRegistered(true);
           setIsUnverified(true);
         }
       }

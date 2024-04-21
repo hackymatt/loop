@@ -388,3 +388,27 @@ class PurchaseTest(APITestCase):
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_create_purchase_3_authenticated(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        self.lesson_5.active = True
+        self.lesson_5.save()
+        self.lesson_6.active = True
+        self.lesson_6.save()
+
+        data = {
+            "lessons": [
+                {
+                    "lesson": self.lesson_6.id,
+                },
+                {
+                    "lesson": self.lesson_5.id,
+                },
+            ],
+            "coupon": "",
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

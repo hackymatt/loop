@@ -12,7 +12,23 @@ from profile.models import Profile
 from purchase.models import Purchase
 
 
-class ProfileSerializer(ModelSerializer):
+class StudentSerializer(ModelSerializer):
+    first_name = CharField(source="user.first_name")
+    email = EmailField(source="user.email")
+    gender = CharField(source="get_gender_display")
+    image = ImageField()
+
+    class Meta:
+        model = Profile
+        fields = (
+            "first_name",
+            "email",
+            "gender",
+            "image",
+        )
+
+
+class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
     email = EmailField(source="user.email")
     gender = CharField(source="get_gender_display")
@@ -32,7 +48,7 @@ class ProfileSerializer(ModelSerializer):
 
 
 class BestReviewSerializer(ModelSerializer):
-    student = ProfileSerializer()
+    student = StudentSerializer()
 
     class Meta:
         model = Review
@@ -47,8 +63,8 @@ class BestReviewSerializer(ModelSerializer):
 
 class ReviewGetSerializer(ModelSerializer):
     lesson_title = CharField(source="lesson.title")
-    student = ProfileSerializer()
-    lecturer = ProfileSerializer()
+    student = StudentSerializer()
+    lecturer = LecturerSerializer()
 
     class Meta:
         model = Review
