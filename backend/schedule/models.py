@@ -4,6 +4,7 @@ from django.db.models import (
     ForeignKey,
     DateTimeField,
     CASCADE,
+    PROTECT,
     Index,
 )
 from profile.models import Profile
@@ -15,7 +16,7 @@ class Schedule(BaseModel):
     start_time = DateTimeField()
     end_time = DateTimeField()
     lesson = ForeignKey(
-        Lesson, on_delete=CASCADE, related_name="schedule_lesson", null=True, blank=True
+        Lesson, on_delete=PROTECT, related_name="schedule_lesson", null=True, blank=True
     )
 
     class Meta:

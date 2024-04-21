@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 (
                     "lesson",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
+                        on_delete=django.db.models.deletion.PROTECT,
                         related_name="reservation_lesson",
                         to="lesson.lesson",
                     ),
