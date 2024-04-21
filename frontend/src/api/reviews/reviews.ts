@@ -14,7 +14,14 @@ import { purchaseQuery } from "../purchase/purchase";
 
 const endpoint = "/reviews" as const;
 
-type IProfile = {
+type IStudent = {
+  first_name: string;
+  email: string;
+  gender: IGender | null;
+  image: string | null;
+};
+
+type ILecturer = {
   full_name: string;
   email: string;
   gender: IGender | null;
@@ -24,8 +31,8 @@ type IProfile = {
 type IReview = {
   id: number;
   lesson_title: string;
-  student: IProfile;
-  lecturer: IProfile;
+  student: IStudent;
+  lecturer: ILecturer;
   created_at: string;
   review?: string | null;
   rating: number;
@@ -43,11 +50,15 @@ export const reviewsQuery = (query?: IQueryParams) => {
     const { results, records_count, pages_count } = data;
     const modifiedResults = results.map(
       ({ id, lesson_title, student, lecturer, created_at, review, rating }: IReview) => {
-        const { full_name: studentFullName, gender: studentGender, image: studentImage } = student;
+        const {
+          first_name: studentFirstName,
+          gender: studentGender,
+          image: studentImage,
+        } = student;
         const { full_name: lecturerFullName } = lecturer;
         return {
           id,
-          name: studentFullName,
+          name: studentFirstName,
           rating: parseFloat(rating.toString()),
           createdAt: created_at,
           gender: studentGender,

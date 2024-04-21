@@ -74,34 +74,39 @@ class PurchaseViewSet(ModelViewSet):
             raise ValidationError({"lessons": serializer.errors})
 
         lessons_data = [dict(item) for item in serializer.data]
-        valid, error_message = validate_coupon(
-            coupon_code=coupon_code,
-            user=profile,
-            total=self.get_total_price(lessons=lessons),
-        )
-        if not valid:
-            raise ValidationError({"coupon": error_message})
 
-        # use coupon
-        coupon_obj = Coupon.objects.get(code=coupon_code)
-        coupon_details = {
-            "discount": coupon_obj.discount,
-            "is_percentage": coupon_obj.is_percentage,
-        }
+        if coupon_code != "":
+            valid, error_message = validate_coupon(
+                coupon_code=coupon_code,
+                user=profile,
+                total=self.get_total_price(lessons=lessons),
+            )
+            if not valid:
+                raise ValidationError({"coupon": error_message})
 
-        discount_percentage = self.get_discount_percentage(
-            lessons=lessons_data, coupon_details=coupon_details
-        )
+            # use coupon
+            coupon_obj = Coupon.objects.get(code=coupon_code)
+            coupon_details = {
+                "discount": coupon_obj.discount,
+                "is_percentage": coupon_obj.is_percentage,
+            }
 
-        records = self.discount_lesson_price(
-            lessons=lessons_data, discount_percentage=discount_percentage
-        )
+            discount_percentage = self.get_discount_percentage(
+                lessons=lessons_data, coupon_details=coupon_details
+            )
+
+            records = self.discount_lesson_price(
+                lessons=lessons_data, discount_percentage=discount_percentage
+            )
+            total = self.get_discounted_total(
+                total_price=self.get_total_price(lessons=records),
+                coupon_details=coupon_details,
+            )
+        else:
+            records = lessons_data
+            total = self.get_total_price(lessons=records)
 
         # make payment
-        total = self.get_discounted_total(
-            total_price=self.get_total_price(lessons=records),
-            coupon_details=coupon_details,
-        )
         is_payment_successful = total > 1
         if not is_payment_successful:
             raise ValidationError({"payment": "Płatność odrzucona."})
