@@ -2465,7 +2465,7 @@ class UsersOrderTest(APITestCase):
             data = json.loads(response.content)
             count = data["records_count"]
             results = data["results"]
-            self.assertEqual(count, 6)
+            self.assertEqual(count, 8)
             field_values = [user[field] for user in results]
             field_values = [value for value in field_values if value is not None]
             if isinstance(field_values[0], dict):
@@ -2484,7 +2484,7 @@ class UsersOrderTest(APITestCase):
             data = json.loads(response.content)
             count = data["records_count"]
             results = data["results"]
-            self.assertEqual(count, 6)
+            self.assertEqual(count, 8)
             field_values = [user[field] for user in results]
             field_values = [value for value in field_values if value is not None]
             if isinstance(field_values[0], dict):

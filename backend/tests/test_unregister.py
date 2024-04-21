@@ -58,8 +58,8 @@ class UnregisterTest(APITestCase):
         response = self.client.delete(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertTrue(is_user_found(self.data["email"]))
-        self.assertEqual(profiles_number(), 4)
-        self.assertEqual(users_number(), 4)
+        self.assertEqual(profiles_number(), 6)
+        self.assertEqual(users_number(), 6)
 
     def test_delete_authenticated_admin(self):
         # login
@@ -69,8 +69,8 @@ class UnregisterTest(APITestCase):
         response = self.client.delete(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertTrue(is_user_found(self.admin_data["email"]))
-        self.assertEqual(profiles_number(), 4)
-        self.assertEqual(users_number(), 4)
+        self.assertEqual(profiles_number(), 6)
+        self.assertEqual(users_number(), 6)
 
     def test_delete_authenticated_lecturer(self):
         # login
@@ -80,8 +80,8 @@ class UnregisterTest(APITestCase):
         response = self.client.delete(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(is_user_found(self.lecturer_data["email"]))
-        self.assertEqual(profiles_number(), 3)
-        self.assertEqual(users_number(), 3)
+        self.assertEqual(profiles_number(), 5)
+        self.assertEqual(users_number(), 5)
 
     def test_delete_authenticated_student(self):
         # login
@@ -91,5 +91,5 @@ class UnregisterTest(APITestCase):
         response = self.client.delete(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(is_user_found(self.data["email"]))
-        self.assertEqual(profiles_number(), 3)
-        self.assertEqual(users_number(), 3)
+        self.assertEqual(profiles_number(), 5)
+        self.assertEqual(users_number(), 5)
