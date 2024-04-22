@@ -15,6 +15,9 @@ export const paths = {
   checkout: "/checkout",
   orderCompleted: "/order-completed",
   wishlist: "/wishlist",
+  support: "/support",
+  privacyPolicy: "/privacy-policy",
+  termsAndConditions: "/terms-and-conditions",
   account: {
     root: "/account",
     personal: "/account/personal",
@@ -125,7 +128,6 @@ export const paths = {
   pricing01: "/other/pricing-01",
   pricing02: "/other/pricing-02",
   payment: "/other/payment",
-  support: "/other/support",
   page404: "/other/error/404",
   page500: "/other/error/500",
   // Components
