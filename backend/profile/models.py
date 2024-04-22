@@ -30,14 +30,14 @@ class Profile(BaseModel):
         ("A", "Admin"),
     )
     JOIN_CHOICES = (
-        ("E", "Email"),
-        ("G", "Goggle"),
-        ("F", "Facebook"),
-        ("G", "GitHub"),
+        ("Email", "Email"),
+        ("Goggle", "Goggle"),
+        ("Facebook", "Facebook"),
+        ("GitHub", "GitHub"),
     )
     uuid = UUIDField(default=uuid.uuid4)
     user = OneToOneField(User, on_delete=CASCADE)
-    join_type = CharField(choices=JOIN_CHOICES, default="E")
+    join_type = CharField(choices=JOIN_CHOICES, default="Email")
     user_type = CharField(choices=USER_TYPE_CHOICES, default="S")
     user_title = CharField(null=True, blank=True)
     verification_code = CharField(max_length=8, null=True)

@@ -34,12 +34,12 @@ class Migration(migrations.Migration):
                     "join_type",
                     models.CharField(
                         choices=[
-                            ("E", "Email"),
-                            ("G", "Goggle"),
-                            ("F", "Facebook"),
-                            ("G", "GitHub"),
+                            ("Email", "Email"),
+                            ("Goggle", "Goggle"),
+                            ("Facebook", "Facebook"),
+                            ("GitHub", "GitHub"),
                         ],
-                        default="E",
+                        default="Email",
                     ),
                 ),
                 (
