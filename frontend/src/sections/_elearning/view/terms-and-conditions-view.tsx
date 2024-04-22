@@ -13,9 +13,9 @@ import { _faqsSupport } from "src/_mock";
 
 import Iconify from "src/components/iconify";
 
-import SupportNav from "../support-nav";
-import SupportHero from "../support-hero";
-import SupportContent from "../support-content";
+import SupportNav from "../support/support-nav";
+import SupportHero from "../support/support-hero";
+import SupportContent from "../support/support-content";
 
 // ----------------------------------------------------------------------
 
@@ -54,7 +54,7 @@ const TOPICS = [
 
 // ----------------------------------------------------------------------
 
-export default function SupportView() {
+export default function TermsAndConditionsView() {
   const [topic, setTopic] = useState("Payment");
 
   const mobileOpen = useBoolean();

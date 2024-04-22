@@ -115,21 +115,19 @@ export function NewsletterEmail({ buttonLabel = "Zapisz", sx }: Props) {
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
-      <Stack spacing={2.5} direction="row">
+      <Stack spacing={2.5} direction="row" alignItems="center">
         <RHFTextField name="email" label="Wpisz swój adres e-mail" />
 
-        <Stack justifyContent="flex-start">
-          <LoadingButton
-            color="primary"
-            size="large"
-            variant="contained"
-            type="submit"
-            loading={isSubmitting}
-            sx={sx}
-          >
-            {buttonLabel}
-          </LoadingButton>
-        </Stack>
+        <LoadingButton
+          color="primary"
+          size="large"
+          variant="contained"
+          type="submit"
+          loading={isSubmitting}
+          sx={sx}
+        >
+          {buttonLabel}
+        </LoadingButton>
       </Stack>
     </FormProvider>
   );
