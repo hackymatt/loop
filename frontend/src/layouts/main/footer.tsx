@@ -22,7 +22,11 @@ import { NewsletterEmail } from "src/sections/_elearning/newsletter/newsletter";
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
-  const { data: technologies } = useTechnologies({ sort_by: "name", page_size: -1 });
+  const { data: technologies } = useTechnologies({
+    courses_count_from: 1,
+    sort_by: "name",
+    page_size: -1,
+  });
 
   const mainFooter = (
     <>
