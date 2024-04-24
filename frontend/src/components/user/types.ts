@@ -6,6 +6,7 @@ import { ILogout, ILogoutReturn } from "src/api/auth/logout";
 import { IVerify, IVerifyReturn } from "src/api/auth/verify";
 import { IRegister, IRegisterReturn } from "src/api/auth/register";
 import { IVerifyCode, IVerifyCodeReturn } from "src/api/auth/resend-code";
+import { ILoginGoogle, ILoginGoogleReturn } from "src/api/auth/login-google";
 import { IPasswordReset, IPasswordResetReturn } from "src/api/auth/password-reset";
 
 export type UserContextProps = {
@@ -19,6 +20,7 @@ export type UserContextProps = {
   unregisterUser: () => Promise<IUnregisterReturn>;
   verifyUser: (variables: IVerify) => Promise<IVerifyReturn>;
   loginUser: (variables: ILogin) => Promise<ILoginReturn>;
+  loginGoogleUser: (variables: ILoginGoogle) => Promise<ILoginGoogleReturn>;
   logoutUser: (variables: ILogout) => Promise<ILogoutReturn>;
   resendVerificationCode: (variables: IVerifyCode) => Promise<IVerifyCodeReturn>;
   resetUserPassword: (variables: IPasswordReset) => Promise<IPasswordResetReturn>;

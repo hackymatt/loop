@@ -1,10 +1,11 @@
 "use client";
 
 import * as Yup from "yup";
-import { useEffect } from "react";
+import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useMemo, useEffect, useCallback } from "react";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
@@ -18,7 +19,9 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
+import { useGoogleAuth } from "src/hooks/google";
 import { useBoolean } from "src/hooks/use-boolean";
+import { useQueryParams } from "src/hooks/use-query-params";
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import Iconify from "src/components/iconify";
@@ -30,12 +33,17 @@ import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 export default function RegisterView() {
   const { enqueueSnackbar } = useToastContext();
+  const { getQueryParams } = useQueryParams();
 
   const { push } = useRouter();
 
   const passwordShow = useBoolean();
 
-  const { registerUser, isRegistered } = useUserContext();
+  const { authUrl: googleAuthUrl } = useGoogleAuth();
+
+  const queryParams = useMemo(() => getQueryParams(), [getQueryParams]);
+
+  const { registerUser, loginGoogleUser, isRegistered, isLoggedIn } = useUserContext();
 
   const RegisterSchema = Yup.object().shape({
     first_name: Yup.string().required("Imię jest wymagane"),
@@ -74,7 +82,7 @@ export default function RegisterView() {
 
   const handleFormError = useFormErrorHandler(methods);
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onEmailSubmit = handleSubmit(async (data) => {
     clearErrors();
     try {
       await registerUser(data);
@@ -84,11 +92,41 @@ export default function RegisterView() {
     }
   });
 
+  const onGoogleSubmit = useCallback(async () => {
+    clearErrors();
+    try {
+      const { code, scope, authuser, prompt } = queryParams;
+      await loginGoogleUser({ code, scope, authuser, prompt });
+      enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
+    } catch (error) {
+      if ((error as AxiosError).response?.status !== 403) {
+        handleFormError(error);
+      }
+    }
+  }, [clearErrors, enqueueSnackbar, handleFormError, loginGoogleUser, queryParams]);
+
   useEffect(() => {
     if (isRegistered) {
       push(paths.verify);
     }
   }, [isRegistered, push]);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      push(paths.account.personal);
+    }
+  }, [isLoggedIn, push]);
+
+  useEffect(() => {
+    const { type } = queryParams;
+    switch (type) {
+      case "google":
+        onGoogleSubmit();
+        break;
+      default:
+        break;
+    }
+  }, [onGoogleSubmit, queryParams]);
 
   const renderHead = (
     <div>
@@ -107,7 +145,14 @@ export default function RegisterView() {
 
   const renderSocials = (
     <Stack direction="row" spacing={2}>
-      <Button fullWidth size="large" color="inherit" variant="outlined">
+      <Button
+        component={RouterLink}
+        href={googleAuthUrl}
+        fullWidth
+        size="large"
+        color="inherit"
+        variant="outlined"
+      >
         <Iconify icon="logos:google-icon" width={24} />
       </Button>
 
@@ -122,7 +167,7 @@ export default function RegisterView() {
   );
 
   const renderForm = (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
+    <FormProvider methods={methods} onSubmit={onEmailSubmit}>
       <Stack spacing={2.5}>
         <RHFTextField name="first_name" label="Imię" />
 
@@ -173,11 +218,21 @@ export default function RegisterView() {
 
         <Typography variant="caption" align="center" sx={{ color: "text.secondary", mt: 1 }}>
           Klikając przycisk Zarejestruj się, akceptujesz nasz{" "}
-          <Link color="text.primary" href="#" underline="always">
+          <Link
+            component={RouterLink}
+            href={paths.termsAndConditions}
+            color="text.primary"
+            underline="always"
+          >
             Regulamin
           </Link>{" "}
           oraz{" "}
-          <Link color="text.primary" href="#" underline="always">
+          <Link
+            component={RouterLink}
+            href={paths.privacyPolicy}
+            color="text.primary"
+            underline="always"
+          >
             Politykę prywatności.
           </Link>
         </Typography>

@@ -8,6 +8,7 @@ import { useLogout } from "src/api/auth/logout";
 import { useRegister } from "src/api/auth/register";
 import { useUnregister } from "src/api/auth/unregister";
 import { useVerifyCode } from "src/api/auth/resend-code";
+import { useLoginGoogle } from "src/api/auth/login-google";
 import { useLogin, ILoginReturn } from "src/api/auth/login";
 import { usePasswordReset } from "src/api/auth/password-reset";
 
@@ -51,6 +52,13 @@ export function UserProvider({ children }: Props) {
     isLoading: isLoadingLogin,
   } = useLogin();
   const {
+    mutateAsync: loginGoogle,
+    isSuccess: isSuccessLoginGoogle,
+    isError: isErrorLoginGoogle,
+    error: loginGoogleError,
+    isLoading: isLoadingLoginGoogle,
+  } = useLoginGoogle();
+  const {
     mutateAsync: logout,
     isSuccess: isSuccessLogout,
     isLoading: isLoadingLogout,
@@ -67,6 +75,7 @@ export function UserProvider({ children }: Props) {
     isLoadingVerify ||
     isLoadingVerifyCode ||
     isLoadingLogin ||
+    isLoadingLoginGoogle ||
     isLoadingLogout ||
     isLoadingPasswordReset;
 
@@ -94,10 +103,10 @@ export function UserProvider({ children }: Props) {
   }, [isSuccessVerify]);
 
   useEffect(() => {
-    if (isSuccessLogin) {
+    if (isSuccessLogin || isSuccessLoginGoogle) {
       setIsLoggedIn(true);
     }
-  }, [isSuccessLogin]);
+  }, [isSuccessLogin, isSuccessLoginGoogle]);
 
   useEffect(() => {
     if (isSuccessLogout) {
@@ -112,16 +121,16 @@ export function UserProvider({ children }: Props) {
   }, [isSuccessPasswordReset]);
 
   useEffect(() => {
-    if (isErrorLogin) {
-      if (loginError) {
-        if ((loginError as AxiosError).response?.status === 403) {
+    if (isErrorLogin || isErrorLoginGoogle) {
+      if (loginError || loginGoogleError) {
+        if (((loginError || loginGoogleError) as AxiosError).response?.status === 403) {
           setEmail(((loginError as AxiosError).response?.data as ILoginReturn).email);
           setIsRegistered(true);
           setIsUnverified(true);
         }
       }
     }
-  }, [isErrorLogin, loginError]);
+  }, [isErrorLogin, isErrorLoginGoogle, loginError, loginGoogleError]);
 
   const memoizedValue = useMemo(
     () => ({
@@ -135,24 +144,26 @@ export function UserProvider({ children }: Props) {
       unregisterUser: unregister,
       verifyUser: verify,
       loginUser: login,
+      loginGoogleUser: loginGoogle,
       logoutUser: logout,
       resendVerificationCode: verifyCode,
       resetUserPassword: resetPassword,
     }),
     [
-      email,
       isLoading,
-      isLoggedIn,
-      isPasswordReset,
       isRegistered,
+      isLoggedIn,
       isUnverified,
-      login,
-      logout,
+      isPasswordReset,
+      email,
       register,
       unregister,
-      resetPassword,
       verify,
+      login,
+      loginGoogle,
+      logout,
       verifyCode,
+      resetPassword,
     ],
   );
 

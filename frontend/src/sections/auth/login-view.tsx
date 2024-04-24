@@ -1,11 +1,11 @@
 "use client";
 
 import * as Yup from "yup";
-import { useEffect } from "react";
 import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useMemo, useEffect, useCallback } from "react";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
@@ -19,7 +19,9 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
+import { useGoogleAuth } from "src/hooks/google";
 import { useBoolean } from "src/hooks/use-boolean";
+import { useQueryParams } from "src/hooks/use-query-params";
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import Iconify from "src/components/iconify";
@@ -31,12 +33,17 @@ import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 export default function LoginView() {
   const { enqueueSnackbar } = useToastContext();
+  const { getQueryParams } = useQueryParams();
 
   const { push } = useRouter();
 
   const passwordShow = useBoolean();
 
-  const { loginUser, isRegistered, isUnverified, isLoggedIn } = useUserContext();
+  const { authUrl: googleAuthUrl } = useGoogleAuth();
+
+  const queryParams = useMemo(() => getQueryParams(), [getQueryParams]);
+
+  const { loginUser, loginGoogleUser, isRegistered, isUnverified, isLoggedIn } = useUserContext();
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().required("Adres e-mail jest wymagany").email("Podaj poprawny adres e-mail"),
@@ -61,7 +68,7 @@ export default function LoginView() {
 
   const handleFormError = useFormErrorHandler(methods);
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onEmailSubmit = handleSubmit(async (data) => {
     clearErrors();
     try {
       await loginUser(data);
@@ -69,9 +76,26 @@ export default function LoginView() {
     } catch (error) {
       if ((error as AxiosError).response?.status !== 403) {
         handleFormError(error);
+      } else {
+        enqueueSnackbar("Wystąpił błąd podczas logowania", { variant: "error" });
       }
     }
   });
+
+  const onGoogleSubmit = useCallback(async () => {
+    clearErrors();
+    try {
+      const { code, scope, authuser, prompt } = queryParams;
+      await loginGoogleUser({ code, scope, authuser, prompt });
+      enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
+    } catch (error) {
+      if ((error as AxiosError).response?.status !== 403) {
+        handleFormError(error);
+      } else {
+        enqueueSnackbar("Wystąpił błąd podczas logowania", { variant: "error" });
+      }
+    }
+  }, [clearErrors, enqueueSnackbar, handleFormError, loginGoogleUser, queryParams]);
 
   useEffect(() => {
     if (isRegistered && isUnverified) {
@@ -84,6 +108,17 @@ export default function LoginView() {
       push(paths.account.personal);
     }
   }, [isLoggedIn, push]);
+
+  useEffect(() => {
+    const { type } = queryParams;
+    switch (type) {
+      case "google":
+        onGoogleSubmit();
+        break;
+      default:
+        break;
+    }
+  }, [onGoogleSubmit, queryParams]);
 
   const renderHead = (
     <div>
@@ -102,7 +137,14 @@ export default function LoginView() {
 
   const renderSocials = (
     <Stack direction="row" spacing={2}>
-      <Button fullWidth size="large" color="inherit" variant="outlined">
+      <Button
+        component={RouterLink}
+        href={googleAuthUrl}
+        fullWidth
+        size="large"
+        color="inherit"
+        variant="outlined"
+      >
         <Iconify icon="logos:google-icon" width={24} />
       </Button>
 
@@ -117,7 +159,7 @@ export default function LoginView() {
   );
 
   const renderForm = (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
+    <FormProvider methods={methods} onSubmit={onEmailSubmit}>
       <Stack spacing={2.5} alignItems="flex-end">
         <RHFTextField name="email" label="Adres e-mail" />
 
