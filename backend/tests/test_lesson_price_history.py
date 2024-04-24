@@ -19,7 +19,7 @@ import json
 
 class LessonPriceHistoryTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/lesson-price-history"
+        self.endpoint = "/api/lesson-price-history"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",

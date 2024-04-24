@@ -24,7 +24,7 @@ from django.utils.timezone import make_aware
 
 class UnregisterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/unregister"
+        self.endpoint = "/api/unregister"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",

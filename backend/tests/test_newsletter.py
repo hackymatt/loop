@@ -15,7 +15,7 @@ import json
 
 class NewsletterEntriesTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/newsletter"
+        self.endpoint = "/api/newsletter"
 
         self.admin_data = {
             "email": "admin_test_email@example.com",
@@ -127,7 +127,7 @@ class NewsletterEntriesTest(APITestCase):
 
 class NewsletterSubscribeTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/newsletter-subscribe"
+        self.endpoint = "/api/newsletter-subscribe"
 
     def test_subscribe_to_newsletter_without_history(self):
         # post data
@@ -155,7 +155,7 @@ class NewsletterSubscribeTest(APITestCase):
 
 class NewsletterUnsubscribeTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/newsletter-unsubscribe"
+        self.endpoint = "/api/newsletter-unsubscribe"
 
         self.newsletter = create_newsletter(email="test@example.com")
 

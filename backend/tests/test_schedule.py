@@ -30,7 +30,7 @@ from django.utils.timezone import make_aware
 
 class ScheduleTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/schedules"
+        self.endpoint = "/api/schedules"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",

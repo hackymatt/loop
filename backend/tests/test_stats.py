@@ -16,7 +16,7 @@ import json
 
 class StatsTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/stats"
+        self.endpoint = "/api/stats"
         self.user_1 = create_user(
             first_name="first_name",
             last_name="last_name",

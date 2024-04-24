@@ -25,7 +25,7 @@ from random import sample
 
 class EarningsTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/earnings"
+        self.endpoint = "/api/earnings"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",

@@ -18,7 +18,7 @@ import json
 
 class WishlistTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/wishlist"
+        self.endpoint = "/api/wishlist"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",

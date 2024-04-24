@@ -21,7 +21,7 @@ from django.utils.timezone import make_aware
 
 class LessonSchedulesTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/lesson-schedules"
+        self.endpoint = "/api/lesson-schedules"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",

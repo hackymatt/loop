@@ -7,7 +7,7 @@ from django.contrib import auth
 
 class PasswordResetTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/password-reset"
+        self.endpoint = "/api/password-reset"
         self.data = {"email": "email@example.com", "password": "test_password"}
         self.user = create_user(
             first_name="first_name",

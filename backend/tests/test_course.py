@@ -36,7 +36,7 @@ from base64 import b64encode
 
 class CourseTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/courses"
+        self.endpoint = "/api/courses"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",
@@ -760,7 +760,7 @@ class CourseTest(APITestCase):
 
 class BestCourseTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/best-courses"
+        self.endpoint = "/api/best-courses"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",

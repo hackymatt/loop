@@ -15,7 +15,7 @@ import json
 
 class CartTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/cart"
+        self.endpoint = "/api/cart"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",

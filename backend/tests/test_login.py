@@ -6,7 +6,7 @@ from django.contrib import auth
 
 class LoginTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/login"
+        self.endpoint = "/api/login"
         self.data_1 = {"email": "email@example.com", "password": "test_password"}
         create_user(
             first_name="first_name",
