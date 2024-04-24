@@ -9,6 +9,7 @@ import { useRegister } from "src/api/auth/register";
 import { useUnregister } from "src/api/auth/unregister";
 import { useVerifyCode } from "src/api/auth/resend-code";
 import { useLoginGoogle } from "src/api/auth/login-google";
+import { useLoginGithub } from "src/api/auth/login-github";
 import { useLogin, ILoginReturn } from "src/api/auth/login";
 import { useLoginFacebook } from "src/api/auth/login-facebook";
 import { usePasswordReset } from "src/api/auth/password-reset";
@@ -67,6 +68,13 @@ export function UserProvider({ children }: Props) {
     isLoading: isLoadingLoginFacebook,
   } = useLoginFacebook();
   const {
+    mutateAsync: loginGithub,
+    isSuccess: isSuccessLoginGithub,
+    isError: isErrorLoginGithub,
+    error: loginGithubError,
+    isLoading: isLoadingLoginGithub,
+  } = useLoginGithub();
+  const {
     mutateAsync: logout,
     isSuccess: isSuccessLogout,
     isLoading: isLoadingLogout,
@@ -85,6 +93,7 @@ export function UserProvider({ children }: Props) {
     isLoadingLogin ||
     isLoadingLoginGoogle ||
     isLoadingLoginFacebook ||
+    isLoadingLoginGithub ||
     isLoadingLogout ||
     isLoadingPasswordReset;
 
@@ -112,10 +121,10 @@ export function UserProvider({ children }: Props) {
   }, [isSuccessVerify]);
 
   useEffect(() => {
-    if (isSuccessLogin || isSuccessLoginGoogle || isSuccessLoginFacebook) {
+    if (isSuccessLogin || isSuccessLoginGoogle || isSuccessLoginFacebook || isSuccessLoginGithub) {
       setIsLoggedIn(true);
     }
-  }, [isSuccessLogin, isSuccessLoginGoogle, isSuccessLoginFacebook]);
+  }, [isSuccessLogin, isSuccessLoginGoogle, isSuccessLoginFacebook, isSuccessLoginGithub]);
 
   useEffect(() => {
     if (isSuccessLogout) {
@@ -130,8 +139,8 @@ export function UserProvider({ children }: Props) {
   }, [isSuccessPasswordReset]);
 
   useEffect(() => {
-    if (isErrorLogin || isErrorLoginGoogle || isErrorLoginFacebook) {
-      if (loginError || loginGoogleError || loginFacebookError) {
+    if (isErrorLogin || isErrorLoginGoogle || isErrorLoginFacebook || isErrorLoginGithub) {
+      if (loginError || loginGoogleError || loginFacebookError || loginGithubError) {
         if (((loginError || loginGoogleError) as AxiosError).response?.status === 403) {
           setEmail(((loginError as AxiosError).response?.data as ILoginReturn).email);
           setIsRegistered(true);
@@ -142,9 +151,11 @@ export function UserProvider({ children }: Props) {
   }, [
     isErrorLogin,
     isErrorLoginFacebook,
+    isErrorLoginGithub,
     isErrorLoginGoogle,
     loginError,
     loginFacebookError,
+    loginGithubError,
     loginGoogleError,
   ]);
 
@@ -162,6 +173,7 @@ export function UserProvider({ children }: Props) {
       loginUser: login,
       loginGoogleUser: loginGoogle,
       loginFacebookUser: loginFacebook,
+      loginGithubUser: loginGithub,
       logoutUser: logout,
       resendVerificationCode: verifyCode,
       resetUserPassword: resetPassword,
@@ -179,6 +191,7 @@ export function UserProvider({ children }: Props) {
       login,
       loginGoogle,
       loginFacebook,
+      loginGithub,
       logout,
       verifyCode,
       resetPassword,

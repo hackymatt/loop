@@ -6,6 +6,7 @@ from profile.login.views import (
     EmailLoginViewSet,
     GoogleLoginViewSet,
     FacebookLoginViewSet,
+    GithubLoginViewSet,
 )
 from profile.logout.views import ProfileLogoutViewSet
 from profile.password_change.views import ProfilePasswordChangeViewSet
@@ -126,6 +127,7 @@ urlpatterns = [
                 ),
                 path("login-google", GoogleLoginViewSet.as_view({"post": "post"})),
                 path("login-facebook", FacebookLoginViewSet.as_view({"post": "post"})),
+                path("login-github", GithubLoginViewSet.as_view({"post": "post"})),
             ]
         ),
     ),

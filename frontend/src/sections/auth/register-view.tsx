@@ -22,7 +22,7 @@ import { RouterLink } from "src/routes/components";
 import { useBoolean } from "src/hooks/use-boolean";
 import { useQueryParams } from "src/hooks/use-query-params";
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
-import { useGoogleAuth, useFacebookAuth } from "src/hooks/use-social-auth";
+import { useGoogleAuth, useGithubAuth, useFacebookAuth } from "src/hooks/use-social-auth";
 
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
@@ -41,11 +41,18 @@ export default function RegisterView() {
 
   const { authUrl: googleAuthUrl } = useGoogleAuth();
   const { authUrl: facebookAuthUrl } = useFacebookAuth();
+  const { authUrl: githubAuthUrl } = useGithubAuth();
 
   const queryParams = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const { registerUser, loginGoogleUser, loginFacebookUser, isRegistered, isLoggedIn } =
-    useUserContext();
+  const {
+    registerUser,
+    loginGoogleUser,
+    loginFacebookUser,
+    loginGithubUser,
+    isRegistered,
+    isLoggedIn,
+  } = useUserContext();
 
   const RegisterSchema = Yup.object().shape({
     first_name: Yup.string().required("Imię jest wymagane"),
@@ -122,6 +129,21 @@ export default function RegisterView() {
     }
   }, [clearErrors, enqueueSnackbar, handleFormError, loginFacebookUser, queryParams]);
 
+  const onGithubSubmit = useCallback(async () => {
+    clearErrors();
+    try {
+      const { code } = queryParams;
+      await loginGithubUser({ code });
+      enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
+    } catch (error) {
+      if ((error as AxiosError).response?.status !== 403) {
+        handleFormError(error);
+      } else {
+        enqueueSnackbar("Wystąpił błąd podczas logowania", { variant: "error" });
+      }
+    }
+  }, [clearErrors, enqueueSnackbar, handleFormError, loginGithubUser, queryParams]);
+
   useEffect(() => {
     if (isRegistered) {
       push(paths.verify);
@@ -143,10 +165,13 @@ export default function RegisterView() {
       case "facebook":
         onFacebookSubmit();
         break;
+      case "github":
+        onGithubSubmit();
+        break;
       default:
         break;
     }
-  }, [onGoogleSubmit, onFacebookSubmit, queryParams]);
+  }, [onGoogleSubmit, onFacebookSubmit, queryParams, onGithubSubmit]);
 
   const renderHead = (
     <div>
@@ -187,7 +212,14 @@ export default function RegisterView() {
         <Iconify icon="carbon:logo-facebook" width={24} sx={{ color: "#1877F2" }} />
       </Button>
 
-      <Button color="inherit" fullWidth variant="outlined" size="large">
+      <Button
+        component={RouterLink}
+        href={githubAuthUrl}
+        color="inherit"
+        fullWidth
+        variant="outlined"
+        size="large"
+      >
         <Iconify icon="carbon:logo-github" width={24} sx={{ color: "text.primary" }} />
       </Button>
     </Stack>

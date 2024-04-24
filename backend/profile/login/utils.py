@@ -14,6 +14,10 @@ GOOGLE_USER_INFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
 FACEBOOK_ACCESS_TOKEN_OBTAIN_URL = "https://graph.facebook.com/v19.0/oauth/access_token"
 FACEBOOK_USER_INFO_URL = "https://graph.facebook.com/v19.0/me/"
 
+GITHUB_ACCESS_TOKEN_OBTAIN_URL = "https://github.com/login/oauth/access_token"
+GITHUB_USER_EMAIL_URL = "https://api.github.com/user/emails"
+GITHUB_USER_INFO_URL = "https://api.github.com/user"
+
 
 def generate_tokens_for_user(user):
     """
@@ -65,13 +69,12 @@ def facebook_get_access_token(*, code: str, redirect_uri: str) -> str:
         "client_id": settings.FACEBOOK_CLIENT_ID,
         "client_secret": settings.FACEBOOK_CLIENT_SECRET,
         "redirect_uri": redirect_uri,
-        "grant_type": "authorization_code",
     }
     response = requests.get(FACEBOOK_ACCESS_TOKEN_OBTAIN_URL, params=params)
 
     if not response.ok:
         raise ValidationError(
-            {"root": "1Wystąpił błąd podczas pobierania danych użytkownika od Facebook"}
+            {"root": "Wystąpił błąd podczas pobierania danych użytkownika od Facebook"}
         )
 
     access_token = response.json()["access_token"]
@@ -88,7 +91,59 @@ def facebook_get_user_info(*, access_token: str) -> Dict[str, Any]:
 
     if not response.ok:
         raise ValidationError(
-            {"root": "2Wystąpił błąd podczas pobierania danych użytkownika od Google"}
+            {"root": "Wystąpił błąd podczas pobierania danych użytkownika od Google"}
+        )
+
+    return response.json()
+
+
+def github_get_access_token(*, code: str, redirect_uri: str) -> str:
+    data = {
+        "code": code,
+        "client_id": settings.GITHUB_CLIENT_ID,
+        "client_secret": settings.GITHUB_CLIENT_SECRET,
+        "redirect_uri": redirect_uri,
+    }
+    response = requests.post(
+        GITHUB_ACCESS_TOKEN_OBTAIN_URL,
+        data=data,
+        headers={"Accept": "application/json"},
+    )
+
+    if not response.ok:
+        raise ValidationError(
+            {"root": "Wystąpił błąd podczas pobierania danych użytkownika od GitHub"}
+        )
+    access_token = response.json()["access_token"]
+
+    return access_token
+
+
+def github_get_user_email(*, access_token: str) -> Dict[str, Any]:
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"Bearer {access_token}",
+    }
+    response = requests.get(GITHUB_USER_EMAIL_URL, headers=headers)
+
+    if not response.ok:
+        raise ValidationError(
+            {"root": "Wystąpił błąd podczas pobierania danych użytkownika od GitHub"}
+        )
+
+    return response.json()
+
+
+def github_get_user_info(*, access_token: str) -> Dict[str, Any]:
+    headers = {
+        "Accept": "application/vnd.github+json",
+        "Authorization": f"Bearer {access_token}",
+    }
+    response = requests.get(GITHUB_USER_INFO_URL, headers=headers)
+
+    if not response.ok:
+        raise ValidationError(
+            {"root": "Wystąpił błąd podczas pobierania danych użytkownika od GitHub"}
         )
 
     return response.json()

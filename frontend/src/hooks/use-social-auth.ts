@@ -42,3 +42,20 @@ export const useFacebookAuth = () => {
 
   return { authUrl: `${facebookUrl}?${params}`, state };
 };
+
+export const useGithubAuth = () => {
+  const githubUrl = "https://github.com/login/oauth/authorize";
+
+  const scope = ["user:email", "read:user"].join(" ");
+
+  const state = generateCode(18);
+
+  const params = new URLSearchParams({
+    client_id: process.env.GITHUB_CLIENT_ID ?? "",
+    redirect_uri: `${process.env.BASE_URL ?? ""}${paths.login}/?type=github`,
+    scope,
+    state,
+  });
+
+  return { authUrl: `${githubUrl}?${params}`, state };
+};

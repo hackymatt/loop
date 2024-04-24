@@ -35,6 +35,8 @@ services:
       - GOOGLE_CLIENT_SECRET=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
       - FACEBOOK_CLIENT_ID=1576703186506729
       - FACEBOOK_CLIENT_SECRET=047412a60351ed9a59f4d1c86cec10ce
+      - GITHUB_CLIENT_ID=802861860d8aee939ba2
+      - GITHUB_CLIENT_SECRET=61ad39aec6a1570aab7f97df2502e3627ea14a07
     depends_on:
       - db
 
@@ -51,6 +53,7 @@ services:
       - NEXT_PUBLIC_API_URL=http://localhost:8000/api
       - NEXT_PUBLIC_GOOGLE_CLIENT_ID=617166587683-r77p1ri68pjhff6fd9032ak42qjq0v7j.apps.googleusercontent.com
       - NEXT_PUBLIC_FACEBOOK_CLIENT_ID=1576703186506729
+      - NEXT_PUBLIC_GITHUB_CLIENT_ID=802861860d8aee939ba2
       - NEXT_PUBLIC_BASE_URL=http://localhost:8002
     volumes:
       - ./frontend:/usr/src/app/frontend
