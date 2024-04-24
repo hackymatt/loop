@@ -2,7 +2,11 @@ from profile.users.views import UserViewSet
 from profile.register.views import ProfileRegisterViewSet
 from profile.unregister.views import ProfileUnregisterViewSet
 from profile.verify.views import ProfileVerificationCodeViewSet, ProfileVerifyViewSet
-from profile.login.views import EmailLoginViewSet, GoogleLoginViewSet
+from profile.login.views import (
+    EmailLoginViewSet,
+    GoogleLoginViewSet,
+    FacebookLoginViewSet,
+)
 from profile.logout.views import ProfileLogoutViewSet
 from profile.password_change.views import ProfilePasswordChangeViewSet
 from profile.password_reset.views import ProfilePasswordResetViewSet
@@ -121,6 +125,7 @@ urlpatterns = [
                     CouponValidationViewSet.validate,
                 ),
                 path("login-google", GoogleLoginViewSet.as_view({"post": "post"})),
+                path("login-facebook", FacebookLoginViewSet.as_view({"post": "post"})),
             ]
         ),
     ),

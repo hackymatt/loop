@@ -1,0 +1,44 @@
+import { paths } from "src/routes/paths";
+
+import { generateCode } from "src/utils/generateCode";
+
+export const useGoogleAuth = () => {
+  const googleUrl = "https://accounts.google.com/o/oauth2/v2/auth";
+
+  const scope = [
+    "https://www.googleapis.com/auth/userinfo.email",
+    "https://www.googleapis.com/auth/userinfo.profile",
+  ].join(" ");
+
+  const state = generateCode(18);
+
+  const params = new URLSearchParams({
+    client_id: process.env.GOOGLE_CLIENT_ID ?? "",
+    redirect_uri: `${process.env.BASE_URL ?? ""}${paths.login}/?type=google`,
+    response_type: "code",
+    scope,
+    access_type: "offline",
+    state,
+    prompt: "select_account",
+  });
+
+  return { authUrl: `${googleUrl}?${params}`, state };
+};
+
+export const useFacebookAuth = () => {
+  const facebookUrl = "https://www.facebook.com/v19.0/dialog/oauth";
+
+  const scope = ["email", "user_birthday", "user_gender", "public_profile"].join(",");
+
+  const state = generateCode(18);
+
+  const params = new URLSearchParams({
+    client_id: process.env.FACEBOOK_CLIENT_ID ?? "",
+    redirect_uri: `${process.env.BASE_URL ?? ""}${paths.login}/?type=facebook`,
+    state,
+    response_type: "code",
+    scope,
+  });
+
+  return { authUrl: `${facebookUrl}?${params}`, state };
+};

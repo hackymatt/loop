@@ -10,6 +10,7 @@ import { useUnregister } from "src/api/auth/unregister";
 import { useVerifyCode } from "src/api/auth/resend-code";
 import { useLoginGoogle } from "src/api/auth/login-google";
 import { useLogin, ILoginReturn } from "src/api/auth/login";
+import { useLoginFacebook } from "src/api/auth/login-facebook";
 import { usePasswordReset } from "src/api/auth/password-reset";
 
 import { UserContext } from "./user-context";
@@ -59,6 +60,13 @@ export function UserProvider({ children }: Props) {
     isLoading: isLoadingLoginGoogle,
   } = useLoginGoogle();
   const {
+    mutateAsync: loginFacebook,
+    isSuccess: isSuccessLoginFacebook,
+    isError: isErrorLoginFacebook,
+    error: loginFacebookError,
+    isLoading: isLoadingLoginFacebook,
+  } = useLoginFacebook();
+  const {
     mutateAsync: logout,
     isSuccess: isSuccessLogout,
     isLoading: isLoadingLogout,
@@ -76,6 +84,7 @@ export function UserProvider({ children }: Props) {
     isLoadingVerifyCode ||
     isLoadingLogin ||
     isLoadingLoginGoogle ||
+    isLoadingLoginFacebook ||
     isLoadingLogout ||
     isLoadingPasswordReset;
 
@@ -103,10 +112,10 @@ export function UserProvider({ children }: Props) {
   }, [isSuccessVerify]);
 
   useEffect(() => {
-    if (isSuccessLogin || isSuccessLoginGoogle) {
+    if (isSuccessLogin || isSuccessLoginGoogle || isSuccessLoginFacebook) {
       setIsLoggedIn(true);
     }
-  }, [isSuccessLogin, isSuccessLoginGoogle]);
+  }, [isSuccessLogin, isSuccessLoginGoogle, isSuccessLoginFacebook]);
 
   useEffect(() => {
     if (isSuccessLogout) {
@@ -121,8 +130,8 @@ export function UserProvider({ children }: Props) {
   }, [isSuccessPasswordReset]);
 
   useEffect(() => {
-    if (isErrorLogin || isErrorLoginGoogle) {
-      if (loginError || loginGoogleError) {
+    if (isErrorLogin || isErrorLoginGoogle || isErrorLoginFacebook) {
+      if (loginError || loginGoogleError || loginFacebookError) {
         if (((loginError || loginGoogleError) as AxiosError).response?.status === 403) {
           setEmail(((loginError as AxiosError).response?.data as ILoginReturn).email);
           setIsRegistered(true);
@@ -130,7 +139,14 @@ export function UserProvider({ children }: Props) {
         }
       }
     }
-  }, [isErrorLogin, isErrorLoginGoogle, loginError, loginGoogleError]);
+  }, [
+    isErrorLogin,
+    isErrorLoginFacebook,
+    isErrorLoginGoogle,
+    loginError,
+    loginFacebookError,
+    loginGoogleError,
+  ]);
 
   const memoizedValue = useMemo(
     () => ({
@@ -145,6 +161,7 @@ export function UserProvider({ children }: Props) {
       verifyUser: verify,
       loginUser: login,
       loginGoogleUser: loginGoogle,
+      loginFacebookUser: loginFacebook,
       logoutUser: logout,
       resendVerificationCode: verifyCode,
       resetUserPassword: resetPassword,
@@ -161,6 +178,7 @@ export function UserProvider({ children }: Props) {
       verify,
       login,
       loginGoogle,
+      loginFacebook,
       logout,
       verifyCode,
       resetPassword,

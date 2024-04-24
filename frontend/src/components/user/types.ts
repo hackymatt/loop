@@ -8,6 +8,7 @@ import { IRegister, IRegisterReturn } from "src/api/auth/register";
 import { IVerifyCode, IVerifyCodeReturn } from "src/api/auth/resend-code";
 import { ILoginGoogle, ILoginGoogleReturn } from "src/api/auth/login-google";
 import { IPasswordReset, IPasswordResetReturn } from "src/api/auth/password-reset";
+import { ILoginFacebook, ILoginFacebookReturn } from "src/api/auth/login-facebook";
 
 export type UserContextProps = {
   isLoading: boolean;
@@ -21,6 +22,7 @@ export type UserContextProps = {
   verifyUser: (variables: IVerify) => Promise<IVerifyReturn>;
   loginUser: (variables: ILogin) => Promise<ILoginReturn>;
   loginGoogleUser: (variables: ILoginGoogle) => Promise<ILoginGoogleReturn>;
+  loginFacebookUser: (variables: ILoginFacebook) => Promise<ILoginFacebookReturn>;
   logoutUser: (variables: ILogout) => Promise<ILogoutReturn>;
   resendVerificationCode: (variables: IVerifyCode) => Promise<IVerifyCodeReturn>;
   resetUserPassword: (variables: IPasswordReset) => Promise<IPasswordResetReturn>;

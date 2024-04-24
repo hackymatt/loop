@@ -19,10 +19,10 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
-import { useGoogleAuth } from "src/hooks/google";
 import { useBoolean } from "src/hooks/use-boolean";
 import { useQueryParams } from "src/hooks/use-query-params";
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
+import { useGoogleAuth, useFacebookAuth } from "src/hooks/use-social-auth";
 
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
@@ -40,10 +40,12 @@ export default function RegisterView() {
   const passwordShow = useBoolean();
 
   const { authUrl: googleAuthUrl } = useGoogleAuth();
+  const { authUrl: facebookAuthUrl } = useFacebookAuth();
 
   const queryParams = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const { registerUser, loginGoogleUser, isRegistered, isLoggedIn } = useUserContext();
+  const { registerUser, loginGoogleUser, loginFacebookUser, isRegistered, isLoggedIn } =
+    useUserContext();
 
   const RegisterSchema = Yup.object().shape({
     first_name: Yup.string().required("Imię jest wymagane"),
@@ -95,8 +97,8 @@ export default function RegisterView() {
   const onGoogleSubmit = useCallback(async () => {
     clearErrors();
     try {
-      const { code, scope, authuser, prompt } = queryParams;
-      await loginGoogleUser({ code, scope, authuser, prompt });
+      const { code } = queryParams;
+      await loginGoogleUser({ code });
       enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
     } catch (error) {
       if ((error as AxiosError).response?.status !== 403) {
@@ -104,6 +106,21 @@ export default function RegisterView() {
       }
     }
   }, [clearErrors, enqueueSnackbar, handleFormError, loginGoogleUser, queryParams]);
+
+  const onFacebookSubmit = useCallback(async () => {
+    clearErrors();
+    try {
+      const { code } = queryParams;
+      await loginFacebookUser({ code });
+      enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
+    } catch (error) {
+      if ((error as AxiosError).response?.status !== 403) {
+        handleFormError(error);
+      } else {
+        enqueueSnackbar("Wystąpił błąd podczas logowania", { variant: "error" });
+      }
+    }
+  }, [clearErrors, enqueueSnackbar, handleFormError, loginFacebookUser, queryParams]);
 
   useEffect(() => {
     if (isRegistered) {
@@ -123,10 +140,13 @@ export default function RegisterView() {
       case "google":
         onGoogleSubmit();
         break;
+      case "facebook":
+        onFacebookSubmit();
+        break;
       default:
         break;
     }
-  }, [onGoogleSubmit, queryParams]);
+  }, [onGoogleSubmit, onFacebookSubmit, queryParams]);
 
   const renderHead = (
     <div>
@@ -156,7 +176,14 @@ export default function RegisterView() {
         <Iconify icon="logos:google-icon" width={24} />
       </Button>
 
-      <Button fullWidth size="large" color="inherit" variant="outlined">
+      <Button
+        component={RouterLink}
+        href={facebookAuthUrl}
+        fullWidth
+        size="large"
+        color="inherit"
+        variant="outlined"
+      >
         <Iconify icon="carbon:logo-facebook" width={24} sx={{ color: "#1877F2" }} />
       </Button>
 

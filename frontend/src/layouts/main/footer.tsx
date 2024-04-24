@@ -114,36 +114,38 @@ export default function Footer() {
             </Stack>
           </Grid>
 
-          <Grid xs={12} md={6}>
-            <Masonry columns={3} spacing={2} defaultColumns={3} defaultSpacing={2}>
-              {technologies?.map((technology) => (
-                <Link
-                  component={RouterLink}
-                  key={technology.id}
-                  href={`${paths.courses}?technology_in=${technology.name}`}
-                  variant="caption"
-                  sx={{
-                    color: "text.secondary",
-                    "&:hover": {
-                      color: "text.primary",
-                    },
-                  }}
-                >
-                  <Typography
-                    variant="subtitle2"
+          {technologies && technologies.length > 0 && (
+            <Grid xs={12} md={6}>
+              <Masonry columns={3} spacing={2} defaultColumns={3} defaultSpacing={2}>
+                {technologies?.map((technology) => (
+                  <Link
+                    component={RouterLink}
+                    key={technology.id}
+                    href={`${paths.courses}?technology_in=${technology.name}`}
+                    variant="caption"
                     sx={{
-                      cursor: "pointer",
-                      display: "inline-flex",
-                      alignItems: "center",
+                      color: "text.secondary",
+                      "&:hover": {
+                        color: "text.primary",
+                      },
                     }}
                   >
-                    {`Kursy ${technology.name}`}
-                    <Iconify width={16} icon="carbon:chevron-right" sx={{ ml: 0.5 }} />
-                  </Typography>
-                </Link>
-              ))}
-            </Masonry>
-          </Grid>
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        cursor: "pointer",
+                        display: "inline-flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      {`Kursy ${technology.name}`}
+                      <Iconify width={16} icon="carbon:chevron-right" sx={{ ml: 0.5 }} />
+                    </Typography>
+                  </Link>
+                ))}
+              </Masonry>
+            </Grid>
+          )}
         </Grid>
       </Container>
 

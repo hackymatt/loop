@@ -189,5 +189,9 @@ EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
 
 
 BASE_FRONTEND_URL = os.environ.get("BASE_FRONTEND_URL", "http://localhost:8002")
+
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "")
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", "")
+
+FACEBOOK_CLIENT_ID = os.environ.get("FACEBOOK_CLIENT_ID", "")
+FACEBOOK_CLIENT_SECRET = os.environ.get("FACEBOOK_CLIENT_SECRET", "")

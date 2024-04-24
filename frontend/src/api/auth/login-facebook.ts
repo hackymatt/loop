@@ -4,21 +4,21 @@ import { useMutation } from "@tanstack/react-query";
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
 
-const endpoint = "/login-google" as const;
+const endpoint = "/login-facebook" as const;
 
-export type ILoginGoogle = {
+export type ILoginFacebook = {
   code: string;
 };
 
-export type ILoginGoogleReturn = {
+export type ILoginFacebookReturn = {
   first_name?: string;
   last_name?: string;
   email: string;
   login?: string;
 };
 
-export const useLoginGoogle = () =>
-  useMutation<ILoginGoogleReturn, AxiosError, ILoginGoogle>(async (variables) => {
+export const useLoginFacebook = () =>
+  useMutation<ILoginFacebookReturn, AxiosError, ILoginFacebook>(async (variables) => {
     const result = await Api.post(endpoint, variables, {
       headers: {
         "X-CSRFToken": getCsrfToken(),

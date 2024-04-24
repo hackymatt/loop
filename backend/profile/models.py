@@ -31,7 +31,7 @@ class Profile(BaseModel):
     )
     JOIN_CHOICES = (
         ("Email", "Email"),
-        ("Goggle", "Goggle"),
+        ("Google", "Google"),
         ("Facebook", "Facebook"),
         ("GitHub", "GitHub"),
     )

@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
                     models.CharField(
                         choices=[
                             ("Email", "Email"),
-                            ("Goggle", "Goggle"),
+                            ("Google", "Google"),
                             ("Facebook", "Facebook"),
                             ("GitHub", "GitHub"),
                         ],
