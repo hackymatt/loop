@@ -31,7 +31,7 @@ from django.utils.timezone import make_aware
 
 class ReservationTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/reservation"
+        self.endpoint = "/api/reservation"
         self.data = {
             "email": "user@example.com",
             "password": "TestPassword123",

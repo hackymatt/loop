@@ -16,7 +16,7 @@ from unittest.mock import patch
 
 class ThrottlingTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/courses"
+        self.endpoint = "/api/courses"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",

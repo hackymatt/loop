@@ -18,7 +18,7 @@ import json
 
 class LecturersTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/lecturers"
+        self.endpoint = "/api/lecturers"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -170,7 +170,7 @@ class LecturersTest(APITestCase):
 
 class BestLecturersTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/best-lecturers"
+        self.endpoint = "/api/best-lecturers"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",

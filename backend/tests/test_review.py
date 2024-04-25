@@ -26,7 +26,7 @@ import json
 
 class ReviewTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/reviews"
+        self.endpoint = "/api/reviews"
         self.data = {
             "email": "user@example.com",
             "password": "TestPassword123",
@@ -371,7 +371,7 @@ class ReviewTest(APITestCase):
 
 class BestReviewTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/best-reviews"
+        self.endpoint = "/api/best-reviews"
         self.data = {
             "email": "user@example.com",
             "password": "TestPassword123",
@@ -522,7 +522,7 @@ class BestReviewTest(APITestCase):
 
 class ReviewStatsTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/reviews-stats"
+        self.endpoint = "/api/reviews-stats"
         self.data = {
             "email": "user@example.com",
             "password": "TestPassword123",

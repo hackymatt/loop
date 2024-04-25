@@ -1,11 +1,11 @@
 "use client";
 
 import * as Yup from "yup";
-import { useEffect } from "react";
 import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useRef, useMemo, useEffect, useCallback } from "react";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
@@ -20,7 +20,9 @@ import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
 import { useBoolean } from "src/hooks/use-boolean";
+import { useQueryParams } from "src/hooks/use-query-params";
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
+import { useGoogleAuth, useGithubAuth, useFacebookAuth } from "src/hooks/use-social-auth";
 
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
@@ -31,12 +33,27 @@ import FormProvider, { RHFTextField } from "src/components/hook-form";
 
 export default function LoginView() {
   const { enqueueSnackbar } = useToastContext();
+  const { getQueryParams } = useQueryParams();
 
   const { push } = useRouter();
 
   const passwordShow = useBoolean();
 
-  const { loginUser, isRegistered, isUnverified, isLoggedIn } = useUserContext();
+  const { authUrl: googleAuthUrl } = useGoogleAuth();
+  const { authUrl: facebookAuthUrl } = useFacebookAuth();
+  const { authUrl: githubAuthUrl } = useGithubAuth();
+
+  const queryParams = useMemo(() => getQueryParams(), [getQueryParams]);
+
+  const {
+    loginUser,
+    loginGoogleUser,
+    loginFacebookUser,
+    loginGithubUser,
+    isRegistered,
+    isUnverified,
+    isLoggedIn,
+  } = useUserContext();
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().required("Adres e-mail jest wymagany").email("Podaj poprawny adres e-mail"),
@@ -61,7 +78,7 @@ export default function LoginView() {
 
   const handleFormError = useFormErrorHandler(methods);
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onEmailSubmit = handleSubmit(async (data) => {
     clearErrors();
     try {
       await loginUser(data);
@@ -69,9 +86,56 @@ export default function LoginView() {
     } catch (error) {
       if ((error as AxiosError).response?.status !== 403) {
         handleFormError(error);
+      } else {
+        enqueueSnackbar("Wystąpił błąd podczas logowania", { variant: "error" });
       }
     }
   });
+
+  const onGoogleSubmit = useCallback(async () => {
+    clearErrors();
+    try {
+      const { code } = queryParams;
+      await loginGoogleUser({ code });
+      enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
+    } catch (error) {
+      if ((error as AxiosError).response?.status !== 403) {
+        handleFormError(error);
+      } else {
+        enqueueSnackbar("Wystąpił błąd podczas logowania", { variant: "error" });
+      }
+    }
+  }, [clearErrors, enqueueSnackbar, handleFormError, loginGoogleUser, queryParams]);
+
+  const onFacebookSubmit = useCallback(async () => {
+    clearErrors();
+    try {
+      const { code } = queryParams;
+      await loginFacebookUser({ code });
+      enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
+    } catch (error) {
+      if ((error as AxiosError).response?.status !== 403) {
+        handleFormError(error);
+      } else {
+        enqueueSnackbar("Wystąpił błąd podczas logowania", { variant: "error" });
+      }
+    }
+  }, [clearErrors, enqueueSnackbar, handleFormError, loginFacebookUser, queryParams]);
+
+  const onGithubSubmit = useCallback(async () => {
+    clearErrors();
+    try {
+      const { code } = queryParams;
+      await loginGithubUser({ code });
+      enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
+    } catch (error) {
+      if ((error as AxiosError).response?.status !== 403) {
+        handleFormError(error);
+      } else {
+        enqueueSnackbar("Wystąpił błąd podczas logowania", { variant: "error" });
+      }
+    }
+  }, [clearErrors, enqueueSnackbar, handleFormError, loginGithubUser, queryParams]);
 
   useEffect(() => {
     if (isRegistered && isUnverified) {
@@ -84,6 +148,29 @@ export default function LoginView() {
       push(paths.account.personal);
     }
   }, [isLoggedIn, push]);
+
+  const effectRan = useRef(false);
+  useEffect(() => {
+    const { type } = queryParams;
+    if (type) {
+      if (!effectRan.current) {
+        switch (type) {
+          case "google":
+            onGoogleSubmit();
+            break;
+          case "facebook":
+            onFacebookSubmit();
+            break;
+          case "github":
+            onGithubSubmit();
+            break;
+          default:
+            break;
+        }
+        effectRan.current = true;
+      }
+    }
+  }, [onGoogleSubmit, onFacebookSubmit, queryParams, onGithubSubmit]);
 
   const renderHead = (
     <div>
@@ -102,22 +189,43 @@ export default function LoginView() {
 
   const renderSocials = (
     <Stack direction="row" spacing={2}>
-      <Button fullWidth size="large" color="inherit" variant="outlined">
+      <Button
+        component={RouterLink}
+        href={googleAuthUrl}
+        fullWidth
+        size="large"
+        color="inherit"
+        variant="outlined"
+      >
         <Iconify icon="logos:google-icon" width={24} />
       </Button>
 
-      <Button fullWidth size="large" color="inherit" variant="outlined">
+      <Button
+        component={RouterLink}
+        href={facebookAuthUrl}
+        fullWidth
+        size="large"
+        color="inherit"
+        variant="outlined"
+      >
         <Iconify icon="carbon:logo-facebook" width={24} sx={{ color: "#1877F2" }} />
       </Button>
 
-      <Button color="inherit" fullWidth variant="outlined" size="large">
+      <Button
+        component={RouterLink}
+        href={githubAuthUrl}
+        color="inherit"
+        fullWidth
+        variant="outlined"
+        size="large"
+      >
         <Iconify icon="carbon:logo-github" width={24} sx={{ color: "text.primary" }} />
       </Button>
     </Stack>
   );
 
   const renderForm = (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
+    <FormProvider methods={methods} onSubmit={onEmailSubmit}>
       <Stack spacing={2.5} alignItems="flex-end">
         <RHFTextField name="email" label="Adres e-mail" />
 

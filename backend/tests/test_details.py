@@ -9,7 +9,7 @@ from base64 import b64encode
 
 class DetailsTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/details"
+        self.endpoint = "/api/details"
         self.data = {
             "first_name": "test_first_name",
             "last_name": "test_last_name",

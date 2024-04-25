@@ -29,7 +29,7 @@ from random import sample
 
 class CourseFilterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/courses"
+        self.endpoint = "/api/courses"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -433,7 +433,7 @@ class CourseFilterTest(APITestCase):
 
 class ReviewFilterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/reviews"
+        self.endpoint = "/api/reviews"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -711,7 +711,7 @@ class ReviewFilterTest(APITestCase):
 
 class ScheduleFilterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/schedules"
+        self.endpoint = "/api/schedules"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -1030,7 +1030,7 @@ class ScheduleFilterTest(APITestCase):
 
 class LessonPriceHistoryFilterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/lesson-price-history"
+        self.endpoint = "/api/lesson-price-history"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",
@@ -1225,7 +1225,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
 
 class TechnologyFilterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/technologies"
+        self.endpoint = "/api/technologies"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -1316,7 +1316,7 @@ class TechnologyFilterTest(APITestCase):
 
 class TopicFilterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/topics"
+        self.endpoint = "/api/topics"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -1363,7 +1363,7 @@ class TopicFilterTest(APITestCase):
 
 class SkillFilterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/skills"
+        self.endpoint = "/api/skills"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -1410,7 +1410,7 @@ class SkillFilterTest(APITestCase):
 
 class LecturerFilterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/lecturers"
+        self.endpoint = "/api/lecturers"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -1579,7 +1579,7 @@ class LecturerFilterTest(APITestCase):
 
 class PurchaseFilterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/purchase"
+        self.endpoint = "/api/purchase"
         self.data = {
             "email": "user@example.com",
             "password": "TestPassword123",
@@ -1919,7 +1919,7 @@ class PurchaseFilterTest(APITestCase):
 
 class LessonFilterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/lessons"
+        self.endpoint = "/api/lessons"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",
@@ -2302,7 +2302,7 @@ class LessonFilterTest(APITestCase):
 
 class ManageTeachingFilterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/teaching"
+        self.endpoint = "/api/teaching"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -2568,7 +2568,7 @@ class ManageTeachingFilterTest(APITestCase):
 
 class TeachingFilterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/lesson-lecturers"
+        self.endpoint = "/api/lesson-lecturers"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -2717,7 +2717,7 @@ class TeachingFilterTest(APITestCase):
 
 class UsersFilerTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/users"
+        self.endpoint = "/api/users"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",
@@ -2990,7 +2990,7 @@ class UsersFilerTest(APITestCase):
 
 class FinanceHistoryFilterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/finance-history"
+        self.endpoint = "/api/finance-history"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -3171,7 +3171,7 @@ class FinanceHistoryFilterTest(APITestCase):
 
 class CouponFilteringTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/coupons"
+        self.endpoint = "/api/coupons"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",
@@ -3338,7 +3338,7 @@ class CouponFilteringTest(APITestCase):
 
 class CouponUserFilteringTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/coupon-usage"
+        self.endpoint = "/api/coupon-usage"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",
@@ -3461,7 +3461,7 @@ class CouponUserFilteringTest(APITestCase):
 
 class EarningsFilterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/earnings"
+        self.endpoint = "/api/earnings"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",

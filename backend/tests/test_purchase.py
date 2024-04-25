@@ -24,7 +24,7 @@ from django.utils.timezone import make_aware
 
 class PurchaseTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/purchase"
+        self.endpoint = "/api/purchase"
         self.data = {
             "email": "user@example.com",
             "password": "TestPassword123",

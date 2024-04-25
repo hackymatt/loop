@@ -16,7 +16,7 @@ import json
 
 class PaginationTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/reviews"
+        self.endpoint = "/api/reviews"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",

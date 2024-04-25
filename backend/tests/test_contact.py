@@ -10,7 +10,7 @@ import json
 
 class ContactTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/contact"
+        self.endpoint = "/api/contact"
 
     def test_contact(self):
         # post data

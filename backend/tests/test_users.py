@@ -12,7 +12,7 @@ import json
 
 class UsersTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/users"
+        self.endpoint = "/api/users"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",

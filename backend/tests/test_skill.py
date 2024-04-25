@@ -16,7 +16,7 @@ import json
 
 class SkillTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/skills"
+        self.endpoint = "/api/skills"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",

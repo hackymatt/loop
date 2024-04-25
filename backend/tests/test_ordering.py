@@ -37,7 +37,7 @@ def is_float(element: any) -> bool:
 
 class CourseOrderTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/courses"
+        self.endpoint = "/api/courses"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -351,7 +351,7 @@ class CourseOrderTest(APITestCase):
 
 class ReviewOrderTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/reviews"
+        self.endpoint = "/api/reviews"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -611,7 +611,7 @@ class ReviewOrderTest(APITestCase):
 
 class ScheduleOrderTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/schedules"
+        self.endpoint = "/api/schedules"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -827,7 +827,7 @@ class ScheduleOrderTest(APITestCase):
 
 class LessonPriceHistoryOrderTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/lesson-price-history"
+        self.endpoint = "/api/lesson-price-history"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",
@@ -1012,7 +1012,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
 
 class BestTechnologyOrderTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/best-technologies"
+        self.endpoint = "/api/best-technologies"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -1076,7 +1076,7 @@ class BestTechnologyOrderTest(APITestCase):
 
 class TechnologyOrderTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/technologies"
+        self.endpoint = "/api/technologies"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -1140,7 +1140,7 @@ class TechnologyOrderTest(APITestCase):
 
 class TopicOrderTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/topics"
+        self.endpoint = "/api/topics"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -1204,7 +1204,7 @@ class TopicOrderTest(APITestCase):
 
 class SkillOrderTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/skills"
+        self.endpoint = "/api/skills"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -1268,7 +1268,7 @@ class SkillOrderTest(APITestCase):
 
 class LecturerOrderTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/lecturers"
+        self.endpoint = "/api/lecturers"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -1580,7 +1580,7 @@ class LecturerOrderTest(APITestCase):
 
 class PurchaseOrderTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/purchase"
+        self.endpoint = "/api/purchase"
         self.data = {
             "email": "user@example.com",
             "password": "TestPassword123",
@@ -1878,7 +1878,7 @@ class PurchaseOrderTest(APITestCase):
 
 class LessonOrderTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/lessons"
+        self.endpoint = "/api/lessons"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",
@@ -2195,7 +2195,7 @@ class LessonOrderTest(APITestCase):
 
 class TeachingOrderTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/teaching"
+        self.endpoint = "/api/teaching"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -2377,7 +2377,7 @@ class TeachingOrderTest(APITestCase):
 
 class UsersOrderTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/users"
+        self.endpoint = "/api/users"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",
@@ -2502,7 +2502,7 @@ class UsersOrderTest(APITestCase):
 
 class FinanceHistoryOrderTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/finance-history"
+        self.endpoint = "/api/finance-history"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -2639,7 +2639,7 @@ class FinanceHistoryOrderTest(APITestCase):
 
 class CouponOrderingTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/coupons"
+        self.endpoint = "/api/coupons"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",
@@ -2792,7 +2792,7 @@ class CouponOrderingTest(APITestCase):
 
 class CouponUserOrderingTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/coupon-usage"
+        self.endpoint = "/api/coupon-usage"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",

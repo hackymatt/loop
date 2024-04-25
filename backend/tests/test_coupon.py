@@ -16,7 +16,7 @@ from django.utils.timezone import make_aware
 
 class CouponTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/coupons"
+        self.endpoint = "/api/coupons"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",
@@ -268,7 +268,7 @@ class CouponTest(APITestCase):
 
 class CouponUserTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/coupon-usage"
+        self.endpoint = "/api/coupon-usage"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",
@@ -406,7 +406,7 @@ class CouponUserTest(APITestCase):
 
 class CouponValidationTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/coupon-validate"
+        self.endpoint = "/api/coupon-validate"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",

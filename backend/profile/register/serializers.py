@@ -69,7 +69,7 @@ class ProfileRegisterSerializer(ModelSerializer):
         verification_code = VerificationCode()
         code = verification_code.generate()
 
-        profile = Profile.objects.create(
+        Profile.objects.create(
             user=user,
             verification_code=code,
             verification_code_created_at=make_aware(datetime.now()),

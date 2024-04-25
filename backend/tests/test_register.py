@@ -17,7 +17,7 @@ from .helpers import (
 
 class RegisterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/register"
+        self.endpoint = "/api/register"
         self.data = {
             "first_name": "test_first_name",
             "last_name": "test_last_name",

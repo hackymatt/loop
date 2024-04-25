@@ -12,7 +12,7 @@ import json
 
 class FinanceTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/finance-details"
+        self.endpoint = "/api/finance-details"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",

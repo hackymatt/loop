@@ -7,7 +7,7 @@ from .helpers import login
 
 class LogoutTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/logout"
+        self.endpoint = "/api/logout"
         self.data = {"email": "email@example.com", "password": "test_password"}
         create_user(
             first_name="first_name",

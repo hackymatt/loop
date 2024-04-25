@@ -8,7 +8,7 @@ from django.utils.timezone import make_aware
 
 class VerifyTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/verify"
+        self.endpoint = "/api/verify"
         self.data_1 = {
             "email": "test_email@example.com",
             "code": "code1234",
@@ -79,7 +79,7 @@ class VerifyTest(APITestCase):
 
 class VerificationCodeTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/verify-code"
+        self.endpoint = "/api/verify-code"
         self.data = {"email": "test_email@example.com"}
         self.verification_code = {
             "verification_code": "abcd1234",
