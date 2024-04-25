@@ -5,7 +5,7 @@ import { AxiosError } from "axios";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useMemo, useEffect, useCallback } from "react";
+import { useRef, useMemo, useEffect, useCallback } from "react";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
@@ -149,20 +149,26 @@ export default function LoginView() {
     }
   }, [isLoggedIn, push]);
 
+  const effectRan = useRef(false);
   useEffect(() => {
     const { type } = queryParams;
-    switch (type) {
-      case "google":
-        onGoogleSubmit();
-        break;
-      case "facebook":
-        onFacebookSubmit();
-        break;
-      case "github":
-        onGithubSubmit();
-        break;
-      default:
-        break;
+    if (type) {
+      if (!effectRan.current) {
+        switch (type) {
+          case "google":
+            onGoogleSubmit();
+            break;
+          case "facebook":
+            onFacebookSubmit();
+            break;
+          case "github":
+            onGithubSubmit();
+            break;
+          default:
+            break;
+        }
+        effectRan.current = true;
+      }
     }
   }, [onGoogleSubmit, onFacebookSubmit, queryParams, onGithubSubmit]);
 

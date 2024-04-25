@@ -2,7 +2,6 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from profile.login.serializers import UserSerializer, InputSerializer
-from profile.models import Profile
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.conf import settings
@@ -15,6 +14,7 @@ from profile.login.utils import (
     github_get_access_token,
     github_get_user_email,
     github_get_user_info,
+    create_user,
     get_image_content,
 )
 
@@ -52,23 +52,6 @@ class EmailLoginViewSet(ModelViewSet):
         )
 
 
-def create_user(username, email, first_name, last_name, dob, gender, image, join_type):
-    user, _ = User.objects.get_or_create(email=email)
-    user.username = username
-    user.first_name = first_name
-    user.last_name = last_name
-    user.is_active = True
-
-    profile, _ = Profile.objects.get_or_create(user=user)
-    profile.dob = dob
-    profile.gender = gender
-    profile.join_type = join_type
-    profile.save()
-    profile.image.save(f"{profile.uuid}.jpg", image)
-
-    return user
-
-
 class GoogleLoginViewSet(ModelViewSet):
     http_method_names = ["post"]
 
@@ -84,7 +67,7 @@ class GoogleLoginViewSet(ModelViewSet):
         if error or not code:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
-                data={"root": error},
+                data={"root": "Błąd uwierzytelniania"},
             )
 
         redirect_uri = f"{settings.BASE_FRONTEND_URL}/login/?type=google"
@@ -95,27 +78,20 @@ class GoogleLoginViewSet(ModelViewSet):
         email = user_data["email"]
         first_name = user_data.get("given_name", "")
         last_name = user_data.get("family_name", "")
-        dob = user_data.get("birthday", None)
-        gender = user_data.get("gender", "I")
         image_url = user_data.get("picture", "")
 
-        if gender == "male":
-            gender = "M"
-        elif gender == "female":
-            gender = "K"
-        else:
-            gender = "I"
-
         if image_url != "":
-            image = get_image_content(url=image_url)
+            image = get_image_content(url=image_url, provider="Google")
+        else:
+            image = None
 
         user = create_user(
             username=email,
             email=email,
             first_name=first_name,
             last_name=last_name,
-            dob=dob,
-            gender=gender,
+            dob=None,
+            gender="I",
             image=image,
             join_type="Google",
         )
@@ -141,7 +117,7 @@ class FacebookLoginViewSet(ModelViewSet):
         if error or not code:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
-                data={"root": error},
+                data={"root": "Błąd uwierzytelniania"},
             )
 
         redirect_uri = f"{settings.BASE_FRONTEND_URL}/login/?type=facebook"
@@ -169,7 +145,9 @@ class FacebookLoginViewSet(ModelViewSet):
 
         if image_data != "":
             image_url = image_data["data"]["url"]
-            image = get_image_content(url=image_url)
+            image = get_image_content(url=image_url, provider="Facebook")
+        else:
+            image = None
 
         user = create_user(
             username=email,
@@ -203,7 +181,7 @@ class GithubLoginViewSet(ModelViewSet):
         if error or not code:
             return Response(
                 status=status.HTTP_400_BAD_REQUEST,
-                data={"root": error},
+                data={"root": "Błąd uwierzytelniania"},
             )
 
         redirect_uri = f"{settings.BASE_FRONTEND_URL}/login/?type=github"
@@ -217,7 +195,9 @@ class GithubLoginViewSet(ModelViewSet):
         image_url = user_data.get("avatar_url", "")
 
         if image_url != "":
-            image = get_image_content(url=image_url)
+            image = get_image_content(url=image_url, provider="GitHub")
+        else:
+            image = None
 
         user = create_user(
             username=email,

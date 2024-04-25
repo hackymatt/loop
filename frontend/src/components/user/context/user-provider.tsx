@@ -141,7 +141,10 @@ export function UserProvider({ children }: Props) {
   useEffect(() => {
     if (isErrorLogin || isErrorLoginGoogle || isErrorLoginFacebook || isErrorLoginGithub) {
       if (loginError || loginGoogleError || loginFacebookError || loginGithubError) {
-        if (((loginError || loginGoogleError) as AxiosError).response?.status === 403) {
+        if (
+          ((loginError || loginGoogleError || loginFacebookError || loginGithubError) as AxiosError)
+            .response?.status === 403
+        ) {
           setEmail(((loginError as AxiosError).response?.data as ILoginReturn).email);
           setIsRegistered(true);
           setIsUnverified(true);
