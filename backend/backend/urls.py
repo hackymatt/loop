@@ -99,7 +99,6 @@ urlpatterns = [
         include(
             [
                 path("", include(router.urls)),
-                path("admin", admin.site.urls),
                 path(
                     "details",
                     ProfileDetailsViewSet.as_view({"get": "list", "put": "update"}),
@@ -131,4 +130,5 @@ urlpatterns = [
             ]
         ),
     ),
+    path("admin", admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
