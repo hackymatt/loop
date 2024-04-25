@@ -11,8 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from pathlib import Path
 import os
-from dotenv import load_dotenv
 from socket import gethostbyname, gethostname
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -28,7 +28,8 @@ SECRET_KEY = os.getenv(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("LOCAL", "False") == "True"
+LOCAL = os.getenv("LOCAL", "False") == "True"
+DEBUG = LOCAL
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
@@ -38,16 +39,14 @@ CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost:8002"
 )
 
 
-SECURE_SSL_REDIRECT = False if os.getenv("LOCAL", "False") == "True" else True
-SESSION_COOKIE_SECURE = False if os.getenv("LOCAL", "False") == "True" else True
-CSRF_COOKIE_SECURE = False if os.getenv("LOCAL", "False") == "True" else True
-SECURE_BROWSER_XSS_FILTER = False if os.getenv("LOCAL", "False") == "True" else True
-SECURE_CONTENT_TYPE_NOSNIFF = False if os.getenv("LOCAL", "False") == "True" else True
+SECURE_SSL_REDIRECT = not LOCAL
+SESSION_COOKIE_SECURE = not LOCAL
+CSRF_COOKIE_SECURE = not LOCAL
+SECURE_BROWSER_XSS_FILTER = not LOCAL
+SECURE_CONTENT_TYPE_NOSNIFF = not LOCAL
 SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = (
-    False if os.getenv("LOCAL", "False") == "True" else True
-)
-SECURE_HSTS_PRELOAD = False if os.getenv("LOCAL", "False") == "True" else True
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not LOCAL
+SECURE_HSTS_PRELOAD = not LOCAL
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOST", "localhost").split(",")
 ALLOWED_HOSTS.append(gethostbyname(gethostname()))
