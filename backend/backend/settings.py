@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from socket import gethostbyname, gethostname
 
 load_dotenv()
 
@@ -22,14 +23,34 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-1%@y^a@2yaw8y#f#3&o%ov4hy9e#eu#-mi$92d3n=+v1v%rgvf"
+SECRET_KEY = os.getenv(
+    "SECRET_KEY", "django-insecure-1%@y^a@2yaw8y#f#3&o%ov4hy9e#eu#-mi$92d3n=+v1v%rgvf"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("LOCAL", "False") == "True"
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = ["http://localhost:8002"]
+
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost:8002").split(
+    ","
+)
+
+
+SECURE_SSL_REDIRECT = False if os.getenv("LOCAL", "False") == "True" else True
+SESSION_COOKIE_SECURE = False if os.getenv("LOCAL", "False") == "True" else True
+CSRF_COOKIE_SECURE = False if os.getenv("LOCAL", "False") == "True" else True
+SECURE_BROWSER_XSS_FILTER = False if os.getenv("LOCAL", "False") == "True" else True
+SECURE_CONTENT_TYPE_NOSNIFF = False if os.getenv("LOCAL", "False") == "True" else True
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = (
+    False if os.getenv("LOCAL", "False") == "True" else True
+)
+SECURE_HSTS_PRELOAD = False if os.getenv("LOCAL", "False") == "True" else True
+
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOST", "localhost").split(",")
+ALLOWED_HOSTS.append(gethostbyname(gethostname()))
 
 # Application definition
 
