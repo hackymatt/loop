@@ -60,6 +60,8 @@ jobs:
         working-directory: ${{ github.workspace }}/backend
 
     env:
+      LOCAL: ${{ secrets.LOCAL }}
+
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_HOST: ${{ secrets.DB_HOST }}
       DB_USER: postgres
