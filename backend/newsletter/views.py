@@ -31,7 +31,7 @@ class NewsletterSubscribeViewSet(ModelViewSet):
         mailer = Mailer()
         data = {
             **{
-                "unsubscribe_url": f"{settings.BASE_FRONTEND_UR}/newsletter-unsubscribe/"
+                "unsubscribe_url": f"{settings.BASE_FRONTEND_URL}/newsletter-unsubscribe/"
                 + str(instance.uuid),
             }
         }
