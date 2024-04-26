@@ -1,4 +1,4 @@
-from backend.base_model import BaseModel
+from core.base_model import BaseModel
 from django.db.models import (
     ForeignKey,
     TextField,
