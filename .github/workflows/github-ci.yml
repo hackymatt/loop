@@ -27,7 +27,7 @@ jobs:
       - name: Install requirements
         run: pip install -r requirements.txt
       - name: Test code quality
-        run: pylint backend --recursive=true --fail-under=10
+        run: pylint core --recursive=true --fail-under=10
       - name: Test code formatting
         run: black . --check
 
