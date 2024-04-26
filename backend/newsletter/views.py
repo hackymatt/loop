@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from newsletter.serializers import NewsletterEntrySerializer, NewsletterSerializer
 from newsletter.models import Newsletter
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
 from mailer.mailer import Mailer
 import json
 
@@ -30,7 +31,7 @@ class NewsletterSubscribeViewSet(ModelViewSet):
         mailer = Mailer()
         data = {
             **{
-                "unsubscribe_url": "http://localhost:8002/newsletter-unsubscribe/"
+                "unsubscribe_url": f"{settings.BASE_FRONTEND_UR}/newsletter-unsubscribe/"
                 + str(instance.uuid),
             }
         }
