@@ -32,7 +32,7 @@ class ReviewViewSet(ModelViewSet):
         if self.action == "create":
             permission_classes = [IsAuthenticated]
         elif self.action == "update" or self.action == "destroy":
-            permission_classes = [IsAuthenticated & IsUserReview]
+            permission_classes = [IsAuthenticated, IsUserReview]
         else:
             permission_classes = self.permission_classes
         return [permission() for permission in permission_classes]

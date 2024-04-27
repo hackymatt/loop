@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from profile.login.serializers import UserSerializer, InputSerializer
+from profile.login.serializers import ProfileLoginSerializer, UserSerializer, InputSerializer
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.conf import settings
@@ -21,6 +21,7 @@ from profile.login.utils import (
 
 class EmailLoginViewSet(ModelViewSet):
     http_method_names = ["post"]
+    serializer_class = ProfileLoginSerializer
 
     def create(self, request, *args, **kwargs):
         email = request.data["email"]

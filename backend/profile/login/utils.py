@@ -7,6 +7,7 @@ from django.core.files.base import ContentFile
 
 from django.contrib.auth.models import User
 from profile.models import Profile
+from newsletter.models import Newsletter
 
 GOOGLE_ACCESS_TOKEN_OBTAIN_URL = "https://oauth2.googleapis.com/token"
 GOOGLE_USER_INFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
@@ -200,5 +201,10 @@ def create_user(username, email, first_name, last_name, dob, gender, image, join
 
     if image:
         profile.image.save(f"{profile.uuid}.jpg", image)
+
+    newsletter, created = Newsletter.objects.get_or_create(email=email)
+    if not created:
+        newsletter.active = True
+        newsletter.save()
 
     return user
