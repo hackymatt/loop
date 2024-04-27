@@ -1,4 +1,9 @@
-from rest_framework.serializers import ModelSerializer, Serializer, EmailField, CharField
+from rest_framework.serializers import (
+    ModelSerializer,
+    Serializer,
+    EmailField,
+    CharField,
+)
 from django.contrib.auth.models import User
 
 

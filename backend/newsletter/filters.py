@@ -4,7 +4,7 @@ from django_filters import (
     CharFilter,
     UUIDFilter,
     DateFilter,
-    BooleanFilter
+    BooleanFilter,
 )
 from newsletter.models import Newsletter
 

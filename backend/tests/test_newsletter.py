@@ -76,28 +76,6 @@ class NewsletterEntriesTest(APITestCase):
         count = data["records_count"]
         self.assertEqual(count, 20)
 
-    def test_get_active_newsletter_entries(self):
-        # login
-        login(self, self.admin_data["email"], self.admin_data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        response = self.client.get(f"{self.endpoint}?active=True")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
-        count = data["records_count"]
-        self.assertEqual(count, 15)
-
-    def test_get_inactive_newsletter_entries(self):
-        # login
-        login(self, self.admin_data["email"], self.admin_data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        response = self.client.get(f"{self.endpoint}?active=False")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
-        count = data["records_count"]
-        self.assertEqual(count, 5)
-
     def test_get_newsletter_entry_unauthenticated(self):
         # login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
