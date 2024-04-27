@@ -63,8 +63,17 @@ services:
       - ./frontend:/usr/src/app/frontend
       - /usr/src/app/frontend/node_modules
       - /usr/src/app/frontend/.next
+
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    build:
+      context: ./nginx
     ports:
-      - 8002:8002
+      - 80:80
+    depends_on:
+      - backend
+      - frontend
 
   db:
     container_name: database

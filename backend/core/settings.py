@@ -34,7 +34,7 @@ DEBUG = LOCAL
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost:8002").split(
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost").split(
     ","
 )
 
@@ -208,7 +208,7 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
 
 
-BASE_FRONTEND_URL = os.environ.get("BASE_FRONTEND_URL", "http://localhost:8002")
+BASE_FRONTEND_URL = os.environ.get("BASE_FRONTEND_URL", "http://localhost")
 
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "")
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", "")
