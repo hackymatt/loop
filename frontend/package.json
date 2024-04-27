@@ -5,8 +5,8 @@
   "description": "Next & TypeScript",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 8002",
-    "start": "next start -p 8002",
+    "dev": "next dev",
+    "start": "next start",
     "build": "next build",
     "test": "jest --passWithNoTests",
     "test:coverage": "jest --coverage --passWithNoTests",

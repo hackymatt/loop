@@ -16,3 +16,6 @@ venv/
 
 # Local PostgreSQL data
 data/
+
+# Nginx data
+nginx/

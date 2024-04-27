@@ -190,6 +190,7 @@ def create_user(username, email, first_name, last_name, dob, gender, image, join
     user.first_name = first_name
     user.last_name = last_name
     user.is_active = True
+    user.save()
 
     profile, _ = Profile.objects.get_or_create(user=user)
     profile.dob = dob
