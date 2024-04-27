@@ -37,7 +37,7 @@ class CourseViewSet(ModelViewSet):
             or self.action == "update"
             or self.action == "destroy"
         ):
-            permission_classes = [IsAuthenticated & IsAdminUser]
+            permission_classes = [IsAuthenticated, IsAdminUser]
         else:
             permission_classes = self.permission_classes
         return [permission() for permission in permission_classes]

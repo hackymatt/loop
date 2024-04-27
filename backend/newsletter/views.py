@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from newsletter.serializers import NewsletterEntrySerializer, NewsletterSerializer
 from newsletter.models import Newsletter
+from newsletter.filters import NewsletterFilter
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from mailer.mailer import Mailer
@@ -13,8 +14,8 @@ class NewsletterEntriesViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = Newsletter.objects.all()
     serializer_class = NewsletterEntrySerializer
-    filterset_fields = "__all__"
-    permission_classes = [IsAuthenticated & IsAdminUser]
+    filterset_class = NewsletterFilter
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
 
 class NewsletterSubscribeViewSet(ModelViewSet):

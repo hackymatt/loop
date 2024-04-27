@@ -46,4 +46,4 @@ class LessonPriceHistoryViewSet(ModelViewSet):
     queryset = LessonPriceHistory.objects.all()
     serializer_class = LessonPriceHistorySerializer
     filterset_class = LessonPriceHistoryFilter
-    permission_classes = [IsAuthenticated & IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdminUser]

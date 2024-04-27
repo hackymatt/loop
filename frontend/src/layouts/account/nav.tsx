@@ -212,6 +212,12 @@ const adminNavigations = [
         },
       ],
     },
+    {
+      title: "Newsletter",
+      path: `${paths.account.admin.newsletter}/?sort_by=-created_at&page_size=10`,
+      icon: <Iconify icon="carbon:email-new" />,
+      children: [],
+    },
   ],
 ];
 
