@@ -32,10 +32,10 @@ export const usersQuery = (query?: IQueryParams) => {
   return { url, queryFn, queryKey: compact([url, urlParams]) };
 };
 
-export const useUsers = (query?: IQueryParams) => {
+export const useUsers = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = usersQuery(query);
-  const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as IUserDetailsProps[], ...rest };
+  const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
+  return { data: data?.results as IUserDetailsProps[], count: data?.count, ...rest };
 };
 
 export const useUsersPagesCount = (query?: IQueryParams) => {

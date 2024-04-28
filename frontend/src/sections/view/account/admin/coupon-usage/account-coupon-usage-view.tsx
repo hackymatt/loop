@@ -20,6 +20,7 @@ import { useUsers } from "src/api/users/users";
 import { useCouponUsage, useCouponUsagePagesCount } from "src/api/coupons/coupon-usage";
 
 import Scrollbar from "src/components/scrollbar";
+import DownloadCSVButton from "src/components/download-csv";
 
 import FilterUser from "src/sections/filters/filter-user";
 import AccountCouponUsageTableRow from "src/sections/account/admin/account-finance-table-usage-row";
@@ -48,7 +49,7 @@ export default function AdminCouponUsageView() {
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
   const { data: pagesCount } = useCouponUsagePagesCount(filters);
-  const { data: couponUsages } = useCouponUsage(filters);
+  const { data: couponUsages, count: recordsCount } = useCouponUsage(filters);
   const { data: users } = useUsers({
     user_type: UserType.Student[0],
     sort_by: "email",
@@ -100,6 +101,7 @@ export default function AdminCouponUsageView() {
         <Typography variant="h5" sx={{ mb: 3 }}>
           Wykorzystanie kuponów
         </Typography>
+        <DownloadCSVButton queryHook={useCouponUsage} disabled={(recordsCount ?? 0) === 0} />
       </Stack>
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={1} sx={{ mt: 2, mb: 3 }}>

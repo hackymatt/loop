@@ -115,10 +115,10 @@ export const lessonsQuery = (query?: IQueryParams) => {
   return { url, queryFn, queryKey: compact([endpoint, urlParams]) };
 };
 
-export const useLessons = (query?: IQueryParams) => {
+export const useLessons = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = lessonsQuery(query);
-  const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as ICourseLessonProp[], ...rest };
+  const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
+  return { data: data?.results as ICourseLessonProp[], count: data?.count, ...rest };
 };
 
 export const useLessonsPagesCount = (query?: IQueryParams) => {

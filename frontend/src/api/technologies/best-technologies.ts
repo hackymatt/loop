@@ -39,5 +39,5 @@ export const bestTechnologiesQuery = (query?: IQueryParams) => {
 export const useBestTechnologies = (query?: IQueryParams) => {
   const { queryKey, queryFn } = bestTechnologiesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as ICourseByCategoryProps[], ...rest };
+  return { data: data?.results as ICourseByCategoryProps[], count: data?.count, ...rest };
 };

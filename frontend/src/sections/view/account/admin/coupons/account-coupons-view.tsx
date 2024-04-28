@@ -26,6 +26,7 @@ import { useCoupons, useCouponsPagesCount } from "src/api/coupons/coupons";
 
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
+import DownloadCSVButton from "src/components/download-csv";
 
 import FilterValue from "src/sections/filters/filter-value";
 import AccountCouponsTableRow from "src/sections/account/admin/account-coupons-table-row";
@@ -71,7 +72,7 @@ export default function AccountCouponsView() {
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
   const { data: pagesCount } = useCouponsPagesCount(filters);
-  const { data: coupons } = useCoupons(filters);
+  const { data: coupons, count: recordsCount } = useCoupons(filters);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
@@ -154,16 +155,19 @@ export default function AccountCouponsView() {
         <Typography variant="h5" sx={{ mb: 3 }}>
           Spis kuponów
         </Typography>
-        <LoadingButton
-          component="label"
-          variant="contained"
-          size="small"
-          color="success"
-          loading={false}
-          onClick={newCouponFormOpen.onToggle}
-        >
-          <Iconify icon="carbon:add" />
-        </LoadingButton>
+        <Stack direction="row" spacing={1}>
+          <DownloadCSVButton queryHook={useCoupons} disabled={(recordsCount ?? 0) === 0} />
+          <LoadingButton
+            component="label"
+            variant="contained"
+            size="small"
+            color="success"
+            loading={false}
+            onClick={newCouponFormOpen.onToggle}
+          >
+            <Iconify icon="carbon:add" />
+          </LoadingButton>
+        </Stack>
       </Stack>
 
       <Tabs

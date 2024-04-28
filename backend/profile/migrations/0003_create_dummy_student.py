@@ -11,7 +11,8 @@ def generate_dummy_student(apps, schema_editor):
     user = get_user_model()
 
     if not user.objects.filter(email=email).exists():
-        student = user.objects.create(username=email, password=password, email=email)
+        student = user.objects.create(username=email, email=email)
+        student.set_password(password)
         student.save()
 
         Profile.objects.create(user=student, user_type="S")

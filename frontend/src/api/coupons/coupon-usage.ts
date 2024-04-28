@@ -34,7 +34,7 @@ export const couponUsageQuery = (query?: IQueryParams) => {
 export const useCouponUsage = (query?: IQueryParams) => {
   const { queryKey, queryFn } = couponUsageQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as ICouponUsageProps[], ...rest };
+  return { data: data?.results as ICouponUsageProps[], count: data?.count, ...rest };
 };
 
 export const useCouponUsagePagesCount = (query?: IQueryParams) => {

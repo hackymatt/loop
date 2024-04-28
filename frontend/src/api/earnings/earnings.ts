@@ -32,10 +32,10 @@ export const earningsQuery = (query?: IQueryParams) => {
   return { url, queryFn, queryKey: compact([endpoint, urlParams]) };
 };
 
-export const useEarnings = (query?: IQueryParams) => {
+export const useEarnings = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = earningsQuery(query);
-  const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as IEarningProp[], ...rest };
+  const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
+  return { data: data?.results as IEarningProp[], count: data?.count, ...rest };
 };
 
 export const useEarningsPagesCount = (query?: IQueryParams) => {

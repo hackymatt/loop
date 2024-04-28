@@ -54,10 +54,10 @@ export const schedulesQuery = (query?: IQueryParams) => {
   return { url, queryFn, queryKey: compact([endpoint, urlParams]) };
 };
 
-export const useSchedules = (query?: IQueryParams) => {
+export const useSchedules = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = schedulesQuery(query);
-  const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as IScheduleProp[], ...rest };
+  const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
+  return { data: data?.results as IScheduleProp[], count: data?.count, ...rest };
 };
 
 export const useCreateSchedule = () => {

@@ -24,6 +24,7 @@ import { fDate } from "src/utils/format-time";
 import { useUsers, useUsersPagesCount } from "src/api/users/users";
 
 import Scrollbar from "src/components/scrollbar";
+import DownloadCSVButton from "src/components/download-csv/download-csv";
 
 import AccountUsersTableRow from "src/sections/account/admin/account-users-table-row";
 
@@ -66,7 +67,7 @@ export default function AccountUsersView() {
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
   const { data: pagesCount } = useUsersPagesCount(filters);
-  const { data: users } = useUsers(filters);
+  const { data: users, count: recordsCount } = useUsers(filters);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
@@ -140,6 +141,7 @@ export default function AccountUsersView() {
         <Typography variant="h5" sx={{ mb: 3 }}>
           Spis użytkowników
         </Typography>
+        <DownloadCSVButton queryHook={useUsers} disabled={(recordsCount ?? 0) === 0} />
       </Stack>
 
       <Tabs

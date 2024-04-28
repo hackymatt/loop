@@ -41,10 +41,10 @@ export const topicsQuery = (query?: IQueryParams) => {
   return { url, queryFn, queryKey: compact([url, urlParams]) };
 };
 
-export const useTopics = (query?: IQueryParams) => {
+export const useTopics = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = topicsQuery(query);
-  const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as ICourseByCategoryProps[], ...rest };
+  const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
+  return { data: data?.results as ICourseByCategoryProps[], count: data?.count, ...rest };
 };
 
 export const useTopicsPagesCount = (query?: IQueryParams) => {

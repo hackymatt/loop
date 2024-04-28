@@ -129,10 +129,10 @@ export const coursesQuery = (query?: IQueryParams) => {
   return { url, queryFn, queryKey: compact([endpoint, urlParams]) };
 };
 
-export const useCourses = (query?: IQueryParams) => {
+export const useCourses = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = coursesQuery(query);
-  const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as ICourseProps[], ...rest };
+  const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
+  return { data: data?.results as ICourseProps[], count: data?.count, ...rest };
 };
 
 export const useCoursesPagesCount = (query?: IQueryParams) => {

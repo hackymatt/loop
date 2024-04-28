@@ -45,5 +45,5 @@ export const bestReviewsQuery = () => {
 export const useBestReviews = () => {
   const { queryKey, queryFn } = bestReviewsQuery();
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as ITestimonialProps[], ...rest };
+  return { data: data?.results as ITestimonialProps[], count: data?.count, ...rest };
 };

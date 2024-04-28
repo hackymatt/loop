@@ -59,5 +59,5 @@ export const lessonLecturersQuery = (query?: IQueryParams) => {
 export const useLessonLecturers = (query?: IQueryParams) => {
   const { queryKey, queryFn } = lessonLecturersQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as ITeamMemberProps[], ...rest };
+  return { data: data?.results as ITeamMemberProps[], count: data?.count, ...rest };
 };

@@ -60,10 +60,10 @@ export const teachingsQuery = (query?: IQueryParams) => {
   return { url, queryFn, queryKey: compact([endpoint, urlParams]) };
 };
 
-export const useTeachings = (query?: IQueryParams) => {
+export const useTeachings = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = teachingsQuery(query);
-  const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as ITeachingProp[], ...rest };
+  const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
+  return { data: data?.results as ITeachingProp[], count: data?.count, ...rest };
 };
 
 export const useTeachingsPagesCount = (query?: IQueryParams) => {

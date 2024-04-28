@@ -20,6 +20,7 @@ import { useCourses, useCoursesPagesCount } from "src/api/courses/courses";
 
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
+import DownloadCSVButton from "src/components/download-csv";
 
 import FilterLevel from "src/sections/filters/filter-level";
 import AccountCoursesTableRow from "src/sections/account/admin/account-courses-table-row";
@@ -83,7 +84,7 @@ export default function AccountCoursesView() {
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
   const { data: pagesCount } = useCoursesPagesCount(filters);
-  const { data: courses } = useCourses(filters);
+  const { data: courses, count: recordsCount } = useCourses(filters);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
@@ -157,16 +158,19 @@ export default function AccountCoursesView() {
         <Typography variant="h5" sx={{ mb: 3 }}>
           Spis kursów
         </Typography>
-        <LoadingButton
-          component="label"
-          variant="contained"
-          size="small"
-          color="success"
-          loading={false}
-          onClick={newCourseFormOpen.onToggle}
-        >
-          <Iconify icon="carbon:add" />
-        </LoadingButton>
+        <Stack direction="row" spacing={1}>
+          <DownloadCSVButton queryHook={useCourses} disabled={(recordsCount ?? 0) === 0} />
+          <LoadingButton
+            component="label"
+            variant="contained"
+            size="small"
+            color="success"
+            loading={false}
+            onClick={newCourseFormOpen.onToggle}
+          >
+            <Iconify icon="carbon:add" />
+          </LoadingButton>
+        </Stack>
       </Stack>
 
       <Tabs
