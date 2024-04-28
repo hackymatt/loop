@@ -236,7 +236,6 @@ export function defaultProps(theme: Theme) {
         defaultEndIcon: <TreeViewEndIcon />,
       },
     },
-    // Zone
     MuiFormControl: {
       defaultProps: {
         variant: "filled",

@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 
 import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
 import { Badge } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import AppBar from "@mui/material/AppBar";
@@ -21,7 +20,6 @@ import { useCartsRecordsCount } from "src/api/carts/carts";
 import { useWishlistsRecordsCount } from "src/api/wishlists/wishlists";
 
 import Logo from "src/components/logo";
-import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 
@@ -59,24 +57,6 @@ export default function Header({ headerOnDark }: Props) {
     <>
       <Box sx={{ lineHeight: 0, position: "relative" }}>
         <Logo />
-
-        <Link href="https://zone-docs.vercel.app/changelog" target="_blank" rel="noopener">
-          <Label
-            color="info"
-            sx={{
-              ml: 0.5,
-              px: 0.5,
-              top: -14,
-              left: 60,
-              height: 20,
-              fontSize: 11,
-              cursor: "pointer",
-              position: "absolute",
-            }}
-          >
-            v2.4.0
-          </Label>
-        </Link>
       </Box>
 
       <>
