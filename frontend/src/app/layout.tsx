@@ -24,10 +24,10 @@ export const viewport = {
 };
 
 export const metadata = {
-  title: "Zone UI Kit",
+  title: "loop",
   description:
-    "The ZONE is built on top of MUI, a powerful library that provides flexible, customizable, and easy-to-use components.",
-  keywords: "react,material,kit,application,dashboard,admin,template",
+    "Platforma firmy loop oferującej kursy programowania online dla przyszłych i obecnych programistów",
+  keywords: "loop,szkoła,kursy,programowanie,it,tanio,profesjonalnie,online,zdalne",
   manifest: "/manifest.json",
   icons: [
     { rel: "icon", url: "/favicon/favicon.ico" },

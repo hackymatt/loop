@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import AccountUsersView from "src/sections/_elearning/view/account/admin/users/account-users-view";
+import AccountUsersView from "src/sections/view/account/admin/users/account-users-view";
 
 // ----------------------------------------------------------------------
 

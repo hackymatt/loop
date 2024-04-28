@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import HomeView from "src/sections/_elearning/view/home-view";
+import HomeView from "src/sections/view/home-view";
 
 // ----------------------------------------------------------------------
 

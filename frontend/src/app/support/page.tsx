@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import SupportView from "src/sections/_elearning/view/support-view";
+import SupportView from "src/sections/view/support-view";
 
 // ----------------------------------------------------------------------
 

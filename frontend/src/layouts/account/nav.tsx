@@ -26,7 +26,7 @@ import { useUserContext } from "src/components/user";
 import TextMaxLine from "src/components/text-max-line";
 import { useToastContext } from "src/components/toast";
 
-import AccountImage from "src/sections/_elearning/account/account-image";
+import AccountImage from "src/sections/account/account-image";
 
 import { UserType } from "src/types/user";
 import { ReviewStatus } from "src/types/purchase";

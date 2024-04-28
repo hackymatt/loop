@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import AccountCalendarView from "src/sections/_elearning/view/account/teacher/calendar/account-calendar-view";
+import AccountCalendarView from "src/sections/view/account/teacher/calendar/account-calendar-view";
 
 // ----------------------------------------------------------------------
 

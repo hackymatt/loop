@@ -1,6 +1,6 @@
 {
-  "name": "Zone UI",
-  "short_name": "Zone UI",
+  "name": "loop UI",
+  "short_name": "loop UI",
   "display": "standalone",
   "start_url": "/",
   "theme_color": "#000000",

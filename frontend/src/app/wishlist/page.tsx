@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import WishlistView from "src/sections/_elearning/view/wishlist-view";
+import WishlistView from "src/sections/view/wishlist-view";
 
 // ----------------------------------------------------------------------
 

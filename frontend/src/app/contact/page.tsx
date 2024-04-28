@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import ContactView from "src/sections/_elearning/view/contact-view";
+import ContactView from "src/sections/view/contact-view";
 
 // ----------------------------------------------------------------------
 

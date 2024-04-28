@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import AboutView from "src/sections/_elearning/view/about-view";
+import AboutView from "src/sections/view/about-view";
 
 // ----------------------------------------------------------------------
 
