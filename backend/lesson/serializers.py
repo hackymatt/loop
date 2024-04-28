@@ -17,6 +17,7 @@ from purchase.models import Purchase
 from teaching.models import Teaching
 from django.db.models.functions import Concat
 from django.db.models import Avg, Value
+from django.conf import settings
 
 
 MIN_LESSON_DURATION_MINS = 30
@@ -135,6 +136,15 @@ class LessonSerializer(ModelSerializer):
             )
 
         return duration
+
+    def validate_github_url(self, github_url):
+        github_repo = settings.GITHUB_REPO
+        if not github_url.startswith(github_repo):
+            raise ValidationError(
+                f"Github url musi być rozpoczynać się na {github_repo} minut."
+            )
+
+        return github_url
 
     def add_technology(self, lesson, technologies):
         for technology in technologies:

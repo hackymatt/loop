@@ -31,7 +31,7 @@ export const schema = Yup.object().shape({
       "Czas trwania musi być wielokrotnością 30 minut",
       (number) => number % 30 === 0,
     ),
-  github_url: Yup.string().url().required("Link dla repozytorium jest wymagany"),
+  github_url: Yup.string().required("Link dla repozytorium jest wymagany"),
   technologies: Yup.array()
     .required("Technologie są wymagane")
     .min(1, "Wymagana przynajmniej jedna technologia"),

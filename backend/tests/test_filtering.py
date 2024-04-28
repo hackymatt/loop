@@ -81,7 +81,7 @@ class CourseFilterTest(APITestCase):
             title="Python lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="99.99",
             technologies=[self.technology_1],
         )
@@ -90,7 +90,7 @@ class CourseFilterTest(APITestCase):
             title="Python lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_1],
         )
@@ -168,7 +168,7 @@ class CourseFilterTest(APITestCase):
             title="JS lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="299.99",
             technologies=[self.technology_2],
         )
@@ -177,7 +177,7 @@ class CourseFilterTest(APITestCase):
             title="JS lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_2],
         )
@@ -185,7 +185,7 @@ class CourseFilterTest(APITestCase):
             title="JS lesson 3",
             description="bbbb",
             duration="120",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_2],
         )
@@ -293,7 +293,7 @@ class CourseFilterTest(APITestCase):
             title="VBA lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="109.99",
             technologies=[self.technology_3],
         )
@@ -485,7 +485,7 @@ class ReviewFilterTest(APITestCase):
             title="Python lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_1],
         )
@@ -493,7 +493,7 @@ class ReviewFilterTest(APITestCase):
             title="Python lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_1],
         )
@@ -543,7 +543,7 @@ class ReviewFilterTest(APITestCase):
             title="JS lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_2],
         )
@@ -551,7 +551,7 @@ class ReviewFilterTest(APITestCase):
             title="JS lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_2],
         )
@@ -559,7 +559,7 @@ class ReviewFilterTest(APITestCase):
             title="JS lesson 3",
             description="bbbb",
             duration="120",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_2],
         )
@@ -616,7 +616,7 @@ class ReviewFilterTest(APITestCase):
             title="VBA lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_3],
         )
@@ -767,7 +767,7 @@ class ScheduleFilterTest(APITestCase):
             title="Python lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_1],
         )
@@ -775,7 +775,7 @@ class ScheduleFilterTest(APITestCase):
             title="Python lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_1],
         )
@@ -813,7 +813,7 @@ class ScheduleFilterTest(APITestCase):
             title="JS lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_2],
         )
@@ -821,7 +821,7 @@ class ScheduleFilterTest(APITestCase):
             title="JS lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_2],
         )
@@ -829,7 +829,7 @@ class ScheduleFilterTest(APITestCase):
             title="JS lesson 3",
             description="bbbb",
             duration="120",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_2],
         )
@@ -860,7 +860,7 @@ class ScheduleFilterTest(APITestCase):
             title="VBA lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_3],
         )
@@ -1054,7 +1054,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             title="Python lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_1],
         )
@@ -1062,7 +1062,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             title="Python lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_1],
         )
@@ -1096,7 +1096,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             title="JS lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_2],
         )
@@ -1104,7 +1104,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             title="JS lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_2],
         )
@@ -1131,7 +1131,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             title="VBA lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_3],
         )
@@ -1139,7 +1139,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             title="VBA lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_3],
         )
@@ -1248,7 +1248,7 @@ class TechnologyFilterTest(APITestCase):
             title="Python lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology],
         )
@@ -1256,7 +1256,7 @@ class TechnologyFilterTest(APITestCase):
             title="Python lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_2],
         )
@@ -1462,7 +1462,7 @@ class LecturerFilterTest(APITestCase):
             title="Python lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_1],
         )
@@ -1470,7 +1470,7 @@ class LecturerFilterTest(APITestCase):
             title="Python lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_1],
         )
@@ -1612,7 +1612,7 @@ class PurchaseFilterTest(APITestCase):
             title="Python lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_1],
         )
@@ -1620,7 +1620,7 @@ class PurchaseFilterTest(APITestCase):
             title="Python lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_1],
         )
@@ -1628,7 +1628,7 @@ class PurchaseFilterTest(APITestCase):
             title="Python lesson 3",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_1],
         )
@@ -1737,7 +1737,7 @@ class PurchaseFilterTest(APITestCase):
             title="JS lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_2],
         )
@@ -1745,7 +1745,7 @@ class PurchaseFilterTest(APITestCase):
             title="JS lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_2],
         )
@@ -1753,7 +1753,7 @@ class PurchaseFilterTest(APITestCase):
             title="JS lesson 3",
             description="bbbb",
             duration="120",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_2],
         )
@@ -1793,7 +1793,7 @@ class PurchaseFilterTest(APITestCase):
             title="VBA lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_3],
         )
@@ -1983,7 +1983,7 @@ class LessonFilterTest(APITestCase):
             title="Python lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_1],
         )
@@ -1992,7 +1992,7 @@ class LessonFilterTest(APITestCase):
             title="Python lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_1],
         )
@@ -2058,7 +2058,7 @@ class LessonFilterTest(APITestCase):
             title="JS lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_2],
         )
@@ -2067,7 +2067,7 @@ class LessonFilterTest(APITestCase):
             title="JS lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_2],
         )
@@ -2126,7 +2126,7 @@ class LessonFilterTest(APITestCase):
             title="VBA lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_3],
         )
@@ -2135,7 +2135,7 @@ class LessonFilterTest(APITestCase):
             title="VBA lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lasson",
+            github_url="https://github.com/loopedupl/lasson",
             price="2.99",
             technologies=[self.technology_3],
         )
@@ -2326,7 +2326,7 @@ class ManageTeachingFilterTest(APITestCase):
             title="Python lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_1],
         )
@@ -2334,7 +2334,7 @@ class ManageTeachingFilterTest(APITestCase):
             title="Python lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_1],
         )
@@ -2371,7 +2371,7 @@ class ManageTeachingFilterTest(APITestCase):
             title="JS lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_2],
         )
@@ -2379,7 +2379,7 @@ class ManageTeachingFilterTest(APITestCase):
             title="JS lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_2],
         )
@@ -2387,7 +2387,7 @@ class ManageTeachingFilterTest(APITestCase):
             title="JS lesson 3",
             description="bbbb",
             duration="120",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_2],
         )
@@ -2415,7 +2415,7 @@ class ManageTeachingFilterTest(APITestCase):
             title="VBA lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_3],
         )
@@ -2592,7 +2592,7 @@ class TeachingFilterTest(APITestCase):
             title="Python lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_1],
         )
@@ -2600,7 +2600,7 @@ class TeachingFilterTest(APITestCase):
             title="Python lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_1],
         )
@@ -2637,7 +2637,7 @@ class TeachingFilterTest(APITestCase):
             title="JS lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_2],
         )
@@ -2645,7 +2645,7 @@ class TeachingFilterTest(APITestCase):
             title="JS lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_2],
         )
@@ -2653,7 +2653,7 @@ class TeachingFilterTest(APITestCase):
             title="JS lesson 3",
             description="bbbb",
             duration="120",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_2],
         )
@@ -2681,7 +2681,7 @@ class TeachingFilterTest(APITestCase):
             title="VBA lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_3],
         )
@@ -3555,7 +3555,7 @@ class EarningsFilterTest(APITestCase):
             title="Python lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="99.99",
             technologies=[self.technology_1],
         )
@@ -3563,7 +3563,7 @@ class EarningsFilterTest(APITestCase):
             title="Python lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="152.99",
             technologies=[self.technology_1],
         )
@@ -3571,7 +3571,7 @@ class EarningsFilterTest(APITestCase):
             title="Python lesson 3",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="222.99",
             technologies=[self.technology_1],
         )
@@ -3579,7 +3579,7 @@ class EarningsFilterTest(APITestCase):
             title="Python lesson 4",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="312.99",
             technologies=[self.technology_1],
         )

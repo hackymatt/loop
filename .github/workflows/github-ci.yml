@@ -83,6 +83,8 @@ jobs:
       EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
       EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
 
+      GITHUB_REPO: ${{ secrets.LESSON_GITHUB_REPO }}
+
     services:
       postgres:
         image: postgres:12.5

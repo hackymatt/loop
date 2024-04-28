@@ -90,7 +90,7 @@ class LessonTest(APITestCase):
             title="Python lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_1],
         )
@@ -99,7 +99,7 @@ class LessonTest(APITestCase):
             title="Python lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_1],
         )
@@ -165,7 +165,7 @@ class LessonTest(APITestCase):
             title="JS lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_2],
         )
@@ -174,7 +174,7 @@ class LessonTest(APITestCase):
             title="JS lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_2],
         )
@@ -233,7 +233,7 @@ class LessonTest(APITestCase):
             title="VBA lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_3],
         )
@@ -242,7 +242,7 @@ class LessonTest(APITestCase):
             title="VBA lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_3],
         )
@@ -305,7 +305,7 @@ class LessonTest(APITestCase):
             description="lesson_description",
             price="89.99",
             duration=90,
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             technologies=[self.technology_2.id],
         )
 
@@ -314,7 +314,7 @@ class LessonTest(APITestCase):
             description="lesson_description",
             price="19.99",
             duration=60,
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             technologies=[self.technology_1.id],
         )
 
@@ -478,6 +478,17 @@ class LessonTest(APITestCase):
         # post data
         data = self.new_lesson
         data["duration"] = 55
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(lessons_number(), 6)
+
+    def test_create_lesson_incorrect_github_url(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = self.new_lesson
+        data["github_url"] = "https://github.com/test/lesson"
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(lessons_number(), 6)
