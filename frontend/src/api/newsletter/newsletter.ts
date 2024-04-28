@@ -32,9 +32,9 @@ export const newsletterQuery = (query?: IQueryParams) => {
   return { url, queryFn, queryKey: compact([endpoint, urlParams]) };
 };
 
-export const useNewsletter = (query?: IQueryParams) => {
+export const useNewsletter = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = newsletterQuery(query);
-  const { data, ...rest } = useQuery({ queryKey, queryFn });
+  const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
   return { data: data?.results as INewsletterProps[], ...rest };
 };
 

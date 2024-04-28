@@ -115,9 +115,9 @@ export const purchaseQuery = (query?: IQueryParams) => {
   return { url, queryFn, queryKey: compact([endpoint, urlParams]) };
 };
 
-export const usePurchase = (query?: IQueryParams) => {
+export const usePurchase = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = purchaseQuery(query);
-  const { data, ...rest } = useQuery({ queryKey, queryFn });
+  const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
   return { data: data?.results as IPurchaseItemProp[], ...rest };
 };
 

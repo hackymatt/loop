@@ -75,9 +75,9 @@ export const reviewsQuery = (query?: IQueryParams) => {
   return { url, queryFn, queryKey: compact([endpoint, urlParams]) };
 };
 
-export const useReviews = (query?: IQueryParams) => {
+export const useReviews = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = reviewsQuery(query);
-  const { data, ...rest } = useQuery({ queryKey, queryFn });
+  const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
   return { data: data?.results as IReviewItemProp[], ...rest };
 };
 
