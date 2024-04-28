@@ -50,5 +50,5 @@ export const lessonSchedulesQuery = (query?: IQueryParams) => {
 export const useLessonSchedules = (query?: IQueryParams) => {
   const { queryKey, queryFn } = lessonSchedulesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as IScheduleProp[], ...rest };
+  return { data: data?.results as IScheduleProp[], count: data?.count, ...rest };
 };

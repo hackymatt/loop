@@ -35,7 +35,7 @@ export const usersQuery = (query?: IQueryParams) => {
 export const useUsers = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = usersQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as IUserDetailsProps[], ...rest };
+  return { data: data?.results as IUserDetailsProps[], count: data?.count, ...rest };
 };
 
 export const useUsersPagesCount = (query?: IQueryParams) => {

@@ -118,7 +118,7 @@ export const purchaseQuery = (query?: IQueryParams) => {
 export const usePurchase = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = purchaseQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as IPurchaseItemProp[], ...rest };
+  return { data: data?.results as IPurchaseItemProp[], count: data?.count, ...rest };
 };
 
 export const usePurchasePageCount = (query?: IQueryParams) => {

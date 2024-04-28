@@ -27,5 +27,5 @@ export const reviewsStatisticsQuery = (query?: IQueryParams) => {
 export const useReviewsStatistics = (query?: IQueryParams) => {
   const { queryKey, queryFn } = reviewsStatisticsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as IReviewStatistic[], ...rest };
+  return { data: data?.results as IReviewStatistic[], count: data?.count, ...rest };
 };

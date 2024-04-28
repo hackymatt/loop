@@ -118,7 +118,7 @@ export const lessonsQuery = (query?: IQueryParams) => {
 export const useLessons = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = lessonsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as ICourseLessonProp[], ...rest };
+  return { data: data?.results as ICourseLessonProp[], count: data?.count, ...rest };
 };
 
 export const useLessonsPagesCount = (query?: IQueryParams) => {

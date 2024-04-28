@@ -22,6 +22,7 @@ import { useTopics, useTopicsPagesCount } from "src/api/topics/topics";
 
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
+import DownloadCSVButton from "src/components/download-csv";
 
 import AccountTopicsTableRow from "src/sections/account/admin/account-topics-table-row";
 
@@ -56,7 +57,7 @@ export default function AccountCoursesTopicsView() {
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
   const { data: pagesCount } = useTopicsPagesCount(filters);
-  const { data: topics } = useTopics(filters);
+  const { data: topics, count: recordsCount } = useTopics(filters);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
@@ -122,16 +123,19 @@ export default function AccountCoursesTopicsView() {
         <Typography variant="h5" sx={{ mb: 3 }}>
           Tematy
         </Typography>
-        <LoadingButton
-          component="label"
-          variant="contained"
-          size="small"
-          color="success"
-          loading={false}
-          onClick={newTopicFormOpen.onToggle}
-        >
-          <Iconify icon="carbon:add" />
-        </LoadingButton>
+        <Stack direction="row" spacing={1}>
+          <DownloadCSVButton queryHook={useTopics} disabled={(recordsCount ?? 0) === 0} />
+          <LoadingButton
+            component="label"
+            variant="contained"
+            size="small"
+            color="success"
+            loading={false}
+            onClick={newTopicFormOpen.onToggle}
+          >
+            <Iconify icon="carbon:add" />
+          </LoadingButton>
+        </Stack>
       </Stack>
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={1} sx={{ mt: 5, mb: 3 }}>

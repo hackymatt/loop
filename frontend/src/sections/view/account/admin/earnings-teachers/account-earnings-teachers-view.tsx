@@ -20,6 +20,7 @@ import { useLecturers } from "src/api/lecturers/lecturers";
 import { useEarnings, useEarningsPagesCount } from "src/api/earnings/earnings";
 
 import Scrollbar from "src/components/scrollbar";
+import DownloadCSVButton from "src/components/download-csv";
 
 import FilterTeacher from "src/sections/filters/filter-teacher";
 import AccountTableHead from "src/sections/account/account-table-head";
@@ -49,7 +50,7 @@ export default function AccountEarningsTeachersView() {
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
   const { data: pagesCount } = useEarningsPagesCount(filters);
-  const { data: earnings } = useEarnings(filters);
+  const { data: earnings, count: recordsCount } = useEarnings(filters);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 12;
@@ -86,6 +87,7 @@ export default function AccountEarningsTeachersView() {
         <Typography variant="h5" sx={{ mb: 3 }}>
           Zarobki instruktorów
         </Typography>
+        <DownloadCSVButton queryHook={useEarnings} disabled={(recordsCount ?? 0) === 0} />
       </Stack>
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={1} sx={{ mt: 2, mb: 3 }}>

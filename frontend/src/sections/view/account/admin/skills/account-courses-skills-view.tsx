@@ -22,6 +22,7 @@ import { useSkills, useSkillsPagesCount } from "src/api/skills/skills";
 
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
+import DownloadCSVButton from "src/components/download-csv";
 
 import AccountSkillsTableRow from "src/sections/account/admin/account-skills-table-row";
 
@@ -56,7 +57,7 @@ export default function AccountCoursesSkillsView() {
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
   const { data: pagesCount } = useSkillsPagesCount(filters);
-  const { data: skills } = useSkills(filters);
+  const { data: skills, count: recordsCount } = useSkills(filters);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
@@ -122,16 +123,19 @@ export default function AccountCoursesSkillsView() {
         <Typography variant="h5" sx={{ mb: 3 }}>
           Umiejętności
         </Typography>
-        <LoadingButton
-          component="label"
-          variant="contained"
-          size="small"
-          color="success"
-          loading={false}
-          onClick={newSkillFormOpen.onToggle}
-        >
-          <Iconify icon="carbon:add" />
-        </LoadingButton>
+        <Stack direction="row" spacing={1}>
+          <DownloadCSVButton queryHook={useSkills} disabled={(recordsCount ?? 0) === 0} />
+          <LoadingButton
+            component="label"
+            variant="contained"
+            size="small"
+            color="success"
+            loading={false}
+            onClick={newSkillFormOpen.onToggle}
+          >
+            <Iconify icon="carbon:add" />
+          </LoadingButton>
+        </Stack>
       </Stack>
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={1} sx={{ mt: 5, mb: 3 }}>

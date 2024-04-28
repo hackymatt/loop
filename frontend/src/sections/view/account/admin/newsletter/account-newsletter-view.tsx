@@ -20,6 +20,7 @@ import { fDate } from "src/utils/format-time";
 import { useNewsletter, useNewsletterPagesCount } from "src/api/newsletter/newsletter";
 
 import Scrollbar from "src/components/scrollbar";
+import DownloadCSVButton from "src/components/download-csv";
 
 import AccountNewsletterTableRow from "src/sections/account/admin/account-newsletter-table-row";
 
@@ -54,7 +55,7 @@ export default function AccountNewsletterView() {
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
   const { data: pagesCount } = useNewsletterPagesCount(filters);
-  const { data: newsletter } = useNewsletter(filters);
+  const { data: newsletter, count: recordsCount } = useNewsletter(filters);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
@@ -109,6 +110,7 @@ export default function AccountNewsletterView() {
         <Typography variant="h5" sx={{ mb: 3 }}>
           Zapisy w newsletterze
         </Typography>
+        <DownloadCSVButton queryHook={useNewsletter} disabled={(recordsCount ?? 0) === 0} />
       </Stack>
       <Tabs
         value={TABS.find((t) => t.id === tab)?.id ?? ""}

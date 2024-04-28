@@ -78,7 +78,7 @@ export const reviewsQuery = (query?: IQueryParams) => {
 export const useReviews = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = reviewsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as IReviewItemProp[], ...rest };
+  return { data: data?.results as IReviewItemProp[], count: data?.count, ...rest };
 };
 
 export const useReviewsPageCount = (query?: IQueryParams) => {

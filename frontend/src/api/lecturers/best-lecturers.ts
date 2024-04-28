@@ -40,5 +40,5 @@ export const bestLecturersQuery = () => {
 export const useBestLecturers = () => {
   const { queryKey, queryFn } = bestLecturersQuery();
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as ITeamMemberProps[], ...rest };
+  return { data: data?.results as ITeamMemberProps[], count: data?.count, ...rest };
 };

@@ -7,10 +7,10 @@ import Iconify from "../iconify";
 
 export default function DownloadCSVButton({
   queryHook,
-  filename,
+  disabled = false,
 }: {
   queryHook: any;
-  filename: string;
+  disabled?: boolean;
 }) {
   const [enabled, setEnabled] = useState<boolean>(false);
   const [initiateDownload, setInitiateDownload] = useState<boolean>(false);
@@ -32,14 +32,15 @@ export default function DownloadCSVButton({
 
   return (
     <>
-      {initiateDownload && <CSVDownload data={data} filename={filename} target="_blank" />}
+      {initiateDownload && <CSVDownload data={data} target="_blank" />}
       <LoadingButton
         component="label"
         variant="contained"
         size="small"
-        color="success"
+        color="secondary"
         loading={enabled ? isLoading : false}
         onClick={() => setEnabled(true)}
+        disabled={disabled}
       >
         <Iconify icon="carbon:download" />
       </LoadingButton>

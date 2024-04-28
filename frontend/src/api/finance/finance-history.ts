@@ -65,7 +65,7 @@ export const financeHistoryQuery = (query?: IQueryParams) => {
 export const useFinanceHistory = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = financeHistoryQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as IFinanceHistoryProp[], ...rest };
+  return { data: data?.results as IFinanceHistoryProp[], count: data?.count, ...rest };
 };
 
 export const useFinanceHistoryPagesCount = (query?: IQueryParams) => {

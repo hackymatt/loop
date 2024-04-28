@@ -93,5 +93,5 @@ export const bestCoursesQuery = () => {
 export const useBestCourses = () => {
   const { queryKey, queryFn } = bestCoursesQuery();
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as ICourseProps[], ...rest };
+  return { data: data?.results as ICourseProps[], count: data?.count, ...rest };
 };

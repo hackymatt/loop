@@ -21,6 +21,7 @@ import { fCurrency } from "src/utils/format-number";
 import { useEarnings, useEarningsPagesCount } from "src/api/earnings/earnings";
 
 import Scrollbar from "src/components/scrollbar";
+import DownloadCSVButton from "src/components/download-csv";
 
 import AccountTableHead from "src/sections/account/account-table-head";
 import AccountEarningsTableRow from "src/sections/account/teacher/account-earnings-table-row";
@@ -48,7 +49,7 @@ export default function AccountEarningsView() {
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
   const { data: pagesCount } = useEarningsPagesCount(filters);
-  const { data: earnings } = useEarnings(filters);
+  const { data: earnings, count: recordsCount } = useEarnings(filters);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 12;
@@ -108,6 +109,7 @@ export default function AccountEarningsView() {
         <Typography variant="h5" sx={{ mb: 3 }}>
           Zarobki
         </Typography>
+        <DownloadCSVButton queryHook={useEarnings} disabled={(recordsCount ?? 0) === 0} />
       </Stack>
 
       <Stack direction="row" display="flex" justifyContent="center">

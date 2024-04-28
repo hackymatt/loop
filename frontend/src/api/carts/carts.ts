@@ -73,7 +73,7 @@ export const cartsQuery = (query?: IQueryParams) => {
 export const useCarts = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = cartsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as ICartProp[], ...rest };
+  return { data: data?.results as ICartProp[], count: data?.count, ...rest };
 };
 
 export const useCartsRecordsCount = (query?: IQueryParams, enabled: boolean = true) => {

@@ -35,7 +35,7 @@ export const newsletterQuery = (query?: IQueryParams) => {
 export const useNewsletter = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = newsletterQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as INewsletterProps[], ...rest };
+  return { data: data?.results as INewsletterProps[], count: data?.count, ...rest };
 };
 
 export const useNewsletterPagesCount = (query?: IQueryParams) => {

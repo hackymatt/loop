@@ -11,7 +11,8 @@ def generate_dummy_lecturer(apps, schema_editor):
     user = get_user_model()
 
     if not user.objects.filter(email=email).exists():
-        lecturer = user.objects.create(username=email, password=password, email=email)
+        lecturer = user.objects.create(username=email, email=email)
+        lecturer.set_password(password)
         lecturer.save()
 
         Profile.objects.create(user=lecturer, user_type="W")

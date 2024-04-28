@@ -63,7 +63,7 @@ export const teachingsQuery = (query?: IQueryParams) => {
 export const useTeachings = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = teachingsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as ITeachingProp[], ...rest };
+  return { data: data?.results as ITeachingProp[], count: data?.count, ...rest };
 };
 
 export const useTeachingsPagesCount = (query?: IQueryParams) => {

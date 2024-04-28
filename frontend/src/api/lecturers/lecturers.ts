@@ -71,7 +71,7 @@ export const lecturersQuery = (query?: IQueryParams) => {
 export const useLecturers = (query?: IQueryParams) => {
   const { queryKey, queryFn } = lecturersQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as ITeamMemberProps[], ...rest };
+  return { data: data?.results as ITeamMemberProps[], count: data?.count, ...rest };
 };
 
 export const useLecturersPagesCount = (query?: IQueryParams) => {

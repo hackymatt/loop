@@ -35,7 +35,7 @@ export const earningsQuery = (query?: IQueryParams) => {
 export const useEarnings = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = earningsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as IEarningProp[], ...rest };
+  return { data: data?.results as IEarningProp[], count: data?.count, ...rest };
 };
 
 export const useEarningsPagesCount = (query?: IQueryParams) => {

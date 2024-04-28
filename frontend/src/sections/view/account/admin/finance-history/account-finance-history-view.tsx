@@ -20,6 +20,7 @@ import { useLecturers } from "src/api/lecturers/lecturers";
 import { useFinanceHistory, useFinanceHistoryPagesCount } from "src/api/finance/finance-history";
 
 import Scrollbar from "src/components/scrollbar";
+import DownloadCSVButton from "src/components/download-csv";
 
 import FilterTeacher from "src/sections/filters/filter-teacher";
 
@@ -50,7 +51,7 @@ export default function AdminFinanceHistoryView() {
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
   const { data: pagesCount } = useFinanceHistoryPagesCount(filters);
-  const { data: financeHistories } = useFinanceHistory(filters);
+  const { data: financeHistories, count: recordsCount } = useFinanceHistory(filters);
   const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: -1 });
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
@@ -98,6 +99,8 @@ export default function AdminFinanceHistoryView() {
         <Typography variant="h5" sx={{ mb: 3 }}>
           Historia danych finansowych
         </Typography>
+
+        <DownloadCSVButton queryHook={useFinanceHistory} disabled={(recordsCount ?? 0) === 0} />
       </Stack>
 
       <Stack direction={{ xs: "column", md: "column" }} spacing={1} sx={{ mt: 2, mb: 3 }}>

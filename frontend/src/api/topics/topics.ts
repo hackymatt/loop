@@ -44,7 +44,7 @@ export const topicsQuery = (query?: IQueryParams) => {
 export const useTopics = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = topicsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as ICourseByCategoryProps[], ...rest };
+  return { data: data?.results as ICourseByCategoryProps[], count: data?.count, ...rest };
 };
 
 export const useTopicsPagesCount = (query?: IQueryParams) => {

@@ -44,7 +44,7 @@ export const technologiesQuery = (query?: IQueryParams) => {
 export const useTechnologies = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = technologiesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as ICourseByCategoryProps[], ...rest };
+  return { data: data?.results as ICourseByCategoryProps[], count: data?.count, ...rest };
 };
 
 export const useTechnologiesPagesCount = (query?: IQueryParams) => {
