@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import PrivacyPolicyView from "src/sections/_elearning/view/privacy-policy-view";
+import PrivacyPolicyView from "src/sections/view/privacy-policy-view";
 
 // ----------------------------------------------------------------------
 

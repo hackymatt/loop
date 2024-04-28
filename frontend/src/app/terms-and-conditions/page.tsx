@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import TermsAndConditionsView from "src/sections/_elearning/view/terms-and-conditions-view";
+import TermsAndConditionsView from "src/sections/view/terms-and-conditions-view";
 
 // ----------------------------------------------------------------------
 

@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import AdminCouponUsageView from "src/sections/_elearning/view/account/admin/coupon-usage/account-coupon-usage-view";
+import AdminCouponUsageView from "src/sections/view/account/admin/coupon-usage/account-coupon-usage-view";
 
 // ----------------------------------------------------------------------
 

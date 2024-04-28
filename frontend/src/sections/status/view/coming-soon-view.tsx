@@ -10,7 +10,7 @@ import { useCountdown } from "src/hooks/use-countdown";
 
 import Image from "src/components/image";
 
-import { NewsletterEmail } from "src/sections/_elearning/newsletter/newsletter";
+import { NewsletterEmail } from "src/sections/newsletter/newsletter";
 
 // ----------------------------------------------------------------------
 

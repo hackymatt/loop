@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import AccountNewsletterView from "src/sections/_elearning/view/account/admin/newsletter/account-newsletter-view";
+import AccountNewsletterView from "src/sections/view/account/admin/newsletter/account-newsletter-view";
 
 // ----------------------------------------------------------------------
 

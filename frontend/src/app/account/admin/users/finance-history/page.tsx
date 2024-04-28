@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import AdminFinanceHistoryView from "src/sections/_elearning/view/account/admin/finance-history/account-finance-history-view";
+import AdminFinanceHistoryView from "src/sections/view/account/admin/finance-history/account-finance-history-view";
 
 // ----------------------------------------------------------------------
 

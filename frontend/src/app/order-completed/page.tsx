@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import OrderCompletedView from "src/sections/_elearning/view/order-completed-view";
+import OrderCompletedView from "src/sections/view/order-completed-view";
 
 // ----------------------------------------------------------------------
 

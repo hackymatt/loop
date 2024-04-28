@@ -15,7 +15,7 @@ import { useTechnologies } from "src/api/technologies/technologies";
 import Logo from "src/components/logo";
 import Iconify from "src/components/iconify";
 
-import { NewsletterEmail } from "src/sections/_elearning/newsletter/newsletter";
+import { NewsletterEmail } from "src/sections/newsletter/newsletter";
 
 // ----------------------------------------------------------------------
 
@@ -46,7 +46,6 @@ export default function Footer() {
               </Stack>
 
               <Stack spacing={1} alignItems="flex-start">
-                <Typography variant="h6">Community</Typography>
                 <Link
                   component={RouterLink}
                   href={paths.courses}

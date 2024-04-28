@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import CartView from "src/sections/_elearning/view/cart-view";
+import CartView from "src/sections/view/cart-view";
 
 // ----------------------------------------------------------------------
 

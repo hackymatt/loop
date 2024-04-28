@@ -1,6 +1,6 @@
 import packageInfo from "package.json";
 
-import NewsletterUnsubscribeView from "src/sections/_elearning/view/newsletter-unsubscribe-view";
+import NewsletterUnsubscribeView from "src/sections/view/newsletter-unsubscribe-view";
 
 // ----------------------------------------------------------------------
 
