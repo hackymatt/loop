@@ -40,7 +40,7 @@ class TeachingTest(APITestCase):
             title="Python lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_1],
         )
@@ -48,7 +48,7 @@ class TeachingTest(APITestCase):
             title="Python lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_1],
         )
@@ -85,7 +85,7 @@ class TeachingTest(APITestCase):
             title="JS lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_2],
         )
@@ -93,7 +93,7 @@ class TeachingTest(APITestCase):
             title="JS lesson 2",
             description="bbbb",
             duration="30",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_2],
         )
@@ -101,7 +101,7 @@ class TeachingTest(APITestCase):
             title="JS lesson 3",
             description="bbbb",
             duration="120",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="2.99",
             technologies=[self.technology_2],
         )
@@ -129,7 +129,7 @@ class TeachingTest(APITestCase):
             title="VBA lesson 1",
             description="bbbb",
             duration="90",
-            github_url="https://github.com/hackymatt/lesson",
+            github_url="https://github.com/loopedupl/lesson",
             price="9.99",
             technologies=[self.technology_3],
         )

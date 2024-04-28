@@ -2,6 +2,13 @@ import { paths } from "src/routes/paths";
 
 import { generateCode } from "src/utils/generateCode";
 
+import {
+  BASE_URL,
+  GOOGLE_CLIENT_ID,
+  GITHUB_CLIENT_ID,
+  FACEBOOK_CLIENT_ID,
+} from "src/config-global";
+
 export const useGoogleAuth = () => {
   const googleUrl = "https://accounts.google.com/o/oauth2/v2/auth";
 
@@ -13,8 +20,8 @@ export const useGoogleAuth = () => {
   const state = generateCode(18);
 
   const params = new URLSearchParams({
-    client_id: process.env.GOOGLE_CLIENT_ID ?? "",
-    redirect_uri: `${process.env.BASE_URL ?? ""}${paths.login}/?type=google`,
+    client_id: GOOGLE_CLIENT_ID,
+    redirect_uri: `${BASE_URL}${paths.login}/?type=google`,
     response_type: "code",
     scope,
     access_type: "offline",
@@ -33,8 +40,8 @@ export const useFacebookAuth = () => {
   const state = generateCode(18);
 
   const params = new URLSearchParams({
-    client_id: process.env.FACEBOOK_CLIENT_ID ?? "",
-    redirect_uri: `${process.env.BASE_URL ?? ""}${paths.login}/?type=facebook`,
+    client_id: FACEBOOK_CLIENT_ID,
+    redirect_uri: `${BASE_URL}${paths.login}/?type=facebook`,
     state,
     response_type: "code",
     scope,
@@ -51,8 +58,8 @@ export const useGithubAuth = () => {
   const state = generateCode(18);
 
   const params = new URLSearchParams({
-    client_id: process.env.GITHUB_CLIENT_ID ?? "",
-    redirect_uri: `${process.env.BASE_URL ?? ""}${paths.login}/?type=github`,
+    client_id: GITHUB_CLIENT_ID,
+    redirect_uri: `${BASE_URL}${paths.login}/?type=github`,
     scope,
     state,
   });

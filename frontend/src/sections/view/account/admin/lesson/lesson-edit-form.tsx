@@ -13,6 +13,7 @@ import { Step, Stepper, StepLabel, StepContent } from "@mui/material";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
+import { GITHUB_REPO } from "src/config-global";
 import { useLesson, useEditLesson } from "src/api/lessons/lesson";
 import { useTechnologies } from "src/api/technologies/technologies";
 
@@ -56,7 +57,7 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
     if (lessonData && availableTechnologies) {
       reset({
         ...lessonData,
-        github_url: lessonData.githubUrl,
+        github_url: lessonData.githubUrl.replace(GITHUB_REPO, ""),
         technologies: lessonData.category.map((category: string) =>
           availableTechnologies.find(
             (technology: ICourseByCategoryProps) => technology.name === category,
@@ -73,6 +74,7 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
       await editLesson({
         ...data,
         technologies: data.technologies.map((technology: ICourseByCategoryProps) => technology.id),
+        github_url: `${GITHUB_REPO}${data.github_url}`,
       });
       reset();
       onClose();

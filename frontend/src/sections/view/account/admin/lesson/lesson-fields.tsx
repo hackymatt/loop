@@ -1,5 +1,6 @@
 import { InputAdornment } from "@mui/material";
 
+import { GITHUB_REPO } from "src/config-global";
 import { useTechnologies } from "src/api/technologies/technologies";
 
 import { RHFSwitch, RHFTextField, RHFAutocompleteDnd } from "src/components/hook-form";
@@ -41,7 +42,18 @@ export const useLessonFields = () => {
         }}
       />
     ),
-    github_url: <RHFTextField key="github_url" name="github_url" label="Repozytorium" type="url" />,
+    github_url: (
+      <RHFTextField
+        key="github_url"
+        name="github_url"
+        label="Repozytorium"
+        type="url"
+        InputLabelProps={{ shrink: true }}
+        InputProps={{
+          startAdornment: <InputAdornment position="start">{GITHUB_REPO}</InputAdornment>,
+        }}
+      />
+    ),
     technologies: (
       <RHFAutocompleteDnd
         key="technologies"

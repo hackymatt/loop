@@ -1,6 +1,8 @@
 import axios from "axios";
 import https from "https";
 
+import { API_URL } from "src/config-global";
+
 export const createAxiosInstance = (endpoint: string) => {
   if (endpoint.startsWith("https")) {
     const httpsAgent = new https.Agent({
@@ -14,4 +16,4 @@ export const createAxiosInstance = (endpoint: string) => {
   });
 };
 
-export const Api = createAxiosInstance(process.env.API_URL ?? "");
+export const Api = createAxiosInstance(API_URL);

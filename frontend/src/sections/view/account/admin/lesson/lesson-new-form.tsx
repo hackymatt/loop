@@ -13,6 +13,7 @@ import { Step, Stepper, StepLabel, StepContent } from "@mui/material";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
+import { GITHUB_REPO } from "src/config-global";
 import { useCreateLesson } from "src/api/lessons/lessons";
 
 import FormProvider from "src/components/hook-form";
@@ -55,6 +56,7 @@ export default function LessonNewForm({ onClose, ...other }: Props) {
       await createLesson({
         ...data,
         technologies: data.technologies.map((technology: ICourseByCategoryProps) => technology.id),
+        github_url: `${GITHUB_REPO}${data.github_url}`,
       });
       reset();
       onClose();

@@ -41,6 +41,7 @@ services:
       - FACEBOOK_CLIENT_SECRET=${FACEBOOK_CLIENT_SECRET}
       - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
       - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      - GITHUB_REPO=${GITHUB_REPO}
     depends_on:
       - db
 
@@ -59,6 +60,7 @@ services:
       - NEXT_PUBLIC_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - NEXT_PUBLIC_FACEBOOK_CLIENT_ID=${FACEBOOK_CLIENT_ID}
       - NEXT_PUBLIC_GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - NEXT_PUBLIC_GITHUB_REPO=${GITHUB_REPO}
     volumes:
       - ./frontend:/usr/src/app/frontend
       - /usr/src/app/frontend/node_modules
