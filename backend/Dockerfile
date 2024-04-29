@@ -9,7 +9,7 @@ ENV PYTHONUNBUFFERED 1
 
 # install system dependencies
 RUN apt-get update \
-    && apt-get -y install libpq-dev gcc \
+    && apt-get -y install postgresql-client-15 cron libpq-dev gcc \
     && pip install psycopg2
 
 # install dependencies

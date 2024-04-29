@@ -60,6 +60,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_cleanup.apps.CleanupConfig",
     "django_filters",
+    "django_crontab",
+    "dbbackup",
     "corsheaders",
     "rest_framework",
     "utils.filtering",
@@ -147,6 +149,12 @@ DATABASES = {
         "PORT": os.environ.get("DB_PORT", "5432"),
     }
 }
+
+# Database backup
+DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
+DBBACKUP_STORAGE_OPTIONS = {"location": f"{BASE_DIR}/backup"}
+CRONJOBS = [("0 */12 * * *", "core.cron.create_backup")]
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
