@@ -9,53 +9,42 @@ import IconButton from "@mui/material/IconButton";
 
 import { useBoolean } from "src/hooks/use-boolean";
 
-import { _faqsSupport } from "src/_mock";
+import { lessonFAQ, accountFAQ, paymentFAQ, reservationFAQ } from "src/consts/faq";
 
 import Iconify from "src/components/iconify";
 
 import SupportNav from "../support/support-nav";
-import SupportHero from "../support/support-hero";
 import SupportContent from "../support/support-content";
 
 // ----------------------------------------------------------------------
 
 const TOPICS = [
   {
-    title: "Account",
-    icon: "/assets/icons/faq/ic_faq_account.svg",
-    content: <SupportContent contents={_faqsSupport} />,
+    title: "Konto",
+    icon: "/assets/icons/faq/ic_account.svg",
+    content: <SupportContent contents={accountFAQ} />,
   },
   {
-    title: "Payment",
-    icon: "/assets/icons/faq/ic_faq_payment.svg",
-    content: <SupportContent contents={_faqsSupport} />,
+    title: "Lekcje",
+    icon: "/assets/icons/faq/ic_lesson.svg",
+    content: <SupportContent contents={lessonFAQ} />,
   },
   {
-    title: "Delivery",
-    icon: "/assets/icons/faq/ic_faq_delivery.svg",
-    content: <SupportContent contents={_faqsSupport} />,
+    title: "Rezerwacje",
+    icon: "/assets/icons/faq/ic_booking.svg",
+    content: <SupportContent contents={reservationFAQ} />,
   },
   {
-    title: "Product",
-    icon: "/assets/icons/faq/ic_faq_package.svg",
-    content: <SupportContent contents={_faqsSupport} />,
-  },
-  {
-    title: "Return & Refund",
-    icon: "/assets/icons/faq/ic_faq_refund.svg",
-    content: <SupportContent contents={_faqsSupport} />,
-  },
-  {
-    title: "Assurances",
-    icon: "/assets/icons/faq/ic_faq_assurances.svg",
-    content: <SupportContent contents={_faqsSupport} />,
+    title: "Płatność",
+    icon: "/assets/icons/faq/ic_payment.svg",
+    content: <SupportContent contents={paymentFAQ} />,
   },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function SupportView() {
-  const [topic, setTopic] = useState("Payment");
+  const [topic, setTopic] = useState("Konto");
 
   const mobileOpen = useBoolean();
 
@@ -72,8 +61,6 @@ export default function SupportView() {
 
   return (
     <>
-      <SupportHero />
-
       <Stack
         alignItems="flex-end"
         sx={{
@@ -90,7 +77,7 @@ export default function SupportView() {
 
       <Container>
         <Typography variant="h3" sx={{ py: { xs: 3, md: 10 } }}>
-          Frequently Asked Questions
+          Często zadawane pytania
         </Typography>
 
         <Stack direction="row" sx={{ pb: { xs: 10, md: 15 } }}>

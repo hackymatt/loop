@@ -12,7 +12,6 @@ import Iconify from "src/components/iconify";
 
 type Props = {
   contents: {
-    id: string;
     question: string;
     answer: string;
   }[];
@@ -30,9 +29,9 @@ export default function SupportContent({ contents }: Props) {
 
   return (
     <Box sx={{ pl: { md: 10 } }}>
-      {contents.map((faq) => (
+      {contents.map((faq, index) => (
         <Accordion
-          key={faq.id}
+          key={index}
           expanded={expanded === faq.question}
           onChange={handleChangeExpanded(faq.question)}
         >

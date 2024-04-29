@@ -96,24 +96,27 @@ export default function About() {
           }}
         >
           <Stack spacing={{ xs: 2, md: 2 }}>
-            {statsSummary.map((value) => (
-              <Box key={value.name}>
-                <Typography variant="h4" sx={{ color: "text.disabled", opacity: 0.48 }}>
-                  {value.name}
-                </Typography>
+            {statsSummary.map(
+              (value) =>
+                value.number > 0 && (
+                  <Box key={value.name}>
+                    <Typography variant="h4" sx={{ color: "text.disabled", opacity: 0.48 }}>
+                      {value.name}
+                    </Typography>
 
-                <Typography variant="h2" sx={{ mt: 1, mb: 2 }}>
-                  <CountUp
-                    start={value.number / 2}
-                    end={value.number}
-                    formattingFn={(newValue: number) => fShortenNumber(newValue)}
-                  />
-                  +
-                </Typography>
+                    <Typography variant="h2" sx={{ mt: 1, mb: 2 }}>
+                      <CountUp
+                        start={value.number / 2}
+                        end={value.number}
+                        formattingFn={(newValue: number) => fShortenNumber(newValue)}
+                      />
+                      +
+                    </Typography>
 
-                <Typography sx={{ color: "text.secondary" }}>{value.description}</Typography>
-              </Box>
-            ))}
+                    <Typography sx={{ color: "text.secondary" }}>{value.description}</Typography>
+                  </Box>
+                ),
+            )}
           </Stack>
         </Grid>
       </Grid>
