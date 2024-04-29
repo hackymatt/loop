@@ -1,11 +1,15 @@
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
+import { Button } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Tab, { tabClasses } from "@mui/material/Tab";
 import Stack, { StackProps } from "@mui/material/Stack";
 import CardActionArea from "@mui/material/CardActionArea";
+
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
 import { useResponsive } from "src/hooks/use-responsive";
 
@@ -16,12 +20,15 @@ import Scrollbar from "src/components/scrollbar";
 // ----------------------------------------------------------------------
 
 interface ContactButtonStyleProps extends StackProps {
+  href: string;
   children?: React.ReactNode;
 }
 
 const StyledButton = styled((props: ContactButtonStyleProps) => (
   <CardActionArea sx={{ borderRadius: 1 }}>
-    <Stack direction="row" alignItems="center" spacing={2} {...props} />
+    <Button component={RouterLink} href={props.href} color="inherit" fullWidth>
+      <Stack direction="row" alignItems="center" spacing={2} {...props} width={1} />
+    </Button>
   </CardActionArea>
 ))(({ theme }) => ({
   ...theme.typography.subtitle2,
@@ -93,32 +100,13 @@ export default function SupportNav({ topic, data, onChangeTopic, open, onClose }
         }}
       >
         <Typography variant="h4" paragraph>
-          Do you still need help?
-        </Typography>
-
-        <Typography variant="body2" sx={{ color: "text.secondary", mb: 4 }}>
-          Always support whenever you need (24/7).
+          Nadal potrzebujesz pomocy?
         </Typography>
 
         <Stack spacing={2}>
-          <StyledButton>
+          <StyledButton href={paths.contact}>
             <Iconify icon="carbon:email" width={24} />
-            <Typography variant="subtitle2">Email</Typography>
-          </StyledButton>
-
-          <StyledButton>
-            <Iconify icon="carbon:chat" width={24} />
-            <Typography variant="subtitle2">Chat Now</Typography>
-          </StyledButton>
-
-          <StyledButton>
-            <Iconify icon="carbon:mobile" width={24} />
-            <Typography variant="subtitle2">
-              {`Call `}
-              <Box component="span" sx={{ color: "primary.main" }}>
-                552-917-1454
-              </Box>
-            </Typography>
+            <Typography variant="subtitle2">Kontakt</Typography>
           </StyledButton>
         </Stack>
       </Box>
