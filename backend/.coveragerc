@@ -6,6 +6,7 @@ omit =
     */utils/*
     */migrations/*
     */settings/*
+    */cron.py
     */asgi.py
     */wsgi.py
     manage.py
