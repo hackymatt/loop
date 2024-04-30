@@ -1,1 +1,3 @@
-export const getTimezone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
+export function getTimezone() {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
