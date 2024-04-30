@@ -7,9 +7,9 @@ describe("getTimezone", () => {
     expect(typeof result).toBe("string");
   });
 
-  // Returns 'Europe/Warsaw' if the timezone cannot be determined.
-  it("should return Europe/Warsaw if the timezone cannot be determined", () => {
+  // Returns 'UTC' if the timezone cannot be determined.
+  it("should return UTC if the timezone cannot be determined", () => {
     const result = getTimezone();
-    expect(result).toBe("Europe/Warsaw");
+    expect(result).toBe("UTC");
   });
 });
