@@ -1,10 +1,10 @@
-name: GithubCI
+name: Test
 
 on:
   push:
-    branches: [main, develop]
+    branches: [develop]
   pull_request:
-    branches: [main, develop]
+    branches: [develop]
 
 jobs:
   lint_backend:

@@ -1,0 +1,43 @@
+name: Build and Push Docker Image to Docker Hub
+
+on: push
+  branches: [develop]
+
+jobs:
+  build_and_push_docker_backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: login to docker registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+
+      - name: build and push docker image to registry
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: loopedupl/backend:latest
+
+  build_and_push_docker_frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: login to docker registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+
+      - name: build and push docker image to registry
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: loopedupl/frontend:latest
