@@ -49,11 +49,8 @@ services:
     container_name: frontend
     build:
       context: ./frontend
-      target: dev
     restart: always
-    command: yarn dev
     environment:
-      - NODE_ENV=development
       - WATCHPACK_POLLING=true
       - NEXT_PUBLIC_BASE_URL=${BASE_URL}
       - NEXT_PUBLIC_API_URL=${API_URL}

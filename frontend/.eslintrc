@@ -4,7 +4,13 @@
     "browser": true,
     "es2021": true
   },
-  "plugins": ["perfectionist", "unused-imports", "@typescript-eslint", "prettier"],
+  "plugins": [
+    "perfectionist",
+    "unused-imports",
+    "@typescript-eslint",
+    "prettier",
+    "@next/next/recommended"
+  ],
   "extends": ["airbnb", "airbnb-typescript", "airbnb/hooks", "prettier"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
