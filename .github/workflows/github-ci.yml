@@ -138,6 +138,11 @@ jobs:
       - name: Checkout repository code
         uses: actions/checkout@v4
 
+      - name: Docker meta
+        uses: docker/metadata-action@v4
+        with:
+          tags: type=raw,value={{date 'YYYYMMDDHHMMSS'}}
+
       - name: login to docker registry
         uses: docker/login-action@v3
         with:
@@ -149,7 +154,7 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: loopedupl/backend:latest
+          tags: loopedupl/backend:${{ steps.meta.outputs.tags }}
 
   build_and_push_docker_frontend:
     needs: [lint_frontend, test_frontend]
@@ -158,6 +163,11 @@ jobs:
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v4
+
+      - name: Docker meta
+        uses: docker/metadata-action@v4
+        with:
+          tags: type=raw,value={{date 'YYYYMMDDHHMMSS'}}
 
       - name: login to docker registry
         uses: docker/login-action@v3
@@ -170,4 +180,4 @@ jobs:
         with:
           context: ./frontend
           push: true
-          tags: loopedupl/frontend:latest
+          tags: loopedupl/frontend:${{ steps.meta.outputs.tags }}
