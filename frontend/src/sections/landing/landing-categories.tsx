@@ -119,9 +119,12 @@ function CategoryItem({ category }: CategoryItemProps) {
         {category.name}
       </TextMaxLine>
 
-      <Typography variant="body2" sx={{ mt: 1, color: "text.disabled" }}>
-        {category.totalStudents} {polishPlurals("kurs", "kursy", "kursów", category.totalStudents)}
-      </Typography>
+      {category.totalStudents && (
+        <Typography variant="body2" sx={{ mt: 1, color: "text.disabled" }}>
+          {category.totalStudents}{" "}
+          {polishPlurals("kurs", "kursy", "kursów", category.totalStudents)}
+        </Typography>
+      )}
     </Paper>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import AuthBackgroundLayout from "src/layouts/auth/background";
+import AuthIllustrationLayout from "src/layouts/auth/illustration";
 
 import { useUserContext } from "src/components/user";
 
@@ -12,5 +12,5 @@ type Props = {
 
 export default function Layout({ children }: Props) {
   const { email } = useUserContext();
-  return email ? <AuthBackgroundLayout>{children}</AuthBackgroundLayout> : <>{children}</>;
+  return email ? <AuthIllustrationLayout>{children}</AuthIllustrationLayout> : <>{children}</>;
 }
