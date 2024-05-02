@@ -141,6 +141,7 @@ jobs:
       - name: Docker meta
         uses: docker/metadata-action@v4
         with:
+          images: loopedupl/backend
           tags: type=raw,value={{date 'YYYYMMDDHHMMSS'}}
 
       - name: login to docker registry
@@ -167,6 +168,7 @@ jobs:
       - name: Docker meta
         uses: docker/metadata-action@v4
         with:
+          images: loopedupl/frontend
           tags: type=raw,value={{date 'YYYYMMDDHHMMSS'}}
 
       - name: login to docker registry
