@@ -1,20 +1,30 @@
-FROM node:18-alpine as dependencies
-WORKDIR /usr/src/app/frontend
-COPY package.json package-lock.json ./
-RUN yarn install --frozen-lockfile
-FROM node:18-alpine as builder
-WORKDIR /usr/src/app/frontend
-COPY . .
-COPY --from=dependencies /usr/src/app/frontend/node_modules ./node_modules
-RUN yarn build
-FROM node:18-alpine as runner
-WORKDIR /usr/src/app/frontend
-ENV NODE_ENV production
+FROM node:18-alpine as BUILD_IMAGE
 
-COPY --from=builder /usr/src/app/frontend/next.config.js ./
-COPY --from=builder /usr/src/app/frontend/public ./public
-COPY --from=builder /usr/src/app/frontend/.next ./.next
-COPY --from=builder /usr/src/app/frontend/node_modules ./node_modules
-COPY --from=builder /usr/src/app/frontend/package.json ./package.json
+WORKDIR /usr/src/app/frontend
+
+COPY package.json package-lock.json ./
+
+# install dependencies
+RUN npm install
+
+COPY . .
+
+# build
+RUN npm run build
+
+# remove dev dependencies
+RUN npm prune --production
+
+FROM node:18-alpine
+
+WORKDIR /usr/src/app/frontend
+
+# copy from build image
+COPY --from=BUILD_IMAGE /usr/src/app/frontend/package.json ./package.json
+COPY --from=BUILD_IMAGE /usr/src/app/frontend/node_modules ./node_modules
+COPY --from=BUILD_IMAGE /usr/src/app/frontend/next.config.js next.config.js
+COPY --from=BUILD_IMAGE /usr/src/app/frontend/.next ./.next
+COPY --from=BUILD_IMAGE /usr/src/app/frontend/public ./public
+
 EXPOSE 3000
-CMD ["yarn", "start"]
+CMD ["npm", "start"]

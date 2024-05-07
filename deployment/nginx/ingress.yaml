@@ -5,7 +5,7 @@ metadata:
 
 spec:
   rules:
-    - host: dev.loopdev.edu.pl
+    - host: www.loopdev.edu.pl
       http:
         paths:
           - path: /

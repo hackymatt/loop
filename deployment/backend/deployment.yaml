@@ -25,9 +25,9 @@ spec:
             - name: SECRET_KEY
               value: "2x$e%!k_u_0*gq0s4!_u(2(^lpy&gir0hg)q&5nurj0-sseuav"
             - name: CSRF_TRUSTED_ORIGINS
-              value: "http://localhost"
+              value: "http://localhost,https://localhost,http://127.0.0.1"
             - name: ALLOWED_HOST
-              value: "localhost"
+              value: "localhost,127.0.0.1"
             - name: DB_NAME
               value: "postgres"
             - name: DB_USER
