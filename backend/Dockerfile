@@ -20,6 +20,8 @@ RUN pip install -r requirements.txt
 # copy project
 COPY . .
 
+EXPOSE 8000
+
 # run main.sh
 RUN ["chmod", "+x",  "./main.sh"]
 ENTRYPOINT ["./main.sh"]
