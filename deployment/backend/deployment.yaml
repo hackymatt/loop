@@ -19,62 +19,25 @@ spec:
           image: loopedupl/backend:latest
           ports:
             - containerPort: 8000
-          env:
-            - name: LOCAL
-              value: "False"
-            - name: SECRET_KEY
-              value: "2x$e%!k_u_0*gq0s4!_u(2(^lpy&gir0hg)q&5nurj0-sseuav"
-            - name: CSRF_TRUSTED_ORIGINS
-              value: "http://localhost,https://localhost,http://127.0.0.1"
-            - name: ALLOWED_HOST
-              value: "localhost,127.0.0.1"
-            - name: DB_NAME
-              value: "postgres"
-            - name: DB_USER
-              value: "utoX6JeB1f"
-            - name: DB_PASSWORD
-              value: "4kmiQDq0VZCQqA3HzntYj4LSM3kPAp"
-            - name: DB_HOST
-              value: "postgresql"
-            - name: DB_PORT
-              value: "5432"
-            - name: ADMIN_EMAIL
-              value: "matios94@gmail.com"
-            - name: ADMIN_PASSWORD
-              value: "19Mateusz94!"
-            - name: DUMMY_STUDENT_EMAIL
-              value: "dummy_student@example.com"
-            - name: DUMMY_STUDENT_PASSWORD
-              value: "19Mateusz94!"
-            - name: DUMMY_LECTURER_EMAIL
-              value: "dummy_lecturer@example.com"
-            - name: DUMMY_LECTURER_PASSWORD
-              value: "19Mateusz94!"
-            - name: EMAIL_USE_TLS
-              value: "True"
-            - name: EMAIL_FROM
-              value: "matios94@gmail.com"
-            - name: EMAIL_HOST
-              value: "smtp.gmail.com"
-            - name: EMAIL_HOST_USER
-              value: "matios94@gmail.com"
-            - name: EMAIL_HOST_PASSWORD
-              value: "bvmanocbsnyxozuf"
-            - name: EMAIL_PORT
-              value: "587"
-            - name: BASE_URL
-              value: "http://localhost"
-            - name: GOOGLE_CLIENT_ID
-              value: "617166587683-r77p1ri68pjhff6fd9032ak42qjq0v7j.apps.googleusercontent.com"
-            - name: GOOGLE_CLIENT_SECRET
-              value: "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"
-            - name: FACEBOOK_CLIENT_ID
-              value: "1576703186506729"
-            - name: FACEBOOK_CLIENT_SECRET
-              value: "047412a60351ed9a59f4d1c86cec10ce"
-            - name: GITHUB_CLIENT_ID
-              value: "802861860d8aee939ba2"
-            - name: GITHUB_CLIENT_SECRET
-              value: "61ad39aec6a1570aab7f97df2502e3627ea14a07"
-            - name: GITHUB_REPO
-              value: "https://github.com/loopedupl/"
+          volumeMounts:
+            - name: media-volume
+              mountPath: /usr/src/app/backend/media
+          envFrom:
+            - secretRef:
+                name: backend-secret
+            - secretRef:
+                name: email-secret
+            - secretRef:
+                name: facebook-secret
+            - secretRef:
+                name: github-secret
+            - secretRef:
+                name: google-secret
+            - secretRef:
+                name: postgre-secret
+            - configMapRef:
+                name: backend-config
+      volumes:
+        - name: media-volume
+          persistentVolumeClaim:
+            claimName: media-volume

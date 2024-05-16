@@ -19,18 +19,14 @@ spec:
           image: loopedupl/frontend:latest
           ports:
             - containerPort: 3000
-          env:
-            - name: WATCHPACK_POLLING
-              value: "true"
-            - name: NEXT_PUBLIC_BASE_URL
-              value: "http://localhost"
-            - name: NEXT_PUBLIC_API_URL
-              value: "http://localhost/api"
-            - name: NEXT_PUBLIC_GOOGLE_CLIENT_ID
-              value: "617166587683-r77p1ri68pjhff6fd9032ak42qjq0v7j.apps.googleusercontent.com"
-            - name: NEXT_PUBLIC_FACEBOOK_CLIENT_ID
-              value: "1576703186506729"
-            - name: NEXT_PUBLIC_GITHUB_CLIENT_ID
-              value: "802861860d8aee939ba2"
-            - name: NEXT_PUBLIC_GITHUB_REPO
-              value: "https://github.com/loopedupl/"
+          envFrom:
+            - secretRef:
+                name: frontend-secret
+            - secretRef:
+                name: facebook-secret
+            - secretRef:
+                name: github-secret
+            - secretRef:
+                name: google-secret
+            - configMapRef:
+                name: frontend-config
