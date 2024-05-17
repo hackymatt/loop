@@ -17,13 +17,11 @@ RUN pip install --upgrade pip
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
-# copy main.sh
-COPY ./main.sh .
-RUN sed -i 's/\r$//g' /usr/src/app/backend/main.sh
-RUN chmod +x /usr/src/app/backend/main.sh
-
 # copy project
 COPY . .
 
+EXPOSE 8000
+
 # run main.sh
-ENTRYPOINT ["/usr/src/app/backend/main.sh"]
+RUN ["chmod", "+x",  "./main.sh"]
+ENTRYPOINT ["./main.sh"]

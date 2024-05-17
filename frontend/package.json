@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "start": "next build && next start",
+    "start": "next start",
     "build": "next build",
     "test": "jest",
     "test:coverage": "jest --coverage",
