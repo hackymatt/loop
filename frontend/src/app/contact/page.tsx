@@ -1,13 +1,10 @@
-import packageInfo from "package.json";
+import { createMetadata } from "src/utils/create-metadata";
 
 import ContactView from "src/sections/view/contact-view";
 
 // ----------------------------------------------------------------------
 
-export const metadata = {
-  title: `${packageInfo.name}: Kontakt`,
-};
-
+export const metadata = createMetadata("Kontakt");
 export default function ContactPage() {
   return <ContactView />;
 }

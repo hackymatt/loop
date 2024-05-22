@@ -2,12 +2,15 @@ FROM node:18-alpine as BUILD_IMAGE
 
 WORKDIR /usr/src/app/frontend
 
-COPY package.json package-lock.json ./
+COPY frontend/package.json frontend/package-lock.json ./
 
 # install dependencies
 RUN npm install
 
-COPY . .
+COPY frontend .
+
+RUN mkdir cert
+COPY certificate cert
 
 ARG API_URL=http://dev.loop.edu.pl/api
 ENV NEXT_PUBLIC_API_URL=$API_URL
@@ -31,7 +34,7 @@ ENV NEXT_PUBLIC_GITHUB_REPO=$GITHUB_REPO
 RUN npm run build
 
 # remove dev dependencies
-RUN npm prune --production
+RUN npm prune --omit=dev
 
 FROM node:18-alpine
 
@@ -43,6 +46,7 @@ COPY --from=BUILD_IMAGE /usr/src/app/frontend/node_modules ./node_modules
 COPY --from=BUILD_IMAGE /usr/src/app/frontend/next.config.js next.config.js
 COPY --from=BUILD_IMAGE /usr/src/app/frontend/.next ./.next
 COPY --from=BUILD_IMAGE /usr/src/app/frontend/public ./public
+COPY --from=BUILD_IMAGE /usr/src/app/frontend/cert ./cert
 
 EXPOSE 3000
 CMD ["npm", "start"]

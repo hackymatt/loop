@@ -1,13 +1,10 @@
-import packageInfo from "package.json";
+import { createMetadata } from "src/utils/create-metadata";
 
 import OrderCompletedView from "src/sections/view/order-completed-view";
 
 // ----------------------------------------------------------------------
 
-export const metadata = {
-  title: `${packageInfo.name}: Zakup ukończony`,
-};
-
+export const metadata = createMetadata("Zakup ukończony");
 export default function OrderCompletedPage() {
   return <OrderCompletedView />;
 }

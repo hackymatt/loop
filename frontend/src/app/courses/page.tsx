@@ -1,12 +1,10 @@
-import packageInfo from "package.json";
+import { createMetadata } from "src/utils/create-metadata";
 
 import CoursesView from "src/sections/view/courses-view";
 
 // ----------------------------------------------------------------------
 
-export const metadata = {
-  title: `${packageInfo.name}: Kursy`,
-};
+export const metadata = createMetadata("Kursy");
 
 export default function CoursesPage() {
   return <CoursesView />;

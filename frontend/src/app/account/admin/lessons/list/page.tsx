@@ -1,12 +1,10 @@
-import packageInfo from "package.json";
+import { createMetadata } from "src/utils/create-metadata";
 
 import AdminLessonsView from "src/sections/view/account/admin/lesson/account-lessons-view";
 
 // ----------------------------------------------------------------------
 
-export const metadata = {
-  title: `${packageInfo.name}: Konto - Lekcje`,
-};
+export const metadata = createMetadata("Konto - Lekcje");
 
 export default function AccountLessonsPage() {
   return <AdminLessonsView />;

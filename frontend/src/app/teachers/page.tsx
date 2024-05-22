@@ -1,13 +1,10 @@
-import packageInfo from "package.json";
+import { createMetadata } from "src/utils/create-metadata";
 
 import TeachersView from "src/sections/view/teachers-view";
 
 // ----------------------------------------------------------------------
 
-export const metadata = {
-  title: `${packageInfo.name}: Instruktorzy`,
-};
-
+export const metadata = createMetadata("Instruktorzy");
 export default function CoursesPage() {
   return <TeachersView />;
 }

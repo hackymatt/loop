@@ -36,15 +36,10 @@ CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost").split(",")
 
-# TODO: Change settings
-# SECURE_SSL_REDIRECT = not LOCAL
-# SESSION_COOKIE_SECURE = not LOCAL
-# CSRF_COOKIE_SECURE = not LOCAL
-# SECURE_BROWSER_XSS_FILTER = not LOCAL
-# SECURE_CONTENT_TYPE_NOSNIFF = not LOCAL
-# SECURE_HSTS_SECONDS = 31536000
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = not LOCAL
-# SECURE_HSTS_PRELOAD = not LOCAL
+SECURE_HSTS_SECONDS = 2_592_000  # 30 days
+SECURE_HSTS_PRELOAD = True
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOST", "localhost").split(",")
 ALLOWED_HOSTS.append(gethostbyname(gethostname()))
@@ -188,7 +183,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_URL = "/static/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 

@@ -14,11 +14,14 @@ RUN apt-get update \
 
 # install dependencies
 RUN pip install --upgrade pip
-COPY ./requirements.txt .
+COPY backend/requirements.txt .
 RUN pip install -r requirements.txt
 
 # copy project
-COPY . .
+COPY backend .
+
+RUN mkdir cert
+COPY certificate cert
 
 EXPOSE 8000
 

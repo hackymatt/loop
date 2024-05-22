@@ -17,8 +17,16 @@ spec:
       containers:
         - name: frontend
           image: loopedupl/frontend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
+          resources:
+            requests:
+              cpu: 200m
+              memory: 300Mi
+            limits:
+              cpu: 300m
+              memory: 400Mi
           envFrom:
             - secretRef:
                 name: frontend-secret

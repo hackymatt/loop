@@ -14,14 +14,26 @@ spec:
       labels:
         app: backend
     spec:
+      volumes:
+        - name: media-volume-storage
+          persistentVolumeClaim:
+            claimName: media-pvc
       containers:
         - name: backend
           image: loopedupl/backend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8000
           volumeMounts:
-            - name: media-volume
+            - name: media-volume-storage
               mountPath: /usr/src/app/backend/media
+          resources:
+            requests:
+              cpu: 200m
+              memory: 300Mi
+            limits:
+              cpu: 300m
+              memory: 400Mi
           envFrom:
             - secretRef:
                 name: backend-secret
@@ -34,10 +46,6 @@ spec:
             - secretRef:
                 name: google-secret
             - secretRef:
-                name: postgre-secret
+                name: postgres-secret
             - configMapRef:
                 name: backend-config
-      volumes:
-        - name: media-volume
-          persistentVolumeClaim:
-            claimName: media-volume

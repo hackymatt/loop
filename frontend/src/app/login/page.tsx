@@ -1,13 +1,10 @@
-import packageInfo from "package.json";
+import { createMetadata } from "src/utils/create-metadata";
 
 import LoginView from "src/sections/auth/login-view";
 
 // ----------------------------------------------------------------------
 
-export const metadata = {
-  title: `${packageInfo.name}: Logowanie`,
-};
-
+export const metadata = createMetadata("Logowanie");
 export default function LoginPage() {
   return <LoginView />;
 }

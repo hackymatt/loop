@@ -1,12 +1,10 @@
-import packageInfo from "package.json";
+import { createMetadata } from "src/utils/create-metadata";
 
 import AccountUsersView from "src/sections/view/account/admin/users/account-users-view";
 
 // ----------------------------------------------------------------------
 
-export const metadata = {
-  title: `${packageInfo.name}: Konto - Spis użytkowników`,
-};
+export const metadata = createMetadata("Konto - Spis użytkowników");
 
 export default function AccountUsersPage() {
   return <AccountUsersView />;
