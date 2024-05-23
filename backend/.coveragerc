@@ -9,6 +9,7 @@ omit =
     */cron.py
     */asgi.py
     */wsgi.py
+    */gunicorn.py
     manage.py
 source = .
 
