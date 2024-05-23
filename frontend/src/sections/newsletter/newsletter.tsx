@@ -1,5 +1,4 @@
 import * as Yup from "yup";
-import packageInfo from "package.json";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -14,6 +13,7 @@ import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import { useRegisterNewsletter } from "src/api/newsletter/register";
 
+import Logo from "src/components/logo";
 import Image from "src/components/image";
 import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
@@ -43,16 +43,7 @@ export default function Newsletter() {
             </Typography>
 
             <Typography sx={{ mt: 2.5, mb: 5 }}>
-              Zapisz się do newslettera{" "}
-              <Typography
-                variant="overline"
-                sx={{
-                  fontSize: 15,
-                  color: "primary.main",
-                }}
-              >
-                {packageInfo.name}
-              </Typography>
+              Zapisz się do newslettera <Logo sx={{ height: "16px", width: "auto" }} />
             </Typography>
 
             <NewsletterEmail buttonLabel="Zapisz" sx={{ mt: 0.3 }} />

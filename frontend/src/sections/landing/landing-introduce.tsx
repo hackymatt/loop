@@ -1,5 +1,3 @@
-import packageInfo from "package.json";
-
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
@@ -8,6 +6,7 @@ import Typography from "@mui/material/Typography";
 
 import { useResponsive } from "src/hooks/use-responsive";
 
+import Logo from "src/components/logo";
 import Image from "src/components/image";
 
 // ----------------------------------------------------------------------
@@ -55,21 +54,12 @@ export default function LandingIntroduce() {
 
           <Stack sx={{ gap: 2, textAlign: "justify" }}>
             <Typography sx={{ color: "text.secondary" }}>
-              W{" "}
-              <Typography
-                variant="overline"
-                sx={{
-                  fontSize: 15,
-                  color: "primary.main",
-                }}
-              >
-                {packageInfo.name}
-              </Typography>{" "}
-              naszą misją jest umożliwienie zarówno początkującym entuzjastom, jak i doświadczonym
-              inżynierom oprogramowania rozwijania swojej wiedzy i umiejętności w dynamicznym
-              świecie programowania. Zobowiązujemy się tworzyć otoczenie edukacyjne online, które
-              jest dostępne i wspierające, zapewniając społeczność, w której ceni się ciekawość, a
-              współpraca jest kluczowa.
+              W <Logo sx={{ height: "16px", width: "auto" }} /> naszą misją jest umożliwienie
+              zarówno początkującym entuzjastom, jak i doświadczonym inżynierom oprogramowania
+              rozwijania swojej wiedzy i umiejętności w dynamicznym świecie programowania.
+              Zobowiązujemy się tworzyć otoczenie edukacyjne online, które jest dostępne i
+              wspierające, zapewniając społeczność, w której ceni się ciekawość, a współpraca jest
+              kluczowa.
             </Typography>
 
             <Typography sx={{ color: "text.secondary" }}>
@@ -91,17 +81,8 @@ export default function LandingIntroduce() {
             </Typography>
 
             <Typography sx={{ color: "text.secondary" }}>
-              Dołącz do nas w{" "}
-              <Typography
-                variant="overline"
-                sx={{
-                  fontSize: 15,
-                  color: "primary.main",
-                }}
-              >
-                {packageInfo.name}
-              </Typography>
-              , gdzie nauka nie zna ograniczeń, a razem kształtujemy przyszłość programowania.
+              Dołącz do nas w <Logo sx={{ height: "16px", width: "auto" }} />, gdzie nauka nie zna
+              ograniczeń, a razem kształtujemy przyszłość programowania.
             </Typography>
           </Stack>
 
