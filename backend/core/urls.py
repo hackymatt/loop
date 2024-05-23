@@ -93,42 +93,48 @@ router.register(r"earnings", EarningViewSet, basename="earnings")
 router.register(r"coupons", CouponViewSet, basename="coupons")
 router.register(r"coupon-usage", CouponUserViewSet, basename="coupon_usage")
 
-urlpatterns = [
-    path(
-        "api/",
-        include(
-            [
-                path("", include(router.urls)),
-                path(
-                    "details",
-                    ProfileDetailsViewSet.as_view({"get": "list", "put": "update"}),
-                ),
-                path(
-                    "unregister",
-                    ProfileUnregisterViewSet.as_view(
-                        {"delete": "destroy", "put": "update"}
+urlpatterns = (
+    [
+        path(
+            "api/",
+            include(
+                [
+                    path("", include(router.urls)),
+                    path(
+                        "details",
+                        ProfileDetailsViewSet.as_view({"get": "list", "put": "update"}),
                     ),
-                ),
-                path(
-                    "finance-details",
-                    FinanceDetailsViewSet.as_view({"get": "list", "put": "update"}),
-                ),
-                path("stats", StatsViewSet.as_view({"get": "get_stats"})),
-                path("newsletter-subscribe", NewsletterSubscribeViewSet.subscribe),
-                path(
-                    "newsletter-unsubscribe/<str:uuid>",
-                    NewsletterUnsubscribeViewSet.unsubscribe,
-                ),
-                path("contact", ContactViewSet.as_view({"post": "contact"})),
-                path(
-                    "coupon-validate/<str:coupon_code>/<str:total>",
-                    CouponValidationViewSet.validate,
-                ),
-                path("login-google", GoogleLoginViewSet.as_view({"post": "post"})),
-                path("login-facebook", FacebookLoginViewSet.as_view({"post": "post"})),
-                path("login-github", GithubLoginViewSet.as_view({"post": "post"})),
-            ]
+                    path(
+                        "unregister",
+                        ProfileUnregisterViewSet.as_view(
+                            {"delete": "destroy", "put": "update"}
+                        ),
+                    ),
+                    path(
+                        "finance-details",
+                        FinanceDetailsViewSet.as_view({"get": "list", "put": "update"}),
+                    ),
+                    path("stats", StatsViewSet.as_view({"get": "get_stats"})),
+                    path("newsletter-subscribe", NewsletterSubscribeViewSet.subscribe),
+                    path(
+                        "newsletter-unsubscribe/<str:uuid>",
+                        NewsletterUnsubscribeViewSet.unsubscribe,
+                    ),
+                    path("contact", ContactViewSet.as_view({"post": "contact"})),
+                    path(
+                        "coupon-validate/<str:coupon_code>/<str:total>",
+                        CouponValidationViewSet.validate,
+                    ),
+                    path("login-google", GoogleLoginViewSet.as_view({"post": "post"})),
+                    path(
+                        "login-facebook", FacebookLoginViewSet.as_view({"post": "post"})
+                    ),
+                    path("login-github", GithubLoginViewSet.as_view({"post": "post"})),
+                ]
+            ),
         ),
-    ),
-    path("admin", admin.site.urls),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+        path("admin", admin.site.urls),
+    ]
+    + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+)

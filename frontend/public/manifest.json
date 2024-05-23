@@ -1,6 +1,6 @@
 {
-  "name": "loop UI",
-  "short_name": "loop UI",
+  "name": "loop",
+  "short_name": "loop",
   "display": "standalone",
   "start_url": "/",
   "theme_color": "#000000",
