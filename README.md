@@ -1,9 +1,9 @@
 # loop
 
 Build docker:
-docker build -t loopedupl/backend:latest . --file ./backend/Dockerfile
-docker build -t loopedupl/frontend:latest . --file ./frontend/Dockerfile
-docker build -t loopedupl/nginx:latest . --file ./nginx/Dockerfile
+docker build -t loopedupl/backend:latest ./backend
+docker build -t loopedupl/frontend:latest ./frontend
+docker build -t loopedupl/nginx:latest ./nginx
 
 Push docker:
 docker push loopedupl/backend:latest
