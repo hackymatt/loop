@@ -1,12 +1,10 @@
-import packageInfo from "package.json";
+import { createMetadata } from "src/utils/create-metadata";
 
 import WishlistView from "src/sections/view/wishlist-view";
 
 // ----------------------------------------------------------------------
 
-export const metadata = {
-  title: `${packageInfo.name}: Ulubione`,
-};
+export const metadata = createMetadata("Ulubione");
 
 export default function WishlistPage() {
   return <WishlistView />;

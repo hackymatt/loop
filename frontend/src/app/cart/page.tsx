@@ -1,13 +1,10 @@
-import packageInfo from "package.json";
+import { createMetadata } from "src/utils/create-metadata";
 
 import CartView from "src/sections/view/cart-view";
 
 // ----------------------------------------------------------------------
 
-export const metadata = {
-  title: `${packageInfo.name}: Koszyk`,
-};
-
+export const metadata = createMetadata("Koszyk");
 export default function CartPage() {
   return <CartView />;
 }

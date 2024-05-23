@@ -1,13 +1,10 @@
-import packageInfo from "package.json";
+import { createMetadata } from "src/utils/create-metadata";
 
 import AccountReviewsView from "src/sections/view/account/teacher/reviews/account-reviews-view";
 
 // ----------------------------------------------------------------------
 
-export const metadata = {
-  title: `${packageInfo.name}: Konto - Recenzje`,
-};
-
+export const metadata = createMetadata("Konto - Recenzje");
 export default function AccountReviewsPage() {
   return <AccountReviewsView />;
 }

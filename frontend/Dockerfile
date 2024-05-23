@@ -9,10 +9,10 @@ RUN npm install
 
 COPY . .
 
-ARG API_URL=http://dev.loop.edu.pl/api
+ARG API_URL=https://dev.loop.edu.pl/api
 ENV NEXT_PUBLIC_API_URL=$API_URL
 
-ARG BASE_URL=http://dev.loop.edu.pl
+ARG BASE_URL=https://dev.loop.edu.pl
 ENV NEXT_PUBLIC_BASE_URL=$BASE_URL
 
 ARG GOOGLE_CLIENT_ID=617166587683-r77p1ri68pjhff6fd9032ak42qjq0v7j.apps.googleusercontent.com
@@ -31,7 +31,7 @@ ENV NEXT_PUBLIC_GITHUB_REPO=$GITHUB_REPO
 RUN npm run build
 
 # remove dev dependencies
-RUN npm prune --production
+RUN npm prune --omit=dev
 
 FROM node:18-alpine
 

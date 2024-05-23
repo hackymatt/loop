@@ -20,6 +20,8 @@ service cron start
 
 python manage.py migrate
 
-gunicorn core.wsgi --bind 0.0.0.0:8000 --workers 3 --timeout 120
+python manage.py collectstatic --no-input
+
+gunicorn -c gunicorn.py 
 
 exec "$@"
