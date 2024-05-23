@@ -4,15 +4,13 @@ services:
   backend:
     hostname: backend
     build:
-      context: .
-      dockerfile: ./backend/Dockerfile
+      context: ./backend
     restart: always
     ports:
       - 8000:8000
     volumes:
       - ./backend/:/usr/src/app/backend
       - /usr/src/app/backend/media
-      - /usr/src/app/backend/static
     environment:
       - LOCAL=${LOCAL}
       - SECRET_KEY=${SECRET_KEY}
@@ -49,8 +47,7 @@ services:
   frontend:
     container_name: frontend
     build:
-      context: .
-      dockerfile: ./frontend/Dockerfile
+      context: ./frontend
     restart: always
     environment:
       - WATCHPACK_POLLING=true
