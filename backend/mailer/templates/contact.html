@@ -1,64 +1,8 @@
-<html>
-	<head>
-		<style>
-		.body {
-            margin: 0px;
-            padding: 0px;
-            width: 100%;
-            height: 963px;
-            box-sizing: border-box;
-            color: rgb(33, 43, 54);
-            line-height: 24px;
-            font-size: 16px;
-            font-family: __Public_Sans_66e638, __Public_Sans_Fallback_66e638, Helvetica, Arial, sans-serif;
-            font-weight: 400;
-            background-color: rgb(255, 255, 255);
-        }
-	.container {
-            display: flex;
-            flex-direction: column;
-            margin: auto;
-            max-width: 600px;
-            min-height: 963px;
-            text-align: left;
-            -webkit-box-pack: center;
-            justify-content: center;
-            box-sizing: border-box;
-        }
-
-	.text {
-            font-size: 30px;
-            margin: 0px;
-            font-weight: 700;
-            line-height: 45px;
-            font-family: __Barlow_5868ee, __Barlow_Fallback_5868ee, Helvetica, Arial, sans-serif;
-            box-sizing: border-box;
-        }
-
-	.sub-text {
-            margin: 16px 0px;
-            line-height: 22px;
-            font-size: 14px;
-            font-family: __Public_Sans_66e638, __Public_Sans_Fallback_66e638, Helvetica, Arial, sans-serif;
-            font-weight: 400;
-            color: rgb(99, 115, 129);
-            box-sizing: border-box;
-        }
-
-		
-	</style>
-	</head>
-	<body class="body">
-		<div>
-			<main">
-				<div class="container">
-					<h3 class="text">Nowa wiadomość ze strony</h3>
-					<p class="sub-text">Imię i nazwisko: {{full_name}}</p>
-					<p class="sub-text">Email: {{email}}</p>
-					<p class="sub-text">Tytuł: {{subject}}</p>
-					<p class="sub-text">Wiadomość: {{message}}</p>
-				</div>
-			</main>
-		</div>
-	</body>
-</html>
+{% extends "base.html" %} {% block title %}Dziękujemy za rejestrację w
+newsletterze{% endblock %} {% block content %}Otrzymano nową wiadomość ze
+strony<br /><br />
+<div><b>Imię i nazwisko:</b> {{full_name}}</div>
+<div><b>Email:</b> {{email}}</div>
+<div><b>Tytuł:</b> {{subject}}</div>
+<div><b>Wiadomość:</b> {{message}}</div>
+{% endblock %}
