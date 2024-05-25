@@ -4,5 +4,19 @@
 
 {% block content %}Od teraz będziesz otrzymywał
 informację na temat naszych aktualnych ofert i promocji. <br /><br />W celu
-anulowania subskrypcji kliknij w ten link:
-<a href="{{unsubscribe_url}}">Wyrejestruj</a>{% endblock %}
+anulowania subskrypcji kliknij w poniższy przycisk:
+<button
+    style="
+      color: #ffffff;
+      background-color: #FF5630;
+      border: 0;
+      min-width: 64px;
+      padding: 8px 22px;
+      border-radius: 8px;
+      height: 48px;
+    "
+  >
+    <a style="color: #ffffff; text-decoration: none" href="{{meeting_url}}"
+      >Wyrejestruj</a
+    >
+  </button>{% endblock %}
