@@ -3,12 +3,20 @@
 {% block title %}Dziękujemy za rejestrację w newsletterze{% endblock %} 
 
 {% block content %}Od teraz będziesz otrzymywał
-informację na temat naszych aktualnych ofert i promocji. <br /><br />W celu
-anulowania subskrypcji kliknij w poniższy przycisk:
-<button
+informację na temat naszych aktualnych ofert i promocji.<br /><br />
+W celu anulowania subskrypcji kliknij w poniższy przycisk:
+<div
+  style="
+    text-align: center;
+    font-size: 36px;
+    margin-top: 20px;
+    line-height: 44px;
+  "
+>
+  <button
     style="
       color: #ffffff;
-      background-color: #FF5630;
+      background-color: #ff5630;
       border: 0;
       min-width: 64px;
       padding: 8px 22px;
@@ -16,7 +24,11 @@ anulowania subskrypcji kliknij w poniższy przycisk:
       height: 48px;
     "
   >
-    <a style="color: #ffffff; text-decoration: none" href="{{meeting_url}}"
+    <a style="color: #ffffff; text-decoration: none" href="{{unsubscribe_url}}"
       >Wyrejestruj</a
     >
-  </button>{% endblock %}
+  </button>
+</div>
+<br />
+Jeżeli przycisk się nie wyświetla skopiuj następujący link
+<b>{{unsubscribe_url}}</b>.<br /><br />{% endblock %}
