@@ -1,6 +1,6 @@
 {% extends "base.html" %} {% block title %}Zweryfikuj swoje konto{% endblock %}
 {% block content %}W celu aktywacji konta
-<a style="font-weight: bold">{{email}}</a> wprowadź poniższy kod
+<a style="font-weight: bold">{{email}}</a> wprowadź poniższy kod:
 <br />
 <div
   style="
@@ -13,5 +13,5 @@
   {{code}}
 </div>
 <br />Kod będzie aktywny przez kolejne {{valid_for}} godzin.<br /><br />Jeżeli
-to nie Ty zarejestrowałeś się na naszej platformie, możesz zignorować tego
-maila.{% endblock %}
+to nie Ty zarejestrowałeś się na naszej platformie, możesz bez obaw zignorować
+tego maila.{% endblock %}

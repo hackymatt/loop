@@ -48,7 +48,10 @@ services:
     container_name: frontend
     build:
       context: ./frontend
+      dockerfile: ./Dockerfile.local
+      target: dev
     restart: always
+    command: yarn dev
     environment:
       - WATCHPACK_POLLING=true
       - NEXT_PUBLIC_BASE_URL=${BASE_URL}

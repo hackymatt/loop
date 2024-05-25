@@ -84,7 +84,7 @@ class ProfileRegisterSerializer(ModelSerializer):
         }
 
         mailer.send(
-            email_template="verification_email.html",
+            email_template="verify.html",
             to=[user.email],
             subject="Aktywuj swoje konto.",
             data=data,
