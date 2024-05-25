@@ -77,13 +77,10 @@ class ProfileRegisterSerializer(ModelSerializer):
 
         mailer = Mailer()
 
-        code_parts = {f"code_{i + 1}": code[i] for i in range(0, len(code))}
-
         data = {
-            **{
-                "valid_for": int(verification_code.timeout() / 3600),
-            },
-            **code_parts,
+            "email": user.email,
+            "valid_for": int(verification_code.timeout() / 3600),
+            "code": code,
         }
 
         mailer.send(

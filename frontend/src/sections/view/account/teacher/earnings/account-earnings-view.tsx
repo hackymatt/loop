@@ -156,6 +156,7 @@ export default function AccountEarningsView() {
               itemGap: 10,
               labelStyle: { fontSize: 12 },
             },
+            noDataOverlay: { message: "Brak danych." },
           }}
         />
       </Stack>
