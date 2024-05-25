@@ -39,17 +39,13 @@ class ProfilePasswordResetViewSet(ModelViewSet):
 
         mailer = Mailer()
 
-        code_parts = {f"code_{i + 1}": code[i] for i in range(0, len(code))}
-
         data = {
-            **{
-                "valid_for": int(verification_code.timeout() / 3600),
-            },
-            **code_parts,
+            "email": user.email,
+            "code": code,
         }
 
         mailer.send(
-            email_template="password_reset_email.html",
+            email_template="reset_password.html",
             to=[user.email],
             subject="Twoje tymczasowe hasło.",
             data=data,
