@@ -94,7 +94,7 @@ class ProfileUnregisterViewSet(ModelViewSet):
                 }
                 for email in emails:
                     mailer.send(
-                        email_template="lesson_cancel.html",
+                        email_template="cancel_lesson.html",
                         to=[email],
                         subject="Twoja lekcja została odwołana.",
                         data=data,

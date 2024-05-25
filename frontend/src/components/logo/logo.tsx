@@ -14,14 +14,10 @@ interface LogoProps extends BoxProps {
 
 function Logo({ single = false, sx }: LogoProps) {
   const singleLogo = (
-    <Image
-      alt="logo-mark"
-      src="/favicon/logo-small-green-black.svg"
-      sx={{ height: "50px", width: "auto" }}
-    />
+    <Image alt="logo-mark" src="/favicon/logo-mark.svg" sx={{ height: "50px", width: "auto" }} />
   );
 
-  const fullLogo = <Image alt="logo" src="/favicon/logo-full-green-black.svg" />;
+  const fullLogo = <Image alt="logo" src="/favicon/logo.svg" />;
 
   return (
     <Link

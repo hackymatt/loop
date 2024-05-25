@@ -77,17 +77,14 @@ class ProfileRegisterSerializer(ModelSerializer):
 
         mailer = Mailer()
 
-        code_parts = {f"code_{i + 1}": code[i] for i in range(0, len(code))}
-
         data = {
-            **{
-                "valid_for": int(verification_code.timeout() / 3600),
-            },
-            **code_parts,
+            "email": user.email,
+            "valid_for": int(verification_code.timeout() / 3600),
+            "code": code,
         }
 
         mailer.send(
-            email_template="verification_email.html",
+            email_template="verify.html",
             to=[user.email],
             subject="Aktywuj swoje konto.",
             data=data,
