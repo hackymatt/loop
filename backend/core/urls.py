@@ -15,8 +15,6 @@ from profile.details.views import ProfileDetailsViewSet
 from profile.lecturers.views import LecturerViewSet, BestLecturerViewSet
 from profile.earnings.views import EarningViewSet
 from django.urls import path, include
-from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib import admin
 from rest_framework.routers import DefaultRouter
 from course.views import (
