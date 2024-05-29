@@ -15,9 +15,12 @@ spec:
         app: backend
     spec:
       volumes:
-        - name: media-volume-storage
+        - name: staticfiles
           persistentVolumeClaim:
-            claimName: media-pvc
+            claimName: staticfiles-pvc
+        - name: mediafiles
+          persistentVolumeClaim:
+            claimName: mediafiles-pvc
       containers:
         - name: backend
           image: loopedupl/backend:latest
@@ -25,8 +28,10 @@ spec:
           ports:
             - containerPort: 8000
           volumeMounts:
-            - name: media-volume-storage
-              mountPath: /usr/src/app/backend/media
+            - name: staticfiles
+              mountPath: "/usr/src/app/backend/static"
+            - name: mediafiles
+              mountPath: "/usr/src/app/backend/media"
           resources:
             requests:
               cpu: 200m

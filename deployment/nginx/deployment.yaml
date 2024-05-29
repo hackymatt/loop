@@ -14,12 +14,24 @@ spec:
       labels:
         app: nginx
     spec:
+      volumes:
+        - name: staticfiles
+          persistentVolumeClaim:
+            claimName: staticfiles-pvc
+        - name: mediafiles
+          persistentVolumeClaim:
+            claimName: mediafiles-pvc
       containers:
         - name: nginx
           image: loopedupl/nginx:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+          volumeMounts:
+            - name: staticfiles
+              mountPath: "/usr/src/app/backend/static"
+            - name: mediafiles
+              mountPath: "/usr/src/app/backend/media"
           resources:
             requests:
               cpu: 200m
