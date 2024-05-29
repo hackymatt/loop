@@ -10,7 +10,8 @@ services:
       - 8000:8000
     volumes:
       - ./backend/:/usr/src/app/backend
-      - /usr/src/app/backend/media
+      - staticfiles:/usr/src/app/backend/static
+      - mediafiles:/usr/src/app/backend/media
     environment:
       - LOCAL=${LOCAL}
       - SECRET_KEY=${SECRET_KEY}
@@ -72,6 +73,9 @@ services:
       context: ./nginx
     ports:
       - 80:80
+    volumes:
+      - staticfiles:/usr/src/app/backend/static
+      - mediafiles:/usr/src/app/backend/media
     depends_on:
       - backend
       - frontend
@@ -89,3 +93,5 @@ services:
 
 volumes:
   postgres_data:
+  staticfiles:
+  mediafiles:

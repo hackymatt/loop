@@ -19,3 +19,8 @@ kubectl create secret generic frontend-secret --from-env-file=./frontend_secrets
 kubectl create secret generic github-secret --from-env-file=./github_secrets.sh
 kubectl create secret generic google-secret --from-env-file=./google_secrets.sh
 kubectl create secret generic postgres-secret --from-env-file=./postgres_secrets.sh
+
+Generate cert:
+OpenSSL genrsa -out ca.key 2048
+openssl req -x509 -new -nodes -days 365 -key ca.key -out ca.crt -subj "//CN=.loop.edu.pl"
+kubectl create secret tls cert-secret --key ca.key --cert ca.crt
