@@ -22,5 +22,5 @@ kubectl create secret generic postgres-secret --from-env-file=./postgres_secrets
 
 Generate cert:
 OpenSSL genrsa -out ca.key 2048
-openssl req -x509 -new -nodes -days 365 -key ca.key -out ca.crt -subj "//CN=loop.edu.pl"
+openssl req -x509 -new -nodes -days 365 -key ca.key -out ca.crt -subj "//CN=.loop.edu.pl"
 kubectl create secret tls cert-secret --key ca.key --cert ca.crt
