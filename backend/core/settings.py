@@ -215,7 +215,7 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
 
 
-BASE_FRONTEND_URL = os.environ.get("BASE_FRONTEND_URL", "http://localhost")
+BASE_FRONTEND_URL = os.environ.get("BASE_URL", "http://localhost")
 
 GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "")
 GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", "")

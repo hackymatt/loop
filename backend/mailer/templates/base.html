@@ -1,7 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style></style>
+    <style>
+      .only-on-dark {
+        display: none;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .only-on-dark {
+          display: block;
+        }
+
+        .only-on-light {
+          display: none;
+        }
+      }
+    </style>
   </head>
   <body>
     <table
@@ -42,13 +56,21 @@
                     >
                       <a href="{{website_url}}" target="_blank"
                         ><img
-                          src="{{website_url}}/favicon/logo.svg"
+                          src="{{website_url}}/favicon/logo-light.png"
                           width="74"
                           height="24"
                           aria-hidden="true"
                           style="margin-bottom: 16px"
                           alt="loop"
-                          class="CToWUd"
+                          class="only-on-light"
+                          data-bit="iit" /><img
+                          src="{{website_url}}/favicon/logo-dark.png"
+                          width="74"
+                          height="24"
+                          aria-hidden="true"
+                          style="margin-bottom: 16px"
+                          alt="loop"
+                          class="only-on-dark"
                           data-bit="iit"
                       /></a>
                       <div
