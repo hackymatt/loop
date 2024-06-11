@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tls-cert
+  namespace: default
+spec:
+  secretName: tls-cert
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  dnsNames:
+    - loop.edu.pl
+    - dev.loop.edu.pl
+    - uat.loop.edu.pl
