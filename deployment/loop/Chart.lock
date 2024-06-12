@@ -1,0 +1,12 @@
+dependencies:
+- name: backend
+  repository: file://../services/backend
+  version: 1.0.0
+- name: frontend
+  repository: file://../services/frontend
+  version: 1.0.0
+- name: nginx
+  repository: file://../services/nginx
+  version: 1.0.0
+digest: sha256:e098791278416514027541e26f80bc8632d4c1d5a1085f66728267c7cd6c61ba
+generated: "2024-06-12T12:39:10.1424639+02:00"

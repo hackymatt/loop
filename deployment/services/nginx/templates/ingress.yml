@@ -6,9 +6,10 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     cert-manager.io/cluster-issuer: letsencrypt-production
+    app.kubernetes.io/managed-by: "Helm"
 spec:
   rules:
-    - host: loop.edu.pl
+    - host: {{ .Values.nginx.host }}
       http:
         paths:
           - path: /
@@ -18,17 +19,7 @@ spec:
                 name: nginx
                 port:
                   number: 80
-    - host: dev.loop.edu.pl
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: nginx
-                port:
-                  number: 80
-    - host: uat.loop.edu.pl
+    - host: www.{{ .Values.nginx.host }}
       http:
         paths:
           - path: /
@@ -40,7 +31,6 @@ spec:
                   number: 80
   tls:
     - hosts:
-        - loop.edu.pl
-        - dev.loop.edu.pl
-        - uat.loop.edu.pl
+        - www.{{ .Values.nginx.host }}
+        - {{ .Values.nginx.host }}
       secretName: tls-cert

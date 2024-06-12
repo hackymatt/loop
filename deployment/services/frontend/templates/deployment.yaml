@@ -2,10 +2,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
+  namespace: default
+  annotations:
+    app.kubernetes.io/managed-by: "Helm"
   labels:
     app: frontend
 spec:
-  replicas: 1
+  replicas: {{ .Values.frontend.replicas }}
   selector:
     matchLabels:
       app: frontend
@@ -16,7 +19,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: loopedupl/frontend:latest
+          image: loopedupl/frontend:{{ .Values.frontend.tag }}
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
@@ -27,14 +30,3 @@ spec:
             limits:
               cpu: 300m
               memory: 400Mi
-          envFrom:
-            - secretRef:
-                name: frontend-secret
-            - secretRef:
-                name: facebook-secret
-            - secretRef:
-                name: github-secret
-            - secretRef:
-                name: google-secret
-            - configMapRef:
-                name: frontend-config

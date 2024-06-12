@@ -1,13 +1,15 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: staticfiles-pvc
+  name: mediafiles-pvc
   namespace: default
+  annotations:
+    app.kubernetes.io/managed-by: "Helm"
 spec:
   storageClassName: manual
   accessModes:
     - ReadWriteMany
   resources:
     requests:
-      storage: 1Gi
-  volumeName: staticfiles-pv
+      storage: 5Gi
+  volumeName: mediafiles-pv
