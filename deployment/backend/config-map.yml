@@ -4,3 +4,13 @@ metadata:
   name: backend-config
 data:
   LOCAL: "False"
+  CSRF_TRUSTED_ORIGINS: "http://localhost,https://loop.edu.pl,https://dev.loop.edu.pl,https://uat.loop.edu.pl"
+  ALLOWED_HOST: "localhost,127.0.0.1,loop.edu.pl,dev.loop.edu.pl,uat.loop.edu.pl"
+  BASE_URL: "https://loop.edu.pl"
+  GITHUB_REPO: "https://github.com/loopedupl/"
+  EMAIL_USE_TLS: "True"
+  EMAIL_HOST: "smtp.gmail.com"
+  EMAIL_PORT: "587"
+  DB_NAME: "postgres"
+  DB_HOST: "postgresql"
+  DB_PORT: "5432"

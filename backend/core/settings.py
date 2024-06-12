@@ -208,7 +208,7 @@ DUMMY_LECTURER_PASSWORD = os.getenv("DUMMY_LECTURER_PASSWORD", "")
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = bool(os.getenv("EMAIL_USE_TLS", "True"))
-EMAIL_FROM = os.getenv("EMAIL_FROM", "")
+EMAIL_FROM = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST = os.getenv("EMAIL_HOST", "")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
