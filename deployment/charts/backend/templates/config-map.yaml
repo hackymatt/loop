@@ -7,9 +7,9 @@ metadata:
     app.kubernetes.io/managed-by: "Helm"
 data:
   LOCAL: "False"
-  CSRF_TRUSTED_ORIGINS: {{ .Values.backend.env.CSRF_TRUSTED_ORIGINS }}
-  ALLOWED_HOST: {{ .Values.backend.env.ALLOWED_HOST }}
-  BASE_URL: {{ .Values.backend.env.BASE_URL }}
+  CSRF_TRUSTED_ORIGINS: {{ .Values.env.CSRF_TRUSTED_ORIGINS }}
+  ALLOWED_HOST: {{ .Values.env.ALLOWED_HOST }}
+  BASE_URL: {{ .Values.env.BASE_URL }}
   GITHUB_REPO: "https://github.com/loopedupl/"
   EMAIL_USE_TLS: "True"
   EMAIL_HOST: "smtp.gmail.com"

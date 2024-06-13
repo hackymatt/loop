@@ -1,4 +1,0 @@
-nginx:
-  tag: latest
-  replicas: 1
-  host: loop.edu.pl

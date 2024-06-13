@@ -8,7 +8,7 @@ metadata:
   labels:
     app: nginx
 spec:
-  replicas: {{ .Values.nginx.replicas }}
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
       app: nginx
@@ -26,7 +26,7 @@ spec:
             claimName: staticfiles-pvc
       containers:
         - name: nginx
-          image: loopedupl/nginx:{{ .Values.nginx.tag }}
+          image: loopedupl/nginx:{{ .Values.tag }}
           imagePullPolicy: Always
           ports:
             - containerPort: 80

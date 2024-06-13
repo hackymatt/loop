@@ -1,4 +1,5 @@
 backend:
+  enabled: true
   tag: latest
   replicas: 1
   env:
@@ -7,10 +8,12 @@ backend:
     BASE_URL: "https://dev.loop.edu.pl"
 
 frontend:
-  tag: latest
+  enabled: true
+  tag: v1.0.0.dev
   replicas: 1
 
 nginx:
+  enabled: true
   tag: latest
   replicas: 1
   host: dev.loop.edu.pl

@@ -1,3 +1,0 @@
-frontend:
-  tag: latest
-  replicas: 1
