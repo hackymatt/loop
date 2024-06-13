@@ -7,7 +7,7 @@ backend:
     BASE_URL: "https://uat.loop.edu.pl"
 
 frontend:
-  tag: latest
+  tag: v1.0.0.uat
   replicas: 1
 
 nginx:
