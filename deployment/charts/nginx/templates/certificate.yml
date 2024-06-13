@@ -11,6 +11,4 @@ spec:
     name: letsencrypt-production
     kind: ClusterIssuer
   dnsNames:
-    - loop.edu.pl
-    - dev.loop.edu.pl
-    - uat.loop.edu.pl
+    - {{ .Values.host }}

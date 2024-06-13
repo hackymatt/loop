@@ -18,11 +18,6 @@ docker push loopedupl/backend:latest
 docker push loopedupl/frontend:latest
 docker push loopedupl/nginx:latest
 
-Create namespaces:
-kubectl create namespace dev
-kubectl create namespace uat
-kubectl create namespace prod
-
 Create secrets:
 kubectl delete secret secrets
 kubectl create secret generic secrets --from-env-file=./secrets.sh
