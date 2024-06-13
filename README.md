@@ -1,5 +1,13 @@
 # loop
 
+Cluster applications:
+Cert Manager
+Civo cluster autoscaler
+Helm
+Metrics Server
+Nginx
+PostgreSQL
+
 Build docker:
 docker build -t loopedupl/backend:latest ./backend
 docker build -t loopedupl/frontend:latest ./frontend
@@ -10,6 +18,18 @@ docker push loopedupl/backend:latest
 docker push loopedupl/frontend:latest
 docker push loopedupl/nginx:latest
 
+Create namespaces:
+kubectl create namespace dev
+kubectl create namespace uat
+kubectl create namespace prod
+
 Create secrets:
 kubectl delete secret secrets
 kubectl create secret generic secrets --from-env-file=./secrets.sh
+
+Delete cert:
+kubectl delete cert tls-cert
+
+Deploy:
+helm dep update
+helm upgrade --install -f values-dev.yaml loop . -n default
