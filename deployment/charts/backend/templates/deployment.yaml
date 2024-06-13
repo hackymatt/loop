@@ -1,18 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx
+  name: backend
+  namespace: default
+  annotations:
+    app.kubernetes.io/managed-by: "Helm"
   labels:
-    app: nginx
+    app: backend
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      app: nginx
+      app: backend
   template:
     metadata:
       labels:
-        app: nginx
+        app: backend
     spec:
       volumes:
         - name: mediafiles
@@ -22,11 +25,11 @@ spec:
           persistentVolumeClaim:
             claimName: staticfiles-pvc
       containers:
-        - name: nginx
-          image: loopedupl/nginx:latest
+        - name: backend
+          image: loopedupl/backend:{{ .Values.tag }}
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
+            - containerPort: 8000
           volumeMounts:
             - name: mediafiles
               mountPath: "/usr/src/app/backend/media"
@@ -39,3 +42,8 @@ spec:
             limits:
               cpu: 300m
               memory: 400Mi
+          envFrom:
+            - secretRef:
+                name: secrets
+            - configMapRef:
+                name: backend-config

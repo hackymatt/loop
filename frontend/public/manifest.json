@@ -1,15 +1,20 @@
 {
-  "name": "loop",
-  "short_name": "loop",
-  "display": "standalone",
-  "start_url": "/",
   "theme_color": "#000000",
   "background_color": "#ffffff",
   "icons": [
     {
-      "src": "favicon/logo-mark.svg",
-      "sizes": "72x72 96x96 128x128 256x256",
+      "purpose": "maskable",
+      "sizes": "512x512",
+      "src": "logo/maskable.png",
       "type": "image/png"
-    }
-  ]
+    },
+    { "purpose": "any", "sizes": "512x512", "src": "logo/rounded.png", "type": "image/png" }
+  ],
+  "orientation": "any",
+  "display": "standalone",
+  "dir": "auto",
+  "lang": "pl-PL",
+  "name": "loop",
+  "short_name": "loop",
+  "start_url": "/"
 }

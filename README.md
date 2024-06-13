@@ -1,5 +1,13 @@
 # loop
 
+Cluster applications:
+Cert Manager
+Civo cluster autoscaler
+Helm
+Metrics Server
+Nginx
+PostgreSQL
+
 Build docker:
 docker build -t loopedupl/backend:latest ./backend
 docker build -t loopedupl/frontend:latest ./frontend
@@ -11,11 +19,12 @@ docker push loopedupl/frontend:latest
 docker push loopedupl/nginx:latest
 
 Create secrets:
-kubectl delete secret backend-secret
-kubectl create secret generic backend-secret --from-env-file=./backend_secrets.sh
-kubectl create secret generic email-secret --from-env-file=./email_secrets.sh
-kubectl create secret generic facebook-secret --from-env-file=./facebook_secrets.sh
-kubectl create secret generic frontend-secret --from-env-file=./frontend_secrets.sh
-kubectl create secret generic github-secret --from-env-file=./github_secrets.sh
-kubectl create secret generic google-secret --from-env-file=./google_secrets.sh
-kubectl create secret generic postgres-secret --from-env-file=./postgres_secrets.sh
+kubectl delete secret secrets
+kubectl create secret generic secrets --from-env-file=./secrets.sh
+
+Delete cert:
+kubectl delete cert tls-cert
+
+Deploy:
+helm dep update
+helm upgrade --install -f values-dev.yaml loop . -n default
