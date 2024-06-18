@@ -6,6 +6,8 @@ on:
 
 jobs:
   lint_backend:
+    name: Lint backend
+
     runs-on: ubuntu-latest
 
     defaults:
@@ -30,6 +32,8 @@ jobs:
         run: black . --check
 
   lint_frontend:
+    name: Lint frontend
+
     runs-on: ubuntu-latest
 
     defaults:
@@ -50,6 +54,8 @@ jobs:
         run: npm run prettier:check
 
   test_backend:
+    name: Test backend
+
     runs-on: ubuntu-latest
 
     defaults:
@@ -111,6 +117,8 @@ jobs:
         run: coverage report
 
   test_frontend:
+    name: Test frontend
+
     runs-on: ubuntu-latest
 
     defaults:
@@ -129,6 +137,8 @@ jobs:
         run: npm run test:coverage
 
   build_and_push_docker_backend:
+    name: Build and push backend docker image
+
     needs: [lint_backend, test_backend]
 
     runs-on: ubuntu-latest
@@ -158,6 +168,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
   build_and_push_docker_frontend:
+    name: Build and push frontend docker image
+
     needs: [lint_frontend, test_frontend]
 
     runs-on: ubuntu-latest
@@ -187,6 +199,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
   build_and_push_docker_nginx:
+    name: Build and push nginx docker image
+
     needs: [build_and_push_docker_backend, build_and_push_docker_frontend]
 
     runs-on: ubuntu-latest
@@ -216,6 +230,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
   deployment:
+    name: Deploy to DEV
+
     needs: [build_and_push_docker_nginx]
 
     runs-on: ubuntu-latest
@@ -224,7 +240,7 @@ jobs:
       - name: Checkout repository code
         uses: actions/checkout@v4
 
-      - name: Deploy to DEV
+      - name: Deploy
         uses: wahyd4/kubectl-helm-action@master
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DEV }}
