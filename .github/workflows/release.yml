@@ -1,8 +1,9 @@
-name: Test
+name: Deployment on release
 
 on:
   push:
-    branches: [develop]
+    tags:
+      - v*.*.*
 
 jobs:
   lint_backend:
@@ -141,7 +142,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: loopedupl/backend
-          tags: type=raw,value={{date 'YYYYMMDDHHMMSS'}}
+          tags: ${{  github.ref_name }}
 
       - name: login to docker registry
         uses: docker/login-action@v3
@@ -170,7 +171,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: loopedupl/frontend
-          tags: type=raw,value={{date 'YYYYMMDDHHMMSS'}}
+          tags: ${{  github.ref_name }}
 
       - name: login to docker registry
         uses: docker/login-action@v3
@@ -199,7 +200,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: loopedupl/nginx
-          tags: type=raw,value={{date 'YYYYMMDDHHMMSS'}}
+          tags: ${{  github.ref_name }}
 
       - name: login to docker registry
         uses: docker/login-action@v3
@@ -214,3 +215,81 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  dev_deployment:
+    needs: [build_and_push_docker_nginx]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Update Helm Chart Values
+        uses: Nextdoor/helm-set-image-tag-action@main
+        with:
+          values_files: deployment/values-dev.yaml
+          tag_keys: .backend.tag,.frontend.tag,nginx.tag
+          tag_value: ${{ github.ref }}
+
+      - name: Deploy to DEV
+        uses: wahyd4/kubectl-helm-action@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DEV }}
+        with:
+          args: |
+            helm repo add bitnami https://charts.bitnami.com/bitnami
+            cd deployment
+            helm upgrade --install -f values-dev.yaml loop -n default
+
+  uat_deployment:
+    needs: [dev_deployment]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Update Helm Chart Values
+        uses: Nextdoor/helm-set-image-tag-action@main
+        with:
+          values_files: deployment/values-uat.yaml
+          tag_keys: .backend.tag,.frontend.tag,nginx.tag
+          tag_value: ${{ github.ref }}
+
+      - name: Deploy to UAT
+        uses: wahyd4/kubectl-helm-action@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_UAT }}
+        with:
+          args: |
+            helm repo add bitnami https://charts.bitnami.com/bitnami
+            cd deployment
+            helm upgrade --install -f values-uat.yaml loop -n default
+
+  prod_deployment:
+    needs: [uat_deployment]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Update Helm Chart Values
+        uses: Nextdoor/helm-set-image-tag-action@main
+        with:
+          values_files: deployment/values-prod.yaml
+          tag_keys: .backend.tag,.frontend.tag,nginx.tag
+          tag_value: ${{ github.ref }}
+
+      - name: Deploy to PROD
+        uses: wahyd4/kubectl-helm-action@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_PROD }}
+        with:
+          args: |
+            helm repo add bitnami https://charts.bitnami.com/bitnami
+            cd deployment
+            helm upgrade --install -f values-prod.yaml loop -n default

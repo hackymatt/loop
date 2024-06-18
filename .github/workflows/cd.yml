@@ -1,0 +1,235 @@
+name: Deployment on merge
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  lint_backend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ github.workspace }}/backend
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+      - name: Pull python
+        uses: actions/setup-python@v4
+      - name: Upgrade pip
+        run: pip install --upgrade pip
+      - name: Install lint requirements
+        run: pip install -r requirements_lint.txt
+      - name: Install requirements
+        run: pip install -r requirements.txt
+      - name: Test code quality
+        run: pylint core --recursive=true --fail-under=10
+      - name: Test code formatting
+        run: black . --check
+
+  lint_frontend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ github.workspace }}/frontend
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+      - name: Pull nodejs
+        uses: actions/setup-node@v4
+      - name: Install dependencies
+        run: npm install
+      - name: Test code quality
+        run: npm run lint:check
+      - name: Test code formatting
+        run: npm run prettier:check
+
+  test_backend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ github.workspace }}/backend
+
+    env:
+      LOCAL: ${{ secrets.LOCAL }}
+
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+
+      ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+
+      DUMMY_STUDENT_EMAIL: ${{ secrets.DUMMY_STUDENT_EMAIL }}
+      DUMMY_STUDENT_PASSWORD: ${{ secrets.DUMMY_STUDENT_PASSWORD }}
+
+      DUMMY_LECTURER_EMAIL: ${{ secrets.DUMMY_LECTURER_EMAIL }}
+      DUMMY_LECTURER_PASSWORD: ${{ secrets.DUMMY_LECTURER_PASSWORD }}
+
+      EMAIL_USE_TLS: ${{ secrets.EMAIL_USE_TLS }}
+      EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+      EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+      EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
+      EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
+      EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+
+      GITHUB_REPO: ${{ secrets.LESSON_GITHUB_REPO }}
+
+    services:
+      postgres:
+        image: postgres:12.5
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+      - name: Pull python
+        uses: actions/setup-python@v4
+      - name: Upgrade pip
+        run: pip install --upgrade pip
+      - name: Install test requirements
+        run: pip install -r requirements_test.txt
+      - name: Install requirements
+        run: pip install -r requirements.txt
+      - name: Run tests
+        run: coverage run manage.py test
+      - name: Print report
+        run: coverage report
+
+  test_frontend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ github.workspace }}/frontend
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+      - name: Pull nodejs
+        uses: actions/setup-node@v4
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm run test:coverage
+
+  build_and_push_docker_backend:
+    needs: [lint_backend, test_backend]
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: loopedupl/backend
+          tags: latest.dev
+
+      - name: login to docker registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+
+      - name: build and push docker image to registry
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  build_and_push_docker_frontend:
+    needs: [lint_frontend, test_frontend]
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: loopedupl/frontend
+          tags: latest.dev
+
+      - name: login to docker registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+
+      - name: build and push docker image to registry
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  build_and_push_docker_nginx:
+    needs: [build_and_push_docker_backend, build_and_push_docker_frontend]
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: loopedupl/nginx
+          tags: latest.dev
+
+      - name: login to docker registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+
+      - name: build and push docker image to registry
+        uses: docker/build-push-action@v5
+        with:
+          context: ./nginx
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  deployment:
+    needs: [build_and_push_docker_nginx]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Deploy to DEV
+        uses: wahyd4/kubectl-helm-action@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DEV }}
+        with:
+          args: |
+            helm repo add bitnami https://charts.bitnami.com/bitnami
+            cd deployment
+            helm upgrade --install -f values-dev.yaml loop -n default
