@@ -249,4 +249,4 @@ jobs:
           args: |
             helm repo add bitnami https://charts.bitnami.com/bitnami
             cd deployment
-            helm upgrade --install -f 'values-dev.yaml' loop -n default
+            helm upgrade --install -f 'values-dev.yaml' loop . -n default
