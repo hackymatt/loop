@@ -1,5 +1,5 @@
 backend:
-  tag: latest
+  tag: latest.uat
   replicas: 1
   env:
     CSRF_TRUSTED_ORIGINS: "https://uat.loop.edu.pl,https://www.uat.loop.edu.pl"
@@ -7,10 +7,10 @@ backend:
     BASE_URL: "https://uat.loop.edu.pl"
 
 frontend:
-  tag: v1.0.0.uat
+  tag: latest.uat
   replicas: 1
 
 nginx:
-  tag: latest
+  tag: latest.uat
   replicas: 1
   host: uat.loop.edu.pl

@@ -1,5 +1,5 @@
 backend:
-  tag: latest
+  tag: latest.prod
   replicas: 1
   env:
     CSRF_TRUSTED_ORIGINS: "https://loop.edu.pl,https://www.loop.edu.pl"
@@ -7,10 +7,10 @@ backend:
     BASE_URL: "https://loop.edu.pl"
 
 frontend:
-  tag: latest
+  tag: latest.prod
   replicas: 1
 
 nginx:
-  tag: latest
+  tag: latest.prod
   replicas: 1
   host: loop.edu.pl
