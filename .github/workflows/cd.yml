@@ -4,9 +4,6 @@ on:
   push:
     branches: [develop]
 
-env:
-  TAG: ${{ github.run_id }}
-
 jobs:
   lint_backend:
     name: Lint backend
@@ -154,7 +151,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: loopedupl/backend
-          tags: ${{ env.TAG }}.dev
+          tags: ${{ github.run_id }}.dev
 
       - name: login to docker registry
         uses: docker/login-action@v3
@@ -185,7 +182,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: loopedupl/frontend
-          tags: ${{ env.TAG }}.dev
+          tags: ${{ github.run_id }}.dev
 
       - name: login to docker registry
         uses: docker/login-action@v3
@@ -217,7 +214,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: loopedupl/nginx
-          tags: ${{ env.TAG }}.dev
+          tags: ${{ github.run_id }}.dev
 
       - name: login to docker registry
         uses: docker/login-action@v3
@@ -247,9 +244,9 @@ jobs:
       - name: Update Helm Chart Values
         uses: Nextdoor/helm-set-image-tag-action@main
         with:
-          values_files: deployment/values-prod.yaml
-          tag_keys: .backend.tag,.frontend.tag,nginx.tag
-          tag_value: ${{ env.TAG }}.dev
+          values_files: deployment/values-dev.yaml
+          tag_keys: .backend.tag,.frontend.tag,.nginx.tag
+          tag_value: ${{ github.run_id }}.dev
 
       - name: Deploy
         uses: wahyd4/kubectl-helm-action@master
