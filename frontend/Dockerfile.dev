@@ -9,6 +9,9 @@ RUN npm install
 
 COPY . .
 
+ARG ENV=DEV
+ENV NEXT_PUBLIC_ENV=$ENV
+
 ARG API_URL=https://dev.loop.edu.pl/api
 ENV NEXT_PUBLIC_API_URL=$API_URL
 
