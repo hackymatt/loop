@@ -5,7 +5,7 @@ on:
     branches: [develop]
 
 env:
-  TAG: type=raw,value={{date 'YYYYMMDDHHMMSS'}}
+  TAG: ${{ github.run_id }}
 
 jobs:
   lint_backend:
