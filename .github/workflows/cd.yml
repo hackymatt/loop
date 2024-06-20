@@ -4,6 +4,9 @@ on:
   push:
     branches: [develop]
 
+env:
+  TAG: type=raw,value={{date 'YYYYMMDDHHMMSS'}}
+
 jobs:
   lint_backend:
     name: Lint backend
@@ -151,7 +154,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: loopedupl/backend
-          tags: latest.dev
+          tags: ${{ env.TAG }}.dev
 
       - name: login to docker registry
         uses: docker/login-action@v3
@@ -182,7 +185,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: loopedupl/frontend
-          tags: latest.dev
+          tags: ${{ env.TAG }}.dev
 
       - name: login to docker registry
         uses: docker/login-action@v3
@@ -214,7 +217,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: loopedupl/nginx
-          tags: latest.dev
+          tags: ${{ env.TAG }}.dev
 
       - name: login to docker registry
         uses: docker/login-action@v3
@@ -240,6 +243,13 @@ jobs:
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v4
+
+      - name: Update Helm Chart Values
+        uses: Nextdoor/helm-set-image-tag-action@main
+        with:
+          values_files: deployment/values-prod.yaml
+          tag_keys: .backend.tag,.frontend.tag,nginx.tag
+          tag_value: ${{ env.TAG }}.dev
 
       - name: Deploy
         uses: wahyd4/kubectl-helm-action@master
