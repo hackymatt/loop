@@ -493,7 +493,7 @@ jobs:
         with:
           values_files: deployment/values-prod.yaml
           tag_keys: .backend.tag,.frontend.tag,.nginx.tag
-          tag_value: ${{ github.ref }}
+          tag_value: ${{ github.ref }}.prod
 
       - name: Deploy
         uses: wahyd4/kubectl-helm-action@master
