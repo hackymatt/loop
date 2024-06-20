@@ -9,6 +9,9 @@ RUN npm install
 
 COPY . .
 
+ARG ENV=UAT
+ENV NEXT_PUBLIC_ENV=$ENV
+
 ARG API_URL=https://uat.loop.edu.pl/api
 ENV NEXT_PUBLIC_API_URL=$API_URL
 

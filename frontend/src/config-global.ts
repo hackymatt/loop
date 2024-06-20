@@ -1,5 +1,7 @@
 import { env } from "../next.config";
 
+export const ENV = env.ENV ?? "LOCAL";
+
 export const API_URL = env.API_URL ?? "";
 export const BASE_URL = env.BASE_URL ?? "";
 
