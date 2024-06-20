@@ -105,7 +105,7 @@ export default function Footer() {
                       variant="body2"
                       href={social.url}
                     >
-                      <Iconify icon={social.icon} />
+                      <Iconify icon={social.icon} color={social.color} />
                     </Link>
                   ))}
                 </Stack>
