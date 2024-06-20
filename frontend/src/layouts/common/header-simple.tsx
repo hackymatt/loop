@@ -49,8 +49,8 @@ export default function HeaderSimple() {
             sx={{
               ml: 0.5,
               px: 0.5,
-              top: -14,
-              left: 60,
+              top: 14,
+              left: 85,
               height: 20,
               fontSize: 11,
               cursor: "pointer",
