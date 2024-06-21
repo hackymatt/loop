@@ -13,7 +13,6 @@ import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import { useRegisterNewsletter } from "src/api/newsletter/register";
 
-import Logo from "src/components/logo";
 import Image from "src/components/image";
 import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
@@ -43,7 +42,14 @@ export default function Newsletter() {
             </Typography>
 
             <Typography sx={{ mt: 2.5, mb: 5 }}>
-              Zapisz się do newslettera <Logo sx={{ height: "16px", width: "auto" }} />
+              Zapisz się do newslettera{" "}
+              <Typography
+                variant="overline"
+                color="primary"
+                sx={{ fontSize: 17, textTransform: "none" }}
+              >
+                loop
+              </Typography>
             </Typography>
 
             <NewsletterEmail buttonLabel="Zapisz" sx={{ mt: 0.3 }} />
