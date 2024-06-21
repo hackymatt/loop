@@ -6,7 +6,6 @@ import Typography from "@mui/material/Typography";
 
 import { useResponsive } from "src/hooks/use-responsive";
 
-import Logo from "src/components/logo";
 import Image from "src/components/image";
 
 // ----------------------------------------------------------------------
@@ -54,12 +53,19 @@ export default function LandingIntroduce() {
 
           <Stack sx={{ gap: 2, textAlign: "justify" }}>
             <Typography sx={{ color: "text.secondary" }}>
-              W <Logo sx={{ height: "16px", width: "auto" }} /> naszą misją jest umożliwienie
-              zarówno początkującym entuzjastom, jak i doświadczonym inżynierom oprogramowania
-              rozwijania swojej wiedzy i umiejętności w dynamicznym świecie programowania.
-              Zobowiązujemy się tworzyć otoczenie edukacyjne online, które jest dostępne i
-              wspierające, zapewniając społeczność, w której ceni się ciekawość, a współpraca jest
-              kluczowa.
+              W{" "}
+              <Typography
+                variant="overline"
+                color="primary"
+                sx={{ fontSize: 17, textTransform: "none" }}
+              >
+                loop
+              </Typography>{" "}
+              naszą misją jest umożliwienie zarówno początkującym entuzjastom, jak i doświadczonym
+              inżynierom oprogramowania rozwijania swojej wiedzy i umiejętności w dynamicznym
+              świecie programowania. Zobowiązujemy się tworzyć otoczenie edukacyjne online, które
+              jest dostępne i wspierające, zapewniając społeczność, w której ceni się ciekawość, a
+              współpraca jest kluczowa.
             </Typography>
 
             <Typography sx={{ color: "text.secondary" }}>
@@ -81,8 +87,15 @@ export default function LandingIntroduce() {
             </Typography>
 
             <Typography sx={{ color: "text.secondary" }}>
-              Dołącz do nas w <Logo sx={{ height: "16px", width: "auto" }} />, gdzie nauka nie zna
-              ograniczeń, a razem kształtujemy przyszłość programowania.
+              Dołącz do nas w{" "}
+              <Typography
+                variant="overline"
+                color="primary"
+                sx={{ fontSize: 17, textTransform: "none" }}
+              >
+                loop
+              </Typography>{" "}
+              gdzie nauka nie zna ograniczeń, a razem kształtujemy przyszłość programowania.
             </Typography>
           </Stack>
 
