@@ -15,9 +15,7 @@ from profile.details.views import ProfileDetailsViewSet
 from profile.lecturers.views import LecturerViewSet, BestLecturerViewSet
 from profile.earnings.views import EarningViewSet
 from django.urls import path, include
-from django.conf import settings
 from django.contrib import admin
-from .routers import Router
 from course.views import (
     CourseViewSet,
     BestCourseViewSet,
@@ -45,6 +43,7 @@ from reservation.views import ReservationViewSet
 from contact.views import ContactViewSet
 from finance.views import FinanceDetailsViewSet, FinanceHistoryViewSet
 from coupon.views import CouponViewSet, CouponUserViewSet, CouponValidationViewSet
+from .routers import Router
 
 router = Router(trailing_slash=False)
 
