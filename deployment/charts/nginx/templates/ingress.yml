@@ -5,6 +5,7 @@ metadata:
   namespace: default
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-production
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
     app.kubernetes.io/managed-by: "Helm"
 spec:
   ingressClassName: "nginx"
