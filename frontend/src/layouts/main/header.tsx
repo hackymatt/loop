@@ -16,12 +16,10 @@ import { useOffSetTop } from "src/hooks/use-off-set-top";
 import { useResponsive } from "src/hooks/use-responsive";
 
 import { bgBlur } from "src/theme/css";
-import { ENV } from "src/config-global";
 import { useCartsRecordsCount } from "src/api/carts/carts";
 import { useWishlistsRecordsCount } from "src/api/wishlists/wishlists";
 
 import Logo from "src/components/logo";
-import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 
@@ -59,23 +57,6 @@ export default function Header({ headerOnDark }: Props) {
     <>
       <Box sx={{ lineHeight: 0, position: "relative" }}>
         <Logo />
-        {ENV === "PROD" ? null : (
-          <Label
-            color="info"
-            sx={{
-              ml: 0.5,
-              px: 0.5,
-              top: -14,
-              left: 60,
-              height: 20,
-              fontSize: 11,
-              cursor: "pointer",
-              position: "absolute",
-            }}
-          >
-            {ENV}
-          </Label>
-        )}
       </Box>
 
       <>
