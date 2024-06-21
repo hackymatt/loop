@@ -1,11 +1,16 @@
 import { memo } from "react";
 
 import Link from "@mui/material/Link";
+import { Stack } from "@mui/material";
 import Box, { BoxProps } from "@mui/material/Box";
 
 import { RouterLink } from "src/routes/components";
 
+import { ENV } from "src/config-global";
+
 import Image from "src/components/image";
+
+import Label from "../label";
 // ----------------------------------------------------------------------
 
 interface LogoProps extends BoxProps {
@@ -25,17 +30,29 @@ function Logo({ single = false, sx }: LogoProps) {
       aria-label="go to homepage"
       sx={{ lineHeight: 0 }}
     >
-      <Box
+      <Stack
+        alignItems="center"
+        justifyContent="center"
         sx={{
           width: single ? 64 : 75,
           lineHeight: 0,
           cursor: "pointer",
           display: "inline-flex",
-          ...sx,
         }}
       >
-        {single ? singleLogo : fullLogo}
-      </Box>
+        <Box
+          sx={{
+            width: single ? 64 : 75,
+            lineHeight: 0,
+            cursor: "pointer",
+            display: "inline-flex",
+            ...sx,
+          }}
+        >
+          {single ? singleLogo : fullLogo}
+        </Box>
+        {ENV === "PROD" ? null : <Label color="info">{ENV}</Label>}
+      </Stack>
     </Link>
   );
 }

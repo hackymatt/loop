@@ -15,8 +15,9 @@ from profile.details.views import ProfileDetailsViewSet
 from profile.lecturers.views import LecturerViewSet, BestLecturerViewSet
 from profile.earnings.views import EarningViewSet
 from django.urls import path, include
+from django.conf import settings
 from django.contrib import admin
-from rest_framework.routers import DefaultRouter
+from .routers import Router
 from course.views import (
     CourseViewSet,
     BestCourseViewSet,
@@ -45,7 +46,8 @@ from contact.views import ContactViewSet
 from finance.views import FinanceDetailsViewSet, FinanceHistoryViewSet
 from coupon.views import CouponViewSet, CouponUserViewSet, CouponValidationViewSet
 
-router = DefaultRouter(trailing_slash=False)
+router = Router(trailing_slash=False)
+
 router.register(r"users", UserViewSet, basename="users")
 router.register(r"register", ProfileRegisterViewSet, basename="user_register")
 router.register(r"verify", ProfileVerifyViewSet, basename="user_verification")
@@ -91,42 +93,40 @@ router.register(r"earnings", EarningViewSet, basename="earnings")
 router.register(r"coupons", CouponViewSet, basename="coupons")
 router.register(r"coupon-usage", CouponUserViewSet, basename="coupon_usage")
 
+api_urlpatterns = [
+    path("", include(router.urls)),
+    path(
+        "details",
+        ProfileDetailsViewSet.as_view({"get": "list", "put": "update"}),
+    ),
+    path(
+        "unregister",
+        ProfileUnregisterViewSet.as_view({"delete": "destroy", "put": "update"}),
+    ),
+    path(
+        "finance-details",
+        FinanceDetailsViewSet.as_view({"get": "list", "put": "update"}),
+    ),
+    path("stats", StatsViewSet.as_view({"get": "get_stats"})),
+    path("newsletter-subscribe", NewsletterSubscribeViewSet.subscribe),
+    path(
+        "newsletter-unsubscribe/<str:uuid>",
+        NewsletterUnsubscribeViewSet.unsubscribe,
+    ),
+    path("contact", ContactViewSet.as_view({"post": "contact"})),
+    path(
+        "coupon-validate/<str:coupon_code>/<str:total>",
+        CouponValidationViewSet.validate,
+    ),
+    path("login-google", GoogleLoginViewSet.as_view({"post": "post"})),
+    path("login-facebook", FacebookLoginViewSet.as_view({"post": "post"})),
+    path("login-github", GithubLoginViewSet.as_view({"post": "post"})),
+]
+
 urlpatterns = [
     path(
         "api/",
-        include(
-            [
-                path("", include(router.urls)),
-                path(
-                    "details",
-                    ProfileDetailsViewSet.as_view({"get": "list", "put": "update"}),
-                ),
-                path(
-                    "unregister",
-                    ProfileUnregisterViewSet.as_view(
-                        {"delete": "destroy", "put": "update"}
-                    ),
-                ),
-                path(
-                    "finance-details",
-                    FinanceDetailsViewSet.as_view({"get": "list", "put": "update"}),
-                ),
-                path("stats", StatsViewSet.as_view({"get": "get_stats"})),
-                path("newsletter-subscribe", NewsletterSubscribeViewSet.subscribe),
-                path(
-                    "newsletter-unsubscribe/<str:uuid>",
-                    NewsletterUnsubscribeViewSet.unsubscribe,
-                ),
-                path("contact", ContactViewSet.as_view({"post": "contact"})),
-                path(
-                    "coupon-validate/<str:coupon_code>/<str:total>",
-                    CouponValidationViewSet.validate,
-                ),
-                path("login-google", GoogleLoginViewSet.as_view({"post": "post"})),
-                path("login-facebook", FacebookLoginViewSet.as_view({"post": "post"})),
-                path("login-github", GithubLoginViewSet.as_view({"post": "post"})),
-            ]
-        ),
+        include(api_urlpatterns),
     ),
     path("admin", admin.site.urls),
 ]

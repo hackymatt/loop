@@ -55,6 +55,7 @@ services:
     command: yarn dev
     environment:
       - WATCHPACK_POLLING=true
+      - NEXT_PUBLIC_ENV=LOCAL
       - NEXT_PUBLIC_BASE_URL=${BASE_URL}
       - NEXT_PUBLIC_API_URL=${API_URL}
       - NEXT_PUBLIC_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
