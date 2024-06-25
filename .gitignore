@@ -6,7 +6,10 @@
 .env.development.local
 .env.test.local
 .env.production.local
-*secrets*
+
+secrets.yaml
+secrets.sh
+auth.sh
 
 
 certificate/
