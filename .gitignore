@@ -9,7 +9,7 @@
 
 secrets.yaml
 secrets.sh
-auth.sh
+auth
 
 
 certificate/
