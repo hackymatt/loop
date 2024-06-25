@@ -7,7 +7,7 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-production
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
     app.kubernetes.io/managed-by: "Helm"
-    {{- if not eq .Values.host "loop.edu.pl" }}
+    {{- if ne .Values.host "loop.edu.pl" }}
     nginx.ingress.kubernetes.io/auth-type: basic
     nginx.ingress.kubernetes.io/auth-secret: auth
     nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
