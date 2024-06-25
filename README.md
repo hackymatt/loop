@@ -22,6 +22,9 @@ Create secrets:
 kubectl delete secret secrets
 kubectl create secret generic secrets --from-env-file=./secrets.sh
 
+kubectl delete secret auth
+kubectl create secret generic auth --from-env-file=./auth.sh
+
 Delete cert:
 kubectl delete cert tls-cert
 
