@@ -202,7 +202,7 @@ jobs:
   build_and_push_docker_nginx:
     name: Build and push nginx docker image
 
-    needs: [build_and_push_docker_backend, build_and_push_docker_frontend]
+    needs: [lint_backend, test_backend, lint_frontend, test_frontend]
 
     runs-on: ubuntu-latest
     steps:
@@ -233,7 +233,12 @@ jobs:
   deployment:
     name: Deploy to DEV
 
-    needs: [build_and_push_docker_nginx]
+    needs:
+      [
+        build_and_push_docker_backend,
+        build_and_push_docker_frontend,
+        build_and_push_docker_nginx,
+      ]
 
     runs-on: ubuntu-latest
 
