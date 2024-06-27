@@ -19,7 +19,7 @@ module.exports = {
     return config;
   },
   env: {
-    ENV: process.env.NEXT_PUBLIC_ENV ?? "",
+    ENV: process.env.NEXT_PUBLIC_ENV ?? "LOCAL",
     API_URL: process.env.NEXT_PUBLIC_API_URL ?? "",
     BASE_URL: process.env.NEXT_PUBLIC_BASE_URL ?? "",
     GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ?? "",
