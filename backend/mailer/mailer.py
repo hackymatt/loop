@@ -12,7 +12,7 @@ class Mailer:
                 **data,
                 **{
                     "website_url": settings.BASE_FRONTEND_URL,
-                    "company": "loop sp. z o.o.",
+                    "company": "loop",
                 },
             },
         )

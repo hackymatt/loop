@@ -18,9 +18,9 @@ interface LogoProps extends BoxProps {
 }
 
 function Logo({ single = false, sx }: LogoProps) {
-  const singleLogo = <Image alt="logo-mark" src="/favicon/logo-mark.svg" />;
+  const singleLogo = <Image alt="logo-mark" src="/logo/logo-mark.svg" />;
 
-  const fullLogo = <Image alt="logo" src="/favicon/logo.svg" />;
+  const fullLogo = <Image alt="logo" src="/logo/logo.svg" />;
 
   return (
     <Link
