@@ -363,7 +363,7 @@ jobs:
 
     needs:
       [
-        build_and_push_docker_frontend_uat,
+        build_and_push_docker_backend_uat,
         build_and_push_docker_frontend_uat,
         build_and_push_docker_nginx_uat,
       ]
