@@ -5,7 +5,7 @@ import { ENV } from "src/config-global";
 export default function robots(): MetadataRoute.Robots {
   const env = ENV === "PROD" ? "" : `${ENV.toLocaleLowerCase()}.`;
 
-  const allRules = { userAgent: "*", allow: "/$", disallow: "/" };
+  const allRules = { userAgent: "*", disallow: "/" };
   const prodRules = {
     userAgent: ["Googlebot", "Applebot", "Bingbot"],
     allow: ["/"],
