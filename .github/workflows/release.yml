@@ -203,8 +203,7 @@ jobs:
   build_and_push_docker_nginx_dev:
     name: Build and push nginx DEV docker image
 
-    needs:
-      [build_and_push_docker_backend_dev, build_and_push_docker_frontend_dev]
+    needs: [lint_backend, test_backend, lint_frontend, test_frontend]
 
     runs-on: ubuntu-latest
     steps:
@@ -235,7 +234,12 @@ jobs:
   dev_deployment:
     name: Deploy to DEV
 
-    needs: [build_and_push_docker_nginx_dev]
+    needs:
+      [
+        build_and_push_docker_backend_dev,
+        build_and_push_docker_frontend_dev,
+        build_and_push_docker_nginx_dev,
+      ]
 
     runs-on: ubuntu-latest
 
@@ -326,8 +330,7 @@ jobs:
   build_and_push_docker_nginx_uat:
     name: Build and push nginx UAT docker image
 
-    needs:
-      [build_and_push_docker_backend_uat, build_and_push_docker_frontend_uat]
+    needs: [dev_deployment]
 
     runs-on: ubuntu-latest
     steps:
@@ -358,7 +361,12 @@ jobs:
   uat_deployment:
     name: Deploy to UAT
 
-    needs: [build_and_push_docker_nginx_uat]
+    needs:
+      [
+        build_and_push_docker_frontend_uat,
+        build_and_push_docker_frontend_uat,
+        build_and_push_docker_nginx_uat,
+      ]
 
     runs-on: ubuntu-latest
 
@@ -448,8 +456,7 @@ jobs:
   build_and_push_docker_nginx_prod:
     name: Build and push nginx PROD docker image
 
-    needs:
-      [build_and_push_docker_backend_prod, build_and_push_docker_frontend_prod]
+    needs: [uat_deployment]
 
     runs-on: ubuntu-latest
     steps:
@@ -480,7 +487,12 @@ jobs:
   prod_deployment:
     name: Deploy to PROD
 
-    needs: [build_and_push_docker_nginx_prod]
+    needs:
+      [
+        build_and_push_docker_backend_prod,
+        build_and_push_docker_frontend_prod,
+        build_and_push_docker_nginx_prod,
+      ]
 
     runs-on: ubuntu-latest
 
