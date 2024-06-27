@@ -1,28 +1,9 @@
 import { MetadataRoute } from "next";
 
 import { ENV } from "src/config-global";
-import { getAllTechnologies } from "src/api/technologies/technologies";
 
-import { ICourseByCategoryProps } from "src/types/course";
-
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const technologies = await getAllTechnologies({
-    courses_count_from: 1,
-    sort_by: "-courses_count",
-    page_size: 1000,
-  });
-
+export default function sitemap(): MetadataRoute.Sitemap {
   const env = ENV === "PROD" ? "" : `${ENV.toLocaleLowerCase()}.`;
-
-  const coursesDetails: MetadataRoute.Sitemap = technologies?.map(
-    (technology: ICourseByCategoryProps) => ({
-      url: `https://www.${env}loop.edu.pl/courses/?technology_in=${technology.name}`,
-      lastModified: new Date(),
-      changeFrequency: "always",
-      priority: 0.8,
-    }),
-  );
-
   return [
     {
       url: `https://www.${env}loop.edu.pl`,
@@ -78,6 +59,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "yearly",
       priority: 0.5,
     },
-    ...coursesDetails,
   ];
 }

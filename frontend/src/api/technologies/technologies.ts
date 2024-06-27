@@ -71,19 +71,3 @@ export const useCreateTechnology = () => {
     },
   );
 };
-
-export const getAllTechnologies = async (
-  query?: IQueryParams,
-): Promise<ICourseByCategoryProps[]> => {
-  const url = endpoint;
-  const urlParams = formatQueryParams(query);
-
-  const { data } = await Api.get(`${url}?${urlParams}`);
-  const { results } = data;
-  const modifiedResults = results.map(({ id, name, created_at }: ITechnology) => ({
-    id,
-    name,
-    createdAt: created_at,
-  }));
-  return modifiedResults;
-};
