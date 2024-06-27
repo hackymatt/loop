@@ -21,17 +21,7 @@ module.exports = {
   async redirects() {
     return (process.env.NEXT_PUBLIC_ENV ?? "LOCAL") === "PROD" &&
       Math.floor((new Date("10/01/2024 00:00") - new Date()) / 86400000) > 0
-      ? [
-          { source: "/", destination: "/coming-soon", permanent: false },
-          { source: "/courses", destination: "/coming-soon", permanent: false },
-          { source: "/teachers", destination: "/coming-soon", permanent: false },
-          { source: "/about", destination: "/coming-soon", permanent: false },
-          { source: "/contact", destination: "/coming-soon", permanent: false },
-          { source: "/login", destination: "/coming-soon", permanent: false },
-          { source: "/support", destination: "/coming-soon", permanent: false },
-          { source: "/privacy-policy", destination: "/coming-soon", permanent: false },
-          { source: "/terms-and-conditions", destination: "/coming-soon", permanent: false },
-        ]
+      ? [{ source: "/", destination: "/coming-soon", permanent: false }]
       : [];
   },
   env: {
