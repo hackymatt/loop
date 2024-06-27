@@ -14,8 +14,8 @@ import { NewsletterEmail } from "src/sections/newsletter/newsletter";
 
 // ----------------------------------------------------------------------
 
-export default function ComingSoonView() {
-  const { days, hours, minutes, seconds } = useCountdown(new Date("07/01/2024 12:00"));
+export default function ComingSoonView({ startDate }: { startDate?: Date }) {
+  const { days, hours, minutes, seconds } = useCountdown(startDate ?? new Date("10/01/2024 00:00"));
 
   return (
     <>
