@@ -48,7 +48,7 @@ export default function ContactInfo() {
               </Link>
             </Stack>
 
-            <Stack spacing={1}>
+            <Stack spacing={1} sx={{ mr: 2 }}>
               <Stack direction="row" alignItems="center" sx={{ typography: "subtitle2" }}>
                 <Iconify icon="carbon:mobile" width={24} sx={{ mr: 1 }} /> Telefon
               </Stack>
