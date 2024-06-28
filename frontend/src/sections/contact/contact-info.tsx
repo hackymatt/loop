@@ -53,7 +53,9 @@ export default function ContactInfo() {
                 <Iconify icon="carbon:mobile" width={24} sx={{ mr: 1 }} /> Telefon
               </Stack>
 
-              <Typography variant="body2">(+48) 881 455 596</Typography>
+              <Link color="inherit" variant="body2" href="tel:+48881455596">
+                +48 881 455 596
+              </Link>
             </Stack>
 
             <Divider sx={{ borderStyle: "dashed", width: 1 }} />
