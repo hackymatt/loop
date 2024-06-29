@@ -14,7 +14,7 @@ const START_DATE: Date = new Date("10/01/2024 00:00");
 const useShowComingSoon = () => {
   const { state } = useLocalStorage("admin", { admin: false });
   const diff = differenceInSeconds(START_DATE, new Date());
-  return diff > 0 && (process.env.NEXT_PUBLIC_ENV ?? "LOCAL") === "LOCAL" && !state.admin;
+  return diff > 0 && (process.env.NEXT_PUBLIC_ENV ?? "LOCAL") === "PROD" && !state.admin;
 };
 
 export function ComingSoonViewUtil({ defaultView }: { defaultView: ReactNode }) {
