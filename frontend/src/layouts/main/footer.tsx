@@ -1,6 +1,7 @@
 import { Masonry } from "@mui/lab";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
+import { IconButton } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -96,17 +97,11 @@ export default function Footer() {
 
               <Stack spacing={2}>
                 <Typography variant="h6">Media społecznościowe</Typography>
-                <Stack direction="row" alignItems="center" spacing={2}>
+                <Stack direction="row">
                   {socials.map((social) => (
-                    <Link
-                      key={social.value}
-                      target="_blank"
-                      rel="noopener"
-                      variant="body2"
-                      href={social.url}
-                    >
+                    <IconButton key={social.value} href={social.url} target="_blank">
                       <Iconify icon={social.icon} color={social.color} />
-                    </Link>
+                    </IconButton>
                   ))}
                 </Stack>
               </Stack>

@@ -18,12 +18,6 @@ module.exports = {
     });
     return config;
   },
-  async redirects() {
-    return (process.env.NEXT_PUBLIC_ENV ?? "LOCAL") === "PROD" &&
-      Math.floor((new Date("10/01/2024 00:00") - new Date()) / 86400000) > 0
-      ? [{ source: "/", destination: "/coming-soon", permanent: false }]
-      : [];
-  },
   env: {
     ENV: process.env.NEXT_PUBLIC_ENV ?? "LOCAL",
     API_URL: process.env.NEXT_PUBLIC_API_URL ?? "",

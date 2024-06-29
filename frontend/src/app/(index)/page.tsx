@@ -1,4 +1,5 @@
 import { createMetadata } from "src/utils/create-metadata";
+import { ComingSoonViewUtil } from "src/utils/coming-soon-utils";
 
 import HomeView from "src/sections/view/home-view";
 
@@ -7,5 +8,5 @@ import HomeView from "src/sections/view/home-view";
 export const metadata = createMetadata("Zostań lepszym programistą już dziś!");
 
 export default function HomePage() {
-  return <HomeView />;
+  return <ComingSoonViewUtil defaultView={<HomeView />} />;
 }
