@@ -10,13 +10,13 @@ export default function manifest(): MetadataRoute.Manifest {
     icons: [
       {
         purpose: "maskable",
-        sizes: "192x192",
+        sizes: "512x512",
         src: `logo/pwa/${ENV.toLocaleLowerCase()}/maskable.png`,
         type: "image/png",
       },
       {
         purpose: "any",
-        sizes: "192x192",
+        sizes: "512x512",
         src: `logo/pwa/${ENV.toLocaleLowerCase()}/rounded.png`,
         type: "image/png",
       },
