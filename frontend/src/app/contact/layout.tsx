@@ -1,5 +1,7 @@
 "use client";
 
+import { ComingSoonLayoutUtil } from "src/utils/coming-soon-utils";
+
 import MainLayout from "src/layouts/main";
 
 // ----------------------------------------------------------------------
@@ -9,5 +11,7 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
-  return <MainLayout>{children}</MainLayout>;
+  return (
+    <ComingSoonLayoutUtil defaultLayout={<MainLayout>{children}</MainLayout>} children={children} />
+  );
 }

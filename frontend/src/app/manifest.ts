@@ -6,17 +6,17 @@ export default function manifest(): MetadataRoute.Manifest {
   const env = ENV === "PROD" ? "" : `-${ENV.toLocaleLowerCase()}`;
   return {
     theme_color: "#000000",
-    background_color: "#ffffff",
+    background_color: "#1D1D1D",
     icons: [
       {
         purpose: "maskable",
-        sizes: "512x512",
+        sizes: "192x192",
         src: `logo/pwa/${ENV.toLocaleLowerCase()}/maskable.png`,
         type: "image/png",
       },
       {
         purpose: "any",
-        sizes: "512x512",
+        sizes: "192x192",
         src: `logo/pwa/${ENV.toLocaleLowerCase()}/rounded.png`,
         type: "image/png",
       },
