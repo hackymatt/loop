@@ -14,8 +14,7 @@ from schedule.models import Schedule
 from review.models import Review
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
-
-CANCELLATION_TIME = 24
+from const import CANCELLATION_TIME
 
 
 def get_review(purchase):

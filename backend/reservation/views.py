@@ -13,10 +13,7 @@ from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from pytz import timezone, utc
 from mailer.mailer import Mailer
-
-
-MIN_LESSON_DURATION_MINS = 30
-CANCELLATION_TIME = 24
+from const import CANCELLATION_TIME, MIN_LESSON_DURATION_MINS
 
 
 class ReservationViewSet(ModelViewSet):

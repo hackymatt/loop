@@ -12,8 +12,7 @@ from schedule.models import Schedule
 from datetime import timedelta
 from pytz import timezone, utc
 from mailer.mailer import Mailer
-
-MIN_LESSON_DURATION_MINS = 30
+from const import MIN_LESSON_DURATION_MINS
 
 
 class ProfileSerializer(ModelSerializer):

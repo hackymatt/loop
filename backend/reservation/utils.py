@@ -6,10 +6,7 @@ from datetime import datetime
 from django.utils.timezone import make_aware
 from pytz import timezone, utc
 from mailer.mailer import Mailer
-
-
-CANCELLATION_TIME = 24
-MINIMUM_STUDENTS_REQUIRED = 3
+from const import CANCELLATION_TIME, MINIMUM_STUDENTS_REQUIRED
 
 
 def confirm_reservations():
@@ -22,7 +19,6 @@ def confirm_reservations():
         # create meeting url
         meeting_url = ""
         schedule.meeting_url = meeting_url
-        schedule.save()
 
         reservations = Reservation.objects.filter(schedule=schedule)
         if reservations.count() >= MINIMUM_STUDENTS_REQUIRED:
@@ -46,4 +42,7 @@ def confirm_reservations():
                 )
         else:
             # remove reservations
+            schedule.lesson = None
             reservations.delete()
+
+        schedule.save()

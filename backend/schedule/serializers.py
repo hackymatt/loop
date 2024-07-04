@@ -3,8 +3,7 @@ from schedule.models import Schedule
 from profile.models import Profile
 from lesson.models import Lesson
 from reservation.models import Reservation
-
-MINIMUM_STUDENTS_REQUIRED = 3
+from const import MINIMUM_STUDENTS_REQUIRED
 
 
 class LessonSerializer(ModelSerializer):

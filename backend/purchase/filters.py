@@ -24,8 +24,7 @@ from reservation.models import Reservation
 from purchase.serializers import LessonStatus, ReviewStatus
 from datetime import datetime
 from schedule.models import Schedule
-
-CANCELLATION_TIME = 24
+from const import CANCELLATION_TIME
 
 
 def get_lesson_lecturer(queryset):

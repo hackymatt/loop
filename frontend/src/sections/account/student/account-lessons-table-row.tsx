@@ -6,7 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import IconButton from "@mui/material/IconButton";
-import { Avatar, Button, Typography } from "@mui/material";
+import { Link, Avatar, Typography } from "@mui/material";
 import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
 import { fDate, fDateTime } from "src/utils/format-time";
@@ -125,22 +125,8 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
           <InputBase value={fDate(row.createdAt)} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <Button
-            size="small"
-            variant="outlined"
-            component="a"
-            href={"row.meetingUrl"}
-            target="_blank"
-            startIcon={<Iconify icon="logos:google-meet" />}
-            sx={{ ml: 1 }}
-          >
-            GitHub
-          </Button>
-        </TableCell>
-
         <TableCell align="right" padding="none">
-          <IconButton onClick={handleOpen} disabled={isCompleted || isConfirmed}>
+          <IconButton onClick={handleOpen} disabled={isCompleted}>
             <Iconify icon="carbon:overflow-menu-vertical" />
           </IconButton>
         </TableCell>
@@ -170,6 +156,15 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
             <Iconify icon="carbon:trash-can" sx={{ mr: 0.5 }} />
             <Typography variant="body2">Usuń rezerwację</Typography>
           </MenuItem>
+        )}
+
+        {isConfirmed && (
+          <Link href={row.meetingUrl} target="_blank" underline="none" color="inherit">
+            <MenuItem>
+              <Iconify icon="logos:google-meet" sx={{ mr: 0.5 }} />
+              <Typography variant="body2">Dołącz do spotkania</Typography>
+            </MenuItem>
+          </Link>
         )}
       </Popover>
     </>
