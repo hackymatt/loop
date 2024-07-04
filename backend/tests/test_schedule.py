@@ -430,11 +430,11 @@ class ScheduleTest(APITestCase):
         self.assertEqual(email.to, [self.profile.user.email])
         self.assertEqual(
             email.subject,
-            "Twoja lekcja została odwołana.",
+            "Twoja lekcja została odwołana",
         )
         email = get_mail(1)
         self.assertEqual(email.to, [self.profile_2.user.email])
         self.assertEqual(
             email.subject,
-            "Twoja lekcja została odwołana.",
+            "Twoja lekcja została odwołana",
         )

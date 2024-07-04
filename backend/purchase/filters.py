@@ -74,7 +74,7 @@ def get_lesson_status(queryset):
             lesson_status=Case(
                 When(diff__gte=0, then=Value(LessonStatus.COMPLETED)),
                 When(
-                    diff__gte=-CANCELLATION_TIME * 60 * 60 * 1000000,
+                    diff__gte=-CANCELLATION_TIME * 60 * 60,
                     then=Value(LessonStatus.CONFIRMED),
                 ),
                 When(reservation_exists=1, then=Value(LessonStatus.PLANNED)),

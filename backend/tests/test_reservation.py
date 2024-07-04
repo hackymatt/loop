@@ -386,24 +386,14 @@ class ReservationTest(APITestCase):
             self.lesson_2,
         )
         self.assertEqual(schedule_number(), 16)
-        self.assertEqual(emails_sent_number(), 3)
+        self.assertEqual(emails_sent_number(), 2)
         student_email = get_mail(0)
         self.assertEqual(student_email.to, [self.data["email"]])
         self.assertEqual(
             student_email.subject,
-            f"Potwierdzenie rezerwacji lekcji {self.lesson_2.title}.",
+            f"Potwierdzenie rezerwacji lekcji {self.lesson_2.title}",
         )
-        lecturer_slot_email = get_mail(1)
-        self.assertEqual(
-            lecturer_slot_email.to,
-            [
-                get_schedule(
-                    self.schedules[len(self.schedules) - 1].id
-                ).lecturer.user.email
-            ],
-        )
-        self.assertEqual(lecturer_slot_email.subject, "Nowa rezerwacja terminu.")
-        lecturer_reservation_email = get_mail(2)
+        lecturer_reservation_email = get_mail(1)
         self.assertEqual(
             lecturer_reservation_email.to,
             [
@@ -414,7 +404,7 @@ class ReservationTest(APITestCase):
         )
         self.assertEqual(
             lecturer_reservation_email.subject,
-            f"Nowy zapis na lekcję {self.lesson_2.title}.",
+            f"Nowy zapis na lekcję {self.lesson_2.title}",
         )
 
     def test_create_reservation_authenticated_other_reservation_single_slot(self):
@@ -440,7 +430,7 @@ class ReservationTest(APITestCase):
         self.assertEqual(student_email.to, [self.data["email"]])
         self.assertEqual(
             student_email.subject,
-            f"Potwierdzenie rezerwacji lekcji {self.lesson_2.title}.",
+            f"Potwierdzenie rezerwacji lekcji {self.lesson_2.title}",
         )
         lecturer_reservation_email = get_mail(1)
         self.assertEqual(
@@ -449,7 +439,7 @@ class ReservationTest(APITestCase):
         )
         self.assertEqual(
             lecturer_reservation_email.subject,
-            f"Nowy zapis na lekcję {self.lesson_2.title}.",
+            f"Nowy zapis na lekcję {self.lesson_2.title}",
         )
 
     def test_create_reservation_authenticated_first_reservation_multiple_slot(self):
@@ -470,24 +460,14 @@ class ReservationTest(APITestCase):
         self.assertNotEqual(data["schedule"], self.schedules[3].id)
         self.assertEqual(get_schedule(data["schedule"]).lesson, self.lesson_1)
         self.assertEqual(schedule_number(), 14)
-        self.assertEqual(emails_sent_number(), 3)
+        self.assertEqual(emails_sent_number(), 2)
         student_email = get_mail(0)
         self.assertEqual(student_email.to, [self.data["email"]])
         self.assertEqual(
             student_email.subject,
-            f"Potwierdzenie rezerwacji lekcji {self.lesson_1.title}.",
+            f"Potwierdzenie rezerwacji lekcji {self.lesson_1.title}",
         )
-        lecturer_slot_email = get_mail(1)
-        self.assertEqual(
-            lecturer_slot_email.to,
-            [
-                get_schedule(
-                    self.schedules[len(self.schedules) - 1].id
-                ).lecturer.user.email
-            ],
-        )
-        self.assertEqual(lecturer_slot_email.subject, "Nowa rezerwacja terminu.")
-        lecturer_reservation_email = get_mail(2)
+        lecturer_reservation_email = get_mail(1)
         self.assertEqual(
             lecturer_reservation_email.to,
             [
@@ -498,7 +478,7 @@ class ReservationTest(APITestCase):
         )
         self.assertEqual(
             lecturer_reservation_email.subject,
-            f"Nowy zapis na lekcję {self.lesson_1.title}.",
+            f"Nowy zapis na lekcję {self.lesson_1.title}",
         )
 
     def test_create_reservation_authenticated_other_reservation_multiple_slot(self):
@@ -524,7 +504,7 @@ class ReservationTest(APITestCase):
         self.assertEqual(student_email.to, [self.data["email"]])
         self.assertEqual(
             student_email.subject,
-            f"Potwierdzenie rezerwacji lekcji {self.lesson_1.title}.",
+            f"Potwierdzenie rezerwacji lekcji {self.lesson_1.title}",
         )
         lecturer_reservation_email = get_mail(1)
         self.assertEqual(
@@ -533,7 +513,7 @@ class ReservationTest(APITestCase):
         )
         self.assertEqual(
             lecturer_reservation_email.subject,
-            f"Nowy zapis na lekcję {self.lesson_1.title}.",
+            f"Nowy zapis na lekcję {self.lesson_1.title}",
         )
 
     def test_delete_reservation_unauthenticated(self):
@@ -610,20 +590,12 @@ class ReservationTest(APITestCase):
         self.assertFalse(is_reservation_found(self.reservation_4.id))
         self.assertEqual(get_schedule(self.reservation_4.schedule.id).lesson, None)
         self.assertEqual(schedule_number(), 16)
-        self.assertEqual(emails_sent_number(), 2)
+        self.assertEqual(emails_sent_number(), 1)
         student_email = get_mail(0)
         self.assertEqual(student_email.to, [self.data["email"]])
         self.assertEqual(
             student_email.subject,
             "Potwierdzenie odwołania rezerwacji",
-        )
-        lecturer_reservation_email = get_mail(1)
-        self.assertEqual(
-            lecturer_reservation_email.to,
-            [get_schedule(self.reservation_4.schedule.id).lecturer.user.email],
-        )
-        self.assertEqual(
-            lecturer_reservation_email.subject, "Odwołanie rezerwacji terminu."
         )
 
     def test_delete_reservation_authenticated_not_shared_multi_slot(self):
@@ -638,15 +610,11 @@ class ReservationTest(APITestCase):
         self.assertFalse(is_reservation_found(self.reservation_6.id))
         self.assertFalse(is_schedule_found(self.reservation_6.schedule.id))
         self.assertEqual(schedule_number(), 18)
-        self.assertEqual(emails_sent_number(), 2)
+        self.assertEqual(emails_sent_number(), 1)
         student_email = get_mail(0)
         self.assertEqual(student_email.to, [self.data["email"]])
         self.assertEqual(
             student_email.subject,
             "Potwierdzenie odwołania rezerwacji",
         )
-        lecturer_reservation_email = get_mail(1)
-        self.assertEqual(lecturer_reservation_email.to, [lecturer.user.email])
-        self.assertEqual(
-            lecturer_reservation_email.subject, "Odwołanie rezerwacji terminu."
-        )
+

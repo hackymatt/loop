@@ -1830,7 +1830,7 @@ class PurchaseFilterTest(APITestCase):
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        lesson_status = "zaplanowana"
+        lesson_status = "potwierdzona"
         response = self.client.get(f"{self.endpoint}?lesson_status={lesson_status}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)

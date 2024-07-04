@@ -26,4 +26,4 @@ class ContactTest(APITestCase):
         self.assertEqual(emails_sent_number(), 1)
         email = get_mail(0)
         self.assertEqual(email.to, [settings.EMAIL_FROM])
-        self.assertEqual(email.subject, "Nowa wiadomość ze strony.")
+        self.assertEqual(email.subject, "Nowa wiadomość ze strony")
