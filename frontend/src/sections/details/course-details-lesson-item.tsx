@@ -1,7 +1,7 @@
 import { format } from "date-fns";
-import { useMemo, useState } from "react";
 import { polishPlurals } from "polish-plurals";
 import { formatInTimeZone } from "date-fns-tz";
+import { useMemo, useState, useEffect } from "react";
 
 import { LoadingButton } from "@mui/lab";
 import Typography from "@mui/material/Typography";
@@ -113,12 +113,20 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
       const dt = new Date(lessonSchedule.startTime);
       return {
         time: formatInTimeZone(dt, getTimezone(), "HH:mm"),
-        studentsCount: lessonSchedule.studentsCount,
+        studentsRequired: lessonSchedule.studentsRequired,
       };
     });
 
     return Array.from(new Set(allSlots)).sort();
   }, [lessonSchedules]);
+
+  const [slot, setSlot] = useState<string>(slots?.[0]?.time);
+
+  useEffect(() => {
+    if (slots) {
+      setSlot(slots[0]?.time);
+    }
+  }, [slots]);
 
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} sx={{ height: "fit-content" }} {...other}>
@@ -132,7 +140,8 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
           currentDate={date}
           onDateChange={(selectedDate) => setDate(format(selectedDate, "yyyy-MM-dd"))}
           availableTimeSlots={slots ?? []}
-          currentSlot={slots?.[0]?.time}
+          currentSlot={slot}
+          onSlotChange={(event, selectedSlot) => setSlot(selectedSlot)}
           isLoadingUsers={isLoadingUsers}
           isLoadingTimeSlots={isLoadingTimeSlots}
         />

@@ -50,7 +50,7 @@ export type IScheduleProp = {
   startTime: string;
   endTime: string;
   lesson: Pick<ICourseLessonProp, "id" | "title">;
-  studentsCount: number;
+  studentsRequired: number;
 };
 
 export type ICourseLessonPriceHistoryProp = {

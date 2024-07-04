@@ -2,20 +2,18 @@
 
 import React from "react";
 import { parseISO } from "date-fns";
+import { polishPlurals } from "polish-plurals";
 
-import styled from "@mui/system/styled";
 import { StaticDatePicker } from "@mui/x-date-pickers";
 import {
   Box,
-  Tab,
   Tabs,
+  Chip,
   Stack,
   Theme,
-  Badge,
+  Alert,
   Avatar,
-  Tooltip,
   Typography,
-  BadgeProps,
   CircularProgress,
 } from "@mui/material";
 
@@ -30,7 +28,12 @@ const TABS_STYLE = {
     color: (theme: Theme) => theme.palette.text.primary,
     "&:not(:last-of-type)": { marginRight: (theme: Theme) => theme.spacing(1) },
   },
+  "& .MuiTabs-scrollButtons.Mui-disabled": {
+    opacity: 0.3,
+  },
 };
+
+const CHIP_STYLE = { p: 1, mt: 1, ml: 0.25, mr: 0.25 };
 
 // ----------------------------------------------------------------------
 
@@ -40,7 +43,7 @@ type Props = {
   onUserChange: (event: React.SyntheticEvent, userId: string) => void;
   currentDate: string;
   onDateChange: (value: Date) => void;
-  availableTimeSlots: { time: string; studentsCount: number }[];
+  availableTimeSlots: { time: string; studentsRequired: number }[];
   currentSlot: string;
   onSlotChange?: (event: React.SyntheticEvent, slot: string) => void;
   isLoadingUsers?: boolean;
@@ -61,14 +64,9 @@ export default function Schedule({
   isLoadingTimeSlots,
   error,
 }: Props) {
-  const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
-    "& .MuiBadge-badge": {
-      right: 4,
-      border: `2px solid ${theme.palette.background.paper}`,
-      padding: "4px",
-    },
-  }));
-
+  const selectedTimeSlot = availableTimeSlots?.find(
+    (ts: { time: string; studentsRequired: number }) => ts.time === currentSlot,
+  );
   return (
     <Stack direction="column" alignItems="center">
       <Box sx={{ maxWidth: MAX_WIDTH }}>
@@ -86,22 +84,15 @@ export default function Schedule({
             sx={TABS_STYLE}
           >
             {availableUsers?.map((u: ITeamMemberProps) => (
-              <Tab
+              <Chip
                 key={u.id}
-                value={u.id}
-                icon={<Avatar key={u.id} src={u.avatarUrl} />}
-                label={
-                  <Typography
-                    sx={{
-                      fontSize: 12,
-                      maxWidth: 50,
-                      overflow: "hidden",
-                    }}
-                  >
-                    {u.name}
-                  </Typography>
-                }
-                iconPosition="top"
+                avatar={<Avatar alt={u.name} src={u.avatarUrl} />}
+                label={u.name}
+                size="medium"
+                sx={CHIP_STYLE}
+                variant={currentUser.id === u.id ? "filled" : "outlined"}
+                color="primary"
+                onClick={(event) => onUserChange && onUserChange(event, u.id)}
               />
             ))}
           </Tabs>
@@ -120,56 +111,61 @@ export default function Schedule({
       />
 
       <Box sx={{ maxWidth: MAX_WIDTH }}>
-        {isLoadingTimeSlots ? (
+        {!isLoadingTimeSlots && availableTimeSlots.length === 0 && (
+          <Alert severity="info">Brak dostępnych terminów</Alert>
+        )}
+
+        {isLoadingTimeSlots && (
           <Box sx={{ p: 0.7 }}>
             <CircularProgress size={30} />
           </Box>
-        ) : (
-          <Tabs
-            value={currentSlot ?? false}
-            scrollButtons="auto"
-            variant="scrollable"
-            allowScrollButtonsMobile
-            onChange={onSlotChange}
-            sx={
-              onSlotChange
-                ? TABS_STYLE
-                : {
-                    ...TABS_STYLE,
-                    "& .MuiTabs-indicator": {
-                      display: "none",
-                    },
-                  }
-            }
-          >
-            {availableTimeSlots.length > 0 ? (
-              availableTimeSlots?.map((ts: { time: string; studentsCount: number }) => (
-                <Tab
+        )}
+
+        {!isLoadingTimeSlots && availableTimeSlots.length > 0 && (
+          <>
+            <Tabs
+              value={currentSlot ?? false}
+              scrollButtons
+              variant="scrollable"
+              allowScrollButtonsMobile
+              onChange={onSlotChange}
+              sx={
+                onSlotChange
+                  ? TABS_STYLE
+                  : {
+                      ...TABS_STYLE,
+                      "& .MuiTabs-indicator": {
+                        display: "none",
+                      },
+                    }
+              }
+            >
+              {availableTimeSlots?.map((ts: { time: string; studentsRequired: number }) => (
+                <Chip
                   key={ts.time}
-                  value={ts.time}
-                  label={
-                    <Tooltip title={`Liczba zapisów: ${ts.studentsCount}`} placement="top">
-                      <StyledBadge badgeContent={ts.studentsCount} color="primary">
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            border: (theme) => `solid 1px ${theme.palette.grey[500]}`,
-                            p: 1,
-                            borderRadius: 1,
-                          }}
-                        >
-                          {ts.time}
-                        </Typography>
-                      </StyledBadge>
-                    </Tooltip>
-                  }
-                  sx={{ p: 1 }}
+                  label={ts.time}
+                  sx={CHIP_STYLE}
+                  variant={currentSlot === ts.time ? "filled" : "outlined"}
+                  color="primary"
+                  onClick={(event) => onSlotChange && onSlotChange(event, ts.time)}
                 />
-              ))
+              ))}
+            </Tabs>
+            {(selectedTimeSlot?.studentsRequired ?? 0) === 0 ? (
+              <Alert severity="success">Osiągnięto limit zgłoszeń</Alert>
             ) : (
-              <Typography variant="body2">Brak dostępnych terminów</Typography>
+              <Alert severity="warning">
+                Nie osiągnięto limitu zgłoszeń, wymagane jeszcze{" "}
+                {selectedTimeSlot?.studentsRequired ?? 0}{" "}
+                {polishPlurals(
+                  "zapis",
+                  "zapisy",
+                  "zapisów",
+                  selectedTimeSlot?.studentsRequired ?? 0,
+                )}
+              </Alert>
             )}
-          </Tabs>
+          </>
         )}
       </Box>
 

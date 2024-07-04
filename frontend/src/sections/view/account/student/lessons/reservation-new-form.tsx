@@ -94,7 +94,7 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
       const dt = new Date(lessonSchedule.startTime);
       return {
         time: formatInTimeZone(dt, getTimezone(), "HH:mm"),
-        studentsCount: lessonSchedule.studentsCount,
+        studentsRequired: lessonSchedule.studentsRequired,
       };
     });
 
