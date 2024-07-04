@@ -40,6 +40,7 @@ const TABS = [
   { id: "", label: "Wszystkie lekcje" },
   { id: LessonStatus.nowa, label: "Nowe" },
   { id: LessonStatus.zaplanowana, label: "Zaplanowane" },
+  { id: LessonStatus.potwierdzona, label: "Potwierdzone" },
   { id: LessonStatus.zakończona, label: "Zakończone" },
 ];
 

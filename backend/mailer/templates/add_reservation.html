@@ -2,37 +2,12 @@
 
 {% block title %}Potwierdzenie rezerwacji{% endblock %} 
 
-{% block content %}Rezerwacja terminu lekcji <b>{{lesson_title}}</b>, która
-odbędzie się <b>{{lesson_start_time}} (PL)</b>
-została potwierdzona przez prowadzącego
+{% block content %}Złożyłeś rezerwację terminu lekcji
+<b>{{lesson_title}}</b>, która planowo odbędzie się
+<b>{{lesson_start_time}} (PL)</b>
+i będzie prowadzona przez
 <b>{{lecturer_full_name}}</b>.<br /><br />
-W celu dołączenia do spotkania kliknij w poniższy przycisk:
-<div
-  style="
-    text-align: center;
-    font-size: 36px;
-    margin-top: 20px;
-    line-height: 44px;
-  "
->
-  <button
-    style="
-      color: #ffffff;
-      background-color: #018257;
-      border: 0;
-      min-width: 64px;
-      padding: 8px 22px;
-      border-radius: 8px;
-      height: 48px;
-    "
-  >
-    <a style="color: #ffffff; text-decoration: none" href="{{meeting_url}}"
-      >Dołącz</a
-    >
-  </button>
-</div>
-<br />
-Jeżeli przycisk się nie wyświetla skopiuj następujący link
-<b>{{meeting_url}}</b>.<br /><br />
 Pamiętaj, że odwołanie rezerwacji jest możliwe do <b>24 godzin</b> przed
-rozpoczęciem zajęć. W celu odwołania rezerwacji zaloguj się do swojego konta.{% endblock %}
+rozpoczęciem zajęć. W celu odwołania rezerwacji zaloguj się do swojego konta.<br /><br />
+Jednocześnie informujemy, że to nie jest potwierdzenie realizacji szkolenia.
+Potwierdzenie otrzymasz 24 godziny przez planowym rozpoczęciem zajęć.{% endblock %}

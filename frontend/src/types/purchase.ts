@@ -5,6 +5,7 @@ import { ITeamMemberProps } from "./team";
 export enum LessonStatus {
   nowa = "nowa",
   zaplanowana = "zaplanowana",
+  potwierdzona = "potwierdzona",
   zakończona = "zakończona",
 }
 

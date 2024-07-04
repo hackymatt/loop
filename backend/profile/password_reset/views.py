@@ -47,7 +47,7 @@ class ProfilePasswordResetViewSet(ModelViewSet):
         mailer.send(
             email_template="reset_password.html",
             to=[user.email],
-            subject="Twoje tymczasowe hasło.",
+            subject="Twoje tymczasowe hasło",
             data=data,
         )
 

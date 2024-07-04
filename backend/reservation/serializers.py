@@ -171,7 +171,7 @@ class ReservationSerializer(ModelSerializer):
         mailer.send(
             email_template="add_reservation.html",
             to=[profile.user.email],
-            subject=f"Potwierdzenie rezerwacji na lekcję {lesson.title}.",
+            subject=f"Potwierdzenie rezerwacji lekcji {lesson.title}",
             data=data,
         )
 
@@ -187,18 +187,10 @@ class ReservationSerializer(ModelSerializer):
                 "students_count": students_count,
             }
         }
-        if previous_students_count == 0:
-            mailer.send(
-                email_template="reserve_timeslot.html",
-                to=[schedule.lecturer.user.email],
-                subject="Nowa rezerwacja terminu.",
-                data=data,
-            )
-
         mailer.send(
             email_template="new_reservation.html",
             to=[schedule.lecturer.user.email],
-            subject=f"Nowy zapis na lekcję {lesson.title}.",
+            subject=f"Nowy zapis na lekcję {lesson.title}",
             data=data,
         )
 

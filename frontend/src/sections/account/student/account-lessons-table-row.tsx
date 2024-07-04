@@ -74,6 +74,11 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
     [row.lessonStatus],
   );
 
+  const isConfirmed = useMemo(
+    () => row.lessonStatus === LessonStatus.potwierdzona,
+    [row.lessonStatus],
+  );
+
   const isNew = useMemo(() => row.lessonStatus === LessonStatus.nowa, [row.lessonStatus]);
 
   const canCancel = useMemo(
@@ -94,7 +99,8 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
           <Label
             sx={{ textTransform: "uppercase" }}
             color={
-              (isCompleted && "success") ||
+              (isCompleted && "error") ||
+              (isConfirmed && "success") ||
               (isPlanned && "warning") ||
               (isNew && "info") ||
               "default"
@@ -120,7 +126,7 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
         </TableCell>
 
         <TableCell align="right" padding="none">
-          <IconButton onClick={handleOpen} disabled={isCompleted}>
+          <IconButton onClick={handleOpen} disabled={isCompleted || isConfirmed}>
             <Iconify icon="carbon:overflow-menu-vertical" />
           </IconButton>
         </TableCell>

@@ -13,7 +13,9 @@ from reservation.models import Reservation
 from schedule.models import Schedule
 from review.models import Review
 from datetime import datetime
-from django.utils.timezone import make_aware
+from django.utils.timezone import make_aware, timedelta
+
+CANCELLATION_TIME = 24
 
 
 def get_review(purchase):
@@ -27,6 +29,7 @@ def get_reservation(purchase):
 class LessonStatus:
     NEW = "nowa"
     PLANNED = "zaplanowana"
+    CONFIRMED = "potwierdzona"
     COMPLETED = "zakończona"
 
 
@@ -137,6 +140,10 @@ class PurchaseGetSerializer(ModelSerializer):
             schedule_time = reservation.first().schedule.start_time
             if make_aware(datetime.now()) >= schedule_time:
                 return LessonStatus.COMPLETED
+            elif (schedule_time - make_aware(datetime.now())) < timedelta(
+                hours=CANCELLATION_TIME
+            ):
+                return LessonStatus.CONFIRMED
             else:
                 return LessonStatus.PLANNED
         else:

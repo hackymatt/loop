@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import { Typography } from "@mui/material";
+import { Alert, Typography } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -22,10 +22,13 @@ export default function ReservationConfirmForm({ loading, onConfirm, onClose, ..
       <DialogTitle sx={{ typography: "h3", pb: 3 }}>Potwierdź rezerwację</DialogTitle>
 
       <DialogContent sx={{ py: 0 }}>
-        <Typography>Czy na pewno chcesz zarezerwować ten termin?</Typography>
-        <Typography variant="body2" sx={{ color: "warning.main", mt: 2 }}>
-          Pamiętaj, że odwołanie rezerwacji jest możliwe do 24 godzin przed rozpoczęciem zajęć.
+        <Typography>
+          Czy na pewno chcesz zarezerwować ten termin? Potwierdzenie realizacji wraz z linkiem do
+          spotkania otrzymasz 24 godziny przed planowanym rozpoczęciem zajęć.
         </Typography>
+        <Alert variant="outlined" severity="warning" sx={{ mt: 2 }}>
+          Odwołanie rezerwacji jest możliwe do 24 godzin przed rozpoczęciem zajęć.
+        </Alert>
       </DialogContent>
 
       <DialogActions>

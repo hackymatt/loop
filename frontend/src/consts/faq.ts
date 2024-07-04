@@ -78,20 +78,17 @@ export const lessonFAQ = [
   },
   {
     question: "Na jakiej platformie prowadzone są zajęcia?",
-    answer: "Zajęcia prowadzone są poprzez platformę Microsoft Teams.",
+    answer: "Zajęcia prowadzone są poprzez platformę Google Meet.",
   },
   {
     question: "Jak dołączyć do spotkania, na którym przeprowadzane jest szkolenie?",
-    answer: "Po złożeniu rezerwacji na lekcję w mailu potwierdzającym otrzymasz link do spotkania.",
+    answer:
+      "Po złożeniu rezerwacji terminu lekcji w mailu potwierdzającym realizację zajęć otrzymasz link do spotkania.",
   },
   {
     question: "Gdzie znajdę materiały do szkolenia?",
     answer:
       "Dla każdej lekcji stworzone jest repozytorium na platformie GitHub a link znajduje się w informacjach o lekcji.",
-  },
-  {
-    question: "Gdzie znajdę nagranie ze szkolenia?",
-    answer: "Nagranie można pobrać klikając na link otrzymany po zakończeniu szkolenia.",
   },
 ];
 
@@ -110,6 +107,11 @@ export const reservationFAQ = [
     question: "Kiedy mogę odwołać rezerwację terminu?",
     answer:
       "Odwołanie rezerwacji terminu jest możliwe na 24 godziny przez planowanym rozpoczęciem zajęć.",
+  },
+  {
+    question: "Czy rezerwacja jest równoznaczna z realizacją lekcji?",
+    answer:
+      "Nie, potwierdzenie realizacji lekcji otrzymasz 24 godziny przez planowanym terminem rozpoczęcia zajęć.",
   },
 ];
 

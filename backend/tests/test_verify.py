@@ -123,4 +123,4 @@ class VerificationCodeTest(APITestCase):
         self.assertEqual(emails_sent_number(), 1)
         email = get_mail(0)
         self.assertEqual(email.to, [self.data["email"]])
-        self.assertEqual(email.subject, "Aktywuj swoje konto.")
+        self.assertEqual(email.subject, "Zweryfikuj swoje konto")

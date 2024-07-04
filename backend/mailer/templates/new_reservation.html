@@ -1,8 +1,8 @@
 {% extends "base.html" %} 
 
-{% block title %}Nowy zapis{% endblock %} 
+{% block title %}Nowy zapis na lekcję {{lesson_title}}{% endblock %} 
 
-{% block content %}Lista uczestników lekcji <b>{{lesson_title}}</b>, która odbędzie się
-<b>{{lesson_start_time}} (PL)</b> została powiększona o nowy zapis studenta
-<b>{{student_full_name}}</b>.<br /><br />
+{% block content %}Lista potencjalnych uczestników lekcji <b>{{lesson_title}}</b>, która
+planowo odbędzie się <b>{{lesson_start_time}} (PL)</b> została powiększona o
+nowy zapis studenta <b>{{student_full_name}}</b>.<br /><br />
 Aktualna liczba uczestników: <b>{{students_count}}</b>.{% endblock %}

@@ -77,7 +77,6 @@ class TeachingSerializer(ModelSerializer):
     class Meta:
         model = Teaching
         exclude = (
-            "lesson",
             "modified_at",
             "created_at",
         )

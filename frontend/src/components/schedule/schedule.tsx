@@ -112,7 +112,9 @@ export default function Schedule({
 
       <Box sx={{ maxWidth: MAX_WIDTH }}>
         {!isLoadingTimeSlots && availableTimeSlots.length === 0 && (
-          <Alert severity="info">Brak dostępnych terminów</Alert>
+          <Alert severity="info" variant="outlined">
+            Brak dostępnych terminów
+          </Alert>
         )}
 
         {isLoadingTimeSlots && (
@@ -152,9 +154,11 @@ export default function Schedule({
               ))}
             </Tabs>
             {(selectedTimeSlot?.studentsRequired ?? 0) === 0 ? (
-              <Alert severity="success">Osiągnięto limit zgłoszeń</Alert>
+              <Alert severity="success" variant="outlined">
+                Osiągnięto limit zgłoszeń
+              </Alert>
             ) : (
-              <Alert severity="warning">
+              <Alert severity="warning" variant="outlined">
                 Nie osiągnięto limitu zgłoszeń, wymagane jeszcze{" "}
                 {selectedTimeSlot?.studentsRequired ?? 0}{" "}
                 {polishPlurals(

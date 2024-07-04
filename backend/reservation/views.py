@@ -91,25 +91,8 @@ class ReservationViewSet(ModelViewSet):
         mailer.send(
             email_template="remove_reservation.html",
             to=[student.user.email],
-            subject=f"Odwołanie rezerwacji na lekcję {reservation.lesson.title}.",
+            subject="Potwierdzenie odwołania rezerwacji",
             data=data,
         )
-
-        # notify lecturer
-        data = {
-            **{
-                "lesson_title": reservation.lesson.title,
-                "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
-                .astimezone(timezone("Europe/Warsaw"))
-                .strftime("%d-%m-%Y %H:%M"),
-            }
-        }
-        if other_reservations.count() == 0:
-            mailer.send(
-                email_template="unreserve_timeslot.html",
-                to=[schedule.lecturer.user.email],
-                subject="Odwołanie rezerwacji terminu.",
-                data=data,
-            )
 
         return deletion
