@@ -32,6 +32,7 @@ export type IPurchaseItemProp = {
   reviewId: string;
   ratingNumber: number;
   review: string;
+  meetingUrl: string;
   createdAt: Date;
 };
 

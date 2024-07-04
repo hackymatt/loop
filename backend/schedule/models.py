@@ -3,6 +3,7 @@ from django.db.models import (
     UniqueConstraint,
     ForeignKey,
     DateTimeField,
+    URLField,
     CASCADE,
     PROTECT,
     Index,
@@ -18,6 +19,7 @@ class Schedule(BaseModel):
     lesson = ForeignKey(
         Lesson, on_delete=PROTECT, related_name="schedule_lesson", null=True, blank=True
     )
+    meeting_url = URLField(null=True, blank=True)
 
     class Meta:
         db_table = "schedule"

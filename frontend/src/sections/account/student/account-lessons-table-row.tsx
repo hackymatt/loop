@@ -6,7 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import IconButton from "@mui/material/IconButton";
-import { Avatar, Typography } from "@mui/material";
+import { Avatar, Button, Typography } from "@mui/material";
 import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
 import { fDate, fDateTime } from "src/utils/format-time";
@@ -123,6 +123,20 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
 
         <TableCell>
           <InputBase value={fDate(row.createdAt)} />
+        </TableCell>
+
+        <TableCell sx={{ px: 1 }}>
+          <Button
+            size="small"
+            variant="outlined"
+            component="a"
+            href={"row.meetingUrl"}
+            target="_blank"
+            startIcon={<Iconify icon="logos:google-meet" />}
+            sx={{ ml: 1 }}
+          >
+            GitHub
+          </Button>
         </TableCell>
 
         <TableCell align="right" padding="none">

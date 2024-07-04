@@ -12,8 +12,8 @@ from profile.models import Profile
 from reservation.models import Reservation
 from schedule.models import Schedule
 from review.models import Review
-from datetime import datetime
-from django.utils.timezone import make_aware, timedelta
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
 
 CANCELLATION_TIME = 24
 
@@ -125,6 +125,7 @@ class PurchaseGetSerializer(ModelSerializer):
     reservation = SerializerMethodField("get_reservation_details")
     review_status = SerializerMethodField("get_review_status")
     review = SerializerMethodField("get_review_details")
+    meeting_url = SerializerMethodField("get_meeting_url")
 
     class Meta:
         model = Purchase
@@ -132,6 +133,14 @@ class PurchaseGetSerializer(ModelSerializer):
             "student",
             "modified_at",
         )
+
+    def get_meeting_url(self, purchase):
+        reservation = get_reservation(purchase=purchase)
+
+        if reservation.exists():
+            return reservation.first().schedule.meeting_url
+        else:
+            return None
 
     def get_lesson_status(self, purchase):
         reservation = get_reservation(purchase=purchase)

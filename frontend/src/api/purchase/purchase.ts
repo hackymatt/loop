@@ -54,6 +54,7 @@ type IPurchase = {
   review: IReview | null;
   created_at: string;
   price: number;
+  meeting_url?: string;
 };
 
 type ICreatePurchase = {
@@ -79,6 +80,7 @@ export const purchaseQuery = (query?: IQueryParams) => {
         reservation,
         review_status,
         review,
+        meeting_url,
         created_at,
       }: IPurchase) => {
         const { id: lessonId, title: lessonTitle, duration } = lesson;
@@ -105,6 +107,7 @@ export const purchaseQuery = (query?: IQueryParams) => {
           reviewId: review?.id,
           ratingNumber: review?.rating,
           review: review?.review,
+          meetingUrl: meeting_url,
           createdAt: created_at,
         };
       },
