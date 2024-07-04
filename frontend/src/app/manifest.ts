@@ -5,8 +5,17 @@ import { ENV } from "src/config-global";
 export default function manifest(): MetadataRoute.Manifest {
   const env = ENV === "PROD" ? "" : `-${ENV.toLocaleLowerCase()}`;
   return {
+    name: `loop${env} - szkoła programowania`,
+    short_name: `loop${env}`,
+    start_url: "/",
+    display: "standalone",
+    description:
+      "Platforma firmy loop oferującej kursy programowania online dla przyszłych i obecnych programistów",
+    lang: "pl-PL",
+    dir: "auto",
     theme_color: "#000000",
     background_color: "#1D1D1D",
+    orientation: "any",
     icons: [
       {
         purpose: "maskable",
@@ -21,12 +30,11 @@ export default function manifest(): MetadataRoute.Manifest {
         type: "image/png",
       },
     ],
-    orientation: "any",
-    display: "standalone",
-    dir: "auto",
-    lang: "pl-PL",
-    name: `loop${env}`,
-    short_name: `loop${env}`,
-    start_url: "/",
+    screenshots: [],
+    related_applications: [],
+    prefer_related_applications: false,
+    shortcuts: [],
+    display_override: [],
+    protocol_handlers: [],
   };
 }
