@@ -60,7 +60,7 @@ class ProfileUnregisterViewSet(ModelViewSet):
                     mailer.send(
                         email_template="unreserve_timeslot.html",
                         to=[schedule_obj.lecturer.user.email],
-                        subject="Odwołanie rezerwacji terminu.",
+                        subject="Odwołanie rezerwacji terminu",
                         data=data,
                     )
                     schedule_obj.lesson = None
@@ -96,7 +96,7 @@ class ProfileUnregisterViewSet(ModelViewSet):
                     mailer.send(
                         email_template="cancel_lesson.html",
                         to=[email],
-                        subject="Twoja lekcja została odwołana.",
+                        subject="Twoja lekcja została odwołana",
                         data=data,
                     )
 

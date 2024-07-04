@@ -18,9 +18,7 @@ from teaching.models import Teaching
 from django.db.models.functions import Concat
 from django.db.models import Avg, Value
 from django.conf import settings
-
-
-MIN_LESSON_DURATION_MINS = 30
+from const import MIN_LESSON_DURATION_MINS
 
 
 def get_lecturers(self, lessons):

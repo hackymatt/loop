@@ -1,11 +1,11 @@
 from rest_framework.serializers import ValidationError
+from const import MIN_PASSWORD_LENGTH
 
 
 def validate_password_strength(password):
-    min_length = 8
-    if len(password) < 8:
+    if len(password) < MIN_PASSWORD_LENGTH:
         raise ValidationError(
-            {"password": f"Hasło musi mieć minimum {min_length} znaków."}
+            {"password": f"Hasło musi mieć minimum {MIN_PASSWORD_LENGTH} znaków."}
         )
 
     if not any(char.isdigit() for char in password):

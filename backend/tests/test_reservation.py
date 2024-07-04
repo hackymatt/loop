@@ -1,4 +1,5 @@
 from rest_framework import status
+from django.test import TestCase
 from rest_framework.test import APITestCase
 from .factory import (
     create_user,
@@ -27,6 +28,7 @@ from django.contrib import auth
 import json
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
+from reservation.utils import confirm_reservations
 
 
 class ReservationTest(APITestCase):
@@ -386,24 +388,14 @@ class ReservationTest(APITestCase):
             self.lesson_2,
         )
         self.assertEqual(schedule_number(), 16)
-        self.assertEqual(emails_sent_number(), 3)
+        self.assertEqual(emails_sent_number(), 2)
         student_email = get_mail(0)
         self.assertEqual(student_email.to, [self.data["email"]])
         self.assertEqual(
             student_email.subject,
-            f"Potwierdzenie rezerwacji na lekcję {self.lesson_2.title}.",
+            f"Potwierdzenie rezerwacji lekcji {self.lesson_2.title}",
         )
-        lecturer_slot_email = get_mail(1)
-        self.assertEqual(
-            lecturer_slot_email.to,
-            [
-                get_schedule(
-                    self.schedules[len(self.schedules) - 1].id
-                ).lecturer.user.email
-            ],
-        )
-        self.assertEqual(lecturer_slot_email.subject, "Nowa rezerwacja terminu.")
-        lecturer_reservation_email = get_mail(2)
+        lecturer_reservation_email = get_mail(1)
         self.assertEqual(
             lecturer_reservation_email.to,
             [
@@ -414,7 +406,7 @@ class ReservationTest(APITestCase):
         )
         self.assertEqual(
             lecturer_reservation_email.subject,
-            f"Nowy zapis na lekcję {self.lesson_2.title}.",
+            f"Nowy zapis na lekcję {self.lesson_2.title}",
         )
 
     def test_create_reservation_authenticated_other_reservation_single_slot(self):
@@ -440,7 +432,7 @@ class ReservationTest(APITestCase):
         self.assertEqual(student_email.to, [self.data["email"]])
         self.assertEqual(
             student_email.subject,
-            f"Potwierdzenie rezerwacji na lekcję {self.lesson_2.title}.",
+            f"Potwierdzenie rezerwacji lekcji {self.lesson_2.title}",
         )
         lecturer_reservation_email = get_mail(1)
         self.assertEqual(
@@ -449,7 +441,7 @@ class ReservationTest(APITestCase):
         )
         self.assertEqual(
             lecturer_reservation_email.subject,
-            f"Nowy zapis na lekcję {self.lesson_2.title}.",
+            f"Nowy zapis na lekcję {self.lesson_2.title}",
         )
 
     def test_create_reservation_authenticated_first_reservation_multiple_slot(self):
@@ -470,24 +462,14 @@ class ReservationTest(APITestCase):
         self.assertNotEqual(data["schedule"], self.schedules[3].id)
         self.assertEqual(get_schedule(data["schedule"]).lesson, self.lesson_1)
         self.assertEqual(schedule_number(), 14)
-        self.assertEqual(emails_sent_number(), 3)
+        self.assertEqual(emails_sent_number(), 2)
         student_email = get_mail(0)
         self.assertEqual(student_email.to, [self.data["email"]])
         self.assertEqual(
             student_email.subject,
-            f"Potwierdzenie rezerwacji na lekcję {self.lesson_1.title}.",
+            f"Potwierdzenie rezerwacji lekcji {self.lesson_1.title}",
         )
-        lecturer_slot_email = get_mail(1)
-        self.assertEqual(
-            lecturer_slot_email.to,
-            [
-                get_schedule(
-                    self.schedules[len(self.schedules) - 1].id
-                ).lecturer.user.email
-            ],
-        )
-        self.assertEqual(lecturer_slot_email.subject, "Nowa rezerwacja terminu.")
-        lecturer_reservation_email = get_mail(2)
+        lecturer_reservation_email = get_mail(1)
         self.assertEqual(
             lecturer_reservation_email.to,
             [
@@ -498,7 +480,7 @@ class ReservationTest(APITestCase):
         )
         self.assertEqual(
             lecturer_reservation_email.subject,
-            f"Nowy zapis na lekcję {self.lesson_1.title}.",
+            f"Nowy zapis na lekcję {self.lesson_1.title}",
         )
 
     def test_create_reservation_authenticated_other_reservation_multiple_slot(self):
@@ -524,7 +506,7 @@ class ReservationTest(APITestCase):
         self.assertEqual(student_email.to, [self.data["email"]])
         self.assertEqual(
             student_email.subject,
-            f"Potwierdzenie rezerwacji na lekcję {self.lesson_1.title}.",
+            f"Potwierdzenie rezerwacji lekcji {self.lesson_1.title}",
         )
         lecturer_reservation_email = get_mail(1)
         self.assertEqual(
@@ -533,7 +515,7 @@ class ReservationTest(APITestCase):
         )
         self.assertEqual(
             lecturer_reservation_email.subject,
-            f"Nowy zapis na lekcję {self.lesson_1.title}.",
+            f"Nowy zapis na lekcję {self.lesson_1.title}",
         )
 
     def test_delete_reservation_unauthenticated(self):
@@ -586,7 +568,7 @@ class ReservationTest(APITestCase):
         self.assertEqual(student_email.to, [self.data["email"]])
         self.assertEqual(
             student_email.subject,
-            f"Odwołanie rezerwacji na lekcję {self.reservation_1.lesson.title}.",
+            "Potwierdzenie odwołania rezerwacji",
         )
 
     def test_delete_reservation_authenticated_not_shared_single_slot(self):
@@ -610,20 +592,12 @@ class ReservationTest(APITestCase):
         self.assertFalse(is_reservation_found(self.reservation_4.id))
         self.assertEqual(get_schedule(self.reservation_4.schedule.id).lesson, None)
         self.assertEqual(schedule_number(), 16)
-        self.assertEqual(emails_sent_number(), 2)
+        self.assertEqual(emails_sent_number(), 1)
         student_email = get_mail(0)
         self.assertEqual(student_email.to, [self.data["email"]])
         self.assertEqual(
             student_email.subject,
-            f"Odwołanie rezerwacji na lekcję {self.reservation_4.lesson.title}.",
-        )
-        lecturer_reservation_email = get_mail(1)
-        self.assertEqual(
-            lecturer_reservation_email.to,
-            [get_schedule(self.reservation_4.schedule.id).lecturer.user.email],
-        )
-        self.assertEqual(
-            lecturer_reservation_email.subject, "Odwołanie rezerwacji terminu."
+            "Potwierdzenie odwołania rezerwacji",
         )
 
     def test_delete_reservation_authenticated_not_shared_multi_slot(self):
@@ -638,15 +612,179 @@ class ReservationTest(APITestCase):
         self.assertFalse(is_reservation_found(self.reservation_6.id))
         self.assertFalse(is_schedule_found(self.reservation_6.schedule.id))
         self.assertEqual(schedule_number(), 18)
-        self.assertEqual(emails_sent_number(), 2)
+        self.assertEqual(emails_sent_number(), 1)
         student_email = get_mail(0)
         self.assertEqual(student_email.to, [self.data["email"]])
         self.assertEqual(
             student_email.subject,
-            f"Odwołanie rezerwacji na lekcję {self.reservation_6.lesson.title}.",
+            "Potwierdzenie odwołania rezerwacji",
         )
-        lecturer_reservation_email = get_mail(1)
-        self.assertEqual(lecturer_reservation_email.to, [lecturer.user.email])
-        self.assertEqual(
-            lecturer_reservation_email.subject, "Odwołanie rezerwacji terminu."
+
+
+class ReservationConfirmationTest(TestCase):
+    def setUp(self):
+        self.endpoint = "/api/purchase"
+        self.data = {
+            "email": "user@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
         )
+        self.user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="user2@example.com",
+            password="TestPassword123",
+            is_active=True,
+        )
+        self.user_3 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="user3@example.com",
+            password="TestPassword123",
+            is_active=True,
+        )
+        self.profile = create_profile(user=self.user)
+        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_3 = create_profile(user=self.user_3)
+
+        self.lecturer_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_1@example.com",
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
+
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
+
+        # course 1
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="9.99",
+            technologies=[self.technology_1],
+        )
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_1],
+        )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
+        self.course_1 = create_course(
+            title="Python Beginner",
+            description="Learn Python today",
+            level="Podstawowy",
+            skills=[self.skill_1, self.skill_2],
+            topics=[
+                self.topic_1,
+                self.topic_2,
+            ],
+            lessons=[self.lesson_1, self.lesson_2],
+        )
+
+        create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile,
+            price=self.lesson_1.price,
+        )
+
+        create_purchase(
+            lesson=self.lesson_2,
+            student=self.profile,
+            price=self.lesson_2.price,
+        )
+
+        for lesson in self.course_1.lessons.all():
+            create_teaching(
+                lecturer=self.lecturer_profile,
+                lesson=lesson,
+            )
+
+        self.schedules = []
+        for i in range(-10, 100):
+            self.schedules.append(
+                create_schedule(
+                    lecturer=self.lecturer_profile,
+                    start_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * i)
+                    ),
+                    end_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * (i + 1))
+                    ),
+                )
+            )
+        self.purchase_1 = create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile,
+            price=self.lesson_1.price,
+        )
+        create_reservation(
+            student=self.profile,
+            lesson=self.lesson_1,
+            schedule=self.schedules[len(self.schedules) - 3],
+            purchase=self.purchase_1,
+        )
+        create_reservation(
+            student=self.profile_2,
+            lesson=self.lesson_1,
+            schedule=self.schedules[len(self.schedules) - 3],
+            purchase=self.purchase_1,
+        )
+        create_reservation(
+            student=self.profile_3,
+            lesson=self.lesson_1,
+            schedule=self.schedules[len(self.schedules) - 3],
+            purchase=self.purchase_1,
+        )
+        self.schedules[len(self.schedules) - 3].lesson = self.lesson_1
+        self.schedules[len(self.schedules) - 3].save()
+        self.purchase_2 = create_purchase(
+            lesson=self.lesson_2,
+            student=self.profile,
+            price=self.lesson_2.price,
+        )
+        create_reservation(
+            student=self.profile,
+            lesson=self.lesson_2,
+            schedule=self.schedules[0],
+            purchase=self.purchase_2,
+        )
+        self.schedules[0].lesson = self.lesson_2
+        self.schedules[0].save()
+
+    def test_reservation_confirmation(self):
+        self.assertEqual(reservation_number(), 4)
+        confirm_reservations()
+        self.assertEqual(reservation_number(), 3)
+        self.assertEqual(emails_sent_number(), 3)
+        email = get_mail(0)
+        self.assertEqual(email.to, [self.profile.user.email])
+        self.assertEqual(email.subject, "Potwierdzenie realizacji szkolenia")
+        email = get_mail(1)
+        self.assertEqual(email.to, [self.profile_2.user.email])
+        self.assertEqual(email.subject, "Potwierdzenie realizacji szkolenia")
+        email = get_mail(2)
+        self.assertEqual(email.to, [self.profile_3.user.email])
+        self.assertEqual(email.subject, "Potwierdzenie realizacji szkolenia")

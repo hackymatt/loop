@@ -3,6 +3,7 @@ from schedule.models import Schedule
 from profile.models import Profile
 from lesson.models import Lesson
 from reservation.models import Reservation
+from const import MINIMUM_STUDENTS_REQUIRED
 
 
 class LessonSerializer(ModelSerializer):
@@ -42,7 +43,7 @@ class ManageScheduleSerializer(ModelSerializer):
 
 
 class ScheduleSerializer(ModelSerializer):
-    students_count = SerializerMethodField("get_students_count")
+    students_required = SerializerMethodField("get_students_required")
 
     class Meta:
         model = Schedule
@@ -53,5 +54,9 @@ class ScheduleSerializer(ModelSerializer):
             "created_at",
         )
 
-    def get_students_count(self, schedule):
-        return Reservation.objects.filter(schedule=schedule).count()
+    def get_students_required(self, schedule):
+        return max(
+            MINIMUM_STUDENTS_REQUIRED
+            - Reservation.objects.filter(schedule=schedule).count(),
+            0,
+        )

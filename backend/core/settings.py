@@ -158,7 +158,10 @@ DATABASES = {
 # Database backup
 DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
 DBBACKUP_STORAGE_OPTIONS = {"location": f"{BASE_DIR}/backup"}
-CRONJOBS = [("0 */12 * * *", "core.cron.create_backup")]
+CRONJOBS = [
+    ("0 */12 * * *", "core.cron.create_backup"),
+    ("30 * * * *", "core.cron.confirm_lessons"),
+]
 
 
 # Password validation

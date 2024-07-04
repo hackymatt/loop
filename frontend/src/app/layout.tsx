@@ -27,7 +27,8 @@ export const metadata = {
   title: "loop",
   description:
     "Platforma firmy loop oferującej kursy programowania online dla przyszłych i obecnych programistów",
-  keywords: "loop,szkoła,kursy,programowanie,it,tanio,profesjonalnie,online,zdalne",
+  keywords:
+    "loop,szkoła,szkoła programowania,kursy,programowanie,it,tanio,profesjonalnie,online,zdalne",
   manifest: "/manifest.json",
   icons: [{ rel: "icon", url: "/favicon/favicon.ico" }],
 };
@@ -45,9 +46,9 @@ export default function RootLayout({ children }: Props) {
             <LocalizationProvider>
               <SettingsProvider
                 defaultSettings={{
-                  themeMode: "light", // 'light' | 'dark'
-                  themeDirection: "ltr", //  'rtl' | 'ltr'
-                  themeColorPresets: "default", // 'default' | 'preset01' | 'preset02' | 'preset03' | 'preset04' | 'preset05'
+                  themeMode: "light",
+                  themeDirection: "ltr",
+                  themeColorPresets: "default",
                 }}
               >
                 <ThemeProvider>

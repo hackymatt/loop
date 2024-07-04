@@ -116,7 +116,7 @@ class NewsletterSubscribeTest(APITestCase):
         self.assertEqual(emails_sent_number(), 1)
         email = get_mail(0)
         self.assertEqual(email.to, [data["email"]])
-        self.assertEqual(email.subject, "Potwierdzenie rejestracji w newsletterze.")
+        self.assertEqual(email.subject, "Potwierdzenie rejestracji w newsletterze")
 
     def test_subscribe_to_newsletter_with_history(self):
         data = {"email": "test@example.com"}
@@ -128,7 +128,7 @@ class NewsletterSubscribeTest(APITestCase):
         self.assertEqual(emails_sent_number(), 1)
         email = get_mail(0)
         self.assertEqual(email.to, [data["email"]])
-        self.assertEqual(email.subject, "Potwierdzenie rejestracji w newsletterze.")
+        self.assertEqual(email.subject, "Potwierdzenie rejestracji w newsletterze")
 
 
 class NewsletterUnsubscribeTest(APITestCase):

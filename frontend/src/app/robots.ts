@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
   const prodRules = {
     userAgent: ["Googlebot", "Applebot", "Bingbot"],
     allow: ["/"],
-    disallow: [""],
+    disallow: ["/_next"],
   };
 
   const rules = ENV === "PROD" ? [prodRules, allRules] : [allRules];

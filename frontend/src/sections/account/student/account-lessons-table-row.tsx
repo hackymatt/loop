@@ -6,7 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import IconButton from "@mui/material/IconButton";
-import { Avatar, Typography } from "@mui/material";
+import { Link, Avatar, Typography } from "@mui/material";
 import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
 import { fDate, fDateTime } from "src/utils/format-time";
@@ -74,6 +74,11 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
     [row.lessonStatus],
   );
 
+  const isConfirmed = useMemo(
+    () => row.lessonStatus === LessonStatus.potwierdzona,
+    [row.lessonStatus],
+  );
+
   const isNew = useMemo(() => row.lessonStatus === LessonStatus.nowa, [row.lessonStatus]);
 
   const canCancel = useMemo(
@@ -94,7 +99,8 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
           <Label
             sx={{ textTransform: "uppercase" }}
             color={
-              (isCompleted && "success") ||
+              (isCompleted && "error") ||
+              (isConfirmed && "success") ||
               (isPlanned && "warning") ||
               (isNew && "info") ||
               "default"
@@ -150,6 +156,15 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
             <Iconify icon="carbon:trash-can" sx={{ mr: 0.5 }} />
             <Typography variant="body2">Usuń rezerwację</Typography>
           </MenuItem>
+        )}
+
+        {isConfirmed && (
+          <Link href={row.meetingUrl} target="_blank" underline="none" color="inherit">
+            <MenuItem>
+              <Iconify icon="logos:google-meet" sx={{ mr: 0.5 }} />
+              <Typography variant="body2">Dołącz do spotkania</Typography>
+            </MenuItem>
+          </Link>
         )}
       </Popover>
     </>

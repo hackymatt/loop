@@ -13,10 +13,7 @@ from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from pytz import timezone, utc
 from mailer.mailer import Mailer
-
-
-MIN_LESSON_DURATION_MINS = 30
-CANCELLATION_TIME = 24
+from const import CANCELLATION_TIME, MIN_LESSON_DURATION_MINS
 
 
 class ReservationViewSet(ModelViewSet):
@@ -91,25 +88,8 @@ class ReservationViewSet(ModelViewSet):
         mailer.send(
             email_template="remove_reservation.html",
             to=[student.user.email],
-            subject=f"Odwołanie rezerwacji na lekcję {reservation.lesson.title}.",
+            subject="Potwierdzenie odwołania rezerwacji",
             data=data,
         )
-
-        # notify lecturer
-        data = {
-            **{
-                "lesson_title": reservation.lesson.title,
-                "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
-                .astimezone(timezone("Europe/Warsaw"))
-                .strftime("%d-%m-%Y %H:%M"),
-            }
-        }
-        if other_reservations.count() == 0:
-            mailer.send(
-                email_template="unreserve_timeslot.html",
-                to=[schedule.lecturer.user.email],
-                subject="Odwołanie rezerwacji terminu.",
-                data=data,
-            )
 
         return deletion

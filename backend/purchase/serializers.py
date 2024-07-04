@@ -12,8 +12,9 @@ from profile.models import Profile
 from reservation.models import Reservation
 from schedule.models import Schedule
 from review.models import Review
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
+from const import CANCELLATION_TIME
 
 
 def get_review(purchase):
@@ -27,6 +28,7 @@ def get_reservation(purchase):
 class LessonStatus:
     NEW = "nowa"
     PLANNED = "zaplanowana"
+    CONFIRMED = "potwierdzona"
     COMPLETED = "zakończona"
 
 
@@ -122,6 +124,7 @@ class PurchaseGetSerializer(ModelSerializer):
     reservation = SerializerMethodField("get_reservation_details")
     review_status = SerializerMethodField("get_review_status")
     review = SerializerMethodField("get_review_details")
+    meeting_url = SerializerMethodField("get_meeting_url")
 
     class Meta:
         model = Purchase
@@ -130,6 +133,14 @@ class PurchaseGetSerializer(ModelSerializer):
             "modified_at",
         )
 
+    def get_meeting_url(self, purchase):
+        reservation = get_reservation(purchase=purchase)
+
+        if reservation.exists():
+            return reservation.first().schedule.meeting_url
+        else:
+            return None
+
     def get_lesson_status(self, purchase):
         reservation = get_reservation(purchase=purchase)
 
@@ -137,6 +148,10 @@ class PurchaseGetSerializer(ModelSerializer):
             schedule_time = reservation.first().schedule.start_time
             if make_aware(datetime.now()) >= schedule_time:
                 return LessonStatus.COMPLETED
+            elif (schedule_time - make_aware(datetime.now())) < timedelta(
+                hours=CANCELLATION_TIME
+            ):
+                return LessonStatus.CONFIRMED
             else:
                 return LessonStatus.PLANNED
         else:

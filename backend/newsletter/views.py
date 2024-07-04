@@ -39,7 +39,7 @@ class NewsletterSubscribeViewSet(ModelViewSet):
         mailer.send(
             email_template="subscribe.html",
             to=[instance.email],
-            subject="Potwierdzenie rejestracji w newsletterze.",
+            subject="Potwierdzenie rejestracji w newsletterze",
             data=data,
         )
 

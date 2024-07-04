@@ -132,7 +132,7 @@ class RegisterTest(APITestCase):
         self.assertEqual(emails_sent_number(), 1)
         email = get_mail(0)
         self.assertEqual(email.to, [self.data["email"]])
-        self.assertEqual(email.subject, "Aktywuj swoje konto.")
+        self.assertEqual(email.subject, "Zweryfikuj swoje konto")
         self.assertEqual(newsletters_number(), 1)
 
     def test_register_success_with_newsletter(self):
@@ -164,5 +164,5 @@ class RegisterTest(APITestCase):
         self.assertEqual(emails_sent_number(), 1)
         email = get_mail(0)
         self.assertEqual(email.to, [self.data["email"]])
-        self.assertEqual(email.subject, "Aktywuj swoje konto.")
+        self.assertEqual(email.subject, "Zweryfikuj swoje konto")
         self.assertEqual(newsletters_number(), 1)

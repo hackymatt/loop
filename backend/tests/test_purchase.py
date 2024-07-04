@@ -106,7 +106,7 @@ class PurchaseTest(APITestCase):
             )
 
         self.schedules = []
-        for i in range(-10, 10):
+        for i in range(-10, 100):
             self.schedules.append(
                 create_schedule(
                     lecturer=self.lecturer_profile,

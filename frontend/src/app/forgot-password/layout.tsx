@@ -1,6 +1,6 @@
 "use client";
 
-import AuthIllustrationLayout from "src/layouts/auth/illustration";
+import AuthBackgroundLayout from "src/layouts/auth/background";
 
 // ----------------------------------------------------------------------
 
@@ -9,5 +9,5 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
-  return <AuthIllustrationLayout>{children}</AuthIllustrationLayout>;
+  return <AuthBackgroundLayout>{children}</AuthBackgroundLayout>;
 }

@@ -47,7 +47,7 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
 
   const { mutateAsync: createReservation, isLoading: isSubmitting } = useCreateReservation();
   const { data: lessonLecturers, isLoading: isLoadingUsers } = useLessonLecturers({
-    lesson_id: purchase?.id,
+    lesson_id: purchase?.lessonId,
     page_size: 1000,
   });
 
@@ -94,7 +94,7 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
       const dt = new Date(lessonSchedule.startTime);
       return {
         time: formatInTimeZone(dt, getTimezone(), "HH:mm"),
-        studentsCount: lessonSchedule.studentsCount,
+        studentsRequired: lessonSchedule.studentsRequired,
       };
     });
 

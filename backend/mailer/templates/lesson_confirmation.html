@@ -1,9 +1,10 @@
 {% extends "base.html" %} 
 
-{% block title %}Nowa rezerwacja{% endblock %} 
+{% block title %}Potwierdzenie realizacji szkolenia{% endblock %} 
 
-{% block content %}Termin został zarezerwowany na lekcję <b>{{lesson_title}}</b>,
-która odbędzie się <b>{{lesson_start_time}} (PL)</b>.<br /><br />
+{% block content %}Potwierdzamy realizację lekcji
+<b>{{lesson_title}}</b>, która odbędzie się <b>{{lesson_start_time}} (PL)</b> i
+będzie prowadzona przez <b>{{lecturer_full_name}}</b>.<br /><br />
 W celu dołączenia do spotkania kliknij w poniższy przycisk:
 <div
   style="

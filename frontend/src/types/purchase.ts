@@ -5,6 +5,7 @@ import { ITeamMemberProps } from "./team";
 export enum LessonStatus {
   nowa = "nowa",
   zaplanowana = "zaplanowana",
+  potwierdzona = "potwierdzona",
   zakończona = "zakończona",
 }
 
@@ -31,6 +32,7 @@ export type IPurchaseItemProp = {
   reviewId: string;
   ratingNumber: number;
   review: string;
+  meetingUrl: string;
   createdAt: Date;
 };
 

@@ -43,4 +43,4 @@ class PasswordResetTest(APITestCase):
         self.assertEqual(emails_sent_number(), 1)
         email = get_mail(0)
         self.assertEqual(email.to, [self.data["email"]])
-        self.assertEqual(email.subject, "Twoje tymczasowe hasło.")
+        self.assertEqual(email.subject, "Twoje tymczasowe hasło")

@@ -24,6 +24,7 @@ from reservation.models import Reservation
 from purchase.serializers import LessonStatus, ReviewStatus
 from datetime import datetime
 from schedule.models import Schedule
+from const import CANCELLATION_TIME
 
 
 def get_lesson_lecturer(queryset):
@@ -71,6 +72,10 @@ def get_lesson_status(queryset):
         .annotate(
             lesson_status=Case(
                 When(diff__gte=0, then=Value(LessonStatus.COMPLETED)),
+                When(
+                    diff__gte=-CANCELLATION_TIME * 60 * 60,
+                    then=Value(LessonStatus.CONFIRMED),
+                ),
                 When(reservation_exists=1, then=Value(LessonStatus.PLANNED)),
                 default=Value(LessonStatus.NEW),
             )

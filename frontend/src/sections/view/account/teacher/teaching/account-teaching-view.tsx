@@ -56,7 +56,6 @@ const TABLE_HEAD = [
   { id: "active", label: "Status", width: 100 },
   { id: "teaching", label: "Nauczanie", width: 100 },
   { id: "price", label: "Cena", width: 50 },
-  { id: "github_url", label: "Repozytorium", width: 100 },
   { id: "", width: 25 },
 ];
 

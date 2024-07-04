@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import { Typography } from "@mui/material";
+import { Alert, Typography } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -24,9 +24,9 @@ export default function LessonCancelForm({ loading, onConfirm, onClose, ...other
       <DialogContent sx={{ py: 0 }}>
         <Typography>Czy na pewno chcesz odwołać tę lekcję?</Typography>
 
-        <Typography variant="body2" sx={{ color: "error.main", mt: 2 }}>
+        <Alert severity="error" variant="outlined" sx={{ mt: 2 }}>
           Rezerwacje uczestników zostaną usunięte.
-        </Typography>
+        </Alert>
       </DialogContent>
 
       <DialogActions>

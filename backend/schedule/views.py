@@ -65,7 +65,7 @@ class ManageScheduleViewSet(ModelViewSet):
                 mailer.send(
                     email_template="cancel_lesson.html",
                     to=[email],
-                    subject="Twoja lekcja została odwołana.",
+                    subject="Twoja lekcja została odwołana",
                     data=data,
                 )
 
