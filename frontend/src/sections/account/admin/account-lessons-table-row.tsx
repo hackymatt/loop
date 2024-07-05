@@ -5,7 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import IconButton from "@mui/material/IconButton";
-import { Button, Divider, Typography } from "@mui/material";
+import { Link, Divider, Typography } from "@mui/material";
 import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
 import { fCurrency } from "src/utils/format-number";
@@ -80,20 +80,6 @@ export default function AccountLessonsTableRow({ row, onEdit, onPriceHistoryView
           <InputBase value={fCurrency(row.price ?? 0)} sx={inputStyles} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <Button
-            size="small"
-            variant="outlined"
-            component="a"
-            href={row.githubUrl}
-            target="_blank"
-            startIcon={<Iconify icon="carbon:logo-github" />}
-            sx={{ ml: 1 }}
-          >
-            GitHub
-          </Button>
-        </TableCell>
-
         <TableCell align="right" padding="none">
           <IconButton onClick={handleOpen}>
             <Iconify icon="carbon:overflow-menu-vertical" />
@@ -113,6 +99,13 @@ export default function AccountLessonsTableRow({ row, onEdit, onPriceHistoryView
           },
         }}
       >
+        <Link href={row.githubUrl} target="_blank" underline="none" color="inherit">
+          <MenuItem>
+            <Iconify icon="carbon:logo-github" sx={{ mr: 0.5 }} />
+            <Typography variant="body2">Repozytorium</Typography>
+          </MenuItem>
+        </Link>
+
         <MenuItem onClick={handleEdit} sx={{ mr: 1, width: "100%" }}>
           <Iconify icon="carbon:edit" sx={{ mr: 0.5 }} />
           <Typography variant="body2">Edytuj lekcję</Typography>
