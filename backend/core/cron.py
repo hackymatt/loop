@@ -11,4 +11,7 @@ def create_backup():
 
 
 def confirm_lessons():
-    confirm_reservations()
+    try:
+        confirm_reservations()
+    except Exception:
+        pass
