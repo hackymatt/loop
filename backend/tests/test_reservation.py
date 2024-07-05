@@ -623,7 +623,6 @@ class ReservationTest(APITestCase):
 
 class ReservationConfirmationTest(TestCase):
     def setUp(self):
-        self.endpoint = "/api/purchase"
         self.data = {
             "email": "user@example.com",
             "password": "TestPassword123",
@@ -721,7 +720,7 @@ class ReservationConfirmationTest(TestCase):
             )
 
         self.schedules = []
-        for i in range(-10, 100):
+        for i in range(-10, 50):
             self.schedules.append(
                 create_schedule(
                     lecturer=self.lecturer_profile,

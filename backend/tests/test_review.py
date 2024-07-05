@@ -1,4 +1,5 @@
 from rest_framework import status
+from django.test import TestCase
 from rest_framework.test import APITestCase
 from .factory import (
     create_user,
@@ -10,6 +11,9 @@ from .factory import (
     create_topic,
     create_review,
     create_purchase,
+    create_reservation,
+    create_teaching,
+    create_schedule,
 )
 from .helpers import (
     login,
@@ -19,9 +23,15 @@ from .helpers import (
     is_data_match,
     get_review,
     is_review_found,
+    reservation_number,
+    get_mail,
+    emails_sent_number,
 )
 from django.contrib import auth
 import json
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
+from review.utils import remind_review
 
 
 class ReviewTest(APITestCase):
@@ -744,3 +754,175 @@ class ReviewStatsTest(APITestCase):
                 {"rating": "5.0", "count": 3},
             ],
         )
+
+
+class ReviewConfirmationTest(TestCase):
+    def setUp(self):
+        self.data = {
+            "email": "user@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="user2@example.com",
+            password="TestPassword123",
+            is_active=True,
+        )
+        self.user_3 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="user3@example.com",
+            password="TestPassword123",
+            is_active=True,
+        )
+        self.profile = create_profile(user=self.user)
+        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_3 = create_profile(user=self.user_3)
+
+        self.lecturer_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_1@example.com",
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
+
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
+
+        # course 1
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="9.99",
+            technologies=[self.technology_1],
+        )
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_1],
+        )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
+        self.course_1 = create_course(
+            title="Python Beginner",
+            description="Learn Python today",
+            level="Podstawowy",
+            skills=[self.skill_1, self.skill_2],
+            topics=[
+                self.topic_1,
+                self.topic_2,
+            ],
+            lessons=[self.lesson_1, self.lesson_2],
+        )
+
+        create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile,
+            price=self.lesson_1.price,
+        )
+
+        create_purchase(
+            lesson=self.lesson_2,
+            student=self.profile,
+            price=self.lesson_2.price,
+        )
+
+        for lesson in self.course_1.lessons.all():
+            create_teaching(
+                lecturer=self.lecturer_profile,
+                lesson=lesson,
+            )
+
+        self.schedules = []
+        for i in range(-48, 10):
+            self.schedules.append(
+                create_schedule(
+                    lecturer=self.lecturer_profile,
+                    start_time=make_aware(datetime.now() + timedelta(minutes=30 * i)),
+                    end_time=make_aware(
+                        datetime.now() + timedelta(minutes=30 * (i + 1))
+                    ),
+                )
+            )
+        self.purchase_1 = create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile,
+            price=self.lesson_1.price,
+        )
+        create_reservation(
+            student=self.profile,
+            lesson=self.lesson_1,
+            schedule=self.schedules[len(self.schedules) - 3],
+            purchase=self.purchase_1,
+        )
+        create_reservation(
+            student=self.profile_2,
+            lesson=self.lesson_1,
+            schedule=self.schedules[len(self.schedules) - 3],
+            purchase=self.purchase_1,
+        )
+        create_reservation(
+            student=self.profile_3,
+            lesson=self.lesson_1,
+            schedule=self.schedules[len(self.schedules) - 3],
+            purchase=self.purchase_1,
+        )
+        self.schedules[len(self.schedules) - 3].lesson = self.lesson_1
+        self.schedules[len(self.schedules) - 3].meeting_url = "abc"
+        self.schedules[len(self.schedules) - 3].save()
+        self.purchase_2 = create_purchase(
+            lesson=self.lesson_2,
+            student=self.profile,
+            price=self.lesson_2.price,
+        )
+        create_reservation(
+            student=self.profile,
+            lesson=self.lesson_2,
+            schedule=self.schedules[0],
+            purchase=self.purchase_2,
+        )
+        create_reservation(
+            student=self.profile_2,
+            lesson=self.lesson_2,
+            schedule=self.schedules[0],
+            purchase=self.purchase_2,
+        )
+        create_review(
+            lesson=self.lesson_2,
+            student=self.profile_2,
+            lecturer=self.lecturer_profile,
+            rating=5,
+            review="Great lesson.",
+        )
+        self.schedules[0].lesson = self.lesson_2
+        self.schedules[0].meeting_url = "abc"
+        self.schedules[0].save()
+
+    def test_review_reminder(self):
+        self.assertEqual(reviews_number(), 1)
+        remind_review()
+        self.assertEqual(emails_sent_number(), 1)
+        email = get_mail(0)
+        self.assertEqual(email.to, [self.profile.user.email])
+        self.assertEqual(email.subject, "Prośba o ocenę szkolenia")

@@ -1,8 +1,7 @@
-from .models import Reservation
+from reservation.models import Reservation
 from schedule.models import Schedule
 from django.db.models import F
-from django.db.models.functions import ExtractSecond
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from pytz import timezone, utc
 from mailer.mailer import Mailer
@@ -14,8 +13,8 @@ def confirm_reservations():
 
     schedules = (
         Schedule.objects.filter(lesson__isnull=False, meeting_url__isnull=True)
-        .annotate(diff=ExtractSecond(make_aware(datetime.now()) - F("start_time")))
-        .filter(diff__gte=-CANCELLATION_TIME * 60 * 60)
+        .annotate(diff=make_aware(datetime.now()) - F("start_time"))
+        .filter(diff__gte=-timedelta(hours=CANCELLATION_TIME))
     )
 
     for schedule in schedules:
