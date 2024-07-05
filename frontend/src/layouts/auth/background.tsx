@@ -1,10 +1,7 @@
 import Stack from "@mui/material/Stack";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Unstable_Grid2";
+import { alpha, useTheme } from "@mui/material/styles";
 
-import { useResponsive } from "src/hooks/use-responsive";
-
-import Image from "src/components/image";
+import { bgGradient } from "src/theme/css";
 
 import Header from "../common/header-simple";
 
@@ -14,47 +11,43 @@ type Props = {
   children: React.ReactNode;
 };
 
-export default function AuthIllustrationLayout({ children }: Props) {
-  const mdUp = useResponsive("up", "md");
+export default function AuthBackgroundLayout({ children }: Props) {
+  const theme = useTheme();
 
   return (
     <>
       <Header />
 
-      <Container
+      <Stack
+        alignItems="center"
+        justifyContent="center"
         sx={{
-          pb: 10,
-          minHeight: 1,
-          pt: { xs: 12, md: 10 },
+          ...bgGradient({
+            color: alpha(theme.palette.background.default, 0.9),
+            imgUrl: "/assets/background/overlay_1.jpg",
+          }),
+          px: 2,
+          py: 12,
+          minHeight: "100vh",
         }}
       >
-        <Grid container columnSpacing={{ md: 5 }} justifyContent="space-between">
-          {mdUp && (
-            <Grid xs={12} md={7}>
-              <Image
-                visibleByDefault
-                disabledEffect
-                alt="login"
-                src="/assets/illustrations/illustration_login.svg"
-              />
-            </Grid>
-          )}
-
-          <Grid xs={12} md={5} lg={4}>
-            <Stack
-              spacing={4}
-              sx={{
-                p: 4,
-                borderRadius: 2,
-                textAlign: { xs: "center", md: "left" },
-                boxShadow: (theme) => theme.customShadows.z24,
-              }}
-            >
-              {children}
-            </Stack>
-          </Grid>
-        </Grid>
-      </Container>
+        <Stack
+          spacing={4}
+          sx={{
+            p: 4,
+            width: 1,
+            mx: "auto",
+            flexShrink: 0,
+            maxWidth: 500,
+            borderRadius: 2,
+            bgcolor: "background.default",
+            boxShadow: theme.customShadows.z24,
+            textAlign: { xs: "center", md: "left" },
+          }}
+        >
+          {children}
+        </Stack>
+      </Stack>
     </>
   );
 }
