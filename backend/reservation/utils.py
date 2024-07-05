@@ -1,8 +1,7 @@
-from .models import Reservation
+from reservation.models import Reservation
 from schedule.models import Schedule
 from django.db.models import F
-from django.db.models.functions import ExtractSecond
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from pytz import timezone, utc
 from mailer.mailer import Mailer
@@ -10,38 +9,66 @@ from const import CANCELLATION_TIME, MINIMUM_STUDENTS_REQUIRED
 
 
 def confirm_reservations():
+    mailer = Mailer()
+
     schedules = (
         Schedule.objects.filter(lesson__isnull=False, meeting_url__isnull=True)
-        .annotate(diff=ExtractSecond(make_aware(datetime.now()) - F("start_time")))
-        .filter(diff__gte=-CANCELLATION_TIME * 60 * 60)
+        .annotate(diff=make_aware(datetime.now()) - F("start_time"))
+        .filter(diff__gte=-timedelta(hours=CANCELLATION_TIME))
     )
-    for schedule in schedules:
-        # create meeting url
-        meeting_url = ""
-        schedule.meeting_url = meeting_url
 
+    for schedule in schedules:
         reservations = Reservation.objects.filter(schedule=schedule)
-        if reservations.count() >= MINIMUM_STUDENTS_REQUIRED:
-            # send confirmation email
-            for reservation in reservations:
-                mailer = Mailer()
-                data = {
-                    **{
-                        "lesson_title": reservation.lesson.title,
-                        "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
-                        "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
-                        .astimezone(timezone("Europe/Warsaw"))
-                        .strftime("%d-%m-%Y %H:%M"),
-                    }
-                }
+
+        is_lesson_success = reservations.count() >= MINIMUM_STUDENTS_REQUIRED
+
+        if is_lesson_success:
+            # create meeting url
+            meeting_url = "https://www.google.com"
+            schedule.meeting_url = meeting_url
+
+        data = {
+            **{
+                "lesson_title": schedule.lesson.title,
+                "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
+                "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
+                .astimezone(timezone("Europe/Warsaw"))
+                .strftime("%d-%m-%Y %H:%M"),
+                "meeting_url": schedule.meeting_url,
+            }
+        }
+
+        # send email
+        for reservation in reservations:
+            if is_lesson_success:
                 mailer.send(
-                    email_template="lesson_confirmation.html",
+                    email_template="lesson_success.html",
                     to=[reservation.student.user.email],
                     subject="Potwierdzenie realizacji szkolenia",
                     data=data,
                 )
+            else:
+                mailer.send(
+                    email_template="lesson_failure.html",
+                    to=[reservation.student.user.email],
+                    subject="Brak realizacji szkolenia",
+                    data=data,
+                )
+
+        if is_lesson_success:
+            mailer.send(
+                email_template="lesson_success.html",
+                to=[schedule.lecturer.user.email],
+                subject="Potwierdzenie realizacji szkolenia",
+                data=data,
+            )
         else:
-            # remove reservations
+            mailer.send(
+                email_template="lesson_failure.html",
+                to=[schedule.lecturer.user.email],
+                subject="Brak realizacji szkolenia",
+                data=data,
+            )
             schedule.lesson = None
             reservations.delete()
 

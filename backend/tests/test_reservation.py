@@ -623,7 +623,6 @@ class ReservationTest(APITestCase):
 
 class ReservationConfirmationTest(TestCase):
     def setUp(self):
-        self.endpoint = "/api/purchase"
         self.data = {
             "email": "user@example.com",
             "password": "TestPassword123",
@@ -721,7 +720,7 @@ class ReservationConfirmationTest(TestCase):
             )
 
         self.schedules = []
-        for i in range(-10, 100):
+        for i in range(-10, 50):
             self.schedules.append(
                 create_schedule(
                     lecturer=self.lecturer_profile,
@@ -778,13 +777,22 @@ class ReservationConfirmationTest(TestCase):
         self.assertEqual(reservation_number(), 4)
         confirm_reservations()
         self.assertEqual(reservation_number(), 3)
-        self.assertEqual(emails_sent_number(), 3)
+        self.assertEqual(emails_sent_number(), 6)
         email = get_mail(0)
         self.assertEqual(email.to, [self.profile.user.email])
-        self.assertEqual(email.subject, "Potwierdzenie realizacji szkolenia")
+        self.assertEqual(email.subject, "Brak realizacji szkolenia")
         email = get_mail(1)
+        self.assertEqual(email.to, [self.lecturer_profile.user.email])
+        self.assertEqual(email.subject, "Brak realizacji szkolenia")
+        email = get_mail(2)
+        self.assertEqual(email.to, [self.profile.user.email])
+        self.assertEqual(email.subject, "Potwierdzenie realizacji szkolenia")
+        email = get_mail(3)
         self.assertEqual(email.to, [self.profile_2.user.email])
         self.assertEqual(email.subject, "Potwierdzenie realizacji szkolenia")
-        email = get_mail(2)
+        email = get_mail(4)
         self.assertEqual(email.to, [self.profile_3.user.email])
+        self.assertEqual(email.subject, "Potwierdzenie realizacji szkolenia")
+        email = get_mail(5)
+        self.assertEqual(email.to, [self.lecturer_profile.user.email])
         self.assertEqual(email.subject, "Potwierdzenie realizacji szkolenia")
