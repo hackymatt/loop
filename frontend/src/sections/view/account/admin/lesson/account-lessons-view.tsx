@@ -59,7 +59,6 @@ const TABLE_HEAD = [
   { id: "duration", label: "Czas", width: 100 },
   { id: "active", label: "Status", width: 100 },
   { id: "price", label: "Cena", width: 50 },
-  { id: "github_url", label: "Repozytorium", width: 100 },
   { id: "", width: 25 },
 ];
 
