@@ -10,14 +10,22 @@ from const import CANCELLATION_TIME, MINIMUM_STUDENTS_REQUIRED
 
 def confirm_reservations():
     mailer = Mailer()
+    now = make_aware(datetime.now())
 
-    schedules = (
-        Schedule.objects.filter(lesson__isnull=False, meeting_url__isnull=True)
-        .annotate(diff=make_aware(datetime.now()) - F("start_time"))
-        .filter(diff__gte=-timedelta(hours=CANCELLATION_TIME))
-    )
+    schedules = Schedule.objects.filter(
+        lesson__isnull=False, meeting_url__isnull=True
+    ).annotate(diff=now - F("start_time"))
 
     for schedule in schedules:
+        print(now)
+        print(schedule.start_time)
+        print(schedule.diff)
+
+    schedules = schedules.filter(diff__gte=-timedelta(hours=CANCELLATION_TIME))
+
+    for schedule in schedules:
+        print(schedule.start_time)
+        print(schedule.diff)
         reservations = Reservation.objects.filter(schedule=schedule)
 
         is_lesson_success = reservations.count() >= MINIMUM_STUDENTS_REQUIRED
