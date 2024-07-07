@@ -13,23 +13,16 @@ def remind_review():
     mailer = Mailer()
     now = make_aware(datetime.now())
 
-    schedules = Schedule.objects.filter(
-        lesson__isnull=False, meeting_url__isnull=False
-    ).annotate(diff=now - F("end_time"))
-
-    for schedule in schedules:
-        print(now)
-        print(schedule.end_time)
-        print(schedule.diff)
-
-    schedules = schedules.filter(
-        diff__lte=timedelta(minutes=REMINDER_TIME * 60),
-        diff__gt=timedelta(minutes=(REMINDER_TIME - 0.5) * 60),
+    schedules = (
+        Schedule.objects.filter(lesson__isnull=False, meeting_url__isnull=False)
+        .annotate(diff=now - F("end_time"))
+        .filter(
+            diff__lte=timedelta(minutes=REMINDER_TIME * 60),
+            diff__gt=timedelta(minutes=(REMINDER_TIME - 0.5) * 60),
+        )
     )
 
     for schedule in schedules:
-        print(schedule.end_time)
-        print(schedule.diff)
         reservations = Reservation.objects.filter(schedule=schedule)
 
         for reservation in reservations:
