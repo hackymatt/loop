@@ -160,8 +160,8 @@ DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
 DBBACKUP_STORAGE_OPTIONS = {"location": f"{BASE_DIR}/backup"}
 CRONJOBS = [
     ("0 */12 * * *", "core.cron.create_backup"),
-    ("30 * * * *", "core.cron.confirm_lessons"),
-    ("30 * * * *", "core.cron.remind_lessons_review"),
+    ("*/30 * * * *", "core.cron.confirm_lessons"),
+    ("*/30 * * * *", "core.cron.remind_lessons_review"),
 ]
 
 
