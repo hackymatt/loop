@@ -48,6 +48,7 @@ export const paths = {
       newsletter: "/account/admin/newsletter",
     },
     teacher: {
+      profile: "/account/teacher/profile",
       finance: "/account/teacher/finance",
       teaching: "/account/teacher/teaching",
       earnings: "/account/teacher/earnings",

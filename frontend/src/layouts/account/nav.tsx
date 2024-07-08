@@ -70,6 +70,12 @@ const teacherNavigations = [
   ...userNavigations,
   ...[
     {
+      title: "Profil instruktora",
+      path: paths.account.teacher.profile,
+      icon: <Iconify icon="carbon:user-profile" />,
+      children: [],
+    },
+    {
       title: "Dane finansowe",
       path: paths.account.teacher.finance,
       icon: <Iconify icon="carbon:finance" />,
