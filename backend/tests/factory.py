@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from profile.models import Profile
+from profile.models import Profile, LecturerProfile
 from course.models import Course
 from coupon.models import Coupon, CouponUser
 from lesson.models import Lesson, LessonPriceHistory
@@ -46,12 +46,22 @@ def create_user(
     return user
 
 
+def create_lecturer_profile(
+    profile: Profile, title: str = "", description: str = "", linkedin_url: str = ""
+):
+    return LecturerProfile.objects.create(
+        profile=profile,
+        title=title,
+        description=description,
+        linkedin_url=linkedin_url,
+    )
+
+
 def create_profile(
     user: User,
     verification_code: str = "abcdefgh",
     verification_code_created_at: datetime = make_aware(datetime.now()),
     user_type: str = "S",
-    user_title: str = "",
     gender: str = "M",
     phone_number: str = "123456789",
     dob: str = "1999-12-31",
@@ -65,7 +75,6 @@ def create_profile(
         verification_code=verification_code,
         verification_code_created_at=verification_code_created_at,
         user_type=user_type,
-        user_title=user_title,
         gender=gender,
         phone_number=phone_number,
         dob=dob,
@@ -230,7 +239,11 @@ def create_topic_obj(name: str):
 
 
 def create_review(
-    lesson: Lesson, student: Profile, lecturer: Profile, rating: int, review: str = None
+    lesson: Lesson,
+    student: Profile,
+    lecturer: LecturerProfile,
+    rating: int,
+    review: str = None,
 ):
     return Review.objects.create(
         lesson=lesson, student=student, lecturer=lecturer, rating=rating, review=review
@@ -254,7 +267,7 @@ def create_newsletter(email: str, active: bool = True):
 
 
 def create_schedule(
-    lecturer: Profile, start_time: str, end_time: str, lesson: Lesson = None
+    lecturer: LecturerProfile, start_time: str, end_time: str, lesson: Lesson = None
 ):
     return Schedule.objects.create(
         lecturer=lecturer, start_time=start_time, end_time=end_time, lesson=lesson
@@ -277,7 +290,7 @@ def create_cart(student: Profile, lesson: Lesson):
     return Cart.objects.create(student=student, lesson=lesson)
 
 
-def create_teaching(lecturer: Profile, lesson: Lesson):
+def create_teaching(lecturer: LecturerProfile, lesson: Lesson):
     return Teaching.objects.create(lecturer=lecturer, lesson=lesson)
 
 
@@ -290,7 +303,10 @@ def create_reservation(
 
 
 def create_finance(
-    lecturer: Profile, account: str = None, rate: float = None, commission: int = None
+    lecturer: LecturerProfile,
+    account: str = None,
+    rate: float = None,
+    commission: int = None,
 ):
     return Finance.objects.create(
         lecturer=lecturer, account=account, rate=rate, commission=commission
@@ -298,7 +314,10 @@ def create_finance(
 
 
 def create_finance_history(
-    lecturer: Profile, account: str = None, rate: float = None, commission: int = None
+    lecturer: LecturerProfile,
+    account: str = None,
+    rate: float = None,
+    commission: int = None,
 ):
     return FinanceHistory.objects.create(
         lecturer=lecturer, account=account, rate=rate, commission=commission

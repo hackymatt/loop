@@ -4,6 +4,7 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
+    create_lecturer_profile,
     create_course,
     create_lesson,
     create_technology,
@@ -70,7 +71,9 @@ class ReservationTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -401,7 +404,7 @@ class ReservationTest(APITestCase):
             [
                 get_schedule(
                     self.schedules[len(self.schedules) - 1].id
-                ).lecturer.user.email
+                ).lecturer.profile.user.email
             ],
         )
         self.assertEqual(
@@ -437,7 +440,7 @@ class ReservationTest(APITestCase):
         lecturer_reservation_email = get_mail(1)
         self.assertEqual(
             lecturer_reservation_email.to,
-            [get_schedule(self.schedules[2].id).lecturer.user.email],
+            [get_schedule(self.schedules[2].id).lecturer.profile.user.email],
         )
         self.assertEqual(
             lecturer_reservation_email.subject,
@@ -475,7 +478,7 @@ class ReservationTest(APITestCase):
             [
                 get_schedule(
                     self.schedules[len(self.schedules) - 1].id
-                ).lecturer.user.email
+                ).lecturer.profile.user.email
             ],
         )
         self.assertEqual(
@@ -511,7 +514,7 @@ class ReservationTest(APITestCase):
         lecturer_reservation_email = get_mail(1)
         self.assertEqual(
             lecturer_reservation_email.to,
-            [get_schedule(self.long_timeslot_2.id).lecturer.user.email],
+            [get_schedule(self.long_timeslot_2.id).lecturer.profile.user.email],
         )
         self.assertEqual(
             lecturer_reservation_email.subject,
@@ -659,7 +662,9 @@ class ReservationConfirmationTest(TestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -782,7 +787,7 @@ class ReservationConfirmationTest(TestCase):
         self.assertEqual(email.to, [self.profile.user.email])
         self.assertEqual(email.subject, "Brak realizacji szkolenia")
         email = get_mail(1)
-        self.assertEqual(email.to, [self.lecturer_profile.user.email])
+        self.assertEqual(email.to, [self.lecturer_profile.profile.user.email])
         self.assertEqual(email.subject, "Brak realizacji szkolenia")
         email = get_mail(2)
         self.assertEqual(email.to, [self.profile.user.email])
@@ -794,5 +799,5 @@ class ReservationConfirmationTest(TestCase):
         self.assertEqual(email.to, [self.profile_3.user.email])
         self.assertEqual(email.subject, "Potwierdzenie realizacji szkolenia")
         email = get_mail(5)
-        self.assertEqual(email.to, [self.lecturer_profile.user.email])
+        self.assertEqual(email.to, [self.lecturer_profile.profile.user.email])
         self.assertEqual(email.subject, "Potwierdzenie realizacji szkolenia")

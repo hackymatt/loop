@@ -4,7 +4,7 @@ from profile.lecturers.serializers import (
     BestLecturerSerializer,
 )
 from profile.lecturers.filters import LecturerFilter
-from profile.models import Profile
+from profile.models import Profile, LecturerProfile
 from review.models import Review
 from django.db.models import OuterRef, Subquery, Value, Avg
 from django.contrib.auth.models import User
@@ -14,24 +14,24 @@ from random import sample
 
 class LecturerViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Profile.objects.filter(user_type__startswith="W").all()
+    queryset = LecturerProfile.objects.all()
     serializer_class = LecturerSerializer
     filterset_class = LecturerFilter
     search_fields = [
-        "user__first_name",
-        "user__last_name",
-        "user__email",
-        "user_title",
+        "profile__user__first_name",
+        "profile__user__last_name",
+        "profile__user__email",
+        "title",
     ]
 
     def get_queryset(self):
         dummy_user = User.objects.get(email=settings.DUMMY_LECTURER_EMAIL)
-        return self.queryset.exclude(user=dummy_user)
+        return self.queryset.exclude(profile__user=dummy_user)
 
 
 class BestLecturerViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Profile.objects.filter(user_type__startswith="W").all()
+    queryset = LecturerProfile.objects.all()
     serializer_class = BestLecturerSerializer
 
     def get_rating(self, queryset):
@@ -49,8 +49,8 @@ class BestLecturerViewSet(ModelViewSet):
 
     def get_queryset(self):
         dummy_user = User.objects.get(email=settings.DUMMY_LECTURER_EMAIL)
+        queryset = self.queryset.exclude(profile__user=dummy_user)
 
-        queryset = self.queryset.exclude(user=dummy_user)
         queryset = self.get_rating(queryset=queryset).filter(rating__gte=4)
 
         ids = queryset.values_list("id", flat=True)

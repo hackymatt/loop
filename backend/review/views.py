@@ -9,7 +9,7 @@ from review.serializers import (
 )
 from review.filters import ReviewFilter
 from review.models import Review
-from profile.models import Profile
+from profile.models import Profile, LecturerProfile
 from random import sample
 from django.db.models import Count
 from django.contrib.auth.models import User
@@ -40,7 +40,7 @@ class ReviewViewSet(ModelViewSet):
     def set_lecturer(self, request):
         data = request.data
         lecturer_uuid = data["lecturer"]
-        lecturer = Profile.objects.get(uuid=lecturer_uuid)
+        lecturer = LecturerProfile.objects.get(profile=Profile.objects.get(uuid=lecturer_uuid))
         data["lecturer"] = lecturer.id
 
         return request

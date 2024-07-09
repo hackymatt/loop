@@ -59,7 +59,7 @@ class ProfileUnregisterViewSet(ModelViewSet):
                     }
                     mailer.send(
                         email_template="unreserve_timeslot.html",
-                        to=[schedule_obj.lecturer.user.email],
+                        to=[schedule_obj.lecturer.profile.user.email],
                         subject="Odwołanie rezerwacji terminu",
                         data=data,
                     )
@@ -69,11 +69,11 @@ class ProfileUnregisterViewSet(ModelViewSet):
             dummy_user = User.objects.get(email=settings.DUMMY_LECTURER_EMAIL)
             dummy_profile = Profile.objects.get(user=dummy_user)
             past_schedules = Schedule.objects.filter(
-                lecturer=profile, start_time__lt=now, lesson__isnull=False
+                lecturer__profile=profile, start_time__lt=now, lesson__isnull=False
             )
             past_schedules.update(lecturer=dummy_profile)
             future_schedules = Schedule.objects.filter(
-                lecturer=profile, start_time__gte=now, lesson__isnull=False
+                lecturer__profile=profile, start_time__gte=now, lesson__isnull=False
             )
             for schedule in future_schedules:
                 emails = [
@@ -86,7 +86,7 @@ class ProfileUnregisterViewSet(ModelViewSet):
                 data = {
                     **{
                         "lesson_title": schedule.lesson.title,
-                        "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
+                        "lecturer_full_name": f"{schedule.lecturer.profile.user.first_name} {schedule.lecturer.profile.user.last_name}",
                         "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
                         .astimezone(timezone("Europe/Warsaw"))
                         .strftime("%d-%m-%Y %H:%M"),

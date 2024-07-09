@@ -12,7 +12,7 @@ from lesson.models import Lesson, Technology
 from review.models import Review
 from purchase.models import Purchase
 from teaching.models import Teaching
-from profile.models import Profile
+from profile.models import LecturerProfile
 from django.db.models import OuterRef, Subquery, Value, Avg, Sum, Count, TextField
 from django.contrib.postgres.aggregates import StringAgg
 from django.db.models.functions import Cast
@@ -102,12 +102,12 @@ def get_lecturers(queryset):
     )
 
     profiles = (
-        Profile.objects.filter(id__in=Subquery(lecturers))
-        .values("uuid")
+        LecturerProfile.objects.filter(id__in=Subquery(lecturers))
+        .values("profile__uuid")
         .annotate(dummy_group_by=Value(1))
         .values("dummy_group_by")
         .order_by("dummy_group_by")
-        .annotate(uuids=StringAgg(Cast("uuid", TextField()), delimiter=","))
+        .annotate(uuids=StringAgg(Cast("profile__uuid", TextField()), delimiter=","))
         .values("uuids")
     )
 

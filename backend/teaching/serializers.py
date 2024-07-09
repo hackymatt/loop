@@ -2,17 +2,21 @@ from rest_framework.serializers import (
     ModelSerializer,
     CharField,
     EmailField,
+    UUIDField,
     SerializerMethodField,
 )
+from drf_extra_fields.fields import Base64ImageField
 from lesson.models import Lesson
 from teaching.models import Teaching
-from profile.models import Profile
+from profile.models import Profile, LecturerProfile
 
 
 def get_teaching_instance(self, lesson):
     user = self.context["request"].user
     lecturer = Profile.objects.get(user=user)
-    teaching = Teaching.objects.filter(lecturer=lecturer, lesson=lesson)
+    teaching = Teaching.objects.filter(
+        lecturer__profile=lecturer, lesson=lesson
+    )
 
     return teaching
 
@@ -48,7 +52,7 @@ class ManageTeachingSerializer(ModelSerializer):
 
     def create(self, validated_data):
         user = self.context["request"].user
-        lecturer = Profile.objects.get(user=user)
+        lecturer = LecturerProfile.objects.get(profile=Profile.objects.get(user=user))
 
         lesson = validated_data.pop("lesson")
 
@@ -56,12 +60,14 @@ class ManageTeachingSerializer(ModelSerializer):
 
 
 class LecturerSerializer(ModelSerializer):
-    gender = CharField(source="get_gender_display")
-    first_name = CharField(source="user.first_name")
-    email = EmailField(source="user.email")
+    uuid = UUIDField(source="profile.uuid")
+    gender = CharField(source="profile.get_gender_display")
+    first_name = CharField(source="profile.user.first_name")
+    email = EmailField(source="profile.user.email")
+    image = Base64ImageField(source="profile.image")
 
     class Meta:
-        model = Profile
+        model = LecturerProfile
         fields = (
             "uuid",
             "first_name",

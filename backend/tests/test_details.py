@@ -1,6 +1,6 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .factory import create_user, create_profile, create_image
+from .factory import create_user, create_profile, create_lecturer_profile, create_image
 from .helpers import login, is_data_match, filter_dict, get_user, get_profile
 from django.contrib import auth
 import json
@@ -38,7 +38,9 @@ class DetailsTest(APITestCase):
             password=self.data_lecturer["password"],
             is_active=True,
         )
-        self.profile_lecturer = create_profile(user=self.user_lecturer, user_type="W")
+        self.profile_lecturer = create_lecturer_profile(
+            profile=create_profile(user=self.user_lecturer, user_type="W")
+        )
 
         self.user_columns = ["first_name", "last_name", "email"]
         self.profile_columns = [
@@ -49,7 +51,6 @@ class DetailsTest(APITestCase):
             "zip_code",
             "city",
             "country",
-            "user_title",
             "user_type",
         ]
 
@@ -69,7 +70,6 @@ class DetailsTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         results = json.loads(response.content)
         self.assertFalse("user_type" in results.keys())
-        self.assertFalse("user_title" in results.keys())
 
     def test_get_details_other(self):
         # login
@@ -80,7 +80,6 @@ class DetailsTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         results = json.loads(response.content)
         self.assertTrue("user_type" in results.keys())
-        self.assertTrue("user_title" in results.keys())
 
     def test_get_details_authenticated(self):
         # login
@@ -169,7 +168,6 @@ class DetailsTest(APITestCase):
             "last_name": "LastName",
             "email": "test_email_lecturer@example.com",
             "user_type": "W",
-            "user_title": "Test role",
             "phone_number": "999888777",
             "gender": "M",
             "dob": None,

@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from schedule.models import Schedule
-from profile.models import Profile
+from profile.models import Profile, LecturerProfile
 from lesson.models import Lesson
 from reservation.models import Reservation
 from const import MINIMUM_STUDENTS_REQUIRED
@@ -37,7 +37,7 @@ class ManageScheduleSerializer(ModelSerializer):
 
     def create(self, validated_data):
         user = self.context["request"].user
-        lecturer = Profile.objects.get(user=user)
+        lecturer = LecturerProfile.objects.get(profile=Profile.objects.get(user=user))
 
         return Schedule.objects.create(lecturer=lecturer, **validated_data)
 

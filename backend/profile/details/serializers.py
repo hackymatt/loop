@@ -71,7 +71,6 @@ class LecturerDetailsSerializer(ModelSerializer):
             "last_name",
             "email",
             "user_type",
-            "user_title",
             "phone_number",
             "dob",
             "gender",

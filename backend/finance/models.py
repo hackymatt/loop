@@ -13,11 +13,13 @@ from django.core.validators import (
     MaxValueValidator,
 )
 from decimal import Decimal
-from profile.models import Profile
+from profile.models import LecturerProfile
 
 
 class Finance(BaseModel):
-    lecturer = ForeignKey(Profile, on_delete=CASCADE, related_name="finance_lecturer")
+    lecturer = ForeignKey(
+        LecturerProfile, on_delete=CASCADE, related_name="finance_lecturer"
+    )
     account = CharField(max_length=26, validators=[MinLengthValidator(26)], null=True)
     commission = IntegerField(
         validators=[MaxValueValidator(100), MinValueValidator(0)], default=0
@@ -48,7 +50,7 @@ class Finance(BaseModel):
 
 class FinanceHistory(BaseModel):
     lecturer = ForeignKey(
-        Profile, on_delete=CASCADE, related_name="finance_history_lecturer"
+        LecturerProfile, on_delete=CASCADE, related_name="finance_history_lecturer"
     )
     account = CharField(max_length=26, validators=[MinLengthValidator(26)], null=True)
     commission = IntegerField(

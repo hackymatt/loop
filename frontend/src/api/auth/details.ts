@@ -15,7 +15,6 @@ export type IDetail = {
   last_name: string;
   email: string;
   user_type?: IUserType;
-  user_title?: string | null;
   phone_number: string | null;
   dob: string | null;
   gender: IGender;

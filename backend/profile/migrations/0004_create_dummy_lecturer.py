@@ -1,7 +1,7 @@
 from django.db import migrations
 from django.contrib.auth import get_user_model
 from django.conf import settings
-from profile.models import Profile
+from profile.models import Profile, LecturerProfile
 
 
 def generate_dummy_lecturer(apps, schema_editor):
@@ -15,7 +15,8 @@ def generate_dummy_lecturer(apps, schema_editor):
         lecturer.set_password(password)
         lecturer.save()
 
-        Profile.objects.create(user=lecturer, user_type="W")
+        profile = Profile.objects.create(user=lecturer, user_type="W")
+        LecturerProfile.objects.create(profile=profile)
 
 
 class Migration(migrations.Migration):

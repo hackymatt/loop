@@ -3,6 +3,7 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
+    create_lecturer_profile,
     create_course,
     create_lesson,
     create_technology,
@@ -73,11 +74,11 @@ class LessonSchedulesTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -212,7 +213,7 @@ class LessonSchedulesTest(APITestCase):
 
         self.schedules.append(
             create_schedule(
-                lecturer=self.admin_profile,
+                lecturer=self.lecturer_profile_1,
                 start_time=make_aware(
                     datetime.now().replace(minute=30, second=0, microsecond=0)
                 ),

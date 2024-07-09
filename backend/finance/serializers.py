@@ -2,21 +2,23 @@ from rest_framework.serializers import (
     ModelSerializer,
     CharField,
     EmailField,
+    UUIDField,
     SerializerMethodField,
 )
 from drf_extra_fields.fields import Base64ImageField
 from finance.models import Finance, FinanceHistory
-from profile.models import Profile
+from profile.models import LecturerProfile
 
 
 class LecturerSerializer(ModelSerializer):
+    uuid = UUIDField(source="profile.uuid")
     full_name = SerializerMethodField("get_full_name")
-    email = EmailField(source="user.email")
-    gender = CharField(source="get_gender_display")
-    image = Base64ImageField(required=True)
+    email = EmailField(source="profile.user.email")
+    gender = CharField(source="profile.get_gender_display")
+    image = Base64ImageField(source="profile.image", required=True)
 
     class Meta:
-        model = Profile
+        model = LecturerProfile
         fields = (
             "uuid",
             "email",
@@ -25,8 +27,8 @@ class LecturerSerializer(ModelSerializer):
             "image",
         )
 
-    def get_full_name(self, profile):
-        return profile.user.first_name + " " + profile.user.last_name
+    def get_full_name(self, lecturer):
+        return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
 
 
 class FinanceSerializer(ModelSerializer):

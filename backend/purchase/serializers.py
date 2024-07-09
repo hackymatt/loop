@@ -3,12 +3,13 @@ from rest_framework.serializers import (
     SerializerMethodField,
     EmailField,
     CharField,
+    UUIDField,
     ImageField,
     ValidationError,
 )
 from purchase.models import Purchase
 from lesson.models import Lesson, Technology
-from profile.models import Profile
+from profile.models import Profile, LecturerProfile
 from reservation.models import Reservation
 from schedule.models import Schedule
 from review.models import Review
@@ -61,14 +62,15 @@ class LessonSerializer(ModelSerializer):
         )
 
 
-class ProfileSerializer(ModelSerializer):
+class LecturerSerializer(ModelSerializer):
+    uuid = UUIDField(source="profile.uuid")
     full_name = SerializerMethodField("get_full_name")
-    email = EmailField(source="user.email")
-    gender = CharField(source="get_gender_display")
-    image = ImageField()
+    email = EmailField(source="profile.user.email")
+    gender = CharField(source="profile.get_gender_display")
+    image = ImageField(source="profile.image")
 
     class Meta:
-        model = Profile
+        model = LecturerProfile
         fields = (
             "uuid",
             "full_name",
@@ -77,8 +79,8 @@ class ProfileSerializer(ModelSerializer):
             "image",
         )
 
-    def get_full_name(self, profile):
-        return profile.user.first_name + " " + profile.user.last_name
+    def get_full_name(self, lecturer):
+        return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
 
 
 class ReviewSerializer(ModelSerializer):
@@ -94,7 +96,7 @@ class ReviewSerializer(ModelSerializer):
 
 
 class ScheduleSerializer(ModelSerializer):
-    lecturer = ProfileSerializer()
+    lecturer = LecturerSerializer()
 
     class Meta:
         model = Schedule

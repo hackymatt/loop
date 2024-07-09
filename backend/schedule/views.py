@@ -37,7 +37,7 @@ class ManageScheduleViewSet(ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         lecturer = Profile.objects.get(user=user)
-        return self.queryset.filter(lecturer=lecturer)
+        return self.queryset.filter(lecturer__profile=lecturer)
 
     def destroy(self, request, *args, **kwargs):
         schedule = super().get_object()
@@ -55,7 +55,7 @@ class ManageScheduleViewSet(ModelViewSet):
             data = {
                 **{
                     "lesson_title": lesson.title,
-                    "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
+                    "lecturer_full_name": f"{schedule.lecturer.profile.user.first_name} {schedule.lecturer.profile.user.last_name}",
                     "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
                     .astimezone(timezone("Europe/Warsaw"))
                     .strftime("%d-%m-%Y %H:%M"),

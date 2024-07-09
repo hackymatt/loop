@@ -4,6 +4,7 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
+    create_lecturer_profile,
     create_course,
     create_lesson,
     create_technology,
@@ -23,7 +24,6 @@ from .helpers import (
     is_data_match,
     get_review,
     is_review_found,
-    reservation_number,
     get_mail,
     emails_sent_number,
 )
@@ -73,7 +73,9 @@ class ReviewTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -229,7 +231,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.lesson_1.id,
-            "lecturer": self.lecturer_profile.uuid,
+            "lecturer": self.lecturer_profile.profile.uuid,
             "rating": 3,
             "review": "Good lesson.",
         }
@@ -244,7 +246,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.course.lessons.all()[3].id,
-            "lecturer": self.lecturer_profile.uuid,
+            "lecturer": self.lecturer_profile.profile.uuid,
             "rating": 3,
             "review": "Good lesson.",
         }
@@ -259,7 +261,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.lesson_1.id,
-            "lecturer": self.lecturer_profile.uuid,
+            "lecturer": self.lecturer_profile.profile.uuid,
             "rating": 3,
             "review": "Good lesson.",
         }
@@ -274,7 +276,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.lesson_1.id,
-            "lecturer": self.lecturer_profile.uuid,
+            "lecturer": self.lecturer_profile.profile.uuid,
             "rating": 3.4,
             "review": "Good lesson.",
         }
@@ -289,7 +291,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.lesson_3.id,
-            "lecturer": self.lecturer_profile.uuid,
+            "lecturer": self.lecturer_profile.profile.uuid,
             "rating": 3.5,
             "review": "Good lesson.",
         }
@@ -303,7 +305,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.lesson_1.id,
-            "lecturer": self.lecturer_profile.uuid,
+            "lecturer": self.lecturer_profile.profile.uuid,
             "rating": 3,
             "review": "Good lesson.",
         }
@@ -318,7 +320,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.lesson_3.id,
-            "lecturer": self.lecturer_profile.uuid,
+            "lecturer": self.lecturer_profile.profile.uuid,
             "rating": 4,
             "review": "Good lesson.",
         }
@@ -333,7 +335,7 @@ class ReviewTest(APITestCase):
         # post data
         data = {
             "lesson": self.lesson_1.id,
-            "lecturer": self.lecturer_profile.uuid,
+            "lecturer": self.lecturer_profile.profile.uuid,
             "rating": 4,
             "review": "Good lesson.",
         }
@@ -345,9 +347,7 @@ class ReviewTest(APITestCase):
         lecturer = results.pop("lecturer")
         self.assertTrue(is_data_match(get_review(self.review_1.id), results))
         self.assertEqual(lesson, get_review(self.review_1.id).lesson.id)
-        self.assertEqual(
-            lecturer, get_profile(get_user(self.review_1.lecturer.user.email)).id
-        )
+        self.assertEqual(lecturer, self.review_1.lecturer.id)
 
     def test_delete_review_unauthenticated(self):
         # no login
@@ -418,7 +418,9 @@ class BestReviewTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -569,7 +571,9 @@ class ReviewStatsTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -794,7 +798,9 @@ class ReviewConfirmationTest(TestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")

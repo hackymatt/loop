@@ -12,7 +12,10 @@ import LoadingButton from "@mui/lab/LoadingButton";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useUserFinanceDetail, useEditUserFinanceDetail } from "src/api/finance/finance";
+import {
+  useUserLecturerDetail,
+  useEditUserLecturerDetail,
+} from "src/api/lecturer-profile/lecturer-profile";
 
 import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
@@ -22,19 +25,16 @@ import FormProvider, { RHFTextField } from "src/components/hook-form";
 export default function AccountProfileView() {
   const { enqueueSnackbar } = useToastContext();
 
-  const { data: userFinanceDetails } = useUserFinanceDetail();
-  const { mutateAsync: updateUserFinanceDetails } = useEditUserFinanceDetail();
+  const { data: lecturerProfileDetails } = useUserLecturerDetail();
+  const { mutateAsync: updateUserLecturerProfileDetails } = useEditUserLecturerDetail();
 
   const schema = Yup.object().shape({
-    account: Yup.string().nullable().length(26, "Numer konta musi mieć 26 znaków"),
-    rate: Yup.number().nullable().min(0, "Stawka musi wynosić min 0 zł"),
-    commission: Yup.number()
-      .nullable()
-      .min(0, "Prowizja musi wynosić min 0 %")
-      .max(100, "Prowizja musi wynosić max 100 %"),
+    title: Yup.string().required("Tytuł zawodowy jest wymagany"),
+    linkedin_url: Yup.string().required("Link do profilu na LinkedIn jest wymagany"),
+    description: Yup.string().required("Opis jest wymagany"),
   });
 
-  const defaultValues = userFinanceDetails;
+  const defaultValues = lecturerProfileDetails;
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -50,15 +50,15 @@ export default function AccountProfileView() {
   const handleFormError = useFormErrorHandler(methods);
 
   useEffect(() => {
-    if (userFinanceDetails) {
-      reset(userFinanceDetails);
+    if (lecturerProfileDetails) {
+      reset(lecturerProfileDetails);
     }
-  }, [reset, userFinanceDetails]);
+  }, [reset, lecturerProfileDetails]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await updateUserFinanceDetails(data);
-      enqueueSnackbar("Dane finansowe zostały zmienione", { variant: "success" });
+      await updateUserLecturerProfileDetails(data);
+      enqueueSnackbar("Profil instruktora został zmieniony", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }
@@ -77,7 +77,7 @@ export default function AccountProfileView() {
         gridTemplateColumns={{ xs: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
         sx={{ mt: 5 }}
       >
-        <RHFTextField name="user_title" label="Tytuł zawodowy" />
+        <RHFTextField name="title" label="Tytuł zawodowy" />
 
         <RHFTextField
           name="linkedin_url"

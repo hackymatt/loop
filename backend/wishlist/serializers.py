@@ -4,7 +4,7 @@ from rest_framework.serializers import (
 )
 from lesson.models import Lesson, Technology
 from wishlist.models import Wishlist
-from profile.models import Profile
+from profile.models import Profile, LecturerProfile
 from teaching.models import Teaching
 from django.db.models.functions import Concat
 from django.db.models import Value
@@ -14,11 +14,11 @@ class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
 
     class Meta:
-        model = Profile
+        model = LecturerProfile
         fields = ("full_name",)
 
-    def get_full_name(self, profile):
-        return profile.user.first_name + " " + profile.user.last_name
+    def get_full_name(self, lecturer):
+        return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
 
 
 class TechnologySerializer(ModelSerializer):
@@ -49,9 +49,11 @@ class LessonSerializer(ModelSerializer):
     def get_lesson_lecturers(self, lesson):
         lecturer_ids = Teaching.objects.filter(lesson=lesson).values("lecturer")
         lecturers = (
-            Profile.objects.filter(id__in=lecturer_ids)
+            LecturerProfile.objects.filter(id__in=lecturer_ids)
             .annotate(
-                full_name=Concat("user__first_name", Value(" "), "user__last_name")
+                full_name=Concat(
+                    "profile__user__first_name", Value(" "), "profile__user__last_name"
+                )
             )
             .order_by("full_name")
         )

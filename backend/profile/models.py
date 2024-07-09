@@ -6,6 +6,8 @@ from django.db.models import (
     DateTimeField,
     UUIDField,
     ImageField,
+    URLField,
+    TextField,
     CASCADE,
     Index,
 )
@@ -39,7 +41,6 @@ class Profile(BaseModel):
     user = OneToOneField(User, on_delete=CASCADE)
     join_type = CharField(choices=JOIN_CHOICES, default="Email")
     user_type = CharField(choices=USER_TYPE_CHOICES, default="S")
-    user_title = CharField(null=True, blank=True)
     verification_code = CharField(max_length=8, null=True)
     verification_code_created_at = DateTimeField(null=True)
     phone_number = CharField(null=True, blank=True)
@@ -68,6 +69,29 @@ class Profile(BaseModel):
             Index(
                 fields=[
                     "user_type",
+                ]
+            ),
+        ]
+
+
+class LecturerProfile(BaseModel):
+    profile = OneToOneField(Profile, on_delete=CASCADE)
+    title = CharField(null=True, blank=True)
+    description = TextField(null=True, blank=True)
+    linkedin_url = URLField(null=True, blank=True)
+
+    class Meta:
+        db_table = "lecturer_profile"
+        ordering = ["id"]
+        indexes = [
+            Index(
+                fields=[
+                    "id",
+                ]
+            ),
+            Index(
+                fields=[
+                    "profile",
                 ]
             ),
         ]

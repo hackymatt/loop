@@ -17,7 +17,7 @@ class FinanceDetailsViewSet(ModelViewSet):
     def list(self, request, *args, **kwargs):
         user = request.user
         profile = Profile.objects.get(user=user)
-        finance = Finance.objects.filter(lecturer=profile).first()
+        finance = Finance.objects.filter(lecturer__profile=profile).first()
 
         serializer = FinanceSerializer(finance, context={"request": request})
 
@@ -26,7 +26,7 @@ class FinanceDetailsViewSet(ModelViewSet):
     def get_object(self):
         user = self.request.user
         profile = Profile.objects.get(user=user)
-        return Finance.objects.filter(lecturer=profile).first()
+        return Finance.objects.filter(lecturer__profile=profile).first()
 
 
 class FinanceHistoryViewSet(ModelViewSet):

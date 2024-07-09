@@ -4,14 +4,14 @@ from rest_framework.serializers import (
     CharField,
     EmailField,
     IntegerField,
+    UUIDField,
 )
 from drf_extra_fields.fields import Base64ImageField, Base64FileField
-from rest_framework.serializers import ValidationError
 from course.models import Course
 from lesson.models import Lesson, Technology, LessonPriceHistory
 from topic.models import Topic
 from skill.models import Skill
-from profile.models import Profile
+from profile.models import Profile, LecturerProfile
 from review.models import Review
 from purchase.models import Purchase
 from teaching.models import Teaching
@@ -159,8 +159,12 @@ def get_lowest_30_days_price_course(instance):
 def get_lecturers(self, lessons):
     lecturer_ids = Teaching.objects.filter(lesson__in=lessons).values("lecturer")
     lecturers = (
-        Profile.objects.filter(id__in=lecturer_ids)
-        .annotate(full_name=Concat("user__first_name", Value(" "), "user__last_name"))
+        LecturerProfile.objects.filter(id__in=lecturer_ids)
+        .annotate(
+            full_name=Concat(
+                "profile__user__first_name", Value(" "), "profile__user__last_name"
+            )
+        )
         .order_by("full_name")
     )
     return LecturerSerializer(
@@ -184,8 +188,12 @@ def get_technologies(lessons):
 def get_lecturers_details(self, lessons):
     lecturer_ids = Teaching.objects.filter(lesson__in=lessons).values("lecturer")
     lecturers = (
-        Profile.objects.filter(id__in=lecturer_ids)
-        .annotate(full_name=Concat("user__first_name", Value(" "), "user__last_name"))
+        LecturerProfile.objects.filter(id__in=lecturer_ids)
+        .annotate(
+            full_name=Concat(
+                "profile__user__first_name", Value(" "), "profile__user__last_name"
+            )
+        )
         .order_by("full_name")
     )
     return LecturerDetailsSerializer(
@@ -261,10 +269,11 @@ class TopicSerializer(ModelSerializer):
 
 
 class LecturerSerializer(ModelSerializer):
+    uuid = UUIDField(source="profile.uuid")
     full_name = SerializerMethodField("get_full_name")
-    email = EmailField(source="user.email")
-    gender = CharField(source="get_gender_display")
-    image = Base64ImageField(required=True)
+    email = EmailField(source="profile.user.email")
+    gender = CharField(source="profile.get_gender_display")
+    image = Base64ImageField(source="profile.image", required=True)
 
     class Meta:
         model = Profile
@@ -276,34 +285,36 @@ class LecturerSerializer(ModelSerializer):
             "image",
         )
 
-    def get_full_name(self, profile):
-        return profile.user.first_name + " " + profile.user.last_name
+    def get_full_name(self, lecturer):
+        return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
 
 
 class LecturerDetailsSerializer(ModelSerializer):
+    uuid = UUIDField(source="profile.uuid")
     full_name = SerializerMethodField("get_full_name")
-    email = EmailField(source="user.email")
-    gender = CharField(source="get_gender_display")
+    email = EmailField(source="profile.user.email")
+    gender = CharField(source="profile.get_gender_display")
+    image = Base64ImageField(source="profile.image", required=True)
     rating = SerializerMethodField("get_user_rating")
     rating_count = SerializerMethodField("get_lecturer_rating_count")
     lessons_count = SerializerMethodField("get_lessons_count")
 
     class Meta:
-        model = Profile
+        model = LecturerProfile
         fields = (
             "uuid",
             "email",
             "full_name",
             "gender",
-            "user_title",
+            "title",
             "image",
             "rating",
             "rating_count",
             "lessons_count",
         )
 
-    def get_full_name(self, profile):
-        return profile.user.first_name + " " + profile.user.last_name
+    def get_full_name(self, lecturer):
+        return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
 
     def get_user_rating(self, lecturer):
         return get_lecturer_rating(lecturer=lecturer).aggregate(Avg("rating"))[

@@ -13,7 +13,7 @@ from django.db.models import OuterRef, Subquery, Exists, Case, When, Value
 def get_teaching(self, queryset):
     user = self.request.user
     lecturer = Profile.objects.get(user=user)
-    teaching = Teaching.objects.filter(lecturer=lecturer, lesson=OuterRef("pk"))
+    teaching = Teaching.objects.filter(lecturer__profile=lecturer, lesson=OuterRef("pk"))
 
     lessons = queryset.annotate(teaching_exists=Subquery(Exists(teaching))).annotate(
         is_teaching=Case(

@@ -3,6 +3,7 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
+    create_lecturer_profile,
     create_course,
     create_lesson,
     create_skill,
@@ -65,11 +66,11 @@ class CourseFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -382,7 +383,7 @@ class CourseFilterTest(APITestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         ids = ",".join(
-            [str(self.lecturer_profile_1.uuid), str(self.lecturer_profile_2.uuid)]
+            [str(self.lecturer_profile_1.profile.uuid), str(self.lecturer_profile_2.profile.uuid)]
         )
         response = self.client.get(f"{self.endpoint}?lecturer_in={ids}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -469,11 +470,11 @@ class ReviewFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -672,7 +673,7 @@ class ReviewFilterTest(APITestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(
-            f"{self.endpoint}?lecturer_id={self.lecturer_profile_1.uuid}"
+            f"{self.endpoint}?lecturer_id={self.lecturer_profile_1.profile.uuid}"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
@@ -751,11 +752,11 @@ class ScheduleFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -974,7 +975,7 @@ class ScheduleFilterTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(
-            f"{self.endpoint}?lecturer_id={self.lecturer_profile_1.uuid}"
+            f"{self.endpoint}?lecturer_id={self.lecturer_profile_1.profile.uuid}"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
@@ -1446,11 +1447,11 @@ class LecturerFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -1556,14 +1557,14 @@ class LecturerFilterTest(APITestCase):
     def test_id_filter(self):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
-        response = self.client.get(f"{self.endpoint}?id={self.lecturer_profile_1.uuid}")
+        response = self.client.get(f"{self.endpoint}?id={self.lecturer_profile_1.profile.uuid}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 1)
         uuids = [record["uuid"] for record in results]
-        self.assertEqual(uuids, [str(self.lecturer_profile_1.uuid)])
+        self.assertEqual(uuids, [str(self.lecturer_profile_1.profile.uuid)])
 
     def test_rating_filter(self):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -1601,7 +1602,9 @@ class PurchaseFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -1883,7 +1886,7 @@ class PurchaseFilterTest(APITestCase):
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        uuid = self.lecturer_profile.uuid
+        uuid = self.lecturer_profile.profile.uuid
         response = self.client.get(f"{self.endpoint}?lecturer_id={uuid}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
@@ -1968,11 +1971,11 @@ class LessonFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -2315,7 +2318,9 @@ class ManageTeachingFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user, user_type="W")
+        self.profile = create_lecturer_profile(
+            profile=create_profile(user=self.user, user_type="W")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -2581,7 +2586,9 @@ class TeachingFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user, user_type="W")
+        self.profile = create_lecturer_profile(
+            profile=create_profile(user=self.user, user_type="W")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -2773,11 +2780,12 @@ class UsersFilerTest(APITestCase):
         )
         self.student_profile_1 = create_profile(user=self.student_user_1)
         self.student_profile_2 = create_profile(user=self.student_user_2)
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W", user_title="soft"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W"),
+            title="soft",
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
     def test_first_name_filter(self):
@@ -2872,22 +2880,6 @@ class UsersFilerTest(APITestCase):
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 8)
-        values = list(set([variable in record[column].lower() for record in results]))
-        self.assertTrue(len(values) == 1)
-        self.assertTrue(values[0])
-
-    def test_user_title_filter(self):
-        login(self, self.admin_data["email"], self.admin_data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        column = "user_title"
-        variable = "soft"
-        response = self.client.get(f"{self.endpoint}?{column}={variable}")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
-        records_count = data["records_count"]
-        results = data["results"]
-        self.assertEqual(records_count, 1)
         values = list(set([variable in record[column].lower() for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
@@ -3035,11 +3027,11 @@ class FinanceHistoryFilterTest(APITestCase):
             is_active=True,
         )
         self.student_profile = create_profile(user=self.student_user)
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.finance_1 = create_finance_history(
@@ -3060,7 +3052,7 @@ class FinanceHistoryFilterTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         column = "lecturer_id"
-        variable = str(self.lecturer_profile_1.uuid)
+        variable = str(self.lecturer_profile_1.profile.uuid)
         response = self.client.get(f"{self.endpoint}?{column}={variable}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
@@ -3514,11 +3506,11 @@ class EarningsFilterTest(APITestCase):
         )
         self.student_profile_1 = create_profile(user=self.student_user_1)
         self.student_profile_2 = create_profile(user=self.student_user_2)
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         create_finance(
@@ -3741,7 +3733,7 @@ class EarningsFilterTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         column = "lecturer"
-        variable = str(self.lecturer_profile_1.uuid)
+        variable = str(self.lecturer_profile_1.profile.uuid)
         response = self.client.get(f"{self.endpoint}?total=False&{column}={variable}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)

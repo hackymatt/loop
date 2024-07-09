@@ -25,7 +25,7 @@ class OrderFilter(OrderingFilter):
 
 
 class FinanceHistoryFilter(FilterSet):
-    lecturer_id = UUIDFilter(field_name="lecturer__uuid", lookup_expr="exact")
+    lecturer_id = UUIDFilter(field_name="lecturer__profile__uuid", lookup_expr="exact")
     account = CharFilter(field_name="account", lookup_expr="contains")
     rate_from = NumberFilter(field_name="rate", lookup_expr="gte")
     rate_to = NumberFilter(field_name="rate", lookup_expr="lte")

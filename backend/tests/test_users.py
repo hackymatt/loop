@@ -3,6 +3,7 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
+    create_lecturer_profile,
     create_finance,
 )
 from .helpers import login, filter_dict, get_profile, get_user, is_data_match
@@ -71,16 +72,16 @@ class UsersTest(APITestCase):
         )
         self.student_profile_1 = create_profile(user=self.student_user_1)
         self.student_profile_2 = create_profile(user=self.student_user_2)
-        self.lecturer_profile_1 = create_profile(
+        self.lecturer_profile_1 = create_lecturer_profile(profile=create_profile(
             user=self.lecturer_user_1,
             user_type="W",
-        )
+        ))
         create_finance(
             lecturer=self.lecturer_profile_1, account="", rate=125, commission=4
         )
-        self.lecturer_profile_2 = create_profile(
+        self.lecturer_profile_2 = create_lecturer_profile(profile=create_profile(
             user=self.lecturer_user_2, user_type="W"
-        )
+        ))
 
         self.user_columns = ["first_name", "last_name", "email"]
         self.profile_columns = [

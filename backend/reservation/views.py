@@ -79,7 +79,7 @@ class ReservationViewSet(ModelViewSet):
         data = {
             **{
                 "lesson_title": reservation.lesson.title,
-                "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
+                "lecturer_full_name": f"{schedule.lecturer.profile.user.first_name} {schedule.lecturer.profile.user.last_name}",
                 "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
                 .astimezone(timezone("Europe/Warsaw"))
                 .strftime("%d-%m-%Y %H:%M"),
