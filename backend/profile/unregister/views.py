@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.conf import settings
-from profile.models import Profile
+from profile.models import Profile, LecturerProfile
 from reservation.models import Reservation
 from schedule.models import Schedule
 from datetime import datetime
@@ -71,7 +71,9 @@ class ProfileUnregisterViewSet(ModelViewSet):
             past_schedules = Schedule.objects.filter(
                 lecturer__profile=profile, start_time__lt=now, lesson__isnull=False
             )
-            past_schedules.update(lecturer=dummy_profile)
+            past_schedules.update(
+                lecturer=LecturerProfile.objects.get(profile=dummy_profile)
+            )
             future_schedules = Schedule.objects.filter(
                 lecturer__profile=profile, start_time__gte=now, lesson__isnull=False
             )

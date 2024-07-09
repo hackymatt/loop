@@ -14,9 +14,7 @@ from profile.models import Profile, LecturerProfile
 def get_teaching_instance(self, lesson):
     user = self.context["request"].user
     lecturer = Profile.objects.get(user=user)
-    teaching = Teaching.objects.filter(
-        lecturer__profile=lecturer, lesson=lesson
-    )
+    teaching = Teaching.objects.filter(lecturer__profile=lecturer, lesson=lesson)
 
     return teaching
 

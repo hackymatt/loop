@@ -5,7 +5,7 @@ from rest_framework.serializers import (
     SerializerMethodField,
 )
 from drf_extra_fields.fields import Base64ImageField
-from profile.models import Profile
+from profile.models import Profile, LecturerProfile
 from finance.models import Finance, FinanceHistory
 
 
@@ -13,7 +13,7 @@ def get_finance(profile):
     if profile.user_type[0] != "W":
         return None
 
-    finance = Finance.objects.filter(lecturer=profile)
+    finance = Finance.objects.filter(lecturer__profile=profile)
 
     if not finance.exists():
         return None
@@ -72,13 +72,15 @@ class UserSerializer(ModelSerializer):
             data = self.context["request"].data
             rate = data["rate"]
             commission = data["commission"]
-            finance, _ = Finance.objects.get_or_create(lecturer=instance)
+            finance, _ = Finance.objects.get_or_create(
+                lecturer=LecturerProfile.objects.get(profile=instance)
+            )
             current_rate = finance.rate
             current_commission = finance.commission
 
             if current_rate != rate or current_commission != commission:
                 FinanceHistory.objects.create(
-                    lecturer=instance,
+                    lecturer=LecturerProfile.objects.get(profile=instance),
                     account=finance.account,
                     rate=current_rate,
                     commission=current_commission,

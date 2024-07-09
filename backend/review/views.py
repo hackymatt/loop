@@ -40,7 +40,9 @@ class ReviewViewSet(ModelViewSet):
     def set_lecturer(self, request):
         data = request.data
         lecturer_uuid = data["lecturer"]
-        lecturer = LecturerProfile.objects.get(profile=Profile.objects.get(uuid=lecturer_uuid))
+        lecturer = LecturerProfile.objects.get(
+            profile=Profile.objects.get(uuid=lecturer_uuid)
+        )
         data["lecturer"] = lecturer.id
 
         return request

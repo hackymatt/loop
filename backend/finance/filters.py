@@ -16,7 +16,7 @@ class OrderFilter(OrderingFilter):
 
         for value in values:
             if value in ["lecturer_uuid", "-lecturer_uuid"]:
-                value_modified = value.replace("_", "__")
+                value_modified = value.replace("_", "__profile__")
                 queryset = queryset.order_by(value_modified)
             else:
                 queryset = queryset.order_by(value)

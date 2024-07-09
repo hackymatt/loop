@@ -30,7 +30,9 @@ class TeachingTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_lecturer_profile(profile=create_profile(user=self.user, user_type="W"))
+        self.profile = create_lecturer_profile(
+            profile=create_profile(user=self.user, user_type="W")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")

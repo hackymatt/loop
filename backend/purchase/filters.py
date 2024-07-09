@@ -7,7 +7,7 @@ from django_filters import (
 )
 from review.models import Review
 from purchase.models import Purchase
-from profile.models import Profile
+from profile.models import LecturerProfile
 from django.db.models import (
     OuterRef,
     Subquery,
@@ -28,7 +28,9 @@ from const import CANCELLATION_TIME
 
 
 def get_lesson_lecturer(queryset):
-    lecturer = Profile.objects.filter(pk=OuterRef("lecturer")).values("uuid")
+    lecturer = LecturerProfile.objects.filter(pk=OuterRef("lecturer")).values(
+        "profile__uuid"
+    )
 
     schedule = (
         Schedule.objects.filter(pk=OuterRef("schedule"))

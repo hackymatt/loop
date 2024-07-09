@@ -72,16 +72,18 @@ class UsersTest(APITestCase):
         )
         self.student_profile_1 = create_profile(user=self.student_user_1)
         self.student_profile_2 = create_profile(user=self.student_user_2)
-        self.lecturer_profile_1 = create_lecturer_profile(profile=create_profile(
-            user=self.lecturer_user_1,
-            user_type="W",
-        ))
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(
+                user=self.lecturer_user_1,
+                user_type="W",
+            )
+        )
         create_finance(
             lecturer=self.lecturer_profile_1, account="", rate=125, commission=4
         )
-        self.lecturer_profile_2 = create_lecturer_profile(profile=create_profile(
-            user=self.lecturer_user_2, user_type="W"
-        ))
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+        )
 
         self.user_columns = ["first_name", "last_name", "email"]
         self.profile_columns = [
@@ -240,7 +242,7 @@ class UsersTest(APITestCase):
             "image": "",
         }
         response = self.client.put(
-            f"{self.endpoint}/{self.lecturer_profile_1.id}", new_data
+            f"{self.endpoint}/{self.lecturer_profile_1.profile.id}", new_data
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         results = json.loads(response.content)
@@ -279,7 +281,7 @@ class UsersTest(APITestCase):
             "image": "",
         }
         response = self.client.put(
-            f"{self.endpoint}/{self.lecturer_profile_1.id}", new_data
+            f"{self.endpoint}/{self.lecturer_profile_1.profile.id}", new_data
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         results = json.loads(response.content)
@@ -318,7 +320,7 @@ class UsersTest(APITestCase):
             "image": "",
         }
         response = self.client.put(
-            f"{self.endpoint}/{self.lecturer_profile_1.id}", new_data
+            f"{self.endpoint}/{self.lecturer_profile_1.profile.id}", new_data
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         results = json.loads(response.content)

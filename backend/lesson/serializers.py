@@ -3,6 +3,7 @@ from rest_framework.serializers import (
     SerializerMethodField,
     EmailField,
     CharField,
+    UUIDField,
     ValidationError,
 )
 from drf_extra_fields.fields import Base64ImageField
@@ -11,7 +12,7 @@ from lesson.models import (
     LessonPriceHistory,
 )
 from technology.models import Technology
-from profile.models import Profile
+from profile.models import LecturerProfile
 from review.models import Review
 from purchase.models import Purchase
 from teaching.models import Teaching
@@ -24,8 +25,12 @@ from const import MIN_LESSON_DURATION_MINS
 def get_lecturers(self, lessons):
     lecturer_ids = Teaching.objects.filter(lesson__in=lessons).values("lecturer")
     lecturers = (
-        Profile.objects.filter(id__in=lecturer_ids)
-        .annotate(full_name=Concat("user__first_name", Value(" "), "user__last_name"))
+        LecturerProfile.objects.filter(id__in=lecturer_ids)
+        .annotate(
+            full_name=Concat(
+                "profile__user__first_name", Value(" "), "profile__user__last_name"
+            )
+        )
         .order_by("full_name")
     )
     return LecturerSerializer(
@@ -59,13 +64,14 @@ def get_lesson_technologies(lesson):
 
 
 class LecturerSerializer(ModelSerializer):
+    uuid = UUIDField(source="profile.uuid")
     full_name = SerializerMethodField("get_full_name")
-    email = EmailField(source="user.email")
-    gender = CharField(source="get_gender_display")
-    image = Base64ImageField(required=True)
+    email = EmailField(source="profile.user.email")
+    gender = CharField(source="profile.get_gender_display")
+    image = Base64ImageField(source="profile.image", required=True)
 
     class Meta:
-        model = Profile
+        model = LecturerProfile
         fields = (
             "uuid",
             "email",
@@ -74,8 +80,8 @@ class LecturerSerializer(ModelSerializer):
             "image",
         )
 
-    def get_full_name(self, profile):
-        return profile.user.first_name + " " + profile.user.last_name
+    def get_full_name(self, lecturer):
+        return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
 
 
 class TechnologySerializer(ModelSerializer):

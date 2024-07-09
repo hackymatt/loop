@@ -383,7 +383,10 @@ class CourseFilterTest(APITestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         ids = ",".join(
-            [str(self.lecturer_profile_1.profile.uuid), str(self.lecturer_profile_2.profile.uuid)]
+            [
+                str(self.lecturer_profile_1.profile.uuid),
+                str(self.lecturer_profile_2.profile.uuid),
+            ]
         )
         response = self.client.get(f"{self.endpoint}?lecturer_in={ids}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -1557,7 +1560,9 @@ class LecturerFilterTest(APITestCase):
     def test_id_filter(self):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
-        response = self.client.get(f"{self.endpoint}?id={self.lecturer_profile_1.profile.uuid}")
+        response = self.client.get(
+            f"{self.endpoint}?id={self.lecturer_profile_1.profile.uuid}"
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
