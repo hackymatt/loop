@@ -2,7 +2,6 @@ from rest_framework.serializers import (
     ModelSerializer,
     CharField,
     EmailField,
-    UUIDField,
     SerializerMethodField,
 )
 from drf_extra_fields.fields import Base64ImageField
@@ -58,7 +57,6 @@ class ManageTeachingSerializer(ModelSerializer):
 
 
 class LecturerSerializer(ModelSerializer):
-    uuid = UUIDField(source="profile.uuid")
     gender = CharField(source="profile.get_gender_display")
     first_name = CharField(source="profile.user.first_name")
     email = EmailField(source="profile.user.email")
@@ -67,7 +65,7 @@ class LecturerSerializer(ModelSerializer):
     class Meta:
         model = LecturerProfile
         fields = (
-            "uuid",
+            "id",
             "first_name",
             "gender",
             "email",

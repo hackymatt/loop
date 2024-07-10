@@ -71,7 +71,7 @@ class CouponFilter(FilterSet):
 
 class CouponUserFilter(FilterSet):
     coupon_code = CharFilter(field_name="coupon__code", lookup_expr="icontains")
-    user_uuid = UUIDFilter(field_name="user__uuid", lookup_expr="exact")
+    user_id = UUIDFilter(field_name="user__uuid", lookup_expr="exact")
     created_at = DateFilter(field_name="created_at", lookup_expr="icontains")
 
     sort_by = OrderFilter(
@@ -97,7 +97,7 @@ class CouponUserFilter(FilterSet):
         model = CouponUser
         fields = (
             "coupon_code",
-            "user_uuid",
+            "user_id",
             "created_at",
             "sort_by",
         )

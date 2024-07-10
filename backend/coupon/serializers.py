@@ -29,7 +29,6 @@ class ProfileSerializer(ModelSerializer):
     class Meta:
         model = Profile
         fields = (
-            "id",
             "uuid",
             "full_name",
             "email",

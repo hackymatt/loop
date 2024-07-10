@@ -384,8 +384,8 @@ class CourseFilterTest(APITestCase):
         # get data
         ids = ",".join(
             [
-                str(self.lecturer_profile_1.profile.uuid),
-                str(self.lecturer_profile_2.profile.uuid),
+                str(self.lecturer_profile_1.id),
+                str(self.lecturer_profile_2.id),
             ]
         )
         response = self.client.get(f"{self.endpoint}?lecturer_in={ids}")
@@ -676,7 +676,7 @@ class ReviewFilterTest(APITestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(
-            f"{self.endpoint}?lecturer_id={self.lecturer_profile_1.profile.uuid}"
+            f"{self.endpoint}?lecturer_id={self.lecturer_profile_1.id}"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
@@ -978,7 +978,7 @@ class ScheduleFilterTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(
-            f"{self.endpoint}?lecturer_id={self.lecturer_profile_1.profile.uuid}"
+            f"{self.endpoint}?lecturer_id={self.lecturer_profile_1.id}"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
@@ -1560,16 +1560,14 @@ class LecturerFilterTest(APITestCase):
     def test_id_filter(self):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
-        response = self.client.get(
-            f"{self.endpoint}?id={self.lecturer_profile_1.profile.uuid}"
-        )
+        response = self.client.get(f"{self.endpoint}?id={self.lecturer_profile_1.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 1)
-        uuids = [record["uuid"] for record in results]
-        self.assertEqual(uuids, [str(self.lecturer_profile_1.profile.uuid)])
+        ids = [record["id"] for record in results]
+        self.assertEqual(ids, [self.lecturer_profile_1.id])
 
     def test_rating_filter(self):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -1891,24 +1889,23 @@ class PurchaseFilterTest(APITestCase):
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        uuid = self.lecturer_profile.profile.uuid
-        response = self.client.get(f"{self.endpoint}?lecturer_id={uuid}")
+        id = self.lecturer_profile.id
+        response = self.client.get(f"{self.endpoint}?lecturer_id={id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 3)
-        uuids = list(
+        ids = list(
             set(
                 [
-                    str(record["reservation"]["schedule"]["lecturer"]["uuid"])
-                    == str(uuid)
+                    str(record["reservation"]["schedule"]["lecturer"]["id"]) == str(id)
                     for record in results
                 ]
             )
         )
-        self.assertTrue(len(uuids) == 1)
-        self.assertTrue(uuids[0])
+        self.assertTrue(len(ids) == 1)
+        self.assertTrue(ids[0])
 
     def test_created_at_filter(self):
         login(self, self.data["email"], self.data["password"])
@@ -3057,16 +3054,14 @@ class FinanceHistoryFilterTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         column = "lecturer_id"
-        variable = str(self.lecturer_profile_1.profile.uuid)
+        variable = self.lecturer_profile_1.id
         response = self.client.get(f"{self.endpoint}?{column}={variable}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 1)
-        values = list(
-            set([variable in record["lecturer"]["uuid"] for record in results])
-        )
+        values = list(set([variable == record["lecturer"]["id"] for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
 
@@ -3422,11 +3417,11 @@ class CouponUserFilteringTest(APITestCase):
         self.coupon_user_2 = create_coupon_user(self.coupon_2, self.profile)
         self.coupon_user_3 = create_coupon_user(self.coupon_3, self.profile)
 
-    def test_user_uuid_filter(self):
+    def test_user_id_filter(self):
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        column = "user_uuid"
+        column = "user_id"
         variable = str(self.coupon_user_1.user.uuid)
         response = self.client.get(f"{self.endpoint}?{column}={variable}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -3738,14 +3733,14 @@ class EarningsFilterTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         column = "lecturer"
-        variable = str(self.lecturer_profile_1.profile.uuid)
+        variable = self.lecturer_profile_1.id
         response = self.client.get(f"{self.endpoint}?total=False&{column}={variable}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 9)
-        values = list(set([variable == record[column]["uuid"] for record in results]))
+        values = list(set([variable == record[column]["id"] for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
 
@@ -3789,7 +3784,7 @@ class NewsletterEntriesFilterTest(APITestCase):
             for i in range(5)
         ]
 
-    def test_uuid_filter(self):
+    def test_id_filter(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)

@@ -21,7 +21,7 @@ class ReviewFilter(FilterSet):
         method="filter_course_id",
     )
     lesson_id = NumberFilter(field_name="lesson__id", lookup_expr="exact")
-    lecturer_id = UUIDFilter(field_name="lecturer__profile__uuid", lookup_expr="exact")
+    lecturer_id = NumberFilter(field_name="lecturer__id", lookup_expr="exact")
     student_id = UUIDFilter(field_name="student__uuid", lookup_expr="exact")
     rating = NumberFilter(field_name="rating", lookup_expr="exact")
     rating_from = NumberFilter(field_name="rating", lookup_expr="gte")

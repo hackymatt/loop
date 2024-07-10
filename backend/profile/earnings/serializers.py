@@ -6,7 +6,6 @@ from rest_framework.serializers import (
     BooleanField,
     SerializerMethodField,
     EmailField,
-    UUIDField,
     CharField,
 )
 from profile.models import LecturerProfile
@@ -14,7 +13,6 @@ from finance.models import Finance
 
 
 class LecturerSerializer(ModelSerializer):
-    uuid = UUIDField(source="profile.uuid")
     full_name = SerializerMethodField("get_full_name")
     email = EmailField(source="profile.user.email")
     street_address = CharField(source="profile.street_address")
@@ -26,7 +24,7 @@ class LecturerSerializer(ModelSerializer):
     class Meta:
         model = LecturerProfile
         fields = (
-            "uuid",
+            "id",
             "email",
             "full_name",
             "street_address",

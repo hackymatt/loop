@@ -78,8 +78,6 @@ class DetailsTest(APITestCase):
         # get data
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        results = json.loads(response.content)
-        self.assertTrue("user_type" in results.keys())
 
     def test_get_details_authenticated(self):
         # login

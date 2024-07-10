@@ -2,7 +2,7 @@ from django_filters import (
     FilterSet,
     OrderingFilter,
     CharFilter,
-    UUIDFilter,
+    NumberFilter,
     DateFilter,
 )
 from review.models import Review
@@ -28,27 +28,25 @@ from const import CANCELLATION_TIME
 
 
 def get_lesson_lecturer(queryset):
-    lecturer = LecturerProfile.objects.filter(pk=OuterRef("lecturer")).values(
-        "profile__uuid"
-    )
+    lecturer = LecturerProfile.objects.filter(pk=OuterRef("lecturer")).values("id")
 
     schedule = (
         Schedule.objects.filter(pk=OuterRef("schedule"))
-        .annotate(lecturer_uuid=Subquery(lecturer))
-        .values("lecturer_uuid")
+        .annotate(teacher_id=Subquery(lecturer))
+        .values("teacher_id")
     )
 
     reservation = Reservation.objects.filter(purchase__pk=OuterRef("pk")).annotate(
-        lecturer_uuid=Subquery(schedule)
+        teacher_id=Subquery(schedule)
     )
 
     purchase = queryset.annotate(
         lecturer_exists=Subquery(Exists(reservation))
     ).annotate(
-        lecturer_uuid=Case(
+        teacher_id=Case(
             When(
                 lecturer_exists=1,
-                then=Cast(Subquery(reservation.values("lecturer_uuid")), CharField()),
+                then=Cast(Subquery(reservation.values("teacher_id")), CharField()),
             ),
             When(lecturer_exists=None, then=Value("")),
         )
@@ -117,8 +115,9 @@ class OrderFilter(OrderingFilter):
                 )
             elif value in ["lesson_status", "-lesson_status"]:
                 queryset = get_lesson_status(queryset).order_by(value)
-            elif value in ["lecturer_uuid", "-lecturer_uuid"]:
-                queryset = get_lesson_lecturer(queryset).order_by(value)
+            elif value in ["lecturer_id", "-lecturer_id"]:
+                value_modified = value.replace("lecturer", "teacher")
+                queryset = get_lesson_lecturer(queryset).order_by(value_modified)
             elif value in ["lesson_title", "-lesson_title"]:
                 value_modified = value.replace("lesson_", "lesson__")
                 queryset = queryset.order_by(value_modified)
@@ -135,9 +134,9 @@ class PurchaseFilter(FilterSet):
         field_name="lesson_status",
         method="filter_lesson_status",
     )
-    lecturer_id = UUIDFilter(
+    lecturer_id = NumberFilter(
         label="Lecturer Id",
-        field_name="lecturer_uuid",
+        field_name="teacher_id",
         method="filter_lecturer_id",
     )
     review_status = CharFilter(
@@ -160,8 +159,8 @@ class PurchaseFilter(FilterSet):
             ("-lesson_status", "Lesson Status DESC"),
             ("review_status", "Review Status ASC"),
             ("-review_status", "Review Status DESC"),
-            ("lecturer_uuid", "Lecturer Id ASC"),
-            ("-lecturer_uuid", "Lecturer Id DESC"),
+            ("lecturer_id", "Lecturer Id ASC"),
+            ("-lecturer_id", "Lecturer Id DESC"),
             ("created_at", "Created At ASC"),
             ("-created_at", "Created At DESC"),
         ),
@@ -172,8 +171,8 @@ class PurchaseFilter(FilterSet):
             "lesson_status": "-lesson_status",
             "review_status": "review_status",
             "review_status": "-review_status",
-            "lecturer_uuid": "lecturer_uuid",
-            "lecturer_uuid": "-lecturer_uuid",
+            "lecturer_id": "lecturer_id",
+            "lecturer_id": "-lecturer_id",
             "created_at": "created_at",
             "created_at": "-created_at",
         },

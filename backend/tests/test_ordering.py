@@ -1782,7 +1782,7 @@ class PurchaseOrderTest(APITestCase):
             "lesson_title",
             "lesson_status",
             "review_status",
-            "lecturer_uuid",
+            "lecturer_id",
             "created_at",
         ]
 
@@ -1801,7 +1801,7 @@ class PurchaseOrderTest(APITestCase):
             if "_title" in field:
                 field1, field2 = field.split("_")
                 field_values = [course[field1][field2] for course in results]
-            elif "_uuid" in field:
+            elif "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course["reservation"]
@@ -1843,7 +1843,7 @@ class PurchaseOrderTest(APITestCase):
             if "_title" in field:
                 field1, field2 = field.split("_")
                 field_values = [course[field1][field2] for course in results]
-            elif "_uuid" in field:
+            elif "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course["reservation"]
@@ -2571,7 +2571,7 @@ class FinanceHistoryOrderTest(APITestCase):
         )
 
         self.fields = [
-            "lecturer_uuid",
+            "lecturer_id",
             "account",
             "rate",
             "commission",
@@ -2590,7 +2590,7 @@ class FinanceHistoryOrderTest(APITestCase):
             count = data["records_count"]
             results = data["results"]
             self.assertEqual(count, 2)
-            if "_uuid" in field:
+            if "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course[field1] for course in results if course[field1] is not None
@@ -2617,7 +2617,7 @@ class FinanceHistoryOrderTest(APITestCase):
             count = data["records_count"]
             results = data["results"]
             self.assertEqual(count, 2)
-            if "_uuid" in field:
+            if "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course[field1] for course in results if course[field1] is not None
@@ -2743,7 +2743,7 @@ class CouponOrderingTest(APITestCase):
             count = data["records_count"]
             results = data["results"]
             self.assertEqual(count, 6)
-            if "_uuid" in field:
+            if "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course[field1] for course in results if course[field1] is not None
@@ -2770,7 +2770,7 @@ class CouponOrderingTest(APITestCase):
             count = data["records_count"]
             results = data["results"]
             self.assertEqual(count, 6)
-            if "_uuid" in field:
+            if "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course[field1] for course in results if course[field1] is not None
@@ -2899,7 +2899,7 @@ class CouponUserOrderingTest(APITestCase):
             count = data["records_count"]
             results = data["results"]
             self.assertEqual(count, 3)
-            if "_uuid" in field:
+            if "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course[field1] for course in results if course[field1] is not None
@@ -2932,7 +2932,7 @@ class CouponUserOrderingTest(APITestCase):
             count = data["records_count"]
             results = data["results"]
             self.assertEqual(count, 3)
-            if "_uuid" in field:
+            if "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course[field1] for course in results if course[field1] is not None
@@ -3019,7 +3019,7 @@ class NewsletterEntriesOrderTest(APITestCase):
             count = data["records_count"]
             results = data["results"]
             self.assertEqual(count, 20)
-            if "_uuid" in field:
+            if "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course[field1] for course in results if course[field1] is not None
@@ -3052,7 +3052,7 @@ class NewsletterEntriesOrderTest(APITestCase):
             count = data["records_count"]
             results = data["results"]
             self.assertEqual(count, 20)
-            if "_uuid" in field:
+            if "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course[field1] for course in results if course[field1] is not None
