@@ -14,7 +14,7 @@ class CartViewSet(ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         student = Profile.objects.get(user=user)
-        return self.queryset.filter(student=student)
+        return self.queryset.filter(student__profile=student)
 
     def get_serializer_class(self):
         if self.action == "create":

@@ -1,6 +1,9 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .factory import create_user, create_profile
+from .factory import (
+    create_user,
+    create_profile,
+)
 from .helpers import users_number, get_user, emails_sent_number, get_mail, get_profile
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware

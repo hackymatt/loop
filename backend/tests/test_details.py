@@ -1,6 +1,12 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .factory import create_user, create_profile, create_lecturer_profile, create_image
+from .factory import (
+    create_user,
+    create_profile,
+    create_student_profile,
+    create_lecturer_profile,
+    create_image,
+)
 from .helpers import login, is_data_match, filter_dict, get_user, get_profile
 from django.contrib import auth
 import json
@@ -23,7 +29,7 @@ class DetailsTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
 
         self.data_lecturer = {
             "first_name": "test_first_name_lecturer",

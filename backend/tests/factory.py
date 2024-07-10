@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from profile.models import Profile, LecturerProfile
+from profile.models import Profile, LecturerProfile, AdminProfile, StudentProfile
 from course.models import Course
 from coupon.models import Coupon, CouponUser
 from lesson.models import Lesson, LessonPriceHistory
@@ -44,6 +44,18 @@ def create_user(
     user.save()
 
     return user
+
+
+def create_admin_profile(profile: Profile):
+    return AdminProfile.objects.create(
+        profile=profile,
+    )
+
+
+def create_student_profile(profile: Profile):
+    return StudentProfile.objects.create(
+        profile=profile,
+    )
 
 
 def create_lecturer_profile(

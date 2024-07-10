@@ -5,7 +5,7 @@ from rest_framework.serializers import (
     SerializerMethodField,
 )
 from drf_extra_fields.fields import Base64ImageField
-from profile.models import Profile, LecturerProfile
+from profile.models import Profile, LecturerProfile, AdminProfile, StudentProfile
 from finance.models import Finance, FinanceHistory
 
 
@@ -66,7 +66,23 @@ class UserSerializer(ModelSerializer):
         )
 
     def update(self, instance, validated_data):
+        current_user_type = instance.user_type
         user_type = validated_data.get("get_user_type_display")
+
+        if current_user_type[0] != user_type[0]:
+            if user_type == "A":
+                AdminProfile.objects.get_or_create(profile=instance)
+            elif user_type == "W":
+                LecturerProfile.objects.get_or_create(profile=instance)
+            elif user_type == "S":
+                StudentProfile.objects.get_or_create(profile=instance)
+
+            if user_type == "A":
+                AdminProfile.objects.get(profile=instance).delete()
+            elif user_type == "W":
+                LecturerProfile.objects.get(profile=instance).delete()
+            elif user_type == "S":
+                StudentProfile.objects.get(profile=instance).delete()
 
         if user_type[0] == "W":
             data = self.context["request"].data

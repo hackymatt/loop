@@ -3,6 +3,8 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
+    create_admin_profile,
+    create_student_profile,
     create_lecturer_profile,
     create_course,
     create_lesson,
@@ -43,7 +45,7 @@ class CourseFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
         self.user_2 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -51,7 +53,7 @@ class CourseFilterTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -450,7 +452,7 @@ class ReviewFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
         self.user_2 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -458,7 +460,7 @@ class ReviewFilterTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -728,7 +730,7 @@ class ScheduleFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
         self.user_2 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -736,7 +738,7 @@ class ScheduleFilterTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
         self.lecturer_data = {
             "email": "lecturer_1@example.com",
             "password": "TestPassword123",
@@ -1048,7 +1050,9 @@ class LessonPriceHistoryFilterTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -1427,7 +1431,7 @@ class LecturerFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
         self.user_2 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -1435,7 +1439,7 @@ class LecturerFilterTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -1596,7 +1600,7 @@ class PurchaseFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
 
         self.lecturer_user = create_user(
             first_name="first_name",
@@ -1938,7 +1942,9 @@ class LessonFilterTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -1950,7 +1956,7 @@ class LessonFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
         self.user_2 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -1958,7 +1964,7 @@ class LessonFilterTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -2740,7 +2746,9 @@ class UsersFilerTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -3006,7 +3014,9 @@ class FinanceHistoryFilterTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.student_user = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -3177,7 +3187,9 @@ class CouponFilteringTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -3189,7 +3201,7 @@ class CouponFilteringTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
 
         self.coupon = create_coupon(
             code="aaaaaaa",
@@ -3344,7 +3356,9 @@ class CouponUserFilteringTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -3356,7 +3370,7 @@ class CouponUserFilteringTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
 
         self.coupon_1 = create_coupon(
             code="aaaaaaa",
@@ -3475,7 +3489,9 @@ class EarningsFilterTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.student_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -3761,7 +3777,9 @@ class NewsletterEntriesFilterTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
 
         self.data = {
             "email": "test_email@example.com",
@@ -3774,7 +3792,7 @@ class NewsletterEntriesFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
 
         self.active_newsletters = [
             create_newsletter(email=f"test_active_{i}@example.com") for i in range(15)
