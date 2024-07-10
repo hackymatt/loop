@@ -46,7 +46,7 @@ def remind_review():
                 }
                 mailer.send(
                     email_template="review_reminder.html",
-                    to=[reservation.student.user.email],
+                    to=[reservation.student.profile.user.email],
                     subject="Prośba o ocenę szkolenia",
                     data=data,
                 )

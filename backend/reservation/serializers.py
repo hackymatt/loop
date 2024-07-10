@@ -5,7 +5,7 @@ from rest_framework.serializers import (
     ValidationError,
 )
 from reservation.models import Reservation
-from profile.models import Profile, LecturerProfile
+from profile.models import Profile, LecturerProfile, StudentProfile
 from lesson.models import Lesson, Technology
 from schedule.models import Schedule
 from datetime import timedelta
@@ -69,7 +69,10 @@ class ReservationSerializer(ModelSerializer):
         user = self.context["request"].user
         profile = Profile.objects.get(user=user)
 
-        if not (purchase.student == profile and purchase.lesson == lesson):
+        if not (
+            purchase.student == StudentProfile.objects.get(profile=profile)
+            and purchase.lesson == lesson
+        ):
             raise ValidationError({"lesson": "Lekcja nie została zakupiona."})
 
         return lesson
@@ -145,7 +148,10 @@ class ReservationSerializer(ModelSerializer):
             timeslots.exclude(id=lesson_schedule.id).delete()
 
         reservation = Reservation.objects.create(
-            student=profile, lesson=lesson, schedule=lesson_schedule, purchase=purchase
+            student=StudentProfile.objects.get(profile=profile),
+            lesson=lesson,
+            schedule=lesson_schedule,
+            purchase=purchase,
         )
 
         mailer = Mailer()

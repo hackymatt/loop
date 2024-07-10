@@ -60,7 +60,7 @@ class BestReviewViewSet(ModelViewSet):
     def get_queryset(self):
         dummy_user = User.objects.get(email=settings.DUMMY_STUDENT_EMAIL)
 
-        queryset = self.queryset.exclude(student__user=dummy_user)
+        queryset = self.queryset.exclude(student__profile__user=dummy_user)
         ids = queryset.values_list("id", flat=True)
         random_ids = sample(list(ids), min(len(ids), 10))
         return self.queryset.filter(id__in=random_ids)

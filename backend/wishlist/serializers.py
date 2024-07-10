@@ -4,7 +4,7 @@ from rest_framework.serializers import (
 )
 from lesson.models import Lesson, Technology
 from wishlist.models import Wishlist
-from profile.models import Profile, LecturerProfile
+from profile.models import Profile, LecturerProfile, StudentProfile
 from teaching.models import Teaching
 from django.db.models.functions import Concat
 from django.db.models import Value
@@ -79,6 +79,8 @@ class WishlistSerializer(ModelSerializer):
         user = self.context["request"].user
         student = Profile.objects.get(user=user)
 
-        obj, _ = Wishlist.objects.get_or_create(student=student, **validated_data)
+        obj, _ = Wishlist.objects.get_or_create(
+            student=StudentProfile.objects.get(profile=student), **validated_data
+        )
 
         return obj

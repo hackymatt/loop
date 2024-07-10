@@ -44,14 +44,14 @@ def confirm_reservations():
             if is_lesson_success:
                 mailer.send(
                     email_template="lesson_success.html",
-                    to=[reservation.student.user.email],
+                    to=[reservation.student.profile.user.email],
                     subject="Potwierdzenie realizacji szkolenia",
                     data=data,
                 )
             else:
                 mailer.send(
                     email_template="lesson_failure.html",
-                    to=[reservation.student.user.email],
+                    to=[reservation.student.profile.user.email],
                     subject="Brak realizacji szkolenia",
                     data=data,
                 )

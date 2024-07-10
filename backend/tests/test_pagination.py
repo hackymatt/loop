@@ -38,7 +38,9 @@ class PaginationTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",

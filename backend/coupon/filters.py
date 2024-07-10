@@ -20,7 +20,7 @@ class OrderFilter(OrderingFilter):
                 modified_value = value.replace("_", "__")
                 queryset = queryset.order_by(modified_value)
             elif value in ["user_email", "-user_email"]:
-                modified_value = value.replace("user_", "user__user__")
+                modified_value = value.replace("user_", "user__profile__user__")
                 queryset = queryset.order_by(modified_value)
             else:
                 queryset = queryset.order_by(value)

@@ -5,7 +5,7 @@ from rest_framework.serializers import (
     CharField,
 )
 from coupon.models import Coupon, CouponUser
-from profile.models import Profile
+from profile.models import Profile, StudentProfile
 
 
 class CouponListSerializer(ModelSerializer):
@@ -21,26 +21,26 @@ class CouponListSerializer(ModelSerializer):
         )
 
 
-class ProfileSerializer(ModelSerializer):
+class StudentSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
-    email = EmailField(source="user.email")
-    gender = CharField(source="get_gender_display")
+    email = EmailField(source="profile.user.email")
+    gender = CharField(source="profile.get_gender_display")
 
     class Meta:
-        model = Profile
+        model = StudentProfile
         fields = (
-            "uuid",
+            "id",
             "full_name",
             "email",
             "gender",
         )
 
-    def get_full_name(self, profile):
-        return profile.user.first_name + " " + profile.user.last_name
+    def get_full_name(self, student):
+        return student.profile.user.first_name + " " + student.profile.user.last_name
 
 
 class CouponGetSerializer(ModelSerializer):
-    users = ProfileSerializer(many=True)
+    users = StudentSerializer(many=True)
 
     class Meta:
         model = Coupon
@@ -81,7 +81,7 @@ class CouponSerializer(ModelSerializer):
 
 
 class CouponUserSerializer(ModelSerializer):
-    user = ProfileSerializer()
+    user = StudentSerializer()
     coupon = CouponListSerializer()
 
     class Meta:

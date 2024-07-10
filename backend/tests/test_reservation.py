@@ -61,9 +61,15 @@ class ReservationTest(APITestCase):
             password="TestPassword123",
             is_active=True,
         )
-        self.profile_1 = create_profile(user=self.user_1)
-        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
-        self.profile_3 = create_profile(user=self.user_3)
+        self.profile_1 = create_student_profile(
+            profile=create_profile(user=self.user_1)
+        )
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
+        self.profile_3 = create_student_profile(
+            profile=create_profile(user=self.user_3)
+        )
 
         self.lecturer_user = create_user(
             first_name="first_name",
@@ -653,8 +659,12 @@ class ReservationConfirmationTest(TestCase):
             is_active=True,
         )
         self.profile = create_student_profile(profile=create_profile(user=self.user))
-        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
-        self.profile_3 = create_profile(user=self.user_3)
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
+        self.profile_3 = create_student_profile(
+            profile=create_profile(user=self.user_3)
+        )
 
         self.lecturer_user = create_user(
             first_name="first_name",
@@ -785,19 +795,19 @@ class ReservationConfirmationTest(TestCase):
         self.assertEqual(reservation_number(), 3)
         self.assertEqual(emails_sent_number(), 6)
         email = get_mail(0)
-        self.assertEqual(email.to, [self.profile.user.email])
+        self.assertEqual(email.to, [self.profile.profile.user.email])
         self.assertEqual(email.subject, "Brak realizacji szkolenia")
         email = get_mail(1)
         self.assertEqual(email.to, [self.lecturer_profile.profile.user.email])
         self.assertEqual(email.subject, "Brak realizacji szkolenia")
         email = get_mail(2)
-        self.assertEqual(email.to, [self.profile.user.email])
+        self.assertEqual(email.to, [self.profile.profile.user.email])
         self.assertEqual(email.subject, "Potwierdzenie realizacji szkolenia")
         email = get_mail(3)
-        self.assertEqual(email.to, [self.profile_2.user.email])
+        self.assertEqual(email.to, [self.profile_2.profile.user.email])
         self.assertEqual(email.subject, "Potwierdzenie realizacji szkolenia")
         email = get_mail(4)
-        self.assertEqual(email.to, [self.profile_3.user.email])
+        self.assertEqual(email.to, [self.profile_3.profile.user.email])
         self.assertEqual(email.subject, "Potwierdzenie realizacji szkolenia")
         email = get_mail(5)
         self.assertEqual(email.to, [self.lecturer_profile.profile.user.email])

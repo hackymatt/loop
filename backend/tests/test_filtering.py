@@ -53,7 +53,9 @@ class CourseFilterTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -460,7 +462,9 @@ class ReviewFilterTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -738,7 +742,9 @@ class ScheduleFilterTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_data = {
             "email": "lecturer_1@example.com",
             "password": "TestPassword123",
@@ -1439,7 +1445,9 @@ class LecturerFilterTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -1964,7 +1972,9 @@ class LessonFilterTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -2788,8 +2798,12 @@ class UsersFilerTest(APITestCase):
             password="TestPassword123",
             is_active=True,
         )
-        self.student_profile_1 = create_profile(user=self.student_user_1)
-        self.student_profile_2 = create_profile(user=self.student_user_2)
+        self.student_profile_1 = create_student_profile(
+            profile=create_profile(user=self.student_user_1)
+        )
+        self.student_profile_2 = create_student_profile(
+            profile=create_profile(user=self.student_user_2)
+        )
         self.lecturer_profile_1 = create_lecturer_profile(
             profile=create_profile(user=self.lecturer_user_1, user_type="W"),
             title="soft",
@@ -3436,7 +3450,7 @@ class CouponUserFilteringTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         column = "user_id"
-        variable = str(self.coupon_user_1.user.uuid)
+        variable = str(self.coupon_user_1.user.profile.uuid)
         response = self.client.get(f"{self.endpoint}?{column}={variable}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
@@ -3520,8 +3534,12 @@ class EarningsFilterTest(APITestCase):
             password="TestPassword123",
             is_active=True,
         )
-        self.student_profile_1 = create_profile(user=self.student_user_1)
-        self.student_profile_2 = create_profile(user=self.student_user_2)
+        self.student_profile_1 = create_student_profile(
+            profile=create_profile(user=self.student_user_1)
+        )
+        self.student_profile_2 = create_student_profile(
+            profile=create_profile(user=self.student_user_2)
+        )
         self.lecturer_profile_1 = create_lecturer_profile(
             profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )

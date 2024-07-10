@@ -79,6 +79,8 @@ class CartSerializer(ModelSerializer):
         user = self.context["request"].user
         student = Profile.objects.get(user=user)
 
-        obj, _ = Cart.objects.get_or_create(student=StudentProfile.objects.get(profile=student), **validated_data)
+        obj, _ = Cart.objects.get_or_create(
+            student=StudentProfile.objects.get(profile=student), **validated_data
+        )
 
         return obj

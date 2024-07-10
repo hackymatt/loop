@@ -8,7 +8,7 @@ from rest_framework.serializers import (
 )
 from purchase.models import Purchase
 from lesson.models import Lesson, Technology
-from profile.models import Profile, LecturerProfile
+from profile.models import Profile, LecturerProfile, StudentProfile
 from reservation.models import Reservation
 from schedule.models import Schedule
 from review.models import Review
@@ -208,7 +208,7 @@ class PurchaseSerializer(ModelSerializer):
             obj = Purchase.objects.create(
                 lesson=lesson,
                 price=data["price"],
-                student=student,
+                student=StudentProfile.objects.get(profile=student),
             )
             objs.append(obj)
 

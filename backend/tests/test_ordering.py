@@ -61,7 +61,9 @@ class CourseOrderTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -375,7 +377,9 @@ class ReviewOrderTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -635,7 +639,9 @@ class ScheduleOrderTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_data = {
             "email": "lecturer_1@example.com",
             "password": "TestPassword123",
@@ -1294,7 +1300,9 @@ class LecturerOrderTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -1919,7 +1927,9 @@ class LessonOrderTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -2442,8 +2452,12 @@ class UsersOrderTest(APITestCase):
             password="TestPassword123",
             is_active=True,
         )
-        self.student_profile_1 = create_profile(user=self.student_user_1)
-        self.student_profile_2 = create_profile(user=self.student_user_2)
+        self.student_profile_1 = create_student_profile(
+            profile=create_profile(user=self.student_user_1)
+        )
+        self.student_profile_2 = create_student_profile(
+            profile=create_profile(user=self.student_user_2)
+        )
         self.lecturer_profile_1 = create_lecturer_profile(
             profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )

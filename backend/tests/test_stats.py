@@ -3,6 +3,7 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
+    create_student_profile,
     create_lecturer_profile,
     create_course,
     create_lesson,
@@ -39,9 +40,15 @@ class StatsTest(APITestCase):
             password="TestPassword123",
             is_active=True,
         )
-        self.profile_1 = create_profile(user=self.user_1)
-        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
-        self.profile_3 = create_profile(user=self.user_3)
+        self.profile_1 = create_student_profile(
+            profile=create_profile(user=self.user_1)
+        )
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
+        self.profile_3 = create_student_profile(
+            profile=create_profile(user=self.user_3)
+        )
 
         self.lecturer_user = create_user(
             first_name="first_name",

@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from django.conf import settings
-from profile.models import Profile, LecturerProfile
+from profile.models import Profile, LecturerProfile, StudentProfile
 from reservation.models import Reservation
 from schedule.models import Schedule
 from datetime import datetime
@@ -29,12 +29,14 @@ class ProfileUnregisterViewSet(ModelViewSet):
             dummy_user = User.objects.get(email=settings.DUMMY_STUDENT_EMAIL)
             dummy_profile = Profile.objects.get(user=dummy_user)
             past_reservations = Reservation.objects.filter(
-                student=profile, schedule__start_time__lt=now
+                student__profile=profile, schedule__start_time__lt=now
             )
-            past_reservations.update(student=dummy_profile)
+            past_reservations.update(
+                student=StudentProfile.objects.get(profile=dummy_profile)
+            )
             future_reservations_schedules = (
                 Reservation.objects.filter(
-                    student=profile, schedule__start_time__gte=now
+                    student__profile=profile, schedule__start_time__gte=now
                 )
                 .values("schedule")
                 .distinct()
@@ -44,7 +46,7 @@ class ProfileUnregisterViewSet(ModelViewSet):
                 schedule_obj = Schedule.objects.get(pk=schedule["schedule"])
                 other_reservations = Reservation.objects.filter(
                     schedule=schedule_obj
-                ).exclude(student=profile)
+                ).exclude(student__profile=profile)
                 if other_reservations.count() == 0:
                     # notify lecturer
                     data = {
@@ -79,7 +81,7 @@ class ProfileUnregisterViewSet(ModelViewSet):
             )
             for schedule in future_schedules:
                 emails = [
-                    reservation.student.user.email
+                    reservation.student.profile.user.email
                     for reservation in Reservation.objects.filter(
                         schedule=schedule
                     ).all()

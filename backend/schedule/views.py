@@ -43,7 +43,7 @@ class ManageScheduleViewSet(ModelViewSet):
         schedule = super().get_object()
         lesson = schedule.lesson
         emails = [
-            reservation.student.user.email
+            reservation.student.profile.user.email
             for reservation in Reservation.objects.filter(schedule=schedule).all()
         ]
 

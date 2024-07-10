@@ -67,7 +67,9 @@ class ScheduleTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_student_profile(profile=create_profile(user=self.user))
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_data = {
             "email": "lecturer_1@example.com",
             "password": "TestPassword123",
@@ -423,13 +425,13 @@ class ScheduleTest(APITestCase):
         self.assertEqual(schedule_number(), 21)
         self.assertEqual(emails_sent_number(), 2)
         email = get_mail(0)
-        self.assertEqual(email.to, [self.profile.user.email])
+        self.assertEqual(email.to, [self.profile.profile.user.email])
         self.assertEqual(
             email.subject,
             "Twoja lekcja została odwołana",
         )
         email = get_mail(1)
-        self.assertEqual(email.to, [self.profile_2.user.email])
+        self.assertEqual(email.to, [self.profile_2.profile.user.email])
         self.assertEqual(
             email.subject,
             "Twoja lekcja została odwołana",

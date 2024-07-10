@@ -4,6 +4,7 @@ from .factory import (
     create_user,
     create_profile,
     create_admin_profile,
+    create_student_profile,
     create_lecturer_profile,
     create_finance,
 )
@@ -73,8 +74,12 @@ class UsersTest(APITestCase):
             password="TestPassword123",
             is_active=True,
         )
-        self.student_profile_1 = create_profile(user=self.student_user_1)
-        self.student_profile_2 = create_profile(user=self.student_user_2)
+        self.student_profile_1 = create_student_profile(
+            profile=create_profile(user=self.student_user_1)
+        )
+        self.student_profile_2 = create_student_profile(
+            profile=create_profile(user=self.student_user_2)
+        )
         self.lecturer_profile_1 = create_lecturer_profile(
             profile=create_profile(
                 user=self.lecturer_user_1,
@@ -164,7 +169,9 @@ class UsersTest(APITestCase):
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        response = self.client.get(f"{self.endpoint}/{self.student_profile_1.id}")
+        response = self.client.get(
+            f"{self.endpoint}/{self.student_profile_1.profile.id}"
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         results = json.loads(response.content)
         user_data = filter_dict(results, self.user_columns)
