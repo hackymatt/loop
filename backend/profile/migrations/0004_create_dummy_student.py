@@ -1,7 +1,7 @@
 from django.db import migrations
 from django.contrib.auth import get_user_model
 from django.conf import settings
-from profile.models import Profile
+from profile.models import Profile, StudentProfile
 
 
 def generate_dummy_student(apps, schema_editor):
@@ -15,12 +15,13 @@ def generate_dummy_student(apps, schema_editor):
         student.set_password(password)
         student.save()
 
-        Profile.objects.create(user=student, user_type="S")
+        profile = Profile.objects.create(user=student, user_type="S")
+        StudentProfile.objects.create(profile=profile)
 
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("profile", "0002_create_superuser"),
+        ("profile", "0003_create_dummy_lecturer"),
     ]
 
     operations = [migrations.RunPython(generate_dummy_student)]

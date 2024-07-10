@@ -6,11 +6,13 @@ from django.db.models import (
     Index,
 )
 from course.models import Lesson
-from profile.models import Profile
+from profile.models import StudentProfile
 
 
 class Wishlist(BaseModel):
-    student = ForeignKey(Profile, on_delete=CASCADE, related_name="wishlist_student")
+    student = ForeignKey(
+        StudentProfile, on_delete=CASCADE, related_name="wishlist_student"
+    )
     lesson = ForeignKey(Lesson, on_delete=CASCADE)
 
     class Meta:

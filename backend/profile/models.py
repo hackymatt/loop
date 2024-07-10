@@ -74,6 +74,46 @@ class Profile(BaseModel):
         ]
 
 
+class AdminProfile(BaseModel):
+    profile = OneToOneField(Profile, on_delete=CASCADE)
+
+    class Meta:
+        db_table = "admin_profile"
+        ordering = ["id"]
+        indexes = [
+            Index(
+                fields=[
+                    "id",
+                ]
+            ),
+            Index(
+                fields=[
+                    "profile",
+                ]
+            ),
+        ]
+
+
+class StudentProfile(BaseModel):
+    profile = OneToOneField(Profile, on_delete=CASCADE)
+
+    class Meta:
+        db_table = "student_profile"
+        ordering = ["id"]
+        indexes = [
+            Index(
+                fields=[
+                    "id",
+                ]
+            ),
+            Index(
+                fields=[
+                    "profile",
+                ]
+            ),
+        ]
+
+
 class LecturerProfile(BaseModel):
     profile = OneToOneField(Profile, on_delete=CASCADE)
     title = CharField(null=True, blank=True)

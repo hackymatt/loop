@@ -5,12 +5,12 @@ from django.db.models import (
     Index,
 )
 from course.models import Lesson
-from profile.models import Profile
+from profile.models import StudentProfile
 
 
 class Cart(BaseModel):
     lesson = ForeignKey(Lesson, on_delete=CASCADE)
-    student = ForeignKey(Profile, on_delete=CASCADE, related_name="cart_student")
+    student = ForeignKey(StudentProfile, on_delete=CASCADE, related_name="cart_student")
 
     class Meta:
         db_table = "cart"
