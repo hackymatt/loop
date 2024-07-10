@@ -13,9 +13,9 @@ import json
 from base64 import b64encode
 
 
-class DetailsTest(APITestCase):
+class PersonalDataTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/api/details"
+        self.endpoint = "/api/personal-data"
         self.data = {
             "first_name": "test_first_name",
             "last_name": "test_last_name",
@@ -60,14 +60,14 @@ class DetailsTest(APITestCase):
             "user_type",
         ]
 
-    def test_get_details_unauthenticated(self):
+    def test_get_personal_personal_data_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_get_details_student(self):
+    def test_get_personal_personal_data_student(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -77,7 +77,7 @@ class DetailsTest(APITestCase):
         results = json.loads(response.content)
         self.assertFalse("user_type" in results.keys())
 
-    def test_get_details_other(self):
+    def test_get_personal_personal_data_other(self):
         # login
         login(self, self.data_lecturer["email"], self.data_lecturer["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -85,7 +85,7 @@ class DetailsTest(APITestCase):
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_get_details_authenticated(self):
+    def test_get_personal_data_authenticated(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -103,7 +103,7 @@ class DetailsTest(APITestCase):
         )
         self.assertFalse(get_profile(get_user(self.data["email"])).image)
 
-    def test_amend_details_unauthenticated(self):
+    def test_amend_personal_data_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # new data
@@ -123,7 +123,7 @@ class DetailsTest(APITestCase):
         response = self.client.put(self.endpoint, new_data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_amend_details_student_authenticated(self):
+    def test_amend_personal_data_student_authenticated(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -158,7 +158,7 @@ class DetailsTest(APITestCase):
         self.assertEqual(get_profile(get_user(self.data["email"])).dob, None)
         self.assertIsNotNone(get_profile(get_user(self.data["email"])).image)
 
-    def test_amend_details_lecturer_authenticated(self):
+    def test_amend_personal_data_lecturer_authenticated(self):
         # login
         login(self, self.data_lecturer["email"], self.data_lecturer["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)

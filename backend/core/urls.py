@@ -95,7 +95,7 @@ router.register(r"coupon-usage", CouponUserViewSet, basename="coupon_usage")
 api_urlpatterns = [
     path("", include(router.urls)),
     path(
-        "details",
+        "personal-data",
         ProfileDetailsViewSet.as_view({"get": "list", "put": "update"}),
     ),
     path(
