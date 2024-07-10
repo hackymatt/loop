@@ -17,7 +17,7 @@ type IProfile = {
 };
 
 type IReview = {
-  id: number;
+  id: string;
   lesson_title: string;
   student: IProfile;
   lecturer: IProfile;

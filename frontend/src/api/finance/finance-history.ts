@@ -12,7 +12,7 @@ import { Api } from "../service";
 const endpoint = "/finance-history" as const;
 
 type ILecturer = {
-  uuid: string;
+  id: string;
   full_name: string;
   email: string;
   image: string | null;
@@ -20,7 +20,7 @@ type ILecturer = {
 };
 
 type IFinanceHistory = {
-  id: number;
+  id: string;
   lecturer: ILecturer;
   account: string | null;
   rate: number | null;
@@ -46,10 +46,10 @@ export const financeHistoryQuery = (query?: IQueryParams) => {
     const { results, records_count, pages_count } = data;
     const modifiedResults = results.map(
       ({ id, lecturer, account, rate, commission, created_at }: IFinanceHistory) => {
-        const { uuid, full_name, gender, image } = lecturer;
+        const { id: lecturerId, full_name, gender, image } = lecturer;
         return {
           id,
-          teacher: { id: uuid, name: full_name, avatarUrl: image, gender },
+          teacher: { id: lecturerId, name: full_name, avatarUrl: image, gender },
           account,
           rate,
           commission,

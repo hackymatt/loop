@@ -11,7 +11,7 @@ import { Api } from "../service";
 const endpoint = "/lesson-schedules" as const;
 
 type ILessonSchedule = {
-  id: number;
+  id: string;
   start_time: string;
   end_time: string;
   students_required: number;

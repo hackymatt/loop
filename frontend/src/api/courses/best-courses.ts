@@ -12,19 +12,19 @@ type ILevel = "P" | "Ś" | "Z" | "E";
 
 type ILecturer = {
   full_name: string;
-  uuid: string;
+  id: string;
   email: string;
   image: string | null;
   gender: IGender | null;
 };
 
 type ITechnology = {
-  id: number;
+  id: string;
   name: string;
 };
 
 type ICourse = {
-  id: number;
+  id: string;
   price: number;
   previous_price: number | null;
   lowest_30_days_price: number | null;
@@ -77,11 +77,13 @@ export const bestCoursesQuery = () => {
         ratingNumber: rating,
         totalReviews: rating_count,
         totalStudents: students_count,
-        teachers: lecturers.map(({ uuid, full_name, image: lecturerImage }: ILecturer) => ({
-          id: uuid,
-          name: full_name,
-          avatarUrl: lecturerImage,
-        })),
+        teachers: lecturers.map(
+          ({ id: lecturerId, full_name, image: lecturerImage }: ILecturer) => ({
+            id: lecturerId,
+            name: full_name,
+            avatarUrl: lecturerImage,
+          }),
+        ),
       }),
     );
     return { results: modifiedResults, count: records_count };

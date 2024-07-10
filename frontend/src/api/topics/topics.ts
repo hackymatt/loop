@@ -13,7 +13,7 @@ import { getCsrfToken } from "../utils/csrf";
 const endpoint = "/topics" as const;
 
 type ITopic = {
-  id: number;
+  id: string;
   modified_at: string;
   created_at: string;
   name: string;

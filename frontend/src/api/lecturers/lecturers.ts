@@ -12,7 +12,7 @@ import { Api } from "../service";
 const endpoint = "/lecturers" as const;
 
 type ILecturer = {
-  uuid: string;
+  id: string;
   full_name: string;
   email: string;
   user_title: string | null;
@@ -41,7 +41,7 @@ export const lecturersQuery = (query?: IQueryParams) => {
     const { results, records_count, pages_count } = data;
     const modifiedResults = results.map(
       ({
-        uuid,
+        id,
         full_name,
         email,
         user_title,
@@ -51,7 +51,7 @@ export const lecturersQuery = (query?: IQueryParams) => {
         rating_count,
         lessons_count,
       }: ILecturer) => ({
-        id: uuid,
+        id,
         name: full_name,
         email,
         role: user_title,

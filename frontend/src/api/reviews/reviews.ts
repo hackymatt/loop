@@ -29,7 +29,7 @@ type ILecturer = {
 };
 
 type IReview = {
-  id: number;
+  id: string;
   lesson_title: string;
   student: IStudent;
   lecturer: ILecturer;

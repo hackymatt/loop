@@ -129,7 +129,7 @@ export default function AccountUsersView() {
   const handleFinanceHistoryView = useCallback(
     (user: IUserDetailsProps) => {
       router.push(
-        `${paths.account.admin.users.financeHistory}/?lecturer_id=${user.uuid}&sort_by=-created_at`,
+        `${paths.account.admin.users.financeHistory}/?lecturer_id=${user.id}&sort_by=-created_at`,
       );
     },
     [router],

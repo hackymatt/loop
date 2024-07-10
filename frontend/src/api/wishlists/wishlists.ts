@@ -21,7 +21,7 @@ type ITechnology = {
 };
 
 type ILesson = {
-  id: number;
+  id: string;
   lecturers: ILecturer[];
   technologies: ITechnology[];
   title: string;
@@ -29,7 +29,7 @@ type ILesson = {
   price: number;
 };
 
-type IWishlist = { id: number; lesson: ILesson };
+type IWishlist = { id: string; lesson: ILesson };
 
 type ICreateWishlist = { lesson: string };
 type ICreateWishlistReturn = ICreateWishlist;

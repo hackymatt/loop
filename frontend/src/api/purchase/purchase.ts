@@ -14,7 +14,7 @@ import { getCsrfToken } from "../utils/csrf";
 const endpoint = "/purchase" as const;
 
 type ILecturer = {
-  uuid: string;
+  id: string;
   full_name: string;
   email: string;
   gender: IGender | null;
@@ -22,31 +22,31 @@ type ILecturer = {
 };
 
 type ILesson = {
-  id: number;
+  id: string;
   title: string;
   duration: number;
 };
 
 type IReview = {
-  id: number;
+  id: string;
   rating: string;
   review: string;
 };
 
 type ISchedule = {
-  id: number;
+  id: string;
   lecturer: ILecturer;
   start_time: string;
   end_time: string;
 };
 
 type IReservation = {
-  id: number;
+  id: string;
   schedule: ISchedule;
 };
 
 type IPurchase = {
-  id: number;
+  id: string;
   lesson: ILesson;
   lesson_status: ILessonStatus;
   reservation: IReservation;
@@ -96,7 +96,7 @@ export const purchaseQuery = (query?: IQueryParams) => {
           reservationId: reservation?.id,
           teacher: reservation?.schedule.lecturer
             ? {
-                id: reservation?.schedule.lecturer.uuid,
+                id: reservation?.schedule.lecturer.id,
                 name: reservation?.schedule.lecturer.full_name,
                 email: reservation?.schedule.lecturer.email,
                 avatarUrl: reservation?.schedule.lecturer.image,

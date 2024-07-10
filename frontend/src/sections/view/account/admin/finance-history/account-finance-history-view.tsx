@@ -34,7 +34,7 @@ import AccountFinanceHistoryTableRow from "../../../../account/admin/account-fin
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: "lecturer_uuid", label: "Wykładowca", minWidth: 200 },
+  { id: "lecturer_id", label: "Wykładowca", minWidth: 200 },
   { id: "account", label: "Konto" },
   { id: "rate", label: "Stawka h" },
   { id: "commission", label: "Prowizja" },
