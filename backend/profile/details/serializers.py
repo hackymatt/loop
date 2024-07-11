@@ -13,6 +13,7 @@ class ProfileDetailsSerializer(ModelSerializer):
     email = EmailField(source="user.email")
     gender = CharField(source="get_gender_display", allow_blank=True)
     image = Base64ImageField(required=False)
+    user_type = CharField(source="get_user_type_display", required=False)
 
     class Meta:
         model = Profile
@@ -28,11 +29,15 @@ class ProfileDetailsSerializer(ModelSerializer):
             "city",
             "country",
             "image",
+            "user_type",
         )
 
     def update(self, instance, validated_data):
         user = validated_data.pop("user")
         user.pop("email")
+        if "get_user_type_display" in validated_data:
+            validated_data.pop("get_user_type_display")
+
         first_name = user.pop("first_name", instance.user.first_name)
         last_name = user.pop("last_name", instance.user.last_name)
         instance.user.first_name = first_name

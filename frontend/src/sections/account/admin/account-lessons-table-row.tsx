@@ -99,13 +99,6 @@ export default function AccountLessonsTableRow({ row, onEdit, onPriceHistoryView
           },
         }}
       >
-        <Link href={row.githubUrl} target="_blank" underline="none" color="inherit">
-          <MenuItem>
-            <Iconify icon="carbon:logo-github" sx={{ mr: 0.5 }} />
-            <Typography variant="body2">Repozytorium</Typography>
-          </MenuItem>
-        </Link>
-
         <MenuItem onClick={handleEdit} sx={{ mr: 1, width: "100%" }}>
           <Iconify icon="carbon:edit" sx={{ mr: 0.5 }} />
           <Typography variant="body2">Edytuj lekcję</Typography>
@@ -117,6 +110,15 @@ export default function AccountLessonsTableRow({ row, onEdit, onPriceHistoryView
           <Iconify icon="carbon:chart-line" sx={{ mr: 0.5 }} />
           <Typography variant="body2">Historia cen</Typography>
         </MenuItem>
+
+        <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
+
+        <Link href={row.githubUrl} target="_blank" underline="none" color="inherit">
+          <MenuItem>
+            <Iconify icon="carbon:logo-github" sx={{ mr: 0.5 }} />
+            <Typography variant="body2">Repozytorium</Typography>
+          </MenuItem>
+        </Link>
       </Popover>
     </>
   );

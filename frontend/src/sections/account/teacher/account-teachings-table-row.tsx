@@ -118,19 +118,6 @@ export default function AccountTeachingsTableRow({ row, onView, onAdd, onDelete 
           },
         }}
       >
-        <Link href={row.githubUrl} target="_blank" underline="none" color="inherit">
-          <MenuItem>
-            <Iconify icon="carbon:logo-github" sx={{ mr: 0.5 }} />
-            <Typography variant="body2">Repozytorium</Typography>
-          </MenuItem>
-        </Link>
-        <MenuItem onClick={handleView} sx={{ mr: 1, width: "100%" }}>
-          <Iconify icon="carbon:edit" sx={{ mr: 0.5 }} />
-          <Typography variant="body2">Szczegóły</Typography>
-        </MenuItem>
-
-        <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
-
         {isNotTeaching && (
           <MenuItem onClick={handleAdd} sx={{ mr: 1, width: "100%", color: "success.main" }}>
             <Iconify icon="carbon:add" sx={{ mr: 0.5 }} />
@@ -144,6 +131,21 @@ export default function AccountTeachingsTableRow({ row, onView, onAdd, onDelete 
             <Typography variant="body2">Przestań uczyć</Typography>
           </MenuItem>
         )}
+        <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
+
+        <Link href={row.githubUrl} target="_blank" underline="none" color="inherit">
+          <MenuItem>
+            <Iconify icon="carbon:logo-github" sx={{ mr: 0.5 }} />
+            <Typography variant="body2">Repozytorium</Typography>
+          </MenuItem>
+        </Link>
+
+        <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
+
+        <MenuItem onClick={handleView} sx={{ mr: 1, width: "100%" }}>
+          <Iconify icon="carbon:edit" sx={{ mr: 0.5 }} />
+          <Typography variant="body2">Szczegóły</Typography>
+        </MenuItem>
       </Popover>
     </>
   );

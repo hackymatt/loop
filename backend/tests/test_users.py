@@ -111,7 +111,6 @@ class UsersTest(APITestCase):
             "zip_code",
             "city",
             "country",
-            "user_title",
         ]
 
     def test_get_users_unauthenticated(self):

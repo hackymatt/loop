@@ -23,6 +23,8 @@ import Logo from "src/components/logo";
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 
+import { UserType } from "src/types/user";
+
 import NavMobile from "./nav/mobile";
 import NavDesktop from "./nav/desktop";
 import { HEADER } from "../config-layout";
@@ -42,7 +44,7 @@ export default function Header({ headerOnDark }: Props) {
 
   const mdUp = useResponsive("up", "md");
 
-  const { isLoggedIn } = useUserContext();
+  const { isLoggedIn, userType } = useUserContext();
 
   const { data: wishlistRecords } = useWishlistsRecordsCount({ page_size: -1 }, isLoggedIn);
   const { data: cartRecords } = useCartsRecordsCount({ page_size: -1 }, isLoggedIn);
@@ -84,6 +86,7 @@ export default function Header({ headerOnDark }: Props) {
             size="small"
             color="inherit"
             sx={{ p: 0 }}
+            disabled={userType !== UserType.Student}
           >
             <Iconify icon="carbon:favorite" width={24} />
           </IconButton>
@@ -96,6 +99,7 @@ export default function Header({ headerOnDark }: Props) {
             size="small"
             color="inherit"
             sx={{ p: 0 }}
+            disabled={userType !== UserType.Student}
           >
             <Iconify icon="carbon:shopping-cart" width={24} />
           </IconButton>

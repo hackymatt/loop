@@ -41,6 +41,7 @@ import Schedule from "src/components/schedule";
 import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
 
+import { UserType } from "src/types/user";
 import { ITeamMemberProps } from "src/types/team";
 import { IScheduleProp, ICourseLessonProp } from "src/types/course";
 
@@ -164,7 +165,7 @@ export default function CourseDetailsLessonItem({
   loading,
 }: LessonItemProps) {
   const { enqueueSnackbar } = useToastContext();
-  const { isLoggedIn } = useUserContext();
+  const { isLoggedIn, userType } = useUserContext();
   const { push } = useRouter();
 
   const checkTimeSlotsForm = useBoolean();
@@ -401,6 +402,7 @@ export default function CourseDetailsLessonItem({
                   variant="contained"
                   onClick={handleAddToFavorites}
                   loading={isAddingToFavorites}
+                  disabled={userType !== UserType.Student}
                 >
                   <Iconify icon="carbon:favorite" />
                 </LoadingButton>
@@ -410,6 +412,7 @@ export default function CourseDetailsLessonItem({
                   variant="contained"
                   onClick={handleAddToCart}
                   loading={isAddingToCart}
+                  disabled={userType !== UserType.Student}
                 >
                   <Iconify icon="carbon:shopping-cart-plus" />
                 </LoadingButton>

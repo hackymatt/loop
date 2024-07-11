@@ -17,8 +17,12 @@ class ProfileDetailsViewSet(ModelViewSet):
         user = request.user
         profile = Profile.objects.get(user=user)
         serializer = ProfileDetailsSerializer(profile, context={"request": request})
+        data = serializer.data
 
-        return Response(serializer.data)
+        if profile.user_type[0] == "S":
+            del data["user_type"]
+
+        return Response(data)
 
     def get_object(self):
         user = self.request.user

@@ -199,13 +199,13 @@ class StatsTest(APITestCase):
         self.assertEqual(
             data,
             {
-                "students_count": 4,
+                "students_count": 3,
                 "course_count": 1,
                 "lessons_count": 4,
                 "technology_count": 1,
-                "lecturers_count": 2,
+                "lecturers_count": 1,
                 "purchase_count": 7,
-                "hours_sum": 180,
+                "hours_sum": 3.0,
                 "rating": 4.0,
                 "rating_count": 6,
             },

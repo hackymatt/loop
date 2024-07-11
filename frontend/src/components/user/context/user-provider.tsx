@@ -14,6 +14,8 @@ import { useLogin, ILoginReturn } from "src/api/auth/login";
 import { useLoginFacebook } from "src/api/auth/login-facebook";
 import { usePasswordReset } from "src/api/auth/password-reset";
 
+import { UserType } from "src/types/user";
+
 import { UserContext } from "./user-context";
 
 // ----------------------------------------------------------------------
@@ -28,6 +30,7 @@ export function UserProvider({ children }: Props) {
   const [isUnverified, setIsUnverified] = useState<boolean>(false);
   const [isPasswordReset, setIsPasswordReset] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
+  const [userType, setUserType] = useState<string>(UserType.Student);
 
   const {
     mutateAsync: register,
@@ -48,6 +51,7 @@ export function UserProvider({ children }: Props) {
   const { mutateAsync: verifyCode, isLoading: isLoadingVerifyCode } = useVerifyCode();
   const {
     mutateAsync: login,
+    data: loginData,
     isSuccess: isSuccessLogin,
     isError: isErrorLogin,
     error: loginError,
@@ -55,6 +59,7 @@ export function UserProvider({ children }: Props) {
   } = useLogin();
   const {
     mutateAsync: loginGoogle,
+    data: loginGoogleData,
     isSuccess: isSuccessLoginGoogle,
     isError: isErrorLoginGoogle,
     error: loginGoogleError,
@@ -62,6 +67,7 @@ export function UserProvider({ children }: Props) {
   } = useLoginGoogle();
   const {
     mutateAsync: loginFacebook,
+    data: loginFacebookData,
     isSuccess: isSuccessLoginFacebook,
     isError: isErrorLoginFacebook,
     error: loginFacebookError,
@@ -69,6 +75,7 @@ export function UserProvider({ children }: Props) {
   } = useLoginFacebook();
   const {
     mutateAsync: loginGithub,
+    data: loginGithubData,
     isSuccess: isSuccessLoginGithub,
     isError: isErrorLoginGithub,
     error: loginGithubError,
@@ -123,8 +130,24 @@ export function UserProvider({ children }: Props) {
   useEffect(() => {
     if (isSuccessLogin || isSuccessLoginGoogle || isSuccessLoginFacebook || isSuccessLoginGithub) {
       setIsLoggedIn(true);
+      setUserType(
+        (loginData?.user_type ||
+          loginGoogleData?.user_type ||
+          loginFacebookData?.user_type ||
+          loginGithubData?.user_type) ??
+          UserType.Student,
+      );
     }
-  }, [isSuccessLogin, isSuccessLoginGoogle, isSuccessLoginFacebook, isSuccessLoginGithub]);
+  }, [
+    isSuccessLogin,
+    isSuccessLoginGoogle,
+    isSuccessLoginFacebook,
+    isSuccessLoginGithub,
+    loginData?.user_type,
+    loginGoogleData?.user_type,
+    loginFacebookData?.user_type,
+    loginGithubData?.user_type,
+  ]);
 
   useEffect(() => {
     if (isSuccessLogout) {
@@ -170,6 +193,7 @@ export function UserProvider({ children }: Props) {
       isUnverified,
       isPasswordReset,
       email,
+      userType,
       registerUser: register,
       unregisterUser: unregister,
       verifyUser: verify,
@@ -188,6 +212,7 @@ export function UserProvider({ children }: Props) {
       isUnverified,
       isPasswordReset,
       email,
+      userType,
       register,
       unregister,
       verify,

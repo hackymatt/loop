@@ -12,6 +12,10 @@ from profile.models import Profile
 from reservation.models import Reservation
 from pytz import timezone, utc
 from mailer.mailer import Mailer
+from django.db.models import F
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
+from const import CANCELLATION_TIME
 
 
 class ManageScheduleViewSet(ModelViewSet):
@@ -74,7 +78,9 @@ class ManageScheduleViewSet(ModelViewSet):
 
 class ScheduleViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Schedule.objects.all()
+    queryset = Schedule.objects.annotate(
+        diff=make_aware(datetime.now()) - F("start_time")
+    ).exclude(diff__gte=-timedelta(hours=CANCELLATION_TIME))
     serializer_class = ScheduleSerializer
     filterset_class = ScheduleFilter
     permission_classes = [AllowAny]

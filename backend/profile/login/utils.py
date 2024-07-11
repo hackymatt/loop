@@ -207,4 +207,4 @@ def create_user(username, email, first_name, last_name, dob, gender, image, join
         newsletter.active = True
         newsletter.save()
 
-    return user
+    return user, profile

@@ -15,6 +15,7 @@ export type ILoginFacebookReturn = {
   last_name?: string;
   email: string;
   login?: string;
+  user_type?: string;
 };
 
 export const useLoginFacebook = () =>

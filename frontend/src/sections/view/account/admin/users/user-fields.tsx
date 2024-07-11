@@ -34,8 +34,6 @@ export const useUserFields = () => {
 
     email: <RHFTextField name="email" label="Adres e-mail" disabled />,
 
-    user_title: <RHFTextField name="user_title" label="Tytuł zawodowy" />,
-
     commission: (
       <RHFTextField
         name="commission"

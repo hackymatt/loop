@@ -16,6 +16,7 @@ export type ILoginReturn = {
   last_name?: string;
   email: string;
   login?: string;
+  user_type?: string;
 };
 
 export const useLogin = () =>
