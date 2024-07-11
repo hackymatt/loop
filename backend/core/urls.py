@@ -11,7 +11,8 @@ from profile.login.views import (
 from profile.logout.views import ProfileLogoutViewSet
 from profile.password_change.views import ProfilePasswordChangeViewSet
 from profile.password_reset.views import ProfilePasswordResetViewSet
-from profile.details.views import ProfileDetailsViewSet
+from profile.personal_data.views import PersonalDataViewSet
+from profile.profile_data.views import ProfileDataViewSet
 from profile.lecturers.views import LecturerViewSet, BestLecturerViewSet
 from profile.earnings.views import EarningViewSet
 from django.urls import path, include
@@ -96,7 +97,11 @@ api_urlpatterns = [
     path("", include(router.urls)),
     path(
         "personal-data",
-        ProfileDetailsViewSet.as_view({"get": "list", "put": "update"}),
+        PersonalDataViewSet.as_view({"get": "list", "put": "update"}),
+    ),
+    path(
+        "profile-data",
+        ProfileDataViewSet.as_view({"get": "list", "put": "update"}),
     ),
     path(
         "unregister",

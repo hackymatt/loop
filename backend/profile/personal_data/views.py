@@ -1,13 +1,13 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from profile.details.serializers import (
+from profile.personal_data.serializers import (
     ProfileDetailsSerializer,
 )
 from profile.models import Profile
 
 
-class ProfileDetailsViewSet(ModelViewSet):
+class PersonalDataViewSet(ModelViewSet):
     http_method_names = ["get", "put"]
     queryset = Profile.objects.all()
     serializer_class = ProfileDetailsSerializer

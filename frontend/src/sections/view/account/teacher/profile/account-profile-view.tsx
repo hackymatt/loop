@@ -12,10 +12,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import {
-  useUserLecturerDetail,
-  useEditUserLecturerDetail,
-} from "src/api/lecturer-profile/lecturer-profile";
+import { useUserProfile, useEditUserProfile } from "src/api/profile/profile";
 
 import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
@@ -25,8 +22,8 @@ import FormProvider, { RHFTextField } from "src/components/hook-form";
 export default function AccountProfileView() {
   const { enqueueSnackbar } = useToastContext();
 
-  const { data: lecturerProfileDetails } = useUserLecturerDetail();
-  const { mutateAsync: updateUserLecturerProfileDetails } = useEditUserLecturerDetail();
+  const { data: profileDetails } = useUserProfile();
+  const { mutateAsync: updateProfileDetails } = useEditUserProfile();
 
   const schema = Yup.object().shape({
     title: Yup.string().required("Tytuł zawodowy jest wymagany"),
@@ -34,7 +31,7 @@ export default function AccountProfileView() {
     description: Yup.string().required("Opis jest wymagany"),
   });
 
-  const defaultValues = lecturerProfileDetails;
+  const defaultValues = profileDetails;
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -50,14 +47,17 @@ export default function AccountProfileView() {
   const handleFormError = useFormErrorHandler(methods);
 
   useEffect(() => {
-    if (lecturerProfileDetails) {
-      reset(lecturerProfileDetails);
+    if (profileDetails) {
+      reset(profileDetails);
     }
-  }, [reset, lecturerProfileDetails]);
+  }, [reset, profileDetails]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await updateUserLecturerProfileDetails(data);
+      await updateProfileDetails({
+        ...data,
+        linkedin_url: `https://www.linkedin.com/in/${data.linkedin_url}`,
+      });
       enqueueSnackbar("Profil instruktora został zmieniony", { variant: "success" });
     } catch (error) {
       handleFormError(error);
@@ -83,7 +83,9 @@ export default function AccountProfileView() {
           name="linkedin_url"
           label="Profil linkedin"
           InputProps={{
-            startAdornment: <InputAdornment position="start">www.linkedin.com/in/</InputAdornment>,
+            startAdornment: (
+              <InputAdornment position="start">https://www.linkedin.com/in/</InputAdornment>
+            ),
           }}
           InputLabelProps={{ shrink: true }}
         />

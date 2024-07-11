@@ -56,6 +56,18 @@ def get_profile(user: User):
     return Profile.objects.get(user=user)
 
 
+def get_admin_profile(profile: Profile):
+    return AdminProfile.objects.get(profile=profile)
+
+
+def get_lecturer_profile(profile: Profile):
+    return LecturerProfile.objects.get(profile=profile)
+
+
+def get_student_profile(profile: Profile):
+    return StudentProfile.objects.get(profile=profile)
+
+
 def is_data_match(obj, data):
     for key, value in data.items():
         data_value = str(value)
