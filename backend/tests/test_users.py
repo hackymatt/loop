@@ -8,7 +8,16 @@ from .factory import (
     create_lecturer_profile,
     create_finance,
 )
-from .helpers import login, filter_dict, get_profile, get_user, is_data_match
+from .helpers import (
+    login,
+    filter_dict,
+    get_profile,
+    get_user,
+    is_data_match,
+    is_admin_profile_found,
+    is_lecturer_profile_found,
+    is_student_profile_found,
+)
 from django.contrib import auth
 import json
 
@@ -232,7 +241,7 @@ class UsersTest(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_amend_details_authenticated(self):
+    def test_amend_details_authenticated_student_to_lecturer(self):
         # no login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -240,11 +249,56 @@ class UsersTest(APITestCase):
         new_data = {
             "first_name": "Name",
             "last_name": "LastName",
-            "email": "student_1@example.com",
+            "email": self.data["email"],
             "phone_number": "999888777",
             "dob": "1900-01-01",
             "gender": "M",
-            "user_type": "S",
+            "user_type": "W",
+            "street_address": "abc",
+            "zip_code": "30-100",
+            "city": "Miasto",
+            "country": "Polska",
+            "image": "",
+            "rate": 100,
+            "commission": 10,
+        }
+        response = self.client.put(
+            f"{self.endpoint}/{self.student_profile_1.profile.id}", new_data
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
+        user_data = filter_dict(results, self.user_columns)
+        profile_data = filter_dict(results, self.profile_columns)
+        gender = profile_data.pop("gender")
+        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender[0])
+        self.assertTrue(is_data_match(get_user(user_data["email"]), user_data))
+        self.assertTrue(
+            is_data_match(get_profile(get_user(user_data["email"])), profile_data)
+        )
+        self.assertEqual(
+            get_profile(get_user(user_data["email"])).user_type, results["user_type"][0]
+        )
+        self.assertFalse(get_profile(get_user(user_data["email"])).image)
+        self.assertFalse(
+            is_student_profile_found(get_profile(get_user(user_data["email"])))
+        )
+        self.assertTrue(
+            is_lecturer_profile_found(get_profile(get_user(user_data["email"])))
+        )
+
+    def test_amend_details_authenticated_lecturer_to_admin(self):
+        # no login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # new data
+        new_data = {
+            "first_name": "Name",
+            "last_name": "LastName",
+            "email": self.lecturer_data["email"],
+            "phone_number": "999888777",
+            "dob": "1900-01-01",
+            "gender": "M",
+            "user_type": "A",
             "street_address": "abc",
             "zip_code": "30-100",
             "city": "Miasto",
@@ -268,6 +322,55 @@ class UsersTest(APITestCase):
             get_profile(get_user(user_data["email"])).user_type, results["user_type"][0]
         )
         self.assertFalse(get_profile(get_user(user_data["email"])).image)
+        self.assertFalse(
+            is_lecturer_profile_found(get_profile(get_user(user_data["email"])))
+        )
+        self.assertTrue(
+            is_admin_profile_found(get_profile(get_user(user_data["email"])))
+        )
+
+    def test_amend_details_authenticated_admin_to_student(self):
+        # no login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # new data
+        new_data = {
+            "first_name": "Name",
+            "last_name": "LastName",
+            "email": self.admin_data["email"],
+            "phone_number": "999888777",
+            "dob": "1900-01-01",
+            "gender": "M",
+            "user_type": "S",
+            "street_address": "abc",
+            "zip_code": "30-100",
+            "city": "Miasto",
+            "country": "Polska",
+            "image": "",
+        }
+        response = self.client.put(
+            f"{self.endpoint}/{self.admin_profile.profile.id}", new_data
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        results = json.loads(response.content)
+        user_data = filter_dict(results, self.user_columns)
+        profile_data = filter_dict(results, self.profile_columns)
+        gender = profile_data.pop("gender")
+        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender[0])
+        self.assertTrue(is_data_match(get_user(user_data["email"]), user_data))
+        self.assertTrue(
+            is_data_match(get_profile(get_user(user_data["email"])), profile_data)
+        )
+        self.assertEqual(
+            get_profile(get_user(user_data["email"])).user_type, results["user_type"][0]
+        )
+        self.assertFalse(get_profile(get_user(user_data["email"])).image)
+        self.assertFalse(
+            is_admin_profile_found(get_profile(get_user(user_data["email"])))
+        )
+        self.assertTrue(
+            is_student_profile_found(get_profile(get_user(user_data["email"])))
+        )
 
     def test_amend_financial_details_authenticated_change(self):
         # no login

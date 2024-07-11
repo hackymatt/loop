@@ -70,18 +70,18 @@ class UserSerializer(ModelSerializer):
         user_type = validated_data.get("get_user_type_display")
 
         if current_user_type[0] != user_type[0]:
-            if user_type == "A":
+            if user_type[0] == "A":
                 AdminProfile.objects.get_or_create(profile=instance)
-            elif user_type == "W":
+            elif user_type[0] == "W":
                 LecturerProfile.objects.get_or_create(profile=instance)
-            elif user_type == "S":
+            else:
                 StudentProfile.objects.get_or_create(profile=instance)
 
-            if user_type == "A":
+            if current_user_type[0] == "A":
                 AdminProfile.objects.get(profile=instance).delete()
-            elif user_type == "W":
+            elif current_user_type[0] == "W":
                 LecturerProfile.objects.get(profile=instance).delete()
-            elif user_type == "S":
+            else:
                 StudentProfile.objects.get(profile=instance).delete()
 
         if user_type[0] == "W":
