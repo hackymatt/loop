@@ -19,17 +19,25 @@ import ReviewToolbar from "./review-toolbar";
 
 type Props = {
   courseId: string;
+  teacherId: string;
   ratingNumber: number;
   reviewNumber: number;
   lessons: ICourseLessonProp[];
   teachers: ICourseTeacherProp[];
 };
 
-export default function Review({ courseId, ratingNumber, reviewNumber, lessons, teachers }: Props) {
+export default function Review({
+  courseId,
+  teacherId,
+  ratingNumber,
+  reviewNumber,
+  lessons,
+  teachers,
+}: Props) {
   const [query, setQuery] = useState({
     course_id: courseId,
     lesson_id: "",
-    lecturer_id: "",
+    lecturer_id: teacherId,
     rating: "",
     sort_by: "-created_at",
     page: "1",

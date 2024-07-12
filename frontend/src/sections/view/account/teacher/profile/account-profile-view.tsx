@@ -17,6 +17,8 @@ import { useUserProfile, useEditUserProfile } from "src/api/profile/profile";
 import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
 
+const LINKEDIN_PREFIX = "https://www.linkedin.com/in/" as const;
+
 // ----------------------------------------------------------------------
 
 export default function AccountProfileView() {
@@ -48,7 +50,10 @@ export default function AccountProfileView() {
 
   useEffect(() => {
     if (profileDetails) {
-      reset(profileDetails);
+      reset({
+        ...profileDetails,
+        linkedin_url: profileDetails.linkedin_url.replace(LINKEDIN_PREFIX, ""),
+      });
     }
   }, [reset, profileDetails]);
 
@@ -56,7 +61,7 @@ export default function AccountProfileView() {
     try {
       await updateProfileDetails({
         ...data,
-        linkedin_url: `https://www.linkedin.com/in/${data.linkedin_url}`,
+        linkedin_url: `${LINKEDIN_PREFIX}${data.linkedin_url}`,
       });
       enqueueSnackbar("Profil instruktora został zmieniony", { variant: "success" });
     } catch (error) {
@@ -83,9 +88,7 @@ export default function AccountProfileView() {
           name="linkedin_url"
           label="Profil linkedin"
           InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">https://www.linkedin.com/in/</InputAdornment>
-            ),
+            startAdornment: <InputAdornment position="start">{LINKEDIN_PREFIX}</InputAdornment>,
           }}
           InputLabelProps={{ shrink: true }}
         />

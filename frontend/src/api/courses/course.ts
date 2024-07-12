@@ -155,7 +155,7 @@ export const courseQuery = (id: string) => {
             name: full_name,
             gender,
             avatarUrl: lecturerImage,
-            totalCourses: lessons_count,
+            totalLessons: lessons_count,
             ratingNumber: lecturerRating,
             totalReviews: lecturerRatingCount,
             role: user_title,

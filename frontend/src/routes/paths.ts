@@ -6,6 +6,7 @@ export const paths = {
   courses: "/courses",
   course: `/course`,
   teachers: "/teachers",
+  teacher: "/teacher",
   about: "/about",
   contact: "/contact",
   newsletter: "/newsletter-unsubscribe",

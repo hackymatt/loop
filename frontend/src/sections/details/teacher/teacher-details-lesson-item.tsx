@@ -45,7 +45,7 @@ import { UserType } from "src/types/user";
 import { ITeamMemberProps } from "src/types/team";
 import { IScheduleProp, ICourseLessonProp } from "src/types/course";
 
-import Repository from "../repository/repository";
+import Repository from "../../repository/repository";
 
 // ----------------------------------------------------------------------
 
@@ -157,7 +157,7 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
   );
 }
 
-export default function CourseDetailsLessonItem({
+export default function TeacherDetailsLessonItem({
   lesson,
   details,
   expanded,

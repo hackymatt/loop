@@ -6,7 +6,7 @@ from rest_framework.serializers import ValidationError
 from django.core.files.base import ContentFile
 
 from django.contrib.auth.models import User
-from profile.models import Profile
+from profile.models import Profile, StudentProfile, AdminProfile, LecturerProfile
 from newsletter.models import Newsletter
 
 GOOGLE_ACCESS_TOKEN_OBTAIN_URL = "https://oauth2.googleapis.com/token"
@@ -198,6 +198,14 @@ def create_user(username, email, first_name, last_name, dob, gender, image, join
     profile.gender = gender
     profile.join_type = join_type
     profile.save()
+
+    user_type = profile.user_type
+    if user_type[0] == "A":
+        AdminProfile.objects.get_or_create(profile=profile)
+    elif user_type[0] == "W":
+        LecturerProfile.objects.get_or_create(profile=profile)
+    else:
+        StudentProfile.objects.get_or_create(profile=profile)
 
     if image:
         profile.image.save(f"{profile.uuid}.jpg", image)

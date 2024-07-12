@@ -7,49 +7,39 @@ import Grid from "@mui/material/Unstable_Grid2";
 
 import { useResponsive } from "src/hooks/use-responsive";
 
-import { useCourse } from "src/api/courses/course";
-import { useBestCourses } from "src/api/courses/best-courses";
+import { useLecturer } from "src/api/lecturers/lecturer";
 
 import { SplashScreen } from "src/components/loading-screen";
 
-import Review from "src/sections/review/review";
 import NotFoundView from "src/sections/error/not-found-view";
 
-import { ICourseProps } from "src/types/course";
-
+import Review from "../review/review";
 import Advertisement from "../advertisement";
 import Newsletter from "../newsletter/newsletter";
-import CourseListSimilar from "../list/course-list-similar";
-import CourseDetailsHero from "../details/course/course-details-hero";
-import CourseDetailsInfo from "../details/course/course-details-info";
-import CourseDetailsSummary from "../details/course/course-details-summary";
-import CourseDetailsTeachersInfo from "../details/course/course-details-teachers-info";
+import TeacherDetailsHero from "../details/teacher/teacher-details-hero";
+import TeacherDetailsInfo from "../details/teacher/teacher-details-info";
+import TeacherDetailsSummary from "../details/teacher/teacher-details-summary";
 
 // ----------------------------------------------------------------------
 
-export default function CourseView({ id }: { id: string }) {
+export default function TeacherView({ id }: { id: string }) {
   const mdUp = useResponsive("up", "md");
 
-  const { data: course, isLoading: isLoadingCourse } = useCourse(id);
-  const { data: bestCourses, isLoading: isLoadingBestCourse } = useBestCourses();
+  const { data: teacher, isLoading: isLoadingTeacher } = useLecturer(id);
 
-  const similarCourses = bestCourses?.filter(
-    (bestCourse: ICourseProps) => bestCourse.id !== course?.id,
-  );
-
-  const isLoading = isLoadingCourse || isLoadingBestCourse;
+  const isLoading = isLoadingTeacher;
 
   if (isLoading) {
     return <SplashScreen />;
   }
 
-  if (Object.keys(course).length === 0) {
+  if (Object.keys(teacher).length === 0) {
     return <NotFoundView />;
   }
 
   return (
     <>
-      <CourseDetailsHero course={course} />
+      <TeacherDetailsHero teacher={teacher} />
 
       <Container
         sx={{
@@ -61,21 +51,17 @@ export default function CourseView({ id }: { id: string }) {
         <Grid container spacing={{ xs: 5, md: 8 }}>
           {!mdUp && (
             <Grid xs={12}>
-              <CourseDetailsInfo course={course} />
+              <TeacherDetailsInfo teacher={teacher} />
             </Grid>
           )}
 
           <Grid xs={12} md={7} lg={8}>
-            <CourseDetailsSummary course={course} />
-
-            <Divider sx={{ my: 5 }} />
-
-            {course && <CourseDetailsTeachersInfo teachers={course.teachers} />}
+            <TeacherDetailsSummary teacher={teacher} />
           </Grid>
 
           <Grid xs={12} md={5} lg={4}>
             <Stack spacing={5}>
-              {mdUp && <CourseDetailsInfo course={course} />}
+              {mdUp && <TeacherDetailsInfo teacher={teacher} />}
 
               <Advertisement
                 advertisement={{
@@ -93,15 +79,13 @@ export default function CourseView({ id }: { id: string }) {
       {mdUp && <Divider />}
 
       <Review
-        courseId={id}
-        teacherId=""
-        ratingNumber={course.ratingNumber}
-        reviewNumber={course.totalReviews}
-        lessons={course.lessons ?? []}
-        teachers={course.teachers ?? []}
+        courseId=""
+        teacherId={teacher.id}
+        ratingNumber={teacher.ratingNumber ?? 0}
+        reviewNumber={teacher.totalReviews ?? 0}
+        lessons={teacher.lessons ?? []}
+        teachers={[]}
       />
-
-      {similarCourses?.length >= 3 && <CourseListSimilar courses={similarCourses} />}
 
       <Newsletter />
     </>

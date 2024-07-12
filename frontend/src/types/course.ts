@@ -6,13 +6,21 @@ import { ISocialLinks } from "./socials";
 export type ICourseTeacherProp = {
   id: string;
   name: string;
+  description: string;
+  linkedinUrl?: string;
+  email: string;
   role?: string;
   avatarUrl?: string;
   ratingNumber?: number;
-  totalCourses?: number;
+  totalLessons?: number;
   totalReviews?: number;
   totalStudents?: number;
+  totalHours?: number;
   gender?: IGender;
+  lessons: ICourseLessonProp[];
+  lessonsPrice: number;
+  lessonsPreviousPrice: number;
+  lessonsLowest30DaysPrice: number;
 };
 
 export type ITeachingProp = {

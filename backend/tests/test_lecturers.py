@@ -12,6 +12,8 @@ from .factory import (
     create_topic,
     create_teaching,
     create_review,
+    create_lesson_price_history,
+    create_purchase,
 )
 from .helpers import login
 from django.contrib import auth
@@ -77,7 +79,6 @@ class LecturersTest(APITestCase):
         self.technology_2 = create_technology(name="JS")
         self.technology_3 = create_technology(name="VBA")
 
-        # course 1
         self.lesson_1 = create_lesson(
             title="Python lesson 1",
             description="bbbb",
@@ -86,6 +87,7 @@ class LecturersTest(APITestCase):
             price="9.99",
             technologies=[self.technology_1],
         )
+
         self.lesson_2 = create_lesson(
             title="Python lesson 2",
             description="bbbb",
@@ -102,8 +104,8 @@ class LecturersTest(APITestCase):
         self.skill_2 = create_skill(name="IDE")
 
         self.course = create_course(
-            title="Python Beginner",
-            description="Learn Python today",
+            title="course_title",
+            description="course_description",
             level="Podstawowy",
             skills=[self.skill_1, self.skill_2],
             topics=[
@@ -112,6 +114,13 @@ class LecturersTest(APITestCase):
             ],
             lessons=[self.lesson_1, self.lesson_2],
         )
+
+        create_lesson_price_history(self.lesson_1, 15)
+        create_lesson_price_history(self.lesson_1, 25)
+        create_lesson_price_history(self.lesson_1, 5)
+        create_lesson_price_history(self.lesson_2, 1)
+        create_lesson_price_history(self.lesson_2, 5)
+        create_lesson_price_history(self.lesson_2, 3)
 
         create_teaching(
             lesson=self.lesson_1,
@@ -129,6 +138,110 @@ class LecturersTest(APITestCase):
             lesson=self.lesson_2,
             lecturer=self.lecturer_profile_2,
         )
+
+        create_purchase(
+            lesson=self.lesson_1,
+            student=self.student_profile_1,
+            price=self.lesson_1.price,
+        )
+        create_purchase(
+            lesson=self.lesson_2,
+            student=self.student_profile_1,
+            price=self.lesson_2.price,
+        )
+
+        self.review_1 = create_review(
+            lesson=self.lesson_1,
+            student=self.student_profile_1,
+            lecturer=self.lecturer_profile_1,
+            rating=5,
+            review="Great lesson.",
+        )
+        self.review_2 = create_review(
+            lesson=self.lesson_1,
+            student=self.student_profile_2,
+            lecturer=self.lecturer_profile_1,
+            rating=4,
+            review="Good lesson.",
+        )
+        self.review_3 = create_review(
+            lesson=self.lesson_2,
+            student=self.student_profile_1,
+            lecturer=self.lecturer_profile_1,
+            rating=3,
+            review="So so lesson.",
+        )
+
+        self.lesson_3 = create_lesson(
+            title="JS lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="9.99",
+            technologies=[self.technology_2],
+        )
+
+        self.lesson_4 = create_lesson(
+            title="JS lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_2],
+        )
+
+        self.course_2 = create_course(
+            title="course_title 2",
+            description="course_description",
+            level="Podstawowy",
+            skills=[self.skill_1, self.skill_2],
+            topics=[
+                self.topic_1,
+                self.topic_2,
+            ],
+            lessons=[self.lesson_3, self.lesson_4],
+        )
+
+        create_lesson_price_history(self.lesson_3, 15)
+        create_lesson_price_history(self.lesson_3, 25)
+        create_lesson_price_history(self.lesson_3, 5)
+
+        self.lesson_5 = create_lesson(
+            title="VBA lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="9.99",
+            technologies=[self.technology_3],
+        )
+
+        self.lesson_6 = create_lesson(
+            title="VBA lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_3],
+        )
+
+        self.course_3 = create_course(
+            title="course_title 3",
+            description="course_description",
+            level="Podstawowy",
+            skills=[self.skill_1, self.skill_2],
+            topics=[
+                self.topic_1,
+                self.topic_2,
+            ],
+            lessons=[self.lesson_5, self.lesson_6],
+        )
+
+        create_lesson_price_history(self.lesson_5, 15)
+        create_lesson_price_history(self.lesson_5, 25)
+        create_lesson_price_history(self.lesson_5, 5)
+        create_lesson_price_history(self.lesson_6, 1)
+        create_lesson_price_history(self.lesson_6, 5)
+        create_lesson_price_history(self.lesson_6, 3)
 
         self.review_course_1_1 = create_review(
             lesson=self.lesson_1,
@@ -161,6 +274,25 @@ class LecturersTest(APITestCase):
         data = json.loads(response.content)
         count = data["records_count"]
         self.assertEqual(count, 2)
+
+    def test_get_lecturer_authenticated(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.lecturer_profile_1.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        print(data)
+
+    def test_get_lecturer_unauthenticated(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.lecturer_profile_1.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        # print(data)
 
     def test_get_lecturers_authenticated(self):
         # login

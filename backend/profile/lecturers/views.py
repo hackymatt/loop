@@ -1,10 +1,11 @@
 from rest_framework.viewsets import ModelViewSet
 from profile.lecturers.serializers import (
     LecturerSerializer,
+    LecturerGetSerializer,
     BestLecturerSerializer,
 )
 from profile.lecturers.filters import LecturerFilter
-from profile.models import Profile, LecturerProfile
+from profile.models import LecturerProfile
 from review.models import Review
 from django.db.models import OuterRef, Subquery, Value, Avg
 from django.contrib.auth.models import User
@@ -27,6 +28,12 @@ class LecturerViewSet(ModelViewSet):
     def get_queryset(self):
         dummy_user = User.objects.get(email=settings.DUMMY_LECTURER_EMAIL)
         return self.queryset.exclude(profile__user=dummy_user)
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return LecturerGetSerializer
+        else:
+            return self.serializer_class
 
 
 class BestLecturerViewSet(ModelViewSet):
