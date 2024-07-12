@@ -13,7 +13,7 @@ import { getCsrfToken } from "../utils/csrf";
 const endpoint = "/teaching" as const;
 
 type ITeaching = {
-  id: number;
+  id: string;
   teaching: boolean;
   teaching_id: number | null;
   title: string;

@@ -15,6 +15,7 @@ export type ILoginGithubReturn = {
   last_name?: string;
   email: string;
   login?: string;
+  user_type?: string;
 };
 
 export const useLoginGithub = () =>

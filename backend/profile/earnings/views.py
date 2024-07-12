@@ -7,7 +7,7 @@ from profile.earnings.serializers import (
     AdminEarningLecturerSerializer,
 )
 from reservation.models import Reservation
-from profile.models import Profile
+from profile.models import Profile, LecturerProfile
 from schedule.models import Schedule
 from purchase.models import Purchase
 from lesson.models import Lesson
@@ -43,10 +43,10 @@ class EarningViewSet(ModelViewSet):
         total = query_params.get("total", "True")
         return total == "True"
 
-    def lecturer(self):
+    def lecturer_id(self):
         query_params = self.request.query_params
-        lecturer = query_params.get("lecturer", "")
-        return lecturer
+        lecturer_id = query_params.get("lecturer", "")
+        return lecturer_id
 
     def year(self):
         query_params = self.request.query_params
@@ -73,7 +73,9 @@ class EarningViewSet(ModelViewSet):
         profile = Profile.objects.get(user=user)
 
         if profile.user_type[0] == "W":
-            queryset = self.queryset.filter(lecturer=profile)
+            queryset = self.queryset.filter(
+                lecturer=LecturerProfile.objects.get(profile=profile)
+            )
             total_earnings = True
         else:
             queryset = self.queryset
@@ -176,12 +178,12 @@ class EarningViewSet(ModelViewSet):
 
         queryset = queryset.order_by("-year", "-month")
 
-        lecturer = self.lecturer()
+        lecturer_id = self.lecturer_id()
         year = self.year()
         month = self.month()
 
-        if lecturer != "":
-            queryset = queryset.filter(lecturer__uuid=lecturer)
+        if lecturer_id != "":
+            queryset = queryset.filter(lecturer=lecturer_id)
 
         if year != "":
             queryset = queryset.filter(year=year)

@@ -9,7 +9,7 @@ import { Api } from "../service";
 const endpoint = "/best-lecturers" as const;
 
 type ILecturer = {
-  uuid: string;
+  id: string;
   full_name: string;
   user_title: string | null;
   image: string | null;
@@ -23,8 +23,8 @@ export const bestLecturersQuery = () => {
     const { data } = await Api.get(url);
     const { results, records_count } = data;
     const modifiedResults = results.map(
-      ({ uuid, full_name, user_title, image, gender }: ILecturer) => ({
-        id: uuid,
+      ({ id, full_name, user_title, image, gender }: ILecturer) => ({
+        id,
         name: full_name,
         role: user_title,
         photo: image,

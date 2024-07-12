@@ -15,14 +15,14 @@ from django.core.validators import (
     MinLengthValidator,
 )
 from decimal import Decimal
-from profile.models import Profile
+from profile.models import StudentProfile
 
 
 class Coupon(BaseModel):
     code = CharField(max_length=36, unique=True, validators=[MinLengthValidator(6)])
     discount = IntegerField(default=0)
     is_percentage = BooleanField(default=False)
-    users = ManyToManyField(Profile, blank=True)
+    users = ManyToManyField(StudentProfile, blank=True)
     all_users = BooleanField(default=False)
     max_uses = BigIntegerField(default=0)
     is_infinite = BooleanField(default=False)
@@ -42,7 +42,7 @@ class Coupon(BaseModel):
 
 
 class CouponUser(BaseModel):
-    user = ForeignKey(Profile, on_delete=CASCADE)
+    user = ForeignKey(StudentProfile, on_delete=CASCADE)
     coupon = ForeignKey(Coupon, on_delete=CASCADE)
 
     class Meta:

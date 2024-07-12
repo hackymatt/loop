@@ -12,6 +12,10 @@ from profile.models import Profile
 from reservation.models import Reservation
 from pytz import timezone, utc
 from mailer.mailer import Mailer
+from django.db.models import F
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
+from const import CANCELLATION_TIME
 
 
 class ManageScheduleViewSet(ModelViewSet):
@@ -37,13 +41,13 @@ class ManageScheduleViewSet(ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         lecturer = Profile.objects.get(user=user)
-        return self.queryset.filter(lecturer=lecturer)
+        return self.queryset.filter(lecturer__profile=lecturer)
 
     def destroy(self, request, *args, **kwargs):
         schedule = super().get_object()
         lesson = schedule.lesson
         emails = [
-            reservation.student.user.email
+            reservation.student.profile.user.email
             for reservation in Reservation.objects.filter(schedule=schedule).all()
         ]
 
@@ -55,7 +59,7 @@ class ManageScheduleViewSet(ModelViewSet):
             data = {
                 **{
                     "lesson_title": lesson.title,
-                    "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
+                    "lecturer_full_name": f"{schedule.lecturer.profile.user.first_name} {schedule.lecturer.profile.user.last_name}",
                     "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
                     .astimezone(timezone("Europe/Warsaw"))
                     .strftime("%d-%m-%Y %H:%M"),
@@ -74,7 +78,9 @@ class ManageScheduleViewSet(ModelViewSet):
 
 class ScheduleViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Schedule.objects.all()
+    queryset = Schedule.objects.annotate(
+        diff=make_aware(datetime.now()) - F("start_time")
+    ).exclude(diff__gte=-timedelta(hours=CANCELLATION_TIME))
     serializer_class = ScheduleSerializer
     filterset_class = ScheduleFilter
     permission_classes = [AllowAny]

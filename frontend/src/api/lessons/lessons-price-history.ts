@@ -13,19 +13,19 @@ const endpoint = "/lesson-price-history" as const;
 
 type ILecturer = {
   full_name: string;
-  uuid: string;
+  id: string;
   email: string;
   image: string | null;
   gender: IGender | null;
 };
 
 type ITechnology = {
-  id: number;
+  id: string;
   name: string;
 };
 
 type ILesson = {
-  id: number;
+  id: string;
   lecturers: ILecturer[];
   students_count: number;
   rating: number;
@@ -42,7 +42,7 @@ type ILesson = {
 };
 
 type ILessonPriceHistory = {
-  id: number;
+  id: string;
   lesson: ILesson;
   price: number;
   created_at: string;

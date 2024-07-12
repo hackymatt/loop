@@ -6,7 +6,7 @@ from rest_framework.serializers import (
 )
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.models import User
-from profile.models import Profile
+from profile.models import Profile, StudentProfile
 from newsletter.models import Newsletter
 from datetime import datetime
 from django.utils.timezone import make_aware
@@ -69,11 +69,13 @@ class ProfileRegisterSerializer(ModelSerializer):
         verification_code = VerificationCode()
         code = verification_code.generate()
 
-        Profile.objects.create(
+        profile = Profile.objects.create(
             user=user,
             verification_code=code,
             verification_code_created_at=make_aware(datetime.now()),
         )
+
+        StudentProfile.objects.create(profile=profile)
 
         mailer = Mailer()
 

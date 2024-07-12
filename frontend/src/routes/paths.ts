@@ -6,6 +6,7 @@ export const paths = {
   courses: "/courses",
   course: `/course`,
   teachers: "/teachers",
+  teacher: "/teacher",
   about: "/about",
   contact: "/contact",
   newsletter: "/newsletter-unsubscribe",
@@ -48,6 +49,7 @@ export const paths = {
       newsletter: "/account/admin/newsletter",
     },
     teacher: {
+      profile: "/account/teacher/profile",
       finance: "/account/teacher/finance",
       teaching: "/account/teacher/teaching",
       earnings: "/account/teacher/earnings",

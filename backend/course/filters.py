@@ -12,7 +12,7 @@ from lesson.models import Lesson, Technology
 from review.models import Review
 from purchase.models import Purchase
 from teaching.models import Teaching
-from profile.models import Profile
+from profile.models import LecturerProfile
 from django.db.models import OuterRef, Subquery, Value, Avg, Sum, Count, TextField
 from django.contrib.postgres.aggregates import StringAgg
 from django.db.models.functions import Cast
@@ -102,13 +102,13 @@ def get_lecturers(queryset):
     )
 
     profiles = (
-        Profile.objects.filter(id__in=Subquery(lecturers))
-        .values("uuid")
+        LecturerProfile.objects.filter(id__in=Subquery(lecturers))
+        .values("id")
         .annotate(dummy_group_by=Value(1))
         .values("dummy_group_by")
         .order_by("dummy_group_by")
-        .annotate(uuids=StringAgg(Cast("uuid", TextField()), delimiter=","))
-        .values("uuids")
+        .annotate(ids=StringAgg(Cast("id", TextField()), delimiter=","))
+        .values("ids")
     )
 
     courses = queryset.annotate(all_lecturers=Subquery(profiles))
@@ -270,13 +270,13 @@ class CourseFilter(FilterSet):
 
         queryset = get_lecturers(queryset)
 
-        uuids = value.split(",")
+        ids = value.split(",")
 
-        uuid_first, *uuid_rest = uuids
-        return_queryset = queryset.filter(**{lookup_field_name: uuid_first})
-        for uuid in uuid_rest:
+        id_first, *id_rest = ids
+        return_queryset = queryset.filter(**{lookup_field_name: id_first})
+        for id in id_rest:
             return_queryset = return_queryset | queryset.filter(
-                **{lookup_field_name: uuid}
+                **{lookup_field_name: id}
             )
 
         return return_queryset

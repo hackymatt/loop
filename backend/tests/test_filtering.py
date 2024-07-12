@@ -3,6 +3,9 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
+    create_admin_profile,
+    create_student_profile,
+    create_lecturer_profile,
     create_course,
     create_lesson,
     create_skill,
@@ -42,7 +45,7 @@ class CourseFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
         self.user_2 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -50,7 +53,9 @@ class CourseFilterTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -65,11 +70,11 @@ class CourseFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -382,7 +387,10 @@ class CourseFilterTest(APITestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         ids = ",".join(
-            [str(self.lecturer_profile_1.uuid), str(self.lecturer_profile_2.uuid)]
+            [
+                str(self.lecturer_profile_1.id),
+                str(self.lecturer_profile_2.id),
+            ]
         )
         response = self.client.get(f"{self.endpoint}?lecturer_in={ids}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -446,7 +454,7 @@ class ReviewFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
         self.user_2 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -454,7 +462,9 @@ class ReviewFilterTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -469,11 +479,11 @@ class ReviewFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -672,7 +682,7 @@ class ReviewFilterTest(APITestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(
-            f"{self.endpoint}?lecturer_id={self.lecturer_profile_1.uuid}"
+            f"{self.endpoint}?lecturer_id={self.lecturer_profile_1.id}"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
@@ -724,7 +734,7 @@ class ScheduleFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
         self.user_2 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -732,7 +742,9 @@ class ScheduleFilterTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_data = {
             "email": "lecturer_1@example.com",
             "password": "TestPassword123",
@@ -751,11 +763,11 @@ class ScheduleFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -974,7 +986,7 @@ class ScheduleFilterTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(
-            f"{self.endpoint}?lecturer_id={self.lecturer_profile_1.uuid}"
+            f"{self.endpoint}?lecturer_id={self.lecturer_profile_1.id}"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
@@ -1044,7 +1056,9 @@ class LessonPriceHistoryFilterTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -1423,7 +1437,7 @@ class LecturerFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
         self.user_2 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -1431,7 +1445,9 @@ class LecturerFilterTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -1446,11 +1462,11 @@ class LecturerFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -1556,14 +1572,14 @@ class LecturerFilterTest(APITestCase):
     def test_id_filter(self):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
-        response = self.client.get(f"{self.endpoint}?id={self.lecturer_profile_1.uuid}")
+        response = self.client.get(f"{self.endpoint}?id={self.lecturer_profile_1.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 1)
-        uuids = [record["uuid"] for record in results]
-        self.assertEqual(uuids, [str(self.lecturer_profile_1.uuid)])
+        ids = [record["id"] for record in results]
+        self.assertEqual(ids, [self.lecturer_profile_1.id])
 
     def test_rating_filter(self):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -1592,7 +1608,7 @@ class PurchaseFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
 
         self.lecturer_user = create_user(
             first_name="first_name",
@@ -1601,7 +1617,9 @@ class PurchaseFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -1883,24 +1901,23 @@ class PurchaseFilterTest(APITestCase):
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        uuid = self.lecturer_profile.uuid
-        response = self.client.get(f"{self.endpoint}?lecturer_id={uuid}")
+        id = self.lecturer_profile.id
+        response = self.client.get(f"{self.endpoint}?lecturer_id={id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 3)
-        uuids = list(
+        ids = list(
             set(
                 [
-                    str(record["reservation"]["schedule"]["lecturer"]["uuid"])
-                    == str(uuid)
+                    str(record["reservation"]["schedule"]["lecturer"]["id"]) == str(id)
                     for record in results
                 ]
             )
         )
-        self.assertTrue(len(uuids) == 1)
-        self.assertTrue(uuids[0])
+        self.assertTrue(len(ids) == 1)
+        self.assertTrue(ids[0])
 
     def test_created_at_filter(self):
         login(self, self.data["email"], self.data["password"])
@@ -1933,7 +1950,9 @@ class LessonFilterTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -1945,7 +1964,7 @@ class LessonFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
         self.user_2 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -1953,7 +1972,9 @@ class LessonFilterTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -1968,11 +1989,11 @@ class LessonFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -2315,7 +2336,9 @@ class ManageTeachingFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user, user_type="W")
+        self.profile = create_lecturer_profile(
+            profile=create_profile(user=self.user, user_type="W")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -2581,7 +2604,9 @@ class TeachingFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user, user_type="W")
+        self.profile = create_lecturer_profile(
+            profile=create_profile(user=self.user, user_type="W")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -2731,7 +2756,9 @@ class UsersFilerTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -2771,13 +2798,18 @@ class UsersFilerTest(APITestCase):
             password="TestPassword123",
             is_active=True,
         )
-        self.student_profile_1 = create_profile(user=self.student_user_1)
-        self.student_profile_2 = create_profile(user=self.student_user_2)
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W", user_title="soft"
+        self.student_profile_1 = create_student_profile(
+            profile=create_profile(user=self.student_user_1)
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.student_profile_2 = create_student_profile(
+            profile=create_profile(user=self.student_user_2)
+        )
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W"),
+            title="soft",
+        )
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
     def test_first_name_filter(self):
@@ -2872,22 +2904,6 @@ class UsersFilerTest(APITestCase):
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 8)
-        values = list(set([variable in record[column].lower() for record in results]))
-        self.assertTrue(len(values) == 1)
-        self.assertTrue(values[0])
-
-    def test_user_title_filter(self):
-        login(self, self.admin_data["email"], self.admin_data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        column = "user_title"
-        variable = "soft"
-        response = self.client.get(f"{self.endpoint}?{column}={variable}")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
-        records_count = data["records_count"]
-        results = data["results"]
-        self.assertEqual(records_count, 1)
         values = list(set([variable in record[column].lower() for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
@@ -3012,7 +3028,9 @@ class FinanceHistoryFilterTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.student_user = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -3035,11 +3053,11 @@ class FinanceHistoryFilterTest(APITestCase):
             is_active=True,
         )
         self.student_profile = create_profile(user=self.student_user)
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.finance_1 = create_finance_history(
@@ -3060,16 +3078,14 @@ class FinanceHistoryFilterTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         column = "lecturer_id"
-        variable = str(self.lecturer_profile_1.uuid)
+        variable = self.lecturer_profile_1.id
         response = self.client.get(f"{self.endpoint}?{column}={variable}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 1)
-        values = list(
-            set([variable in record["lecturer"]["uuid"] for record in results])
-        )
+        values = list(set([variable == record["lecturer"]["id"] for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
 
@@ -3185,7 +3201,9 @@ class CouponFilteringTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -3197,7 +3215,7 @@ class CouponFilteringTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
 
         self.coupon = create_coupon(
             code="aaaaaaa",
@@ -3352,7 +3370,9 @@ class CouponUserFilteringTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -3364,7 +3384,7 @@ class CouponUserFilteringTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
 
         self.coupon_1 = create_coupon(
             code="aaaaaaa",
@@ -3425,19 +3445,20 @@ class CouponUserFilteringTest(APITestCase):
         self.coupon_user_2 = create_coupon_user(self.coupon_2, self.profile)
         self.coupon_user_3 = create_coupon_user(self.coupon_3, self.profile)
 
-    def test_user_uuid_filter(self):
+    def test_user_id_filter(self):
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        column = "user_uuid"
-        variable = str(self.coupon_user_1.user.uuid)
+        column = "user_id"
+        variable = self.coupon_user_1.user.id
+        response = self.client.get(f"{self.endpoint}")
         response = self.client.get(f"{self.endpoint}?{column}={variable}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 3)
-        values = list(set([variable in record["user"]["uuid"] for record in results]))
+        values = list(set([variable == record["user"]["id"] for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
 
@@ -3483,7 +3504,9 @@ class EarningsFilterTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.student_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -3512,13 +3535,17 @@ class EarningsFilterTest(APITestCase):
             password="TestPassword123",
             is_active=True,
         )
-        self.student_profile_1 = create_profile(user=self.student_user_1)
-        self.student_profile_2 = create_profile(user=self.student_user_2)
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.student_profile_1 = create_student_profile(
+            profile=create_profile(user=self.student_user_1)
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.student_profile_2 = create_student_profile(
+            profile=create_profile(user=self.student_user_2)
+        )
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+        )
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         create_finance(
@@ -3741,14 +3768,14 @@ class EarningsFilterTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         column = "lecturer"
-        variable = str(self.lecturer_profile_1.uuid)
+        variable = self.lecturer_profile_1.id
         response = self.client.get(f"{self.endpoint}?total=False&{column}={variable}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 9)
-        values = list(set([variable == record[column]["uuid"] for record in results]))
+        values = list(set([variable == record[column]["id"] for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
 
@@ -3769,7 +3796,9 @@ class NewsletterEntriesFilterTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
 
         self.data = {
             "email": "test_email@example.com",
@@ -3782,7 +3811,7 @@ class NewsletterEntriesFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
 
         self.active_newsletters = [
             create_newsletter(email=f"test_active_{i}@example.com") for i in range(15)
@@ -3792,7 +3821,7 @@ class NewsletterEntriesFilterTest(APITestCase):
             for i in range(5)
         ]
 
-    def test_uuid_filter(self):
+    def test_id_filter(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)

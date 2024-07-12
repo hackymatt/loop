@@ -12,19 +12,19 @@ const endpoint = "/lessons" as const;
 
 type ILecturer = {
   full_name: string;
-  uuid: string;
+  id: string;
   email: string;
   image: string | null;
   gender: IGender | null;
 };
 
 type ITechnology = {
-  id: number;
+  id: string;
   name: string;
 };
 
 type ILesson = {
-  id: number;
+  id: string;
   lecturers: ILecturer[];
   students_count: number;
   rating: number;
@@ -77,12 +77,14 @@ export const lessonQuery = (id: string) => {
         totalReviews: rating_count,
         totalStudents: students_count,
         category: technologies.map(({ name }: ITechnology) => name),
-        teachers: lecturers.map(({ uuid, full_name, gender, image: lecturerImage }: ILecturer) => ({
-          id: uuid,
-          name: full_name,
-          gender,
-          avatarUrl: lecturerImage,
-        })),
+        teachers: lecturers.map(
+          ({ id: lecturerId, full_name, gender, image: lecturerImage }: ILecturer) => ({
+            id: lecturerId,
+            name: full_name,
+            gender,
+            avatarUrl: lecturerImage,
+          }),
+        ),
         githubUrl: github_url,
         active,
       };

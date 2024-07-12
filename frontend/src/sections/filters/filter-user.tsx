@@ -26,7 +26,7 @@ type Props = {
 
 export default function FilterUser({ value, options, onChange }: Props) {
   const modifiedOptions = options?.map((option: IUserDetailsProps) => ({
-    value: option.uuid,
+    value: option.id,
     label: option.email,
     gender: option.gender,
     avatarUrl: option.image,

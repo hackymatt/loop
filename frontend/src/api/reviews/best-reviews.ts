@@ -15,7 +15,7 @@ type IStudent = {
 };
 
 type IReview = {
-  id: number;
+  id: string;
   student: IStudent;
   review: string;
 };

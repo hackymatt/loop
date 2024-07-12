@@ -3,6 +3,8 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
+    create_admin_profile,
+    create_student_profile,
     create_technology,
     create_technology_obj,
 )
@@ -29,7 +31,9 @@ class TechnologyTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -41,7 +45,7 @@ class TechnologyTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
 
         create_technology(name="Python")
         self.technology = create_technology(name="JavaScript")

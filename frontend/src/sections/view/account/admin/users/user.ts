@@ -7,7 +7,6 @@ export const defaultValues = {
   gender: "Mężczyzna",
   user_type: "Admin",
   image: "",
-  user_title: "",
   rate: 0,
   commission: 0,
   account: "",
@@ -25,7 +24,6 @@ export const schema = Yup.object().shape({
   email: Yup.string().required("Adres email jest wymagany"),
   gender: Yup.string().required("Płeć jest wymagana"),
   user_type: Yup.string().required("Typ jest wymagany"),
-  user_title: Yup.string().nullable(),
   account: Yup.string().nullable().length(26, "Numer konta musi mieć 26 znaków"),
   rate: Yup.number().nullable().min(0, "Stawka musi wynosić min 0 zł"),
   commission: Yup.number()

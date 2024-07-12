@@ -3,6 +3,8 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
+    create_student_profile,
+    create_lecturer_profile,
     create_course,
     create_lesson,
     create_technology,
@@ -30,7 +32,7 @@ class WishlistTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
 
         self.lecturer_user = create_user(
             first_name="l1_first_name",
@@ -39,7 +41,9 @@ class WishlistTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")

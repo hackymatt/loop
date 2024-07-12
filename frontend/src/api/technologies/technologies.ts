@@ -13,7 +13,7 @@ import { getCsrfToken } from "../utils/csrf";
 const endpoint = "/technologies" as const;
 
 type ITechnology = {
-  id: number;
+  id: string;
   modified_at: string;
   created_at: string;
   name: string;

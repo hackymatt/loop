@@ -4,7 +4,6 @@ from django_filters import (
     CharFilter,
     DateFilter,
     NumberFilter,
-    UUIDFilter,
 )
 from finance.models import FinanceHistory
 
@@ -15,7 +14,7 @@ class OrderFilter(OrderingFilter):
             return super().filter(queryset, values)
 
         for value in values:
-            if value in ["lecturer_uuid", "-lecturer_uuid"]:
+            if value in ["lecturer_id", "-lecturer_id"]:
                 value_modified = value.replace("_", "__")
                 queryset = queryset.order_by(value_modified)
             else:
@@ -25,7 +24,7 @@ class OrderFilter(OrderingFilter):
 
 
 class FinanceHistoryFilter(FilterSet):
-    lecturer_id = UUIDFilter(field_name="lecturer__uuid", lookup_expr="exact")
+    lecturer_id = NumberFilter(field_name="lecturer__id", lookup_expr="exact")
     account = CharFilter(field_name="account", lookup_expr="contains")
     rate_from = NumberFilter(field_name="rate", lookup_expr="gte")
     rate_to = NumberFilter(field_name="rate", lookup_expr="lte")
@@ -34,8 +33,8 @@ class FinanceHistoryFilter(FilterSet):
     created_at = DateFilter(field_name="created_at", lookup_expr="contains")
     sort_by = OrderFilter(
         choices=(
-            ("lecturer_uuid", "Lecturer Id ASC"),
-            ("-lecturer_uuid", "Lecturer Id DESC"),
+            ("lecturer_id", "Lecturer Id ASC"),
+            ("-lecturer_id", "Lecturer Id DESC"),
             ("account", "Account ASC"),
             ("-account", "Account DESC"),
             ("rate", "Rate ASC"),
@@ -46,8 +45,8 @@ class FinanceHistoryFilter(FilterSet):
             ("-created_at", "Created At DESC"),
         ),
         fields={
-            "lecturer_uuid": "lecturer_uuid",
-            "-lecturer_uuid": "-lecturer_uuid",
+            "lecturer_id": "lecturer_id",
+            "-lecturer_id": "-lecturer_id",
             "account": "account",
             "-account": "-account",
             "rate": "rate",

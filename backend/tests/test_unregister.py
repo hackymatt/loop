@@ -3,6 +3,9 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
+    create_admin_profile,
+    create_student_profile,
+    create_lecturer_profile,
     create_reservation,
     create_technology,
     create_lesson,
@@ -37,7 +40,9 @@ class UnregisterTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -49,7 +54,7 @@ class UnregisterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
         self.user_2 = create_user(
             first_name="first_name_2",
             last_name="last_name_2",
@@ -57,7 +62,9 @@ class UnregisterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_data = {
             "email": "lecturer_1@example.com",
             "password": "TestPassword123",
@@ -69,7 +76,9 @@ class UnregisterTest(APITestCase):
             password=self.lecturer_data["password"],
             is_active=True,
         )
-        self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")

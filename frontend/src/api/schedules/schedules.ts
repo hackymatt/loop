@@ -13,12 +13,12 @@ import { getCsrfToken } from "../utils/csrf";
 const endpoint = "/schedules" as const;
 
 type ILesson = {
-  id: number;
+  id: string;
   title: string;
 };
 
 type ISchedule = {
-  id: number;
+  id: string;
   start_time: string;
   end_time: string;
   lesson: ILesson | null;

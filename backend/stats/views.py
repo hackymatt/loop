@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from profile.models import Profile
+from profile.models import StudentProfile, LecturerProfile
 from course.models import Course
 from lesson.models import Lesson, Technology
 from review.models import Review
@@ -13,13 +13,13 @@ class StatsViewSet(ViewSet):
     http_method_names = ["get"]
 
     def get_stats(self, request):
-        students_count = Profile.objects.filter(user_type__startswith="S").count()
+        students_count = StudentProfile.objects.count() - 1
         course_count = Course.objects.count()
         lessons_count = Lesson.objects.count()
         technology_count = Technology.objects.count()
-        lecturers_count = Profile.objects.filter(user_type__startswith="W").count()
+        lecturers_count = LecturerProfile.objects.count() - 1
         purchase_count = Purchase.objects.count()
-        hours_sum = Lesson.objects.aggregate(Sum("duration"))["duration__sum"]
+        hours_sum = Lesson.objects.aggregate(Sum("duration"))["duration__sum"] / 60
         rating = Review.objects.aggregate(Avg("rating"))["rating__avg"]
         rating_count = Review.objects.count()
 

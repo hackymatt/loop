@@ -2,7 +2,6 @@ from django_filters import (
     FilterSet,
     OrderingFilter,
     NumberFilter,
-    UUIDFilter,
     DateFilter,
     BooleanFilter,
 )
@@ -87,7 +86,7 @@ class ScheduleFilter(FilterSet):
         field_name="lesson",
         method="filter_lesson",
     )
-    lecturer_id = UUIDFilter(field_name="lecturer__uuid", lookup_expr="exact")
+    lecturer_id = NumberFilter(field_name="lecturer__id", lookup_expr="exact")
     time = DateFilter(field_name="start_time", lookup_expr="contains")
     time_from = DateFilter(field_name="start_time", lookup_expr="gte")
     time_to = DateFilter(field_name="end_time", lookup_expr="lte")

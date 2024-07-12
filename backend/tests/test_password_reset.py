@@ -1,6 +1,6 @@
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .factory import create_user, create_profile
+from .factory import create_user, create_profile, create_student_profile
 from .helpers import login, emails_sent_number, get_mail
 from django.contrib import auth
 
@@ -16,7 +16,7 @@ class PasswordResetTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
 
     def test_incorrect_email(self):
         # no login

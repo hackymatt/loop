@@ -9,7 +9,6 @@ from review.serializers import (
 )
 from review.filters import ReviewFilter
 from review.models import Review
-from profile.models import Profile
 from random import sample
 from django.db.models import Count
 from django.contrib.auth.models import User
@@ -37,22 +36,6 @@ class ReviewViewSet(ModelViewSet):
             permission_classes = self.permission_classes
         return [permission() for permission in permission_classes]
 
-    def set_lecturer(self, request):
-        data = request.data
-        lecturer_uuid = data["lecturer"]
-        lecturer = Profile.objects.get(uuid=lecturer_uuid)
-        data["lecturer"] = lecturer.id
-
-        return request
-
-    def create(self, request, *args, **kwargs):
-        request = self.set_lecturer(request)
-        return super().create(request, *args, **kwargs)
-
-    def update(self, request, *args, **kwargs):
-        request = self.set_lecturer(request)
-        return super().update(request, *args, **kwargs)
-
 
 class ReviewStatsViewSet(ModelViewSet):
     http_method_names = ["get"]
@@ -77,7 +60,7 @@ class BestReviewViewSet(ModelViewSet):
     def get_queryset(self):
         dummy_user = User.objects.get(email=settings.DUMMY_STUDENT_EMAIL)
 
-        queryset = self.queryset.exclude(student__user=dummy_user)
+        queryset = self.queryset.exclude(student__profile__user=dummy_user)
         ids = queryset.values_list("id", flat=True)
         random_ids = sample(list(ids), min(len(ids), 10))
         return self.queryset.filter(id__in=random_ids)

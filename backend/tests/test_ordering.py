@@ -3,6 +3,9 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
+    create_admin_profile,
+    create_student_profile,
+    create_lecturer_profile,
     create_course,
     create_lesson,
     create_skill,
@@ -50,7 +53,7 @@ class CourseOrderTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
         self.user_2 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -58,7 +61,9 @@ class CourseOrderTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -73,11 +78,11 @@ class CourseOrderTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -364,7 +369,7 @@ class ReviewOrderTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
         self.user_2 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -372,7 +377,9 @@ class ReviewOrderTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -387,11 +394,11 @@ class ReviewOrderTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -624,7 +631,7 @@ class ScheduleOrderTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
         self.user_2 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -632,7 +639,9 @@ class ScheduleOrderTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_data = {
             "email": "lecturer_1@example.com",
             "password": "TestPassword123",
@@ -651,11 +660,11 @@ class ScheduleOrderTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -841,7 +850,9 @@ class LessonPriceHistoryOrderTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -1281,7 +1292,7 @@ class LecturerOrderTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
         self.user_2 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -1289,7 +1300,9 @@ class LecturerOrderTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -1304,11 +1317,13 @@ class LecturerOrderTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W", user_title="Engineer"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W"),
+            title="Engineer",
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W", user_title="DevOps"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W"),
+            title="DevOps",
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -1530,11 +1545,7 @@ class LecturerOrderTest(APITestCase):
             review="So so lesson.",
         )
 
-        self.fields = [
-            "rating",
-            "full_name",
-            "user_title",
-        ]
+        self.fields = ["rating", "full_name", "title"]
 
     def test_ordering(self):
         for field in self.fields:
@@ -1593,7 +1604,7 @@ class PurchaseOrderTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
 
         self.lecturer_user = create_user(
             first_name="first_name",
@@ -1602,7 +1613,9 @@ class PurchaseOrderTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -1781,7 +1794,7 @@ class PurchaseOrderTest(APITestCase):
             "lesson_title",
             "lesson_status",
             "review_status",
-            "lecturer_uuid",
+            "lecturer_id",
             "created_at",
         ]
 
@@ -1800,7 +1813,7 @@ class PurchaseOrderTest(APITestCase):
             if "_title" in field:
                 field1, field2 = field.split("_")
                 field_values = [course[field1][field2] for course in results]
-            elif "_uuid" in field:
+            elif "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course["reservation"]
@@ -1842,7 +1855,7 @@ class PurchaseOrderTest(APITestCase):
             if "_title" in field:
                 field1, field2 = field.split("_")
                 field_values = [course[field1][field2] for course in results]
-            elif "_uuid" in field:
+            elif "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course["reservation"]
@@ -1892,7 +1905,9 @@ class LessonOrderTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -1904,7 +1919,7 @@ class LessonOrderTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
         self.user_2 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -1912,7 +1927,9 @@ class LessonOrderTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_user_1 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -1927,11 +1944,11 @@ class LessonOrderTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -2208,7 +2225,9 @@ class TeachingOrderTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user, user_type="W")
+        self.profile = create_lecturer_profile(
+            profile=create_profile(user=self.user, user_type="W")
+        )
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -2391,7 +2410,9 @@ class UsersOrderTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -2431,13 +2452,17 @@ class UsersOrderTest(APITestCase):
             password="TestPassword123",
             is_active=True,
         )
-        self.student_profile_1 = create_profile(user=self.student_user_1)
-        self.student_profile_2 = create_profile(user=self.student_user_2)
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.student_profile_1 = create_student_profile(
+            profile=create_profile(user=self.student_user_1)
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.student_profile_2 = create_student_profile(
+            profile=create_profile(user=self.student_user_2)
+        )
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+        )
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.fields = [
@@ -2447,7 +2472,6 @@ class UsersOrderTest(APITestCase):
             "gender",
             "user_type",
             "created_at",
-            "user_title",
             "phone_number",
             "dob",
             "street_address",
@@ -2524,7 +2548,9 @@ class FinanceHistoryOrderTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.student_user = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -2547,11 +2573,11 @@ class FinanceHistoryOrderTest(APITestCase):
             is_active=True,
         )
         self.student_profile = create_profile(user=self.student_user)
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.finance_1 = create_finance_history(
@@ -2569,7 +2595,7 @@ class FinanceHistoryOrderTest(APITestCase):
         )
 
         self.fields = [
-            "lecturer_uuid",
+            "lecturer_id",
             "account",
             "rate",
             "commission",
@@ -2588,7 +2614,7 @@ class FinanceHistoryOrderTest(APITestCase):
             count = data["records_count"]
             results = data["results"]
             self.assertEqual(count, 2)
-            if "_uuid" in field:
+            if "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course[field1] for course in results if course[field1] is not None
@@ -2615,7 +2641,7 @@ class FinanceHistoryOrderTest(APITestCase):
             count = data["records_count"]
             results = data["results"]
             self.assertEqual(count, 2)
-            if "_uuid" in field:
+            if "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course[field1] for course in results if course[field1] is not None
@@ -2653,7 +2679,9 @@ class CouponOrderingTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -2665,7 +2693,7 @@ class CouponOrderingTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
 
         self.coupon = create_coupon(
             code="aaaaaaa",
@@ -2741,7 +2769,7 @@ class CouponOrderingTest(APITestCase):
             count = data["records_count"]
             results = data["results"]
             self.assertEqual(count, 6)
-            if "_uuid" in field:
+            if "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course[field1] for course in results if course[field1] is not None
@@ -2768,7 +2796,7 @@ class CouponOrderingTest(APITestCase):
             count = data["records_count"]
             results = data["results"]
             self.assertEqual(count, 6)
-            if "_uuid" in field:
+            if "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course[field1] for course in results if course[field1] is not None
@@ -2806,7 +2834,9 @@ class CouponUserOrderingTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -2818,7 +2848,7 @@ class CouponUserOrderingTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
 
         self.coupon_1 = create_coupon(
             code="aaaaaaa",
@@ -2897,7 +2927,7 @@ class CouponUserOrderingTest(APITestCase):
             count = data["records_count"]
             results = data["results"]
             self.assertEqual(count, 3)
-            if "_uuid" in field:
+            if "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course[field1] for course in results if course[field1] is not None
@@ -2930,7 +2960,7 @@ class CouponUserOrderingTest(APITestCase):
             count = data["records_count"]
             results = data["results"]
             self.assertEqual(count, 3)
-            if "_uuid" in field:
+            if "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course[field1] for course in results if course[field1] is not None
@@ -2975,7 +3005,9 @@ class NewsletterEntriesOrderTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
 
         self.data = {
             "email": "test_email@example.com",
@@ -2988,7 +3020,7 @@ class NewsletterEntriesOrderTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
 
         self.active_newsletters = [
             create_newsletter(email=f"test_active_{i}@example.com") for i in range(15)
@@ -3017,7 +3049,7 @@ class NewsletterEntriesOrderTest(APITestCase):
             count = data["records_count"]
             results = data["results"]
             self.assertEqual(count, 20)
-            if "_uuid" in field:
+            if "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course[field1] for course in results if course[field1] is not None
@@ -3050,7 +3082,7 @@ class NewsletterEntriesOrderTest(APITestCase):
             count = data["records_count"]
             results = data["results"]
             self.assertEqual(count, 20)
-            if "_uuid" in field:
+            if "_id" in field:
                 field1, field2 = field.split("_")
                 parent_objects = [
                     course[field1] for course in results if course[field1] is not None

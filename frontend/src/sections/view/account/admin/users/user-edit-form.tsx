@@ -12,6 +12,8 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
+import { fDate } from "src/utils/format-time";
+
 import { useUser, useEditUser } from "src/api/users/user";
 
 import FormProvider from "src/components/hook-form";
@@ -61,10 +63,9 @@ export default function UserEditForm({ user, onClose, ...other }: Props) {
       await editUser({
         ...data,
         user_type: data.user_type as IUserType,
-        user_title: data.user_title ?? "",
         rate: data.rate ?? 0,
         commission: data.commission ?? 0,
-        dob: data.dob ?? null,
+        dob: fDate(data.dob, "yyyy-MM-dd") ?? "",
         gender: data.gender as IGender,
         phone_number: data.phone_number ?? "",
         street_address: data.street_address ?? "",
@@ -99,7 +100,6 @@ export default function UserEditForm({ user, onClose, ...other }: Props) {
           <Stack spacing={1}>
             {fields.user_type}
 
-            {isTeacher && fields.user_title}
             {isTeacher && fields.rate}
             {isTeacher && fields.commission}
             {isTeacher && fields.account}

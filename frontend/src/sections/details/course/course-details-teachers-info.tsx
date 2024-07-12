@@ -7,6 +7,9 @@ import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
+
 import { fShortenNumber } from "src/utils/format-number";
 
 import Iconify from "src/components/iconify";
@@ -65,7 +68,9 @@ function TeacherItem({ teacher }: TeacherItemProps) {
 
         <Stack spacing={1} flexGrow={1}>
           <Stack spacing={0.5}>
-            <Typography variant="h6">{teacher.name}</Typography>
+            <Link component={RouterLink} href={`${paths.teacher}/${teacher.id}`} color="inherit">
+              <Typography variant="h6">{teacher.name}</Typography>
+            </Link>
             <Typography variant="body2" sx={{ color: "text.secondary" }}>
               {teacher.role}
             </Typography>
@@ -89,7 +94,7 @@ function TeacherItem({ teacher }: TeacherItemProps) {
             </Stack>
           )}
 
-          {teacher.totalCourses && (
+          {teacher.totalLessons && (
             <Stack
               direction="row"
               alignItems="center"
@@ -97,9 +102,9 @@ function TeacherItem({ teacher }: TeacherItemProps) {
             >
               <Iconify icon="carbon:notebook" sx={{ mr: 1 }} />
               <Box component="strong" sx={{ mr: 0.25 }}>
-                {teacher.totalCourses}
+                {teacher.totalLessons}
               </Box>
-              {polishPlurals("lekcja", "lekcje", "lekcji", teacher.totalCourses)}
+              {polishPlurals("lekcja", "lekcje", "lekcji", teacher.totalLessons)}
             </Stack>
           )}
         </Stack>

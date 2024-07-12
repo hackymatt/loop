@@ -6,12 +6,14 @@ from django.db.models import (
     Index,
 )
 from course.models import Lesson
-from profile.models import Profile
+from profile.models import LecturerProfile
 
 
 class Teaching(BaseModel):
     lesson = ForeignKey(Lesson, on_delete=CASCADE)
-    lecturer = ForeignKey(Profile, on_delete=CASCADE, related_name="teaching_lecturer")
+    lecturer = ForeignKey(
+        LecturerProfile, on_delete=CASCADE, related_name="teaching_lecturer"
+    )
 
     class Meta:
         db_table = "teaching"

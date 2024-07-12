@@ -24,7 +24,6 @@ import FormProvider, {
   RHFAutocompleteCountry,
 } from "src/components/hook-form";
 
-import { UserType } from "src/types/user";
 import { IGender } from "src/types/testimonial";
 
 // ----------------------------------------------------------------------
@@ -43,12 +42,7 @@ export default function AccountPersonalView() {
   const { data: userDetails } = useUserDetails();
   const { mutateAsync: updateUserDetails } = useUpdateUserDetails();
 
-  const userType = useMemo(
-    () => (userDetails?.user_type ? userDetails.user_type : UserType.Student),
-    [userDetails],
-  );
-
-  const studentUserSchemaObject = {
+  const userSchemaObject = {
     first_name: Yup.string().required("Imię jest wymagane"),
     last_name: Yup.string().required("Nazwisko jest wymagane"),
     email: Yup.string().required("Adres email jest wymagany"),
@@ -62,17 +56,9 @@ export default function AccountPersonalView() {
     image: Yup.string().nullable(),
   };
 
-  const teacherUserSchemaObject = {
-    ...studentUserSchemaObject,
-    user_title: Yup.string().required("Tytuł zawodowy jest wymagany"),
-  };
-
   const date18YearsAgo = useMemo(() => new Date().setFullYear(new Date().getFullYear() - 18), []);
 
-  const AccountPersonalSchema =
-    userType === UserType.Wykładowca
-      ? Yup.object().shape(teacherUserSchemaObject)
-      : Yup.object().shape(studentUserSchemaObject);
+  const AccountPersonalSchema = Yup.object().shape(userSchemaObject);
 
   const defaultValues = {
     ...userDetails,
@@ -154,10 +140,6 @@ export default function AccountPersonalView() {
         <RHFTextField name="last_name" label="Nazwisko" />
 
         <RHFTextField name="email" label="Adres e-mail" disabled />
-
-        {userType === UserType.Wykładowca && (
-          <RHFTextField name="user_title" label="Tytuł zawodowy" />
-        )}
 
         <RHFTextField name="phone_number" label="Numer telefonu" />
 

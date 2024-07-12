@@ -5,7 +5,7 @@ from rest_framework.serializers import (
     SerializerMethodField,
 )
 from drf_extra_fields.fields import Base64ImageField
-from profile.models import Profile
+from profile.models import Profile, LecturerProfile, AdminProfile, StudentProfile
 from finance.models import Finance, FinanceHistory
 
 
@@ -13,7 +13,7 @@ def get_finance(profile):
     if profile.user_type[0] != "W":
         return None
 
-    finance = Finance.objects.filter(lecturer=profile)
+    finance = Finance.objects.filter(lecturer__profile=profile)
 
     if not finance.exists():
         return None
@@ -66,19 +66,37 @@ class UserSerializer(ModelSerializer):
         )
 
     def update(self, instance, validated_data):
+        current_user_type = instance.user_type
         user_type = validated_data.get("get_user_type_display")
+
+        if current_user_type[0] != user_type[0]:
+            if user_type[0] == "A":
+                AdminProfile.objects.get_or_create(profile=instance)
+            elif user_type[0] == "W":
+                LecturerProfile.objects.get_or_create(profile=instance)
+            else:
+                StudentProfile.objects.get_or_create(profile=instance)
+
+            if current_user_type[0] == "A":
+                AdminProfile.objects.get(profile=instance).delete()
+            elif current_user_type[0] == "W":
+                LecturerProfile.objects.get(profile=instance).delete()
+            else:
+                StudentProfile.objects.get(profile=instance).delete()
 
         if user_type[0] == "W":
             data = self.context["request"].data
             rate = data["rate"]
             commission = data["commission"]
-            finance, _ = Finance.objects.get_or_create(lecturer=instance)
+            finance, _ = Finance.objects.get_or_create(
+                lecturer=LecturerProfile.objects.get(profile=instance)
+            )
             current_rate = finance.rate
             current_commission = finance.commission
 
             if current_rate != rate or current_commission != commission:
                 FinanceHistory.objects.create(
-                    lecturer=instance,
+                    lecturer=LecturerProfile.objects.get(profile=instance),
                     account=finance.account,
                     rate=current_rate,
                     commission=current_commission,

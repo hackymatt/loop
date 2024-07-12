@@ -8,12 +8,14 @@ from django.db.models import (
     PROTECT,
     Index,
 )
-from profile.models import Profile
+from profile.models import LecturerProfile
 from lesson.models import Lesson
 
 
 class Schedule(BaseModel):
-    lecturer = ForeignKey(Profile, on_delete=CASCADE, related_name="schedule_lecturer")
+    lecturer = ForeignKey(
+        LecturerProfile, on_delete=CASCADE, related_name="schedule_lecturer"
+    )
     start_time = DateTimeField()
     end_time = DateTimeField()
     lesson = ForeignKey(

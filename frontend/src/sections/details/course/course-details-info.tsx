@@ -18,6 +18,7 @@ import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
 
+import { UserType } from "src/types/user";
 import { ICourseProps, ICourseLessonProp } from "src/types/course";
 
 // ----------------------------------------------------------------------
@@ -28,7 +29,7 @@ type Props = {
 
 export default function CourseDetailsInfo({ course }: Props) {
   const { enqueueSnackbar } = useToastContext();
-  const { isLoggedIn } = useUserContext();
+  const { isLoggedIn, userType } = useUserContext();
   const { push } = useRouter();
 
   const { mutateAsync: createWishlistItem, isLoading: isAddingToFavorites } = useCreateWishlist();
@@ -129,6 +130,7 @@ export default function CourseDetailsInfo({ course }: Props) {
             startIcon={<Iconify icon="carbon:favorite-filled" />}
             loading={isAddingToFavorites}
             onClick={handleAddToFavorites}
+            disabled={userType !== UserType.Student}
           >
             Dodaj do ulubionych
           </LoadingButton>
@@ -139,6 +141,7 @@ export default function CourseDetailsInfo({ course }: Props) {
             startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
             loading={isAddingToCart}
             onClick={handleAddToCart}
+            disabled={userType !== UserType.Student}
           >
             Dodaj do koszyka
           </LoadingButton>

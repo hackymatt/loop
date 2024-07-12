@@ -30,7 +30,7 @@ class ReservationViewSet(ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         student = Profile.objects.get(user=user)
-        return self.queryset.filter(student=student)
+        return self.queryset.filter(student__profile=student)
 
     def destroy(self, request, *args, **kwargs):
         user = self.request.user
@@ -48,7 +48,9 @@ class ReservationViewSet(ModelViewSet):
             )
 
         other_reservations = (
-            Reservation.objects.filter(schedule=schedule).exclude(student=student).all()
+            Reservation.objects.filter(schedule=schedule)
+            .exclude(student__profile=student)
+            .all()
         )
 
         if other_reservations.count() == 0:
@@ -79,7 +81,7 @@ class ReservationViewSet(ModelViewSet):
         data = {
             **{
                 "lesson_title": reservation.lesson.title,
-                "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
+                "lecturer_full_name": f"{schedule.lecturer.profile.user.first_name} {schedule.lecturer.profile.user.last_name}",
                 "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
                 .astimezone(timezone("Europe/Warsaw"))
                 .strftime("%d-%m-%Y %H:%M"),

@@ -72,11 +72,11 @@ export default function TeamItem({ member }: Props) {
           >
             <IconButton
               component={RouterLink}
-              href={`${paths.courses}?lecturer_in=${id}`}
+              href={`${paths.teacher}/${id}`}
               sx={{ color: "common.white" }}
             >
               <Typography variant="body2" sx={{ color: "common.white" }}>
-                Zobacz kursy
+                Zobacz profil
               </Typography>
             </IconButton>
           </Stack>

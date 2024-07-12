@@ -20,10 +20,10 @@ import { ICourseProps } from "src/types/course";
 import Advertisement from "../advertisement";
 import Newsletter from "../newsletter/newsletter";
 import CourseListSimilar from "../list/course-list-similar";
-import CourseDetailsHero from "../details/course-details-hero";
-import CourseDetailsInfo from "../details/course-details-info";
-import CourseDetailsSummary from "../details/course-details-summary";
-import CourseDetailsTeachersInfo from "../details/course-details-teachers-info";
+import CourseDetailsHero from "../details/course/course-details-hero";
+import CourseDetailsInfo from "../details/course/course-details-info";
+import CourseDetailsSummary from "../details/course/course-details-summary";
+import CourseDetailsTeachersInfo from "../details/course/course-details-teachers-info";
 
 // ----------------------------------------------------------------------
 
@@ -94,6 +94,7 @@ export default function CourseView({ id }: { id: string }) {
 
       <Review
         courseId={id}
+        teacherId=""
         ratingNumber={course.ratingNumber}
         reviewNumber={course.totalReviews}
         lessons={course.lessons ?? []}

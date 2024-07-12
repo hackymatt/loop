@@ -31,7 +31,7 @@ def confirm_reservations():
         data = {
             **{
                 "lesson_title": schedule.lesson.title,
-                "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
+                "lecturer_full_name": f"{schedule.lecturer.profile.user.first_name} {schedule.lecturer.profile.user.last_name}",
                 "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
                 .astimezone(timezone("Europe/Warsaw"))
                 .strftime("%d-%m-%Y %H:%M"),
@@ -44,14 +44,14 @@ def confirm_reservations():
             if is_lesson_success:
                 mailer.send(
                     email_template="lesson_success.html",
-                    to=[reservation.student.user.email],
+                    to=[reservation.student.profile.user.email],
                     subject="Potwierdzenie realizacji szkolenia",
                     data=data,
                 )
             else:
                 mailer.send(
                     email_template="lesson_failure.html",
-                    to=[reservation.student.user.email],
+                    to=[reservation.student.profile.user.email],
                     subject="Brak realizacji szkolenia",
                     data=data,
                 )
@@ -59,14 +59,14 @@ def confirm_reservations():
         if is_lesson_success:
             mailer.send(
                 email_template="lesson_success.html",
-                to=[schedule.lecturer.user.email],
+                to=[schedule.lecturer.profile.user.email],
                 subject="Potwierdzenie realizacji szkolenia",
                 data=data,
             )
         else:
             mailer.send(
                 email_template="lesson_failure.html",
-                to=[schedule.lecturer.user.email],
+                to=[schedule.lecturer.profile.user.email],
                 subject="Brak realizacji szkolenia",
                 data=data,
             )

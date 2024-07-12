@@ -11,7 +11,7 @@ import { Api } from "../service";
 const endpoint = "/best-technologies" as const;
 
 type ITechnology = {
-  id: number;
+  id: string;
   courses_count: number;
   modified_at: string;
   created_at: string;

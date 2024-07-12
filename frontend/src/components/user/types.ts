@@ -18,6 +18,7 @@ export type UserContextProps = {
   isUnverified: boolean;
   isPasswordReset: boolean;
   email: string;
+  userType: string;
   registerUser: (variables: IRegister) => Promise<IRegisterReturn>;
   unregisterUser: () => Promise<IUnregisterReturn>;
   verifyUser: (variables: IVerify) => Promise<IVerifyReturn>;

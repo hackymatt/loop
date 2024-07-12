@@ -47,7 +47,6 @@ class UserFilter(FilterSet):
     gender = CharFilter(field_name="gender", lookup_expr="icontains")
     user_type = CharFilter(field_name="user_type", lookup_expr="icontains")
     created_at = DateFilter(field_name="created_at", lookup_expr="contains")
-    user_title = CharFilter(field_name="user_title", lookup_expr="icontains")
     phone_number = CharFilter(field_name="phone_number", lookup_expr="icontains")
     dob = CharFilter(field_name="dob", lookup_expr="icontains")
     street_address = CharFilter(field_name="street_address", lookup_expr="icontains")
@@ -69,8 +68,6 @@ class UserFilter(FilterSet):
             ("-user_type", "User Type DESC"),
             ("created_at", "Created At ASC"),
             ("-created_at", "Created At DESC"),
-            ("user_title", "User Title ASC"),
-            ("-user_title", "User Title DESC"),
             ("phone_number", "Phone No ASC"),
             ("-phone_number", "Phone No DESC"),
             ("dob", "DOB ASC"),
@@ -97,8 +94,6 @@ class UserFilter(FilterSet):
             "-user_type": "-user_type",
             "created_at": "created_at",
             "-created_at": "-created_at",
-            "user_title": "user_title",
-            "-user_title": "-user_title",
             "phone_number": "phone_number",
             "-phone_number": "-phone_number",
             "dob": "dob",

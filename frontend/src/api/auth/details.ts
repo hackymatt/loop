@@ -8,14 +8,13 @@ import { IUserType, IUserDetailsProps } from "src/types/user";
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
 
-const endpoint = "/details" as const;
+const endpoint = "/personal-data" as const;
 
 export type IDetail = {
   first_name: string;
   last_name: string;
   email: string;
   user_type?: IUserType;
-  user_title?: string | null;
   phone_number: string | null;
   dob: string | null;
   gender: IGender;

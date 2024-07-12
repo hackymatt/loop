@@ -4,11 +4,13 @@ from rest_framework import status
 from profile.login.serializers import (
     ProfileLoginSerializer,
     UserSerializer,
+    ProfileSerializer,
     InputSerializer,
 )
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.conf import settings
+from profile.models import Profile
 
 from profile.login.utils import (
     google_get_access_token,
@@ -52,9 +54,11 @@ class EmailLoginViewSet(ModelViewSet):
             )
 
         login(request, user)
-        return Response(
-            status=status.HTTP_200_OK, data=UserSerializer(instance=user).data
-        )
+        profile = Profile.objects.get(user=user)
+        data = ProfileSerializer(instance=profile).data
+        if profile.user_type[0] == "S":
+            del data["user_type"]
+        return Response(status=status.HTTP_200_OK, data=data)
 
 
 class GoogleLoginViewSet(ModelViewSet):
@@ -90,7 +94,7 @@ class GoogleLoginViewSet(ModelViewSet):
         else:
             image = None
 
-        user = create_user(
+        user, profile = create_user(
             username=email,
             email=email,
             first_name=first_name,
@@ -102,9 +106,10 @@ class GoogleLoginViewSet(ModelViewSet):
         )
 
         login(request, user)
-        return Response(
-            status=status.HTTP_200_OK, data=UserSerializer(instance=user).data
-        )
+        data = ProfileSerializer(instance=profile).data
+        if profile.user_type[0] == "S":
+            del data["user_type"]
+        return Response(status=status.HTTP_200_OK, data=data)
 
 
 class FacebookLoginViewSet(ModelViewSet):
@@ -154,7 +159,7 @@ class FacebookLoginViewSet(ModelViewSet):
         else:
             image = None
 
-        user = create_user(
+        user, profile = create_user(
             username=email,
             email=email,
             first_name=first_name,
@@ -166,9 +171,10 @@ class FacebookLoginViewSet(ModelViewSet):
         )
 
         login(request, user)
-        return Response(
-            status=status.HTTP_200_OK, data=UserSerializer(instance=user).data
-        )
+        data = ProfileSerializer(instance=profile).data
+        if profile.user_type[0] == "S":
+            del data["user_type"]
+        return Response(status=status.HTTP_200_OK, data=data)
 
 
 class GithubLoginViewSet(ModelViewSet):
@@ -204,7 +210,7 @@ class GithubLoginViewSet(ModelViewSet):
         else:
             image = None
 
-        user = create_user(
+        user, profile = create_user(
             username=email,
             email=email,
             first_name=username,
@@ -216,6 +222,7 @@ class GithubLoginViewSet(ModelViewSet):
         )
 
         login(request, user)
-        return Response(
-            status=status.HTTP_200_OK, data=UserSerializer(instance=user).data
-        )
+        data = ProfileSerializer(instance=profile).data
+        if profile.user_type[0] == "S":
+            del data["user_type"]
+        return Response(status=status.HTTP_200_OK, data=data)

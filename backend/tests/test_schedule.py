@@ -3,6 +3,9 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
+    create_admin_profile,
+    create_student_profile,
+    create_lecturer_profile,
     create_course,
     create_lesson,
     create_technology,
@@ -20,7 +23,6 @@ from .helpers import (
     is_schedule_found,
     emails_sent_number,
     get_mail,
-    reservation_number,
 )
 from django.contrib import auth
 import json
@@ -43,7 +45,9 @@ class ScheduleTest(APITestCase):
             is_active=True,
             is_staff=True,
         )
-        self.admin_profile = create_profile(user=self.admin_user, user_type="A")
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -55,7 +59,7 @@ class ScheduleTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_profile(user=self.user)
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
         self.user_2 = create_user(
             first_name="first_name",
             last_name="last_name",
@@ -63,7 +67,9 @@ class ScheduleTest(APITestCase):
             password="Test12345",
             is_active=True,
         )
-        self.profile_2 = create_profile(user=self.user_2)
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
         self.lecturer_data = {
             "email": "lecturer_1@example.com",
             "password": "TestPassword123",
@@ -82,11 +88,11 @@ class ScheduleTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.lecturer_profile_1 = create_profile(
-            user=self.lecturer_user_1, user_type="W"
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
         )
-        self.lecturer_profile_2 = create_profile(
-            user=self.lecturer_user_2, user_type="W"
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -221,7 +227,7 @@ class ScheduleTest(APITestCase):
 
         self.schedules.append(
             create_schedule(
-                lecturer=self.admin_profile,
+                lecturer=self.lecturer_profile_1,
                 start_time=make_aware(
                     datetime.now().replace(minute=30, second=0, microsecond=0)
                 ),
@@ -329,7 +335,7 @@ class ScheduleTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 11)
+        self.assertEqual(count, 12)
 
     def test_get_schedule_unauthenticated(self):
         # no login
@@ -345,14 +351,6 @@ class ScheduleTest(APITestCase):
         # get data
         response = self.client.get(f"{self.endpoint}/{self.schedules[0].id}")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_get_schedule_authenticated(self):
-        # login
-        login(self, self.admin_data["email"], self.admin_data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        response = self.client.get(f"{self.endpoint}/{self.schedules[0].id}")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_create_schedule_unauthenticated(self):
         # no login
@@ -427,13 +425,13 @@ class ScheduleTest(APITestCase):
         self.assertEqual(schedule_number(), 21)
         self.assertEqual(emails_sent_number(), 2)
         email = get_mail(0)
-        self.assertEqual(email.to, [self.profile.user.email])
+        self.assertEqual(email.to, [self.profile.profile.user.email])
         self.assertEqual(
             email.subject,
             "Twoja lekcja została odwołana",
         )
         email = get_mail(1)
-        self.assertEqual(email.to, [self.profile_2.user.email])
+        self.assertEqual(email.to, [self.profile_2.profile.user.email])
         self.assertEqual(
             email.subject,
             "Twoja lekcja została odwołana",

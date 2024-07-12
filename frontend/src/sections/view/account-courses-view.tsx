@@ -43,7 +43,7 @@ const TABLE_HEAD = [
   { id: "course_title", label: "Nazwa kursu" },
   { id: "lesson_title", label: "Nazwa lekcji" },
   { id: "lesson_status", label: "Status" },
-  { id: "lecturer_uuid", label: "Instruktor" },
+  { id: "lecturer_id", label: "Instruktor" },
   { id: "created_at", label: "Data zakupu" },
   { id: "" },
 ];

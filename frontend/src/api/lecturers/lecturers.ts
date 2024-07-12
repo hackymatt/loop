@@ -12,15 +12,17 @@ import { Api } from "../service";
 const endpoint = "/lecturers" as const;
 
 type ILecturer = {
-  uuid: string;
+  id: string;
   full_name: string;
-  email: string;
-  user_title: string | null;
+  description: string | null;
+  title: string | null;
   image: string | null;
   gender: IGender;
   rating: number | null;
   rating_count: number;
   lessons_count: number;
+  lessons_duration: number;
+  students_count: number;
 };
 
 export const lecturersQuery = (query?: IQueryParams) => {
@@ -41,25 +43,29 @@ export const lecturersQuery = (query?: IQueryParams) => {
     const { results, records_count, pages_count } = data;
     const modifiedResults = results.map(
       ({
-        uuid,
+        id,
         full_name,
-        email,
-        user_title,
+        description,
+        title,
         image,
         gender,
         rating,
         rating_count,
         lessons_count,
+        lessons_duration,
+        students_count,
       }: ILecturer) => ({
-        id: uuid,
+        id,
         name: full_name,
-        email,
-        role: user_title,
+        description,
+        role: title,
         avatarUrl: image,
         gender,
         ratingNumber: rating,
         totalReviews: rating_count,
         totalLessons: lessons_count,
+        totalHours: lessons_duration / 60,
+        totalStudents: students_count,
       }),
     );
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };

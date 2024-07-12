@@ -9,18 +9,19 @@ from django.db.models import (
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from lesson.models import Lesson
-from profile.models import Profile
+from profile.models import Profile, StudentProfile
 
 
 def get_dummy_student_profile():
     user = get_user_model().objects.get(email=settings.DUMMY_STUDENT_EMAIL)
-    return Profile.objects.get(user=user)
+    profile = Profile.objects.get(user=user)
+    return StudentProfile.objects.get(profile=profile)
 
 
 class Purchase(BaseModel):
     lesson = ForeignKey(Lesson, on_delete=PROTECT)
     student = ForeignKey(
-        Profile,
+        StudentProfile,
         on_delete=SET(get_dummy_student_profile),
         related_name="lesson_purchase_student",
     )

@@ -47,7 +47,7 @@ const TABLE_HEAD = [
   { id: "lesson_title", label: "Nazwa lekcji", minWidth: 250 },
   { id: "lesson_status", label: "Status" },
   { id: "reservation_date", label: "Termin" },
-  { id: "lecturer_uuid", label: "Instruktor" },
+  { id: "lecturer_id", label: "Instruktor" },
   { id: "created_at", label: "Data zakupu" },
   { id: "" },
 ];

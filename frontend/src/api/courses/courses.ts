@@ -15,7 +15,7 @@ const endpoint = "/courses" as const;
 
 type ILecturer = {
   full_name: string;
-  uuid: string;
+  id: string;
   email: string;
   image: string | null;
   gender: IGender | null;
@@ -27,7 +27,7 @@ export type ITechnology = {
 };
 
 type ICourse = {
-  id: number;
+  id: string;
   price: number;
   previous_price: number | null;
   lowest_30_days_price: number | null;
@@ -114,12 +114,14 @@ export const coursesQuery = (query?: IQueryParams) => {
         ratingNumber: rating,
         totalReviews: rating_count,
         totalStudents: students_count,
-        teachers: lecturers.map(({ uuid, full_name, gender, image: lecturerImage }: ILecturer) => ({
-          id: uuid,
-          name: full_name,
-          avatarUrl: lecturerImage,
-          gender,
-        })),
+        teachers: lecturers.map(
+          ({ id: lecturerId, full_name, gender, image: lecturerImage }: ILecturer) => ({
+            id: lecturerId,
+            name: full_name,
+            avatarUrl: lecturerImage,
+            gender,
+          }),
+        ),
         active,
       }),
     );

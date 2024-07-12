@@ -6,14 +6,16 @@ from django.db.models import (
     PROTECT,
     Index,
 )
-from profile.models import Profile
+from profile.models import StudentProfile
 from course.models import Lesson
 from schedule.models import Schedule
 from purchase.models import Purchase
 
 
 class Reservation(BaseModel):
-    student = ForeignKey(Profile, on_delete=CASCADE, related_name="reservation_student")
+    student = ForeignKey(
+        StudentProfile, on_delete=CASCADE, related_name="reservation_student"
+    )
     lesson = ForeignKey(Lesson, on_delete=PROTECT, related_name="reservation_lesson")
     schedule = ForeignKey(
         Schedule, on_delete=CASCADE, related_name="reservation_schedule"

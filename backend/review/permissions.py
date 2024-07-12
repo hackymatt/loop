@@ -1,8 +1,5 @@
 from rest_framework.permissions import BasePermission
-from profile.models import Profile
-from course.models import Lesson
-from purchase.models import Purchase
-from review.models import Review
+from profile.models import Profile, StudentProfile
 
 
 class IsUserReview(BasePermission):
@@ -10,4 +7,4 @@ class IsUserReview(BasePermission):
         user = request.user
         profile = Profile.objects.get(user=user)
 
-        return obj.student == profile
+        return obj.student == StudentProfile.objects.get(profile=profile)

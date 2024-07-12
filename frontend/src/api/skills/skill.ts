@@ -10,7 +10,7 @@ import { getCsrfToken } from "../utils/csrf";
 const endpoint = "/skills" as const;
 
 type ISkill = {
-  id: number;
+  id: string;
   created_at: string;
   name: string;
 };

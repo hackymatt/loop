@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from profile.models import Profile
+from profile.models import Profile, AdminProfile, LecturerProfile, StudentProfile
 from course.models import Course
 from coupon.models import Coupon
 from lesson.models import Lesson
@@ -40,8 +40,32 @@ def is_profile_found(user: User):
     return Profile.objects.filter(user=user).exists()
 
 
+def is_admin_profile_found(profile: Profile):
+    return AdminProfile.objects.filter(profile=profile).exists()
+
+
+def is_lecturer_profile_found(profile: Profile):
+    return LecturerProfile.objects.filter(profile=profile).exists()
+
+
+def is_student_profile_found(profile: Profile):
+    return StudentProfile.objects.filter(profile=profile).exists()
+
+
 def get_profile(user: User):
     return Profile.objects.get(user=user)
+
+
+def get_admin_profile(profile: Profile):
+    return AdminProfile.objects.get(profile=profile)
+
+
+def get_lecturer_profile(profile: Profile):
+    return LecturerProfile.objects.get(profile=profile)
+
+
+def get_student_profile(profile: Profile):
+    return StudentProfile.objects.get(profile=profile)
 
 
 def is_data_match(obj, data):

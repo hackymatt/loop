@@ -26,8 +26,19 @@ type Props = {
 };
 
 export default function TeacherItem({ teacher, vertical }: Props) {
-  const { id, name, role, email, avatarUrl, gender, ratingNumber, totalReviews, totalLessons } =
-    teacher;
+  const {
+    id,
+    name,
+    role,
+    description,
+    avatarUrl,
+    gender,
+    ratingNumber,
+    totalReviews,
+    totalLessons,
+    totalHours,
+    totalStudents,
+  } = teacher;
 
   const genderAvatarUrl =
     gender === "Kobieta"
@@ -40,7 +51,6 @@ export default function TeacherItem({ teacher, vertical }: Props) {
     <Card
       sx={{
         display: { sm: "flex" },
-        maxHeight: 200,
         "&:hover": {
           boxShadow: (theme) => theme.customShadows.z24,
         },
@@ -78,11 +88,7 @@ export default function TeacherItem({ teacher, vertical }: Props) {
           </Stack>
 
           <Stack spacing={1}>
-            <Link
-              component={RouterLink}
-              href={`${paths.courses}/?lecturer_in=${id}`}
-              color="inherit"
-            >
+            <Link component={RouterLink} href={`${paths.teacher}/${id}`} color="inherit">
               <TextMaxLine variant="h6" line={1}>
                 {name}
               </TextMaxLine>
@@ -98,7 +104,7 @@ export default function TeacherItem({ teacher, vertical }: Props) {
                 textAlign: "justify",
               }}
             >
-              {email}
+              {description}
             </TextMaxLine>
           </Stack>
         </Stack>
@@ -124,10 +130,44 @@ export default function TeacherItem({ teacher, vertical }: Props) {
             </Stack>
           )}
 
+          {totalStudents && totalStudents > 0 && (
+            <Stack direction="row" sx={{ typography: "subtitle2" }}>
+              {fShortenNumber(totalStudents)}
+              <Box component="span" typography="body2" sx={{ ml: 0.5 }}>
+                {polishPlurals("student", "studentów", "studentów", totalStudents)}
+              </Box>
+            </Stack>
+          )}
+        </Stack>
+
+        <Divider
+          sx={{
+            borderStyle: "dashed",
+            display: { sm: "none" },
+            ...(vertical && {
+              display: "block",
+            }),
+          }}
+        />
+
+        <Stack
+          direction="row"
+          flexWrap="wrap"
+          alignItems="center"
+          sx={{ color: "text.disabled", "& > *:not(:last-child)": { mr: 2.5 } }}
+        >
           {totalLessons && (
             <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
               <Iconify icon="carbon:document" sx={{ mr: 1 }} />
               {`${totalLessons} ${polishPlurals("lekcja", "lekcje", "lekcji", totalLessons)}`}
+            </Stack>
+          )}
+
+          {totalHours && (
+            <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
+              <Iconify icon="carbon:time" sx={{ mr: 1 }} />
+              {totalHours < 1 ? totalHours : fShortenNumber(Math.floor(totalHours), 0)}+{" "}
+              {polishPlurals("godzina", "godziny", "godzin", totalHours)}
             </Stack>
           )}
         </Stack>

@@ -106,9 +106,9 @@ export default function AdminCouponUsageView() {
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={1} sx={{ mt: 2, mb: 3 }}>
         <FilterUser
-          value={filters?.user_uuid ?? ""}
+          value={filters?.user_id ?? ""}
           options={users ?? []}
-          onChange={(value) => handleChange("user_uuid", value)}
+          onChange={(value) => handleChange("user_id", value)}
         />
 
         <FilterSearch

@@ -24,7 +24,7 @@ export default function FilterTeachers({ value, options, onChangeTeacher }: Prop
   const currentValue = value
     ? (value as string)
         .split(",")
-        .map((filterTeacher: string) => options?.find((t) => t.id === filterTeacher))
+        .map((filterTeacher: string) => options?.find((t) => t.id.toString() === filterTeacher))
     : [];
   return (
     <Autocomplete

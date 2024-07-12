@@ -3,6 +3,8 @@ from rest_framework.test import APITestCase
 from .factory import (
     create_user,
     create_profile,
+    create_student_profile,
+    create_lecturer_profile,
     create_course,
     create_lesson,
     create_technology,
@@ -38,9 +40,15 @@ class StatsTest(APITestCase):
             password="TestPassword123",
             is_active=True,
         )
-        self.profile_1 = create_profile(user=self.user_1)
-        self.profile_2 = create_profile(user=self.user_2)
-        self.profile_3 = create_profile(user=self.user_3)
+        self.profile_1 = create_student_profile(
+            profile=create_profile(user=self.user_1)
+        )
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
+        self.profile_3 = create_student_profile(
+            profile=create_profile(user=self.user_3)
+        )
 
         self.lecturer_user = create_user(
             first_name="first_name",
@@ -49,7 +57,9 @@ class StatsTest(APITestCase):
             password="TestPassword123",
             is_active=True,
         )
-        self.lecturer_profile = create_profile(user=self.lecturer_user, user_type="W")
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
 
         self.technology_1 = create_technology(name="Python")
 
@@ -189,13 +199,13 @@ class StatsTest(APITestCase):
         self.assertEqual(
             data,
             {
-                "students_count": 4,
+                "students_count": 3,
                 "course_count": 1,
                 "lessons_count": 4,
                 "technology_count": 1,
-                "lecturers_count": 2,
+                "lecturers_count": 1,
                 "purchase_count": 7,
-                "hours_sum": 180,
+                "hours_sum": 3.0,
                 "rating": 4.0,
                 "rating_count": 6,
             },

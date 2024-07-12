@@ -1,7 +1,7 @@
 import { ICourseTeacherProp } from "./course";
 
 export type IFinanceHistoryProp = {
-  id: number;
+  id: string;
   teacher: ICourseTeacherProp;
   account: string;
   rate: number;
@@ -10,7 +10,7 @@ export type IFinanceHistoryProp = {
 };
 
 type ILecturer = {
-  uuid: string;
+  id: string;
   email: string;
   full_name: string;
   account: string;

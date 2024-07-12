@@ -14,7 +14,7 @@ type ILevel = "P" | "Ś" | "Z" | "E";
 
 type ILecturer = {
   full_name: string;
-  uuid: string;
+  id: string;
   email: string;
   image: string | null;
   gender: IGender | null;
@@ -25,17 +25,17 @@ type ILecturer = {
 };
 
 type ITechnology = {
-  id: number;
+  id: string;
   name: string;
 };
 
 type ISkill = {
-  id: number;
+  id: string;
   name: string;
 };
 
 type ITopic = {
-  id: number;
+  id: string;
   name: string;
 };
 
@@ -48,7 +48,7 @@ type ILesson = {
 };
 
 type ICourse = {
-  id: number;
+  id: string;
   level: ILevel;
   price: number;
   previous_price: number | null;
@@ -142,7 +142,7 @@ export const courseQuery = (id: string) => {
         totalStudents: students_count,
         teachers: lecturers.map(
           ({
-            uuid,
+            id: lecturerId,
             full_name,
             gender,
             image: lecturerImage,
@@ -151,11 +151,11 @@ export const courseQuery = (id: string) => {
             rating_count: lecturerRatingCount,
             user_title,
           }: ILecturer) => ({
-            id: uuid,
+            id: lecturerId,
             name: full_name,
             gender,
             avatarUrl: lecturerImage,
-            totalCourses: lessons_count,
+            totalLessons: lessons_count,
             ratingNumber: lecturerRating,
             totalReviews: lecturerRatingCount,
             role: user_title,

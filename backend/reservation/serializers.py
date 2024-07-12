@@ -5,9 +5,8 @@ from rest_framework.serializers import (
     ValidationError,
 )
 from reservation.models import Reservation
-from profile.models import Profile
+from profile.models import Profile, LecturerProfile, StudentProfile
 from lesson.models import Lesson, Technology
-from purchase.models import Purchase
 from schedule.models import Schedule
 from datetime import timedelta
 from pytz import timezone, utc
@@ -15,13 +14,13 @@ from mailer.mailer import Mailer
 from const import MIN_LESSON_DURATION_MINS
 
 
-class ProfileSerializer(ModelSerializer):
-    first_name = CharField(source="user.first_name")
-    last_name = CharField(source="user.last_name")
-    email = EmailField(source="user.email")
+class LecturerSerializer(ModelSerializer):
+    first_name = CharField(source="profile.user.first_name")
+    last_name = CharField(source="profile.user.last_name")
+    email = EmailField(source="profile.user.email")
 
     class Meta:
-        model = Profile
+        model = LecturerProfile
         fields = (
             "first_name",
             "last_name",
@@ -42,7 +41,7 @@ class LessonSerializer(ModelSerializer):
 
 
 class ScheduleSerializer(ModelSerializer):
-    lecturer = ProfileSerializer()
+    lecturer = LecturerSerializer()
 
     class Meta:
         model = Schedule
@@ -70,7 +69,10 @@ class ReservationSerializer(ModelSerializer):
         user = self.context["request"].user
         profile = Profile.objects.get(user=user)
 
-        if not (purchase.student == profile and purchase.lesson == lesson):
+        if not (
+            purchase.student == StudentProfile.objects.get(profile=profile)
+            and purchase.lesson == lesson
+        ):
             raise ValidationError({"lesson": "Lekcja nie została zakupiona."})
 
         return lesson
@@ -145,12 +147,11 @@ class ReservationSerializer(ModelSerializer):
             )
             timeslots.exclude(id=lesson_schedule.id).delete()
 
-        previous_students_count = Reservation.objects.filter(
-            schedule=lesson_schedule
-        ).count()
-
         reservation = Reservation.objects.create(
-            student=profile, lesson=lesson, schedule=lesson_schedule, purchase=purchase
+            student=StudentProfile.objects.get(profile=profile),
+            lesson=lesson,
+            schedule=lesson_schedule,
+            purchase=purchase,
         )
 
         mailer = Mailer()
@@ -160,7 +161,7 @@ class ReservationSerializer(ModelSerializer):
         data = {
             **{
                 "lesson_title": lesson.title,
-                "lecturer_full_name": f"{schedule.lecturer.user.first_name} {schedule.lecturer.user.last_name}",
+                "lecturer_full_name": f"{schedule.lecturer.profile.user.first_name} {schedule.lecturer.profile.user.last_name}",
                 "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
                 .astimezone(timezone("Europe/Warsaw"))
                 .strftime("%d-%m-%Y %H:%M"),
@@ -188,7 +189,7 @@ class ReservationSerializer(ModelSerializer):
         }
         mailer.send(
             email_template="new_reservation.html",
-            to=[schedule.lecturer.user.email],
+            to=[schedule.lecturer.profile.user.email],
             subject=f"Nowy zapis na lekcję {lesson.title}",
             data=data,
         )
