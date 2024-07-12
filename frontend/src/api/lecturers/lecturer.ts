@@ -2,7 +2,7 @@ import { compact } from "lodash-es";
 import { useQuery } from "@tanstack/react-query";
 
 import { IGender } from "src/types/testimonial";
-import { ICourseTeacherProp } from "src/types/course";
+import { ITeamMemberProps } from "src/types/team";
 
 import { Api } from "../service";
 
@@ -108,5 +108,5 @@ export const lecturerQuery = (id: string) => {
 export const useLecturer = (id: string) => {
   const { queryKey, queryFn } = lecturerQuery(id);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as any as ICourseTeacherProp, ...rest };
+  return { data: data?.results as any as ITeamMemberProps, ...rest };
 };
