@@ -1,13 +1,13 @@
 import Stack from "@mui/material/Stack";
 
-import { ICourseTeacherProp } from "src/types/course";
+import { ITeamMemberProps } from "src/types/team";
 
 import TeacherDetailsLessonList from "./teacher-details-lesson-list";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  teacher: ICourseTeacherProp;
+  teacher: ITeamMemberProps;
 };
 
 export default function TeacherDetailsSummary({ teacher }: Props) {

@@ -19,12 +19,13 @@ import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
 
 import { UserType } from "src/types/user";
-import { ICourseLessonProp, ICourseTeacherProp } from "src/types/course";
+import { ITeamMemberProps } from "src/types/team";
+import { ICourseLessonProp } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  teacher: ICourseTeacherProp;
+  teacher: ITeamMemberProps;
 };
 
 export default function TeacherDetailsInfo({ teacher }: Props) {
@@ -40,14 +41,16 @@ export default function TeacherDetailsInfo({ teacher }: Props) {
       push(paths.login);
       return;
     }
-    try {
-      const wishlistItems = teacher.lessons.map((lesson: ICourseLessonProp) =>
-        createWishlistItem({ lesson: lesson.id }),
-      );
-      await Promise.allSettled(wishlistItems);
-      enqueueSnackbar("Pakiet lekcji został dodany do ulubionych", { variant: "success" });
-    } catch (error) {
-      enqueueSnackbar("Wystąpił błąd podczas dodawania do ulubionych", { variant: "error" });
+    if (teacher.lessons) {
+      try {
+        const wishlistItems = teacher.lessons.map((lesson: ICourseLessonProp) =>
+          createWishlistItem({ lesson: lesson.id }),
+        );
+        await Promise.allSettled(wishlistItems);
+        enqueueSnackbar("Pakiet lekcji został dodany do ulubionych", { variant: "success" });
+      } catch (error) {
+        enqueueSnackbar("Wystąpił błąd podczas dodawania do ulubionych", { variant: "error" });
+      }
     }
   };
 
@@ -56,14 +59,16 @@ export default function TeacherDetailsInfo({ teacher }: Props) {
       push(paths.login);
       return;
     }
-    try {
-      const cartItems = teacher.lessons.map((lesson: ICourseLessonProp) =>
-        createCartItem({ lesson: lesson.id }),
-      );
-      await Promise.allSettled(cartItems);
-      enqueueSnackbar("Pakiet lekcji został dodany do koszyka", { variant: "success" });
-    } catch (error) {
-      enqueueSnackbar("Wystąpił błąd podczas dodawania do koszyka", { variant: "error" });
+    if (teacher.lessons) {
+      try {
+        const cartItems = teacher.lessons.map((lesson: ICourseLessonProp) =>
+          createCartItem({ lesson: lesson.id }),
+        );
+        await Promise.allSettled(cartItems);
+        enqueueSnackbar("Pakiet lekcji został dodany do koszyka", { variant: "success" });
+      } catch (error) {
+        enqueueSnackbar("Wystąpił błąd podczas dodawania do koszyka", { variant: "error" });
+      }
     }
   };
 
@@ -84,7 +89,7 @@ export default function TeacherDetailsInfo({ teacher }: Props) {
                 {fCurrency(teacher.lessonsPreviousPrice)}
               </Box>
             )}
-            {fCurrency(teacher.lessonsPrice)}
+            {fCurrency(teacher.lessonsPrice ?? 0)}
           </Stack>
           {!!teacher.lessonsPreviousPrice && teacher.lessonsLowest30DaysPrice && (
             <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "left" }}>

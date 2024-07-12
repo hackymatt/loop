@@ -16,12 +16,12 @@ import Image from "src/components/image";
 import Iconify from "src/components/iconify";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
-import { ICourseTeacherProp } from "src/types/course";
+import { ITeamMemberProps } from "src/types/team";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  teacher: ICourseTeacherProp;
+  teacher: ITeamMemberProps;
 };
 
 export default function TeacherDetailsHero({ teacher }: Props) {
