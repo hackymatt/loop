@@ -130,14 +130,6 @@ class LecturersTest(APITestCase):
             lesson=self.lesson_2,
             lecturer=self.lecturer_profile_1,
         )
-        create_teaching(
-            lesson=self.lesson_1,
-            lecturer=self.lecturer_profile_2,
-        )
-        create_teaching(
-            lesson=self.lesson_2,
-            lecturer=self.lecturer_profile_2,
-        )
 
         create_purchase(
             lesson=self.lesson_1,
@@ -200,6 +192,11 @@ class LecturersTest(APITestCase):
                 self.topic_2,
             ],
             lessons=[self.lesson_3, self.lesson_4],
+        )
+
+        create_teaching(
+            lesson=self.lesson_4,
+            lecturer=self.lecturer_profile_2,
         )
 
         create_lesson_price_history(self.lesson_3, 15)
@@ -275,25 +272,6 @@ class LecturersTest(APITestCase):
         count = data["records_count"]
         self.assertEqual(count, 2)
 
-    def test_get_lecturer_authenticated(self):
-        # login
-        login(self, self.data["email"], self.data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        response = self.client.get(f"{self.endpoint}/{self.lecturer_profile_1.id}")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
-        print(data)
-
-    def test_get_lecturer_unauthenticated(self):
-        # no login
-        self.assertFalse(auth.get_user(self.client).is_authenticated)
-        # get data
-        response = self.client.get(f"{self.endpoint}/{self.lecturer_profile_1.id}")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
-        # print(data)
-
     def test_get_lecturers_authenticated(self):
         # login
         login(self, self.data["email"], self.data["password"])
@@ -304,6 +282,55 @@ class LecturersTest(APITestCase):
         data = json.loads(response.content)
         count = data["records_count"]
         self.assertEqual(count, 2)
+
+    def test_get_lecturer_authenticated(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.lecturer_profile_1.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        self.assertEqual(len(data["lessons"]), 2)
+        self.assertEqual(data["rating"], 4.0)
+        self.assertEqual(data["rating_count"], 6)
+        self.assertEqual(data["lessons_duration"], 120)
+        self.assertEqual(data["lessons_price"], 12.98)
+        self.assertEqual(data["lessons_previous_price"], 12.99)
+        self.assertEqual(data["lessons_lowest_30_days_price"], 10.99)
+        self.assertEqual(data["students_count"], 2)
+
+    def test_get_lecturer_unauthenticated(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.lecturer_profile_1.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        self.assertEqual(len(data["lessons"]), 2)
+        self.assertEqual(data["rating"], 4.0)
+        self.assertEqual(data["rating_count"], 6)
+        self.assertEqual(data["lessons_duration"], 120)
+        self.assertEqual(data["lessons_price"], 12.98)
+        self.assertEqual(data["lessons_previous_price"], 12.99)
+        self.assertEqual(data["lessons_lowest_30_days_price"], 10.99)
+        self.assertEqual(data["students_count"], 2)
+
+    def test_get_lecturer_unauthenticated(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.lecturer_profile_2.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        self.assertEqual(len(data["lessons"]), 1)
+        self.assertEqual(data["rating"], None)
+        self.assertEqual(data["rating_count"], 0)
+        self.assertEqual(data["lessons_duration"], 30)
+        self.assertEqual(data["lessons_price"], 2.99)
+        self.assertEqual(data["lessons_previous_price"], None)
+        self.assertEqual(data["lessons_lowest_30_days_price"], None)
+        self.assertEqual(data["students_count"], 0)
 
 
 class BestLecturersTest(APITestCase):

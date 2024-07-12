@@ -23,6 +23,7 @@ class LecturerViewSet(ModelViewSet):
         "profile__user__last_name",
         "profile__user__email",
         "title",
+        "description",
     ]
 
     def get_queryset(self):

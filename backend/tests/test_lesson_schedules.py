@@ -234,15 +234,11 @@ class LessonSchedulesTest(APITestCase):
                 create_schedule(
                     lecturer=self.lecturer_profile_1,
                     start_time=make_aware(
-                        datetime.now().replace(
-                            hour=0, minute=30, second=0, microsecond=0
-                        )
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
                         + timedelta(minutes=60 * i)
                     ),
                     end_time=make_aware(
-                        datetime.now().replace(
-                            hour=0, minute=30, second=0, microsecond=0
-                        )
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
                         + timedelta(minutes=60 * (i + 1))
                     ),
                 )
@@ -251,15 +247,11 @@ class LessonSchedulesTest(APITestCase):
                 create_schedule(
                     lecturer=self.lecturer_profile_2,
                     start_time=make_aware(
-                        datetime.now().replace(
-                            hour=0, minute=30, second=0, microsecond=0
-                        )
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
                         + timedelta(minutes=60 * i)
                     ),
                     end_time=make_aware(
-                        datetime.now().replace(
-                            hour=0, minute=30, second=0, microsecond=0
-                        )
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
                         + timedelta(minutes=60 * (i + 1))
                     ),
                 )
@@ -284,7 +276,7 @@ class LessonSchedulesTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 32)
+        self.assertEqual(count, 50)
 
     def test_get_schedules_authenticated(self):
         # login
@@ -295,4 +287,4 @@ class LessonSchedulesTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 32)
+        self.assertEqual(count, 50)
