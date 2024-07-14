@@ -15,7 +15,9 @@ from random import sample
 
 class LecturerViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = LecturerProfile.objects.all()
+    queryset = LecturerProfile.objects.all().filter(
+        title__isnull=False, description__isnull=False
+    )
     serializer_class = LecturerSerializer
     filterset_class = LecturerFilter
     search_fields = [

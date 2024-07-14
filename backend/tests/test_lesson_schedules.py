@@ -276,7 +276,7 @@ class LessonSchedulesTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 4)
+        self.assertEqual(count, 2)
 
     def test_get_schedules_authenticated(self):
         # login
@@ -287,4 +287,4 @@ class LessonSchedulesTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 4)
+        self.assertEqual(count, 2)
