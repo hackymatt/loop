@@ -116,17 +116,23 @@ export default function TeacherItem({ teacher, vertical }: Props) {
           flexWrap="wrap"
           divider={<Divider orientation="vertical" sx={{ height: 20, my: "auto" }} />}
         >
-          {totalReviews && (
+          {ratingNumber && ratingNumber > 0 && totalReviews && totalReviews > 0 && (
             <Stack spacing={0.5} direction="row" alignItems="center">
-              <Iconify icon="carbon:star-filled" sx={{ color: "warning.main" }} />
-              <Box sx={{ typography: "h6" }}>
-                {Number.isInteger(ratingNumber) ? `${ratingNumber}.0` : ratingNumber}
-              </Box>
+              {ratingNumber && ratingNumber > 0 && (
+                <>
+                  <Iconify icon="carbon:star-filled" sx={{ color: "warning.main" }} />
+                  <Box sx={{ typography: "h6" }}>
+                    {Number.isInteger(ratingNumber) ? `${ratingNumber}.0` : ratingNumber}
+                  </Box>
+                </>
+              )}
 
-              <Link variant="body2" sx={{ color: "text.secondary" }}>
-                ({fShortenNumber(totalReviews)}{" "}
-                {polishPlurals("recenzja", "recenzje", "recenzji", totalReviews)})
-              </Link>
+              {totalReviews && totalReviews > 0 && (
+                <Link variant="body2" sx={{ color: "text.secondary" }}>
+                  ({fShortenNumber(totalReviews)}{" "}
+                  {polishPlurals("recenzja", "recenzje", "recenzji", totalReviews)})
+                </Link>
+              )}
             </Stack>
           )}
 
@@ -150,27 +156,29 @@ export default function TeacherItem({ teacher, vertical }: Props) {
           }}
         />
 
-        <Stack
-          direction="row"
-          flexWrap="wrap"
-          alignItems="center"
-          sx={{ color: "text.disabled", "& > *:not(:last-child)": { mr: 2.5 } }}
-        >
-          {totalLessons && (
-            <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
-              <Iconify icon="carbon:document" sx={{ mr: 1 }} />
-              {`${totalLessons} ${polishPlurals("lekcja", "lekcje", "lekcji", totalLessons)}`}
-            </Stack>
-          )}
+        {totalLessons && totalLessons > 0 && totalHours && totalHours > 0 && (
+          <Stack
+            direction="row"
+            flexWrap="wrap"
+            alignItems="center"
+            sx={{ color: "text.disabled", "& > *:not(:last-child)": { mr: 2.5 } }}
+          >
+            {totalLessons && totalLessons > 0 && (
+              <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
+                <Iconify icon="carbon:document" sx={{ mr: 1 }} />
+                {`${totalLessons} ${polishPlurals("lekcja", "lekcje", "lekcji", totalLessons)}`}
+              </Stack>
+            )}
 
-          {totalHours && (
-            <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
-              <Iconify icon="carbon:time" sx={{ mr: 1 }} />
-              {totalHours < 1 ? totalHours : fShortenNumber(Math.floor(totalHours), 0)}+{" "}
-              {polishPlurals("godzina", "godziny", "godzin", totalHours)}
-            </Stack>
-          )}
-        </Stack>
+            {totalHours && totalHours > 0 && (
+              <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
+                <Iconify icon="carbon:time" sx={{ mr: 1 }} />
+                {totalHours < 1 ? totalHours : fShortenNumber(Math.floor(totalHours), 0)}+{" "}
+                {polishPlurals("godzina", "godziny", "godzin", totalHours)}
+              </Stack>
+            )}
+          </Stack>
+        )}
       </Stack>
     </Card>
   );

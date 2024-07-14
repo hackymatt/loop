@@ -116,7 +116,12 @@ export default function VerifyView() {
         </LoadingButton>
       </FormProvider>
 
-      <Stack direction="row" alignItems="center" justifyContent="center" sx={{ mt: 3 }}>
+      <Stack
+        direction={{ xs: "column", md: "row" }}
+        alignItems="center"
+        justifyContent="center"
+        sx={{ mt: 3 }}
+      >
         <Typography variant="body2" align="center">
           Kod nie dotarł lub wygasł?
         </Typography>
