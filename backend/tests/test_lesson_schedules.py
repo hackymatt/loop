@@ -217,29 +217,19 @@ class LessonSchedulesTest(APITestCase):
 
         self.schedules = []
 
-        self.schedules.append(
-            create_schedule(
-                lecturer=self.lecturer_profile_1,
-                start_time=make_aware(
-                    datetime.now().replace(minute=30, second=0, microsecond=0)
-                ),
-                end_time=make_aware(
-                    datetime.now().replace(minute=30, second=0, microsecond=0)
-                ),
-            )
-        )
+        date_48_hours_ago = datetime.now().replace(
+            minute=30, second=0, microsecond=0
+        ) - timedelta(hours=48)
 
-        for i in range(50):
+        for i in range(150):
             self.schedules.append(
                 create_schedule(
                     lecturer=self.lecturer_profile_1,
                     start_time=make_aware(
-                        datetime.now().replace(minute=30, second=0, microsecond=0)
-                        + timedelta(minutes=30 * i)
+                        date_48_hours_ago + timedelta(minutes=30 * i)
                     ),
                     end_time=make_aware(
-                        datetime.now().replace(minute=30, second=0, microsecond=0)
-                        + timedelta(minutes=30 * (i + 1))
+                        date_48_hours_ago + timedelta(minutes=30 * (i + 1))
                     ),
                 )
             )
@@ -247,26 +237,13 @@ class LessonSchedulesTest(APITestCase):
                 create_schedule(
                     lecturer=self.lecturer_profile_2,
                     start_time=make_aware(
-                        datetime.now().replace(minute=30, second=0, microsecond=0)
-                        + timedelta(minutes=30 * i)
+                        date_48_hours_ago + timedelta(minutes=30 * i)
                     ),
                     end_time=make_aware(
-                        datetime.now().replace(minute=30, second=0, microsecond=0)
-                        + timedelta(minutes=30 * (i + 1))
+                        date_48_hours_ago + timedelta(minutes=30 * (i + 1))
                     ),
                 )
             )
-
-        self.new_schedule = create_schedule_obj(
-            start_time=make_aware(
-                datetime.now().replace(minute=30, second=0, microsecond=0)
-                + timedelta(minutes=30 * 100)
-            ),
-            end_time=make_aware(
-                datetime.now().replace(minute=30, second=0, microsecond=0)
-                + timedelta(minutes=30 * 101)
-            ),
-        )
 
     def test_get_schedules_unauthenticated(self):
         # no login
@@ -276,7 +253,7 @@ class LessonSchedulesTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 4)
+        self.assertEqual(count, 10)
 
     def test_get_schedules_authenticated(self):
         # login
@@ -287,4 +264,4 @@ class LessonSchedulesTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(count, 4)
+        self.assertEqual(count, 10)
