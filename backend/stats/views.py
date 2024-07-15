@@ -19,7 +19,11 @@ class StatsViewSet(ViewSet):
         technology_count = Technology.objects.count()
         lecturers_count = LecturerProfile.objects.count() - 1
         purchase_count = Purchase.objects.count()
-        hours_sum = Lesson.objects.aggregate(Sum("duration"))["duration__sum"] / 60
+        hours_sum = (
+            Lesson.objects.aggregate(Sum("duration"))["duration__sum"] / 60
+            if lessons_count > 0
+            else 0
+        )
         rating = Review.objects.aggregate(Avg("rating"))["rating__avg"]
         rating_count = Review.objects.count()
 

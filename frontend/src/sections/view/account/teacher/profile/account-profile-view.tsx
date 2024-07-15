@@ -88,9 +88,14 @@ export default function AccountProfileView() {
           name="linkedin_url"
           label="Profil linkedin"
           InputProps={{
-            startAdornment: <InputAdornment position="start">{LINKEDIN_PREFIX}</InputAdornment>,
+            startAdornment: (
+              <InputAdornment position="start">
+                <Typography variant="body2">{LINKEDIN_PREFIX}</Typography>
+              </InputAdornment>
+            ),
           }}
           InputLabelProps={{ shrink: true }}
+          sx={{ minWidth: { md: "500px" } }}
         />
       </Box>
       <Box sx={{ my: 2.5 }}>

@@ -3,7 +3,6 @@ import { polishPlurals } from "polish-plurals";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Rating from "@mui/material/Rating";
-import Button from "@mui/material/Button";
 import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
 
@@ -64,17 +63,6 @@ export default function ReviewSummary({
             options={reviewOptions}
             onChange={(value) => onRatingChange(value)}
           />
-          {rating && (
-            <Button
-              variant="text"
-              size="small"
-              color="primary"
-              onClick={() => onRatingChange("")}
-              sx={{ p: 3, mt: 1 }}
-            >
-              Wyczyść
-            </Button>
-          )}
         </RadioGroup>
       </Stack>
     </Paper>

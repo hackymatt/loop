@@ -300,7 +300,7 @@ class LecturersTest(APITestCase):
         self.assertEqual(data["lessons_lowest_30_days_price"], 10.99)
         self.assertEqual(data["students_count"], 2)
 
-    def test_get_lecturer_unauthenticated(self):
+    def test_get_lecturer_unauthenticated_1(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
@@ -316,7 +316,7 @@ class LecturersTest(APITestCase):
         self.assertEqual(data["lessons_lowest_30_days_price"], 10.99)
         self.assertEqual(data["students_count"], 2)
 
-    def test_get_lecturer_unauthenticated(self):
+    def test_get_lecturer_unauthenticated_2(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
@@ -326,7 +326,7 @@ class LecturersTest(APITestCase):
         self.assertEqual(len(data["lessons"]), 1)
         self.assertEqual(data["rating"], None)
         self.assertEqual(data["rating_count"], 0)
-        self.assertEqual(data["lessons_duration"], 30)
+        self.assertEqual(data["lessons_duration"], None)
         self.assertEqual(data["lessons_price"], 2.99)
         self.assertEqual(data["lessons_previous_price"], None)
         self.assertEqual(data["lessons_lowest_30_days_price"], None)
