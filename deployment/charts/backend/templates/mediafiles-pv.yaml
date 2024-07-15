@@ -11,5 +11,3 @@ spec:
     storage: 5Gi
   accessModes:
     - ReadWriteMany
-  hostPath:
-    path: "/usr/src/app/backend/media"
