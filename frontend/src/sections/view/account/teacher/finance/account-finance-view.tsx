@@ -103,7 +103,11 @@ export default function AccountFinanceView() {
           name="account"
           label="Numer konta"
           InputProps={{
-            startAdornment: <InputAdornment position="start">PL</InputAdornment>,
+            startAdornment: (
+              <InputAdornment position="start">
+                <Typography variant="body2">PL</Typography>
+              </InputAdornment>
+            ),
           }}
           InputLabelProps={{ shrink: true }}
         />

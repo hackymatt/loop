@@ -10,7 +10,7 @@ from review.models import Review
 from teaching.models import Teaching
 from lesson.models import Lesson, LessonPriceHistory
 from purchase.models import Purchase
-from django.db.models import Sum, Avg, Min
+from django.db.models import Sum, Avg, Min, Subquery, OuterRef
 from datetime import timedelta
 
 
@@ -25,7 +25,11 @@ def get_lessons(lecturer):
 
 def get_duration(lecturer):
     lessons = get_lessons(lecturer=lecturer)
-    return lessons.distinct().aggregate(Sum("duration"))["duration__sum"]
+    duration = Lesson.objects.filter(pk=OuterRef("lesson__id")).values("duration")
+    purchases = Purchase.objects.filter(lesson__in=lessons).annotate(
+        duration=Subquery(duration)
+    )
+    return purchases.aggregate(Sum("duration"))["duration__sum"]
 
 
 def get_previous_prices(instance):

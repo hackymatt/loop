@@ -1,4 +1,4 @@
-import { InputAdornment } from "@mui/material";
+import { Typography, InputAdornment } from "@mui/material";
 
 import { GITHUB_REPO } from "src/config-global";
 import { useTechnologies } from "src/api/technologies/technologies";
@@ -50,7 +50,11 @@ export const useLessonFields = () => {
         type="url"
         InputLabelProps={{ shrink: true }}
         InputProps={{
-          startAdornment: <InputAdornment position="start">{GITHUB_REPO}</InputAdornment>,
+          startAdornment: (
+            <InputAdornment position="start">
+              <Typography variant="body2">{GITHUB_REPO}</Typography>
+            </InputAdornment>
+          ),
         }}
       />
     ),
