@@ -11,3 +11,5 @@ spec:
     storage: 1Gi
   accessModes:
     - ReadWriteMany
+  hostPath:
+    path: "/usr/src/app/backend/static"
