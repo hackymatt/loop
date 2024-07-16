@@ -152,6 +152,7 @@ export function UserProvider({ children }: Props) {
   useEffect(() => {
     if (isSuccessLogout) {
       setIsLoggedIn(false);
+      setUserType(UserType.Student);
     }
   }, [isSuccessLogout]);
 
