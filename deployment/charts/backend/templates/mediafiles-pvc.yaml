@@ -6,7 +6,6 @@ metadata:
   annotations:
     app.kubernetes.io/managed-by: "Helm"
 spec:
-  storageClassName: manual
   accessModes:
     - ReadWriteMany
   resources:
