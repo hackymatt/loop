@@ -10,5 +10,6 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ .Values.storage.staticfiles.size }}
+  storageClassName: civo-volume
   volumeName: staticfiles-pv
