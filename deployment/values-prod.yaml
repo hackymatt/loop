@@ -4,10 +4,10 @@ backend:
   storage:
     staticfiles:
       size: 1Gi
-      volumeHandle: e277f7e1-f0be-41d9-8d27-7ce9e8d05da3
+      volumeHandle: ff1695a0-313a-4d56-b8c3-47cf4579d81b
     mediafiles:
-      size: 1Gi
-      volumeHandle: 3a2a4de0-0ad3-468b-99ae-8e4d13b69282
+      size: 5Gi
+      volumeHandle: 3c1b217d-135f-4f32-8ee5-05d771ba7d8c
   env:
     CSRF_TRUSTED_ORIGINS: "https://loop.edu.pl,https://www.loop.edu.pl"
     ALLOWED_HOST: "loop.edu.pl,www.loop.edu.pl"
