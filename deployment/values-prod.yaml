@@ -9,6 +9,7 @@ backend:
       size: 5Gi
       volumeHandle: 3c1b217d-135f-4f32-8ee5-05d771ba7d8c
   env:
+    ENV: "PROD"
     CSRF_TRUSTED_ORIGINS: "https://loop.edu.pl,https://www.loop.edu.pl"
     ALLOWED_HOST: "loop.edu.pl,www.loop.edu.pl"
     BASE_URL: "https://www.loop.edu.pl"

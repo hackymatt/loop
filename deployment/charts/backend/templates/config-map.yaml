@@ -7,6 +7,7 @@ metadata:
     app.kubernetes.io/managed-by: "Helm"
 data:
   LOCAL: "False"
+  ENV: {{ .Values.env.ENV }}
   CSRF_TRUSTED_ORIGINS: {{ .Values.env.CSRF_TRUSTED_ORIGINS }}
   ALLOWED_HOST: {{ .Values.env.ALLOWED_HOST }}
   BASE_URL: {{ .Values.env.BASE_URL }}
