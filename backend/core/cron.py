@@ -1,14 +1,15 @@
 from django.core.management import call_command, CommandError
+from django.conf import settings
 from reservation.utils import confirm_reservations
 from review.utils import remind_review
 
 
 def create_backup():
-    try:
-        call_command("dbbackup")
-        call_command("mediabackup")
-    except CommandError:
-        pass
+    if not settings.LOCAL:
+        try:
+            call_command("dbbackup")
+        except CommandError as e:
+            pass
 
 
 def confirm_lessons():

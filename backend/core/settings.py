@@ -28,7 +28,8 @@ SECRET_KEY = os.getenv(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-LOCAL = os.getenv("LOCAL", "False") == "True"
+ENV = os.getenv("ENV", "LOCAL")
+LOCAL = os.getenv("LOCAL", "True") == "True"
 DEBUG = LOCAL
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -156,8 +157,16 @@ DATABASES = {
 }
 
 # Database backup
-DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
-DBBACKUP_STORAGE_OPTIONS = {"location": f"{BASE_DIR}/backup"}
+DBBACKUP_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+DBBACKUP_STORAGE_OPTIONS = {
+    "access_key": os.getenv("S3_ACCESS_KEY", ""),
+    "secret_key": os.getenv("S3_SECRET_KEY", ""),
+    "bucket_name": "db-backup",
+    "region_name": "FRA1",
+    "default_acl": "private",
+    "endpoint_url": "https://objectstore.fra1.civo.com",
+    "location": ENV,
+}
 CRONJOBS = [
     ("0 */12 * * *", "core.cron.create_backup"),
     ("*/30 * * * *", "core.cron.confirm_lessons"),
