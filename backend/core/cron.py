@@ -8,7 +8,7 @@ def create_backup():
     if not settings.LOCAL:
         try:
             call_command("dbbackup")
-        except CommandError as e:
+        except CommandError:
             pass
 
 
