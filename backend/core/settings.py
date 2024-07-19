@@ -177,7 +177,7 @@ if not LOCAL:
                 },
             }
         }
-    } # pragma: no cover
+    }  # pragma: no cover
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
