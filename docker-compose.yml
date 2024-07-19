@@ -46,6 +46,7 @@ services:
       - S3_SECRET_KEY=${S3_SECRET_KEY}
     depends_on:
       - db
+      - redis
 
   frontend:
     container_name: frontend
@@ -83,6 +84,13 @@ services:
       - backend
       - frontend
 
+  redis:
+    container_name: redis
+    image: redis:7.2.5-bookworm
+    restart: always
+    volumes:
+      - "redis:/data"
+
   db:
     container_name: database
     image: postgres:15
@@ -96,5 +104,6 @@ services:
 
 volumes:
   postgres_data:
+  redis:
   staticfiles:
   mediafiles:
