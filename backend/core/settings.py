@@ -165,6 +165,23 @@ CACHES = {
     }
 }
 
+if not LOCAL:
+    CACHES = {
+        "default": {
+            **{
+                **CACHES["default"],
+                **{
+                    "OPTIONS": {
+                        "PASSWORD": os.getenv("REDIS_PASSWORD", ""),
+                    },
+                },
+            }
+        }
+    }
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
 # Database backup
 DBBACKUP_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 DBBACKUP_STORAGE_OPTIONS = {
