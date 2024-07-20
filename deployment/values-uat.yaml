@@ -4,10 +4,10 @@ backend:
   storage:
     staticfiles:
       size: 1Gi
-      volumeHandle: e277f7e1-f0be-41d9-8d27-7ce9e8d05da3
+      volumeHandle: cf2caa19-1e98-4ddb-a25e-a58d372af9db
     mediafiles:
       size: 1Gi
-      volumeHandle: 3a2a4de0-0ad3-468b-99ae-8e4d13b69282
+      volumeHandle: 6d4c19db-a270-49f2-88cb-4fd012b817ff
   env:
     ENV: "UAT"
     CSRF_TRUSTED_ORIGINS: "https://uat.loop.edu.pl,https://www.uat.loop.edu.pl"
