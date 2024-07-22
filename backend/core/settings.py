@@ -30,8 +30,6 @@ SECRET_KEY = os.getenv(
 # SECURITY WARNING: don't run with debug turned on in production!
 ENV = os.getenv("ENV", "LOCAL")
 LOCAL = os.getenv("LOCAL", "True") == "True"
-print(LOCAL)
-print(not LOCAL)
 DEBUG = LOCAL
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -167,13 +165,17 @@ DBBACKUP_STORAGE_OPTIONS = {
     "region_name": "FRA1",
     "default_acl": "private",
     "endpoint_url": "https://objectstore.fra1.civo.com",
-    "location": ENV,
+    "location": "DEV",
 }
-CRONJOBS = [
-    ("*/5 * * * *", "core.cron.create_backup"),
-    ("*/30 * * * *", "core.cron.confirm_lessons"),
-    ("*/30 * * * *", "core.cron.remind_lessons_review"),
-]
+CRONJOBS = (
+    [
+        ("*/12 * * * *", "core.cron.create_backup"),
+        ("*/30 * * * *", "core.cron.confirm_lessons"),
+        ("*/30 * * * *", "core.cron.remind_lessons_review"),
+    ]
+    if not LOCAL
+    else []
+)
 
 
 # Password validation
