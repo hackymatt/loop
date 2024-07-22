@@ -11,9 +11,9 @@ def create_backup():
         try:
             print("executing")
             call_command("dbbackup")
-        except CommandError as e:
+        except CommandError as error_details:
             print("error")
-            print(e)
+            print(error_details)
             pass
 
 
