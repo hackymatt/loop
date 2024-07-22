@@ -14,7 +14,7 @@ def create_backup():
         except CommandError as error_details:
             print("error")
             print(error_details)
-            pass
+            # pass
 
 
 def confirm_lessons():
