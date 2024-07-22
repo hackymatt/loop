@@ -30,6 +30,8 @@ SECRET_KEY = os.getenv(
 # SECURITY WARNING: don't run with debug turned on in production!
 ENV = os.getenv("ENV", "LOCAL")
 LOCAL = os.getenv("LOCAL", "True") == "True"
+print(LOCAL)
+print(not LOCAL)
 DEBUG = LOCAL
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -158,9 +160,6 @@ DATABASES = {
 
 # Database backup
 DBBACKUP_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-print(os.getenv("S3_ACCESS_KEY", ""))
-print(os.getenv("S3_SECRET_KEY", ""))
-print(ENV)
 DBBACKUP_STORAGE_OPTIONS = {
     "access_key": os.getenv("S3_ACCESS_KEY", ""),
     "secret_key": os.getenv("S3_SECRET_KEY", ""),

@@ -5,10 +5,15 @@ from review.utils import remind_review
 
 
 def create_backup():
+    print(settings.LOCAL)
+    print(not settings.LOCA)
     if not settings.LOCAL:
         try:
+            print("executing")
             call_command("dbbackup")
-        except CommandError:
+        except CommandError as e:
+            print("error")
+            print(e)
             pass
 
 
