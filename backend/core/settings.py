@@ -158,6 +158,9 @@ DATABASES = {
 
 # Database backup
 DBBACKUP_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+print(os.getenv("S3_ACCESS_KEY", ""))
+print(os.getenv("S3_SECRET_KEY", ""))
+print(ENV)
 DBBACKUP_STORAGE_OPTIONS = {
     "access_key": os.getenv("S3_ACCESS_KEY", ""),
     "secret_key": os.getenv("S3_SECRET_KEY", ""),
@@ -168,7 +171,7 @@ DBBACKUP_STORAGE_OPTIONS = {
     "location": ENV,
 }
 CRONJOBS = [
-    ("0 */12 * * *", "core.cron.create_backup"),
+    ("*/5 * * * *", "core.cron.create_backup"),
     ("*/30 * * * *", "core.cron.confirm_lessons"),
     ("*/30 * * * *", "core.cron.remind_lessons_review"),
 ]
