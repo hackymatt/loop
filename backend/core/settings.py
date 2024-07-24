@@ -165,11 +165,11 @@ DBBACKUP_STORAGE_OPTIONS = {
     "region_name": "FRA1",
     "default_acl": "private",
     "endpoint_url": "https://objectstore.fra1.civo.com",
-    "location": "DEV",
+    "location": ENV,
 }
 CRONJOBS = (
     [
-        ("*/12 * * * *", "core.cron.create_backup"),
+        ("0 * * * *", "core.cron.create_backup"),
         ("*/30 * * * *", "core.cron.confirm_lessons"),
         ("*/30 * * * *", "core.cron.remind_lessons_review"),
     ]
