@@ -156,6 +156,9 @@ DATABASES = {
     }
 }
 
+print(os.getenv("REDIS_URL"))
+print(os.getenv("REDIS_PASSWORD"))
+
 # Cache
 # https://docs.djangoproject.com/en/5.0/topics/cache/
 CACHES = {
