@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv(
 # SECURITY WARNING: don't run with debug turned on in production!
 ENV = os.getenv("ENV", "LOCAL")
 LOCAL = os.getenv("LOCAL", "True") == "True"
-DEBUG = LOCAL
+DEBUG = True
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
