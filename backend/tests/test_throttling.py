@@ -131,7 +131,7 @@ class ThrottlingTest(APITestCase):
 
         self.user_rate = 100
 
-    @patch("rest_framework.throttling.UserRateThrottle.get_rate", lambda x: "200/hour")
+    @patch("rest_framework.throttling.UserRateThrottle.get_rate", lambda x: "100/hour")
     def test_throttling_user(self):
         # login
         login(self, self.data["email"], self.data["password"])
