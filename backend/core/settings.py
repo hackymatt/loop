@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv(
 # SECURITY WARNING: don't run with debug turned on in production!
 ENV = os.getenv("ENV", "LOCAL")
 LOCAL = os.getenv("LOCAL", "True") == "True"
-DEBUG = True
+DEBUG = LOCAL
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
@@ -156,9 +156,6 @@ DATABASES = {
     }
 }
 
-print(os.getenv("REDIS_URL"))
-print(os.getenv("REDIS_PASSWORD"))
-
 # Cache
 # https://docs.djangoproject.com/en/5.0/topics/cache/
 CACHES = {
@@ -167,20 +164,6 @@ CACHES = {
         "LOCATION": os.getenv("REDIS_URL", "redis://redis:6379/0"),
     }
 }
-
-if not LOCAL:
-    CACHES = {
-        "default": {
-            **{
-                **CACHES["default"],
-                **{
-                    "OPTIONS": {
-                        "PASSWORD": os.getenv("REDIS_PASSWORD", ""),
-                    },
-                },
-            }
-        }
-    }  # pragma: no cover
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
@@ -239,10 +222,38 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
-STATIC_URL = "/static/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-MEDIA_URL = "/media/"
+if LOCAL:
+    STATIC_ROOT = os.path.join(BASE_DIR, "static")
+    STATIC_URL = "/static/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+    MEDIA_URL = "/media/"
+else:
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "access_key": os.getenv("S3_ACCESS_KEY", ""),
+                "secret_key": os.getenv("S3_SECRET_KEY", ""),
+                "bucket_name": "files",
+                "region_name": "FRA1",
+                "default_acl": "public-read",
+                "endpoint_url": "https://objectstore.fra1.civo.com",
+                "location": f"{ENV}/media" if ENV != "PROD" else "media",
+            },
+        },
+        "staticfiles": {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "access_key": os.getenv("S3_ACCESS_KEY", ""),
+                "secret_key": os.getenv("S3_SECRET_KEY", ""),
+                "bucket_name": "files",
+                "region_name": "FRA1",
+                "default_acl": "public-read",
+                "endpoint_url": "https://objectstore.fra1.civo.com",
+                "location": f"{ENV}/static" if ENV != "PROD" else "static",
+            },
+        },
+    } # pragma: no cover
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
