@@ -2,18 +2,6 @@ backend:
   enabled: true
   tag: latest.dev
   replicas: 1
-  storage:
-    staticfiles:
-      size: 1Gi
-      volumeHandle: 4787ed0d-b4ad-45f5-a18d-0dbed37eebec
-    mediafiles:
-      size: 1Gi
-      volumeHandle: 68766e08-a110-4126-ab05-a054e6d568f5
-  env:
-    ENV: "DEV"
-    CSRF_TRUSTED_ORIGINS: "https://dev.loop.edu.pl,https://www.dev.loop.edu.pl"
-    ALLOWED_HOST: "dev.loop.edu.pl,www.dev.loop.edu.pl"
-    BASE_URL: "https://dev.loop.edu.pl"
 
 frontend:
   enabled: true

@@ -1,13 +1,6 @@
 backend:
   tag: latest.prod
   replicas: 1
-  storage:
-    staticfiles:
-      size: 1Gi
-      volumeHandle: e765b8be-9b89-498a-94df-6bb40b6b016d
-    mediafiles:
-      size: 5Gi
-      volumeHandle: 7adfa6e6-6ae7-4d02-8e9d-0cb5545efcc8
   env:
     ENV: "PROD"
     CSRF_TRUSTED_ORIGINS: "https://loop.edu.pl,https://www.loop.edu.pl"

@@ -1,13 +1,6 @@
 backend:
   tag: latest.uat
   replicas: 1
-  storage:
-    staticfiles:
-      size: 1Gi
-      volumeHandle: cf2caa19-1e98-4ddb-a25e-a58d372af9db
-    mediafiles:
-      size: 1Gi
-      volumeHandle: 6d4c19db-a270-49f2-88cb-4fd012b817ff
   env:
     ENV: "UAT"
     CSRF_TRUSTED_ORIGINS: "https://uat.loop.edu.pl,https://www.uat.loop.edu.pl"
