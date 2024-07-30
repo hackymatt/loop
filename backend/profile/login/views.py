@@ -218,7 +218,7 @@ class GithubLoginViewSet(ModelViewSet):
             dob=None,
             gender="I",
             image=image,
-            join_type="Github",
+            join_type="GitHub",
         )
 
         login(request, user)
