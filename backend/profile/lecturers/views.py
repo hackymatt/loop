@@ -7,7 +7,8 @@ from profile.lecturers.serializers import (
 from profile.lecturers.filters import LecturerFilter
 from profile.models import LecturerProfile
 from review.models import Review
-from django.db.models import OuterRef, Subquery, Value, Avg
+from teaching.models import Teaching
+from django.db.models import OuterRef, Subquery, Value, Avg, Count
 from django.contrib.auth.models import User
 from django.conf import settings
 from random import sample
@@ -16,7 +17,8 @@ from random import sample
 class LecturerViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = LecturerProfile.objects.all().filter(
-        title__isnull=False, description__isnull=False
+        title__isnull=False,
+        description__isnull=False,
     )
     serializer_class = LecturerSerializer
     filterset_class = LecturerFilter
@@ -29,8 +31,15 @@ class LecturerViewSet(ModelViewSet):
     ]
 
     def get_queryset(self):
+        lessons_count = Teaching.objects.filter(lecturer=OuterRef("pk")).values("id")
+
         dummy_user = User.objects.get(email=settings.DUMMY_LECTURER_EMAIL)
-        return self.queryset.exclude(profile__user=dummy_user)
+        queryset = self.queryset.exclude(profile__user=dummy_user)
+        return (
+            queryset.annotate(lessons_count=Count(Subquery(lessons_count)))
+            .filter(lessons_count__gt=0)
+            .order_by("id")
+        )
 
     def get_serializer_class(self):
         if self.action == "retrieve":
