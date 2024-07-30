@@ -29,7 +29,7 @@ class ContactViewSet(ViewSet):
         }
         mailer.send(
             email_template="contact.html",
-            to=[settings.EMAIL_FROM],
+            to=[settings.CONTACT_EMAIL],
             subject="Nowa wiadomość ze strony",
             data=data,
         )

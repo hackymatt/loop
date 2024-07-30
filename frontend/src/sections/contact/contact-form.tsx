@@ -94,7 +94,7 @@ export default function ContactForm() {
               <Typography variant="h3">Napisz do nas</Typography>
 
               <Typography sx={{ color: "text.secondary" }}>
-                Zwykle odpowiadamy w ciągu 2 dni roboczych
+                Zwykle odpowiadamy w ciągu 24 godzin
               </Typography>
             </Stack>
 

@@ -179,9 +179,12 @@ DBBACKUP_STORAGE_OPTIONS = {
     "endpoint_url": "https://objectstore.fra1.civo.com",
     "location": ENV,
 }
+
+DBBACKUP_FREQ = {"DEV": "0 0 * * *", "UAT": "0 0 * * *", "PROD": "0 * * * *"}
+
 CRONJOBS = (
     [
-        ("0 * * * *", "core.cron.create_backup"),
+        (DBBACKUP_FREQ[ENV], "core.cron.create_backup"),
         ("*/30 * * * *", "core.cron.confirm_lessons"),
         ("*/30 * * * *", "core.cron.remind_lessons_review"),
     ]
@@ -259,6 +262,8 @@ else:
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "")
 
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "")

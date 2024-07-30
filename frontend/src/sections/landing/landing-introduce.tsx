@@ -61,29 +61,25 @@ export default function LandingIntroduce() {
               >
                 loop
               </Typography>{" "}
-              naszą misją jest umożliwienie zarówno początkującym entuzjastom, jak i doświadczonym
-              inżynierom oprogramowania rozwijania swojej wiedzy i umiejętności w dynamicznym
-              świecie programowania. Zobowiązujemy się tworzyć otoczenie edukacyjne online, które
-              jest dostępne i wspierające, zapewniając społeczność, w której ceni się ciekawość, a
-              współpraca jest kluczowa.
+              naszą misją jest wspieranie zarówno początkujących entuzjastów, jak i doświadczonych
+              inżynierów oprogramowania w rozwijaniu ich wiedzy i umiejętności w dynamicznym świecie
+              programowania. Tworzymy przyjazne, dostępne środowisko edukacyjne, gdzie ciekawość i
+              współpraca są na pierwszym miejscu.
             </Typography>
 
             <Typography sx={{ color: "text.secondary" }}>
-              Naszym celem jest demistyfikacja złożoności programowania, uczynienie go dostępnym dla
-              nowych uczestników poprzez dostarczanie angażujących i kompleksowych kursów. Dla
-              początkujących oferujemy strukturyzowaną ścieżkę nauki, budującą solidne podstawy,
-              podczas gdy dla doświadczonych programistów dostarczamy zaawansowanych kursów, aby
-              poszerzyć ich ekspertyzę i być na bieżąco z nieustannie zmieniającym się krajobrazem
-              technologicznym.
+              Naszym celem jest uproszczenie złożoności programowania i uczynienie go przystępnym
+              dla wszystkich. Oferujemy angażujące i wszechstronne kursy, które dostarczają solidne
+              podstawy dla nowicjuszy oraz zaawansowaną wiedzę dla doświadczonych programistów,
+              pomagając im nadążyć za nieustannie zmieniającym się krajobrazem technologicznym.
             </Typography>
 
             <Typography sx={{ color: "text.secondary" }}>
-              W centrum naszej misji leży przekonanie, że każdy powinien mieć możliwość nauki i
-              rozwoju w dziedzinie programowania. Dążymy do uczynienia edukacji elastyczną i
-              wygodną, oferując różnorodne kursy dostosowane do różnych harmonogramów i preferencji
-              uczących się. Nasi doświadczeni instruktorzy pasjonują się dzieleniem się wiedzą,
-              prowadzeniem uczestników przez praktyczne projekty i zapewnianiem wsparcia podczas
-              całego procesu nauki.
+              Wierzymy, że każdy powinien mieć możliwość nauki i rozwoju w dziedzinie programowania.
+              Dlatego zapewniamy elastyczne i wygodne opcje edukacyjne, dostosowane do różnych
+              harmonogramów i preferencji. Nasi doświadczeni instruktorzy z pasją dzielą się swoją
+              wiedzą, prowadząc uczestników przez praktyczne projekty i oferując wsparcie na każdym
+              etapie nauki.
             </Typography>
 
             <Typography sx={{ color: "text.secondary" }}>
