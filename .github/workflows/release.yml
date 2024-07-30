@@ -74,6 +74,8 @@ jobs:
 
       REDIS_URL: ${{ secrets.REDIS_URL }}
 
+      CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL }}
+
       ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
 
