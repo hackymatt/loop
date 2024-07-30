@@ -52,7 +52,7 @@ export default function AccountProfileView() {
     if (profileDetails) {
       reset({
         ...profileDetails,
-        linkedin_url: profileDetails.linkedin_url.replace(LINKEDIN_PREFIX, ""),
+        linkedin_url: profileDetails.linkedin_url?.replace(LINKEDIN_PREFIX, ""),
       });
     }
   }, [reset, profileDetails]);
