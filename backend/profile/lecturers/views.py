@@ -31,12 +31,19 @@ class LecturerViewSet(ModelViewSet):
     ]
 
     def get_queryset(self):
-        lessons_count = Teaching.objects.filter(lecturer=OuterRef("pk")).values("id")
+        total_lessons_count = (
+            Teaching.objects.filter(lecturer=OuterRef("pk"))
+            .annotate(dummy_group_by=Value(1))
+            .values("dummy_group_by")
+            .order_by("dummy_group_by")
+            .annotate(total_lessons_count=Count("pk"))
+            .values("total_lessons_count")
+        )
 
         dummy_user = User.objects.get(email=settings.DUMMY_LECTURER_EMAIL)
         queryset = self.queryset.exclude(profile__user=dummy_user)
         return (
-            queryset.annotate(lessons_count=Count(Subquery(lessons_count)))
+            queryset.annotate(lessons_count=Subquery(total_lessons_count))
             .filter(lessons_count__gt=0)
             .order_by("id")
         )
