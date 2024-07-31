@@ -14,10 +14,14 @@ from .factory import (
     create_review,
     create_lesson_price_history,
     create_purchase,
+    create_reservation,
+    create_schedule,
 )
 from .helpers import login
 from django.contrib import auth
 import json
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
 
 
 class LecturersTest(APITestCase):
@@ -131,7 +135,7 @@ class LecturersTest(APITestCase):
             lecturer=self.lecturer_profile_1,
         )
 
-        create_purchase(
+        self.purchase_1 = create_purchase(
             lesson=self.lesson_1,
             student=self.student_profile_1,
             price=self.lesson_1.price,
@@ -262,6 +266,23 @@ class LecturersTest(APITestCase):
             review="So so lesson.",
         )
 
+        self.schedule_1 = create_schedule(
+            lecturer=self.lecturer_profile_1,
+            start_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+            ),
+            end_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30)
+            ),
+        )
+        create_reservation(
+            student=self.student_profile_1,
+            lesson=self.lesson_1,
+            schedule=self.schedule_1,
+            purchase=self.purchase_1,
+        )
+
     def test_get_lecturers_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -294,27 +315,27 @@ class LecturersTest(APITestCase):
         self.assertEqual(len(data["lessons"]), 2)
         self.assertEqual(data["rating"], 4.0)
         self.assertEqual(data["rating_count"], 6)
-        self.assertEqual(data["lessons_duration"], 120)
+        self.assertEqual(data["lessons_duration"], 90)
         self.assertEqual(data["lessons_price"], 12.98)
         self.assertEqual(data["lessons_previous_price"], 12.99)
         self.assertEqual(data["lessons_lowest_30_days_price"], 10.99)
-        self.assertEqual(data["students_count"], 2)
+        self.assertEqual(data["students_count"], 1)
 
     def test_get_lecturer_unauthenticated_1(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
-        response = self.client.get(f"{self.endpoint}/{self.lecturer_profile_1.id}")
+        response = self.client.get(f"{self.endpoint}/{self.lecturer_profile_2.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(len(data["lessons"]), 2)
-        self.assertEqual(data["rating"], 4.0)
-        self.assertEqual(data["rating_count"], 6)
-        self.assertEqual(data["lessons_duration"], 120)
-        self.assertEqual(data["lessons_price"], 12.98)
-        self.assertEqual(data["lessons_previous_price"], 12.99)
-        self.assertEqual(data["lessons_lowest_30_days_price"], 10.99)
-        self.assertEqual(data["students_count"], 2)
+        self.assertEqual(len(data["lessons"]), 1)
+        self.assertEqual(data["rating"], None)
+        self.assertEqual(data["rating_count"], 0)
+        self.assertEqual(data["lessons_duration"], None)
+        self.assertEqual(data["lessons_price"], 2.99)
+        self.assertEqual(data["lessons_previous_price"], None)
+        self.assertEqual(data["lessons_lowest_30_days_price"], None)
+        self.assertEqual(data["students_count"], 0)
 
     def test_get_lecturer_unauthenticated_2(self):
         # no login

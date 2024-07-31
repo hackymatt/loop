@@ -178,13 +178,13 @@ export default function TeacherDetailsHero({ teacher }: Props) {
                     "& > *": { my: 0.5, mr: 3 },
                   }}
                 >
-                  {totalHours && (
-                    <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
-                      <Iconify icon="carbon:time" sx={{ mr: 1 }} />{" "}
-                      {totalHours < 1 ? totalHours : fShortenNumber(Math.floor(totalHours), 0)}+{" "}
-                      {polishPlurals("godzina", "godziny", "godzin", totalHours)}
-                    </Stack>
-                  )}
+                  <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
+                    <Iconify icon="carbon:time" sx={{ mr: 1 }} />{" "}
+                    {(totalHours ?? 0) < 1
+                      ? totalHours
+                      : fShortenNumber(Math.floor(totalHours ?? 0), 0)}
+                    + {polishPlurals("godzina", "godziny", "godzin", totalHours ?? 0)}
+                  </Stack>
 
                   {lessons && lessons.length > 0 && (
                     <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
