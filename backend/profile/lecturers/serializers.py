@@ -9,7 +9,7 @@ from profile.models import LecturerProfile
 from review.models import Review
 from teaching.models import Teaching
 from lesson.models import Lesson, LessonPriceHistory
-from purchase.models import Purchase
+from reservation.models import Reservation
 from django.db.models import Sum, Avg, Min, Subquery, OuterRef
 from datetime import timedelta
 
@@ -26,10 +26,10 @@ def get_lessons(lecturer):
 def get_duration(lecturer):
     lessons = get_lessons(lecturer=lecturer)
     duration = Lesson.objects.filter(pk=OuterRef("lesson__id")).values("duration")
-    purchases = Purchase.objects.filter(lesson__in=lessons).annotate(
+    reservations = Reservation.objects.filter(lesson__in=lessons).annotate(
         duration=Subquery(duration)
     )
-    return purchases.aggregate(Sum("duration"))["duration__sum"]
+    return reservations.aggregate(Sum("duration"))["duration__sum"]
 
 
 def get_previous_prices(instance):
@@ -128,8 +128,8 @@ def get_lowest_30_days_price_course(instance):
     return lowest_30_days_price
 
 
-def get_students_count(lessons):
-    return Purchase.objects.filter(lesson__in=lessons).count()
+def get_students_count(lecturer):
+    return Reservation.objects.filter(schedule__lecturer=lecturer).count()
 
 
 class LecturerSerializer(ModelSerializer):
@@ -174,7 +174,7 @@ class LecturerSerializer(ModelSerializer):
         return get_duration(lecturer=lecturer)
 
     def get_lecturer_students_count(self, lecturer):
-        return get_students_count(lessons=get_lessons(lecturer=lecturer))
+        return get_students_count(lecturer=lecturer)
 
 
 class LessonShortSerializer(ModelSerializer):
@@ -262,7 +262,7 @@ class LecturerGetSerializer(ModelSerializer):
         return get_lowest_30_days_price_course(instance=lecturer)
 
     def get_lecturer_students_count(self, lecturer):
-        return get_students_count(lessons=get_lessons(lecturer=lecturer))
+        return get_students_count(lecturer=lecturer)
 
 
 class BestLecturerSerializer(ModelSerializer):
