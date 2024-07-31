@@ -156,29 +156,29 @@ export default function TeacherItem({ teacher, vertical }: Props) {
           }}
         />
 
-        {totalLessons && totalLessons > 0 && totalHours && totalHours > 0 && (
-          <Stack
-            direction="row"
-            flexWrap="wrap"
-            alignItems="center"
-            sx={{ color: "text.disabled", "& > *:not(:last-child)": { mr: 2.5 } }}
-          >
-            {totalLessons && totalLessons > 0 && (
-              <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
-                <Iconify icon="carbon:document" sx={{ mr: 1 }} />
-                {`${totalLessons} ${polishPlurals("lekcja", "lekcje", "lekcji", totalLessons)}`}
-              </Stack>
-            )}
+        <Stack
+          direction="row"
+          flexWrap="wrap"
+          alignItems="center"
+          sx={{ color: "text.disabled", "& > *:not(:last-child)": { mr: 2.5 } }}
+        >
+          {(totalLessons ?? 0) > 0 && (
+            <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
+              <Iconify icon="carbon:document" sx={{ mr: 1 }} />
+              {`${totalLessons} ${polishPlurals("lekcja", "lekcje", "lekcji", totalLessons ?? 0)}`}
+            </Stack>
+          )}
 
-            {totalHours && totalHours > 0 && (
-              <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
-                <Iconify icon="carbon:time" sx={{ mr: 1 }} />
-                {totalHours < 1 ? totalHours : fShortenNumber(Math.floor(totalHours), 0)}+{" "}
-                {polishPlurals("godzina", "godziny", "godzin", totalHours)}
-              </Stack>
-            )}
-          </Stack>
-        )}
+          {(totalHours ?? 0) > 0 && (
+            <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
+              <Iconify icon="carbon:time" sx={{ mr: 1 }} />
+              {(totalHours ?? 0) < 1
+                ? totalHours
+                : fShortenNumber(Math.floor(totalHours ?? 0), 0)}+{" "}
+              {polishPlurals("godzina", "godziny", "godzin", totalHours ?? 0)}
+            </Stack>
+          )}
+        </Stack>
       </Stack>
     </Card>
   );

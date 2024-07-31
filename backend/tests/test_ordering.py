@@ -1545,6 +1545,12 @@ class LecturerOrderTest(APITestCase):
             review="So so lesson.",
         )
 
+        create_teaching(lecturer=self.lecturer_profile_1, lesson=self.lesson_1)
+        create_teaching(lecturer=self.lecturer_profile_1, lesson=self.lesson_2)
+        create_teaching(lecturer=self.lecturer_profile_1, lesson=self.lesson_3)
+        create_teaching(lecturer=self.lecturer_profile_2, lesson=self.lesson_4)
+        create_teaching(lecturer=self.lecturer_profile_2, lesson=self.lesson_5)
+
         self.fields = ["rating", "full_name", "title"]
 
     def test_ordering(self):
