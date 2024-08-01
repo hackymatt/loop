@@ -144,7 +144,7 @@ export default function Certificate({ id }: IProps) {
               startIcon={<Iconify icon="carbon:logo-linkedin" />}
               sx={{ backgroundColor: "#007EBB" }}
             >
-              Udostępnij na LinkedIn
+              Udostępnij
             </Button>
           </Stack>
         )}
