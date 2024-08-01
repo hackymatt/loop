@@ -311,9 +311,10 @@ class CertificateTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_incorrect_profile_uuid(self):
-        response = self.client.get(
-            f"{self.endpoint}/{str(self.profile_1.profile.uuid)[:-1]}a-{self.reservation_1.id}"
-        )
+        profile = self.profile_3.profile
+        uuid = profile.uuid
+        profile.delete()
+        response = self.client.get(f"{self.endpoint}/{uuid}-{self.reservation_1.id}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_incorrect_profile_reservation_mismatch(self):
