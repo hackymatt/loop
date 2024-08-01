@@ -11,6 +11,7 @@ import { getCsrfToken } from "../utils/csrf";
 const endpoint = "/personal-data" as const;
 
 export type IDetail = {
+  uuid: string;
   first_name: string;
   last_name: string;
   email: string;
@@ -37,8 +38,9 @@ export const userDetailsQuery = () => {
       },
     });
     const { data } = response;
+    const { uuid, ...modifiedData } = data;
 
-    return { results: data };
+    return { results: { ...modifiedData, id: uuid } };
   };
 
   return { url, queryFn, queryKey: compact([endpoint]) };

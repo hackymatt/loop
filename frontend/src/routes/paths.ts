@@ -17,6 +17,7 @@ export const paths = {
   support: "/support",
   privacyPolicy: "/privacy-policy",
   termsAndConditions: "/terms-and-conditions",
+  certificate: "/certificate",
   account: {
     root: "/account",
     personal: "/account/personal",
