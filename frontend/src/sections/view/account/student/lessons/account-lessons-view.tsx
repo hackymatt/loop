@@ -14,15 +14,11 @@ import { tableCellClasses } from "@mui/material/TableCell";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import TablePagination from "@mui/material/TablePagination";
 
-import { paths } from "src/routes/paths";
-import { useRouter } from "src/routes/hooks";
-
 import { useBoolean } from "src/hooks/use-boolean";
 import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
 
-import { useUserDetails } from "src/api/auth/details";
 import { useLecturers } from "src/api/lecturers/lecturers";
 import { usePurchase, usePurchasePageCount } from "src/api/purchase/purchase";
 
@@ -62,10 +58,6 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, { label: "Wszystkie", value: -1 }];
 // ----------------------------------------------------------------------
 
 export default function AccountLessonsPage() {
-  const router = useRouter();
-
-  const { data: userDetails } = useUserDetails();
-
   const addReservationFormOpen = useBoolean();
   const deleteReservationFormOpen = useBoolean();
 
@@ -142,13 +134,6 @@ export default function AccountLessonsPage() {
       deleteReservationFormOpen.onToggle();
     },
     [deleteReservationFormOpen],
-  );
-
-  const handleCertificateView = useCallback(
-    (purchase: IPurchaseItemProp) => {
-      router.push(`${paths.certificate}/${userDetails.id}-${purchase.reservationId}`);
-    },
-    [router, userDetails.id],
   );
 
   return (
@@ -236,7 +221,6 @@ export default function AccountLessonsPage() {
                     row={row}
                     onAdd={handleAddReservation}
                     onDelete={handleDeleteReservation}
-                    onCertificateView={handleCertificateView}
                   />
                 ))}
               </TableBody>

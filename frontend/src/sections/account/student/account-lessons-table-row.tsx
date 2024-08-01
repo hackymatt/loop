@@ -9,7 +9,11 @@ import IconButton from "@mui/material/IconButton";
 import { Link, Avatar, Typography } from "@mui/material";
 import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
+import { paths } from "src/routes/paths";
+
 import { fDate, fDateTime } from "src/utils/format-time";
+
+import { useUserDetails } from "src/api/auth/details";
 
 import Label from "src/components/label";
 import Iconify from "src/components/iconify";
@@ -26,10 +30,16 @@ type Props = {
   row: IPurchaseItemProp;
   onAdd: (purchase: IPurchaseItemProp) => void;
   onDelete: (purchase: IPurchaseItemProp) => void;
-  onCertificateView: (purchase: IPurchaseItemProp) => void;
 };
 
-export default function AccountLessonsTableRow({ row, onAdd, onDelete, onCertificateView }: Props) {
+export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) {
+  const { data: userDetails } = useUserDetails();
+
+  const certificateUrl = useMemo(
+    () => `${paths.certificate}/${userDetails?.id}-${row.reservationId}`,
+    [row.reservationId, userDetails.id],
+  );
+
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
 
   const handleOpen = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -49,11 +59,6 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete, onCertifi
     handleClose();
     onDelete(row);
   }, [handleClose, onDelete, row]);
-
-  const handleViewCertificate = useCallback(() => {
-    handleClose();
-    onCertificateView(row);
-  }, [handleClose, onCertificateView, row]);
 
   const inputStyles = {
     pl: 1,
@@ -174,10 +179,12 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete, onCertifi
         )}
 
         {isCompleted && (
-          <MenuItem onClick={handleViewCertificate} sx={{ color: "success.main" }}>
-            <Iconify icon="carbon:certificate" sx={{ mr: 0.5 }} />
-            <Typography variant="body2">Zobacz certyfikat ukończenia</Typography>
-          </MenuItem>
+          <Link href={certificateUrl} target="_blank" underline="none" color="inherit">
+            <MenuItem sx={{ color: "success.main" }}>
+              <Iconify icon="carbon:certificate" sx={{ mr: 0.5 }} />
+              <Typography variant="body2">Zobacz certyfikat ukończenia</Typography>
+            </MenuItem>
+          </Link>
         )}
       </Popover>
     </>
