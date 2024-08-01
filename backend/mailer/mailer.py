@@ -2,11 +2,15 @@ from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from typing import List
 from django.conf import settings
+from utils.google.gmail import GmailApi
 
 
 class Mailer:
+    def __init__(self):
+        self.gmail_api = GmailApi(email_from=settings.EMAIL_FROM)
+
     def send(self, email_template: str, to: List[str], subject: str, data):
-        message = render_to_string(
+        email_body = render_to_string(
             email_template,
             {
                 **data,
@@ -16,7 +20,9 @@ class Mailer:
                 },
             },
         )
-        email = EmailMultiAlternatives(subject, message, "from_email", to=to)
-        email.attach_alternative(message, "text/html")
-
-        return email.send()
+        return self.gmail_api.send(
+            settings.EMAIL_FROM,
+            email_to=", ".join(to),
+            email_subject=subject,
+            email_body=email_body,
+        )
