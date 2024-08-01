@@ -15,6 +15,7 @@ from profile.personal_data.views import PersonalDataViewSet
 from profile.profile_data.views import ProfileDataViewSet
 from profile.lecturers.views import LecturerViewSet, BestLecturerViewSet
 from profile.earnings.views import EarningViewSet
+from profile.certificate.views import CertificateViewSet
 from django.urls import path, include
 from django.contrib import admin
 from course.views import (
@@ -116,6 +117,10 @@ api_urlpatterns = [
     path(
         "newsletter-unsubscribe/<str:uuid>",
         NewsletterUnsubscribeViewSet.unsubscribe,
+    ),
+    path(
+        "certificate/<str:id>",
+        CertificateViewSet.get_certificate,
     ),
     path("contact", ContactViewSet.as_view({"post": "contact"})),
     path(
