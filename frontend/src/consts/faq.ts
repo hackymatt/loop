@@ -90,6 +90,11 @@ export const lessonFAQ = [
     answer:
       "Dla każdej lekcji stworzone jest repozytorium na platformie GitHub a link znajduje się w informacjach o lekcji.",
   },
+  {
+    question: "Gdzie znajdę certyfikat ukończenia?",
+    answer:
+      "Dla każdej lekcji możesz pobrać lub udostępnić na LinkedIn swój certyfikat. Po zakończonej lekcji możesz go zobaczyć w zakładce Lekcje.",
+  },
 ];
 
 export const reservationFAQ = [
