@@ -1,5 +1,7 @@
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APIClient
+from django.test import TestCase
+from unittest.mock import patch
 from .factory import (
     create_user,
     create_profile,
@@ -17,17 +19,19 @@ from .helpers import (
     login,
     is_user_found,
     profiles_number,
-    emails_sent_number,
+    mock_send_message,
     get_schedule,
 )
 from django.contrib import auth
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
+from utils.google.gmail import GmailApi
 
 
-class UnregisterTest(APITestCase):
+class UnregisterTest(TestCase):
     def setUp(self):
         self.endpoint = "/api/unregister"
+        self.client = APIClient()
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",
@@ -219,7 +223,9 @@ class UnregisterTest(APITestCase):
         self.assertEqual(profiles_number(), 7)
         self.assertEqual(users_number(), 7)
 
-    def test_delete_authenticated_lecturer(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_delete_authenticated_lecturer(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         # login
         login(self, self.lecturer_data["email"], self.lecturer_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -229,9 +235,11 @@ class UnregisterTest(APITestCase):
         self.assertFalse(is_user_found(self.lecturer_data["email"]))
         self.assertEqual(profiles_number(), 6)
         self.assertEqual(users_number(), 6)
-        self.assertEqual(emails_sent_number(), 1)
+        self.assertEqual(_send_message_mock.call_count, 1)
 
-    def test_delete_authenticated_student_1(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_delete_authenticated_student_1(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -241,10 +249,12 @@ class UnregisterTest(APITestCase):
         self.assertFalse(is_user_found(self.data["email"]))
         self.assertEqual(profiles_number(), 6)
         self.assertEqual(users_number(), 6)
-        self.assertEqual(emails_sent_number(), 1)
+        self.assertEqual(_send_message_mock.call_count, 1)
         self.assertTrue(get_schedule(self.future_schedule_1.id).lesson is None)
 
-    def test_delete_authenticated_student_2(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_delete_authenticated_student_2(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         create_reservation(
             student=self.profile_2,
             lesson=self.lesson_2,
@@ -260,4 +270,4 @@ class UnregisterTest(APITestCase):
         self.assertFalse(is_user_found(self.data["email"]))
         self.assertEqual(profiles_number(), 6)
         self.assertEqual(users_number(), 6)
-        self.assertEqual(emails_sent_number(), 0)
+        self.assertEqual(_send_message_mock.call_count, 0)

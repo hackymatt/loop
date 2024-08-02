@@ -95,14 +95,6 @@ def is_list_match(list_1, list_2):
     return True
 
 
-def emails_sent_number():
-    return len(mail.outbox)
-
-
-def get_mail(index: int):
-    return mail.outbox[index]
-
-
 def filter_dict(old_dict, keys):
     return {key: old_dict[key] for key in keys if key in old_dict}
 
@@ -225,3 +217,7 @@ def coupons_number():
 
 def get_coupon(id: int):
     return Coupon.objects.get(pk=id)
+
+
+def mock_send_message(mock):
+    mock.return_value = {}

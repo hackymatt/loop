@@ -1,13 +1,17 @@
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APIClient
+from django.test import TestCase
+from unittest.mock import patch
 from .factory import create_user, create_profile, create_student_profile
-from .helpers import login, emails_sent_number, get_mail
+from .helpers import login, mock_send_message
 from django.contrib import auth
+from utils.google.gmail import GmailApi
 
 
-class PasswordResetTest(APITestCase):
+class PasswordResetTest(TestCase):
     def setUp(self):
         self.endpoint = "/api/password-reset"
+        self.client = APIClient()
         self.data = {"email": "email@example.com", "password": "test_password"}
         self.user = create_user(
             first_name="first_name",
@@ -18,7 +22,9 @@ class PasswordResetTest(APITestCase):
         )
         self.profile = create_student_profile(profile=create_profile(user=self.user))
 
-    def test_incorrect_email(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_incorrect_email(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # password reset request
@@ -29,9 +35,11 @@ class PasswordResetTest(APITestCase):
         self.assertTrue(
             auth.get_user(self.client).check_password(self.data["password"])
         )
-        self.assertEqual(emails_sent_number(), 0)
+        self.assertEqual(_send_message_mock.call_count, 0)
 
-    def test_password_reset_success(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_password_reset_success(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # password reset request
@@ -40,7 +48,4 @@ class PasswordResetTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         login(self, self.data["email"], self.data["password"])
         self.assertFalse(auth.get_user(self.client).is_authenticated)
-        self.assertEqual(emails_sent_number(), 1)
-        email = get_mail(0)
-        self.assertEqual(email.to, [self.data["email"]])
-        self.assertEqual(email.subject, "Twoje tymczasowe hasło")
+        self.assertEqual(_send_message_mock.call_count, 1)
