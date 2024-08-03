@@ -266,8 +266,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "")
 EMAIL_FROM = os.getenv("EMAIL_FROM", "")
-print(json.loads(os.getenv("GOOGLE_CREDENTIALS")))
-GOOGLE_CREDENTIALS = json.loads(os.getenv("GOOGLE_CREDENTIALS", "{}"))
+print(os.getenv("GOOGLE_CREDENTIALS"))
+GOOGLE_CREDENTIALS = os.getenv("GOOGLE_CREDENTIALS", "{}")
 
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "")
