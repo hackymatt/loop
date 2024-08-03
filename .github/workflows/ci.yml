@@ -112,7 +112,6 @@ jobs:
         uses: actions/setup-python@v4
       - name: Upgrade pip
         run: pip install --upgrade pip
-      - run: echo ${{secrets.GOOGLE_CREDENTIALS}}
       - name: Install test requirements
         run: pip install -r requirements_test.txt
       - name: Install requirements

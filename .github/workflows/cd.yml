@@ -75,7 +75,7 @@ jobs:
 
       CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL }}
       EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
-      GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      GOOGLE_CREDENTIALS: ${{ toJSON(secrets.GOOGLE_CREDENTIALS) }}
 
       ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
@@ -112,7 +112,6 @@ jobs:
         uses: actions/setup-python@v4
       - name: Upgrade pip
         run: pip install --upgrade pip
-      - run: echo ${{secrets.GOOGLE_CREDENTIALS}}
       - name: Install test requirements
         run: pip install -r requirements_test.txt
       - name: Install requirements

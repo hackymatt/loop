@@ -4,6 +4,8 @@ from django.conf import settings
 
 
 def build_service(service_name, service_version, on_behalf_of, scopes):
+    print(settings.GOOGLE_CREDENTIALS)
+    print(isinstance(settings.GOOGLE_CREDENTIALS, dict))
     credentials = service_account.Credentials.from_service_account_info(
         settings.GOOGLE_CREDENTIALS, scopes=scopes
     )
