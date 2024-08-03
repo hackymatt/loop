@@ -18,13 +18,21 @@ from .factory import (
     create_schedule_obj,
     create_teaching,
     create_reservation,
+    create_meeting,
 )
-from .helpers import login, schedule_number, is_schedule_found, mock_send_message
+from .helpers import (
+    login,
+    schedule_number,
+    is_schedule_found,
+    mock_send_message,
+    mock_delete_event,
+)
 from django.contrib import auth
 import json
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from utils.google.gmail import GmailApi
+from utils.google.calendar import CalendarApi
 
 
 class ScheduleTest(TestCase):
@@ -415,14 +423,22 @@ class ScheduleTest(TestCase):
         self.assertEqual(_send_message_mock.call_count, 0)
 
     @patch.object(GmailApi, "_send_message")
-    def test_delete_schedule_authenticated_lesson(self, _send_message_mock):
+    @patch.object(CalendarApi, "delete")
+    def test_delete_schedule_authenticated_lesson(
+        self, delete_mock, _send_message_mock
+    ):
+        mock_delete_event(mock=delete_mock)
         mock_send_message(mock=_send_message_mock)
         # login
         login(self, self.lecturer_data["email"], self.lecturer_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
+        meeting = create_meeting(event_id="test_event_id", url="https://example.com")
+        self.delete_schedule.meeting = meeting
+        self.delete_schedule.save()
         response = self.client.delete(f"{self.endpoint}/{self.delete_schedule.id}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(is_schedule_found(self.delete_schedule.id))
         self.assertEqual(schedule_number(), 21)
         self.assertEqual(_send_message_mock.call_count, 2)
+        self.assertEqual(delete_mock.call_count, 1)

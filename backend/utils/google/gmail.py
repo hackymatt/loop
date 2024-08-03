@@ -4,12 +4,12 @@ import base64
 
 
 class GmailApi:
-    def __init__(self, email_from):
+    def __init__(self, on_behalf_of):
         scopes = ["https://www.googleapis.com/auth/gmail.send"]
         self.service = build_service(
             service_name="gmail",
             service_version="v1",
-            email_from=email_from,
+            on_behalf_of=on_behalf_of,
             scopes=scopes,
         )
 

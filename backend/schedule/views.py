@@ -8,6 +8,7 @@ from schedule.serializers import (
 )
 from schedule.filters import ScheduleFilter
 from schedule.models import Schedule
+from schedule.utils import MeetingManager
 from profile.models import Profile
 from reservation.models import Reservation
 from pytz import timezone, utc
@@ -72,6 +73,9 @@ class ManageScheduleViewSet(ModelViewSet):
                     subject="Twoja lekcja została odwołana",
                     data=data,
                 )
+
+            meeting_manager = MeetingManager()
+            meeting_manager.delete(event_id=schedule.meeting.event_id)
 
         return deletion
 

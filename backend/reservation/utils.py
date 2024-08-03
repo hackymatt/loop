@@ -1,5 +1,6 @@
 from reservation.models import Reservation
-from schedule.models import Schedule
+from schedule.models import Schedule, Meeting
+from schedule.utils import MeetingManager
 from django.db.models import F
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
@@ -13,7 +14,7 @@ def confirm_reservations():
     now = make_aware(datetime.now())
 
     schedules = (
-        Schedule.objects.filter(lesson__isnull=False, meeting_url__isnull=True)
+        Schedule.objects.filter(lesson__isnull=False, meeting__url__isnull=True)
         .annotate(diff=now - F("start_time"))
         .filter(diff__gte=-timedelta(hours=CANCELLATION_TIME))
     )
@@ -24,9 +25,20 @@ def confirm_reservations():
         is_lesson_success = reservations.count() >= MINIMUM_STUDENTS_REQUIRED
 
         if is_lesson_success:
-            # create meeting url
-            meeting_url = "https://www.google.com"
-            schedule.meeting_url = meeting_url
+            # create meeting
+            meeting_manager = MeetingManager()
+            event = meeting_manager.create(
+                title=schedule.lesson.title,
+                description=schedule.lesson.description,
+                start_time=schedule.start_time,
+                end_time=schedule.end_time,
+                lecturer=schedule.lecturer,
+                students=[reservation.student for reservation in reservations],
+            )
+            meeting = Meeting.objects.create(
+                event_id=event["id"], url=event["hangoutLink"]
+            )
+            schedule.meeting = meeting
 
         data = {
             **{
@@ -35,13 +47,16 @@ def confirm_reservations():
                 "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
                 .astimezone(timezone("Europe/Warsaw"))
                 .strftime("%d-%m-%Y %H:%M"),
-                "meeting_url": schedule.meeting_url,
             }
         }
 
         # send email
         for reservation in reservations:
             if is_lesson_success:
+                data = {
+                    **data,
+                    "meeting_url": schedule.meeting.url,
+                }
                 mailer.send(
                     email_template="lesson_success.html",
                     to=[reservation.student.profile.user.email],

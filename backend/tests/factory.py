@@ -10,7 +10,7 @@ from skill.models import Skill
 from review.models import Review
 from purchase.models import Purchase
 from newsletter.models import Newsletter
-from schedule.models import Schedule
+from schedule.models import Schedule, Meeting
 from wishlist.models import Wishlist
 from cart.models import Cart
 from teaching.models import Teaching
@@ -403,3 +403,7 @@ def create_coupon_user(
         coupon=coupon,
         user=user,
     )
+
+
+def create_meeting(event_id: str, url: str):
+    return Meeting.objects.create(event_id=event_id, url=url)

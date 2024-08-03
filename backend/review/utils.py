@@ -14,7 +14,7 @@ def remind_review():
     now = make_aware(datetime.now())
 
     schedules = (
-        Schedule.objects.filter(lesson__isnull=False, meeting_url__isnull=False)
+        Schedule.objects.filter(lesson__isnull=False, meeting__url__isnull=False)
         .annotate(diff=now - F("end_time"))
         .filter(
             diff__lte=timedelta(minutes=REMINDER_TIME * 60),

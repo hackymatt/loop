@@ -1,8 +1,10 @@
 from core.base_model import BaseModel
 from django.db.models import (
     UniqueConstraint,
+    OneToOneField,
     ForeignKey,
     DateTimeField,
+    CharField,
     URLField,
     CASCADE,
     PROTECT,
@@ -10,6 +12,27 @@ from django.db.models import (
 )
 from profile.models import LecturerProfile
 from lesson.models import Lesson
+
+
+class Meeting(BaseModel):
+    event_id = CharField(unique=True)
+    url = URLField()
+
+    class Meta:
+        db_table = "meeting"
+        ordering = ["id"]
+        indexes = [
+            Index(
+                fields=[
+                    "event_id",
+                ]
+            ),
+            Index(
+                fields=[
+                    "url",
+                ]
+            ),
+        ]
 
 
 class Schedule(BaseModel):
@@ -21,7 +44,7 @@ class Schedule(BaseModel):
     lesson = ForeignKey(
         Lesson, on_delete=PROTECT, related_name="schedule_lesson", null=True, blank=True
     )
-    meeting_url = URLField(null=True, blank=True)
+    meeting = OneToOneField(Meeting, on_delete=CASCADE, null=True, blank=True)
 
     class Meta:
         db_table = "schedule"

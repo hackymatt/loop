@@ -16,6 +16,7 @@ from .factory import (
     create_schedule,
     create_teaching,
     create_reservation,
+    create_meeting,
 )
 from .helpers import (
     login,
@@ -25,6 +26,8 @@ from .helpers import (
     reservation_number,
     is_reservation_found,
     mock_send_message,
+    mock_create_event,
+    mock_update_event,
 )
 from django.contrib import auth
 import json
@@ -32,6 +35,7 @@ from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from reservation.utils import confirm_reservations
 from utils.google.gmail import GmailApi
+from utils.google.calendar import CalendarApi
 
 
 class ReservationTest(TestCase):
@@ -146,7 +150,7 @@ class ReservationTest(TestCase):
             )
 
         self.schedules = []
-        for i in range(10):
+        for i in range(7):
             self.schedules.append(
                 create_schedule(
                     lecturer=self.lecturer_profile,
@@ -238,6 +242,40 @@ class ReservationTest(TestCase):
                 + timedelta(minutes=30 * 403)
             ),
             lesson=self.lesson_4,
+        )
+
+        self.later_timeslot = create_schedule(
+            lecturer=self.lecturer_profile,
+            start_time=make_aware(
+                datetime.now().replace(minute=0, second=0, microsecond=0)
+                + timedelta(hours=48)
+            ),
+            end_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(hours=48)
+            ),
+        )
+        create_schedule(
+            lecturer=self.lecturer_profile,
+            start_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(hours=48)
+            ),
+            end_time=make_aware(
+                datetime.now().replace(minute=0, second=0, microsecond=0)
+                + timedelta(hours=49)
+            ),
+        )
+        create_schedule(
+            lecturer=self.lecturer_profile,
+            start_time=make_aware(
+                datetime.now().replace(minute=0, second=0, microsecond=0)
+                + timedelta(hours=49)
+            ),
+            end_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(hours=49)
+            ),
         )
 
         self.purchase_1 = create_purchase(
@@ -415,14 +453,20 @@ class ReservationTest(TestCase):
         self.assertEqual(_send_message_mock.call_count, 2)
 
     @patch.object(GmailApi, "_send_message")
+    @patch.object(CalendarApi, "update")
     def test_create_reservation_authenticated_other_reservation_single_slot(
-        self, _send_message_mock
+        self, update_event_mock, _send_message_mock
     ):
+        mock_update_event(mock=update_event_mock)
         mock_send_message(mock=_send_message_mock)
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
+        meeting = create_meeting(event_id="test_event", url="https://example.com")
+        self.schedules[2].meeting = meeting
+        self.schedules[2].lesson = self.lesson_2
+        self.schedules[2].save()
         data = {
             "lesson": self.lesson_2.id,
             "schedule": self.schedules[2].id,
@@ -436,7 +480,8 @@ class ReservationTest(TestCase):
         self.assertEqual(data["schedule"], self.schedules[2].id)
         self.assertEqual(get_schedule(self.schedules[2].id).lesson, self.lesson_2)
         self.assertEqual(schedule_number(), 16)
-        self.assertEqual(_send_message_mock.call_count, 2)
+        self.assertEqual(_send_message_mock.call_count, 3)
+        self.assertEqual(update_event_mock.call_count, 1)
 
     @patch.object(GmailApi, "_send_message")
     def test_create_reservation_authenticated_first_reservation_multiple_slot(
@@ -449,7 +494,7 @@ class ReservationTest(TestCase):
         # post data
         data = {
             "lesson": self.lesson_1.id,
-            "schedule": self.schedules[3].id,
+            "schedule": self.later_timeslot.id,
             "purchase": self.purchase_1.id,
         }
         response = self.client.post(self.endpoint, data)
@@ -457,20 +502,26 @@ class ReservationTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(reservation_number(), 7)
         self.assertEqual(data["lesson"], self.lesson_1.id)
-        self.assertNotEqual(data["schedule"], self.schedules[3].id)
+        self.assertNotEqual(data["schedule"], self.later_timeslot.id)
         self.assertEqual(get_schedule(data["schedule"]).lesson, self.lesson_1)
         self.assertEqual(schedule_number(), 14)
         self.assertEqual(_send_message_mock.call_count, 2)
 
     @patch.object(GmailApi, "_send_message")
+    @patch.object(CalendarApi, "update")
     def test_create_reservation_authenticated_other_reservation_multiple_slot(
-        self, _send_message_mock
+        self, update_event_mock, _send_message_mock
     ):
+        mock_update_event(mock=update_event_mock)
         mock_send_message(mock=_send_message_mock)
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
+        meeting = create_meeting(event_id="test_event", url="https://example.com")
+        self.long_timeslot_2.meeting = meeting
+        self.long_timeslot_2.lesson = self.lesson_1
+        self.long_timeslot_2.save()
         data = {
             "lesson": self.lesson_1.id,
             "schedule": self.long_timeslot_2.id,
@@ -484,7 +535,8 @@ class ReservationTest(TestCase):
         self.assertEqual(data["schedule"], self.long_timeslot_2.id)
         self.assertEqual(get_schedule(data["schedule"]).lesson, self.lesson_1)
         self.assertEqual(schedule_number(), 16)
-        self.assertEqual(_send_message_mock.call_count, 2)
+        self.assertEqual(_send_message_mock.call_count, 3)
+        self.assertEqual(update_event_mock.call_count, 1)
 
     @patch.object(GmailApi, "_send_message")
     def test_delete_reservation_unauthenticated(self, _send_message_mock):
@@ -744,9 +796,12 @@ class ReservationConfirmationTest(TestCase):
         self.schedules[0].save()
 
     @patch.object(GmailApi, "_send_message")
-    def test_reservation_confirmation(self, _send_message_mock):
+    @patch.object(CalendarApi, "create")
+    def test_reservation_confirmation(self, create_event_mock, _send_message_mock):
+        mock_create_event(mock=create_event_mock)
         mock_send_message(mock=_send_message_mock)
         self.assertEqual(reservation_number(), 4)
         confirm_reservations()
         self.assertEqual(reservation_number(), 3)
         self.assertEqual(_send_message_mock.call_count, 6)
+        self.assertEqual(create_event_mock.call_count, 1)

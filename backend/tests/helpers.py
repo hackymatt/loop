@@ -13,7 +13,7 @@ from reservation.models import Reservation
 from teaching.models import Teaching
 from cart.models import Cart
 from wishlist.models import Wishlist
-from django.core import mail
+import uuid
 
 
 def login(self, email: str, password: str):
@@ -220,4 +220,16 @@ def get_coupon(id: int):
 
 
 def mock_send_message(mock):
+    mock.return_value = {}
+
+
+def mock_create_event(mock):
+    mock.return_value = {"id": str(uuid.uuid4()), "hangoutLink": "https://example.com"}
+
+
+def mock_update_event(mock):
+    mock.return_value = {"id": str(uuid.uuid4()), "hangoutLink": "https://example.com"}
+
+
+def mock_delete_event(mock):
     mock.return_value = {}

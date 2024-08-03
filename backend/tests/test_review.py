@@ -17,6 +17,7 @@ from .factory import (
     create_reservation,
     create_teaching,
     create_schedule,
+    create_meeting,
 )
 from .helpers import (
     login,
@@ -917,7 +918,8 @@ class ReviewConfirmationTest(TestCase):
             purchase=self.purchase_1,
         )
         self.schedules[len(self.schedules) - 3].lesson = self.lesson_1
-        self.schedules[len(self.schedules) - 3].meeting_url = "abc"
+        self.meeting_1 = create_meeting(event_id="abc1", url="abc1")
+        self.schedules[len(self.schedules) - 3].meeting = self.meeting_1
         self.schedules[len(self.schedules) - 3].save()
         self.purchase_2 = create_purchase(
             lesson=self.lesson_2,
@@ -943,8 +945,9 @@ class ReviewConfirmationTest(TestCase):
             rating=5,
             review="Great lesson.",
         )
+        self.meeting_2 = create_meeting(event_id="abc2", url="abc2")
         self.schedules[0].lesson = self.lesson_2
-        self.schedules[0].meeting_url = "abc"
+        self.schedules[0].meeting = self.meeting_2
         self.schedules[0].save()
 
     @patch.object(GmailApi, "_send_message")
