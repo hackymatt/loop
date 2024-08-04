@@ -21,12 +21,15 @@ from .factory import (
     create_coupon,
     create_coupon_user,
     create_newsletter,
+    create_meeting,
 )
 from .helpers import login
 from django.contrib import auth
 import json
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
+from const import CANCELLATION_TIME
+import uuid
 
 
 def is_float(element: any) -> bool:
@@ -1683,19 +1686,27 @@ class PurchaseOrderTest(APITestCase):
 
         self.schedules = []
         for i in range(-100, 10):
-            self.schedules.append(
-                create_schedule(
-                    lecturer=self.lecturer_profile,
-                    start_time=make_aware(
-                        datetime.now().replace(minute=30, second=0, microsecond=0)
-                        + timedelta(minutes=30 * i)
-                    ),
-                    end_time=make_aware(
-                        datetime.now().replace(minute=30, second=0, microsecond=0)
-                        + timedelta(minutes=30 * (i + 1))
-                    ),
-                )
+            schedule = create_schedule(
+                lecturer=self.lecturer_profile,
+                start_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * i)
+                ),
+                end_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * (i + 1))
+                ),
             )
+            if (schedule.start_time - make_aware(datetime.now())) < timedelta(
+                hours=CANCELLATION_TIME
+            ):
+                id = str(uuid.uuid4())
+                schedule.meeting = create_meeting(
+                    event_id=id, url=f"https://example.com/{id}"
+                )
+                schedule.save()
+
+            self.schedules.append(schedule)
         self.purchase_1 = create_purchase(
             lesson=self.course_1.lessons.all()[0],
             student=self.profile,

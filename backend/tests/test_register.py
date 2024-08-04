@@ -1,5 +1,7 @@
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APIClient
+from django.test import TestCase
+from unittest.mock import patch
 from .factory import create_user, create_newsletter
 from .helpers import (
     users_number,
@@ -9,15 +11,16 @@ from .helpers import (
     is_profile_found,
     get_profile,
     is_data_match,
-    emails_sent_number,
-    get_mail,
+    mock_send_message,
     newsletters_number,
 )
+from utils.google.gmail import GmailApi
 
 
-class RegisterTest(APITestCase):
+class RegisterTest(TestCase):
     def setUp(self):
         self.endpoint = "/api/register"
+        self.client = APIClient()
         self.data = {
             "first_name": "test_first_name",
             "last_name": "test_last_name",
@@ -33,16 +36,20 @@ class RegisterTest(APITestCase):
             is_active=True,
         )
 
-    def test_incorrect_email(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_incorrect_email(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         data = self.data.copy()
         data["email"] = "email@example.com"
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(users_number(), 4)
-        self.assertEqual(emails_sent_number(), 0)
+        self.assertEqual(_send_message_mock.call_count, 0)
         self.assertEqual(newsletters_number(), 0)
 
-    def test_password_strength(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_password_strength(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         # new password with less than 8 characters
         new_password = "abcd"
         data = self.data.copy()
@@ -50,7 +57,7 @@ class RegisterTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(users_number(), 4)
-        self.assertEqual(emails_sent_number(), 0)
+        self.assertEqual(_send_message_mock.call_count, 0)
         self.assertEqual(newsletters_number(), 0)
 
         # new password without numbers
@@ -60,7 +67,7 @@ class RegisterTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(users_number(), 4)
-        self.assertEqual(emails_sent_number(), 0)
+        self.assertEqual(_send_message_mock.call_count, 0)
         self.assertEqual(newsletters_number(), 0)
 
         # new password without uppercase letter
@@ -70,7 +77,7 @@ class RegisterTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(users_number(), 4)
-        self.assertEqual(emails_sent_number(), 0)
+        self.assertEqual(_send_message_mock.call_count, 0)
         self.assertEqual(newsletters_number(), 0)
 
         # new password without lowercase letter
@@ -80,7 +87,7 @@ class RegisterTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(users_number(), 4)
-        self.assertEqual(emails_sent_number(), 0)
+        self.assertEqual(_send_message_mock.call_count, 0)
         self.assertEqual(newsletters_number(), 0)
 
         # new password without special character
@@ -90,10 +97,12 @@ class RegisterTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(users_number(), 4)
-        self.assertEqual(emails_sent_number(), 0)
+        self.assertEqual(_send_message_mock.call_count, 0)
         self.assertEqual(newsletters_number(), 0)
 
-    def test_new_password_match(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_new_password_match(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         # new password and password 2 does not match
         new_password_2 = "TestPassword12345!"
         data = self.data.copy()
@@ -101,10 +110,12 @@ class RegisterTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(users_number(), 4)
-        self.assertEqual(emails_sent_number(), 0)
+        self.assertEqual(_send_message_mock.call_count, 0)
         self.assertEqual(newsletters_number(), 0)
 
-    def test_register_success_without_newsletter(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_register_success_without_newsletter(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         response = self.client.post(self.endpoint, self.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(users_number(), 5)
@@ -129,13 +140,13 @@ class RegisterTest(APITestCase):
         self.assertTrue(user.check_password(self.data["password"]))
         self.assertNotEqual(profile.verification_code, None)
         self.assertNotEqual(profile.verification_code_created_at, None)
-        self.assertEqual(emails_sent_number(), 1)
-        email = get_mail(0)
-        self.assertEqual(email.to, [self.data["email"]])
-        self.assertEqual(email.subject, "Zweryfikuj swoje konto")
+        self.assertEqual(_send_message_mock.call_count, 1)
+
         self.assertEqual(newsletters_number(), 1)
 
-    def test_register_success_with_newsletter(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_register_success_with_newsletter(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         create_newsletter(email=self.data["email"], active=False)
         response = self.client.post(self.endpoint, self.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -161,8 +172,5 @@ class RegisterTest(APITestCase):
         self.assertTrue(user.check_password(self.data["password"]))
         self.assertNotEqual(profile.verification_code, None)
         self.assertNotEqual(profile.verification_code_created_at, None)
-        self.assertEqual(emails_sent_number(), 1)
-        email = get_mail(0)
-        self.assertEqual(email.to, [self.data["email"]])
-        self.assertEqual(email.subject, "Zweryfikuj swoje konto")
+        self.assertEqual(_send_message_mock.call_count, 1)
         self.assertEqual(newsletters_number(), 1)

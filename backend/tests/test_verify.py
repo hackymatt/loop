@@ -1,12 +1,15 @@
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
+from django.test import TestCase
+from unittest.mock import patch
 from .factory import (
     create_user,
     create_profile,
 )
-from .helpers import users_number, get_user, emails_sent_number, get_mail, get_profile
+from .helpers import users_number, get_user, mock_send_message, get_profile
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
+from utils.google.gmail import GmailApi
 
 
 class VerifyTest(APITestCase):
@@ -80,9 +83,10 @@ class VerifyTest(APITestCase):
         self.assertTrue(get_user(self.data_1["email"]).is_active)
 
 
-class VerificationCodeTest(APITestCase):
+class VerificationCodeTest(TestCase):
     def setUp(self):
         self.endpoint = "/api/verify-code"
+        self.client = APIClient()
         self.data = {"email": "test_email@example.com"}
         self.verification_code = {
             "verification_code": "abcd1234",
@@ -105,14 +109,18 @@ class VerificationCodeTest(APITestCase):
             ],
         )
 
-    def test_incorrect_email(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_incorrect_email(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         data = self.data.copy()
         data["email"] = "email@example.com"
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        self.assertEqual(emails_sent_number(), 0)
+        self.assertEqual(_send_message_mock.call_count, 0)
 
-    def test_verification_code_success(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_verification_code_success(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         response = self.client.post(self.endpoint, self.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertNotEqual(
@@ -123,7 +131,4 @@ class VerificationCodeTest(APITestCase):
             get_profile(self.user).verification_code_created_at,
             self.verification_code["verification_code_created_at"],
         )
-        self.assertEqual(emails_sent_number(), 1)
-        email = get_mail(0)
-        self.assertEqual(email.to, [self.data["email"]])
-        self.assertEqual(email.subject, "Zweryfikuj swoje konto")
+        self.assertEqual(_send_message_mock.call_count, 1)

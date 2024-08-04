@@ -1,6 +1,7 @@
 from rest_framework import status
-from django.test import TestCase
 from rest_framework.test import APITestCase
+from django.test import TestCase
+from unittest.mock import patch
 from .factory import (
     create_user,
     create_profile,
@@ -16,6 +17,7 @@ from .factory import (
     create_reservation,
     create_teaching,
     create_schedule,
+    create_meeting,
 )
 from .helpers import (
     login,
@@ -23,14 +25,14 @@ from .helpers import (
     is_data_match,
     get_review,
     is_review_found,
-    get_mail,
-    emails_sent_number,
+    mock_send_message,
 )
 from django.contrib import auth
 import json
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from review.utils import remind_review
+from utils.google.gmail import GmailApi
 
 
 class ReviewTest(APITestCase):
@@ -916,7 +918,8 @@ class ReviewConfirmationTest(TestCase):
             purchase=self.purchase_1,
         )
         self.schedules[len(self.schedules) - 3].lesson = self.lesson_1
-        self.schedules[len(self.schedules) - 3].meeting_url = "abc"
+        self.meeting_1 = create_meeting(event_id="abc1", url="abc1")
+        self.schedules[len(self.schedules) - 3].meeting = self.meeting_1
         self.schedules[len(self.schedules) - 3].save()
         self.purchase_2 = create_purchase(
             lesson=self.lesson_2,
@@ -942,14 +945,14 @@ class ReviewConfirmationTest(TestCase):
             rating=5,
             review="Great lesson.",
         )
+        self.meeting_2 = create_meeting(event_id="abc2", url="abc2")
         self.schedules[0].lesson = self.lesson_2
-        self.schedules[0].meeting_url = "abc"
+        self.schedules[0].meeting = self.meeting_2
         self.schedules[0].save()
 
-    def test_review_reminder(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_review_reminder(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         self.assertEqual(reviews_number(), 1)
         remind_review()
-        self.assertEqual(emails_sent_number(), 1)
-        email = get_mail(0)
-        self.assertEqual(email.to, [self.profile.profile.user.email])
-        self.assertEqual(email.subject, "Prośba o ocenę szkolenia")
+        self.assertEqual(_send_message_mock.call_count, 1)

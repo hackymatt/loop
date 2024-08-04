@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from pathlib import Path
 import os
+import json
 from socket import gethostbyname, gethostname
 from dotenv import load_dotenv
 
@@ -264,6 +265,8 @@ else:
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "")
+EMAIL_FROM = os.getenv("EMAIL_FROM", "")
+GOOGLE_CREDENTIALS = json.loads(os.getenv("GOOGLE_CREDENTIALS", "{}"))
 
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "")
@@ -272,15 +275,6 @@ DUMMY_STUDENT_EMAIL = os.getenv("DUMMY_STUDENT_EMAIL", "")
 DUMMY_STUDENT_PASSWORD = os.getenv("DUMMY_STUDENT_PASSWORD", "")
 DUMMY_LECTURER_EMAIL = os.getenv("DUMMY_LECTURER_EMAIL", "")
 DUMMY_LECTURER_PASSWORD = os.getenv("DUMMY_LECTURER_PASSWORD", "")
-
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_USE_TLS = bool(os.getenv("EMAIL_USE_TLS", "True"))
-EMAIL_FROM = os.getenv("EMAIL_HOST_USER", "")
-EMAIL_HOST = os.getenv("EMAIL_HOST", "")
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
-EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
-
 
 BASE_FRONTEND_URL = os.environ.get("BASE_URL", "http://localhost")
 

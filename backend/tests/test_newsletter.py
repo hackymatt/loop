@@ -1,5 +1,7 @@
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
+from django.test import TestCase
+from unittest.mock import patch
 from .factory import (
     create_user,
     create_profile,
@@ -12,11 +14,11 @@ from .helpers import (
     newsletters_number,
     get_newsletter,
     is_data_match,
-    emails_sent_number,
-    get_mail,
+    mock_send_message,
 )
 from django.contrib import auth
 import json
+from utils.google.gmail import GmailApi
 
 
 class NewsletterEntriesTest(APITestCase):
@@ -111,32 +113,31 @@ class NewsletterEntriesTest(APITestCase):
         self.assertTrue(is_data_match(newsletter, data))
 
 
-class NewsletterSubscribeTest(APITestCase):
+class NewsletterSubscribeTest(TestCase):
     def setUp(self):
         self.endpoint = "/api/newsletter-subscribe"
+        self.client = APIClient()
 
-    def test_subscribe_to_newsletter_without_history(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_subscribe_to_newsletter_without_history(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         # post data
         data = {"email": "test@example.com"}
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(newsletters_number(), 1)
-        self.assertEqual(emails_sent_number(), 1)
-        email = get_mail(0)
-        self.assertEqual(email.to, [data["email"]])
-        self.assertEqual(email.subject, "Potwierdzenie rejestracji w newsletterze")
+        self.assertEqual(_send_message_mock.call_count, 1)
 
-    def test_subscribe_to_newsletter_with_history(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_subscribe_to_newsletter_with_history(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         data = {"email": "test@example.com"}
         create_newsletter(email=data["email"], active=False)
         # post data
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(newsletters_number(), 1)
-        self.assertEqual(emails_sent_number(), 1)
-        email = get_mail(0)
-        self.assertEqual(email.to, [data["email"]])
-        self.assertEqual(email.subject, "Potwierdzenie rejestracji w newsletterze")
+        self.assertEqual(_send_message_mock.call_count, 1)
 
 
 class NewsletterUnsubscribeTest(APITestCase):

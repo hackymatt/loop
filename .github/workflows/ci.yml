@@ -74,6 +74,8 @@ jobs:
       REDIS_URL: ${{ secrets.REDIS_URL }}
 
       CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL }}
+      EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+      GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
       ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
@@ -83,13 +85,6 @@ jobs:
 
       DUMMY_LECTURER_EMAIL: ${{ secrets.DUMMY_LECTURER_EMAIL }}
       DUMMY_LECTURER_PASSWORD: ${{ secrets.DUMMY_LECTURER_PASSWORD }}
-
-      EMAIL_USE_TLS: ${{ secrets.EMAIL_USE_TLS }}
-      EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
-      EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
-      EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
-      EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
-      EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
 
       GITHUB_REPO: ${{ secrets.LESSON_GITHUB_REPO }}
 

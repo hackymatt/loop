@@ -8,6 +8,7 @@ from schedule.serializers import (
 )
 from schedule.filters import ScheduleFilter
 from schedule.models import Schedule
+from schedule.utils import MeetingManager
 from profile.models import Profile
 from reservation.models import Reservation
 from pytz import timezone, utc
@@ -73,6 +74,11 @@ class ManageScheduleViewSet(ModelViewSet):
                     data=data,
                 )
 
+            meeting_manager = MeetingManager(
+                lecturer_email=schedule.lecturer.profile.user.email
+            )
+            meeting_manager.delete(event_id=schedule.meeting.event_id)
+
         return deletion
 
 
@@ -80,7 +86,7 @@ class ScheduleViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = Schedule.objects.annotate(
         diff=make_aware(datetime.now()) - F("start_time")
-    ).exclude(diff__gte=-timedelta(hours=CANCELLATION_TIME))
+    ).exclude(lesson__isnull=True, diff__gte=-timedelta(hours=CANCELLATION_TIME))
     serializer_class = ScheduleSerializer
     filterset_class = ScheduleFilter
     permission_classes = [AllowAny]

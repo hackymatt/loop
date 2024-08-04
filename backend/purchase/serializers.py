@@ -137,7 +137,13 @@ class PurchaseGetSerializer(ModelSerializer):
         reservation = get_reservation(purchase=purchase)
 
         if reservation.exists():
-            return reservation.first().schedule.meeting_url
+            schedule = reservation.first().schedule
+            if (schedule.start_time - make_aware(datetime.now())) < timedelta(
+                hours=CANCELLATION_TIME
+            ):
+                return schedule.meeting.url
+            else:
+                return None
         else:
             return None
 

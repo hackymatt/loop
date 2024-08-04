@@ -335,7 +335,7 @@ class CertificateTest(APITestCase):
         self.assertEqual(
             data,
             {
-                "completion_date": "2024-08-01",
+                "completion_date": datetime.today().strftime("%Y-%m-%d"),
                 "lesson_duration": 90,
                 "lesson_title": "Python lesson 1",
                 "reference_number": "00001",
@@ -357,7 +357,7 @@ class CertificateTest(APITestCase):
         self.assertEqual(
             data,
             {
-                "completion_date": "2024-08-01",
+                "completion_date": datetime.today().strftime("%Y-%m-%d"),
                 "lesson_duration": 30,
                 "lesson_title": "Python lesson 2",
                 "reference_number": "00008",
@@ -377,7 +377,7 @@ class CertificateTest(APITestCase):
         self.assertEqual(
             data,
             {
-                "completion_date": "2024-08-01",
+                "completion_date": datetime.today().strftime("%Y-%m-%d"),
                 "lesson_duration": 90,
                 "lesson_title": "Python lesson 1",
                 "reference_number": "00031",

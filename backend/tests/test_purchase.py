@@ -16,12 +16,15 @@ from .factory import (
     create_reservation,
     create_review,
     create_coupon,
+    create_meeting,
 )
 from .helpers import login
 import json
 from django.contrib import auth
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
+from const import CANCELLATION_TIME
+import uuid
 
 
 class PurchaseTest(APITestCase):
@@ -110,24 +113,35 @@ class PurchaseTest(APITestCase):
 
         self.schedules = []
         for i in range(-10, 100):
-            self.schedules.append(
-                create_schedule(
-                    lecturer=self.lecturer_profile,
-                    start_time=make_aware(
-                        datetime.now().replace(minute=30, second=0, microsecond=0)
-                        + timedelta(minutes=30 * i)
-                    ),
-                    end_time=make_aware(
-                        datetime.now().replace(minute=30, second=0, microsecond=0)
-                        + timedelta(minutes=30 * (i + 1))
-                    ),
-                )
+            schedule = create_schedule(
+                lecturer=self.lecturer_profile,
+                start_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * i)
+                ),
+                end_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * (i + 1))
+                ),
             )
+            if (schedule.start_time - make_aware(datetime.now())) < timedelta(
+                hours=CANCELLATION_TIME
+            ):
+                id = str(uuid.uuid4())
+                schedule.meeting = create_meeting(
+                    event_id=id, url=f"https://example.com/{id}"
+                )
+                schedule.save()
+
+            self.schedules.append(schedule)
         self.purchase_1 = create_purchase(
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
         )
+        meeting = create_meeting(event_id="test_event", url="https://example.com")
+        self.schedules[len(self.schedules) - 3].meeting = meeting
+        self.schedules[len(self.schedules) - 3].save()
         create_reservation(
             student=self.profile,
             lesson=self.lesson_1,
