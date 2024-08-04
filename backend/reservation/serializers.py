@@ -180,7 +180,9 @@ class ReservationSerializer(ModelSerializer):
         if (schedule.start_time - make_aware(datetime.now())) < timedelta(
             hours=CANCELLATION_TIME
         ):
-            meeting_manager = MeetingManager()
+            meeting_manager = MeetingManager(
+                lecturer_email=schedule.lecturer.profile.user.email
+            )
             meeting_manager.update(
                 event_id=schedule.meeting.event_id,
                 title=schedule.lesson.title,

@@ -65,7 +65,7 @@ export default function UserEditForm({ user, onClose, ...other }: Props) {
         user_type: data.user_type as IUserType,
         rate: data.rate ?? 0,
         commission: data.commission ?? 0,
-        dob: fDate(data.dob, "yyyy-MM-dd") ?? "",
+        dob: data.dob ? fDate(data.dob, "yyyy-MM-dd") : null,
         gender: data.gender as IGender,
         phone_number: data.phone_number ?? "",
         street_address: data.street_address ?? "",

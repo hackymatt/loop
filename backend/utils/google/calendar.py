@@ -42,6 +42,7 @@ class CalendarApi:
                     "email": lecturer["email"],
                     "displayName": f"{lecturer_full_name} (Trener)",
                     "organizer": True,
+                    "responseStatus": "accepted",
                 },
                 *attendees,
             ],
@@ -96,7 +97,12 @@ class CalendarApi:
         )
         return (
             self.service.events()
-            .update(calendarId="primary", eventId=event_id, body=event)
+            .update(
+                calendarId="primary",
+                eventId=event_id,
+                body=event,
+                sendUpdates="none",
+            )
             .execute()
         )
 

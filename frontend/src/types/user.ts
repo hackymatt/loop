@@ -14,7 +14,7 @@ export type IUserDetailsProps = {
   last_name: string;
   email: string;
   phone_number: string;
-  dob: string;
+  dob: string | null;
   gender: IGender;
   street_address: string;
   zip_code: string;
