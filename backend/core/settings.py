@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from pathlib import Path
 import os
+import base64
 import json
 from socket import gethostbyname, gethostname
 from dotenv import load_dotenv
@@ -266,7 +267,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "")
 EMAIL_FROM = os.getenv("EMAIL_FROM", "")
-GOOGLE_CREDENTIALS = json.loads(os.getenv("GOOGLE_CREDENTIALS", "{}"))
+GOOGLE_CREDENTIALS = json.loads(
+    base64.urlsafe_b64decode(os.getenv("GOOGLE_CREDENTIALS", "e30=")).decode()
+)
 
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "")
