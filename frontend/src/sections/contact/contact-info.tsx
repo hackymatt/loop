@@ -43,8 +43,8 @@ export default function ContactInfo() {
                 <Iconify icon="carbon:email" width={24} sx={{ mr: 1 }} /> Email
               </Stack>
 
-              <Link color="inherit" variant="body2" href="mailto:kontakt@loop.edu.pl">
-                kontakt@loop.edu.pl
+              <Link color="inherit" variant="body2" href="mailto:info@loop.edu.pl">
+                info@loop.edu.pl
               </Link>
             </Stack>
 
