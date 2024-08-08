@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+import { Box } from "@mui/material";
 import List from "@mui/material/List";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -47,7 +48,9 @@ export default function NavMobile({ data }: NavProps) {
         }}
       >
         <Scrollbar>
-          <Logo sx={{ mx: 2.5, my: 3 }} />
+          <Box sx={{ lineHeight: 0, position: "relative", mx: 2.5, my: 3 }}>
+            <Logo />
+          </Box>
 
           <List component="nav" disablePadding>
             {data.map((list) => (

@@ -6,7 +6,7 @@ from rest_framework.serializers import (
     ImageField,
     ValidationError,
 )
-from purchase.models import Purchase
+from purchase.models import Purchase, Payment
 from lesson.models import Lesson, Technology
 from profile.models import Profile, LecturerProfile, StudentProfile
 from reservation.models import Reservation
@@ -196,7 +196,7 @@ class PurchaseGetSerializer(ModelSerializer):
 class PurchaseSerializer(ModelSerializer):
     class Meta:
         model = Purchase
-        exclude = ("student",)
+        exclude = ("student", "payment")
 
     def validate_lesson(self, lesson):
         if not lesson.active:
@@ -208,6 +208,9 @@ class PurchaseSerializer(ModelSerializer):
         user = self.context["request"].user
         student = Profile.objects.get(user=user)
 
+        payment_id = self.context["payment"]
+        payment = Payment.objects.get(pk=payment_id)
+
         objs = []
         for data in validated_data:
             lesson = Lesson.objects.get(id=data["lesson"])
@@ -215,6 +218,7 @@ class PurchaseSerializer(ModelSerializer):
                 lesson=lesson,
                 price=data["price"],
                 student=StudentProfile.objects.get(profile=student),
+                payment=payment,
             )
             objs.append(obj)
 

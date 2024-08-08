@@ -15,3 +15,4 @@ data:
   DB_NAME: "postgres"
   DB_HOST: "postgresql"
   DB_PORT: "5432"
+  PAYMENT_SERVER: {{ .Values.env.PAYMENT_SERVER }}

@@ -50,12 +50,17 @@ export default function CartView() {
 
   const handlePurchase = async (coupon: string) => {
     try {
-      await createPurchase({
+      const paymentRegistration = await createPurchase({
         lessons: cartItems.map((cItem: ICartProp) => ({ lesson: cItem.lesson.id })),
         coupon,
       });
-      await Promise.allSettled(cartItems.map((cItem: ICartProp) => deleteCart({ id: cItem.id })));
-      push(paths.orderCompleted);
+      console.log(paymentRegistration);
+      const { token } = paymentRegistration.data;
+
+      const paymentUrl = `https://secure.przelewy24.pl/trnRequest/${token}`;
+      push(paymentUrl);
+
+      // await Promise.allSettled(cartItems.map((cItem: ICartProp) => deleteCart({ id: cItem.id })));
     } catch (err) {
       setError((err as AxiosError).response?.data as IPurchaseError);
       enqueueSnackbar("Wystąpił błąd podczas zakupu", { variant: "error" });

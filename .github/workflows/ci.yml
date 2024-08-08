@@ -77,6 +77,10 @@ jobs:
       EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
       GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
+      PAYMENT_SERVER: ${{ PAYMENT_SERVER }}
+      MERCHANT_ID: ${{ MERCHANT_ID }}
+      STORE_ID: ${{ STORE_ID }}
+
       ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
 

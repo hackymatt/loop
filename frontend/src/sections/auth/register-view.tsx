@@ -186,7 +186,7 @@ export default function RegisterView() {
       </Typography>
 
       <Typography variant="body2" sx={{ color: "text.secondary" }}>
-        Już masz konto?{" "}
+        Masz już konto?{" "}
         <Link component={RouterLink} href={paths.login} variant="subtitle2" color="primary">
           Zaloguj się
         </Link>
@@ -284,7 +284,8 @@ export default function RegisterView() {
         <Typography variant="caption" align="center" sx={{ color: "text.secondary", mt: 1 }}>
           Klikając przycisk Zarejestruj się, akceptujesz nasz{" "}
           <Link
-            component={RouterLink}
+            target="_blank"
+            rel="noopener"
             href={paths.termsAndConditions}
             color="text.primary"
             underline="always"
@@ -293,7 +294,8 @@ export default function RegisterView() {
           </Link>{" "}
           oraz{" "}
           <Link
-            component={RouterLink}
+            target="_blank"
+            rel="noopener"
             href={paths.privacyPolicy}
             color="text.primary"
             underline="always"

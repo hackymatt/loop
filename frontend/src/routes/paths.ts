@@ -12,7 +12,11 @@ export const paths = {
   newsletter: "/newsletter-unsubscribe",
   cart: "/cart",
   checkout: "/checkout",
-  orderCompleted: "/order-completed",
+  order: {
+    status: "/order-status",
+    completed: "/order-completed",
+    "not-completed": "/order-not-completed",
+  },
   wishlist: "/wishlist",
   support: "/support",
   privacyPolicy: "/privacy-policy",

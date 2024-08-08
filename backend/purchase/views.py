@@ -3,18 +3,21 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.serializers import ValidationError
 from rest_framework.response import Response
 from rest_framework import status
+from django.http import JsonResponse
 from purchase.serializers import PurchaseSerializer, PurchaseGetSerializer
-from purchase.models import Purchase
+from purchase.models import Purchase, Payment
 from purchase.filters import PurchaseFilter
+from purchase.utils import Przelewy24
 from profile.models import Profile
 from lesson.models import Lesson
 from coupon.models import Coupon
 from coupon.validation import validate_coupon
+import json
 
 
 class PurchaseViewSet(ModelViewSet):
     http_method_names = ["get", "post"]
-    queryset = Purchase.objects.all()
+    queryset = Purchase.objects.all().filter(payment__status="success")
     serializer_class = PurchaseGetSerializer
     filterset_class = PurchaseFilter
     permission_classes = [IsAuthenticated]
@@ -106,16 +109,48 @@ class PurchaseViewSet(ModelViewSet):
             records = lessons_data
             total = self.get_total_price(lessons=records)
 
-        # make payment
-        is_payment_successful = total > 1
-        if not is_payment_successful:
-            raise ValidationError({"payment": "Płatność odrzucona."})
+        # initialize payment record
+        payment = Payment.objects.create(amount=total * 100)
 
         # create records
-        serializer = PurchaseSerializer(data=records, context={"request": request})
+        serializer = PurchaseSerializer(
+            data=records, context={"request": request, "payment": payment.id}
+        )
         instances = serializer.create(serializer.initial_data)
 
-        return Response(
-            status=status.HTTP_200_OK,
-            data=PurchaseGetSerializer(instances, many=True).data,
+        # register payment
+        przelewy24 = Przelewy24(payment=payment)
+
+        register = przelewy24.register(client=profile, purchases=instances)
+
+        return JsonResponse(
+            status=register.status_code,
+            data=register.json(),
+        )
+
+
+class PurchaseValidateViewSet(ModelViewSet):
+    http_method_names = ["get"]
+
+    def validate(request, id):
+        payment = Payment.objects.filter(session_id=id)
+
+        if not payment.exists():
+            return JsonResponse(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={},
+            )
+
+        payment = payment.first()
+
+        przelewy24 = Przelewy24(payment=payment)
+        verification = przelewy24.verify()
+
+        if verification.ok:
+            payment.status = json.loads(verification)["data"]["status"]
+            payment.save()
+
+        return JsonResponse(
+            status=verification.status_code,
+            data=verification.json(),
         )

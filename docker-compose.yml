@@ -41,6 +41,9 @@ services:
       - GITHUB_REPO=${GITHUB_REPO}
       - S3_ACCESS_KEY=${S3_ACCESS_KEY}
       - S3_SECRET_KEY=${S3_SECRET_KEY}
+      - PAYMENT_SERVER=${PAYMENT_SERVER}
+      - PAYMENT_MERCHANT_ID=${PAYMENT_MERCHANT_ID}
+      - PAYMENT_STORE_ID=${PAYMENT_STORE_ID}
     depends_on:
       - db
       - redis

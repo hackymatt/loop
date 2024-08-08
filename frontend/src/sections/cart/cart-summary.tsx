@@ -14,7 +14,6 @@ import { fCurrency } from "src/utils/format-number";
 import { validateCoupon } from "src/api/coupons/coupon-validation";
 
 import Iconify from "src/components/iconify";
-
 // ----------------------------------------------------------------------
 
 type Props = {

@@ -291,3 +291,9 @@ GITHUB_CLIENT_ID = os.environ.get("GITHUB_CLIENT_ID", "")
 GITHUB_CLIENT_SECRET = os.environ.get("GITHUB_CLIENT_SECRET", "")
 
 GITHUB_REPO = os.environ.get("GITHUB_REPO", "")
+
+PAYMENT_SERVER = os.environ.get("PAYMENT_SERVER", "https://sandbox.przelewy24.pl")
+PAYMENT_MERCHANT_ID = int(os.environ.get("PAYMENT_MERCHANT_ID", "-1"))
+PAYMENT_STORE_ID = os.environ.get("PAYMENT_STORE_ID", "-1")
+PAYMENT_CRC = os.environ.get("PAYMENT_CRC", "")
+PAYMENT_API_KEY = os.environ.get("PAYMENT_API_KEY", "")
