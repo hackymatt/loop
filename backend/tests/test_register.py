@@ -27,6 +27,7 @@ class RegisterTest(TestCase):
             "email": "test_email@example.com",
             "password": "TestPassword123!",
             "password2": "TestPassword123!",
+            "newsletter": True,
         }
         self.user = create_user(
             first_name="first_name",
