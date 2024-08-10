@@ -57,7 +57,7 @@ export default function CartView() {
       console.log(paymentRegistration);
       const { token } = paymentRegistration.data;
 
-      const paymentUrl = `https://secure.przelewy24.pl/trnRequest/${token}`;
+      const paymentUrl = `${paths.payment.url}/${token}`;
       push(paymentUrl);
 
       // await Promise.allSettled(cartItems.map((cItem: ICartProp) => deleteCart({ id: cItem.id })));

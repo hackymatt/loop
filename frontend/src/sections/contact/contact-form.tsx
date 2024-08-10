@@ -3,11 +3,14 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import Box from "@mui/material/Box";
+import { Link } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
+
+import { paths } from "src/routes/paths";
 
 import { useResponsive } from "src/hooks/use-responsive";
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
@@ -16,7 +19,7 @@ import { useContact } from "src/api/contact/contact";
 
 import Image from "src/components/image";
 import { useToastContext } from "src/components/toast";
-import FormProvider, { RHFTextField } from "src/components/hook-form";
+import FormProvider, { RHFCheckbox, RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +35,9 @@ export default function ContactForm() {
     email: Yup.string().required("Adres e-mail jest wymagany").email("Podaj poprawny adres e-mail"),
     subject: Yup.string().required("Temat jest wymagany"),
     message: Yup.string().required("Wiadomość jest wymagana"),
+    acceptance: Yup.boolean()
+      .required("To pole jest wymagane")
+      .oneOf([true], "To pole jest wymagane"),
   });
 
   const defaultValues = {
@@ -39,6 +45,7 @@ export default function ContactForm() {
     subject: "",
     email: "",
     message: "",
+    acceptance: false,
   };
 
   const methods = useForm({
@@ -106,12 +113,34 @@ export default function ContactForm() {
 
                 <RHFTextField name="subject" label="Tytuł" />
 
-                <RHFTextField
-                  name="message"
-                  multiline
-                  rows={4}
-                  label="Wiadomość"
-                  sx={{ pb: 2.5 }}
+                <RHFTextField name="message" multiline rows={4} label="Wiadomość" />
+
+                <RHFCheckbox
+                  name="acceptance"
+                  label={
+                    <Typography variant="caption" align="left" sx={{ color: "text.secondary" }}>
+                      Akceptuję{" "}
+                      <Link
+                        target="_blank"
+                        rel="noopener"
+                        href={paths.termsAndConditions}
+                        color="text.primary"
+                        underline="always"
+                      >
+                        regulamin
+                      </Link>{" "}
+                      i{" "}
+                      <Link
+                        target="_blank"
+                        rel="noopener"
+                        href={paths.privacyPolicy}
+                        color="text.primary"
+                        underline="always"
+                      >
+                        politykę prywatności.
+                      </Link>
+                    </Typography>
+                  }
                 />
 
                 <LoadingButton

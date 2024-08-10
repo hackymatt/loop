@@ -52,7 +52,7 @@ class Przelewy24:
             "timeLimit": 5,
             "channel": 16,
             "waitForResult": False,
-            "regulationAccept": False,
+            "regulationAccept": True,
             "sign": self._create_sign(),
         }
 

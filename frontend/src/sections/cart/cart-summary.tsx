@@ -8,6 +8,11 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Stack, { StackProps } from "@mui/material/Stack";
 import InputAdornment from "@mui/material/InputAdornment";
+import { Link, Checkbox, FormHelperText, FormControlLabel } from "@mui/material";
+
+import { paths } from "src/routes/paths";
+
+import { useBoolean } from "src/hooks/use-boolean";
 
 import { fCurrency } from "src/utils/format-number";
 
@@ -29,6 +34,11 @@ type IDiscount = {
 };
 
 export default function CartSummary({ total, onPurchase, isLoading, error }: Props) {
+  const acceptance = useBoolean(false);
+  const acceptanceError = useBoolean(false);
+  const paymentAcceptance = useBoolean(false);
+  const paymentAcceptanceError = useBoolean(false);
+
   const [couponError, setCouponError] = useState<string>(error ?? "");
   const [coupon, setCoupon] = useState<string>();
   const [selectedCoupon, setSelectedCoupon] = useState<string>();
@@ -60,6 +70,32 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
     setSelectedCoupon("");
     setDiscount({ discount: 0, is_percentage: false });
     setDiscountedValue(total);
+  };
+
+  const handleClick = () => {
+    acceptanceError.onFalse();
+    paymentAcceptanceError.onFalse();
+
+    if (!acceptance.value && !paymentAcceptance.value) {
+      acceptanceError.onTrue();
+      paymentAcceptanceError.onTrue();
+      return;
+    }
+
+    if (!acceptance.value) {
+      acceptanceError.onTrue();
+      return;
+    }
+
+    if (!paymentAcceptance.value) {
+      paymentAcceptanceError.onTrue();
+      return;
+    }
+
+    onPurchase(selectedCoupon ?? "");
+
+    acceptanceError.onFalse();
+    paymentAcceptanceError.onFalse();
   };
 
   return (
@@ -129,11 +165,78 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
         }}
       />
 
+      <Stack spacing={0.5}>
+        <FormControlLabel
+          control={<Checkbox checked={acceptance.value} onChange={acceptance.onToggle} />}
+          label={
+            <Typography variant="caption" align="left" sx={{ color: "text.secondary" }}>
+              Akceptuję{" "}
+              <Link
+                target="_blank"
+                rel="noopener"
+                href={paths.termsAndConditions}
+                color="text.primary"
+                underline="always"
+              >
+                regulamin
+              </Link>{" "}
+              i{" "}
+              <Link
+                target="_blank"
+                rel="noopener"
+                href={paths.privacyPolicy}
+                color="text.primary"
+                underline="always"
+              >
+                politykę prywatności.
+              </Link>
+            </Typography>
+          }
+        />
+        <FormHelperText error={!!acceptanceError.value}>
+          {acceptanceError.value ? "To pole jest wymagane." : null}
+        </FormHelperText>
+
+        <FormControlLabel
+          control={
+            <Checkbox checked={paymentAcceptance.value} onChange={paymentAcceptance.onToggle} />
+          }
+          label={
+            <Typography variant="caption" align="left" sx={{ color: "text.secondary" }}>
+              Oświadczam, że zapoznałem się z{" "}
+              <Link
+                target="_blank"
+                rel="noopener"
+                href={paths.payment.termsAndConditions}
+                color="text.primary"
+                underline="always"
+              >
+                regulaminem
+              </Link>{" "}
+              i{" "}
+              <Link
+                target="_blank"
+                rel="noopener"
+                href={paths.payment.privacyPolicy}
+                color="text.primary"
+                underline="always"
+              >
+                obowiązkiem informacyjnym
+              </Link>{" "}
+              serwisu Przelewy24.
+            </Typography>
+          }
+        />
+        <FormHelperText error={!!paymentAcceptanceError.value}>
+          {paymentAcceptanceError.value ? "To pole jest wymagane." : null}
+        </FormHelperText>
+      </Stack>
+
       <LoadingButton
         size="large"
         variant="contained"
         color="inherit"
-        onClick={() => onPurchase(selectedCoupon ?? "")}
+        onClick={handleClick}
         loading={isLoading}
       >
         Przejdź do płatności

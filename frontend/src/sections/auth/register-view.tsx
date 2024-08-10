@@ -27,7 +27,7 @@ import { useGoogleAuth, useGithubAuth, useFacebookAuth } from "src/hooks/use-soc
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
-import FormProvider, { RHFTextField } from "src/components/hook-form";
+import FormProvider, { RHFCheckbox, RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
@@ -68,6 +68,10 @@ export default function RegisterView() {
     password2: Yup.string()
       .required("Hasło jest wymagane")
       .oneOf([Yup.ref("password")], "Hasła nie są takie same"),
+    acceptance: Yup.boolean()
+      .required("To pole jest wymagane")
+      .oneOf([true], "To pole jest wymagane"),
+    newsletter: Yup.boolean().required("To pole jest wymagane"),
   });
 
   const defaultValues = {
@@ -76,6 +80,8 @@ export default function RegisterView() {
     email: "",
     password: "",
     password2: "",
+    acceptance: false,
+    newsletter: false,
   };
 
   const methods = useForm({
@@ -270,6 +276,45 @@ export default function RegisterView() {
           }}
         />
 
+        <Stack spacing={0.5}>
+          <RHFCheckbox
+            name="acceptance"
+            label={
+              <Typography variant="caption" align="left" sx={{ color: "text.secondary" }}>
+                Akceptuję{" "}
+                <Link
+                  target="_blank"
+                  rel="noopener"
+                  href={paths.termsAndConditions}
+                  color="text.primary"
+                  underline="always"
+                >
+                  regulamin
+                </Link>{" "}
+                i{" "}
+                <Link
+                  target="_blank"
+                  rel="noopener"
+                  href={paths.privacyPolicy}
+                  color="text.primary"
+                  underline="always"
+                >
+                  politykę prywatności.
+                </Link>
+              </Typography>
+            }
+          />
+
+          <RHFCheckbox
+            name="newsletter"
+            label={
+              <Typography variant="caption" align="left" sx={{ color: "text.secondary" }}>
+                Chcę otrzymywać newsletter, informacje o promocjach i produktach dostępnych w loop.
+              </Typography>
+            }
+          />
+        </Stack>
+
         <LoadingButton
           fullWidth
           color="inherit"
@@ -280,29 +325,6 @@ export default function RegisterView() {
         >
           Zarejestruj się
         </LoadingButton>
-
-        <Typography variant="caption" align="center" sx={{ color: "text.secondary", mt: 1 }}>
-          Klikając przycisk Zarejestruj się, akceptujesz nasz{" "}
-          <Link
-            target="_blank"
-            rel="noopener"
-            href={paths.termsAndConditions}
-            color="text.primary"
-            underline="always"
-          >
-            Regulamin
-          </Link>{" "}
-          oraz{" "}
-          <Link
-            target="_blank"
-            rel="noopener"
-            href={paths.privacyPolicy}
-            color="text.primary"
-            underline="always"
-          >
-            Politykę prywatności.
-          </Link>
-        </Typography>
       </Stack>
     </FormProvider>
   );

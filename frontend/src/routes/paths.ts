@@ -17,6 +17,11 @@ export const paths = {
     completed: "/order-completed",
     "not-completed": "/order-not-completed",
   },
+  payment: {
+    privacyPolicy: "https://www.przelewy24.pl/obowiazek-informacyjny-platnik",
+    termsAndConditions: "https://www.przelewy24.pl/regulamin",
+    url: "https://secure.przelewy24.pl/trnRequest",
+  },
   wishlist: "/wishlist",
   support: "/support",
   privacyPolicy: "/privacy-policy",
