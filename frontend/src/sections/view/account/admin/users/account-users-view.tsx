@@ -26,6 +26,7 @@ import { useUsers, useUsersPagesCount } from "src/api/users/users";
 import Scrollbar from "src/components/scrollbar";
 import DownloadCSVButton from "src/components/download-csv/download-csv";
 
+import FilterBoolean from "src/sections/filters/filter-boolean";
 import AccountUsersTableRow from "src/sections/account/admin/account-users-table-row";
 
 import { IQueryParamValue } from "src/types/query-params";
@@ -45,6 +46,7 @@ const TABS = [
 ];
 
 const TABLE_HEAD = [
+  { id: "active", label: "Aktywny" },
   { id: "first_name", label: "Imię" },
   { id: "last_name", label: "Nazwisko" },
   { id: "email", label: "Email", minWidth: 200 },
@@ -157,6 +159,13 @@ export default function AccountUsersView() {
       </Tabs>
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={1} sx={{ mt: 5, mb: 3 }}>
+        <FilterBoolean
+          leftLabel="Nieaktywny"
+          rightLabel="Aktywny"
+          value={(filters?.active ?? "true") === "true"}
+          onChange={(value: boolean) => handleChange("active", value.toString())}
+        />
+
         <FilterSearch
           value={filters?.first_name ?? ""}
           onChangeSearch={(value) => handleChange("first_name", value)}

@@ -2,6 +2,7 @@ from rest_framework.serializers import (
     ModelSerializer,
     EmailField,
     CharField,
+    BooleanField,
     SerializerMethodField,
 )
 from drf_extra_fields.fields import Base64ImageField
@@ -31,6 +32,7 @@ class UserSerializer(ModelSerializer):
     first_name = CharField(source="user.first_name")
     last_name = CharField(source="user.last_name")
     email = EmailField(source="user.email")
+    active = BooleanField(source="user.is_active")
     gender = CharField(source="get_gender_display", allow_blank=True)
     user_type = CharField(source="get_user_type_display", allow_blank=True)
     image = Base64ImageField(required=False)

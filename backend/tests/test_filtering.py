@@ -2753,7 +2753,7 @@ class TeachingFilterTest(APITestCase):
         self.assertEqual(records_count, 1)
 
 
-class UsersFilerTest(APITestCase):
+class UsersFilterTest(APITestCase):
     def setUp(self):
         self.endpoint = "/api/users"
         self.admin_data = {
@@ -2869,6 +2869,22 @@ class UsersFilerTest(APITestCase):
         results = data["results"]
         self.assertEqual(records_count, 1)
         values = list(set([variable in record[column].lower() for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_active_filter(self):
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "active"
+        variable = "true"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        values = list(set([variable == record[column].lower() for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
 

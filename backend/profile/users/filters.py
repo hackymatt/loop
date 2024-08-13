@@ -3,6 +3,7 @@ from django_filters import (
     OrderingFilter,
     CharFilter,
     DateFilter,
+    BooleanFilter,
 )
 from profile.models import Profile
 
@@ -20,9 +21,11 @@ class OrderFilter(OrderingFilter):
                 "-last_name",
                 "email",
                 "-email",
+                "active",
+                "-active",
             ]:
                 desc = value[0] == "-"
-                value_modified = value.replace("-", "")
+                value_modified = value.replace("-", "").replace("active", "is_active")
                 value_modified = "user__" + value_modified
                 value_modified = f"-{value_modified}" if desc else value_modified
                 queryset = queryset.order_by(value_modified)
@@ -44,6 +47,7 @@ class UserFilter(FilterSet):
     email = CharFilter(
         field_name="user__email", lookup_expr="icontains", label="Email zawiera"
     )
+    active = BooleanFilter(field_name="user__is_active", lookup_expr="exact")
     gender = CharFilter(field_name="gender", lookup_expr="icontains")
     user_type = CharFilter(field_name="user_type", lookup_expr="icontains")
     created_at = DateFilter(field_name="created_at", lookup_expr="contains")
@@ -62,6 +66,8 @@ class UserFilter(FilterSet):
             ("-last_name", "Last Name DESC"),
             ("email", "Email ASC"),
             ("-email", "Email DESC"),
+            ("active", "Active ASC"),
+            ("-active", "Active DESC"),
             ("gender", "Gender ASC"),
             ("-gender", "Gender DESC"),
             ("user_type", "User Type ASC"),
@@ -88,6 +94,8 @@ class UserFilter(FilterSet):
             "-last_name": "-last_name",
             "email": "email",
             "-email": "-email",
+            "active": "active",
+            "-active": "-active",
             "gender": "gender",
             "-gender": "-gender",
             "user_type": "user_type",

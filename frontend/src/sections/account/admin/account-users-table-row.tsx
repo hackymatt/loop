@@ -52,12 +52,24 @@ export default function AccountUsersTableRow({ row, onEdit, onFinanceHistoryView
     width: 1,
   };
 
+  const isActive = useMemo(() => row.active, [row.active]);
+
   const isAdmin = useMemo(() => row.user_type === UserType.Admin, [row.user_type]);
   const isTeacher = useMemo(() => row.user_type === UserType.Wykładowca, [row.user_type]);
 
   return (
     <>
       <TableRow hover>
+        <TableCell
+          align="center"
+          sx={{
+            px: 1,
+            color: isActive ? "success.main" : "error.main",
+          }}
+        >
+          <Iconify icon={isActive ? "carbon:checkmark-filled" : "carbon:close-filled"} />
+        </TableCell>
+
         <TableCell sx={{ px: 1 }}>
           <InputBase value={row.first_name} sx={inputStyles} />
         </TableCell>
