@@ -28,7 +28,7 @@ class Przelewy24:
                         "merchantId": settings.PAYMENT_MERCHANT_ID,
                         "amount": self.payment.amount,
                         "currency": "PLN",
-                        "crc": settings.CRC,
+                        "crc": settings.PAYMENT_CRC,
                     }
                 ).encode()
             ).decode(),
@@ -47,8 +47,8 @@ class Przelewy24:
             "country": "PL",
             "language": "pl",
             "method": 0,
-            "urlReturn": f"{settings.BASE_URL}/order-status/",
-            "urlStatus": f"{settings.BASE_URL}/order-status/?id={self.payment.session_id}",
+            "urlReturn": f"{settings.BASE_FRONTEND_URL}/order-status/",
+            "urlStatus": f"{settings.BASE_FRONTEND_URL}/order-status/?id={self.payment.session_id}",
             "timeLimit": 5,
             "channel": 16,
             "waitForResult": False,

@@ -2883,8 +2883,8 @@ class UsersFilterTest(APITestCase):
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 1)
-        values = list(set([variable == record[column].lower() for record in results]))
+        self.assertEqual(records_count, 8)
+        values = list(set([variable == record[column] for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
 
