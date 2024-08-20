@@ -12,6 +12,7 @@ export type IRegister = {
   email: string;
   password: string;
   password2: string;
+  newsletter: boolean;
 };
 
 export type IRegisterReturn = Omit<IRegister, "password" | "password2">;
