@@ -2486,6 +2486,7 @@ class UsersOrderTest(APITestCase):
             "first_name",
             "last_name",
             "email",
+            "active",
             "gender",
             "user_type",
             "created_at",

@@ -11,11 +11,12 @@ import { LoadingButton, LoadingButtonProps } from "@mui/lab";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
+import { newsletterAcceptance } from "src/consts/acceptances";
 import { useRegisterNewsletter } from "src/api/newsletter/register";
 
 import Image from "src/components/image";
 import { useToastContext } from "src/components/toast";
-import FormProvider, { RHFTextField } from "src/components/hook-form";
+import FormProvider, { RHFCheckbox, RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
@@ -79,10 +80,18 @@ export function NewsletterEmail({ buttonLabel = "Zapisz", sx }: Props) {
 
   const NewsletterSchema = Yup.object().shape({
     email: Yup.string().required("Adres e-mail jest wymagany").email("Podaj poprawny adres e-mail"),
+    acceptance: Yup.boolean()
+      .required("To pole jest wymagane")
+      .oneOf([true], "To pole jest wymagane"),
+    newsletter: Yup.boolean()
+      .required("To pole jest wymagane")
+      .oneOf([true], "To pole jest wymagane"),
   });
 
   const defaultValues = {
     email: "",
+    acceptance: false,
+    newsletter: false,
   };
 
   const methods = useForm({
@@ -125,6 +134,10 @@ export function NewsletterEmail({ buttonLabel = "Zapisz", sx }: Props) {
         >
           {buttonLabel}
         </LoadingButton>
+      </Stack>
+
+      <Stack spacing={0.5} alignItems="flex-start">
+        <RHFCheckbox name="newsletter" label={newsletterAcceptance} />
       </Stack>
     </FormProvider>
   );

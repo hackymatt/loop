@@ -13,10 +13,11 @@ import { useResponsive } from "src/hooks/use-responsive";
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import { useContact } from "src/api/contact/contact";
+import { generalAcceptance } from "src/consts/acceptances";
 
 import Image from "src/components/image";
 import { useToastContext } from "src/components/toast";
-import FormProvider, { RHFTextField } from "src/components/hook-form";
+import FormProvider, { RHFCheckbox, RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +33,9 @@ export default function ContactForm() {
     email: Yup.string().required("Adres e-mail jest wymagany").email("Podaj poprawny adres e-mail"),
     subject: Yup.string().required("Temat jest wymagany"),
     message: Yup.string().required("Wiadomość jest wymagana"),
+    acceptance: Yup.boolean()
+      .required("To pole jest wymagane")
+      .oneOf([true], "To pole jest wymagane"),
   });
 
   const defaultValues = {
@@ -39,6 +43,7 @@ export default function ContactForm() {
     subject: "",
     email: "",
     message: "",
+    acceptance: false,
   };
 
   const methods = useForm({
@@ -106,13 +111,9 @@ export default function ContactForm() {
 
                 <RHFTextField name="subject" label="Tytuł" />
 
-                <RHFTextField
-                  name="message"
-                  multiline
-                  rows={4}
-                  label="Wiadomość"
-                  sx={{ pb: 2.5 }}
-                />
+                <RHFTextField name="message" multiline rows={4} label="Wiadomość" />
+
+                <RHFCheckbox name="acceptance" label={generalAcceptance} />
 
                 <LoadingButton
                   size="large"

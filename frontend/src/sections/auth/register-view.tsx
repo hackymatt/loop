@@ -24,10 +24,12 @@ import { useQueryParams } from "src/hooks/use-query-params";
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 import { useGoogleAuth, useGithubAuth, useFacebookAuth } from "src/hooks/use-social-auth";
 
+import { dataAcceptance, generalAcceptance, newsletterAcceptance } from "src/consts/acceptances";
+
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
-import FormProvider, { RHFTextField } from "src/components/hook-form";
+import FormProvider, { RHFCheckbox, RHFTextField } from "src/components/hook-form";
 
 // ----------------------------------------------------------------------
 
@@ -68,6 +70,13 @@ export default function RegisterView() {
     password2: Yup.string()
       .required("Hasło jest wymagane")
       .oneOf([Yup.ref("password")], "Hasła nie są takie same"),
+    acceptance: Yup.boolean()
+      .required("To pole jest wymagane")
+      .oneOf([true], "To pole jest wymagane"),
+    dataAcceptance: Yup.boolean()
+      .required("To pole jest wymagane")
+      .oneOf([true], "To pole jest wymagane"),
+    newsletter: Yup.boolean().required("To pole jest wymagane"),
   });
 
   const defaultValues = {
@@ -76,6 +85,9 @@ export default function RegisterView() {
     email: "",
     password: "",
     password2: "",
+    acceptance: false,
+    dataAcceptance: false,
+    newsletter: false,
   };
 
   const methods = useForm({
@@ -186,7 +198,7 @@ export default function RegisterView() {
       </Typography>
 
       <Typography variant="body2" sx={{ color: "text.secondary" }}>
-        Już masz konto?{" "}
+        Masz już konto?{" "}
         <Link component={RouterLink} href={paths.login} variant="subtitle2" color="primary">
           Zaloguj się
         </Link>
@@ -270,6 +282,12 @@ export default function RegisterView() {
           }}
         />
 
+        <Stack spacing={0.5}>
+          <RHFCheckbox name="acceptance" label={generalAcceptance} />
+          <RHFCheckbox name="dataAcceptance" label={dataAcceptance} />
+          <RHFCheckbox name="newsletter" label={newsletterAcceptance} />
+        </Stack>
+
         <LoadingButton
           fullWidth
           color="inherit"
@@ -280,27 +298,6 @@ export default function RegisterView() {
         >
           Zarejestruj się
         </LoadingButton>
-
-        <Typography variant="caption" align="center" sx={{ color: "text.secondary", mt: 1 }}>
-          Klikając przycisk Zarejestruj się, akceptujesz nasz{" "}
-          <Link
-            component={RouterLink}
-            href={paths.termsAndConditions}
-            color="text.primary"
-            underline="always"
-          >
-            Regulamin
-          </Link>{" "}
-          oraz{" "}
-          <Link
-            component={RouterLink}
-            href={paths.privacyPolicy}
-            color="text.primary"
-            underline="always"
-          >
-            Politykę prywatności.
-          </Link>
-        </Typography>
       </Stack>
     </FormProvider>
   );

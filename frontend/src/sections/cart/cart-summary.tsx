@@ -8,13 +8,16 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Stack, { StackProps } from "@mui/material/Stack";
 import InputAdornment from "@mui/material/InputAdornment";
+import { Checkbox, FormHelperText, FormControlLabel } from "@mui/material";
+
+import { useBoolean } from "src/hooks/use-boolean";
 
 import { fCurrency } from "src/utils/format-number";
 
+import { generalAcceptance } from "src/consts/acceptances";
 import { validateCoupon } from "src/api/coupons/coupon-validation";
 
 import Iconify from "src/components/iconify";
-
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -30,6 +33,9 @@ type IDiscount = {
 };
 
 export default function CartSummary({ total, onPurchase, isLoading, error }: Props) {
+  const acceptance = useBoolean(false);
+  const acceptanceError = useBoolean(false);
+
   const [couponError, setCouponError] = useState<string>(error ?? "");
   const [coupon, setCoupon] = useState<string>();
   const [selectedCoupon, setSelectedCoupon] = useState<string>();
@@ -61,6 +67,19 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
     setSelectedCoupon("");
     setDiscount({ discount: 0, is_percentage: false });
     setDiscountedValue(total);
+  };
+
+  const handleClick = () => {
+    acceptanceError.onFalse();
+
+    if (!acceptance.value) {
+      acceptanceError.onTrue();
+      return;
+    }
+
+    onPurchase(selectedCoupon ?? "");
+
+    acceptanceError.onFalse();
   };
 
   return (
@@ -130,11 +149,21 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
         }}
       />
 
+      <Stack spacing={0.5}>
+        <FormControlLabel
+          control={<Checkbox checked={acceptance.value} onChange={acceptance.onToggle} />}
+          label={generalAcceptance}
+        />
+        <FormHelperText error={!!acceptanceError.value}>
+          {acceptanceError.value ? "To pole jest wymagane." : null}
+        </FormHelperText>
+      </Stack>
+
       <LoadingButton
         size="large"
         variant="contained"
         color="inherit"
-        onClick={() => onPurchase(selectedCoupon ?? "")}
+        onClick={handleClick}
         loading={isLoading}
       >
         Przejdź do płatności

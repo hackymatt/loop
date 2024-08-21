@@ -13,6 +13,7 @@ export type IUserDetailsProps = {
   first_name: string;
   last_name: string;
   email: string;
+  active: boolean;
   phone_number: string;
   dob: string | null;
   gender: IGender;

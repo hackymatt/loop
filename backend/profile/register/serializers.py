@@ -2,6 +2,7 @@ from rest_framework.serializers import (
     ModelSerializer,
     EmailField,
     CharField,
+    BooleanField,
     ValidationError,
 )
 from django.contrib.auth.password_validation import validate_password
@@ -24,6 +25,7 @@ class ProfileRegisterSerializer(ModelSerializer):
             "email",
             "password",
             "password2",
+            "newsletter",
         )
         extra_kwargs = {
             "first_name": {"required": True},
@@ -35,6 +37,7 @@ class ProfileRegisterSerializer(ModelSerializer):
     email = EmailField(required=True)
     password = CharField(write_only=True, required=True, validators=[validate_password])
     password2 = CharField(write_only=True, required=True)
+    newsletter = BooleanField(write_only=True, required=True)
 
     @staticmethod
     def validate_email(email):
@@ -54,6 +57,7 @@ class ProfileRegisterSerializer(ModelSerializer):
         first_name = validated_data["first_name"]
         last_name = validated_data["last_name"]
         password = validated_data["password"]
+        is_newsletter_active = validated_data["newsletter"]
 
         user = User.objects.create(
             username=email,
@@ -92,9 +96,8 @@ class ProfileRegisterSerializer(ModelSerializer):
             data=data,
         )
 
-        newsletter, created = Newsletter.objects.get_or_create(email=email)
-        if not created:
-            newsletter.active = True
-            newsletter.save()
+        newsletter, _ = Newsletter.objects.get_or_create(email=email)
+        newsletter.active = is_newsletter_active
+        newsletter.save()
 
         return user
