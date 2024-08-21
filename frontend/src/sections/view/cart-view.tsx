@@ -55,7 +55,7 @@ export default function CartView() {
         coupon,
       });
       await Promise.allSettled(cartItems.map((cItem: ICartProp) => deleteCart({ id: cItem.id })));
-      push(paths.orderCompleted);
+      push(paths.order.completed);
     } catch (err) {
       setError((err as AxiosError).response?.data as IPurchaseError);
       enqueueSnackbar("Wystąpił błąd podczas zakupu", { variant: "error" });
