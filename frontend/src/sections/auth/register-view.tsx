@@ -24,6 +24,8 @@ import { useQueryParams } from "src/hooks/use-query-params";
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 import { useGoogleAuth, useGithubAuth, useFacebookAuth } from "src/hooks/use-social-auth";
 
+import { dataAcceptance, generalAcceptance, newsletterAcceptance } from "src/consts/acceptances";
+
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
@@ -71,6 +73,9 @@ export default function RegisterView() {
     acceptance: Yup.boolean()
       .required("To pole jest wymagane")
       .oneOf([true], "To pole jest wymagane"),
+    dataAcceptance: Yup.boolean()
+      .required("To pole jest wymagane")
+      .oneOf([true], "To pole jest wymagane"),
     newsletter: Yup.boolean().required("To pole jest wymagane"),
   });
 
@@ -81,6 +86,7 @@ export default function RegisterView() {
     password: "",
     password2: "",
     acceptance: false,
+    dataAcceptance: false,
     newsletter: false,
   };
 
@@ -277,42 +283,9 @@ export default function RegisterView() {
         />
 
         <Stack spacing={0.5}>
-          <RHFCheckbox
-            name="acceptance"
-            label={
-              <Typography variant="caption" align="left" sx={{ color: "text.secondary" }}>
-                Akceptuję{" "}
-                <Link
-                  target="_blank"
-                  rel="noopener"
-                  href={paths.termsAndConditions}
-                  color="text.primary"
-                  underline="always"
-                >
-                  regulamin
-                </Link>{" "}
-                i{" "}
-                <Link
-                  target="_blank"
-                  rel="noopener"
-                  href={paths.privacyPolicy}
-                  color="text.primary"
-                  underline="always"
-                >
-                  politykę prywatności.
-                </Link>
-              </Typography>
-            }
-          />
-
-          <RHFCheckbox
-            name="newsletter"
-            label={
-              <Typography variant="caption" align="left" sx={{ color: "text.secondary" }}>
-                Chcę otrzymywać newsletter, informacje o promocjach i produktach dostępnych w loop.
-              </Typography>
-            }
-          />
+          <RHFCheckbox name="acceptance" label={generalAcceptance} />
+          <RHFCheckbox name="dataAcceptance" label={dataAcceptance} />
+          <RHFCheckbox name="newsletter" label={newsletterAcceptance} />
         </Stack>
 
         <LoadingButton

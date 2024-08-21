@@ -8,14 +8,13 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Stack, { StackProps } from "@mui/material/Stack";
 import InputAdornment from "@mui/material/InputAdornment";
-import { Link, Checkbox, FormHelperText, FormControlLabel } from "@mui/material";
-
-import { paths } from "src/routes/paths";
+import { Checkbox, FormHelperText, FormControlLabel } from "@mui/material";
 
 import { useBoolean } from "src/hooks/use-boolean";
 
 import { fCurrency } from "src/utils/format-number";
 
+import { generalAcceptance } from "src/consts/acceptances";
 import { validateCoupon } from "src/api/coupons/coupon-validation";
 
 import Iconify from "src/components/iconify";
@@ -153,30 +152,7 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
       <Stack spacing={0.5}>
         <FormControlLabel
           control={<Checkbox checked={acceptance.value} onChange={acceptance.onToggle} />}
-          label={
-            <Typography variant="caption" align="left" sx={{ color: "text.secondary" }}>
-              Akceptuję{" "}
-              <Link
-                target="_blank"
-                rel="noopener"
-                href={paths.termsAndConditions}
-                color="text.primary"
-                underline="always"
-              >
-                regulamin
-              </Link>{" "}
-              i{" "}
-              <Link
-                target="_blank"
-                rel="noopener"
-                href={paths.privacyPolicy}
-                color="text.primary"
-                underline="always"
-              >
-                politykę prywatności.
-              </Link>
-            </Typography>
-          }
+          label={generalAcceptance}
         />
         <FormHelperText error={!!acceptanceError.value}>
           {acceptanceError.value ? "To pole jest wymagane." : null}

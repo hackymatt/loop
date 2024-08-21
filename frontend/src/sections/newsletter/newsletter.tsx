@@ -3,16 +3,15 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import Box from "@mui/material/Box";
-import { Link, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 import { LoadingButton, LoadingButtonProps } from "@mui/lab";
 
-import { paths } from "src/routes/paths";
-
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
+import { newsletterAcceptance } from "src/consts/acceptances";
 import { useRegisterNewsletter } from "src/api/newsletter/register";
 
 import Image from "src/components/image";
@@ -138,42 +137,7 @@ export function NewsletterEmail({ buttonLabel = "Zapisz", sx }: Props) {
       </Stack>
 
       <Stack spacing={0.5} alignItems="flex-start">
-        <RHFCheckbox
-          name="acceptance"
-          label={
-            <Typography variant="caption" align="left" sx={{ color: "text.secondary" }}>
-              Akceptuję{" "}
-              <Link
-                target="_blank"
-                rel="noopener"
-                href={paths.termsAndConditions}
-                color="text.primary"
-                underline="always"
-              >
-                regulamin
-              </Link>{" "}
-              i{" "}
-              <Link
-                target="_blank"
-                rel="noopener"
-                href={paths.privacyPolicy}
-                color="text.primary"
-                underline="always"
-              >
-                politykę prywatności.
-              </Link>
-            </Typography>
-          }
-        />
-
-        <RHFCheckbox
-          name="newsletter"
-          label={
-            <Typography variant="caption" align="left" sx={{ color: "text.secondary" }}>
-              Chcę otrzymywać newsletter, informacje o promocjach i produktach dostępnych w loop.
-            </Typography>
-          }
-        />
+        <RHFCheckbox name="newsletter" label={newsletterAcceptance} />
       </Stack>
     </FormProvider>
   );

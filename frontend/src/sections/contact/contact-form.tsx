@@ -3,19 +3,17 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import Box from "@mui/material/Box";
-import { Link } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import { paths } from "src/routes/paths";
-
 import { useResponsive } from "src/hooks/use-responsive";
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import { useContact } from "src/api/contact/contact";
+import { generalAcceptance } from "src/consts/acceptances";
 
 import Image from "src/components/image";
 import { useToastContext } from "src/components/toast";
@@ -115,33 +113,7 @@ export default function ContactForm() {
 
                 <RHFTextField name="message" multiline rows={4} label="Wiadomość" />
 
-                <RHFCheckbox
-                  name="acceptance"
-                  label={
-                    <Typography variant="caption" align="left" sx={{ color: "text.secondary" }}>
-                      Akceptuję{" "}
-                      <Link
-                        target="_blank"
-                        rel="noopener"
-                        href={paths.termsAndConditions}
-                        color="text.primary"
-                        underline="always"
-                      >
-                        regulamin
-                      </Link>{" "}
-                      i{" "}
-                      <Link
-                        target="_blank"
-                        rel="noopener"
-                        href={paths.privacyPolicy}
-                        color="text.primary"
-                        underline="always"
-                      >
-                        politykę prywatności.
-                      </Link>
-                    </Typography>
-                  }
-                />
+                <RHFCheckbox name="acceptance" label={generalAcceptance} />
 
                 <LoadingButton
                   size="large"
