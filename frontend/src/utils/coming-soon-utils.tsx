@@ -9,7 +9,7 @@ import Layout from "src/app/coming-soon/layout";
 
 import ComingSoonView from "src/sections/status/view/coming-soon-view";
 
-const START_DATE: Date = new Date("10/01/2024 00:00");
+const START_DATE: Date = new Date("8/01/2024 00:00");
 
 const useShowComingSoon = () => {
   const { state } = useLocalStorage("admin", { admin: false });
