@@ -3,10 +3,10 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import Box from "@mui/material/Box";
-import { Stack } from "@mui/material";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
+import { Stack, InputAdornment } from "@mui/material";
 import { LoadingButton, LoadingButtonProps } from "@mui/lab";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
@@ -53,7 +53,7 @@ export default function Newsletter() {
               </Typography>
             </Typography>
 
-            <NewsletterEmail buttonLabel="Zapisz" sx={{ mt: 0.3 }} />
+            <NewsletterEmail buttonLabel="Zapisz" />
           </Grid>
 
           <Grid xs={12} md={5}>
@@ -73,7 +73,7 @@ interface Props extends LoadingButtonProps {
   buttonLabel: string;
 }
 
-export function NewsletterEmail({ buttonLabel = "Zapisz", sx }: Props) {
+export function NewsletterEmail({ buttonLabel = "Zapisz" }: Props) {
   const { enqueueSnackbar } = useToastContext();
 
   const { mutateAsync: register } = useRegisterNewsletter();
@@ -117,20 +117,26 @@ export function NewsletterEmail({ buttonLabel = "Zapisz", sx }: Props) {
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
-      <Stack spacing={2.5} direction="row" alignItems="center">
-        <RHFTextField name="email" label="Wpisz swój adres e-mail" />
-
-        <LoadingButton
-          color="primary"
-          size="large"
-          variant="contained"
-          type="submit"
-          loading={isSubmitting}
-          sx={sx}
-        >
-          {buttonLabel}
-        </LoadingButton>
-      </Stack>
+      <RHFTextField
+        name="email"
+        label="Wpisz swój adres e-mail"
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <LoadingButton
+                color="primary"
+                size="large"
+                variant="contained"
+                type="submit"
+                loading={isSubmitting}
+              >
+                {buttonLabel}
+              </LoadingButton>
+            </InputAdornment>
+          ),
+          sx: { p: 0 },
+        }}
+      />
 
       <Stack spacing={0.5} alignItems="flex-start">
         <RHFCheckbox name="newsletter" label={newsletterAcceptance} />

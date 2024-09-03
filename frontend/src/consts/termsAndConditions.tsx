@@ -13,28 +13,20 @@ export const termsAndConditions = [
           za pośrednictwem którego Sprzedawca świadczy usługi drogą elektroniczną.
         </Typography>
         <Typography>
-          2. Sprzedawca – właściciel strony internetowej - loop Mateusz Szczepek, NIP: 6861677925,
+          2. Sprzedawca – właściciel strony internetowej – loop Mateusz Szczepek, NIP: 6861677925,
           REGON: 529269876, e-mail:{" "}
           <Link color="inherit" href="mailto:info@loop.edu.pl">
             info@loop.edu.pl
-          </Link>
-          . Klient dokonuje nabycia usługi od przedsiębiorcy, którego dane zostały wskazane w
-          zakładce{" "}
-          <Link target="_blank" rel="noopener" href={paths.contact} color="text.primary">
-            kontakt
           </Link>
           .
         </Typography>
         <Typography>
           3. Adres Sprzedawcy – ilekroć w Regulaminie jest mowa o adresie Sprzedawcy, rozumie się
-          przez to następujące dane:
-          <Typography sx={{ ml: 3 }}>
-            • adres mailowy (zakładka{" "}
-            <Link target="_blank" rel="noopener" href={paths.contact} color="text.primary">
-              kontakt
-            </Link>
-            )
-          </Typography>
+          przez to adres mailowy (zakładka{" "}
+          <Link target="_blank" rel="noopener" href={paths.contact} color="text.primary">
+            kontakt
+          </Link>
+          ).
         </Typography>
         <Typography>
           4. Klient – osoba fizyczna posiadająca pełną zdolność do czynności prawnych, a w
@@ -53,8 +45,7 @@ export const termsAndConditions = [
           internetowego.
         </Typography>
         <Typography>
-          7. Usługa – usługa, którą Klient nabywa za pośrednictwem Serwisu internetowego, w tym
-          szkolenia na odległość.
+          7. Usługa – usługa, którą Klient nabywa za pośrednictwem Serwisu internetowego.
         </Typography>
         <Typography>
           8. Zamówienie – oświadczenie woli Klienta, złożone za pośrednictwem Serwisu internetowego
@@ -179,7 +170,7 @@ export const termsAndConditions = [
           8. Dane Administrator Państwa danych osobowych znajdują się na w zakładce{" "}
           <Link target="_blank" rel="noopener" href={paths.contact} color="text.primary">
             kontakt
-          </Link>
+          </Link>{" "}
           umiejscowionej na stronie internetowej.
         </Typography>
         <Typography>
@@ -257,17 +248,12 @@ export const termsAndConditions = [
           składniki prawem nakładane.
         </Typography>
         <Typography>
-          18. UWAGA: Podane na stronie Serwisu internetowego ceny Usług nie zawierają kosztów
-          dodatkowych, są one doliczane dopiero na etapie wyboru przez Klienta sposobu realizacji
-          zamówienia.
-        </Typography>
-        <Typography>
-          19. Przedsiębiorca prowadzący jednoosobowo działalność gospodarczą, jeśli dokona zakupu,
+          18. Przedsiębiorca prowadzący jednoosobowo działalność gospodarczą, jeśli dokona zakupu,
           który nie ma związku z prowadzoną przez niego działalnością posiada prawo do odstąpienia
           od umowy w terminie 14 dni kalendarzowych od momentu zawarcia umowy.
         </Typography>
         <Typography>
-          20. Przepisy dotyczące konsumenta, z wyjątkiem art. 558 § 1 zdanie drugie kodeksu
+          19. Przepisy dotyczące konsumenta, z wyjątkiem art. 558 § 1 zdanie drugie kodeksu
           cywilnego, stosuje się do osoby fizycznej zawierającej umowę bezpośrednio związaną z jej
           działalnością gospodarczą, gdy z treści tej umowy wynika, że nie posiada ona dla tej osoby
           charakteru zawodowego, wynikającego w szczególności z przedmiotu wykonywanej przez nią
@@ -275,12 +261,12 @@ export const termsAndConditions = [
           Informacji o Działalności Gospodarczej.
         </Typography>
         <Typography>
-          21. Weryfikacja tego, czy dana czynność ma zawodowy charakter, będzie odbywać się w
+          20. Weryfikacja tego, czy dana czynność ma zawodowy charakter, będzie odbywać się w
           oparciu o CEiDG — Centralną Ewidencję i Informację o Działalności Gospodarczej — a
           konkretnie o wpisane tam kody PKD określające rodzaje działalności gospodarczej.
         </Typography>
         <Typography>
-          22. Przedsiębiorcy prowadzący jednoosobowo działalność uzyskają uprawnienia w zakresie:{" "}
+          21. Przedsiębiorcy prowadzący jednoosobowo działalność uzyskają uprawnienia w zakresie:{" "}
           <Typography sx={{ ml: 3 }}>
             • Niedozwolonych klauzul stosowanych we wzorcach umownych;{" "}
           </Typography>
@@ -295,7 +281,7 @@ export const termsAndConditions = [
           </Typography>
         </Typography>
         <Typography>
-          23. Przepisy dotyczące konsumenta, zawarte w art. 385(1) -385(3) k.c. [dotyczących
+          22. Przepisy dotyczące konsumenta, zawarte w art. 385(1) -385(3) k.c. [dotyczących
           niedozwolonych postanowień umownych] stosuje się do osoby fizycznej zawierającej umowę
           bezpośrednio związaną z jej działalnością gospodarczą, gdy z treści tej umowy wynika, że
           nie posiada ona dla niej charakteru zawodowego, wynikającego w szczególności z przedmiotu
@@ -303,13 +289,13 @@ export const termsAndConditions = [
           Centralnej Ewidencji i Informacji o Działalności Gospodarczej.
         </Typography>
         <Typography>
-          24. Art. 385(5) k.c. dotyczy tylko niedozwolonych postanowień umownych (klauzul
+          23. Art. 385(5) k.c. dotyczy tylko niedozwolonych postanowień umownych (klauzul
           abuzywnych). Przepisy o klauzulach abuzywnych są po 1 stycznia 2021 r. stosowane do
           jednoosobowych przedsiębiorców. Katalog przykładowych dwudziestu trzech klauzul abuzywnych
           zawarty jest w art. 385(3) k.c.
         </Typography>
         <Typography>
-          25. Przedsiębiorcy prowadzący jednoosobowo działalność gospodarczą po zmianach opisanych
+          24. Przedsiębiorcy prowadzący jednoosobowo działalność gospodarczą po zmianach opisanych
           powyżej nadal nie mogą korzystać z pomocy instytucji wspierających konsumentów w ochronie
           ich praw, w tym z pomocy Powiatowych/Miejskich Rzeczników Konsumenta czy UOKIK.
         </Typography>
@@ -343,8 +329,8 @@ export const termsAndConditions = [
         </Typography>
         <Typography>
           5. Klient finalizując zakup w odpowiednim okienku zamówienia zaznacza opcję „Wyrażam zgodę
-          na przetwarzanie przez serwis moich danych osobowych zawartych w formularzu zamówienia w
-          celu i zakresie niezbędnym do realizacji zamówienia.” – jest ona niezbędna do zawarcia
+          na przetwarzanie moich danych osobowych zawartych w formularzu w celu i zakresie
+          niezbędnym do realizacji usługi i tylko w takim celu.” – jest ona niezbędna do zawarcia
           umowy. Podanie przez Państwa danych osobowych jest niezbędne do złożenia zamówienia,
           niepodanie danych osobowych będzie równoznaczne z odstąpieniem od zawarcia umowy.
         </Typography>
@@ -391,7 +377,8 @@ export const termsAndConditions = [
           skontaktuje się z Klientem/Przedsiębiorcą w celu usunięcia błędów.
         </Typography>
         <Typography>
-          4. Rejestracja Konta Klienta w Serwisie internetowym jest dobrowolna i nieodpłatna.
+          4. Rejestracja Konta Klienta w Serwisie internetowym jest wymagana w celu realizacji
+          usługi i jest nieodpłatna.
         </Typography>
         <Typography>
           5. W przypadku udostępnienia przez Sprzedawcę możliwości zamówienia Usługi, której
@@ -433,11 +420,7 @@ export const termsAndConditions = [
           każde zamówienie jest dla nas priorytetowe i bardzo ważne!
         </Typography>
         <Typography>
-          2. Czas realizacji zamówienia dla pojedynczego Klienta wynosi od 1 do 30 dni roboczych
-          licząc od dnia wysłania przez Klienta Zamówienia. W przypadku usług oznaczonych
-          dostępnością ‘na zamówienie’ czas realizacji określany jest na stronie produktu. Na czas
-          realizacji zamówienia składa się przede wszystkim czas przygotowania zamówienia
-          (kompletowanie oraz przygotowanie usługi, wydanie dostępu do materiałów szkoleniowych).
+          2. Czas realizacji zamówienia dla pojedynczego Klienta określany jest na stronie produktu.
           Czas dostępu do usługi zależy od jej specyfiki i jest określony w opisie usługi.
         </Typography>
         <Typography>
