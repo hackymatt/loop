@@ -94,13 +94,7 @@ export const privacyPolicy = [
         </Typography>
         <Typography>
           6. Dane Administratora Państwa danych osobowych znajdują się na w zakładce{" "}
-          <Link
-            target="_blank"
-            rel="noopener"
-            href={paths.contact}
-            color="text.primary"
-            underline="always"
-          >
+          <Link target="_blank" rel="noopener" href={paths.contact} color="text.primary">
             kontakt
           </Link>{" "}
           umiejscowionej na stronie internetowej.
@@ -151,11 +145,11 @@ export const privacyPolicy = [
           12. Dokładamy wszelkich starań, aby chronić przed nieuprawnionym dostępem, nieautoryzowaną
           modyfikacją, ujawnieniem oraz zniszczeniem informacji znajdujących się w naszym
           posiadaniu. W szczególności:
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             a) Kontrolujemy metody gromadzenia, przechowywania i przetwarzania informacji, w tym
             fizyczne środki bezpieczeństwa, aby chronić przed nieuprawnionym dostępem do systemu.{" "}
           </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             b) Dostępu do danych osobowych udzielamy jedynie tym pracownikom, kontrahentom oraz
             przedstawicielom, którzy muszą mieć do nich dostęp. Ponadto na mocy umowy są oni
             zobowiązani do zachowania ścisłej poufności, do umożliwienia nam kontroli i sprawdzenia
@@ -184,17 +178,17 @@ export const privacyPolicy = [
         </Typography>
         <Typography>
           16. Użytkownik ma zawsze prawo powiadomić nas, jeśli:
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             a) nie chce w jakiejkolwiek formie już otrzymywać od nas informacji lub wiadomości;
           </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             b) pragnie otrzymać posiadaną przez nas kopię swoich danych osobowych;
           </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             c) poprawić, zaktualizować lub usunąć swoje dane osobowe znajdujące się w naszej
             ewidencji;
           </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             d) pragnie zgłosić naruszenia, nienależyte wykorzystanie bądź przetwarzanie swoich
             danych osobowych.
           </Typography>
@@ -212,47 +206,47 @@ export const privacyPolicy = [
       <Typography sx={{ textAlign: "justify" }}>
         <Typography>
           1. Przetwarzamy niezbędne dane osobowe w celu realizacji usług oraz w celach księgowych i
-          tylko takich tj. :<Typography sx={{ ml: 6 }}>a) w celu złożenia zamówienia,</Typography>
-          <Typography sx={{ ml: 6 }}>
+          tylko takich tj. :<Typography sx={{ ml: 3 }}>a) w celu złożenia zamówienia,</Typography>
+          <Typography sx={{ ml: 3 }}>
             b) w celu zawarcia umowy, reklamacji oraz odstąpienia od umowy,
           </Typography>
-          <Typography sx={{ ml: 6 }}>c) wystawienia faktury VAT lub innego paragonu. </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>c) wystawienia faktury VAT lub innego paragonu. </Typography>
+          <Typography sx={{ ml: 3 }}>
             d) monitorowania ruchu na naszych stronach internetowych;
           </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             e) zbieranie anonimowych statystyk, dla ustalenia, w jaki sposób użytkownicy korzystają
             z naszej strony internetowej;
           </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             f) ustalanie liczby anonimowych użytkowników naszych stron
           </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             g) kontrolowanie jak często pokazywana jest użytkownikom wybrana treść i jaka treść
             najczęściej;
           </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             h) kontrolowanie jak często użytkownicy wybierają daną usługę bądź z poziomu jakiej
             usługi następuje najczęściej kontakt;
           </Typography>
-          <Typography sx={{ ml: 6 }}>i) badanie zapisów na newsletter i opcje kontaktu;</Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>i) badanie zapisów na newsletter i opcje kontaktu;</Typography>
+          <Typography sx={{ ml: 3 }}>
             j) wykorzystanie systemu personalizowanych rekomendacji dla e-commerce;
           </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             k) wykorzystanie narzędzia do komunikacji zarówno mailowej jak i w następstwie czego
             telefonicznej;
           </Typography>
-          <Typography sx={{ ml: 6 }}>l) integracja z portalem społecznościom;</Typography>
-          <Typography sx={{ ml: 6 }}>m) ewentualne płatności internetowe.</Typography>
+          <Typography sx={{ ml: 3 }}>l) integracja z portalem społecznościom;</Typography>
+          <Typography sx={{ ml: 3 }}>m) ewentualne płatności internetowe.</Typography>
         </Typography>
         <Typography>
           2. Zbieramy, przetwarzamy i przechowujemy następujące dane użytkowników:
-          <Typography sx={{ ml: 6 }}>a) imię i nazwisko,</Typography>
-          <Typography sx={{ ml: 6 }}>b) adres zamieszkania,</Typography>
-          <Typography sx={{ ml: 6 }}>c) adres poczty elektronicznej (e-mail),</Typography>
-          <Typography sx={{ ml: 6 }}>d) numer telefonu,</Typography>
-          <Typography sx={{ ml: 6 }}>e) datę urodzenia.</Typography>
+          <Typography sx={{ ml: 3 }}>a) imię i nazwisko,</Typography>
+          <Typography sx={{ ml: 3 }}>b) adres zamieszkania,</Typography>
+          <Typography sx={{ ml: 3 }}>c) adres poczty elektronicznej (e-mail),</Typography>
+          <Typography sx={{ ml: 3 }}>d) numer telefonu,</Typography>
+          <Typography sx={{ ml: 3 }}>e) datę urodzenia.</Typography>
         </Typography>
         <Typography>
           3. Podanie powyższych danych przez jest całkowicie dobrowolne ale także i niezbędne do
@@ -260,10 +254,10 @@ export const privacyPolicy = [
         </Typography>
         <Typography>
           4. Cel gromadzenia i przetwarzania lub wykorzystania przez nas danych:
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             a) marketing bezpośredni, cele archiwalne kampanii reklamowych;{" "}
           </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             b) realizacja obowiązków nałożonych przepisami prawa poprzez zbieranie informacji o
             niepożądanych działaniach;
           </Typography>
@@ -282,28 +276,28 @@ export const privacyPolicy = [
           6. Twoje dane osobowe przechowujemy nie dłużej niż są one potrzebne dla właściwej jakości
           obsługi i w zależności od trybu i celu ich pozyskania przechowujemy je na czas jej trwania
           oraz po jej zakończeniu w celach:
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             a) realizacji obowiązków wynikających z przepisów prawa, przepisów podatkowych i
             rachunkowych;
           </Typography>
-          <Typography sx={{ ml: 6 }}>b) zapobiegania nadużyciom lub przestępstwom;</Typography>
-          <Typography sx={{ ml: 6 }}>c) statystycznych i archiwizacyjnych.</Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>b) zapobiegania nadużyciom lub przestępstwom;</Typography>
+          <Typography sx={{ ml: 3 }}>c) statystycznych i archiwizacyjnych.</Typography>
+          <Typography sx={{ ml: 3 }}>
             d) działania marketingowe – na czas trwania umowy, udzielenia odrębnej zgody na
             przetwarzanie takich danych – do czasu zakończenia działań związanych z obsługą
             transakcji, wniesienia przez Ciebie sprzeciwu wobec takiego przetwarzania lub wycofania
             zgody.
           </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             e) działania okołosprzedażowe i promocyjne – np. konkursy, akcje promocyjne – na czas
             trwania i rozliczenia takich akcji.
           </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             f) działalność operacyjna - do czasu przedawnienia obowiązków nałożonych przez
             Rozporządzenie RODO oraz odpowiednie przepisy krajowe, celem wykazania rzetelności w
             przetwarzaniu danych osobowych
           </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             g) dochodzenia Wszelkich roszczeń związanych ze zrealizowaną umową;
           </Typography>
         </Typography>
@@ -342,18 +336,18 @@ export const privacyPolicy = [
         <Typography>
           3. Przetwarzanie danych osobowych osób fizycznych będących naszymi klientami opiera się
           na:
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             a) usprawiedliwionym interesie jako administratora danych (np. w zakresie tworzenia bazy
             danych, czynności analitycznych i profilujących, w tym czynności dot. analizy
             korzystania z produktów, marketingu bezpośredniego produktów własnych, zabezpieczeniu
             dokumentacji na potrzeby obrony przed ewentualnymi roszczeniami lub na potrzeby
             dochodzenia roszczeń),
           </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             b) zgody (w tym w szczególności zgody na e-mail marketing lub telemarketing),
           </Typography>
-          <Typography sx={{ ml: 6 }}>c) wykonania zawartej umowy,</Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>c) wykonania zawartej umowy,</Typography>
+          <Typography sx={{ ml: 3 }}>
             d) obowiązków wynikających z prawa (np. prawa podatkowego lub przepisów o
             rachunkowości).
           </Typography>
@@ -361,11 +355,11 @@ export const privacyPolicy = [
         <Typography>
           4. Przetwarzanie danych osobowych osób fizycznych będących potencjalnymi klientami opiera
           się na:
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             a) usprawiedliwionym interesie administratora danych (np. w zakresie tworzenia bazy
             danych, marketingu bezpośrednim produktów własnych)
           </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             b) zgody (w tym w szczególności zgody na e-mail marketing lub telemarketing)
           </Typography>
         </Typography>
@@ -376,19 +370,19 @@ export const privacyPolicy = [
         </Typography>
         <Typography>
           6. Szczególną wagę przykładamy do kwestii profilowania i wskazujemy, że:
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             a) na potrzeby profilowania przetwarzamy z reguły dane, które uprzednio podlegały
             szyfrowaniu ssl;
           </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             b) wykorzystujemy do tego typowe dane: adres e-mail i IP lub cookies
           </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             c) profilujemy w celu analizy lub prognozy osobistych preferencji oraz zainteresowań
             osób korzystających z naszych Serwisów lub produktów lub usług i dopasowywania treści
             znajdujących się w naszych Serwisach lub produktach do tych preferencji
           </Typography>
-          <Typography sx={{ ml: 6 }}>
+          <Typography sx={{ ml: 3 }}>
             d) profilujemy w celach marketingowych, tj. dopasowania oferty marketingowej do ww.
             preferencji.
           </Typography>
@@ -456,7 +450,7 @@ export const privacyPolicy = [
     content: (
       <Typography>
         Właścicielem wszystkich materialnych praw autorskich do wzorca niniejszego Regulaminu
-        Sprzedaży jest Kancelaria Prawna LEGATO, która udzieliła niniejszemu sklepowi niewyłącznego
+        Sprzedaży jest Kancelaria Prawna LEGATO, która udzieliła niniejszemu serwisowi niewyłącznego
         i niezbywalnego prawa do wykorzystywania tego Regulaminu Sprzedaży do celów związanych z
         własną działalnością handlową w Internecie oraz rozciąga ochronę prawną na w/w dokument na
         czas trwania umowy. Kopiowanie oraz rozpowszechnianie wzorca niniejszego Regulaminu
