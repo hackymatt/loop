@@ -80,9 +80,6 @@ export function NewsletterEmail({ buttonLabel = "Zapisz", sx }: Props) {
 
   const NewsletterSchema = Yup.object().shape({
     email: Yup.string().required("Adres e-mail jest wymagany").email("Podaj poprawny adres e-mail"),
-    acceptance: Yup.boolean()
-      .required("To pole jest wymagane")
-      .oneOf([true], "To pole jest wymagane"),
     newsletter: Yup.boolean()
       .required("To pole jest wymagane")
       .oneOf([true], "To pole jest wymagane"),
@@ -90,7 +87,6 @@ export function NewsletterEmail({ buttonLabel = "Zapisz", sx }: Props) {
 
   const defaultValues = {
     email: "",
-    acceptance: false,
     newsletter: false,
   };
 
@@ -111,7 +107,7 @@ export function NewsletterEmail({ buttonLabel = "Zapisz", sx }: Props) {
   const onSubmit = handleSubmit(async (data) => {
     clearErrors();
     try {
-      await register(data);
+      await register({ email: data.email });
       enqueueSnackbar("Zapisano do newslettera", { variant: "success" });
       reset();
     } catch (error) {
