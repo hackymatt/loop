@@ -62,7 +62,7 @@ export default function ComingSoonView({ startDate }: { startDate?: Date }) {
       </Stack>
 
       <Stack sx={{ mt: 3 }}>
-        <NewsletterEmail buttonLabel="Powiadom" sx={{ mt: 0.3 }} />
+        <NewsletterEmail buttonLabel="Powiadom" />
       </Stack>
     </>
   );
