@@ -129,6 +129,10 @@ def lessons_number():
     return Lesson.objects.count()
 
 
+def modules_number():
+    return Module.objects.count()
+
+
 def get_lesson(id: int):
     return Lesson.objects.get(pk=id)
 

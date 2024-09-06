@@ -60,8 +60,11 @@ export default function CourseDetailsHero({ course }: Props) {
 
   const avatarUrl = teachers?.[0]?.avatarUrl || genderAvatarUrl;
 
-  const allLessons: ICourseLessonProp[] = useMemo(
-    () => course?.modules?.map((module: ICourseModuleProp) => module.lessons).flat(),
+  const allLessons = useMemo(
+    () =>
+      course?.modules
+        ?.map((module: ICourseModuleProp) => module.lessons)
+        .flat() as ICourseLessonProp[],
     [course?.modules],
   );
 

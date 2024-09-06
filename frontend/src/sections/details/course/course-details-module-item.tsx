@@ -53,7 +53,7 @@ export default function CourseDetailsModuleItem({
       return;
     }
     try {
-      const wishlistItems = module.lessons.map((lesson: ICourseLessonProp) =>
+      const wishlistItems = module.lessons!.map((lesson: ICourseLessonProp) =>
         createWishlistItem({ lesson: lesson.id }),
       );
       await Promise.allSettled(wishlistItems);
@@ -69,7 +69,7 @@ export default function CourseDetailsModuleItem({
       return;
     }
     try {
-      const cartItems = module.lessons.map((lesson: ICourseLessonProp) =>
+      const cartItems = module.lessons!.map((lesson: ICourseLessonProp) =>
         createCartItem({ lesson: lesson.id }),
       );
       await Promise.allSettled(cartItems);

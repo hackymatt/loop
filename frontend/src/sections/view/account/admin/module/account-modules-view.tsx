@@ -36,7 +36,7 @@ import AccountTableHead from "../../../../account/account-table-head";
 
 const TABLE_HEAD = [
   { id: "title", label: "Nazwa modułu", minWidth: 200 },
-  { id: "modules_count", label: "Liczba lekcji" },
+  { id: "lessons_count", label: "Liczba lekcji" },
   { id: "", width: 25 },
 ];
 

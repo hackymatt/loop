@@ -36,8 +36,11 @@ export default function CourseDetailsInfo({ course }: Props) {
   const { mutateAsync: createWishlistItem, isLoading: isAddingToFavorites } = useCreateWishlist();
   const { mutateAsync: createCartItem, isLoading: isAddingToCart } = useCreateCart();
 
-  const allLessons: ICourseLessonProp[] = useMemo(
-    () => course?.modules?.map((module: ICourseModuleProp) => module.lessons).flat(),
+  const allLessons = useMemo(
+    () =>
+      course?.modules
+        ?.map((module: ICourseModuleProp) => module.lessons)
+        .flat() as ICourseLessonProp[],
     [course?.modules],
   );
 
