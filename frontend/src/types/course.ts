@@ -45,6 +45,16 @@ export type ICourseLessonProp = {
   active?: boolean;
 };
 
+export type ICourseModuleProp = {
+  id: string;
+  title: string;
+  price?: number;
+  priceSale?: number;
+  lowest30DaysPrice?: number;
+  lessons?: ICourseLessonProp[];
+  lessonsCount?: number;
+};
+
 export type IScheduleProp = {
   id: string;
   startTime: string;
@@ -104,7 +114,7 @@ export type ICourseProps = {
   totalReviews: number;
   totalStudents: number;
   shareLinks?: ISocialLinks;
-  lessons: ICourseLessonProp[];
+  modules: ICourseModuleProp[];
   teachers: ICourseTeacherProp[];
   active: boolean;
 };

@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { polishPlurals } from "polish-plurals";
 
 import Fab from "@mui/material/Fab";
@@ -23,7 +24,7 @@ import Iconify from "src/components/iconify";
 import { PlayerDialog } from "src/components/player";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
-import { ILevel, ICourseProps } from "src/types/course";
+import { ILevel, ICourseProps, ICourseLessonProp, ICourseModuleProp } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -35,7 +36,7 @@ export default function CourseDetailsHero({ course }: Props) {
   const {
     slug,
     level,
-    lessons,
+    modules,
     category: categories,
     coverUrl,
     video,
@@ -58,6 +59,14 @@ export default function CourseDetailsHero({ course }: Props) {
       : "/assets/images/avatar/avatar_male.jpg";
 
   const avatarUrl = teachers?.[0]?.avatarUrl || genderAvatarUrl;
+
+  const allLessons = useMemo(
+    () =>
+      course?.modules
+        ?.map((module: ICourseModuleProp) => module.lessons)
+        .flat() as ICourseLessonProp[],
+    [course?.modules],
+  );
 
   return (
     <>
@@ -230,16 +239,28 @@ export default function CourseDetailsHero({ course }: Props) {
                       {polishPlurals("godzina", "godziny", "godzin", totalHours)}
                     </Stack>
 
-                    {lessons && (
-                      <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
-                        <Iconify icon="carbon:document" sx={{ mr: 1 }} />
-                        {`${lessons.length} ${polishPlurals(
-                          "lekcja",
-                          "lekcje",
-                          "lekcji",
-                          lessons.length,
-                        )}`}
-                      </Stack>
+                    {modules && (
+                      <>
+                        <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
+                          <Iconify icon="carbon:document-multiple-01" sx={{ mr: 1 }} />
+                          {`${modules.length} ${polishPlurals(
+                            "moduł",
+                            "moduły",
+                            "modułów",
+                            modules.length,
+                          )}`}
+                        </Stack>
+
+                        <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
+                          <Iconify icon="carbon:document" sx={{ mr: 1 }} />
+                          {`${allLessons.length} ${polishPlurals(
+                            "lekcja",
+                            "lekcje",
+                            "lekcji",
+                            allLessons.length,
+                          )}`}
+                        </Stack>
+                      </>
                     )}
 
                     <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>

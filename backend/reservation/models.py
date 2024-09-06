@@ -7,7 +7,7 @@ from django.db.models import (
     Index,
 )
 from profile.models import StudentProfile
-from course.models import Lesson
+from lesson.models import Lesson
 from schedule.models import Schedule
 from purchase.models import Purchase
 

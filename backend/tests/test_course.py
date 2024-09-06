@@ -18,17 +18,19 @@ from .factory import (
     create_lesson_price_history,
     create_image,
     create_video,
+    create_module,
 )
 from .helpers import (
     login,
     is_data_match,
     get_course,
     get_lesson,
+    get_module,
     get_technology,
     get_skill,
     get_topic,
     courses_number,
-    get_course_lessons,
+    get_course_modules,
     get_course_skills,
     get_course_topics,
 )
@@ -126,6 +128,10 @@ class CourseTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -135,7 +141,7 @@ class CourseTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         create_lesson_price_history(self.lesson_1, 15)
@@ -213,6 +219,10 @@ class CourseTest(APITestCase):
             technologies=[self.technology_2],
         )
 
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4]
+        )
+
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
@@ -222,7 +232,7 @@ class CourseTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4],
+            modules=[self.module_2],
         )
 
         create_lesson_price_history(self.lesson_3, 15)
@@ -247,6 +257,10 @@ class CourseTest(APITestCase):
             technologies=[self.technology_3],
         )
 
+        self.module_3 = create_module(
+            title="Module 3", lessons=[self.lesson_5, self.lesson_6]
+        )
+
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
@@ -256,7 +270,7 @@ class CourseTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_5, self.lesson_6],
+            modules=[self.module_3],
         )
 
         create_lesson_price_history(self.lesson_5, 15)
@@ -273,7 +287,7 @@ class CourseTest(APITestCase):
             title="Javascript course",
             description="course_description",
             level="E",
-            lessons=[self.lesson_3.id],
+            modules=[self.module_3.id, self.module_2.id],
             skills=[self.skill_1.id, self.skill_2.id],
             topics=[
                 self.topic_1.id,
@@ -287,7 +301,7 @@ class CourseTest(APITestCase):
             title="Python for beginners course",
             description="course_description_other",
             level="Z",
-            lessons=[self.lesson_1.id],
+            modules=[self.module_3.id, self.module_2.id],
             skills=[self.skill_1.id],
             topics=[self.topic_2.id],
             image=b64encode(create_image().read()),
@@ -358,7 +372,7 @@ class CourseTest(APITestCase):
         response = self.client.get(f"{self.endpoint}/{self.course.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         course_data = json.loads(response.content)
-        lessons_data = course_data.pop("lessons")
+        modules_data = course_data.pop("modules")
         technology_data = course_data.pop("technologies")
         skills_data = course_data.pop("skills")
         topics_data = course_data.pop("topics")
@@ -379,21 +393,34 @@ class CourseTest(APITestCase):
         self.assertEqual(rating, 4.0)
         self.assertEqual(rating_count, 3)
         self.assertEqual(students_count, 2)
-        for lesson_data in lessons_data:
-            previous_price = lesson_data.pop("previous_price")
-            lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
+        for module_data in modules_data:
+            price = module_data.pop("price")
+            previous_price = module_data.pop("previous_price")
+            lowest_30_days_price = module_data.pop("lowest_30_days_price")
+            lessons_data = module_data.pop("lessons")
 
-            self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
+            self.assertEqual(price, 12.98)
+            self.assertEqual(previous_price, 12.99)
+            self.assertEqual(lowest_30_days_price, 10.99)
+            self.assertTrue(is_data_match(get_module(module_data["id"]), module_data))
 
-            if lesson_data["id"] == self.review_1.lesson.id:
-                self.assertEqual(previous_price, None)
-                self.assertEqual(lowest_30_days_price, None)
-            elif lesson_data["id"] == self.review_3.lesson.id:
-                self.assertEqual(previous_price, 3.0)
-                self.assertEqual(lowest_30_days_price, 1.0)
-            else:
-                self.assertEqual(previous_price, 2)
-                self.assertEqual(lowest_30_days_price, 2)
+            for lesson_data in lessons_data:
+                previous_price = lesson_data.pop("previous_price")
+                lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
+
+                self.assertTrue(
+                    is_data_match(get_lesson(lesson_data["id"]), lesson_data)
+                )
+
+                if lesson_data["id"] == self.review_1.lesson.id:
+                    self.assertEqual(previous_price, None)
+                    self.assertEqual(lowest_30_days_price, None)
+                elif lesson_data["id"] == self.review_3.lesson.id:
+                    self.assertEqual(previous_price, 3.0)
+                    self.assertEqual(lowest_30_days_price, 1.0)
+                else:
+                    self.assertEqual(previous_price, 2)
+                    self.assertEqual(lowest_30_days_price, 2)
 
         for technology in technology_data:
             self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
@@ -410,7 +437,7 @@ class CourseTest(APITestCase):
         response = self.client.get(f"{self.endpoint}/{self.course.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         course_data = json.loads(response.content)
-        lessons_data = course_data.pop("lessons")
+        modules_data = course_data.pop("modules")
         technology_data = course_data.pop("technologies")
         skills_data = course_data.pop("skills")
         topics_data = course_data.pop("topics")
@@ -431,21 +458,34 @@ class CourseTest(APITestCase):
         self.assertEqual(rating, 4.0)
         self.assertEqual(rating_count, 3)
         self.assertEqual(students_count, 2)
-        for lesson_data in lessons_data:
-            previous_price = lesson_data.pop("previous_price")
-            lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
+        for module_data in modules_data:
+            price = module_data.pop("price")
+            previous_price = module_data.pop("previous_price")
+            lowest_30_days_price = module_data.pop("lowest_30_days_price")
+            lessons_data = module_data.pop("lessons")
 
-            self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
+            self.assertEqual(price, 12.98)
+            self.assertEqual(previous_price, 12.99)
+            self.assertEqual(lowest_30_days_price, 10.99)
+            self.assertTrue(is_data_match(get_module(module_data["id"]), module_data))
 
-            if lesson_data["id"] == self.review_1.lesson.id:
-                self.assertEqual(previous_price, None)
-                self.assertEqual(lowest_30_days_price, None)
-            elif lesson_data["id"] == self.review_3.lesson.id:
-                self.assertEqual(previous_price, 3.0)
-                self.assertEqual(lowest_30_days_price, 1.0)
-            else:
-                self.assertEqual(previous_price, 2)
-                self.assertEqual(lowest_30_days_price, 2)
+            for lesson_data in lessons_data:
+                previous_price = lesson_data.pop("previous_price")
+                lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
+
+                self.assertTrue(
+                    is_data_match(get_lesson(lesson_data["id"]), lesson_data)
+                )
+
+                if lesson_data["id"] == self.review_1.lesson.id:
+                    self.assertEqual(previous_price, None)
+                    self.assertEqual(lowest_30_days_price, None)
+                elif lesson_data["id"] == self.review_3.lesson.id:
+                    self.assertEqual(previous_price, 3.0)
+                    self.assertEqual(lowest_30_days_price, 1.0)
+                else:
+                    self.assertEqual(previous_price, 2)
+                    self.assertEqual(lowest_30_days_price, 2)
 
         for technology in technology_data:
             self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
@@ -462,7 +502,7 @@ class CourseTest(APITestCase):
         response = self.client.get(f"{self.endpoint}/{self.course_2.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         course_data = json.loads(response.content)
-        lessons_data = course_data.pop("lessons")
+        modules_data = course_data.pop("modules")
         technology_data = course_data.pop("technologies")
         skills_data = course_data.pop("skills")
         topics_data = course_data.pop("topics")
@@ -483,14 +523,27 @@ class CourseTest(APITestCase):
         self.assertEqual(rating, None)
         self.assertEqual(rating_count, 0)
         self.assertEqual(students_count, 0)
-        for lesson_data in lessons_data:
-            previous_price = lesson_data.pop("previous_price")
-            lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
+        for module_data in modules_data:
+            price = module_data.pop("price")
+            previous_price = module_data.pop("previous_price")
+            lowest_30_days_price = module_data.pop("lowest_30_days_price")
+            lessons_data = module_data.pop("lessons")
 
-            self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
-
+            self.assertEqual(price, 12.98)
             self.assertEqual(previous_price, None)
             self.assertEqual(lowest_30_days_price, None)
+            self.assertTrue(is_data_match(get_module(module_data["id"]), module_data))
+
+            for lesson_data in lessons_data:
+                previous_price = lesson_data.pop("previous_price")
+                lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
+
+                self.assertTrue(
+                    is_data_match(get_lesson(lesson_data["id"]), lesson_data)
+                )
+
+                self.assertEqual(previous_price, None)
+                self.assertEqual(lowest_30_days_price, None)
 
         for technology in technology_data:
             self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
@@ -507,7 +560,7 @@ class CourseTest(APITestCase):
         response = self.client.get(f"{self.endpoint}/{self.course_2.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         course_data = json.loads(response.content)
-        lessons_data = course_data.pop("lessons")
+        modules_data = course_data.pop("modules")
         technology_data = course_data.pop("technologies")
         skills_data = course_data.pop("skills")
         topics_data = course_data.pop("topics")
@@ -528,14 +581,27 @@ class CourseTest(APITestCase):
         self.assertEqual(rating, None)
         self.assertEqual(rating_count, 0)
         self.assertEqual(students_count, 0)
-        for lesson_data in lessons_data:
-            previous_price = lesson_data.pop("previous_price")
-            lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
+        for module_data in modules_data:
+            price = module_data.pop("price")
+            previous_price = module_data.pop("previous_price")
+            lowest_30_days_price = module_data.pop("lowest_30_days_price")
+            lessons_data = module_data.pop("lessons")
 
-            self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
-
+            self.assertEqual(price, 12.98)
             self.assertEqual(previous_price, None)
             self.assertEqual(lowest_30_days_price, None)
+            self.assertTrue(is_data_match(get_module(module_data["id"]), module_data))
+
+            for lesson_data in lessons_data:
+                previous_price = lesson_data.pop("previous_price")
+                lowest_30_days_price = lesson_data.pop("lowest_30_days_price")
+
+                self.assertTrue(
+                    is_data_match(get_lesson(lesson_data["id"]), lesson_data)
+                )
+
+                self.assertEqual(previous_price, None)
+                self.assertEqual(lowest_30_days_price, None)
 
         for technology in technology_data:
             self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
@@ -573,15 +639,22 @@ class CourseTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(courses_number(), 4)
         course_data = json.loads(response.content)
-        lessons_ids = course_data.pop("lessons")
+        modules_ids = course_data.pop("modules")
         skills_ids = course_data.pop("skills")
         topics_ids = course_data.pop("topics")
         self.assertTrue(is_data_match(get_course(course_data["id"]), course_data))
         self.assertEqual(
             sorted(
-                [record.lesson.id for record in get_course_lessons(course_data["id"])]
+                list(
+                    set(
+                        [
+                            record.module.id
+                            for record in get_course_modules(course_data["id"])
+                        ]
+                    )
+                )
             ),
-            sorted(lessons_ids),
+            sorted(modules_ids),
         )
         self.assertEqual(
             sorted(
@@ -602,8 +675,8 @@ class CourseTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = self.new_course
-        del data["lessons"]
-        data["lessons"] = []
+        del data["modules"]
+        data["modules"] = []
 
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -664,15 +737,22 @@ class CourseTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(courses_number(), 3)
         course_data = json.loads(response.content)
-        lessons_ids = course_data.pop("lessons")
+        modules_ids = course_data.pop("modules")
         skills_ids = course_data.pop("skills")
         topics_ids = course_data.pop("topics")
         self.assertTrue(is_data_match(get_course(course_data["id"]), course_data))
         self.assertEqual(
             sorted(
-                [record.lesson.id for record in get_course_lessons(course_data["id"])]
+                list(
+                    set(
+                        [
+                            record.module.id
+                            for record in get_course_modules(course_data["id"])
+                        ]
+                    )
+                )
             ),
-            sorted(lessons_ids),
+            sorted(modules_ids),
         )
         self.assertEqual(
             sorted(
@@ -687,14 +767,14 @@ class CourseTest(APITestCase):
             sorted(topics_ids),
         )
 
-    def test_update_course_without_lesson(self):
+    def test_update_course_without_modules(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = self.amend_course
-        del data["lessons"]
-        data["lessons"] = []
+        del data["modules"]
+        data["modules"] = []
 
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -839,6 +919,10 @@ class BestCourseTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -848,7 +932,7 @@ class BestCourseTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         create_lesson_price_history(self.lesson_1, 15)
@@ -926,6 +1010,10 @@ class BestCourseTest(APITestCase):
             technologies=[self.technology_2],
         )
 
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4]
+        )
+
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
@@ -935,7 +1023,7 @@ class BestCourseTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4],
+            modules=[self.module_2],
         )
 
         create_lesson_price_history(self.lesson_3, 15)
@@ -963,6 +1051,10 @@ class BestCourseTest(APITestCase):
             technologies=[self.technology_3],
         )
 
+        self.module_3 = create_module(
+            title="Module 3", lessons=[self.lesson_5, self.lesson_6]
+        )
+
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
@@ -972,7 +1064,7 @@ class BestCourseTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_5, self.lesson_6],
+            modules=[self.module_3],
         )
 
         create_lesson_price_history(self.lesson_5, 15)

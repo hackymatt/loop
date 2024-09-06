@@ -11,7 +11,7 @@ from django.db.models import (
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from course.models import Lesson
+from lesson.models import Lesson
 from profile.models import Profile, StudentProfile, LecturerProfile
 
 

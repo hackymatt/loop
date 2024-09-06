@@ -137,6 +137,12 @@ const adminNavigations = [
       ],
     },
     {
+      title: "Moduły",
+      path: paths.account.admin.modules.list,
+      icon: <Iconify icon="carbon:notebook-reference" />,
+      children: [],
+    },
+    {
       title: "Lekcje",
       path: paths.account.admin.lessons.list,
       icon: <Iconify icon="carbon:notebook" />,

@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import Container from "@mui/material/Container";
@@ -15,7 +17,7 @@ import { SplashScreen } from "src/components/loading-screen";
 import Review from "src/sections/review/review";
 import NotFoundView from "src/sections/error/not-found-view";
 
-import { ICourseProps } from "src/types/course";
+import { ICourseProps, ICourseLessonProp, ICourseModuleProp } from "src/types/course";
 
 import Advertisement from "../advertisement";
 import Newsletter from "../newsletter/newsletter";
@@ -35,6 +37,14 @@ export default function CourseView({ id }: { id: string }) {
 
   const similarCourses = bestCourses?.filter(
     (bestCourse: ICourseProps) => bestCourse.id !== course?.id,
+  );
+
+  const allLessons = useMemo(
+    () =>
+      course?.modules
+        ?.map((module: ICourseModuleProp) => module.lessons)
+        .flat() as ICourseLessonProp[],
+    [course?.modules],
   );
 
   const isLoading = isLoadingCourse || isLoadingBestCourse;
@@ -97,7 +107,7 @@ export default function CourseView({ id }: { id: string }) {
         teacherId=""
         ratingNumber={course.ratingNumber}
         reviewNumber={course.totalReviews}
-        lessons={course.lessons ?? []}
+        lessons={allLessons ?? []}
         teachers={course.teachers ?? []}
       />
 

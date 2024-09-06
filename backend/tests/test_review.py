@@ -18,6 +18,7 @@ from .factory import (
     create_teaching,
     create_schedule,
     create_meeting,
+    create_module,
 )
 from .helpers import (
     login,
@@ -127,6 +128,13 @@ class ReviewTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4]
+        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -136,7 +144,7 @@ class ReviewTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2, self.lesson_3, self.lesson_4],
+            modules=[self.module_1, self.module_2],
         )
 
         create_purchase(
@@ -252,7 +260,7 @@ class ReviewTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
-            "lesson": self.course.lessons.all()[3].id,
+            "lesson": self.lesson_4.id,
             "lecturer": self.lecturer_profile.id,
             "rating": 3,
             "review": "Good lesson.",
@@ -470,6 +478,10 @@ class BestReviewTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2, self.lesson_3]
+        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -479,7 +491,7 @@ class BestReviewTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2, self.lesson_3],
+            modules=[self.module_1],
         )
 
         self.review_1 = create_review(
@@ -637,6 +649,13 @@ class ReviewStatsTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4]
+        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -646,7 +665,7 @@ class ReviewStatsTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2, self.lesson_3, self.lesson_4],
+            modules=[self.module_1, self.module_2],
         )
 
         create_purchase(
@@ -853,6 +872,10 @@ class ReviewConfirmationTest(TestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -862,7 +885,7 @@ class ReviewConfirmationTest(TestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         create_purchase(
@@ -877,11 +900,12 @@ class ReviewConfirmationTest(TestCase):
             price=self.lesson_2.price,
         )
 
-        for lesson in self.course_1.lessons.all():
-            create_teaching(
-                lecturer=self.lecturer_profile,
-                lesson=lesson,
-            )
+        for module in self.course_1.modules.all():
+            for lesson in module.lessons.all():
+                create_teaching(
+                    lecturer=self.lecturer_profile,
+                    lesson=lesson,
+                )
 
         self.schedules = []
         for i in range(-48, 10):

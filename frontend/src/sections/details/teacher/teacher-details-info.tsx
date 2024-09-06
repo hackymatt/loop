@@ -117,7 +117,7 @@ export default function TeacherDetailsInfo({ teacher }: Props) {
           </Stack>
 
           <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
-            <Iconify icon="carbon:devices" sx={{ mr: 1 }} />
+            <Iconify icon="carbon:devices" sx={{ mr: 1, width: "30px" }} />
             Dostęp na komputerach, tabletach i urządzeniach mobilnych
           </Stack>
 

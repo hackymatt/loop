@@ -9,6 +9,7 @@ from course.models import (
     Course,
 )
 from lesson.models import Lesson, Technology
+from module.models import Module
 from review.models import Review
 from purchase.models import Purchase
 from teaching.models import Teaching
@@ -19,9 +20,16 @@ from django.db.models.functions import Cast
 
 
 def get_rating(queryset):
-    lessons = Course.lessons.through.objects.filter(
-        course=OuterRef(OuterRef("pk"))
-    ).values("lesson_id")
+    course_modules = (
+        Course.modules.through.objects.filter(course=OuterRef(OuterRef(OuterRef("pk"))))
+        .values("module_id")
+        .order_by("id")
+    )
+    lessons = (
+        Module.lessons.through.objects.filter(module__in=Subquery(course_modules))
+        .values("lesson_id")
+        .order_by("id")
+    )
     avg_rating = (
         Review.objects.filter(lesson__in=Subquery(lessons))
         .annotate(dummy_group_by=Value(1))
@@ -36,9 +44,16 @@ def get_rating(queryset):
 
 
 def get_duration(queryset):
-    lessons = Course.lessons.through.objects.filter(
-        course=OuterRef(OuterRef("pk"))
-    ).values("lesson_id")
+    course_modules = (
+        Course.modules.through.objects.filter(course=OuterRef(OuterRef(OuterRef("pk"))))
+        .values("module_id")
+        .order_by("id")
+    )
+    lessons = (
+        Module.lessons.through.objects.filter(module__in=Subquery(course_modules))
+        .values("lesson_id")
+        .order_by("id")
+    )
 
     total_duration = (
         Lesson.objects.filter(id__in=Subquery(lessons))
@@ -54,9 +69,16 @@ def get_duration(queryset):
 
 
 def get_price(queryset):
-    lessons = Course.lessons.through.objects.filter(
-        course=OuterRef(OuterRef("pk"))
-    ).values("lesson_id")
+    course_modules = (
+        Course.modules.through.objects.filter(course=OuterRef(OuterRef(OuterRef("pk"))))
+        .values("module_id")
+        .order_by("id")
+    )
+    lessons = (
+        Module.lessons.through.objects.filter(module__in=Subquery(course_modules))
+        .values("lesson_id")
+        .order_by("id")
+    )
 
     total_price = (
         Lesson.objects.filter(id__in=Subquery(lessons))
@@ -72,9 +94,17 @@ def get_price(queryset):
 
 
 def get_students_count(queryset):
-    lessons = Course.lessons.through.objects.filter(
-        course=OuterRef(OuterRef("pk"))
-    ).values("lesson_id")
+    course_modules = (
+        Course.modules.through.objects.filter(course=OuterRef(OuterRef(OuterRef("pk"))))
+        .values("module_id")
+        .order_by("id")
+    )
+    lessons = (
+        Module.lessons.through.objects.filter(module__in=Subquery(course_modules))
+        .values("lesson_id")
+        .order_by("id")
+    )
+
     total_student_count = (
         Purchase.objects.filter(lesson__in=Subquery(lessons))
         .annotate(dummy_group_by=Value(1))
@@ -89,9 +119,19 @@ def get_students_count(queryset):
 
 
 def get_lecturers(queryset):
-    lessons = Course.lessons.through.objects.filter(
-        course=OuterRef(OuterRef(OuterRef("pk")))
-    ).values("lesson_id")
+    course_modules = (
+        Course.modules.through.objects.filter(
+            course=OuterRef(OuterRef(OuterRef(OuterRef("pk"))))
+        )
+        .values("module_id")
+        .order_by("id")
+    )
+    lessons = (
+        Module.lessons.through.objects.filter(module__in=Subquery(course_modules))
+        .values("lesson_id")
+        .order_by("id")
+    )
+
     lecturers = (
         Teaching.objects.filter(lesson__in=Subquery(lessons))
         .annotate(dummy_group_by=Value(1))
@@ -117,9 +157,18 @@ def get_lecturers(queryset):
 
 
 def get_technologies(queryset):
-    lessons = Course.lessons.through.objects.filter(
-        course=OuterRef(OuterRef(OuterRef("pk")))
-    ).values("lesson_id")
+    course_modules = (
+        Course.modules.through.objects.filter(
+            course=OuterRef(OuterRef(OuterRef(OuterRef("pk"))))
+        )
+        .values("module_id")
+        .order_by("id")
+    )
+    lessons = (
+        Module.lessons.through.objects.filter(module__in=Subquery(course_modules))
+        .values("lesson_id")
+        .order_by("id")
+    )
 
     technologies = (
         Lesson.technologies.through.objects.filter(lesson_id__in=Subquery(lessons))
@@ -127,7 +176,7 @@ def get_technologies(queryset):
         .distinct()
     )
 
-    technologies = (
+    all_technologies = (
         Technology.objects.filter(id__in=Subquery(technologies))
         .values("name")
         .annotate(dummy_group_by=Value(1))
@@ -137,7 +186,7 @@ def get_technologies(queryset):
         .values("names")
     )
 
-    courses = queryset.annotate(all_technologies=Subquery(technologies))
+    courses = queryset.annotate(all_technologies=Subquery(all_technologies))
 
     return courses
 

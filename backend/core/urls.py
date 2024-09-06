@@ -26,6 +26,7 @@ from lesson.views import (
     LessonViewSet,
     LessonPriceHistoryViewSet,
 )
+from module.views import ModuleViewSet
 from technology.views import TechnologyViewSet, BestTechnologyViewSet
 from topic.views import TopicViewSet
 from skill.views import SkillViewSet
@@ -65,6 +66,7 @@ router.register(
 )
 router.register(r"courses", CourseViewSet, basename="courses")
 router.register(r"best-courses", BestCourseViewSet, basename="best_courses")
+router.register(r"modules", ModuleViewSet, basename="modules")
 router.register(r"lessons", LessonViewSet, basename="lessons")
 router.register(
     r"lesson-price-history", LessonPriceHistoryViewSet, basename="lesson_price_history"

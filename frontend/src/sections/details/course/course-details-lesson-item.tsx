@@ -56,6 +56,7 @@ interface Props extends DialogProps {
 
 type LessonItemProps = {
   lesson: Pick<ICourseLessonProp, "id" | "title" | "price" | "priceSale" | "lowest30DaysPrice">;
+  index: number;
   details: ICourseLessonProp;
   expanded: boolean;
   onExpanded: (event: React.SyntheticEvent, isExpanded: boolean) => void;
@@ -159,6 +160,7 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
 
 export default function CourseDetailsLessonItem({
   lesson,
+  index,
   details,
   expanded,
   onExpanded,
@@ -237,7 +239,7 @@ export default function CourseDetailsLessonItem({
               flexGrow: 1,
             }}
           >
-            {lesson.title}
+            {`Lekcja ${index}: ${lesson.title}`}
           </Typography>
 
           <Stack direction="row" alignItems="center" justifyContent="space-between">

@@ -12,6 +12,7 @@ from .factory import (
     create_topic,
     create_review,
     create_purchase,
+    create_module,
 )
 import json
 
@@ -102,6 +103,13 @@ class StatsTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4]
+        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -111,7 +119,7 @@ class StatsTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2, self.lesson_3, self.lesson_4],
+            modules=[self.module_1, self.module_2],
         )
 
         create_purchase(

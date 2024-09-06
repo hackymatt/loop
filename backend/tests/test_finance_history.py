@@ -7,7 +7,7 @@ from .factory import (
     create_lecturer_profile,
     create_finance_history,
 )
-from .helpers import login, is_data_match
+from .helpers import login
 from django.contrib import auth
 import json
 
