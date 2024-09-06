@@ -22,6 +22,7 @@ from .factory import (
     create_coupon_user,
     create_newsletter,
     create_meeting,
+    create_module,
 )
 from .helpers import login
 from django.contrib import auth
@@ -115,6 +116,10 @@ class CourseOrderTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -124,36 +129,36 @@ class CourseOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         create_purchase(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile,
-            price=self.course_1.lessons.all()[0].price,
+            price=self.lesson_1.price,
         )
         create_purchase(
-            lesson=self.course_1.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile,
-            price=self.course_1.lessons.all()[1].price,
+            price=self.lesson_2.price,
         )
 
         self.review_course_1_1 = create_review(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_1_2 = create_review(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_course_1_3 = create_review(
-            lesson=self.course_1.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=3,
@@ -185,6 +190,10 @@ class CourseOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -194,65 +203,65 @@ class CourseOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
         create_purchase(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile,
-            price=self.course_2.lessons.all()[0].price,
+            price=self.lesson_3.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile,
-            price=self.course_2.lessons.all()[1].price,
+            price=self.lesson_4.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile_2,
-            price=self.course_2.lessons.all()[0].price,
+            price=self.lesson_3.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile_2,
-            price=self.course_2.lessons.all()[1].price,
+            price=self.lesson_4.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[2],
+            lesson=self.lesson_5,
             student=self.profile_2,
-            price=self.course_2.lessons.all()[2].price,
+            price=self.lesson_5.price,
         )
 
         self.review_course_2_1 = create_review(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_2_2 = create_review(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_course_2_3 = create_review(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=2,
             review="So so lesson.",
         )
         self.review_course_2_4 = create_review(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=1,
             review="So so lesson.",
         )
         self.review_course_2_5 = create_review(
-            lesson=self.course_2.lessons.all()[2],
+            lesson=self.lesson_5,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=4,
@@ -268,6 +277,8 @@ class CourseOrderTest(APITestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -277,29 +288,29 @@ class CourseOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
         create_purchase(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile,
-            price=self.course_3.lessons.all()[0].price,
+            price=self.lesson_6.price,
         )
         create_purchase(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile_2,
-            price=self.course_3.lessons.all()[0].price,
+            price=self.lesson_6.price,
         )
 
         self.review_course_3_1 = create_review(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_3_2 = create_review(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=2,
@@ -432,6 +443,10 @@ class ReviewOrderTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -441,25 +456,25 @@ class ReviewOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         self.review_course_1_1 = create_review(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_1_2 = create_review(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_course_1_3 = create_review(
-            lesson=self.course_1.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=3,
@@ -491,6 +506,10 @@ class ReviewOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -500,39 +519,39 @@ class ReviewOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
         self.review_course_2_1 = create_review(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_2_2 = create_review(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_course_2_3 = create_review(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=2,
             review="So so lesson.",
         )
         self.review_course_2_4 = create_review(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=1,
             review="So so lesson.",
         )
         self.review_course_2_5 = create_review(
-            lesson=self.course_2.lessons.all()[2],
+            lesson=self.lesson_5,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=4,
@@ -548,6 +567,8 @@ class ReviewOrderTest(APITestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -557,18 +578,18 @@ class ReviewOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
         self.review_course_3_1 = create_review(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_3_2 = create_review(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=2,
@@ -698,6 +719,10 @@ class ScheduleOrderTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -707,7 +732,7 @@ class ScheduleOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         # course 2
@@ -735,6 +760,10 @@ class ScheduleOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -744,7 +773,7 @@ class ScheduleOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
         # course 3
@@ -756,6 +785,8 @@ class ScheduleOrderTest(APITestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -765,7 +796,7 @@ class ScheduleOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
         for i in range(10):
@@ -884,6 +915,10 @@ class LessonPriceHistoryOrderTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -893,7 +928,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         create_lesson_price_history(self.lesson_1, 15)
@@ -919,6 +954,11 @@ class LessonPriceHistoryOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4]
+        )
+
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
@@ -928,15 +968,15 @@ class LessonPriceHistoryOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4],
+            modules=[self.module_2],
         )
 
-        create_lesson_price_history(self.course_2.lessons.all()[0], 15)
-        create_lesson_price_history(self.course_2.lessons.all()[0], 25)
-        create_lesson_price_history(self.course_2.lessons.all()[0], 5)
-        create_lesson_price_history(self.course_2.lessons.all()[1], 1)
-        create_lesson_price_history(self.course_2.lessons.all()[1], 5)
-        create_lesson_price_history(self.course_2.lessons.all()[1], 3)
+        create_lesson_price_history(self.lesson_3, 15)
+        create_lesson_price_history(self.lesson_3, 25)
+        create_lesson_price_history(self.lesson_3, 5)
+        create_lesson_price_history(self.lesson_4, 1)
+        create_lesson_price_history(self.lesson_4, 5)
+        create_lesson_price_history(self.lesson_4, 3)
 
         self.lesson_5 = create_lesson(
             title="VBA lesson 1",
@@ -954,6 +994,11 @@ class LessonPriceHistoryOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_3],
         )
+
+        self.module_3 = create_module(
+            title="Module 3", lessons=[self.lesson_5, self.lesson_6]
+        )
+
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
@@ -963,12 +1008,12 @@ class LessonPriceHistoryOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_5, self.lesson_6],
+            modules=[self.module_3],
         )
 
-        create_lesson_price_history(self.course_3.lessons.all()[0], 15)
-        create_lesson_price_history(self.course_3.lessons.all()[0], 25)
-        create_lesson_price_history(self.course_3.lessons.all()[0], 5)
+        create_lesson_price_history(self.lesson_6, 15)
+        create_lesson_price_history(self.lesson_6, 25)
+        create_lesson_price_history(self.lesson_6, 5)
         create_lesson_price_history(self.lesson_6, 1)
         create_lesson_price_history(self.lesson_6, 5)
         create_lesson_price_history(self.lesson_6, 3)
@@ -1357,6 +1402,10 @@ class LecturerOrderTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -1366,36 +1415,36 @@ class LecturerOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         create_purchase(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile,
-            price=self.course_1.lessons.all()[0].price,
+            price=self.lesson_1.price,
         )
         create_purchase(
-            lesson=self.course_1.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile,
-            price=self.course_1.lessons.all()[1].price,
+            price=self.lesson_2.price,
         )
 
         self.review_course_1_1 = create_review(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_1_2 = create_review(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_course_1_3 = create_review(
-            lesson=self.course_1.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=3,
@@ -1427,6 +1476,10 @@ class LecturerOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -1436,65 +1489,65 @@ class LecturerOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
         create_purchase(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile,
-            price=self.course_2.lessons.all()[0].price,
+            price=self.lesson_3.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile,
-            price=self.course_2.lessons.all()[1].price,
+            price=self.lesson_4.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile_2,
-            price=self.course_2.lessons.all()[0].price,
+            price=self.lesson_3.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile_2,
-            price=self.course_2.lessons.all()[1].price,
+            price=self.lesson_4.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[2],
+            lesson=self.lesson_5,
             student=self.profile_2,
-            price=self.course_2.lessons.all()[2].price,
+            price=self.lesson_5.price,
         )
 
         self.review_course_2_1 = create_review(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_2_2 = create_review(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_course_2_3 = create_review(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=2,
             review="So so lesson.",
         )
         self.review_course_2_4 = create_review(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=1,
             review="So so lesson.",
         )
         self.review_course_2_5 = create_review(
-            lesson=self.course_2.lessons.all()[2],
+            lesson=self.lesson_5,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=4,
@@ -1510,6 +1563,8 @@ class LecturerOrderTest(APITestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -1519,29 +1574,29 @@ class LecturerOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
         create_purchase(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile,
-            price=self.course_3.lessons.all()[0].price,
+            price=self.lesson_6.price,
         )
         create_purchase(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile_2,
-            price=self.course_3.lessons.all()[0].price,
+            price=self.lesson_6.price,
         )
 
         self.review_course_3_1 = create_review(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile,
             lecturer=self.lecturer_profile_2,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_3_2 = create_review(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile_2,
             lecturer=self.lecturer_profile_2,
             rating=2,
@@ -1654,6 +1709,10 @@ class PurchaseOrderTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -1663,26 +1722,27 @@ class PurchaseOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         create_purchase(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile,
-            price=self.course_1.lessons.all()[0].price,
+            price=self.lesson_1.price,
         )
 
         create_purchase(
-            lesson=self.course_1.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile,
-            price=self.course_1.lessons.all()[1].price,
+            price=self.lesson_2.price,
         )
 
-        for lesson in self.course_1.lessons.all():
-            create_teaching(
-                lecturer=self.lecturer_profile,
-                lesson=lesson,
-            )
+        for module in self.course_1.modules.all():
+            for lesson in module.lessons.all():
+                create_teaching(
+                    lecturer=self.lecturer_profile,
+                    lesson=lesson,
+                )
 
         self.schedules = []
         for i in range(-100, 10):
@@ -1708,24 +1768,24 @@ class PurchaseOrderTest(APITestCase):
 
             self.schedules.append(schedule)
         self.purchase_1 = create_purchase(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile,
-            price=self.course_1.lessons.all()[0].price,
+            price=self.lesson_1.price,
         )
         create_reservation(
             student=self.profile,
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             schedule=self.schedules[len(self.schedules) - 3],
             purchase=self.purchase_1,
         )
         self.purchase_2 = create_purchase(
-            lesson=self.course_1.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile,
-            price=self.course_1.lessons.all()[1].price,
+            price=self.lesson_2.price,
         )
         create_reservation(
             student=self.profile,
-            lesson=self.course_1.lessons.all()[1],
+            lesson=self.lesson_2,
             schedule=self.schedules[0],
             purchase=self.purchase_2,
         )
@@ -1755,6 +1815,10 @@ class PurchaseOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -1764,22 +1828,22 @@ class PurchaseOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
         create_purchase(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile,
-            price=self.course_2.lessons.all()[0].price,
+            price=self.lesson_3.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile,
-            price=self.course_2.lessons.all()[1].price,
+            price=self.lesson_4.price,
         )
 
         create_review(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile,
             lecturer=self.lecturer_profile,
             rating=5,
@@ -1795,6 +1859,8 @@ class PurchaseOrderTest(APITestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -1804,7 +1870,7 @@ class PurchaseOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
         self.fields = [
@@ -2274,6 +2340,10 @@ class TeachingOrderTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -2283,17 +2353,18 @@ class TeachingOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         self.teaching = []
-        for lesson in self.course_1.lessons.all():
-            self.teaching.append(
-                create_teaching(
-                    lecturer=self.profile,
-                    lesson=lesson,
+        for module in self.course_1.modules.all():
+            for lesson in module.lessons.all():
+                self.teaching.append(
+                    create_teaching(
+                        lecturer=self.profile,
+                        lesson=lesson,
+                    )
                 )
-            )
 
         # course 2
         self.lesson_3 = create_lesson(
@@ -2320,6 +2391,10 @@ class TeachingOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -2329,7 +2404,7 @@ class TeachingOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
         self.teaching.append(
@@ -2348,6 +2423,8 @@ class TeachingOrderTest(APITestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -2357,7 +2434,7 @@ class TeachingOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
         self.teaching.append(

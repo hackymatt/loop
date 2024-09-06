@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { polishPlurals } from "polish-plurals";
 
 import Box from "@mui/material/Box";
@@ -19,7 +20,7 @@ import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
 
 import { UserType } from "src/types/user";
-import { ICourseProps, ICourseLessonProp } from "src/types/course";
+import { ICourseProps, ICourseLessonProp, ICourseModuleProp } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -35,13 +36,18 @@ export default function CourseDetailsInfo({ course }: Props) {
   const { mutateAsync: createWishlistItem, isLoading: isAddingToFavorites } = useCreateWishlist();
   const { mutateAsync: createCartItem, isLoading: isAddingToCart } = useCreateCart();
 
+  const allLessons: ICourseLessonProp[] = useMemo(
+    () => course?.modules?.map((module: ICourseModuleProp) => module.lessons).flat(),
+    [course?.modules],
+  );
+
   const handleAddToFavorites = async () => {
     if (!isLoggedIn) {
       push(paths.login);
       return;
     }
     try {
-      const wishlistItems = course.lessons.map((lesson: ICourseLessonProp) =>
+      const wishlistItems = allLessons.map((lesson: ICourseLessonProp) =>
         createWishlistItem({ lesson: lesson.id }),
       );
       await Promise.allSettled(wishlistItems);
@@ -57,7 +63,7 @@ export default function CourseDetailsInfo({ course }: Props) {
       return;
     }
     try {
-      const cartItems = course.lessons.map((lesson: ICourseLessonProp) =>
+      const cartItems = allLessons.map((lesson: ICourseLessonProp) =>
         createCartItem({ lesson: lesson.id }),
       );
       await Promise.allSettled(cartItems);
@@ -96,14 +102,24 @@ export default function CourseDetailsInfo({ course }: Props) {
         <Stack spacing={2}>
           <Typography>Ten kurs zawiera:</Typography>
 
-          {course.lessons && (
-            <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
-              <Iconify icon="carbon:document" sx={{ mr: 1 }} />
-              <Box component="strong" sx={{ mr: 0.5 }}>
-                {course.lessons?.length}
-              </Box>
-              {polishPlurals("lekcję", "lekcje", "lekcji", course.lessons?.length)}
-            </Stack>
+          {course.modules && (
+            <>
+              <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
+                <Iconify icon="carbon:document-multiple-01" sx={{ mr: 1 }} />
+                <Box component="strong" sx={{ mr: 0.5 }}>
+                  {course.modules?.length}
+                </Box>
+                {polishPlurals("moduł", "moduły", "modułów", course.modules?.length)}
+              </Stack>
+
+              <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
+                <Iconify icon="carbon:document" sx={{ mr: 1 }} />
+                <Box component="strong" sx={{ mr: 0.5 }}>
+                  {allLessons?.length}
+                </Box>
+                {polishPlurals("lekcję", "lekcje", "lekcji", allLessons?.length)}
+              </Stack>
+            </>
           )}
 
           <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
@@ -112,7 +128,7 @@ export default function CourseDetailsInfo({ course }: Props) {
           </Stack>
 
           <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
-            <Iconify icon="carbon:devices" sx={{ mr: 1 }} />
+            <Iconify icon="carbon:devices" sx={{ mr: 1, width: "30px" }} />
             Dostęp na komputerach, tabletach i urządzeniach mobilnych
           </Stack>
 

@@ -12,6 +12,7 @@ from .factory import (
     create_topic,
     create_wishlist,
     create_teaching,
+    create_module,
 )
 from .helpers import login, wishlist_number
 from django.contrib import auth
@@ -78,6 +79,10 @@ class WishlistTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -87,17 +92,18 @@ class WishlistTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         self.wishlist = []
-        for lesson in self.course_1.lessons.all():
-            self.wishlist.append(
-                create_wishlist(
-                    student=self.profile,
-                    lesson=lesson,
+        for module in self.course_1.modules.all():
+            for lesson in module.lessons.all():
+                self.wishlist.append(
+                    create_wishlist(
+                        student=self.profile,
+                        lesson=lesson,
+                    )
                 )
-            )
 
         # course 2
         self.lesson_3 = create_lesson(
@@ -124,6 +130,10 @@ class WishlistTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -133,7 +143,7 @@ class WishlistTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
         self.wishlist.append(
@@ -152,6 +162,8 @@ class WishlistTest(APITestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -161,7 +173,7 @@ class WishlistTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
         self.wishlist.append(
@@ -194,7 +206,7 @@ class WishlistTest(APITestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         data = {
-            "lesson": self.course_2.lessons.all()[0].id,
+            "lesson": self.lesson_3.id,
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

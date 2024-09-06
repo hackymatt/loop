@@ -10,15 +10,19 @@ from lesson.models import (
 )
 from technology.models import Technology
 from course.models import Course
+from module.models import Module
 from django.db.models import OuterRef, Subquery, Value, Count
 
 
 def get_courses_count(queryset):
     lessons = Lesson.technologies.through.objects.filter(
-        technology_id=OuterRef(OuterRef("pk"))
+        technology_id=OuterRef(OuterRef(OuterRef("pk")))
     ).values("lesson_id")
+    modules = Module.lessons.through.objects.filter(
+        lesson_id__in=Subquery(lessons)
+    ).values("module_id")
     total_courses_count = (
-        Course.lessons.through.objects.filter(lesson_id__in=Subquery(lessons))
+        Course.modules.through.objects.filter(module_id__in=Subquery(modules))
         .annotate(dummy_group_by=Value(1))
         .values("dummy_group_by")
         .order_by("dummy_group_by")

@@ -5,7 +5,7 @@ export const defaultValues = {
   title: "",
   description: "",
   level: "Podstawowy",
-  lessons: [],
+  modules: [],
   skills: [],
   topics: [],
   image: "",
@@ -19,7 +19,7 @@ export const steps = [
   },
   { label: "Wybierz umiejętności", fields: ["skills"] },
   { label: "Wybierz tematy", fields: ["topics"] },
-  { label: "Wybierz lekcje", fields: ["lessons"] },
+  { label: "Wybierz moduły", fields: ["modules"] },
   { label: "Wybierz zdjęcie", fields: ["image"] },
   { label: "Wybierz film", fields: ["video"] },
 ];
@@ -31,7 +31,7 @@ export const schema = Yup.object().shape({
   level: Yup.string().required("Poziom jest wymagany"),
   image: Yup.string().required("Zdjęcie jest wymagane"),
   video: Yup.string(),
-  lessons: Yup.array().required("Lekcje są wymagane").min(1, "Wymagana przynajmniej jedna lekcja"),
+  modules: Yup.array().required("Moduły są wymagane").min(1, "Wymagany przynajmniej jeden moduł"),
   skills: Yup.array()
     .required("Umiejętności są wymagane")
     .min(1, "Wymagana przynajmniej jedna umiejętność"),

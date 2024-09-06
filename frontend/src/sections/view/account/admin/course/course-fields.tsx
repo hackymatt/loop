@@ -1,6 +1,6 @@
 import { useSkills } from "src/api/skills/skills";
 import { useTopics } from "src/api/topics/topics";
-import { useLessons } from "src/api/lessons/lessons";
+import { useModules } from "src/api/modules/modules";
 
 import {
   RHFSwitch,
@@ -11,7 +11,7 @@ import {
   RHFAutocompleteDnd,
 } from "src/components/hook-form";
 
-import { ICourseLessonProp, ICourseBySkillProps, ICourseByTopicProps } from "src/types/course";
+import { ICourseModuleProp, ICourseBySkillProps, ICourseByTopicProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ const LEVEL_OPTIONS = ["Podstawowy", "Średniozaawansowany", "Zaawansowany", "Ek
 // ----------------------------------------------------------------------
 
 export const useCourseFields = () => {
-  const { data: availableLessons, isLoading: isLoadingLessons } = useLessons({
+  const { data: availableModules, isLoading: isLoadingModules } = useModules({
     sort_by: "title",
     page_size: -1,
   });
@@ -48,16 +48,16 @@ export const useCourseFields = () => {
     ),
     image: <RHFImageUpload key="image" name="image" label="" />,
     video: <RHFVideoUpload key="video" name="video" label="" />,
-    lessons: (
+    modules: (
       <RHFAutocompleteDnd
-        key="lessons"
-        name="lessons"
-        label="Lekcje"
+        key="modules"
+        name="modules"
+        label="Moduły"
         multiple
-        options={availableLessons}
-        getOptionLabel={(option) => (option as ICourseLessonProp).title}
+        options={availableModules}
+        getOptionLabel={(option) => (option as ICourseModuleProp).title}
         isOptionEqualToValue={(a, b) => a.id === b.id}
-        loading={isLoadingLessons}
+        loading={isLoadingModules}
       />
     ),
     skills: (

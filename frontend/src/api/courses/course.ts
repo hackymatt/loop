@@ -47,6 +47,15 @@ type ILesson = {
   lowest_30_days_price?: number | null;
 };
 
+type IModule = {
+  id: string;
+  title: string;
+  price: number;
+  previous_price?: number | null;
+  lowest_30_days_price?: number | null;
+  lessons: ILesson[];
+};
+
 type ICourse = {
   id: string;
   level: ILevel;
@@ -55,7 +64,7 @@ type ICourse = {
   lowest_30_days_price: number | null;
   is_bestseller: boolean;
   duration: number;
-  lessons: ILesson[];
+  modules: IModule[];
   technologies: ITechnology[];
   skills: ISkill[];
   topics: ITopic[];
@@ -83,10 +92,10 @@ type IEditCourse = Omit<
   | "students_count"
   | "rating"
   | "rating_count"
-  | "lessons"
+  | "modules"
   | "skills"
   | "topics"
-> & { lessons: string[]; skills: string[]; topics: string[] };
+> & { modules: string[]; skills: string[]; topics: string[] };
 
 type IEditCourseReturn = IEditCourse;
 
@@ -121,7 +130,7 @@ export const courseQuery = (id: string) => {
         lecturers,
         skills,
         topics,
-        lessons,
+        modules,
         active,
       } = data;
 
@@ -163,21 +172,38 @@ export const courseQuery = (id: string) => {
         ),
         skills: skills.map((skill: ISkill) => skill.name),
         learnList: topics.map((topic: ITopic) => topic.name),
-        lessons: lessons.map(
+        modules: modules.map(
           ({
-            id: lessonId,
-            title: titleId,
-            lowest_30_days_price: lessonLowest30DaysPrice,
-            previous_price: lessonPreviousPrice,
-            price: lessonPrice,
-          }: ILesson) => ({
-            id: lessonId,
-            title: titleId,
-            lowest30DaysPrice: lessonLowest30DaysPrice,
-            priceSale: lessonPreviousPrice,
-            price: lessonPrice,
+            id: moduleId,
+            title: moduleTitle,
+            lowest_30_days_price: moduleLowest30DaysPrice,
+            previous_price: modulePreviousPrice,
+            price: modulePrice,
+            lessons,
+          }: IModule) => ({
+            id: moduleId,
+            title: moduleTitle,
+            lowest30DaysPrice: moduleLowest30DaysPrice,
+            priceSale: modulePreviousPrice,
+            price: modulePrice,
+            lessons: lessons.map(
+              ({
+                id: lessonId,
+                title: lessonTitle,
+                lowest_30_days_price: lessonLowest30DaysPrice,
+                previous_price: lessonPreviousPrice,
+                price: lessonPrice,
+              }: ILesson) => ({
+                id: lessonId,
+                title: lessonTitle,
+                lowest30DaysPrice: lessonLowest30DaysPrice,
+                priceSale: lessonPreviousPrice,
+                price: lessonPrice,
+              }),
+            ),
           }),
         ),
+
         active,
       };
     } catch (error) {

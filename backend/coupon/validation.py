@@ -39,7 +39,7 @@ def validate_coupon(coupon_code, user, total):
 
     min_total = coupon.min_total
 
-    if float(total) < float(min_total):
+    if float(total) / 100 < float(min_total):
         return False, f"Kupon ważny dla zamówienia za min. {min_total} zł."
 
     return True, ""

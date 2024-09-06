@@ -73,6 +73,7 @@ INSTALLED_APPS = [
     "lesson",
     "skill",
     "topic",
+    "module",
     "course",
     "review",
     "purchase",

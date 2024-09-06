@@ -17,7 +17,7 @@ import { urlToBlob } from "src/utils/blob-to-base64";
 
 import { useSkills } from "src/api/skills/skills";
 import { useTopics } from "src/api/topics/topics";
-import { useLessons } from "src/api/lessons/lessons";
+import { useModules } from "src/api/modules/modules";
 import { useCourse, useEditCourse } from "src/api/courses/course";
 import { useTechnologies } from "src/api/technologies/technologies";
 
@@ -27,10 +27,9 @@ import { isStepFailed } from "src/components/stepper/step";
 import {
   ILevel,
   ICourseProps,
-  ICourseLessonProp,
+  ICourseModuleProp,
   ICourseBySkillProps,
   ICourseByTopicProps,
-  ICourseByCategoryProps,
 } from "src/types/course";
 
 import { useCourseFields } from "./course-fields";
@@ -46,7 +45,7 @@ interface Props extends DialogProps {
 // ----------------------------------------------------------------------
 
 export default function CourseEditForm({ course, onClose, ...other }: Props) {
-  const { data: availableLessons } = useLessons({
+  const { data: availableModules } = useModules({
     sort_by: "title",
   });
   const { data: availableSkills } = useSkills({
@@ -84,21 +83,15 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
         topics: courseData.learnList.map((topic: string) =>
           availableTopics.find((t: ICourseByTopicProps) => t.name === topic),
         ),
-        lessons: courseData.lessons.map((lesson: ICourseLessonProp) => {
-          const lessonData = availableLessons.find((l: ICourseLessonProp) => l.id === lesson.id);
+        modules: courseData.modules.map((module: ICourseModuleProp) => {
+          const moduleData = availableModules.find((m: ICourseModuleProp) => m.id === module.id);
 
-          if (!lessonData) {
-            return lessonData;
+          if (!moduleData) {
+            return moduleData;
           }
 
           return {
-            ...lessonData,
-            github_url: lessonData.githubUrl,
-            technologies: lessonData.category.map((category: string) =>
-              availableTechnologies.find(
-                (technology: ICourseByCategoryProps) => technology.name === category,
-              ),
-            ),
+            ...moduleData,
           };
         }),
         image: courseData.coverUrl ?? "",
@@ -106,7 +99,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
       });
     }
   }, [
-    availableLessons,
+    availableModules,
     availableSkills,
     availableTechnologies,
     availableTopics,
@@ -120,7 +113,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
     try {
       await editCourse({
         ...data,
-        lessons: data.lessons.map((lesson: ICourseLessonProp) => lesson.id),
+        modules: data.modules.map((module: ICourseModuleProp) => module.id),
         skills: data.skills.map((skill: ICourseBySkillProps) => skill.id),
         topics: data.topics.map((topic: ICourseByTopicProps) => topic.id),
         level: data.level.slice(0, 1) as ILevel,

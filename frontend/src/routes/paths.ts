@@ -32,6 +32,9 @@ export const paths = {
         skills: "/account/admin/courses/skills",
         topics: "/account/admin/courses/topics",
       },
+      modules: {
+        list: "/account/admin/modules/list",
+      },
       lessons: {
         list: "/account/admin/lessons/list",
         priceHistory: "/account/admin/lessons/price-history",

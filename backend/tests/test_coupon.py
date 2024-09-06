@@ -519,7 +519,7 @@ class CouponValidationTest(APITestCase):
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        response = self.client.get(f"{self.endpoint}/{self.coupon_1.code}/200")
+        response = self.client.get(f"{self.endpoint}/{self.coupon_1.code}/20000")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         self.assertEqual(

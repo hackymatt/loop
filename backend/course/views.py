@@ -26,8 +26,8 @@ class CourseViewSet(ModelViewSet):
     search_fields = [
         "title",
         "description",
-        "lessons__title",
-        "lessons__description",
+        "modules__lessons__title",
+        "modules__lessons__description",
     ]
     permission_classes = [AllowAny]
 

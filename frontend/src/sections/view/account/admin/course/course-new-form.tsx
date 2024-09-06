@@ -22,7 +22,7 @@ import { isStepFailed } from "src/components/stepper/step";
 
 import {
   ILevel,
-  ICourseLessonProp,
+  ICourseModuleProp,
   ICourseBySkillProps,
   ICourseByTopicProps,
 } from "src/types/course";
@@ -66,7 +66,7 @@ export default function CourseNewForm({ onClose, ...other }: Props) {
         await createCourse({
           ...data,
           level: data.level.slice(0, 1) as ILevel,
-          lessons: data.lessons.map((lesson: ICourseLessonProp) => lesson.id),
+          modules: data.modules.map((module: ICourseModuleProp) => module.id),
           skills: data.skills.map((skill: ICourseBySkillProps) => skill.id),
           topics: data.topics.map((topic: ICourseByTopicProps) => topic.id),
         });

@@ -8,6 +8,7 @@ from topic.models import Topic
 from finance.models import Finance, FinanceHistory
 from skill.models import Skill
 from review.models import Review
+from module.models import Module
 from purchase.models import Purchase
 from newsletter.models import Newsletter
 from schedule.models import Schedule, Meeting
@@ -142,7 +143,7 @@ def create_course(
     level: str,
     skills,
     topics,
-    lessons,
+    modules,
     active: bool = True,
 ):
     course = Course.objects.create(
@@ -152,7 +153,7 @@ def create_course(
         active=active,
     )
 
-    course.lessons.add(*lessons)
+    course.modules.add(*modules)
     course.skills.add(*skills)
     course.topics.add(*topics)
     course.image = create_image()
@@ -166,7 +167,7 @@ def create_course_obj(
     title: str,
     description: str,
     level: str,
-    lessons: List[Dict[str, int]],
+    modules: List[Dict[str, int]],
     skills,
     topics,
     image: str = None,
@@ -176,11 +177,37 @@ def create_course_obj(
         "title": title,
         "description": description,
         "level": level,
-        "lessons": lessons,
+        "modules": modules,
         "skills": skills,
         "topics": topics,
         "image": image,
         "video": video,
+    }
+
+
+def create_module(
+    title: str,
+    lessons,
+):
+    module = Module.objects.create(
+        title=title,
+    )
+
+    module.lessons.add(*lessons)
+    module.save()
+
+    return module
+
+
+def create_module_obj(
+    title: str,
+    lessons,
+    id: int = -1,
+):
+    return {
+        "id": id,
+        "title": title,
+        "lessons": lessons,
     }
 
 

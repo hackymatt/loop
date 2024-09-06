@@ -5,7 +5,7 @@ from django.db.models import (
     CASCADE,
     Index,
 )
-from course.models import Lesson
+from lesson.models import Lesson
 from profile.models import LecturerProfile
 
 

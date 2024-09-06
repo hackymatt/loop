@@ -7,6 +7,7 @@ from technology.models import Technology
 from topic.models import Topic
 from skill.models import Skill
 from review.models import Review
+from module.models import Module
 from newsletter.models import Newsletter
 from schedule.models import Schedule
 from reservation.models import Reservation
@@ -111,8 +112,9 @@ def is_course_found(id: int):
     return Course.objects.filter(id=id).exists()
 
 
-def get_course_lessons(id: int):
-    return Course.lessons.through.objects.filter(course_id=id)
+def get_course_modules(id: int):
+    modules = Course.modules.through.objects.filter(course_id=id).values("module_id")
+    return Module.lessons.through.objects.filter(module_id__in=modules)
 
 
 def get_course_skills(id: int):
@@ -129,6 +131,10 @@ def lessons_number():
 
 def get_lesson(id: int):
     return Lesson.objects.get(pk=id)
+
+
+def get_module(id: int):
+    return Module.objects.get(pk=id)
 
 
 def technologies_number():
