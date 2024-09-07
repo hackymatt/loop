@@ -16,6 +16,7 @@ from wishlist.models import Wishlist
 from cart.models import Cart
 from teaching.models import Teaching
 from reservation.models import Reservation
+from certificate.models import Certificate
 from datetime import datetime
 from django.utils.timezone import make_aware
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -434,3 +435,14 @@ def create_coupon_user(
 
 def create_meeting(event_id: str, url: str):
     return Meeting.objects.create(event_id=event_id, url=url)
+
+
+def create_certificate(entity_type, entity, schedule, student):
+    return Certificate.objects.create(
+        type=entity_type,
+        entity_id=entity.id,
+        title=entity.title,
+        duration=entity.duration,
+        completed_at=schedule.end_time,
+        student=student,
+    )

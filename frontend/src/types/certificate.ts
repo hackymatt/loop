@@ -1,9 +1,9 @@
 export type ICertificateProps = {
   referenceNumber: string;
-  lessonTitle: string;
-  teacherName: string;
+  type: "Lekcja" | "Moduł" | "Kurs";
+  title: string;
   studentName: string;
-  lessonDuration: string;
-  completionDate: string;
+  duration: string;
+  completedAt: string;
   isAuthorized?: boolean;
 };

@@ -15,7 +15,7 @@ from profile.personal_data.views import PersonalDataViewSet
 from profile.profile_data.views import ProfileDataViewSet
 from profile.lecturers.views import LecturerViewSet, BestLecturerViewSet
 from profile.earnings.views import EarningViewSet
-from profile.certificate.views import CertificateViewSet
+from certificate.views import CertificateViewSet, CertificateInfoViewSet
 from django.urls import path, include
 from django.contrib import admin
 from course.views import (
@@ -64,6 +64,7 @@ router.register(
 router.register(
     r"verify-code", ProfileVerificationCodeViewSet, basename="user_verification_code"
 )
+router.register(r"certificates", CertificateViewSet, basename="certificates")
 router.register(r"courses", CourseViewSet, basename="courses")
 router.register(r"best-courses", BestCourseViewSet, basename="best_courses")
 router.register(r"modules", ModuleViewSet, basename="modules")
@@ -122,7 +123,7 @@ api_urlpatterns = [
     ),
     path(
         "certificate/<str:id>",
-        CertificateViewSet.get_certificate,
+        CertificateInfoViewSet.get_certificate,
     ),
     path("contact", ContactViewSet.as_view({"post": "contact"})),
     path(

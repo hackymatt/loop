@@ -400,16 +400,6 @@ export default function CourseDetailsLessonItem({
               <Divider sx={{ borderStyle: "dashed" }} />
 
               <Stack direction="row" spacing={0.5} flexWrap="wrap" justifyContent="right">
-                <LoadingButton
-                  size="medium"
-                  color="primary"
-                  variant="contained"
-                  onClick={handleAddToFavorites}
-                  loading={isAddingToFavorites}
-                  disabled={userType !== UserType.Student || (lesson.progress ?? 0) < 100}
-                >
-                  <Iconify icon="carbon:certificate" />
-                </LoadingButton>
                 <Button
                   size="medium"
                   color="info"

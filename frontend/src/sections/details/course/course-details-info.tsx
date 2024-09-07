@@ -144,17 +144,6 @@ export default function CourseDetailsInfo({ course }: Props) {
         <Stack spacing={0.5}>
           <LoadingButton
             size="large"
-            color="primary"
-            variant="contained"
-            startIcon={<Iconify icon="carbon:certificate-check" />}
-            loading={isAddingToFavorites}
-            onClick={handleAddToFavorites}
-            disabled={userType !== UserType.Student || (course.progress ?? 0) < 100}
-          >
-            Wygeneruj certyfikat
-          </LoadingButton>
-          <LoadingButton
-            size="large"
             color="error"
             variant="contained"
             startIcon={<Iconify icon="carbon:favorite-filled" />}

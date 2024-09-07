@@ -159,16 +159,6 @@ export default function CourseDetailsModuleItem({
           <Stack direction="row" spacing={0.5} flexWrap="wrap" justifyContent="right">
             <LoadingButton
               size="medium"
-              color="primary"
-              variant="contained"
-              onClick={handleAddToFavorites}
-              loading={isAddingToFavorites}
-              disabled={userType !== UserType.Student || (module.progress ?? 0) < 100}
-            >
-              <Iconify icon="carbon:certificate" />
-            </LoadingButton>
-            <LoadingButton
-              size="medium"
               color="error"
               variant="contained"
               onClick={handleAddToFavorites}

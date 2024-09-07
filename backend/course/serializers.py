@@ -257,7 +257,11 @@ def get_lecturer_rating(lecturer):
 
 def get_progress(lessons, user):
     student_profile = StudentProfile.objects.get(profile__user=user)
-    student_lessons = Reservation.objects.filter(student=student_profile, lesson__in=lessons, schedule__start_time__lte=make_aware(datetime.now()))    
+    student_lessons = Reservation.objects.filter(
+        student=student_profile,
+        lesson__in=lessons,
+        schedule__start_time__lte=make_aware(datetime.now()),
+    )
     return student_lessons.count() / len(lessons)
 
 
@@ -362,13 +366,15 @@ class LessonShortSerializer(ModelSerializer):
 
     def get_lesson_lowest_30_days_price(self, lesson):
         return get_lowest_30_days_price(instance=lesson)
-    
+
     def get_lesson_progress(self, lesson):
         request = self.context.get("request")
         user = request.user
         if not user.is_authenticated:
             return None
-        
+        if user.is_staff:
+            return None
+
         return get_progress(lessons=[lesson], user=user)
 
     class Meta:
@@ -399,13 +405,15 @@ class ModuleSerializer(ModelSerializer):
 
     def get_module_lowest_30_days_price(self, module):
         return get_lowest_30_days_price_course(course_modules=[module])
-    
+
     def get_module_progress(self, module):
         request = self.context.get("request")
         user = request.user
         if not user.is_authenticated:
             return None
-        
+        if user.is_staff:
+            return None
+
         return get_progress(lessons=module.lessons.all(), user=user)
 
     class Meta:
@@ -481,13 +489,15 @@ class CourseListSerializer(ModelSerializer):
     def get_course_students_count(self, course):
         lessons = get_course_lessons(course=course)
         return get_students_count(lessons=lessons)
-    
+
     def get_course_progress(self, course):
         request = self.context.get("request")
         user = request.user
         if not user.is_authenticated:
             return None
-        
+        if user.is_staff:
+            return None
+
         lessons = get_course_lessons(course=course)
         return get_progress(lessons=lessons, user=user)
 
@@ -550,7 +560,11 @@ class CourseGetSerializer(ModelSerializer):
         return get_technologies(lessons=lessons)
 
     def get_modules(self, course):
-        return ModuleSerializer(get_course_modules(course=course), many=True, context={"request": self.context.get("request")}).data
+        return ModuleSerializer(
+            get_course_modules(course=course),
+            many=True,
+            context={"request": self.context.get("request")},
+        ).data
 
     def get_skills(self, course):
         return SkillSerializer(get_course_skills(course=course), many=True).data
@@ -576,13 +590,15 @@ class CourseGetSerializer(ModelSerializer):
     def get_course_students_count(self, course):
         lessons = get_course_lessons(course=course)
         return get_students_count(lessons=lessons)
-    
+
     def get_course_progress(self, course):
         request = self.context.get("request")
         user = request.user
         if not user.is_authenticated:
             return None
-        
+        if user.is_staff:
+            return None
+
         lessons = get_course_lessons(course=course)
         return get_progress(lessons=lessons, user=user)
 
