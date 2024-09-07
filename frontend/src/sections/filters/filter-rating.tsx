@@ -44,7 +44,7 @@ export default function FilterRating({ value, options, onChangeRating }: Props) 
                 sx={{
                   mr: 1,
                   ...(value === rating && {
-                    opacity: 0.48,
+                    opacity: 1,
                   }),
                 }}
               />
@@ -53,7 +53,12 @@ export default function FilterRating({ value, options, onChangeRating }: Props) 
           }
           sx={{
             m: 0,
-            "&:hover": { opacity: 0.48 },
+            opacity: 0.48,
+            "&:hover": { opacity: 1 },
+            ...(value === rating && {
+              opacity: 1,
+              fontWeight: "fontWeightSemiBold",
+            }),
           }}
         />
       ))}

@@ -9,7 +9,6 @@ import { useRef, useMemo, useEffect, useCallback } from "react";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -207,39 +206,18 @@ export default function RegisterView() {
   );
 
   const renderSocials = (
-    <Stack direction="row" spacing={2}>
-      <Button
-        component={RouterLink}
-        href={googleAuthUrl}
-        fullWidth
-        size="large"
-        color="inherit"
-        variant="outlined"
-      >
-        <Iconify icon="logos:google-icon" width={24} />
-      </Button>
+    <Stack direction="row" justifyContent="center" spacing={5}>
+      <IconButton href={googleAuthUrl}>
+        <Iconify icon="logos:google-icon" width={20} />
+      </IconButton>
 
-      <Button
-        component={RouterLink}
-        href={facebookAuthUrl}
-        fullWidth
-        size="large"
-        color="inherit"
-        variant="outlined"
-      >
+      <IconButton href={facebookAuthUrl}>
         <Iconify icon="carbon:logo-facebook" width={24} sx={{ color: "#1877F2" }} />
-      </Button>
+      </IconButton>
 
-      <Button
-        component={RouterLink}
-        href={githubAuthUrl}
-        color="inherit"
-        fullWidth
-        variant="outlined"
-        size="large"
-      >
+      <IconButton href={githubAuthUrl}>
         <Iconify icon="carbon:logo-github" width={24} sx={{ color: "text.primary" }} />
-      </Button>
+      </IconButton>
     </Stack>
   );
 

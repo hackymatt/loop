@@ -77,7 +77,7 @@ export default function CartView() {
       }}
     >
       <Typography variant="h3" sx={{ mb: 5 }}>
-        Koszyk
+        {`Koszyk (${cartItems?.length ?? 0})`}
       </Typography>
 
       {cartItems && cartItems.length === 0 && (

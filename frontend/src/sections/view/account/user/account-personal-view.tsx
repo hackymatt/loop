@@ -6,6 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 
 import Box from "@mui/material/Box";
+import { alpha } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -23,6 +24,8 @@ import FormProvider, {
   RHFTextField,
   RHFAutocompleteCountry,
 } from "src/components/hook-form";
+
+import AccountImage from "src/sections/account/account-image";
 
 import { IGender } from "src/types/testimonial";
 
@@ -127,6 +130,18 @@ export default function AccountPersonalView() {
       <Typography variant="h5" sx={{ mb: 3 }}>
         Dane osobowe
       </Typography>
+
+      <Box
+        sx={{
+          p: 3,
+          mt: 3,
+          borderRadius: 2,
+          display: { xs: "flex", md: "none" },
+          border: (theme) => `solid 1px ${alpha(theme.palette.grey[500], 0.24)}`,
+        }}
+      >
+        <AccountImage />
+      </Box>
 
       <Box
         rowGap={2.5}

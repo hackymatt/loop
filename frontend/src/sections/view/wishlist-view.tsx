@@ -77,7 +77,7 @@ export default function WishlistView() {
       }}
     >
       <Typography variant="h3" sx={{ mb: 5 }}>
-        Ulubione
+        {`Ulubione (${wishlistItems?.length ?? 0})`}
       </Typography>
 
       {wishlistItems && wishlistItems.length === 0 && (

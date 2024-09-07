@@ -4,11 +4,15 @@ import { polishPlurals } from "polish-plurals";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import { IconButton } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
 import { useCountdown } from "src/hooks/use-countdown";
 
+import { socials } from "src/consts/socials";
+
 import Image from "src/components/image";
+import Iconify from "src/components/iconify";
 
 import { NewsletterEmail } from "src/sections/newsletter/newsletter";
 
@@ -63,6 +67,14 @@ export default function ComingSoonView({ startDate }: { startDate?: Date }) {
 
       <Stack sx={{ mt: 3 }}>
         <NewsletterEmail buttonLabel="Powiadom" />
+      </Stack>
+
+      <Stack direction="row" justifyContent="center" sx={{ mt: 3 }}>
+        {socials.map((social) => (
+          <IconButton key={social.value} href={social.url} target="_blank">
+            <Iconify icon={social.icon} color={social.color} />
+          </IconButton>
+        ))}
       </Stack>
     </>
   );

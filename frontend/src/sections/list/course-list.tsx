@@ -33,7 +33,6 @@ export default function CourseList({ courses, loading, pagesCount, page, onPageC
         <Pagination
           count={pagesCount ?? 0}
           page={page}
-          color="primary"
           sx={{
             my: 10,
             [`& .${paginationClasses.ul}`]: {
