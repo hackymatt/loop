@@ -43,6 +43,7 @@ export type ICourseLessonProp = {
   teachers?: ICourseTeacherProp[];
   githubUrl: string;
   active?: boolean;
+  progress?: number | null;
 };
 
 export type ICourseModuleProp = {
@@ -53,6 +54,7 @@ export type ICourseModuleProp = {
   lowest30DaysPrice?: number;
   lessons?: ICourseLessonProp[];
   lessonsCount?: number;
+  progress?: number | null;
 };
 
 export type IScheduleProp = {
@@ -98,7 +100,6 @@ export type ICourseProps = {
   level: ILevel;
   createdAt?: Date;
   coverUrl: string;
-  bestSeller: boolean;
   video?: string;
   category: string[];
   skills: string[];
@@ -117,4 +118,5 @@ export type ICourseProps = {
   modules: ICourseModuleProp[];
   teachers: ICourseTeacherProp[];
   active: boolean;
+  progress?: number | null;
 };

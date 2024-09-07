@@ -14,9 +14,9 @@ import { RouterLink } from "src/routes/components";
 import { fCurrency, fShortenNumber } from "src/utils/format-number";
 
 import Image from "src/components/image";
-import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 import TextMaxLine from "src/components/text-max-line";
+import { CircularProgressWithLabel } from "src/components/progress-label/circle-progress";
 
 import { ILevel, ICourseProps } from "src/types/course";
 
@@ -38,12 +38,12 @@ export default function CourseItem({ course, vertical }: Props) {
     category: categories,
     priceSale,
     lowest30DaysPrice,
-    bestSeller,
     totalHours,
     description,
     ratingNumber,
     totalReviews,
     totalStudents,
+    progress,
   } = course;
 
   const genderAvatarUrl =
@@ -80,19 +80,16 @@ export default function CourseItem({ course, vertical }: Props) {
         />
       </Box>
 
-      {bestSeller && (
-        <Label
-          color="warning"
-          variant="filled"
+      {progress && (
+        <Box
           sx={{
             top: 12,
             left: 12,
             position: "absolute",
-            textTransform: "uppercase",
           }}
         >
-          Bestseller
-        </Label>
+          <CircularProgressWithLabel value={progress} size={50} />
+        </Box>
       )}
 
       <Stack spacing={3} sx={{ p: 3 }}>

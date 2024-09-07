@@ -62,7 +62,6 @@ type ICourse = {
   price: number;
   previous_price: number | null;
   lowest_30_days_price: number | null;
-  is_bestseller: boolean;
   duration: number;
   modules: IModule[];
   technologies: ITechnology[];
@@ -85,7 +84,6 @@ type IEditCourse = Omit<
   | "price"
   | "previous_price"
   | "lowest_30_days_price"
-  | "is_bestseller"
   | "duration"
   | "technologies"
   | "lecturers"

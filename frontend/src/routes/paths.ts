@@ -66,6 +66,7 @@ export const paths = {
     },
     lessons: "/account/lessons",
     reviews: "/account/reviews",
+    certificates: "/account/certificates",
   },
   login: "/login",
   register: "/register",

@@ -28,7 +28,6 @@ type ICourse = {
   price: number;
   previous_price: number | null;
   lowest_30_days_price: number | null;
-  is_bestseller: boolean;
   duration: number;
   technologies: ITechnology[];
   lecturers: ILecturer[];
@@ -57,7 +56,6 @@ export const bestCoursesQuery = () => {
         technologies,
         previous_price,
         lowest_30_days_price,
-        is_bestseller,
         duration,
         rating,
         rating_count,
@@ -73,7 +71,6 @@ export const bestCoursesQuery = () => {
         priceSale: previous_price,
         lowest30DaysPrice: lowest_30_days_price,
         totalHours: duration / 60,
-        bestSeller: is_bestseller,
         ratingNumber: rating,
         totalReviews: rating_count,
         totalStudents: students_count,

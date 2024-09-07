@@ -17,6 +17,7 @@ import { useCreateWishlist } from "src/api/wishlists/wishlists";
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
+import { CircularProgressWithLabel } from "src/components/progress-label/circle-progress";
 
 import { UserType } from "src/types/user";
 import { ICourseLessonProp, ICourseModuleProp } from "src/types/course";
@@ -103,14 +104,18 @@ export default function CourseDetailsModuleItem({
           },
         }}
       >
-        <Typography
-          variant="subtitle1"
+        <Stack
+          direction="row"
+          spacing={1}
+          alignItems="center"
           sx={{
             flexGrow: 1,
           }}
         >
-          {`Moduł ${romanize(index)}: ${module.title}`}
-        </Typography>
+          <CircularProgressWithLabel value={module.progress ?? 0} size={35} />
+
+          <Typography variant="subtitle1">{`Moduł ${romanize(index)}: ${module.title}`}</Typography>
+        </Stack>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h6" sx={{ textAlign: "right" }}>
@@ -150,6 +155,16 @@ export default function CourseDetailsModuleItem({
           <Divider sx={{ borderStyle: "dashed" }} />
 
           <Stack direction="row" spacing={0.5} flexWrap="wrap" justifyContent="right">
+            <LoadingButton
+              size="medium"
+              color="primary"
+              variant="contained"
+              onClick={handleAddToFavorites}
+              loading={isAddingToFavorites}
+              disabled={userType !== UserType.Student || (module.progress ?? 0) < 100}
+            >
+              <Iconify icon="carbon:certificate" />
+            </LoadingButton>
             <LoadingButton
               size="medium"
               color="error"

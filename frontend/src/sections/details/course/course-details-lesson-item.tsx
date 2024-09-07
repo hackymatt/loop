@@ -40,6 +40,7 @@ import Iconify from "src/components/iconify";
 import Schedule from "src/components/schedule";
 import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
+import { CircularProgressWithLabel } from "src/components/progress-label/circle-progress";
 
 import { UserType } from "src/types/user";
 import { ITeamMemberProps } from "src/types/team";
@@ -55,7 +56,10 @@ interface Props extends DialogProps {
 }
 
 type LessonItemProps = {
-  lesson: Pick<ICourseLessonProp, "id" | "title" | "price" | "priceSale" | "lowest30DaysPrice">;
+  lesson: Pick<
+    ICourseLessonProp,
+    "id" | "title" | "price" | "priceSale" | "lowest30DaysPrice" | "progress"
+  >;
   index: number;
   details: ICourseLessonProp;
   expanded: boolean;
@@ -233,14 +237,18 @@ export default function CourseDetailsLessonItem({
             },
           }}
         >
-          <Typography
-            variant="subtitle1"
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
             sx={{
               flexGrow: 1,
             }}
           >
-            {`Lekcja ${index}: ${lesson.title}`}
-          </Typography>
+            <CircularProgressWithLabel value={lesson.progress ?? 0} size={35} />
+
+            <Typography variant="subtitle1">{`Lekcja ${index}: ${lesson.title}`}</Typography>
+          </Stack>
 
           <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Typography variant="h6" sx={{ textAlign: "right" }}>
@@ -390,6 +398,16 @@ export default function CourseDetailsLessonItem({
               <Divider sx={{ borderStyle: "dashed" }} />
 
               <Stack direction="row" spacing={0.5} flexWrap="wrap" justifyContent="right">
+                <LoadingButton
+                  size="medium"
+                  color="primary"
+                  variant="contained"
+                  onClick={handleAddToFavorites}
+                  loading={isAddingToFavorites}
+                  disabled={userType !== UserType.Student || (lesson.progress ?? 0) < 100}
+                >
+                  <Iconify icon="carbon:certificate" />
+                </LoadingButton>
                 <Button
                   size="medium"
                   color="info"

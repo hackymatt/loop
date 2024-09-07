@@ -253,29 +253,6 @@ def get_lecturer_rating(lecturer):
     return Review.objects.filter(lecturer=lecturer)
 
 
-def get_is_bestseller(instance):
-    courses = Course.objects.all()
-
-    students = {}
-    for course in courses:
-        course_modules = (
-            Course.modules.through.objects.filter(course=course)
-            .values("module_id")
-            .order_by("id")
-        )
-        lessons_ids = Module.lessons.through.objects.filter(
-            module__in=course_modules
-        ).values("lesson_id")
-        lessons = Lesson.objects.filter(id__in=lessons_ids).all()
-        students[course.id] = get_students_count(lessons=lessons)
-
-    students = dict(sorted(students.items(), key=lambda item: item[1], reverse=True))
-
-    bestseller_id = list(students.keys())[0]
-
-    return instance.id == bestseller_id
-
-
 class TechnologySerializer(ModelSerializer):
     class Meta:
         model = Technology
@@ -420,7 +397,6 @@ class CourseListSerializer(ModelSerializer):
     price = SerializerMethodField("get_course_price")
     previous_price = SerializerMethodField("get_course_previous_price")
     lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
-    is_bestseller = SerializerMethodField("get_course_is_bestseller")
     duration = SerializerMethodField("get_course_duration")
     technologies = SerializerMethodField("get_course_technologies")
     lecturers = SerializerMethodField("get_course_lecturers")
@@ -453,9 +429,6 @@ class CourseListSerializer(ModelSerializer):
             .order_by("id")
         )
         return get_lowest_30_days_price_course(course_modules=course_modules)
-
-    def get_course_is_bestseller(self, course):
-        return get_is_bestseller(instance=course)
 
     def get_course_technologies(self, course):
         lessons = get_course_lessons(course=course)
@@ -497,7 +470,6 @@ class CourseGetSerializer(ModelSerializer):
     price = SerializerMethodField("get_course_price")
     previous_price = SerializerMethodField("get_course_previous_price")
     lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
-    is_bestseller = SerializerMethodField("get_course_is_bestseller")
     duration = SerializerMethodField("get_course_duration")
     modules = SerializerMethodField("get_modules")
     technologies = SerializerMethodField("get_course_technologies")
@@ -533,9 +505,6 @@ class CourseGetSerializer(ModelSerializer):
             .order_by("id")
         )
         return get_lowest_30_days_price_course(course_modules=course_modules)
-
-    def get_course_is_bestseller(self, course):
-        return get_is_bestseller(instance=course)
 
     def get_course_technologies(self, course):
         lessons = get_course_lessons(course=course)
@@ -645,7 +614,6 @@ class BestCourseSerializer(ModelSerializer):
     price = SerializerMethodField("get_course_price")
     previous_price = SerializerMethodField("get_course_previous_price")
     lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
-    is_bestseller = SerializerMethodField("get_course_is_bestseller")
     technologies = SerializerMethodField("get_course_technologies")
     duration = SerializerMethodField("get_course_duration")
     lecturers = SerializerMethodField("get_course_lecturers")
@@ -678,9 +646,6 @@ class BestCourseSerializer(ModelSerializer):
             .order_by("id")
         )
         return get_lowest_30_days_price_course(course_modules=course_modules)
-
-    def get_course_is_bestseller(self, course):
-        return get_is_bestseller(instance=course)
 
     def get_course_technologies(self, course):
         lessons = get_course_lessons(course=course)
