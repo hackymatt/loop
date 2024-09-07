@@ -358,7 +358,8 @@ class CertificateTest(APITestCase):
         results = data["results"]
         count = data["records_count"]
         self.assertEqual(count, 1)
-        self.assertEqual(list(results[0].keys()), ["title", "type", "completed_at"] )
+        self.assertEqual(list(results[0].keys()), ["title", "type", "completed_at"])
+
 
 class CertificateInfoTest(APITestCase):
     def setUp(self):

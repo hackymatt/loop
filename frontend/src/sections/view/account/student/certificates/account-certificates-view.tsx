@@ -18,32 +18,32 @@ import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
 
-import { useLecturers } from "src/api/lecturers/lecturers";
-import { usePurchase, usePurchasePageCount } from "src/api/purchase/purchase";
+import { useCertificates, useCertificatesPagesCount } from "src/api/certificates/certificates";
 
 import Scrollbar from "src/components/scrollbar";
 
+import AccountCertificatesTableRow from "src/sections/account/student/account-certificates-table-row";
+
 import { ReviewStatus } from "src/types/purchase";
+import { CertificateType } from "src/types/certificate";
 import { IQueryParamValue } from "src/types/query-params";
 
 import FilterSearch from "../../../../filters/filter-search";
-import FilterTeacher from "../../../../filters/filter-teacher";
 import AccountTableHead from "../../../../account/account-table-head";
-import AccountReviewsTableRow from "../../../../account/student/account-reviews-table-row";
 
 // ----------------------------------------------------------------------
 
 const TABS = [
-  { id: ReviewStatus.brak, label: "Wszystkie certyfikaty" },
-  { id: ReviewStatus.oczekujące, label: "Certyfikaty lekcji" },
-  { id: ReviewStatus.ukończone, label: "Certyfikaty modułów" },
-  { id: ReviewStatus.ukończone, label: "Certyfikaty kursów" },
+  { id: "", label: "Wszystkie certyfikaty" },
+  { id: CertificateType.LESSON, label: "Certyfikaty lekcji" },
+  { id: CertificateType.MODULE, label: "Certyfikaty modułów" },
+  { id: CertificateType.COURSE, label: "Certyfikaty kursów" },
 ];
 
 const TABLE_HEAD = [
-  { id: "lesson_title", label: "Nazwa", minWidth: 250 },
-  { id: "lesson_status", label: "Typ" },
-  { id: "created_at", label: "Data wygenerowania" },
+  { id: "title", label: "Nazwa", minWidth: 250 },
+  { id: "type", label: "Typ" },
+  { id: "completed_at", label: "Data ukończenia" },
   { id: "" },
 ];
 
@@ -56,16 +56,14 @@ export default function AccountCertificateView() {
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const { data: pagesCount } = usePurchasePageCount(filters);
-  const { data: reviews } = usePurchase(filters);
-
-  const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: -1 });
+  const { data: pagesCount } = useCertificatesPagesCount(filters);
+  const { data: certificates } = useCertificates(filters);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
   const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "created_at";
   const order = filters?.sort_by && !filters.sort_by.startsWith("-") ? "asc" : "desc";
-  const tab = filters?.review_status ? filters.review_status : ReviewStatus.brak;
+  const tab = filters?.type ? filters.type : "";
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -78,24 +76,11 @@ export default function AccountCertificateView() {
     [removeQueryParam, setQueryParam],
   );
 
-  const manageTab = useCallback(
-    (tabName: string) => {
-      if (tabName === ReviewStatus.brak) {
-        handleChange("review_status", "");
-        handleChange("review_status_exclude", tabName);
-      } else {
-        handleChange("review_status", tabName);
-        handleChange("review_status_exclude", "");
-      }
-    },
-    [handleChange],
-  );
-
   const handleChangeTab = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
-      manageTab(newValue);
+      handleChange("type", newValue);
     },
-    [manageTab],
+    [handleChange],
   );
 
   const handleSort = useCallback(
@@ -141,33 +126,19 @@ export default function AccountCertificateView() {
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 5, mb: 3 }}>
         <FilterSearch
-          value={filters?.course_title ?? ""}
-          onChangeSearch={(value) => handleChange("course_title", value)}
-          placeholder="Nazwa kursu..."
+          value={filters?.title ?? ""}
+          onChangeSearch={(value) => handleChange("title", value)}
+          placeholder="Nazwa certyfikatu..."
         />
-
-        <FilterSearch
-          value={filters?.lesson_title ?? ""}
-          onChangeSearch={(value) => handleChange("lesson_title", value)}
-          placeholder="Nazwa lekcji..."
-        />
-
-        {teachers && (
-          <FilterTeacher
-            value={filters?.lecturer_id ?? ""}
-            options={teachers ?? []}
-            onChange={(value) => handleChange("lecturer_id", value)}
-          />
-        )}
 
         <DatePicker
-          value={filters?.created_at ? new Date(filters.created_at) : null}
+          value={filters?.completed_at ? new Date(filters.completed_at) : null}
           onChange={(value: Date | null) =>
-            handleChange("created_at", value ? fDate(value, "yyyy-MM-dd") : "")
+            handleChange("completed_at", value ? fDate(value, "yyyy-MM-dd") : "")
           }
           sx={{ width: 1, minWidth: 180 }}
           slotProps={{
-            textField: { size: "small", hiddenLabel: true, placeholder: "Data zakupu" },
+            textField: { size: "small", hiddenLabel: true, placeholder: "Data ukończenia" },
           }}
         />
       </Stack>
@@ -198,16 +169,10 @@ export default function AccountCertificateView() {
               headCells={TABLE_HEAD}
             />
 
-            {reviews && (
+            {certificates && (
               <TableBody>
-                {reviews.map((row) => (
-                  <AccountReviewsTableRow
-                    key={row.id}
-                    row={row}
-                    onAdd={() => {}}
-                    onEdit={() => {}}
-                    onDelete={() => {}}
-                  />
+                {certificates.map((row) => (
+                  <AccountCertificatesTableRow key={row.id} row={row} />
                 ))}
               </TableBody>
             )}

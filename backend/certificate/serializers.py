@@ -3,17 +3,20 @@ from rest_framework.serializers import (
     SerializerMethodField,
     CharField,
     DateField,
+    UUIDField
 )
 from certificate.models import Certificate
 
 
 class CertificateSerializer(ModelSerializer):
+    id = UUIDField(source="uuid")
     type = CharField(source="get_type_display")
     completed_at = SerializerMethodField()
 
     class Meta:
         model = Certificate
         fields = (
+            "id",
             "title",
             "type",
             "completed_at",
@@ -24,6 +27,7 @@ class CertificateSerializer(ModelSerializer):
 
 
 class CertificateInfoSerializer(ModelSerializer):
+    id = UUIDField(source="uuid")
     reference_number = SerializerMethodField()
     type = CharField(source="get_type_display")
     completed_at = DateField()
@@ -33,6 +37,7 @@ class CertificateInfoSerializer(ModelSerializer):
     class Meta:
         model = Certificate
         fields = (
+            "id",
             "reference_number",
             "type",
             "title",

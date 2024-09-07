@@ -7,12 +7,14 @@ import { fDate } from "src/utils/format-time";
 
 import { grey } from "src/theme/palette";
 import { BASE_URL } from "src/config-global";
-import { useCertificate } from "src/api/certificate/certificate";
+import { useCertificate } from "src/api/certificates/certificate";
 
 import Logo from "src/components/logo";
 import Iconify from "src/components/iconify";
 import { useToastContext } from "src/components/toast";
 import { SplashScreen } from "src/components/loading-screen";
+
+import { CertificateType } from "src/types/certificate";
 
 import NotFoundView from "../error/not-found-view";
 
@@ -36,11 +38,11 @@ export default function Certificate({ id }: IProps) {
 
   const type = useMemo(() => {
     switch (certificateData.type) {
-      case "Lekcja":
+      case CertificateType.LESSON:
         return "LEKCJI";
-      case "Moduł":
+      case CertificateType.MODULE:
         return "MODUŁU";
-      case "Kurs":
+      case CertificateType.COURSE:
         return "KURSU";
       default:
         return "LEKCJI";

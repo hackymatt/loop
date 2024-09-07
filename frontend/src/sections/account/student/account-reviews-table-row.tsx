@@ -24,7 +24,7 @@ type Props = {
   onDelete: (purchase: IPurchaseItemProp) => void;
 };
 
-export default function AccountLessonsTableRow({ row, onAdd, onEdit, onDelete }: Props) {
+export default function AccountReviewsTableRow({ row, onAdd, onEdit, onDelete }: Props) {
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
 
   const handleOpen = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
