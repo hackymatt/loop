@@ -4,6 +4,21 @@ export function CircularProgressWithLabel(props: CircularProgressProps & { value
   const { value, size } = props;
   return (
     <Box sx={{ position: "relative", display: "inline-flex" }}>
+      <Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          position: "absolute",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          bgcolor: (theme) => theme.palette.grey[400],
+          opacity: 0.3,
+          borderRadius: "50%",
+        }}
+      />
       <CircularProgress variant="determinate" {...props} />
       <Box
         sx={{

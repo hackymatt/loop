@@ -11,13 +11,15 @@ from lesson.models import Lesson, Technology, LessonPriceHistory
 from topic.models import Topic
 from skill.models import Skill
 from module.models import Module
-from profile.models import Profile, LecturerProfile
+from profile.models import Profile, LecturerProfile, StudentProfile
 from review.models import Review
+from reservation.models import Reservation
 from purchase.models import Purchase
 from teaching.models import Teaching
 from django.db.models.functions import Concat
 from django.db.models import Sum, Avg, Min, Value
-from datetime import timedelta
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
 
 
 class VideoBase64File(Base64FileField):
@@ -253,6 +255,12 @@ def get_lecturer_rating(lecturer):
     return Review.objects.filter(lecturer=lecturer)
 
 
+def get_progress(lessons, user):
+    student_profile = StudentProfile.objects.get(profile__user=user)
+    student_lessons = Reservation.objects.filter(student=student_profile, lesson__in=lessons, schedule__start_time__lte=make_aware(datetime.now()))    
+    return student_lessons.count() / len(lessons)
+
+
 class TechnologySerializer(ModelSerializer):
     class Meta:
         model = Technology
@@ -347,12 +355,21 @@ class LessonShortSerializer(ModelSerializer):
     id = IntegerField()
     previous_price = SerializerMethodField("get_lesson_previous_price")
     lowest_30_days_price = SerializerMethodField("get_lesson_lowest_30_days_price")
+    progress = SerializerMethodField("get_lesson_progress")
 
     def get_lesson_previous_price(self, lesson):
         return get_previous_price(instance=lesson)
 
     def get_lesson_lowest_30_days_price(self, lesson):
         return get_lowest_30_days_price(instance=lesson)
+    
+    def get_lesson_progress(self, lesson):
+        request = self.context.get("request")
+        user = request.user
+        if not user.is_authenticated:
+            return None
+        
+        return get_progress(lessons=[lesson], user=user)
 
     class Meta:
         model = Lesson
@@ -362,6 +379,7 @@ class LessonShortSerializer(ModelSerializer):
             "price",
             "previous_price",
             "lowest_30_days_price",
+            "progress",
         )
 
 
@@ -371,6 +389,7 @@ class ModuleSerializer(ModelSerializer):
     previous_price = SerializerMethodField("get_module_previous_price")
     lowest_30_days_price = SerializerMethodField("get_module_lowest_30_days_price")
     lessons = LessonShortSerializer(many=True)
+    progress = SerializerMethodField("get_module_progress")
 
     def get_module_price(self, module):
         return get_price(course_modules=[module])
@@ -380,6 +399,14 @@ class ModuleSerializer(ModelSerializer):
 
     def get_module_lowest_30_days_price(self, module):
         return get_lowest_30_days_price_course(course_modules=[module])
+    
+    def get_module_progress(self, module):
+        request = self.context.get("request")
+        user = request.user
+        if not user.is_authenticated:
+            return None
+        
+        return get_progress(lessons=module.lessons.all(), user=user)
 
     class Meta:
         model = Module
@@ -390,6 +417,7 @@ class ModuleSerializer(ModelSerializer):
             "previous_price",
             "lowest_30_days_price",
             "lessons",
+            "progress",
         )
 
 
@@ -403,6 +431,7 @@ class CourseListSerializer(ModelSerializer):
     students_count = SerializerMethodField("get_course_students_count")
     rating = SerializerMethodField("get_course_rating")
     rating_count = SerializerMethodField("get_course_rating_count")
+    progress = SerializerMethodField("get_course_progress")
     image = Base64ImageField(required=True)
     level = CharField(source="get_level_display")
 
@@ -452,6 +481,15 @@ class CourseListSerializer(ModelSerializer):
     def get_course_students_count(self, course):
         lessons = get_course_lessons(course=course)
         return get_students_count(lessons=lessons)
+    
+    def get_course_progress(self, course):
+        request = self.context.get("request")
+        user = request.user
+        if not user.is_authenticated:
+            return None
+        
+        lessons = get_course_lessons(course=course)
+        return get_progress(lessons=lessons, user=user)
 
     class Meta:
         model = Course
@@ -479,6 +517,7 @@ class CourseGetSerializer(ModelSerializer):
     students_count = SerializerMethodField("get_course_students_count")
     rating = SerializerMethodField("get_course_rating")
     rating_count = SerializerMethodField("get_course_rating_count")
+    progress = SerializerMethodField("get_course_progress")
     image = Base64ImageField(required=True)
     video = VideoBase64File(required=False)
 
@@ -511,7 +550,7 @@ class CourseGetSerializer(ModelSerializer):
         return get_technologies(lessons=lessons)
 
     def get_modules(self, course):
-        return ModuleSerializer(get_course_modules(course=course), many=True).data
+        return ModuleSerializer(get_course_modules(course=course), many=True, context={"request": self.context.get("request")}).data
 
     def get_skills(self, course):
         return SkillSerializer(get_course_skills(course=course), many=True).data
@@ -537,6 +576,15 @@ class CourseGetSerializer(ModelSerializer):
     def get_course_students_count(self, course):
         lessons = get_course_lessons(course=course)
         return get_students_count(lessons=lessons)
+    
+    def get_course_progress(self, course):
+        request = self.context.get("request")
+        user = request.user
+        if not user.is_authenticated:
+            return None
+        
+        lessons = get_course_lessons(course=course)
+        return get_progress(lessons=lessons, user=user)
 
     class Meta:
         model = Course

@@ -45,6 +45,7 @@ type ILesson = {
   price: number;
   previous_price?: number | null;
   lowest_30_days_price?: number | null;
+  progress: number | null;
 };
 
 type IModule = {
@@ -54,6 +55,7 @@ type IModule = {
   previous_price?: number | null;
   lowest_30_days_price?: number | null;
   lessons: ILesson[];
+  progress: number | null;
 };
 
 type ICourse = {
@@ -76,6 +78,7 @@ type ICourse = {
   title: string;
   description: string;
   active: boolean;
+  progress: number | null;
 };
 
 type IEditCourse = Omit<
@@ -130,6 +133,7 @@ export const courseQuery = (id: string) => {
         topics,
         modules,
         active,
+        progress,
       } = data;
 
       modifiedResults = {
@@ -178,12 +182,14 @@ export const courseQuery = (id: string) => {
             previous_price: modulePreviousPrice,
             price: modulePrice,
             lessons,
+            progress: moduleProgress,
           }: IModule) => ({
             id: moduleId,
             title: moduleTitle,
             lowest30DaysPrice: moduleLowest30DaysPrice,
             priceSale: modulePreviousPrice,
             price: modulePrice,
+            progress: moduleProgress !== null ? moduleProgress * 100 : undefined,
             lessons: lessons.map(
               ({
                 id: lessonId,
@@ -191,18 +197,20 @@ export const courseQuery = (id: string) => {
                 lowest_30_days_price: lessonLowest30DaysPrice,
                 previous_price: lessonPreviousPrice,
                 price: lessonPrice,
+                progress: lessonProgress,
               }: ILesson) => ({
                 id: lessonId,
                 title: lessonTitle,
                 lowest30DaysPrice: lessonLowest30DaysPrice,
                 priceSale: lessonPreviousPrice,
                 price: lessonPrice,
+                progress: lessonProgress !== null ? lessonProgress * 100 : undefined,
               }),
             ),
           }),
         ),
-
         active,
+        progress: progress !== null ? progress * 100 : undefined,
       };
     } catch (error) {
       if (error.response && (error.response.status === 400 || error.response.status === 404)) {

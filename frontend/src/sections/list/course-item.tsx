@@ -80,8 +80,10 @@ export default function CourseItem({ course, vertical }: Props) {
         />
       </Box>
 
-      {progress && (
-        <Box
+      {progress !== undefined ? (
+        <Stack
+          justifyContent="center"
+          alignItems="center"
           sx={{
             top: 12,
             left: 12,
@@ -89,8 +91,8 @@ export default function CourseItem({ course, vertical }: Props) {
           }}
         >
           <CircularProgressWithLabel value={progress} size={50} />
-        </Box>
-      )}
+        </Stack>
+      ) : null}
 
       <Stack spacing={3} sx={{ p: 3 }}>
         <Stack

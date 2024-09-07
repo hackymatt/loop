@@ -245,7 +245,9 @@ export default function CourseDetailsLessonItem({
               flexGrow: 1,
             }}
           >
-            <CircularProgressWithLabel value={lesson.progress ?? 0} size={35} />
+            {lesson.progress !== undefined ? (
+              <CircularProgressWithLabel value={lesson.progress} size={35} />
+            ) : null}
 
             <Typography variant="subtitle1">{`Lekcja ${index}: ${lesson.title}`}</Typography>
           </Stack>

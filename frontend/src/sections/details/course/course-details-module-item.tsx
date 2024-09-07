@@ -112,7 +112,9 @@ export default function CourseDetailsModuleItem({
             flexGrow: 1,
           }}
         >
-          <CircularProgressWithLabel value={module.progress ?? 0} size={35} />
+          {module.progress !== undefined ? (
+            <CircularProgressWithLabel value={module.progress} size={35} />
+          ) : null}
 
           <Typography variant="subtitle1">{`Moduł ${romanize(index)}: ${module.title}`}</Typography>
         </Stack>

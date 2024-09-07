@@ -21,7 +21,9 @@ export default function CourseDetailsSummary({ course }: Props) {
   return (
     <Stack spacing={5}>
       <Stack direction="row" spacing={1} alignItems="center">
-        <CircularProgressWithLabel value={course.progress ?? 0} size={40} />
+        {course.progress !== undefined ? (
+          <CircularProgressWithLabel value={course.progress ?? 0} size={40} />
+        ) : null}
         <Typography variant="h4">Program szkolenia</Typography>
       </Stack>
 

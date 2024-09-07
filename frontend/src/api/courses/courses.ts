@@ -42,6 +42,7 @@ type ICourse = {
   title: string;
   description: string;
   active: boolean;
+  progress: number | null;
 };
 
 type ICreateCourse = Omit<
@@ -96,6 +97,7 @@ export const coursesQuery = (query?: IQueryParams) => {
         students_count,
         lecturers,
         active,
+        progress,
       }: ICourse) => ({
         id,
         description,
@@ -119,6 +121,7 @@ export const coursesQuery = (query?: IQueryParams) => {
           }),
         ),
         active,
+        progress: progress !== null ? progress * 100 : undefined,
       }),
     );
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };
