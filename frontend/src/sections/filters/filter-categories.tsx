@@ -13,6 +13,28 @@ type Props = {
   onChangeCategory: (newValue: IQueryParamValue) => void;
 };
 
+const autocompleteProps = {
+  root: {
+    limitTags: 2,
+    multiple: true,
+    disableCloseOnSelect: true,
+  },
+  chip: {
+    size: "small",
+    variant: "soft",
+  },
+  paper: {
+    sx: {
+      [`& .${autocompleteClasses.option}`]: {
+        [`& .${checkboxClasses.root}`]: {
+          p: 0,
+          mr: 1,
+        },
+      },
+    },
+  },
+} as const;
+
 export default function FilterCategories({ value, options, onChangeCategory }: Props) {
   const currentValue = value ? (value as string).split(",") : [];
   return (
@@ -61,11 +83,9 @@ export default function FilterCategories({ value, options, onChangeCategory }: P
         selected.map((option, index) => (
           <Chip
             {...getTagProps({ index })}
+            {...autocompleteProps.chip}
             key={option}
             label={option}
-            size="small"
-            color="primary"
-            variant="filled"
           />
         ))
       }

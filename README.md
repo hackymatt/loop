@@ -31,3 +31,5 @@ kubectl delete cert tls-cert
 Deploy:
 helm dep update
 helm upgrade --install -f values-dev.yaml loop . -n default
+
+cat civo-kubeconfig | base64

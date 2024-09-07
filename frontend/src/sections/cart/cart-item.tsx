@@ -1,12 +1,8 @@
 import { polishPlurals } from "polish-plurals";
 
-import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import { LoadingButton } from "@mui/lab";
 import Typography from "@mui/material/Typography";
-
-import { paths } from "src/routes/paths";
-import { RouterLink } from "src/routes/components";
 
 import { fCurrency } from "src/utils/format-number";
 
@@ -77,15 +73,10 @@ export default function CartItem({ cartItem, error, wishlist }: Props) {
     >
       <Stack direction="row" alignItems="center" flexGrow={1}>
         <Stack spacing={0.5} sx={{ p: 2 }}>
-          <Link
-            component={RouterLink}
-            href={`${paths.course}/${cartItem.lesson.id}`}
-            color="inherit"
-          >
-            <TextMaxLine variant="subtitle2" line={1}>
-              {cartItem.lesson.title}
-            </TextMaxLine>
-          </Link>
+          <TextMaxLine variant="subtitle2" line={1}>
+            {cartItem.lesson.title}
+          </TextMaxLine>
+
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
             Czas trwania: {cartItem.lesson.duration}{" "}
             {polishPlurals("minuta", "minuty", "minut", cartItem.lesson.duration)}
