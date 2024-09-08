@@ -96,6 +96,7 @@ type IEditCourse = Omit<
   | "modules"
   | "skills"
   | "topics"
+  | "progress"
 > & { modules: string[]; skills: string[]; topics: string[] };
 
 type IEditCourseReturn = IEditCourse;

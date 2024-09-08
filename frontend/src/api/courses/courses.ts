@@ -60,6 +60,7 @@ type ICreateCourse = Omit<
   | "modules"
   | "skills"
   | "topics"
+  | "progress"
 > & { modules: string[]; skills: string[]; topics: string[] };
 
 type ICreateCourseReturn = ICreateCourse;
