@@ -43,7 +43,7 @@ const TABS = [
 const TABLE_HEAD = [
   { id: "title", label: "Nazwa", minWidth: 250 },
   { id: "type", label: "Typ" },
-  { id: "completed_at", label: "Data ukończenia" },
+  { id: "created_at", label: "Data wystawienia" },
   { id: "" },
 ];
 
@@ -132,13 +132,13 @@ export default function AccountCertificateView() {
         />
 
         <DatePicker
-          value={filters?.completed_at ? new Date(filters.completed_at) : null}
+          value={filters?.created_at ? new Date(filters.created_at) : null}
           onChange={(value: Date | null) =>
-            handleChange("completed_at", value ? fDate(value, "yyyy-MM-dd") : "")
+            handleChange("created_at", value ? fDate(value, "yyyy-MM-dd") : "")
           }
           sx={{ width: 1, minWidth: 180 }}
           slotProps={{
-            textField: { size: "small", hiddenLabel: true, placeholder: "Data ukończenia" },
+            textField: { size: "small", hiddenLabel: true, placeholder: "Data wystawienia" },
           }}
         />
       </Stack>

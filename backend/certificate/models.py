@@ -24,7 +24,6 @@ class Certificate(BaseModel):
     entity_id = BigIntegerField()
     title = CharField()
     duration = PositiveIntegerField()
-    completed_at = DateTimeField()
     student = ForeignKey(
         StudentProfile, on_delete=CASCADE, related_name="certificate_student"
     )

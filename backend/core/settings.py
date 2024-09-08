@@ -190,7 +190,8 @@ CRONJOBS = (
     [
         (DBBACKUP_FREQ[ENV], "core.cron.create_backup"),
         ("*/30 * * * *", "core.cron.confirm_lessons"),
-        ("*/30 * * * *", "core.cron.remind_lessons_review"),
+        ("0 0 * * *", "core.cron.remind_lessons_review"),
+        ("0 0 * * *", "core.cron.create_certificates"),
     ]
     if not LOCAL
     else []

@@ -5,6 +5,7 @@ from rest_framework import status
 from django.http import JsonResponse
 from certificate.serializers import CertificateSerializer, CertificateInfoSerializer
 from certificate.models import Certificate
+from certificate.filters import CertificateFilter
 from profile.models import Profile
 from django.views.decorators.csrf import csrf_exempt
 
@@ -13,6 +14,7 @@ class CertificateViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = Certificate.objects.all()
     serializer_class = CertificateSerializer
+    filterset_class = CertificateFilter
     permission_classes = [IsAuthenticated, IsStudent]
 
     def get_queryset(self):

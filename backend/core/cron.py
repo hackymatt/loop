@@ -1,6 +1,7 @@
 from django.core.management import call_command, CommandError
 from reservation.utils import confirm_reservations
 from review.utils import remind_review
+from certificate.utils import generate_certificates
 
 
 def create_backup():
@@ -20,5 +21,12 @@ def confirm_lessons():
 def remind_lessons_review():
     try:
         remind_review()
+    except Exception:
+        pass
+
+
+def create_certificates():
+    try:
+        generate_certificates()
     except Exception:
         pass

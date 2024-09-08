@@ -1,0 +1,8 @@
+{% extends "base.html" %} 
+
+{% block title %}Gratulacje! Liczba nowych certyfikatów: {{certificates_count}}{% endblock %} 
+
+{% block content %}Poniżej znajduje się lista nowo otrzymanych certyfikatów ({{certificates_count}}): 
+<ul>{% for type_certificates in types_certificates %} <li>{{type_certificates.type}}:</li><ul>{% for certificate in type_certificates.certificates %} <li><a href="{{certificate.url}}" target="_blank">{{certificate.name}}</a></li> {% endfor %}</ul> {% endfor %}</ul>
+<br /><br />
+Listę wszystkich certyfikatów znajdziesz po zalogowaniu się do swojego konta.{% endblock %}

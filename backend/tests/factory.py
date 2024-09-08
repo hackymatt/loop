@@ -22,6 +22,7 @@ from django.utils.timezone import make_aware
 from django.core.files.uploadedfile import SimpleUploadedFile
 import os
 from typing import List, Dict
+from django.db.models import Sum
 
 
 def create_user(
@@ -437,12 +438,31 @@ def create_meeting(event_id: str, url: str):
     return Meeting.objects.create(event_id=event_id, url=url)
 
 
-def create_certificate(entity_type, entity, schedule, student):
+def create_certificate(entity_type, entity, student):
+    if entity_type == "L":
+        duration = entity.duration
+    elif entity_type == "M":
+        lessons_ids = entity.lessons.through.objects.filter(module=entity).values(
+            "lesson_id"
+        )
+        lessons = Lesson.objects.filter(id__in=lessons_ids).all()
+        duration = lessons.aggregate(Sum("duration"))["duration__sum"]
+    else:
+        course_modules = (
+            Course.modules.through.objects.filter(course=entity)
+            .values("module_id")
+            .order_by("id")
+        )
+        lessons_ids = Module.lessons.through.objects.filter(
+            module__in=course_modules
+        ).values("lesson_id")
+        lessons = Lesson.objects.filter(id__in=lessons_ids).all()
+        duration = lessons.aggregate(Sum("duration"))["duration__sum"]
+
     return Certificate.objects.create(
         type=entity_type,
         entity_id=entity.id,
         title=entity.title,
-        duration=entity.duration,
-        completed_at=schedule.end_time,
+        duration=duration,
         student=student,
     )
