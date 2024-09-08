@@ -55,7 +55,10 @@ interface Props extends DialogProps {
 }
 
 type LessonItemProps = {
-  lesson: Pick<ICourseLessonProp, "id" | "title" | "price" | "priceSale" | "lowest30DaysPrice">;
+  lesson: Pick<
+    ICourseLessonProp,
+    "id" | "title" | "price" | "priceSale" | "lowest30DaysPrice" | "progress"
+  >;
   details: ICourseLessonProp;
   expanded: boolean;
   onExpanded: (event: React.SyntheticEvent, isExpanded: boolean) => void;

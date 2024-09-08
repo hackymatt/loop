@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from profile.models import Profile, AdminProfile, LecturerProfile, StudentProfile
 from course.models import Course
 from coupon.models import Coupon
+from certificate.models import Certificate
 from lesson.models import Lesson
 from technology.models import Technology
 from topic.models import Topic
@@ -227,6 +228,10 @@ def coupons_number():
 
 def get_coupon(id: int):
     return Coupon.objects.get(pk=id)
+
+
+def certificates_number():
+    return Certificate.objects.count()
 
 
 def mock_send_message(mock):

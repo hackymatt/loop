@@ -24,13 +24,23 @@ type Props = {
   children: React.ReactNode;
 };
 
+enum LoginTypes {
+  EMAIL = "email",
+  GOOGLE = "google",
+  FACEBOOK = "facebook",
+  GITHUB = "github",
+}
+
 export function UserProvider({ children }: Props) {
+  type LoginType = LoginTypes.EMAIL | LoginTypes.GOOGLE | LoginTypes.FACEBOOK | LoginTypes.GITHUB;
+
   const [isRegistered, setIsRegistered] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isUnverified, setIsUnverified] = useState<boolean>(false);
   const [isPasswordReset, setIsPasswordReset] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [userType, setUserType] = useState<string>(UserType.Student);
+  const [loginType, setLoginType] = useState<LoginType>();
 
   const {
     mutateAsync: register,
@@ -56,7 +66,7 @@ export function UserProvider({ children }: Props) {
     isError: isErrorLogin,
     error: loginError,
     isLoading: isLoadingLogin,
-  } = useLogin();
+  } = useLogin(() => setLoginType(LoginTypes.EMAIL));
   const {
     mutateAsync: loginGoogle,
     data: loginGoogleData,
@@ -64,7 +74,7 @@ export function UserProvider({ children }: Props) {
     isError: isErrorLoginGoogle,
     error: loginGoogleError,
     isLoading: isLoadingLoginGoogle,
-  } = useLoginGoogle();
+  } = useLoginGoogle(() => setLoginType(LoginTypes.GOOGLE));
   const {
     mutateAsync: loginFacebook,
     data: loginFacebookData,
@@ -72,7 +82,7 @@ export function UserProvider({ children }: Props) {
     isError: isErrorLoginFacebook,
     error: loginFacebookError,
     isLoading: isLoadingLoginFacebook,
-  } = useLoginFacebook();
+  } = useLoginFacebook(() => setLoginType(LoginTypes.FACEBOOK));
   const {
     mutateAsync: loginGithub,
     data: loginGithubData,
@@ -80,7 +90,7 @@ export function UserProvider({ children }: Props) {
     isError: isErrorLoginGithub,
     error: loginGithubError,
     isLoading: isLoadingLoginGithub,
-  } = useLoginGithub();
+  } = useLoginGithub(() => setLoginType(LoginTypes.GITHUB));
   const {
     mutateAsync: logout,
     isSuccess: isSuccessLogout,
@@ -128,15 +138,33 @@ export function UserProvider({ children }: Props) {
   }, [isSuccessVerify]);
 
   useEffect(() => {
-    if (isSuccessLogin || isSuccessLoginGoogle || isSuccessLoginFacebook || isSuccessLoginGithub) {
-      setIsLoggedIn(true);
-      setUserType(
-        (loginData?.user_type ||
-          loginGoogleData?.user_type ||
-          loginFacebookData?.user_type ||
-          loginGithubData?.user_type) ??
-          UserType.Student,
-      );
+    setIsLoggedIn(false);
+    setUserType(UserType.Student);
+    switch (loginType) {
+      case LoginTypes.GOOGLE:
+        if (isSuccessLoginGoogle) {
+          setIsLoggedIn(true);
+          setUserType(loginGoogleData?.user_type ?? UserType.Student);
+        }
+        break;
+      case LoginTypes.FACEBOOK:
+        if (isSuccessLoginFacebook) {
+          setIsLoggedIn(true);
+          setUserType(loginFacebookData?.user_type ?? UserType.Student);
+        }
+        break;
+      case LoginTypes.GITHUB:
+        if (isSuccessLoginGithub) {
+          setIsLoggedIn(true);
+          setUserType(loginGithubData?.user_type ?? UserType.Student);
+        }
+        break;
+      default:
+        if (isSuccessLogin) {
+          setIsLoggedIn(true);
+          setUserType(loginData?.user_type ?? UserType.Student);
+        }
+        break;
     }
   }, [
     isSuccessLogin,
@@ -147,6 +175,7 @@ export function UserProvider({ children }: Props) {
     loginGoogleData?.user_type,
     loginFacebookData?.user_type,
     loginGithubData?.user_type,
+    loginType,
   ]);
 
   useEffect(() => {

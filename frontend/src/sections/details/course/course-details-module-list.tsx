@@ -1,7 +1,5 @@
 import { useState, useCallback } from "react";
 
-import Typography from "@mui/material/Typography";
-
 import { ICourseModuleProp } from "src/types/course";
 
 import CourseDetailsModuleItem from "./course-details-module-item";
@@ -24,10 +22,6 @@ export default function CourseDetailsModuleList({ modules }: Props) {
 
   return (
     <div>
-      <Typography variant="h4" sx={{ mb: 3 }}>
-        Program szkolenia
-      </Typography>
-
       {modules.map((module, index) => (
         <CourseDetailsModuleItem
           key={module.id}

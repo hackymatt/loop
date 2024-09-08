@@ -9,11 +9,11 @@ const endpoint = "/certificate" as const;
 
 type ICertificate = {
   reference_number: string;
-  lesson_title: string;
-  teacher_name: string;
-  student_name: string;
-  lesson_duration: string;
-  completion_date: string;
+  type: string;
+  title: string;
+  duration: string;
+  student_full_name: string;
+  completed_at: string;
   authorized?: boolean;
 };
 
@@ -29,20 +29,20 @@ export const certificateQuery = (id: string) => {
       const { data } = response;
       const {
         reference_number,
-        lesson_title,
-        lesson_duration,
-        student_name,
-        teacher_name,
-        completion_date,
+        type,
+        title,
+        duration,
+        student_full_name,
+        completed_at,
         authorized,
       } = data;
       modifiedResults = {
         referenceNumber: reference_number,
-        lessonTitle: lesson_title,
-        lessonDuration: lesson_duration,
-        studentName: student_name,
-        teacherName: teacher_name,
-        completionDate: completion_date,
+        type,
+        title,
+        duration,
+        studentName: student_full_name,
+        completedAt: completed_at,
         isAuthorized: authorized,
       };
     } catch (error) {

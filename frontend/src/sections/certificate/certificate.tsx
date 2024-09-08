@@ -7,12 +7,14 @@ import { fDate } from "src/utils/format-time";
 
 import { grey } from "src/theme/palette";
 import { BASE_URL } from "src/config-global";
-import { useCertificate } from "src/api/certificate/certificate";
+import { useCertificate } from "src/api/certificates/certificate";
 
 import Logo from "src/components/logo";
 import Iconify from "src/components/iconify";
 import { useToastContext } from "src/components/toast";
 import { SplashScreen } from "src/components/loading-screen";
+
+import { CertificateType } from "src/types/certificate";
 
 import NotFoundView from "../error/not-found-view";
 
@@ -32,6 +34,21 @@ export default function Certificate({ id }: IProps) {
     [certificateData?.isAuthorized],
   );
 
+  const certificateUrl = useMemo(() => `${BASE_URL}/certificate/${id}`, [id]);
+
+  const type = useMemo(() => {
+    switch (certificateData?.type) {
+      case CertificateType.LESSON:
+        return "LEKCJI";
+      case CertificateType.MODULE:
+        return "MODUŁU";
+      case CertificateType.COURSE:
+        return "KURSU";
+      default:
+        return "LEKCJI";
+    }
+  }, [certificateData?.type]);
+
   if (isLoading) {
     return <SplashScreen />;
   }
@@ -39,8 +56,6 @@ export default function Certificate({ id }: IProps) {
   if (Object.keys(certificateData).length === 0) {
     return <NotFoundView />;
   }
-
-  const certificateUrl = `${BASE_URL}/certificate/${id}`;
 
   const downloadPng = () => {
     if (elementRef.current === null) {
@@ -50,7 +65,7 @@ export default function Certificate({ id }: IProps) {
     toPng(elementRef.current, { cacheBust: false, style: { marginTop: "0" } })
       .then((dataUrl) => {
         const link = document.createElement("a");
-        link.download = `certificate_${id}.png`;
+        link.download = `certificate_${certificateData?.referenceNumber}.png`;
         link.href = dataUrl;
         link.click();
       })
@@ -84,35 +99,27 @@ export default function Certificate({ id }: IProps) {
               {`Link certyfikatu: ${certificateUrl}`}
             </Typography>
             <Typography variant="caption" color={grey[600]}>
-              {`Numer referencyjny: ${certificateData.referenceNumber}`}
+              {`Numer referencyjny: ${certificateData?.referenceNumber}`}
             </Typography>
           </Stack>
         </Stack>
 
         <Stack spacing={1} sx={{ minHeight: "300px", maxHeight: "350px" }}>
           <Typography variant="h6" color={grey[600]} sx={{ fontWeight: "bold" }}>
-            CERTYFIKAT UKOŃCZENIA
+            {`CERTYFIKAT UKOŃCZENIA ${type}`}
           </Typography>
-          <Typography variant="h1">{certificateData.lessonTitle}</Typography>
-          <Stack direction="row" spacing={1}>
-            <Typography variant="body1" color={grey[800]}>
-              Instruktor
-            </Typography>
-            <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-              {certificateData.teacherName}
-            </Typography>
-          </Stack>
+          <Typography variant="h1">{certificateData?.title}</Typography>
         </Stack>
 
         <Stack spacing={2}>
-          <Typography variant="h2">{certificateData.studentName}</Typography>
+          <Typography variant="h2">{certificateData?.studentName}</Typography>
           <Stack spacing={0.5}>
             <Stack direction="row" spacing={1}>
               <Typography variant="body1" color={grey[800]}>
                 Data ukończenia
               </Typography>
               <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                {fDate(certificateData.completionDate)}
+                {fDate(certificateData?.completedAt)}
               </Typography>
             </Stack>
 
@@ -121,7 +128,7 @@ export default function Certificate({ id }: IProps) {
                 Czas trwania
               </Typography>
               <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                {`${certificateData.lessonDuration} minut`}
+                {`${certificateData?.duration} minut`}
               </Typography>
             </Stack>
           </Stack>

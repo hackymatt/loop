@@ -34,6 +34,12 @@ export const studentNavigations = [
       icon: <Iconify icon="carbon:review" />,
       children: [],
     },
+    {
+      title: "Certyfikaty",
+      path: `${paths.account.certificates}/?sort_by=-completed_at&page_size=10`,
+      icon: <Iconify icon="carbon:certificate" />,
+      children: [],
+    },
   ],
 ];
 
@@ -109,7 +115,7 @@ export const adminNavigations = [
     },
     {
       title: "Moduły",
-      path: paths.account.admin.modules.list,
+      path: `${paths.account.admin.modules.list}/?sort_by=title&page_size=10`,
       icon: <Iconify icon="carbon:notebook-reference" />,
       children: [],
     },

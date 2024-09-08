@@ -17,6 +17,7 @@ import { useCreateWishlist } from "src/api/wishlists/wishlists";
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
+import { CircularProgressWithLabel } from "src/components/progress-label/circle-progress";
 
 import { UserType } from "src/types/user";
 import { ICourseLessonProp, ICourseModuleProp } from "src/types/course";
@@ -103,14 +104,20 @@ export default function CourseDetailsModuleItem({
           },
         }}
       >
-        <Typography
-          variant="subtitle1"
+        <Stack
+          direction="row"
+          spacing={1}
+          alignItems="center"
           sx={{
             flexGrow: 1,
           }}
         >
-          {`Moduł ${romanize(index)}: ${module.title}`}
-        </Typography>
+          {module.progress !== undefined ? (
+            <CircularProgressWithLabel value={module.progress} size={35} />
+          ) : null}
+
+          <Typography variant="subtitle1">{`Moduł ${romanize(index)}: ${module.title}`}</Typography>
+        </Stack>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h6" sx={{ textAlign: "right" }}>

@@ -17,8 +17,8 @@ def remind_review():
         Schedule.objects.filter(lesson__isnull=False, meeting__url__isnull=False)
         .annotate(diff=now - F("end_time"))
         .filter(
-            diff__lte=timedelta(minutes=REMINDER_TIME * 60),
-            diff__gt=timedelta(minutes=(REMINDER_TIME - 0.5) * 60),
+            diff__lte=timedelta(hours=REMINDER_TIME * 2),
+            diff__gt=timedelta(hours=REMINDER_TIME),
         )
     )
 

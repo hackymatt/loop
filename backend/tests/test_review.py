@@ -908,7 +908,7 @@ class ReviewConfirmationTest(TestCase):
                 )
 
         self.schedules = []
-        for i in range(-48, 10):
+        for i in range(-72, 10):
             self.schedules.append(
                 create_schedule(
                     lecturer=self.lecturer_profile,

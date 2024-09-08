@@ -31,7 +31,6 @@ type ICourse = {
   price: number;
   previous_price: number | null;
   lowest_30_days_price: number | null;
-  is_bestseller: boolean;
   duration: number;
   technologies: ITechnology[];
   lecturers: ILecturer[];
@@ -43,6 +42,7 @@ type ICourse = {
   title: string;
   description: string;
   active: boolean;
+  progress: number | null;
 };
 
 type ICreateCourse = Omit<
@@ -51,7 +51,6 @@ type ICreateCourse = Omit<
   | "price"
   | "previous_price"
   | "lowest_30_days_price"
-  | "is_bestseller"
   | "duration"
   | "technologies"
   | "lecturers"
@@ -92,13 +91,13 @@ export const coursesQuery = (query?: IQueryParams) => {
         technologies,
         previous_price,
         lowest_30_days_price,
-        is_bestseller,
         duration,
         rating,
         rating_count,
         students_count,
         lecturers,
         active,
+        progress,
       }: ICourse) => ({
         id,
         description,
@@ -109,7 +108,6 @@ export const coursesQuery = (query?: IQueryParams) => {
         category: technologies.map(({ name }: ITechnology) => name),
         priceSale: previous_price,
         lowest30DaysPrice: lowest_30_days_price,
-        bestSeller: is_bestseller,
         totalHours: duration / 60,
         ratingNumber: rating,
         totalReviews: rating_count,
@@ -123,6 +121,7 @@ export const coursesQuery = (query?: IQueryParams) => {
           }),
         ),
         active,
+        progress: progress !== null ? progress * 100 : undefined,
       }),
     );
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };
