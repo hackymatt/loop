@@ -37,7 +37,7 @@ export default function Certificate({ id }: IProps) {
   const certificateUrl = useMemo(() => `${BASE_URL}/certificate/${id}`, [id]);
 
   const type = useMemo(() => {
-    switch (certificateData.type) {
+    switch (certificateData?.type) {
       case CertificateType.LESSON:
         return "LEKCJI";
       case CertificateType.MODULE:
@@ -47,7 +47,7 @@ export default function Certificate({ id }: IProps) {
       default:
         return "LEKCJI";
     }
-  }, [certificateData.type]);
+  }, [certificateData?.type]);
 
   if (isLoading) {
     return <SplashScreen />;
@@ -65,7 +65,7 @@ export default function Certificate({ id }: IProps) {
     toPng(elementRef.current, { cacheBust: false, style: { marginTop: "0" } })
       .then((dataUrl) => {
         const link = document.createElement("a");
-        link.download = `certificate_${certificateData.referenceNumber}.png`;
+        link.download = `certificate_${certificateData?.referenceNumber}.png`;
         link.href = dataUrl;
         link.click();
       })
@@ -99,7 +99,7 @@ export default function Certificate({ id }: IProps) {
               {`Link certyfikatu: ${certificateUrl}`}
             </Typography>
             <Typography variant="caption" color={grey[600]}>
-              {`Numer referencyjny: ${certificateData.referenceNumber}`}
+              {`Numer referencyjny: ${certificateData?.referenceNumber}`}
             </Typography>
           </Stack>
         </Stack>
@@ -108,18 +108,18 @@ export default function Certificate({ id }: IProps) {
           <Typography variant="h6" color={grey[600]} sx={{ fontWeight: "bold" }}>
             {`CERTYFIKAT UKOŃCZENIA ${type}`}
           </Typography>
-          <Typography variant="h1">{certificateData.title}</Typography>
+          <Typography variant="h1">{certificateData?.title}</Typography>
         </Stack>
 
         <Stack spacing={2}>
-          <Typography variant="h2">{certificateData.studentName}</Typography>
+          <Typography variant="h2">{certificateData?.studentName}</Typography>
           <Stack spacing={0.5}>
             <Stack direction="row" spacing={1}>
               <Typography variant="body1" color={grey[800]}>
                 Data ukończenia
               </Typography>
               <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                {fDate(certificateData.completedAt)}
+                {fDate(certificateData?.completedAt)}
               </Typography>
             </Stack>
 
@@ -128,7 +128,7 @@ export default function Certificate({ id }: IProps) {
                 Czas trwania
               </Typography>
               <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                {`${certificateData.duration} minut`}
+                {`${certificateData?.duration} minut`}
               </Typography>
             </Stack>
           </Stack>

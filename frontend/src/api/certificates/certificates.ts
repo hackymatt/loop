@@ -8,7 +8,7 @@ import { ICertificateProps } from "src/types/certificate";
 
 import { Api } from "../service";
 
-const endpoint = "/certificate" as const;
+const endpoint = "/certificates" as const;
 
 type ICertificate = {
   id: string;

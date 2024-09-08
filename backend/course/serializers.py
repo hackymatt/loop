@@ -256,6 +256,15 @@ def get_lecturer_rating(lecturer):
 
 
 def get_progress(lessons, user):
+    if not user.is_authenticated:
+        return None
+    
+    student_profiles = StudentProfile.objects.filter(profile__user=user)
+    if not student_profiles.exists():
+        return None
+    
+    student_profile = student_profiles.first()
+
     student_profile = StudentProfile.objects.get(profile__user=user)
     student_lessons = Reservation.objects.filter(
         student=student_profile,
@@ -370,10 +379,6 @@ class LessonShortSerializer(ModelSerializer):
     def get_lesson_progress(self, lesson):
         request = self.context.get("request")
         user = request.user
-        if not user.is_authenticated:
-            return None
-        if user.is_staff:
-            return None
 
         return get_progress(lessons=[lesson], user=user)
 
@@ -409,10 +414,6 @@ class ModuleSerializer(ModelSerializer):
     def get_module_progress(self, module):
         request = self.context.get("request")
         user = request.user
-        if not user.is_authenticated:
-            return None
-        if user.is_staff:
-            return None
 
         return get_progress(lessons=module.lessons.all(), user=user)
 
@@ -493,10 +494,6 @@ class CourseListSerializer(ModelSerializer):
     def get_course_progress(self, course):
         request = self.context.get("request")
         user = request.user
-        if not user.is_authenticated:
-            return None
-        if user.is_staff:
-            return None
 
         lessons = get_course_lessons(course=course)
         return get_progress(lessons=lessons, user=user)
@@ -594,12 +591,8 @@ class CourseGetSerializer(ModelSerializer):
     def get_course_progress(self, course):
         request = self.context.get("request")
         user = request.user
-        if not user.is_authenticated:
-            return None
-        if user.is_staff:
-            return None
-
         lessons = get_course_lessons(course=course)
+
         return get_progress(lessons=lessons, user=user)
 
     class Meta:

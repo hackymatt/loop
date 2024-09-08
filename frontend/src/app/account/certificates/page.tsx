@@ -1,6 +1,6 @@
 import { createMetadata } from "src/utils/create-metadata";
 
-import AccountCertificatesView from "src/sections/view/account/student/reviews/account-reviews-view";
+import AccountCertificatesView from "src/sections/view/account/student/certificates/account-certificates-view";
 
 // ----------------------------------------------------------------------
 

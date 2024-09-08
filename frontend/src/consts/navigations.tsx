@@ -36,7 +36,7 @@ export const studentNavigations = [
     },
     {
       title: "Certyfikaty",
-      path: `${paths.account.certificates}/?sort_by=-created_at&page_size=10`,
+      path: `${paths.account.certificates}/?sort_by=-completed_at&page_size=10`,
       icon: <Iconify icon="carbon:certificate" />,
       children: [],
     },

@@ -19,12 +19,18 @@ export type ILoginReturn = {
   user_type?: string;
 };
 
-export const useLogin = () =>
-  useMutation<ILoginReturn, AxiosError, ILogin>(async (variables) => {
-    const result = await Api.post(endpoint, variables, {
-      headers: {
-        "X-CSRFToken": getCsrfToken(),
-      },
-    });
-    return result.data;
-  });
+export const useLogin = (onResult: () => void) =>
+  useMutation<ILoginReturn, AxiosError, ILogin>(
+    async (variables) => {
+      const result = await Api.post(endpoint, variables, {
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      });
+      return result.data;
+    },
+    {
+      onSuccess: onResult,
+      onError: onResult,
+    },
+  );

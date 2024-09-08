@@ -35,15 +35,15 @@ import AccountTableHead from "../../../../account/account-table-head";
 
 const TABS = [
   { id: "", label: "Wszystkie certyfikaty" },
-  { id: CertificateType.LESSON, label: "Certyfikaty lekcji" },
-  { id: CertificateType.MODULE, label: "Certyfikaty modułów" },
-  { id: CertificateType.COURSE, label: "Certyfikaty kursów" },
+  { id: CertificateType.LESSON.slice(0, 1), label: "Certyfikaty lekcji" },
+  { id: CertificateType.MODULE.slice(0, 1), label: "Certyfikaty modułów" },
+  { id: CertificateType.COURSE.slice(0, 1), label: "Certyfikaty kursów" },
 ];
 
 const TABLE_HEAD = [
   { id: "title", label: "Nazwa", minWidth: 250 },
   { id: "type", label: "Typ" },
-  { id: "created_at", label: "Data wystawienia" },
+  { id: "completed_at", label: "Data ukończenia" },
   { id: "" },
 ];
 
@@ -61,7 +61,7 @@ export default function AccountCertificateView() {
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
-  const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "created_at";
+  const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "completed_at";
   const order = filters?.sort_by && !filters.sort_by.startsWith("-") ? "asc" : "desc";
   const tab = filters?.type ? filters.type : "";
 
@@ -132,13 +132,13 @@ export default function AccountCertificateView() {
         />
 
         <DatePicker
-          value={filters?.created_at ? new Date(filters.created_at) : null}
+          value={filters?.completed_at ? new Date(filters.completed_at) : null}
           onChange={(value: Date | null) =>
-            handleChange("created_at", value ? fDate(value, "yyyy-MM-dd") : "")
+            handleChange("completed_at", value ? fDate(value, "yyyy-MM-dd") : "")
           }
           sx={{ width: 1, minWidth: 180 }}
           slotProps={{
-            textField: { size: "small", hiddenLabel: true, placeholder: "Data wystawienia" },
+            textField: { size: "small", hiddenLabel: true, placeholder: "Data ukończenia" },
           }}
         />
       </Stack>
