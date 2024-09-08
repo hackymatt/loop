@@ -15,13 +15,13 @@ from profile.personal_data.views import PersonalDataViewSet
 from profile.profile_data.views import ProfileDataViewSet
 from profile.lecturers.views import LecturerViewSet, BestLecturerViewSet
 from profile.earnings.views import EarningViewSet
-from certificate.views import CertificateViewSet, CertificateInfoViewSet
 from django.urls import path, include
 from django.contrib import admin
 from course.views import (
     CourseViewSet,
     BestCourseViewSet,
 )
+from certificate.views import CertificateViewSet, CertificateInfoViewSet
 from lesson.views import (
     LessonViewSet,
     LessonPriceHistoryViewSet,

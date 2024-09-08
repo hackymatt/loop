@@ -258,11 +258,11 @@ def get_lecturer_rating(lecturer):
 def get_progress(lessons, user):
     if not user.is_authenticated:
         return None
-    
+
     student_profiles = StudentProfile.objects.filter(profile__user=user)
     if not student_profiles.exists():
         return None
-    
+
     student_profile = student_profiles.first()
 
     student_profile = StudentProfile.objects.get(profile__user=user)
