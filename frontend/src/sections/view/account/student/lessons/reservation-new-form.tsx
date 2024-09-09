@@ -16,6 +16,7 @@ import { useBoolean } from "src/hooks/use-boolean";
 
 import { getTimezone } from "src/utils/get-timezone";
 
+import { useLessonDates } from "src/api/lesson-dates/lesson-dates";
 import { useCreateReservation } from "src/api/reservations/reservations";
 import { useLessonLecturers } from "src/api/lesson-lecturers/lesson-lecturers";
 import { useLessonSchedules } from "src/api/lesson-schedules/lesson-schedules";
@@ -69,9 +70,11 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
   );
 
   const today = useMemo(() => format(new Date(), "yyyy-MM-dd"), []);
+  const currentYearMonth = useMemo(() => format(new Date(), "yyyy-MM"), []);
   const [error, setError] = useState<string | undefined>();
   const [user, setUser] = useState<ITeamMemberProps>(DEFAULT_USER);
   const [date, setDate] = useState<string>(today);
+  const [yearMonth, setYearMonth] = useState<string>(currentYearMonth);
 
   const queryParams = useMemo(
     () => ({
@@ -85,9 +88,22 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
     [date, purchase?.lessonDuration, purchase?.lessonId, user.id],
   );
 
+  const dateQueryParams = useMemo(
+    () => ({
+      lecturer_id: queryParams.lecturer_id,
+      lesson_id: queryParams.lesson_id,
+      duration: queryParams.duration,
+      year_month: yearMonth,
+      page_size: -1,
+    }),
+    [queryParams.duration, queryParams.lecturer_id, queryParams.lesson_id, yearMonth],
+  );
+
   const { data: lessonSchedules, isLoading: isLoadingTimeSlots } = useLessonSchedules(
     date === today ? { ...queryParams, reserved: "True" } : queryParams,
   );
+
+  const { data: lessonDates, isLoading: isLoadingDates } = useLessonDates(dateQueryParams);
 
   const slots = useMemo(() => {
     const allSlots = lessonSchedules?.map((lessonSchedule: IScheduleProp) => {
@@ -150,8 +166,12 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
             availableTimeSlots={slots ?? []}
             currentSlot={slot}
             onSlotChange={(event, selectedSlot) => setSlot(selectedSlot)}
+            availableDates={lessonDates ?? []}
+            onMonthChange={(month) => {
+              setYearMonth(month);
+            }}
             isLoadingUsers={isLoadingUsers}
-            isLoadingTimeSlots={isLoadingTimeSlots}
+            isLoadingTimeSlots={isLoadingTimeSlots || isLoadingDates}
             error={error}
           />
         </DialogContent>

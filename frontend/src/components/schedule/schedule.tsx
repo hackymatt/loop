@@ -17,6 +17,8 @@ import {
   CircularProgress,
 } from "@mui/material";
 
+import { fDate } from "src/utils/format-time";
+
 import { ITeamMemberProps } from "src/types/team";
 
 // ----------------------------------------------------------------------
@@ -46,6 +48,8 @@ type Props = {
   availableTimeSlots: { time: string; studentsRequired: number }[];
   currentSlot: string;
   onSlotChange?: (event: React.SyntheticEvent, slot: string) => void;
+  availableDates: string[];
+  onMonthChange: (month: string) => void;
   isLoadingUsers?: boolean;
   isLoadingTimeSlots?: boolean;
   error?: string;
@@ -60,6 +64,8 @@ export default function Schedule({
   availableTimeSlots,
   currentSlot,
   onSlotChange,
+  availableDates,
+  onMonthChange,
   isLoadingUsers,
   isLoadingTimeSlots,
   error,
@@ -67,6 +73,9 @@ export default function Schedule({
   const selectedTimeSlot = availableTimeSlots?.find(
     (ts: { time: string; studentsRequired: number }) => ts.time === currentSlot,
   );
+
+  const isDisabledDate = (date: string) => !availableDates.includes(date);
+
   return (
     <Stack direction="column" alignItems="center">
       <Box sx={{ maxWidth: MAX_WIDTH }}>
@@ -109,6 +118,10 @@ export default function Schedule({
         }}
         slotProps={{ actionBar: { actions: [] }, toolbar: { hidden: true } }}
         views={["day"]}
+        shouldDisableDate={(date) => isDisabledDate(fDate(date, "yyyy-MM-dd"))}
+        onMonthChange={(date) => {
+          onMonthChange(fDate(date, "yyyy-MM"));
+        }}
       />
 
       <Box sx={{ maxWidth: MAX_WIDTH }}>

@@ -36,7 +36,11 @@ from newsletter.views import (
     NewsletterSubscribeViewSet,
     NewsletterUnsubscribeViewSet,
 )
-from schedule.views import ManageScheduleViewSet, ScheduleViewSet
+from schedule.views import (
+    ManageScheduleViewSet,
+    ScheduleViewSet,
+    ScheduleAvailableDateViewSet,
+)
 from stats.views import StatsViewSet
 from wishlist.views import WishlistViewSet
 from cart.views import CartViewSet
@@ -85,6 +89,9 @@ router.register(r"reviews-stats", ReviewStatsViewSet, basename="reviews-stats")
 router.register(r"best-reviews", BestReviewViewSet, basename="best_reviews")
 router.register(r"schedules", ManageScheduleViewSet, basename="schedules")
 router.register(r"lesson-schedules", ScheduleViewSet, basename="lesson_schedules")
+router.register(
+    r"lesson-dates", ScheduleAvailableDateViewSet, basename="lesson_schedules_dates"
+)
 router.register(r"newsletter", NewsletterEntriesViewSet, basename="newsletter")
 router.register(r"wishlist", WishlistViewSet, basename="wishlist")
 router.register(r"cart", CartViewSet, basename="cart")

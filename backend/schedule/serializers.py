@@ -60,3 +60,14 @@ class ScheduleSerializer(ModelSerializer):
             - Reservation.objects.filter(schedule=schedule).count(),
             0,
         )
+
+
+class ScheduleAvailableDateSerializer(ModelSerializer):
+    date = SerializerMethodField("get_date")
+
+    class Meta:
+        model = Schedule
+        fields = ("date",)
+
+    def get_date(self, schedule):
+        return schedule["date"]

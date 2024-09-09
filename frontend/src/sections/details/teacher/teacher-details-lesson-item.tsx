@@ -33,6 +33,7 @@ import { fCurrency, fShortenNumber } from "src/utils/format-number";
 
 import { useCreateCart } from "src/api/carts/carts";
 import { useCreateWishlist } from "src/api/wishlists/wishlists";
+import { useLessonDates } from "src/api/lesson-dates/lesson-dates";
 import { useLessonLecturers } from "src/api/lesson-lecturers/lesson-lecturers";
 import { useLessonSchedules } from "src/api/lesson-schedules/lesson-schedules";
 
@@ -93,8 +94,10 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
   );
 
   const today = useMemo(() => format(new Date(), "yyyy-MM-dd"), []);
+  const currentYearMonth = useMemo(() => format(new Date(), "yyyy-MM"), []);
   const [user, setUser] = useState<ITeamMemberProps>(DEFAULT_USER);
   const [date, setDate] = useState<string>(today);
+  const [yearMonth, setYearMonth] = useState<string>(currentYearMonth);
 
   const queryParams = useMemo(
     () => ({
@@ -108,9 +111,22 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
     [date, lesson?.duration, lesson?.id, user.id],
   );
 
+  const dateQueryParams = useMemo(
+    () => ({
+      lecturer_id: queryParams.lecturer_id,
+      lesson_id: queryParams.lesson_id,
+      duration: queryParams.duration,
+      year_month: yearMonth,
+      page_size: -1,
+    }),
+    [queryParams.duration, queryParams.lecturer_id, queryParams.lesson_id, yearMonth],
+  );
+
   const { data: lessonSchedules, isLoading: isLoadingTimeSlots } = useLessonSchedules(
     date === today ? { ...queryParams, reserved: "True" } : queryParams,
   );
+
+  const { data: lessonDates, isLoading: isLoadingDates } = useLessonDates(dateQueryParams);
 
   const slots = useMemo(() => {
     const allSlots = lessonSchedules?.map((lessonSchedule: IScheduleProp) => {
@@ -146,8 +162,12 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
           availableTimeSlots={slots ?? []}
           currentSlot={slot}
           onSlotChange={(event, selectedSlot) => setSlot(selectedSlot)}
+          availableDates={lessonDates ?? []}
+          onMonthChange={(month) => {
+            setYearMonth(month);
+          }}
           isLoadingUsers={isLoadingUsers}
-          isLoadingTimeSlots={isLoadingTimeSlots}
+          isLoadingTimeSlots={isLoadingTimeSlots || isLoadingDates}
         />
       </DialogContent>
 
