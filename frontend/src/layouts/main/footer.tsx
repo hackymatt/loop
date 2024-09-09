@@ -80,7 +80,7 @@ export default function Footer() {
                   variant="body2"
                   sx={{ color: "text.primary" }}
                 >
-                  FAQ
+                  Pomoc
                 </Link>
               </Stack>
 

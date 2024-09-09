@@ -108,6 +108,7 @@ export default function Schedule({
           }
         }}
         slotProps={{ actionBar: { actions: [] }, toolbar: { hidden: true } }}
+        views={["day"]}
       />
 
       <Box sx={{ maxWidth: MAX_WIDTH }}>

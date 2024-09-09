@@ -1,15 +1,26 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { SelectChangeEvent } from "@mui/material";
+import {
+  List,
+  Popover,
+  ListItem,
+  IconButton,
+  ListItemText,
+  ListItemButton,
+  SelectChangeEvent,
+  buttonBaseClasses,
+} from "@mui/material";
+
+import { usePathname } from "src/routes/hooks";
 
 import { useBoolean } from "src/hooks/use-boolean";
+import { usePopover } from "src/hooks/use-popover";
 import { useQueryParams } from "src/hooks/use-query-params";
 
 import { useCourses, useCoursesPagesCount } from "src/api/courses/courses";
@@ -34,7 +45,10 @@ const SORT_OPTIONS = [
 ];
 
 export default function CoursesView() {
+  const openSorting = usePopover();
   const mobileOpen = useBoolean();
+  const pathname = usePathname();
+
   const { setQueryParam, getQueryParams } = useQueryParams();
 
   const query = useMemo(() => getQueryParams(), [getQueryParams]);
@@ -47,6 +61,13 @@ export default function CoursesView() {
   };
 
   const isLoading = isLoadingCourses || isLoadingCoursesPagesCount;
+
+  useEffect(() => {
+    if (openSorting.open) {
+      openSorting.onClose();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   if (isLoading) {
     return <SplashScreen />;
@@ -69,17 +90,32 @@ export default function CoursesView() {
         >
           <Typography variant="h2">Kursy</Typography>
 
-          <Button
-            color="inherit"
-            variant="contained"
-            startIcon={<Iconify icon="carbon:filter" width={18} />}
-            onClick={mobileOpen.onTrue}
-            sx={{
-              display: { md: "none" },
-            }}
-          >
-            Filtry
-          </Button>
+          <Stack direction="row">
+            <IconButton
+              onClick={openSorting.onOpen}
+              sx={{
+                display: { md: "none" },
+              }}
+            >
+              <Iconify
+                icon={
+                  (query.sort_by ?? "-students_count").slice(0, 1) === "-"
+                    ? "carbon:sort-descending"
+                    : "carbon:sort-ascending"
+                }
+                width={18}
+              />
+            </IconButton>
+
+            <IconButton
+              onClick={mobileOpen.onTrue}
+              sx={{
+                display: { md: "none" },
+              }}
+            >
+              <Iconify icon="carbon:filter" width={18} />
+            </IconButton>
+          </Stack>
         </Stack>
 
         <Stack direction={{ xs: "column", md: "row" }}>
@@ -93,7 +129,12 @@ export default function CoursesView() {
             }}
           >
             {courses?.length > 0 && (
-              <Stack direction="row" alignItems="center" justifyContent="right" sx={{ mb: 5 }}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="right"
+                sx={{ mb: 5, display: { xs: "none", md: "flex" } }}
+              >
                 <Sorting
                   value={query.sort_by ?? "-students_count"}
                   options={SORT_OPTIONS}
@@ -103,6 +144,43 @@ export default function CoursesView() {
                 />
               </Stack>
             )}
+
+            <Popover
+              open={openSorting.open}
+              anchorEl={openSorting.anchorEl}
+              onClose={openSorting.onClose}
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              transformOrigin={{ vertical: "top", horizontal: "right" }}
+              slotProps={{
+                paper: {
+                  sx: {
+                    width: 220,
+                    [`& .${buttonBaseClasses.root}`]: {
+                      px: 1.5,
+                      py: 0.75,
+                      height: "auto",
+                    },
+                  },
+                },
+              }}
+            >
+              <List>
+                {SORT_OPTIONS.map((option) => (
+                  <ListItem disablePadding>
+                    <ListItemButton
+                      key={option.value}
+                      selected={(query.sort_by ?? "-students_count") === option.value}
+                      onClick={() => {
+                        openSorting.onClose();
+                        handleChange("sort_by", option.value);
+                      }}
+                    >
+                      <ListItemText primary={option.label} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </Popover>
 
             <CourseList
               courses={courses}
