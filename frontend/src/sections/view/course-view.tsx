@@ -9,6 +9,8 @@ import Grid from "@mui/material/Unstable_Grid2";
 
 import { useResponsive } from "src/hooks/use-responsive";
 
+import { createMetadata } from "src/utils/create-metadata";
+
 import { useCourse } from "src/api/courses/course";
 import { useBestCourses } from "src/api/courses/best-courses";
 
@@ -59,6 +61,8 @@ export default function CourseView({ id }: { id: string }) {
 
   return (
     <>
+      <title>{createMetadata(`Kurs: ${course.slug}`).title}</title>
+
       <CourseDetailsHero course={course} />
 
       <Container

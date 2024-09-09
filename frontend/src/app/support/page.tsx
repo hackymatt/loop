@@ -5,7 +5,7 @@ import SupportView from "src/sections/view/support-view";
 
 // ----------------------------------------------------------------------
 
-export const metadata = createMetadata("FAQ");
+export const metadata = createMetadata("Pomoc");
 export default function SupportPage() {
   return <ComingSoonViewUtil defaultView={<SupportView />} />;
 }

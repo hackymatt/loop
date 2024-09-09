@@ -1,11 +1,11 @@
 import Box from "@mui/material/Box";
 import Tabs from "@mui/material/Tabs";
-import { Button } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import Tab, { tabClasses } from "@mui/material/Tab";
 import Stack, { StackProps } from "@mui/material/Stack";
+import { Badge, Button, BadgeProps } from "@mui/material";
 import CardActionArea from "@mui/material/CardActionArea";
 
 import { paths } from "src/routes/paths";
@@ -43,6 +43,10 @@ type Props = {
   data: {
     title: string;
     icon: string;
+    content: {
+      question: string;
+      answer: string;
+    }[];
   }[];
   open: boolean;
   onClose: VoidFunction;
@@ -50,8 +54,58 @@ type Props = {
   onChangeTopic: (event: React.SyntheticEvent, newValue: string) => void;
 };
 
+const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    right: -15,
+    top: 12,
+  },
+}));
+
 export default function SupportNav({ topic, data, onChangeTopic, open, onClose }: Props) {
   const mdUp = useResponsive("up", "md");
+
+  const tabs = (
+    <Tabs
+      value={topic}
+      onChange={onChangeTopic}
+      orientation={mdUp ? "vertical" : "horizontal"}
+      sx={{
+        "& .MuiTabs-scrollButtons.Mui-disabled": {
+          opacity: 0.3,
+        },
+        pb: { xs: 5, md: 0 },
+      }}
+    >
+      {data.map((item) => (
+        <Tab
+          key={item.title}
+          value={item.title}
+          label={
+            <StyledBadge badgeContent={item.content.length} color="primary" showZero>
+              <Typography variant="body2">{item.title}</Typography>
+            </StyledBadge>
+          }
+          icon={
+            <Image
+              disabledEffect
+              alt={item.icon}
+              src={item.icon}
+              sx={{ width: "auto", height: 28, mr: "10px", ml: "10px" }}
+            />
+          }
+          sx={{
+            pr: 4,
+            height: 56,
+            typography: "body2",
+            justifyContent: "flex-start",
+            [`& .${tabClasses.selected}`]: {
+              typography: "subtitle2",
+            },
+          }}
+        />
+      ))}
+    </Tabs>
+  );
 
   const renderContent = (
     <Scrollbar
@@ -59,57 +113,9 @@ export default function SupportNav({ topic, data, onChangeTopic, open, onClose }
         py: { xs: 3, md: 0 },
       }}
     >
-      <Tabs
-        value={topic}
-        onChange={onChangeTopic}
-        orientation="vertical"
-        sx={{
-          pl: { xs: 2.5, md: 0 },
-        }}
-      >
-        {data.map((item) => (
-          <Tab
-            key={item.title}
-            value={item.title}
-            label={item.title}
-            icon={
-              <Image
-                disabledEffect
-                alt={item.icon}
-                src={item.icon}
-                sx={{ width: 28, height: 28, mr: `20px !important` }}
-              />
-            }
-            sx={{
-              height: 56,
-              typography: "body2",
-              justifyContent: "flex-start",
-              [`& .${tabClasses.selected}`]: {
-                typography: "subtitle2",
-              },
-            }}
-          />
-        ))}
-      </Tabs>
+      {tabs}
 
-      <Box
-        sx={{
-          mt: { xs: 2.5, md: 5 },
-          pl: { xs: 2.5, md: 0 },
-          pr: { xs: 2.5, md: 5 },
-        }}
-      >
-        <Typography variant="h4" paragraph>
-          Nadal potrzebujesz pomocy?
-        </Typography>
-
-        <Stack spacing={2}>
-          <StyledButton href={paths.contact}>
-            <Iconify icon="carbon:email" width={24} />
-            <Typography variant="subtitle2">Kontakt</Typography>
-          </StyledButton>
-        </Stack>
-      </Box>
+      <MoreHelp />
     </Scrollbar>
   );
 
@@ -127,14 +133,30 @@ export default function SupportNav({ topic, data, onChangeTopic, open, onClose }
       {renderContent}
     </Drawer>
   ) : (
-    <Drawer
-      open={open}
-      onClose={onClose}
-      PaperProps={{
-        sx: { width: 280 },
+    tabs
+  );
+}
+
+export function MoreHelp() {
+  return (
+    <Box
+      sx={{
+        mt: { xs: 2.5, md: 5 },
+        pl: { xs: 2.5, md: 0 },
+        pr: { xs: 2.5, md: 5 },
+        pb: { xs: 10, md: 0 },
       }}
     >
-      {renderContent}
-    </Drawer>
+      <Typography variant="h4" paragraph>
+        Nadal potrzebujesz pomocy?
+      </Typography>
+
+      <Stack spacing={2}>
+        <StyledButton href={paths.contact}>
+          <Iconify icon="carbon:email" width={24} />
+          <Typography variant="subtitle2">Kontakt</Typography>
+        </StyledButton>
+      </Stack>
+    </Box>
   );
 }

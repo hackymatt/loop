@@ -7,6 +7,8 @@ import Grid from "@mui/material/Unstable_Grid2";
 
 import { useResponsive } from "src/hooks/use-responsive";
 
+import { createMetadata } from "src/utils/create-metadata";
+
 import { useLecturer } from "src/api/lecturers/lecturer";
 
 import { SplashScreen } from "src/components/loading-screen";
@@ -39,6 +41,8 @@ export default function TeacherView({ id }: { id: string }) {
 
   return (
     <>
+      <title>{createMetadata(`Instruktor: ${teacher.name}`).title}</title>
+
       <TeacherDetailsHero teacher={teacher} />
 
       <Container

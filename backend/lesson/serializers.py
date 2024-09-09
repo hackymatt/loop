@@ -16,7 +16,7 @@ from review.models import Review
 from purchase.models import Purchase
 from teaching.models import Teaching
 from django.db.models.functions import Concat
-from django.db.models import Avg, Value
+from django.db.models import Avg, Value, Q
 from django.conf import settings
 from const import MIN_LESSON_DURATION_MINS
 
@@ -24,7 +24,10 @@ from const import MIN_LESSON_DURATION_MINS
 def get_lecturers(self, lessons):
     lecturer_ids = Teaching.objects.filter(lesson__in=lessons).values("lecturer")
     lecturers = (
-        LecturerProfile.objects.filter(id__in=lecturer_ids)
+        LecturerProfile.objects.exclude(
+            Q(title__isnull=True) | Q(description__isnull=True)
+        )
+        .filter(id__in=lecturer_ids)
         .annotate(
             full_name=Concat(
                 "profile__user__first_name", Value(" "), "profile__user__last_name"

@@ -90,11 +90,6 @@ export const lessonFAQ = [
     answer:
       "Dla każdej lekcji stworzone jest repozytorium na platformie GitHub a link znajduje się w informacjach o lekcji.",
   },
-  {
-    question: "Gdzie znajdę certyfikat ukończenia?",
-    answer:
-      "Dla każdej lekcji możesz pobrać lub udostępnić na LinkedIn swój certyfikat. Po zakończonej lekcji możesz go zobaczyć w zakładce Lekcje.",
-  },
 ];
 
 export const reservationFAQ = [
@@ -117,6 +112,27 @@ export const reservationFAQ = [
     question: "Czy rezerwacja jest równoznaczna z realizacją lekcji?",
     answer:
       "Nie, potwierdzenie realizacji lekcji otrzymasz 24 godziny przez planowanym terminem rozpoczęcia zajęć.",
+  },
+];
+
+export const certificateFAQ = [
+  {
+    question: "W jaki sposób wydawane są certyfikaty ukończenia?",
+    answer:
+      "Codziennie sprawdzamy czy możemy wydać Ci certyfikat. Jeżeli ukończysz jakąś lekcję, moduł lub kurs zostaniesz powiadomiony przez nas o jego wydaniu.",
+  },
+  {
+    question: "Gdzie znajdę certyfikat ukończenia?",
+    answer:
+      "Wszystkie swoje certyfikaty znajdziesz w zakładce Certyfikaty po zalogowaniu się do swojego konta.",
+  },
+  {
+    question: "Czy mogę pobrać certyfikat ukończenia?",
+    answer: "Tak, certyfikat możesz pobrać na dysk i później wydrukować.",
+  },
+  {
+    question: "Czy mogę udostępnić swój certyfikat ukończenia?",
+    answer: "Tak, możesz podać link do certyfikatu a osoba będzie mogła go wyświetlić.",
   },
 ];
 

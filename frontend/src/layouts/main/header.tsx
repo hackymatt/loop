@@ -102,29 +102,38 @@ export default function Header({ headerOnDark }: Props) {
   }, [pathname]);
 
   const renderContent = (
-    <>
-      <Box sx={{ lineHeight: 0, position: "relative" }}>
-        <Logo />
-      </Box>
+    <Stack direction="row" justifyContent="space-between" alignItems="center" width={1}>
+      {mdUp && (
+        <>
+          <Box sx={{ lineHeight: 0, position: "relative" }}>
+            <Logo />
+          </Box>
+          <>
+            <Stack
+              flexGrow={1}
+              alignItems="center"
+              sx={{
+                height: 1,
+              }}
+            >
+              <NavDesktop data={navConfig} />
+            </Stack>
 
-      <>
-        <Stack
-          flexGrow={1}
-          alignItems="center"
-          sx={{
-            height: 1,
-            display: { xs: "none", md: "flex" },
-          }}
-        >
-          <NavDesktop data={navConfig} />
-        </Stack>
+            <Box sx={{ flexGrow: { xs: 1, md: "unset" } }} />
+          </>
+        </>
+      )}
 
-        <Box sx={{ flexGrow: { xs: 1, md: "unset" } }} />
-      </>
+      {!mdUp && (
+        <>
+          <NavMobile data={navConfig} />
+          <Box sx={{ lineHeight: 0, alignContent: "center" }}>
+            <Logo />
+          </Box>
+        </>
+      )}
 
-      {!mdUp && <NavMobile data={navConfig} />}
-
-      <Stack spacing={3} direction="row" alignItems="center" flexGrow={1} justifyContent="flex-end">
+      <Stack spacing={3} direction="row" alignItems="center" justifyContent="flex-end">
         <Badge badgeContent={wishlistItems} color="primary">
           <IconButton
             component={RouterLink}
@@ -224,7 +233,7 @@ export default function Header({ headerOnDark }: Props) {
           </ListItemButton>
         </Stack>
       </Popover>
-    </>
+    </Stack>
   );
 
   return (

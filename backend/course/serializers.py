@@ -17,7 +17,7 @@ from reservation.models import Reservation
 from purchase.models import Purchase
 from teaching.models import Teaching
 from django.db.models.functions import Concat
-from django.db.models import Sum, Avg, Min, Value
+from django.db.models import Sum, Avg, Min, Value, Q
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 
@@ -182,7 +182,10 @@ def get_lowest_30_days_price_course(course_modules):
 def get_lecturers(self, lessons):
     lecturer_ids = Teaching.objects.filter(lesson__in=lessons).values("lecturer")
     lecturers = (
-        LecturerProfile.objects.filter(id__in=lecturer_ids)
+        LecturerProfile.objects.exclude(
+            Q(title__isnull=True) | Q(description__isnull=True)
+        )
+        .filter(id__in=lecturer_ids)
         .annotate(
             full_name=Concat(
                 "profile__user__first_name", Value(" "), "profile__user__last_name"
@@ -211,7 +214,10 @@ def get_technologies(lessons):
 def get_lecturers_details(self, lessons):
     lecturer_ids = Teaching.objects.filter(lesson__in=lessons).values("lecturer")
     lecturers = (
-        LecturerProfile.objects.filter(id__in=lecturer_ids)
+        LecturerProfile.objects.exclude(
+            Q(title__isnull=True) | Q(description__isnull=True)
+        )
+        .filter(id__in=lecturer_ids)
         .annotate(
             full_name=Concat(
                 "profile__user__first_name", Value(" "), "profile__user__last_name"

@@ -28,7 +28,13 @@ from const import CANCELLATION_TIME
 
 
 def get_lesson_lecturer(queryset):
-    lecturer = LecturerProfile.objects.filter(pk=OuterRef("lecturer")).values("id")
+    lecturer = (
+        LecturerProfile.objects.exclude(
+            Q(title__isnull=True) | Q(description__isnull=True)
+        )
+        .filter(pk=OuterRef("lecturer"))
+        .values("id")
+    )
 
     schedule = (
         Schedule.objects.filter(pk=OuterRef("schedule"))
