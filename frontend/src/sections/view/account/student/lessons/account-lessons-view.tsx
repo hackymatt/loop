@@ -156,12 +156,6 @@ export default function AccountLessonsPage() {
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 5, mb: 3 }}>
         <FilterSearch
-          value={filters?.course_title ?? ""}
-          onChangeSearch={(value) => handleChange("course_title", value)}
-          placeholder="Nazwa kursu..."
-        />
-
-        <FilterSearch
           value={filters?.lesson_title ?? ""}
           onChangeSearch={(value) => handleChange("lesson_title", value)}
           placeholder="Nazwa lekcji..."

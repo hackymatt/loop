@@ -714,6 +714,18 @@ class ReviewFilterTest(APITestCase):
         count = data["records_count"]
         self.assertEqual(count, 10)
 
+    def test_lecturer_uuid_filter(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(
+            f"{self.endpoint}?lecturer_uuid={self.lecturer_profile_1.profile.uuid}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 10)
+
     def test_rating_filter(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -1338,7 +1350,6 @@ class LessonDatesFilterTest(APITestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         time = str(self.schedules[len(self.schedules) - 1].start_time)[0:7]
-        print(time)
         response = self.client.get(f"{self.endpoint}?year_month={time}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
@@ -1908,6 +1919,20 @@ class LecturerFilterTest(APITestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(f"{self.endpoint}?id={self.lecturer_profile_1.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        ids = [record["id"] for record in results]
+        self.assertEqual(ids, [self.lecturer_profile_1.id])
+
+    def test_uuid_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(
+            f"{self.endpoint}?uuid={self.lecturer_profile_1.profile.uuid}"
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]

@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 
 import Popover from "@mui/material/Popover";
 import MenuItem from "@mui/material/MenuItem";
@@ -7,6 +7,8 @@ import TableCell from "@mui/material/TableCell";
 import IconButton from "@mui/material/IconButton";
 import { Link, Divider, Typography } from "@mui/material";
 import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
+
+import { usePopover } from "src/hooks/use-popover";
 
 import { fCurrency } from "src/utils/format-number";
 
@@ -25,30 +27,22 @@ type Props = {
 };
 
 export default function AccountTeachingsTableRow({ row, onView, onAdd, onDelete }: Props) {
-  const [open, setOpen] = useState<HTMLButtonElement | null>(null);
-
-  const handleOpen = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-    setOpen(event.currentTarget);
-  }, []);
-
-  const handleClose = useCallback(() => {
-    setOpen(null);
-  }, []);
+  const openOptions = usePopover();
 
   const handleAdd = useCallback(() => {
-    handleClose();
+    openOptions.onClose();
     onAdd(row);
-  }, [handleClose, onAdd, row]);
+  }, [openOptions, onAdd, row]);
 
   const handleDelete = useCallback(() => {
-    handleClose();
+    openOptions.onClose();
     onDelete(row);
-  }, [handleClose, onDelete, row]);
+  }, [openOptions, onDelete, row]);
 
   const handleView = useCallback(() => {
-    handleClose();
+    openOptions.onClose();
     onView(row);
-  }, [handleClose, onView, row]);
+  }, [openOptions, onView, row]);
 
   const inputStyles = {
     pl: 1,
@@ -100,16 +94,16 @@ export default function AccountTeachingsTableRow({ row, onView, onAdd, onDelete 
         </TableCell>
 
         <TableCell align="right" padding="none">
-          <IconButton onClick={handleOpen}>
+          <IconButton onClick={openOptions.onOpen}>
             <Iconify icon="carbon:overflow-menu-vertical" />
           </IconButton>
         </TableCell>
       </TableRow>
 
       <Popover
-        open={Boolean(open)}
-        anchorEl={open}
-        onClose={handleClose}
+        open={openOptions.open}
+        anchorEl={openOptions.anchorEl}
+        onClose={openOptions.onClose}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         slotProps={{

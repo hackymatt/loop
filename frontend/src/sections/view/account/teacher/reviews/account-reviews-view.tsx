@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 
 import { Grid, Stack } from "@mui/material";
+
+import { useQueryParams } from "src/hooks/use-query-params";
 
 import { useUserDetails } from "src/api/auth/details";
 import { useTeachings } from "src/api/teaching/teachings";
@@ -25,35 +27,40 @@ export default function AccountReviewsView() {
   const { data: lecturerStats } = useLecturers(
     userDetails
       ? {
-          id: userDetails.id,
+          uuid: userDetails.id,
         }
       : {},
   );
 
-  const [query, setQuery] = useState({
-    lesson_id: "",
-    lecturer_id: userDetails?.id,
-    rating: "",
-    sort_by: "-created_at",
-    page: "1",
-  });
+  const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
+
+  const filters = useMemo(() => getQueryParams(), [getQueryParams]);
+
+  const query = useMemo(
+    () => ({ ...filters, lecturer_uuid: userDetails?.id }),
+    [filters, userDetails?.id],
+  );
 
   const { data: pagesCount } = useReviewsPageCount(query);
   const { data: reviews } = useReviews(query);
   const { data: reviewStatistics } = useReviewsStatistics(query);
 
-  const handleChange = useCallback((name: string, value: IQueryParamValue) => {
-    setQuery((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  }, []);
+  const handleChange = useCallback(
+    (name: string, value: IQueryParamValue) => {
+      if (value) {
+        setQueryParam(name, value);
+      } else {
+        removeQueryParam(name);
+      }
+    },
+    [removeQueryParam, setQueryParam],
+  );
 
   return (
     <Stack direction="column" spacing={8}>
       <Grid xs={12} md={7} lg={8} sx={{ maxWidth: 750 }}>
         <ReviewToolbar
-          lesson={query.lesson_id ?? ""}
+          lesson={filters.lesson_id ?? ""}
           lessonOptions={(teachings ?? []).map(
             (teaching: ITeachingProp) =>
               ({
@@ -65,9 +72,9 @@ export default function AccountReviewsView() {
                 active: teaching.active,
               }) as ICourseLessonProp,
           )}
-          teacher={query.lecturer_id ?? ""}
+          teacher={query.lecturer_uuid ?? ""}
           teacherOptions={[]}
-          sort={query.sort_by}
+          sort={filters.sort_by}
           onChangeLesson={(value) => handleChange("lesson_id", value)}
           onChangeTeacher={() => {}}
           onChangeSort={(event) => handleChange("sort_by", event.target.value)}
@@ -78,7 +85,7 @@ export default function AccountReviewsView() {
           <ReviewSummary
             ratingNumber={lecturerStats?.[0]?.ratingNumber ?? 0}
             reviewNumber={lecturerStats?.[0]?.totalReviews ?? 0}
-            rating={query.rating ?? ""}
+            rating={filters.rating ?? ""}
             reviewStatistics={reviewStatistics}
             onRatingChange={(value) => handleChange("rating", value)}
           />
@@ -89,7 +96,7 @@ export default function AccountReviewsView() {
             reviews={reviews}
             showTeacher={false}
             pagesCount={pagesCount}
-            page={parseInt(query.page ?? "1", 10) ?? 1}
+            page={parseInt(filters.page ?? "1", 10) ?? 1}
             onPageChange={(selectedPage: number) => handleChange("page", selectedPage)}
           />
         </Grid>

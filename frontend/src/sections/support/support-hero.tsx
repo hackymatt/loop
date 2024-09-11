@@ -37,7 +37,7 @@ export default function SupportHero({ onSearch }: { onSearch: (searchText: strin
         fullWidth
         hiddenLabel
         placeholder="Szukaj..."
-        onChange={(event) => onSearch(event.target.value)}
+        onChange={(event) => onSearch(event.target.value.toLowerCase())}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

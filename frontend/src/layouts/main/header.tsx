@@ -1,3 +1,6 @@
+/* eslint-disable import/no-duplicates */
+import { pl } from "date-fns/locale";
+import { formatDistance } from "date-fns";
 import { useMemo, useEffect } from "react";
 
 import Box from "@mui/material/Box";
@@ -8,12 +11,18 @@ import Container from "@mui/material/Container";
 import { useTheme } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import {
+  List,
+  Link,
   Badge,
+  Avatar,
   Divider,
   Popover,
+  ListItem,
+  Typography,
   ListItemIcon,
   ListItemText,
   ListItemButton,
+  ListItemAvatar,
   buttonBaseClasses,
 } from "@mui/material";
 
@@ -28,14 +37,17 @@ import { useResponsive } from "src/hooks/use-responsive";
 import { bgBlur } from "src/theme/css";
 import { useCartsRecordsCount } from "src/api/carts/carts";
 import { useWishlistsRecordsCount } from "src/api/wishlists/wishlists";
+import { useNotifications } from "src/api/notifications/notifications";
 import { adminNavigations, studentNavigations, teacherNavigations } from "src/consts/navigations";
 
 import Logo from "src/components/logo";
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
+import TextMaxLine from "src/components/text-max-line";
 
 import { UserType } from "src/types/user";
+import { INotificationProp } from "src/types/notification";
 
 import NavMobile from "./nav/mobile";
 import NavDesktop from "./nav/desktop";
@@ -55,6 +67,7 @@ export default function Header({ headerOnDark }: Props) {
 
   const { enqueueSnackbar } = useToastContext();
 
+  const openNotifications = usePopover();
   const openMenu = usePopover();
 
   const offset = useOffSetTop();
@@ -77,6 +90,10 @@ export default function Header({ headerOnDark }: Props) {
 
   const { data: wishlistRecords } = useWishlistsRecordsCount({ page_size: -1 }, isLoggedIn);
   const { data: cartRecords } = useCartsRecordsCount({ page_size: -1 }, isLoggedIn);
+  const { data: notifications } = useNotifications(
+    { sort_by: "-created_at", page_size: -1 },
+    isLoggedIn,
+  );
 
   const wishlistItems = useMemo(
     () => (isLoggedIn ? wishlistRecords : 0),
@@ -133,8 +150,31 @@ export default function Header({ headerOnDark }: Props) {
         </>
       )}
 
-      <Stack spacing={3} direction="row" alignItems="center" justifyContent="flex-end">
-        <Badge badgeContent={wishlistItems} color="primary">
+      <Stack spacing={3} direction="row" alignItems="center" flexGrow={1} justifyContent="flex-end">
+        {isLoggedIn ? (
+          <Badge badgeContent={notifications?.length ?? 0} max={99} color="primary">
+            <IconButton
+              size="small"
+              color="inherit"
+              sx={{ p: 0 }}
+              onClick={openNotifications.onOpen}
+            >
+              <Iconify icon="carbon:notification" width={24} />
+            </IconButton>
+          </Badge>
+        ) : (
+          <IconButton
+            component={RouterLink}
+            href={paths.login}
+            size="small"
+            color="inherit"
+            sx={{ p: 0 }}
+          >
+            <Iconify icon="carbon:notification" width={24} />
+          </IconButton>
+        )}
+
+        <Badge badgeContent={wishlistItems} max={99} color="primary">
           <IconButton
             component={RouterLink}
             href={isLoggedIn ? paths.wishlist : paths.login}
@@ -147,7 +187,7 @@ export default function Header({ headerOnDark }: Props) {
           </IconButton>
         </Badge>
 
-        <Badge badgeContent={cartItems} color="primary">
+        <Badge badgeContent={cartItems} max={99} color="primary">
           <IconButton
             component={RouterLink}
             href={isLoggedIn ? paths.cart : paths.login}
@@ -178,15 +218,17 @@ export default function Header({ headerOnDark }: Props) {
       </Stack>
 
       <Popover
-        open={openMenu.open}
-        anchorEl={openMenu.anchorEl}
-        onClose={openMenu.onClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        open={openNotifications.open}
+        anchorEl={openNotifications.anchorEl}
+        onClose={openNotifications.onClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
         slotProps={{
           paper: {
             sx: {
-              width: 220,
+              width: 360,
+              mt: 1,
+              maxHeight: "calc(100% / 4 * 3)",
               [`& .${buttonBaseClasses.root}`]: {
                 px: 1.5,
                 py: 0.75,
@@ -197,7 +239,89 @@ export default function Header({ headerOnDark }: Props) {
         }}
       >
         <Box component="nav">
-          <Stack sx={{ my: 1, px: 2 }}>
+          <List sx={{ width: "100%", maxWidth: 360 }}>
+            {notifications?.length > 0 ? (
+              notifications.map((notification: INotificationProp) => (
+                <Link component={RouterLink} href={notification.url} underline="none">
+                  <ListItem disablePadding>
+                    <ListItemButton
+                      sx={{
+                        px: 1,
+                        height: 44,
+                        borderRadius: 1,
+                        pl: 2,
+                      }}
+                    >
+                      <ListItemAvatar>
+                        <Avatar
+                          color={notification.status === "NEW" ? "primary" : "inherit"}
+                          sx={{ width: 28, height: 28 }}
+                        >
+                          <Iconify icon={notification.icon} />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={notification.title}
+                        secondary={
+                          <>
+                            <Typography
+                              component="span"
+                              variant="body2"
+                              sx={{ color: "text.primary", display: "inline" }}
+                            >
+                              {notification.lesson}
+                            </Typography>
+                            <TextMaxLine variant="body2" line={3}>
+                              {notification.description}
+                            </TextMaxLine>
+                            <Typography
+                              component="span"
+                              variant="caption"
+                              sx={{ display: "inline" }}
+                            >
+                              {formatDistance(new Date(notification.createdAt), new Date(), {
+                                addSuffix: true,
+                                locale: pl,
+                              })}
+                            </Typography>
+                          </>
+                        }
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                </Link>
+              ))
+            ) : (
+              <ListItem>
+                <ListItemText primary="Brak powiadomień" />
+              </ListItem>
+            )}
+          </List>
+        </Box>
+      </Popover>
+
+      <Popover
+        open={openMenu.open}
+        anchorEl={openMenu.anchorEl}
+        onClose={openMenu.onClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        slotProps={{
+          paper: {
+            sx: {
+              width: 220,
+              mt: 1,
+              [`& .${buttonBaseClasses.root}`]: {
+                px: 1.5,
+                py: 0.75,
+                height: "auto",
+              },
+            },
+          },
+        }}
+      >
+        <Box component="nav">
+          <List sx={{ width: "100%", maxWidth: 360 }}>
             {navigations?.map((navigation) => (
               <NavItem
                 key={navigation.title}
@@ -207,12 +331,12 @@ export default function Header({ headerOnDark }: Props) {
                 children={navigation.children}
               />
             ))}
-          </Stack>
+          </List>
         </Box>
 
         <Divider sx={{ my: 0.5, borderStyle: "dashed" }} />
 
-        <Stack sx={{ my: 1, px: 2 }}>
+        <List sx={{ width: "100%", maxWidth: 360 }}>
           <ListItemButton
             sx={{
               px: 1,
@@ -231,7 +355,7 @@ export default function Header({ headerOnDark }: Props) {
               }}
             />
           </ListItemButton>
-        </Stack>
+        </List>
       </Popover>
     </Stack>
   );
