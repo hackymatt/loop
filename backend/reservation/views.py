@@ -11,8 +11,6 @@ from profile.models import Profile
 from schedule.models import Schedule
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
-from pytz import timezone, utc
-from mailer.mailer import Mailer
 from const import CANCELLATION_TIME, MIN_LESSON_DURATION_MINS
 
 
@@ -74,24 +72,5 @@ class ReservationViewSet(ModelViewSet):
                 schedule.delete()
         else:
             deletion = super().destroy(request, *args, **kwargs)
-
-        mailer = Mailer()
-
-        # notify student
-        data = {
-            **{
-                "lesson_title": reservation.lesson.title,
-                "lecturer_full_name": f"{schedule.lecturer.profile.user.first_name} {schedule.lecturer.profile.user.last_name}",
-                "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
-                .astimezone(timezone("Europe/Warsaw"))
-                .strftime("%d-%m-%Y %H:%M"),
-            }
-        }
-        mailer.send(
-            email_template="remove_reservation.html",
-            to=[student.user.email],
-            subject="Potwierdzenie odwołania rezerwacji",
-            data=data,
-        )
 
         return deletion

@@ -19,6 +19,8 @@ from django.db.models.functions import TruncDate
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from const import CANCELLATION_TIME
+from notification.utils import notify
+import urllib.parse
 
 
 class ManageScheduleViewSet(ModelViewSet):
@@ -49,8 +51,8 @@ class ManageScheduleViewSet(ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         schedule = super().get_object()
         lesson = schedule.lesson
-        emails = [
-            reservation.student.profile.user.email
+        profiles = [
+            reservation.student.profile
             for reservation in Reservation.objects.filter(schedule=schedule).all()
         ]
 
@@ -59,21 +61,33 @@ class ManageScheduleViewSet(ModelViewSet):
         if lesson is not None:
             mailer = Mailer()
             # notify students
+            start_time = (
+                schedule.start_time.replace(tzinfo=utc)
+                .astimezone(timezone("Europe/Warsaw"))
+                .strftime("%d-%m-%Y %H:%M")
+            )
+            lecturer_full_name = f"{schedule.lecturer.profile.user.first_name} {schedule.lecturer.profile.user.last_name}"
             data = {
                 **{
                     "lesson_title": lesson.title,
-                    "lecturer_full_name": f"{schedule.lecturer.profile.user.first_name} {schedule.lecturer.profile.user.last_name}",
-                    "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
-                    .astimezone(timezone("Europe/Warsaw"))
-                    .strftime("%d-%m-%Y %H:%M"),
+                    "lecturer_full_name": lecturer_full_name,
+                    "lesson_start_time": start_time,
                 }
             }
-            for email in emails:
+            for profile in profiles:
                 mailer.send(
                     email_template="cancel_lesson.html",
-                    to=[email],
+                    to=[profile.user.email],
                     subject="Twoja lekcja została odwołana",
                     data=data,
+                )
+                notify(
+                    profile=profile,
+                    title="Twoja lekcja została odwołana",
+                    lesson=lesson.title,
+                    description=f"Przepraszamy za zmianę planów. Lekcja, która planowo miała się odbyć {start_time} (PL) została odwołana przez prowadzącego {lecturer_full_name}.",
+                    path=f"/account/lessons?sort_by=-created_at&page_size=10&lesson_title={urllib.parse.quote_plus(schedule.lesson.title)}",
+                    icon="mdi:calendar-remove",
                 )
 
             meeting_manager = MeetingManager(

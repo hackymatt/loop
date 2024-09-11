@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     "finance",
     "coupon",
     "certificate",
+    "notification",
 ]
 
 MIDDLEWARE = [
@@ -192,6 +193,7 @@ CRONJOBS = (
         ("*/30 * * * *", "core.cron.confirm_lessons"),
         ("0 0 * * *", "core.cron.remind_lessons_review"),
         ("0 0 * * *", "core.cron.create_certificates"),
+        ("0 0 * * *", "core.cron.cleanse_notifications"),
     ]
     if not LOCAL
     else []

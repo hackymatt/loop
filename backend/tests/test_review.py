@@ -27,6 +27,7 @@ from .helpers import (
     get_review,
     is_review_found,
     mock_send_message,
+    notifications_number,
 )
 from django.contrib import auth
 import json
@@ -980,3 +981,4 @@ class ReviewConfirmationTest(TestCase):
         self.assertEqual(reviews_number(), 1)
         remind_review()
         self.assertEqual(_send_message_mock.call_count, 1)
+        self.assertEqual(notifications_number(), 1)

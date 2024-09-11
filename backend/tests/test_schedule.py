@@ -27,6 +27,7 @@ from .helpers import (
     is_schedule_found,
     mock_send_message,
     mock_delete_event,
+    notifications_number,
 )
 from django.contrib import auth
 import json
@@ -435,6 +436,7 @@ class ScheduleTest(TestCase):
         self.assertFalse(is_schedule_found(self.schedules[1].id))
         self.assertEqual(schedule_number(), 21)
         self.assertEqual(_send_message_mock.call_count, 0)
+        self.assertEqual(notifications_number(), 0)
 
     @patch.object(GmailApi, "_send_message")
     @patch.object(CalendarApi, "delete")
@@ -456,3 +458,4 @@ class ScheduleTest(TestCase):
         self.assertEqual(schedule_number(), 21)
         self.assertEqual(_send_message_mock.call_count, 2)
         self.assertEqual(delete_mock.call_count, 1)
+        self.assertEqual(notifications_number(), 2)

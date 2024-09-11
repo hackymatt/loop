@@ -19,7 +19,7 @@ from .factory import (
     create_module,
     create_certificate,
 )
-from .helpers import login, mock_send_message, certificates_number
+from .helpers import login, mock_send_message, certificates_number, notifications_number
 from django.contrib import auth
 import json
 from datetime import datetime, timedelta
@@ -994,3 +994,4 @@ class CertificateGenerateTest(TestCase):
         generate_certificates()
         self.assertEqual(certificates_number(), 8)
         self.assertEqual(_send_message_mock.call_count, 3)
+        self.assertEqual(notifications_number(), 3)

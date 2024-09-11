@@ -209,7 +209,7 @@ class TeachingTest(APITestCase):
         self.assertEqual(teaching_number(), 4)
 
     def test_add_to_teaching_authenticated(self):
-        # no login
+        # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
@@ -229,7 +229,7 @@ class TeachingTest(APITestCase):
         self.assertEqual(teaching_number(), 4)
 
     def test_delete_from_teaching_authenticated(self):
-        # no login
+        # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data

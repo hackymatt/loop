@@ -10,6 +10,7 @@ from skill.models import Skill
 from review.models import Review
 from module.models import Module
 from newsletter.models import Newsletter
+from notification.models import Notification
 from schedule.models import Schedule
 from reservation.models import Reservation
 from teaching.models import Teaching
@@ -232,6 +233,10 @@ def get_coupon(id: int):
 
 def certificates_number():
     return Certificate.objects.count()
+
+
+def notifications_number():
+    return Notification.objects.count()
 
 
 def mock_send_message(mock):

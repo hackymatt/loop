@@ -10,33 +10,164 @@ import { Api } from "../service";
 
 const endpoint = "/notifications" as const;
 
+const test = [
+  {
+    id: "1",
+    title: "Gratulacje! Otrzymujesz nowe certyfikaty",
+    lesson: "",
+    target: "s",
+    description: "Poniżej znajduje się lista nowo otrzymanych certyfikatów…",
+    status: "NEW" as "NEW" | "READ",
+    path: "/account/certificates?sort_by=-completed_at&page_size=10&completed_at=2024-09-07",
+    modified_at: "2024-09-08T13:13:31.710729Z",
+    created_at: "2024-09-08T13:13:31.710729Z",
+    icon: "mdi:certificate",
+  },
+  {
+    id: "1",
+    title: "Nowy zapis",
+    lesson: "Podstawy React",
+    target: "l",
+    description:
+      "Lista potencjalnych uczestników lekcji, która planowo odbędzie się {{lesson_start_time}} (PL) została powiększona o nowy zapis studenta {{student_full_name}}. Aktualna liczba uczestników: {{students_count}}.",
+    status: "NEW" as "NEW" | "READ",
+    path: "/account/teacher/calendar",
+    modified_at: "2024-09-08T13:13:31.710729Z",
+    created_at: "2024-09-08T13:13:31.710729Z",
+    icon: "mdi:invoice-text-new",
+  },
+  {
+    id: "1",
+    title: "Brak realizacji szkolenia",
+    lesson: "Podstawy React",
+    target: "s",
+    description:
+      "Niestety, nie udało się zrealizować lekcję, która planowo odbyłaby się {{lesson_start_time}} (PL) i byłaby prowadzona przez {{lecturer_full_name}} z powodu niewystarczającej ilości zapisów.",
+    status: "NEW" as "NEW" | "READ",
+    path: "/account/lessons?sort_by=-created_at&page_size=10&lesson_title=Wstęp+do+React",
+    modified_at: "2024-09-08T13:13:31.710729Z",
+    created_at: "2024-09-08T13:13:31.710729Z",
+    icon: "mdi:school",
+  },
+  {
+    id: "1",
+    title: "Potwierdzenie realizacji szkolenia",
+    lesson: "Podstawy React",
+    target: "s",
+    description:
+      "Udało się! Potwierdzamy realizację lekcji, która odbędzie się {{lesson_start_time}} (PL) i będzie prowadzona przez {{lecturer_full_name}}.",
+    status: "NEW" as "NEW" | "READ",
+    path: "/account/lessons?sort_by=-created_at&page_size=10&lesson_title=Wstęp+do+React",
+    modified_at: "2024-09-08T13:13:31.710729Z",
+    created_at: "2024-09-08T13:13:31.710729Z",
+    icon: "mdi:school",
+  },
+  {
+    id: "1",
+    title: "Brak realizacji szkolenia",
+    lesson: "Podstawy React",
+    target: "l",
+    description:
+      "Niestety, nie udało się zrealizować lekcję, która planowo odbyłaby się {{lesson_start_time}} (PL) z powodu niewystarczającej ilości zapisów.",
+    status: "NEW" as "NEW" | "READ",
+    path: "/account/teacher/calendar",
+    modified_at: "2024-09-08T13:13:31.710729Z",
+    created_at: "2024-09-08T13:13:31.710729Z",
+    icon: "mdi:school",
+  },
+  {
+    id: "1",
+    title: "Potwierdzenie realizacji szkolenia",
+    lesson: "Podstawy React",
+    target: "l",
+    description:
+      "Udało się! Potwierdzamy realizację lekcji, która odbędzie się {{lesson_start_time}} (PL).",
+    status: "NEW" as "NEW" | "READ",
+    path: "/account/teacher/calendar",
+    modified_at: "2024-09-08T13:13:31.710729Z",
+    created_at: "2024-09-08T13:13:31.710729Z",
+    icon: "mdi:school",
+  },
+  {
+    id: "1",
+    title: "Prośba o ocenę szkolenia",
+    lesson: "Podstawy React",
+    target: "s",
+    description:
+      "Proszę daj nam znać jak nam poszło. Dodaj recenzję lekcji, która odbyła się {{lesson_start_time}} (PL) i była prowadzona przez {{lecturer_full_name}}.",
+    status: "NEW" as "NEW" | "READ",
+    path: "/account/reviews?review_status_exclude=brak&page_size=10&lesson_title=Wstęp+do+React",
+    modified_at: "2024-09-08T13:13:31.710729Z",
+    created_at: "2024-09-08T13:13:31.710729Z",
+    icon: "mdi:rate-review",
+  },
+  {
+    id: "1",
+    title: "Twoja lekcja została odwołana",
+    lesson: "Podstawy React",
+    target: "s",
+    description:
+      "Przepraszamy za zmianę planów. Lekcja, która planowo miała się odbyć {{lesson_start_time}} (PL) została odwołana przez prowadzącego {{lecturer_full_name}}.",
+    status: "NEW" as "NEW" | "READ",
+    path: "/account/lessons?sort_by=-created_at&page_size=10&lesson_title=Wstęp+do+React",
+    modified_at: "2024-09-08T13:13:31.710729Z",
+    created_at: "2024-09-08T13:13:31.710729Z",
+    icon: "mdi:calendar-remove",
+  },
+  {
+    id: "1",
+    title: "Nowa recenzja",
+    lesson: "Podstawy React",
+    target: "l",
+    description: "Otrzymano nową recenzję. Ocena 5.0, komentarz: brak.",
+    status: "NEW" as "NEW" | "READ",
+    path: "/account/teacher/reviews/?sort_by=-created_at&page_size=10&lesson_id=1",
+    modified_at: "2024-09-08T13:13:31.710729Z",
+    created_at: "2024-09-08T13:13:31.710729Z",
+    icon: "mdi:star-rate",
+  },
+  {
+    id: "1",
+    title: "Zostałeś nauczycielem",
+    lesson: "",
+    target: "l",
+    description:
+      "Zostałeś nauczycielem, w celu prowadzenia szkoleń uzupełnij swój profil instruktora.",
+    status: "NEW" as "NEW" | "READ",
+    path: "/account/teacher/profile",
+    modified_at: "2024-09-08T13:13:31.710729Z",
+    created_at: "2024-09-08T13:13:31.710729Z",
+    icon: "mdi:teach",
+  },
+];
+
 type INotification = {
   id: string;
   title: string;
   lesson: string | null;
   description: string;
   status: "NEW" | "READ";
-  url: string;
+  path: string;
   icon: string;
   modified_at: string;
   created_at: string;
 };
 
 export const notificationsQuery = (query?: IQueryParams) => {
-  const url = endpoint;
-  const urlParams = formatQueryParams(query);
+  const path = endpoint;
+  const pathParams = formatQueryParams(query);
 
   const queryFn = async () => {
-    const { data } = await Api.get(`${url}?${urlParams}`);
-    const { results, records_count, pages_count } = data;
-    const modifiedResults = results.map(
+    // const { data } = await Api.get(`${path}?${pathParams}`);
+    // const { results, records_count, pages_count } = data;
+    const modifiedResults = test.map(
       ({
         id,
         title,
         lesson,
         description,
         status,
-        url: notificationUrl,
+        path: notificationUrl,
         icon,
         modified_at,
         created_at,
@@ -46,16 +177,16 @@ export const notificationsQuery = (query?: IQueryParams) => {
         lesson,
         description,
         status,
-        url: notificationUrl,
+        path: notificationUrl,
         icon,
         modifiedAt: modified_at,
         createdAt: created_at,
       }),
     );
-    return { results: modifiedResults, count: records_count, pagesCount: pages_count };
+    return { results: modifiedResults, count: test.length, pagesCount: 1 };
   };
 
-  return { url, queryFn, queryKey: compact([url, urlParams]) };
+  return { path, queryFn, queryKey: compact([path, pathParams]) };
 };
 
 export const useNotifications = (query?: IQueryParams, enabled: boolean = true) => {

@@ -242,7 +242,7 @@ export default function Header({ headerOnDark }: Props) {
           <List sx={{ width: "100%", maxWidth: 360 }}>
             {notifications?.length > 0 ? (
               notifications.map((notification: INotificationProp) => (
-                <Link component={RouterLink} href={notification.url} underline="none">
+                <Link component={RouterLink} href={notification.path} underline="none">
                   <ListItem disablePadding>
                     <ListItemButton
                       sx={{

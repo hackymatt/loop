@@ -271,7 +271,7 @@ class PurchaseTest(APITestCase):
         )
 
     def test_get_purchase_unauthenticated(self):
-        # login
+        # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(self.endpoint)
@@ -289,7 +289,7 @@ class PurchaseTest(APITestCase):
         self.assertEqual(records_count, 6)
 
     def test_create_purchase_unauthenticated(self):
-        # login
+        # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # post data
         data = {

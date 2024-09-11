@@ -121,7 +121,7 @@ class UsersTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_users_not_admin(self):
-        # no login
+        # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
@@ -165,7 +165,7 @@ class UsersTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_user_not_admin(self):
-        # no login
+        # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
@@ -218,7 +218,7 @@ class UsersTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_amend_details_not_admin(self):
-        # no login
+        # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # new data
@@ -241,7 +241,7 @@ class UsersTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_amend_details_authenticated_student_to_lecturer(self):
-        # no login
+        # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # new data
@@ -286,7 +286,7 @@ class UsersTest(APITestCase):
         )
 
     def test_amend_details_authenticated_lecturer_to_admin(self):
-        # no login
+        # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # new data
@@ -329,7 +329,7 @@ class UsersTest(APITestCase):
         )
 
     def test_amend_details_authenticated_admin_to_student(self):
-        # no login
+        # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # new data
@@ -372,7 +372,7 @@ class UsersTest(APITestCase):
         )
 
     def test_amend_financial_details_authenticated_change(self):
-        # no login
+        # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # new data
@@ -411,7 +411,7 @@ class UsersTest(APITestCase):
         self.assertFalse(get_profile(get_user(user_data["email"])).image)
 
     def test_amend_financial_details_authenticated_no_change(self):
-        # no login
+        # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # new data

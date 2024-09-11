@@ -2,6 +2,7 @@ from django.core.management import call_command, CommandError
 from reservation.utils import confirm_reservations
 from review.utils import remind_review
 from certificate.utils import generate_certificates
+from notification.utils import remove_old_notifications
 
 
 def create_backup():
@@ -28,5 +29,12 @@ def remind_lessons_review():
 def create_certificates():
     try:
         generate_certificates()
+    except Exception:
+        pass
+
+
+def cleanse_notifications():
+    try:
+        remove_old_notifications()
     except Exception:
         pass

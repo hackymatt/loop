@@ -29,6 +29,7 @@ from .helpers import (
     mock_send_message,
     mock_create_event,
     mock_update_event,
+    notifications_number,
 )
 from django.contrib import auth
 import json
@@ -460,6 +461,7 @@ class ReservationTest(TestCase):
         )
         self.assertEqual(schedule_number(), 16)
         self.assertEqual(_send_message_mock.call_count, 2)
+        self.assertEqual(notifications_number(), 1)
 
     @patch.object(GmailApi, "_send_message")
     @patch.object(CalendarApi, "update")
@@ -491,6 +493,7 @@ class ReservationTest(TestCase):
         self.assertEqual(schedule_number(), 16)
         self.assertEqual(_send_message_mock.call_count, 3)
         self.assertEqual(update_event_mock.call_count, 1)
+        self.assertEqual(notifications_number(), 2)
 
     @patch.object(GmailApi, "_send_message")
     def test_create_reservation_authenticated_first_reservation_multiple_slot(
@@ -515,6 +518,7 @@ class ReservationTest(TestCase):
         self.assertEqual(get_schedule(data["schedule"]).lesson, self.lesson_1)
         self.assertEqual(schedule_number(), 14)
         self.assertEqual(_send_message_mock.call_count, 2)
+        self.assertEqual(notifications_number(), 1)
 
     @patch.object(GmailApi, "_send_message")
     @patch.object(CalendarApi, "update")
@@ -546,6 +550,7 @@ class ReservationTest(TestCase):
         self.assertEqual(schedule_number(), 16)
         self.assertEqual(_send_message_mock.call_count, 3)
         self.assertEqual(update_event_mock.call_count, 1)
+        self.assertEqual(notifications_number(), 2)
 
     @patch.object(GmailApi, "_send_message")
     def test_delete_reservation_unauthenticated(self, _send_message_mock):
@@ -599,6 +604,7 @@ class ReservationTest(TestCase):
         )
         self.assertEqual(schedule_number(), 16)
         self.assertEqual(_send_message_mock.call_count, 1)
+        self.assertEqual(notifications_number(), 0)
 
     @patch.object(GmailApi, "_send_message")
     def test_delete_reservation_authenticated_not_shared_single_slot(
@@ -626,6 +632,7 @@ class ReservationTest(TestCase):
         self.assertEqual(get_schedule(self.reservation_4.schedule.id).lesson, None)
         self.assertEqual(schedule_number(), 16)
         self.assertEqual(_send_message_mock.call_count, 1)
+        self.assertEqual(notifications_number(), 0)
 
     @patch.object(GmailApi, "_send_message")
     def test_delete_reservation_authenticated_not_shared_multi_slot(
@@ -644,6 +651,7 @@ class ReservationTest(TestCase):
         self.assertFalse(is_schedule_found(self.reservation_6.schedule.id))
         self.assertEqual(schedule_number(), 18)
         self.assertEqual(_send_message_mock.call_count, 1)
+        self.assertEqual(notifications_number(), 0)
 
 
 class ReservationConfirmationTest(TestCase):
@@ -819,3 +827,4 @@ class ReservationConfirmationTest(TestCase):
         self.assertEqual(reservation_number(), 3)
         self.assertEqual(_send_message_mock.call_count, 6)
         self.assertEqual(create_event_mock.call_count, 1)
+        self.assertEqual(notifications_number(), 6)

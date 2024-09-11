@@ -4,7 +4,7 @@ export type INotificationProp = {
   lesson?: string;
   description: string;
   status: "NEW" | "READ";
-  url: string;
+  path: string;
   icon: string;
   modifiedAt: string;
   createdAt: string;

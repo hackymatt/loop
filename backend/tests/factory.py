@@ -11,6 +11,7 @@ from review.models import Review
 from module.models import Module
 from purchase.models import Purchase
 from newsletter.models import Newsletter
+from notification.models import Notification
 from schedule.models import Schedule, Meeting
 from wishlist.models import Wishlist
 from cart.models import Cart
@@ -465,4 +466,24 @@ def create_certificate(entity_type, entity, student):
         title=entity.title,
         duration=duration,
         student=student,
+    )
+
+
+def create_notification(
+    profile: Profile,
+    title: str,
+    lesson: str,
+    description: str,
+    status: str,
+    path: str,
+    icon: str,
+):
+    return Notification.objects.create(
+        profile=profile,
+        title=title,
+        lesson=lesson,
+        description=description,
+        status=status,
+        path=path,
+        icon=icon,
     )
