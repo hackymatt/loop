@@ -11,16 +11,17 @@ from typing import List
 
 
 def notify_users(users: List[StudentProfile], coupon: Coupon):
-    discount_type = "%" if coupon.is_percentage else "zł"
-    for user in users:
-        notify(
-            profile=user.profile,
-            title=f"Otrzymujesz nowy kupon zniżkowy na -{coupon.discount} {discount_type}",
-            subtitle=coupon.code,
-            description=f"Wykorzystaj powyższy kupon do {coupon.expiration_date.strftime('%-d %b %Y %H:%M')}.",
-            path="",
-            icon="mdi:coupon",
-        )
+    if coupon.active:
+        discount_type = "%" if coupon.is_percentage else " zł"
+        for user in users:
+            notify(
+                profile=user.profile,
+                title=f"Otrzymujesz nowy kupon zniżkowy na -{coupon.discount}{discount_type}",
+                subtitle=coupon.code,
+                description=f"Wykorzystaj powyższy kupon do {coupon.expiration_date.strftime('%-d %b %Y %H:%M')}.",
+                path="",
+                icon="mdi:coupon",
+            )
 
 
 class CouponListSerializer(ModelSerializer):

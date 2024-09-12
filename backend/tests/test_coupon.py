@@ -136,6 +136,20 @@ class CouponTest(APITestCase):
             10,
         )
 
+        self.new_coupon_3 = create_coupon_obj(
+            "new_coupon",
+            20,
+            True,
+            False,
+            [],
+            True,
+            1,
+            1,
+            False,
+            make_aware(datetime.now() + timedelta(days=5)),
+            10,
+        )
+
         self.amend_coupon = create_coupon_obj(
             "new_coupon",
             10,
@@ -160,6 +174,20 @@ class CouponTest(APITestCase):
             1,
             1,
             True,
+            make_aware(datetime.now() + timedelta(days=5)),
+            10,
+        )
+
+        self.amend_coupon_3 = create_coupon_obj(
+            "new_coupon",
+            10,
+            True,
+            True,
+            [],
+            True,
+            1,
+            1,
+            False,
             make_aware(datetime.now() + timedelta(days=5)),
             10,
         )
@@ -265,6 +293,20 @@ class CouponTest(APITestCase):
         self.assertEqual(coupons_number(), 7)
         self.assertEqual(notifications_number(), 0)
 
+    def test_create_coupons_authenticated_3(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        data = self.new_coupon_3
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        data = json.loads(response.content)
+        data.pop("users")
+        self.assertTrue(is_data_match(get_coupon(data["id"]), data))
+        self.assertEqual(coupons_number(), 7)
+        self.assertEqual(notifications_number(), 0)
+
     def test_update_coupons_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -309,6 +351,19 @@ class CouponTest(APITestCase):
         data.pop("users")
         self.assertTrue(is_data_match(get_coupon(data["id"]), data))
         self.assertEqual(notifications_number(), 2)
+
+    def test_update_coupons_authenticated_3(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        data = self.amend_coupon_3
+        response = self.client.put(f"{self.endpoint}/{self.coupon.id}", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        data.pop("users")
+        self.assertTrue(is_data_match(get_coupon(data["id"]), data))
+        self.assertEqual(notifications_number(), 0)
 
     def test_delete_coupons_unauthenticated(self):
         # no login
