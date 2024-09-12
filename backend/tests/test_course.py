@@ -322,6 +322,21 @@ class CourseTest(APITestCase):
             video=b64encode(create_video().read()),
         )
 
+        self.new_course_2 = create_course_obj(
+            title="Javascript course",
+            description="course_description",
+            level="E",
+            modules=[self.module_3.id, self.module_2.id],
+            skills=[self.skill_1.id, self.skill_2.id],
+            topics=[
+                self.topic_1.id,
+                self.topic_2.id,
+            ],
+            image=b64encode(create_image().read()),
+            video=b64encode(create_video().read()),
+            active=False,
+        )
+
         self.amend_course = create_course_obj(
             title="Python for beginners course",
             description="course_description_other",
@@ -331,6 +346,18 @@ class CourseTest(APITestCase):
             topics=[self.topic_2.id],
             image=b64encode(create_image().read()),
             video=b64encode(create_video().read()),
+        )
+
+        self.amend_course_2 = create_course_obj(
+            title="Python for beginners course",
+            description="course_description_other",
+            level="Z",
+            modules=[self.module_3.id, self.module_2.id],
+            skills=[self.skill_1.id],
+            topics=[self.topic_2.id],
+            image=b64encode(create_image().read()),
+            video=b64encode(create_video().read()),
+            active=False,
         )
 
     def test_get_courses_unauthenticated(self):
@@ -676,7 +703,7 @@ class CourseTest(APITestCase):
         self.assertEqual(courses_number(), 3)
         self.assertEqual(notifications_number(), 0)
 
-    def test_create_course_authenticated(self):
+    def test_create_course_authenticated_1(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -716,6 +743,47 @@ class CourseTest(APITestCase):
             sorted(topics_ids),
         )
         self.assertEqual(notifications_number(), 3)
+
+    def test_create_course_authenticated_2(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = self.new_course_2
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(courses_number(), 4)
+        course_data = json.loads(response.content)
+        modules_ids = course_data.pop("modules")
+        skills_ids = course_data.pop("skills")
+        topics_ids = course_data.pop("topics")
+        self.assertTrue(is_data_match(get_course(course_data["id"]), course_data))
+        self.assertEqual(
+            sorted(
+                list(
+                    set(
+                        [
+                            record.module.id
+                            for record in get_course_modules(course_data["id"])
+                        ]
+                    )
+                )
+            ),
+            sorted(modules_ids),
+        )
+        self.assertEqual(
+            sorted(
+                [record.skill.id for record in get_course_skills(course_data["id"])]
+            ),
+            sorted(skills_ids),
+        )
+        self.assertEqual(
+            sorted(
+                [record.topic.id for record in get_course_topics(course_data["id"])]
+            ),
+            sorted(topics_ids),
+        )
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_course_without_lesson(self):
         # login
@@ -780,7 +848,7 @@ class CourseTest(APITestCase):
         self.assertEqual(courses_number(), 3)
         self.assertEqual(notifications_number(), 0)
 
-    def test_update_course_authenticated(self):
+    def test_update_course_authenticated_1(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -820,6 +888,47 @@ class CourseTest(APITestCase):
             sorted(topics_ids),
         )
         self.assertEqual(notifications_number(), 3)
+
+    def test_update_course_authenticated_2(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = self.amend_course_2
+        response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(courses_number(), 3)
+        course_data = json.loads(response.content)
+        modules_ids = course_data.pop("modules")
+        skills_ids = course_data.pop("skills")
+        topics_ids = course_data.pop("topics")
+        self.assertTrue(is_data_match(get_course(course_data["id"]), course_data))
+        self.assertEqual(
+            sorted(
+                list(
+                    set(
+                        [
+                            record.module.id
+                            for record in get_course_modules(course_data["id"])
+                        ]
+                    )
+                )
+            ),
+            sorted(modules_ids),
+        )
+        self.assertEqual(
+            sorted(
+                [record.skill.id for record in get_course_skills(course_data["id"])]
+            ),
+            sorted(skills_ids),
+        )
+        self.assertEqual(
+            sorted(
+                [record.topic.id for record in get_course_topics(course_data["id"])]
+            ),
+            sorted(topics_ids),
+        )
+        self.assertEqual(notifications_number(), 0)
 
     def test_update_course_without_modules(self):
         # login
