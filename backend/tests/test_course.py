@@ -35,6 +35,7 @@ from .helpers import (
     get_course_modules,
     get_course_skills,
     get_course_topics,
+    notifications_number,
 )
 from django.contrib import auth
 import json
@@ -662,6 +663,7 @@ class CourseTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(courses_number(), 3)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_course_not_admin(self):
         # login
@@ -672,6 +674,7 @@ class CourseTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(courses_number(), 3)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_course_authenticated(self):
         # login
@@ -712,6 +715,7 @@ class CourseTest(APITestCase):
             ),
             sorted(topics_ids),
         )
+        self.assertEqual(notifications_number(), 3)
 
     def test_create_course_without_lesson(self):
         # login
@@ -725,6 +729,7 @@ class CourseTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(courses_number(), 3)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_course_without_skills(self):
         # login
@@ -738,6 +743,7 @@ class CourseTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(courses_number(), 3)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_course_without_topics(self):
         # login
@@ -751,6 +757,7 @@ class CourseTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(courses_number(), 3)
+        self.assertEqual(notifications_number(), 0)
 
     def test_update_course_unauthenticated(self):
         # no login
@@ -760,6 +767,7 @@ class CourseTest(APITestCase):
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(courses_number(), 3)
+        self.assertEqual(notifications_number(), 0)
 
     def test_update_course_not_admin(self):
         # login
@@ -770,6 +778,7 @@ class CourseTest(APITestCase):
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(courses_number(), 3)
+        self.assertEqual(notifications_number(), 0)
 
     def test_update_course_authenticated(self):
         # login
@@ -810,6 +819,7 @@ class CourseTest(APITestCase):
             ),
             sorted(topics_ids),
         )
+        self.assertEqual(notifications_number(), 3)
 
     def test_update_course_without_modules(self):
         # login
@@ -823,6 +833,7 @@ class CourseTest(APITestCase):
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(courses_number(), 3)
+        self.assertEqual(notifications_number(), 0)
 
     def test_update_course_without_skills(self):
         # login
@@ -836,6 +847,7 @@ class CourseTest(APITestCase):
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(courses_number(), 3)
+        self.assertEqual(notifications_number(), 0)
 
     def test_update_course_without_topics(self):
         # login
@@ -849,6 +861,7 @@ class CourseTest(APITestCase):
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(courses_number(), 3)
+        self.assertEqual(notifications_number(), 0)
 
     def test_delete_course_unauthorized(self):
         # no login

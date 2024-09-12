@@ -30,9 +30,9 @@ import { paths } from "src/routes/paths";
 import { usePathname } from "src/routes/hooks";
 import { RouterLink } from "src/routes/components";
 
-import { usePopover } from "src/hooks/use-popover";
 import { useOffSetTop } from "src/hooks/use-off-set-top";
 import { useResponsive } from "src/hooks/use-responsive";
+import { usePopover, UsePopoverReturn } from "src/hooks/use-popover";
 
 import { bgBlur } from "src/theme/css";
 import { useCartsRecordsCount } from "src/api/carts/carts";
@@ -65,8 +65,6 @@ type Props = {
 export default function Header({ headerOnDark }: Props) {
   const theme = useTheme();
 
-  const { enqueueSnackbar } = useToastContext();
-
   const openNotifications = usePopover();
   const openMenu = usePopover();
 
@@ -76,17 +74,7 @@ export default function Header({ headerOnDark }: Props) {
 
   const mdUp = useResponsive("up", "md");
 
-  const { logoutUser, isLoggedIn, userType } = useUserContext();
-
-  const navigations = useMemo(
-    () =>
-      ({
-        [UserType.Admin]: adminNavigations,
-        [UserType.Wykładowca]: teacherNavigations,
-        [UserType.Student]: studentNavigations,
-      })[userType],
-    [userType],
-  );
+  const { isLoggedIn, userType } = useUserContext();
 
   const { data: wishlistRecords } = useWishlistsRecordsCount({ page_size: -1 }, isLoggedIn);
   const { data: cartRecords } = useCartsRecordsCount({ page_size: -1 }, isLoggedIn);
@@ -100,16 +88,6 @@ export default function Header({ headerOnDark }: Props) {
     [isLoggedIn, wishlistRecords],
   );
   const cartItems = useMemo(() => (isLoggedIn ? cartRecords : 0), [isLoggedIn, cartRecords]);
-
-  const handleLogout = async () => {
-    try {
-      await logoutUser({});
-      enqueueSnackbar("Wylogowano pomyślnie", { variant: "success" });
-    } catch (error) {
-      enqueueSnackbar("Wystąpił błąd", { variant: "error" });
-    }
-    openMenu.onClose();
-  };
 
   useEffect(() => {
     if (openMenu.open) {
@@ -217,146 +195,12 @@ export default function Header({ headerOnDark }: Props) {
         )}
       </Stack>
 
-      <Popover
-        open={openNotifications.open}
-        anchorEl={openNotifications.anchorEl}
-        onClose={openNotifications.onClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        transformOrigin={{ vertical: "top", horizontal: "left" }}
-        slotProps={{
-          paper: {
-            sx: {
-              width: 360,
-              mt: 1,
-              maxHeight: "calc(100% / 4 * 3)",
-              [`& .${buttonBaseClasses.root}`]: {
-                px: 1.5,
-                py: 0.75,
-                height: "auto",
-              },
-            },
-          },
-        }}
-      >
-        <Box component="nav">
-          <List sx={{ width: "100%", maxWidth: 360 }}>
-            {notifications?.length > 0 ? (
-              notifications.map((notification: INotificationProp) => (
-                <Link component={RouterLink} href={notification.path} underline="none">
-                  <ListItem disablePadding>
-                    <ListItemButton
-                      sx={{
-                        px: 1,
-                        height: 44,
-                        borderRadius: 1,
-                        pl: 2,
-                      }}
-                    >
-                      <ListItemAvatar>
-                        <Avatar
-                          color={notification.status === "NEW" ? "primary" : "inherit"}
-                          sx={{ width: 28, height: 28 }}
-                        >
-                          <Iconify icon={notification.icon} />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={notification.title}
-                        secondary={
-                          <>
-                            <Typography
-                              component="span"
-                              variant="body2"
-                              sx={{ color: "text.primary", display: "inline" }}
-                            >
-                              {notification.lesson}
-                            </Typography>
-                            <TextMaxLine variant="body2" line={3}>
-                              {notification.description}
-                            </TextMaxLine>
-                            <Typography
-                              component="span"
-                              variant="caption"
-                              sx={{ display: "inline" }}
-                            >
-                              {formatDistance(new Date(notification.createdAt), new Date(), {
-                                addSuffix: true,
-                                locale: pl,
-                              })}
-                            </Typography>
-                          </>
-                        }
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </Link>
-              ))
-            ) : (
-              <ListItem>
-                <ListItemText primary="Brak powiadomień" />
-              </ListItem>
-            )}
-          </List>
-        </Box>
-      </Popover>
+      <NotificationsPopover
+        openNotifications={openNotifications}
+        notifications={notifications ?? []}
+      />
 
-      <Popover
-        open={openMenu.open}
-        anchorEl={openMenu.anchorEl}
-        onClose={openMenu.onClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
-        slotProps={{
-          paper: {
-            sx: {
-              width: 220,
-              mt: 1,
-              [`& .${buttonBaseClasses.root}`]: {
-                px: 1.5,
-                py: 0.75,
-                height: "auto",
-              },
-            },
-          },
-        }}
-      >
-        <Box component="nav">
-          <List sx={{ width: "100%", maxWidth: 360 }}>
-            {navigations?.map((navigation) => (
-              <NavItem
-                key={navigation.title}
-                title={navigation.title}
-                path={navigation.path}
-                icon={navigation.icon}
-                children={navigation.children}
-              />
-            ))}
-          </List>
-        </Box>
-
-        <Divider sx={{ my: 0.5, borderStyle: "dashed" }} />
-
-        <List sx={{ width: "100%", maxWidth: 360 }}>
-          <ListItemButton
-            sx={{
-              px: 1,
-              height: 44,
-              borderRadius: 1,
-            }}
-            onClick={handleLogout}
-          >
-            <ListItemIcon>
-              <Iconify icon="carbon:logout" />
-            </ListItemIcon>
-            <ListItemText
-              primary="Wyloguj"
-              primaryTypographyProps={{
-                typography: "body2",
-              }}
-            />
-          </ListItemButton>
-        </List>
-      </Popover>
+      <AccountPopover openMenu={openMenu} />
     </Stack>
   );
 
@@ -399,5 +243,209 @@ export default function Header({ headerOnDark }: Props) {
 
       {offset && <HeaderShadow />}
     </AppBar>
+  );
+}
+
+function NotificationItem({
+  notification,
+  onClick,
+}: {
+  notification: INotificationProp;
+  onClick?: (text: string) => void;
+}) {
+  return (
+    <ListItem disablePadding>
+      <ListItemButton
+        sx={{
+          px: 1,
+          height: 44,
+          borderRadius: 1,
+          pl: 2,
+        }}
+        onClick={() => onClick && onClick(notification?.subtitle ?? "")}
+      >
+        <ListItemAvatar>
+          <Avatar
+            color={notification.status === "NEW" ? "primary" : "inherit"}
+            sx={{ width: 28, height: 28 }}
+          >
+            <Iconify icon={notification.icon} />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={notification.title}
+          secondary={
+            <>
+              <Typography
+                component="span"
+                variant="body2"
+                sx={{ color: "text.primary", display: "inline" }}
+              >
+                {notification.subtitle}
+              </Typography>
+              <TextMaxLine variant="body2" line={3}>
+                {notification.description}
+              </TextMaxLine>
+              <Typography component="span" variant="caption" sx={{ display: "inline" }}>
+                {formatDistance(new Date(notification.createdAt), new Date(), {
+                  addSuffix: true,
+                  locale: pl,
+                })}
+              </Typography>
+            </>
+          }
+        />
+      </ListItemButton>
+    </ListItem>
+  );
+}
+
+function NotificationsPopover({
+  openNotifications,
+  notifications,
+}: {
+  openNotifications: UsePopoverReturn;
+  notifications: INotificationProp[];
+}) {
+  const { enqueueSnackbar } = useToastContext();
+
+  function handleCopy(text: string) {
+    navigator.clipboard.writeText(text);
+    enqueueSnackbar("Skopiowano do schowka", { variant: "success" });
+  }
+
+  return (
+    <Popover
+      open={openNotifications.open}
+      anchorEl={openNotifications.anchorEl}
+      onClose={openNotifications.onClose}
+      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      transformOrigin={{ vertical: "top", horizontal: "left" }}
+      slotProps={{
+        paper: {
+          sx: {
+            width: 360,
+            mt: 1,
+            maxHeight: "calc(100% / 4 * 3)",
+            [`& .${buttonBaseClasses.root}`]: {
+              px: 1.5,
+              py: 0.75,
+              height: "auto",
+            },
+          },
+        },
+      }}
+    >
+      <Box component="nav">
+        <List sx={{ width: "100%", maxWidth: 360 }}>
+          {notifications.length > 0 ? (
+            notifications.map((notification: INotificationProp) =>
+              notification.path ? (
+                <Link component={RouterLink} href={notification.path} underline="none">
+                  <NotificationItem notification={notification} />
+                </Link>
+              ) : (
+                <Link underline="none">
+                  <NotificationItem
+                    notification={notification}
+                    onClick={(text: string) => handleCopy(text)}
+                  />
+                </Link>
+              ),
+            )
+          ) : (
+            <ListItem>
+              <ListItemText primary="Brak powiadomień" />
+            </ListItem>
+          )}
+        </List>
+      </Box>
+    </Popover>
+  );
+}
+
+function AccountPopover({ openMenu }: { openMenu: UsePopoverReturn }) {
+  const { enqueueSnackbar } = useToastContext();
+
+  const { logoutUser, userType } = useUserContext();
+
+  const navigations = useMemo(
+    () =>
+      ({
+        [UserType.Admin]: adminNavigations,
+        [UserType.Wykładowca]: teacherNavigations,
+        [UserType.Student]: studentNavigations,
+      })[userType],
+    [userType],
+  );
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser({});
+      enqueueSnackbar("Wylogowano pomyślnie", { variant: "success" });
+    } catch (error) {
+      enqueueSnackbar("Wystąpił błąd", { variant: "error" });
+    }
+    openMenu.onClose();
+  };
+
+  return (
+    <Popover
+      open={openMenu.open}
+      anchorEl={openMenu.anchorEl}
+      onClose={openMenu.onClose}
+      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      slotProps={{
+        paper: {
+          sx: {
+            width: 220,
+            mt: 1,
+            [`& .${buttonBaseClasses.root}`]: {
+              px: 1.5,
+              py: 0.75,
+              height: "auto",
+            },
+          },
+        },
+      }}
+    >
+      <Box component="nav">
+        <List sx={{ width: "100%", maxWidth: 360 }}>
+          {navigations?.map((navigation) => (
+            <NavItem
+              key={navigation.title}
+              title={navigation.title}
+              path={navigation.path}
+              icon={navigation.icon}
+              children={navigation.children}
+            />
+          ))}
+        </List>
+      </Box>
+
+      <Divider sx={{ my: 0.5, borderStyle: "dashed" }} />
+
+      <List sx={{ width: "100%", maxWidth: 360 }}>
+        <ListItemButton
+          sx={{
+            px: 1,
+            height: 44,
+            borderRadius: 1,
+          }}
+          onClick={handleLogout}
+        >
+          <ListItemIcon>
+            <Iconify icon="carbon:logout" />
+          </ListItemIcon>
+          <ListItemText
+            primary="Wyloguj"
+            primaryTypographyProps={{
+              typography: "body2",
+            }}
+          />
+        </ListItemButton>
+      </List>
+    </Popover>
   );
 }

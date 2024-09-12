@@ -201,7 +201,7 @@ class ReservationSerializer(ModelSerializer):
             notify(
                 profile=profile,
                 title="Potwierdzenie realizacji szkolenia",
-                lesson=lesson.title,
+                subtitle=lesson.title,
                 description=f"Udało się! Potwierdzamy realizację lekcji, która odbędzie się {start_time} (PL) i będzie prowadzona przez {lecturer_full_name}.",
                 path=f"/account/lessons?sort_by=-created_at&page_size=10&lesson_title={urllib.parse.quote_plus(schedule.lesson.title)}",
                 icon="mdi:school",
@@ -226,7 +226,7 @@ class ReservationSerializer(ModelSerializer):
         notify(
             profile=schedule.lecturer.profile,
             title="Nowy zapis na lekcję",
-            lesson=lesson.title,
+            subtitle=lesson.title,
             description=f"Lista potencjalnych uczestników lekcji, która planowo odbędzie się {start_time} (PL) została powiększona o nowy zapis studenta {student_full_name}. Aktualna liczba uczestników: {students_count}.",
             path=f"/account/teacher/calendar?time_from={schedule.start_time.strftime('%Y-%m-%d')}&view=day",
             icon="mdi:invoice-text-new",

@@ -71,7 +71,7 @@ class ProfileUnregisterViewSet(ModelViewSet):
                     notify(
                         profile=schedule_obj.lecturer.profile,
                         title="Odwołanie rezerwacji terminu",
-                        lesson=schedule_obj.lesson.title,
+                        subtitle=schedule_obj.lesson.title,
                         description=f"Przepraszamy za zmianę planów. Lekcja, która planowo miała się odbyć {start_time} (PL) została odwołana.",
                         path=f"/account/teacher/calendar?time_from={schedule_obj.start_time.strftime('%Y-%m-%d')}&view=day",
                         icon="mdi:calendar-remove",
@@ -121,7 +121,7 @@ class ProfileUnregisterViewSet(ModelViewSet):
                     notify(
                         profile=profile,
                         title="Twoja lekcja została odwołana",
-                        lesson=schedule.lesson.title,
+                        subtitle=schedule.lesson.title,
                         description=f"Przepraszamy za zmianę planów. Lekcja, która planowo miała się odbyć {start_time} (PL) została odwołana przez prowadzącego {lecturer_full_name}.",
                         path=f"/account/lessons?sort_by=-created_at&page_size=10&lesson_title={urllib.parse.quote_plus(schedule.lesson.title)}",
                         icon="mdi:calendar-remove",

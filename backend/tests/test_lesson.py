@@ -23,6 +23,7 @@ from .helpers import (
     filter_dict,
     get_technology,
     lessons_number,
+    notifications_number,
 )
 from django.contrib import auth
 import json
@@ -467,6 +468,7 @@ class LessonTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(lessons_number(), 6)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_lesson_not_admin(self):
         # login
@@ -477,6 +479,7 @@ class LessonTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(lessons_number(), 6)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_lesson_incorrect_duration(self):
         # login
@@ -488,6 +491,7 @@ class LessonTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(lessons_number(), 6)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_lesson_incorrect_github_url(self):
         # login
@@ -499,6 +503,7 @@ class LessonTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(lessons_number(), 6)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_lesson_authorized(self):
         #  login
@@ -515,6 +520,7 @@ class LessonTest(APITestCase):
         technologies_ids = data.pop("technologies")
         self.assertTrue(is_data_match(get_lesson(data["id"]), data))
         self.assertTrue(technologies_ids, get_lesson(data["id"]).technologies)
+        self.assertEqual(notifications_number(), 3)
 
     def test_update_lesson_unauthenticated(self):
         # no login
@@ -524,6 +530,7 @@ class LessonTest(APITestCase):
         response = self.client.put(f"{self.endpoint}/{self.lesson_1.id}", data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(lessons_number(), 6)
+        self.assertEqual(notifications_number(), 0)
 
     def test_update_lesson_not_admin(self):
         # login
@@ -534,6 +541,7 @@ class LessonTest(APITestCase):
         response = self.client.put(f"{self.endpoint}/{self.lesson_1.id}", data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(lessons_number(), 6)
+        self.assertEqual(notifications_number(), 0)
 
     def test_update_lesson_authorized_price_change(self):
         # login
@@ -544,6 +552,7 @@ class LessonTest(APITestCase):
         response = self.client.put(f"{self.endpoint}/{self.lesson_1.id}", data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(lessons_number(), 6)
+        self.assertEqual(notifications_number(), 3)
 
         data = json.loads(response.content)
 
@@ -562,6 +571,7 @@ class LessonTest(APITestCase):
         response = self.client.put(f"{self.endpoint}/{self.lesson_1.id}", data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(lessons_number(), 6)
+        self.assertEqual(notifications_number(), 3)
 
         data = json.loads(response.content)
 

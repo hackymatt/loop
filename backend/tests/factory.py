@@ -175,6 +175,7 @@ def create_course_obj(
     topics,
     image: str = None,
     video: str = None,
+    active: bool = True,
 ):
     return {
         "title": title,
@@ -185,6 +186,7 @@ def create_course_obj(
         "topics": topics,
         "image": image,
         "video": video,
+        "active": active,
     }
 
 
@@ -244,6 +246,7 @@ def create_lesson_obj(
     price: str,
     technologies,
     id: int = -1,
+    active: bool = True,
 ):
     return {
         "id": id,
@@ -253,6 +256,7 @@ def create_lesson_obj(
         "github_url": github_url,
         "price": price,
         "technologies": technologies,
+        "active": active,
     }
 
 
@@ -472,7 +476,7 @@ def create_certificate(entity_type, entity, student):
 def create_notification(
     profile: Profile,
     title: str,
-    lesson: str,
+    subtitle: str,
     description: str,
     status: str,
     path: str,
@@ -481,7 +485,7 @@ def create_notification(
     return Notification.objects.create(
         profile=profile,
         title=title,
-        lesson=lesson,
+        subtitle=subtitle,
         description=description,
         status=status,
         path=path,

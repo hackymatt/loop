@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from .factory import create_image, create_newsletter, create_user, create_profile
+from .helpers import notifications_number
 
 from django.test import TestCase
 from unittest.mock import patch, Mock
@@ -156,6 +157,7 @@ class LoginGithubTest(TestCase):
         )
         response = self.client.post(self.endpoint, self.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(notifications_number(), 1)
 
     @patch("profile.login.utils.get_image_content_request")
     @patch("profile.login.utils.github_get_user_info_request")
@@ -187,6 +189,7 @@ class LoginGithubTest(TestCase):
         )
         response = self.client.post(self.endpoint, self.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(notifications_number(), 1)
 
     @patch("profile.login.utils.get_image_content_request")
     @patch("profile.login.utils.github_get_user_info_request")
@@ -215,6 +218,7 @@ class LoginGithubTest(TestCase):
         )
         response = self.client.post(self.endpoint, self.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(notifications_number(), 1)
 
     @patch("profile.login.utils.get_image_content_request")
     @patch("profile.login.utils.github_get_user_info_request")
@@ -246,6 +250,7 @@ class LoginGithubTest(TestCase):
         )
         response = self.client.post(self.endpoint, self.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(notifications_number(), 0)
 
     @patch("profile.login.utils.get_image_content_request")
     @patch("profile.login.utils.github_get_user_info_request")
@@ -277,3 +282,4 @@ class LoginGithubTest(TestCase):
         )
         response = self.client.post(self.endpoint, self.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(notifications_number(), 0)

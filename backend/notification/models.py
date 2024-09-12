@@ -16,7 +16,7 @@ class Notification(BaseModel):
     )
     profile = ForeignKey(Profile, on_delete=CASCADE)
     title = CharField()
-    lesson = CharField()
+    subtitle = CharField()
     description = TextField()
     status = CharField(choices=STATUS_CHOICES, null=False, default="N")
     path = CharField()

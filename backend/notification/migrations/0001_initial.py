@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ("modified_at", models.DateTimeField(auto_now=True)),
                 ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("title", models.CharField()),
-                ("lesson", models.CharField()),
+                ("subtitle", models.CharField()),
                 ("description", models.TextField()),
                 (
                     "status",

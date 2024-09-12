@@ -84,7 +84,7 @@ class ManageScheduleViewSet(ModelViewSet):
                 notify(
                     profile=profile,
                     title="Twoja lekcja została odwołana",
-                    lesson=lesson.title,
+                    subtitle=lesson.title,
                     description=f"Przepraszamy za zmianę planów. Lekcja, która planowo miała się odbyć {start_time} (PL) została odwołana przez prowadzącego {lecturer_full_name}.",
                     path=f"/account/lessons?sort_by=-created_at&page_size=10&lesson_title={urllib.parse.quote_plus(schedule.lesson.title)}",
                     icon="mdi:calendar-remove",

@@ -460,7 +460,7 @@ class ReservationTest(TestCase):
             self.lesson_2,
         )
         self.assertEqual(schedule_number(), 16)
-        self.assertEqual(_send_message_mock.call_count, 2)
+        self.assertEqual(_send_message_mock.call_count, 1)
         self.assertEqual(notifications_number(), 1)
 
     @patch.object(GmailApi, "_send_message")
@@ -491,7 +491,7 @@ class ReservationTest(TestCase):
         self.assertEqual(data["schedule"], self.schedules[2].id)
         self.assertEqual(get_schedule(self.schedules[2].id).lesson, self.lesson_2)
         self.assertEqual(schedule_number(), 16)
-        self.assertEqual(_send_message_mock.call_count, 3)
+        self.assertEqual(_send_message_mock.call_count, 2)
         self.assertEqual(update_event_mock.call_count, 1)
         self.assertEqual(notifications_number(), 2)
 
@@ -517,7 +517,7 @@ class ReservationTest(TestCase):
         self.assertNotEqual(data["schedule"], self.later_timeslot.id)
         self.assertEqual(get_schedule(data["schedule"]).lesson, self.lesson_1)
         self.assertEqual(schedule_number(), 14)
-        self.assertEqual(_send_message_mock.call_count, 2)
+        self.assertEqual(_send_message_mock.call_count, 1)
         self.assertEqual(notifications_number(), 1)
 
     @patch.object(GmailApi, "_send_message")
@@ -548,7 +548,7 @@ class ReservationTest(TestCase):
         self.assertEqual(data["schedule"], self.long_timeslot_2.id)
         self.assertEqual(get_schedule(data["schedule"]).lesson, self.lesson_1)
         self.assertEqual(schedule_number(), 16)
-        self.assertEqual(_send_message_mock.call_count, 3)
+        self.assertEqual(_send_message_mock.call_count, 2)
         self.assertEqual(update_event_mock.call_count, 1)
         self.assertEqual(notifications_number(), 2)
 
@@ -603,7 +603,7 @@ class ReservationTest(TestCase):
             self.reservation_1.lesson,
         )
         self.assertEqual(schedule_number(), 16)
-        self.assertEqual(_send_message_mock.call_count, 1)
+        self.assertEqual(_send_message_mock.call_count, 0)
         self.assertEqual(notifications_number(), 0)
 
     @patch.object(GmailApi, "_send_message")
@@ -631,7 +631,7 @@ class ReservationTest(TestCase):
         self.assertFalse(is_reservation_found(self.reservation_4.id))
         self.assertEqual(get_schedule(self.reservation_4.schedule.id).lesson, None)
         self.assertEqual(schedule_number(), 16)
-        self.assertEqual(_send_message_mock.call_count, 1)
+        self.assertEqual(_send_message_mock.call_count, 0)
         self.assertEqual(notifications_number(), 0)
 
     @patch.object(GmailApi, "_send_message")
@@ -650,7 +650,7 @@ class ReservationTest(TestCase):
         self.assertFalse(is_reservation_found(self.reservation_6.id))
         self.assertFalse(is_schedule_found(self.reservation_6.schedule.id))
         self.assertEqual(schedule_number(), 18)
-        self.assertEqual(_send_message_mock.call_count, 1)
+        self.assertEqual(_send_message_mock.call_count, 0)
         self.assertEqual(notifications_number(), 0)
 
 

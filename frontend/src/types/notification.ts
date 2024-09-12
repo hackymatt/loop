@@ -1,10 +1,10 @@
 export type INotificationProp = {
   id: string;
   title: string;
-  lesson?: string;
+  subtitle?: string;
   description: string;
   status: "NEW" | "READ";
-  path: string;
+  path?: string;
   icon: string;
   modifiedAt: string;
   createdAt: string;

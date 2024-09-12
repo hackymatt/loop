@@ -74,7 +74,7 @@ def confirm_reservations():
                 notify(
                     profile=reservation.student.profile,
                     title="Potwierdzenie realizacji szkolenia",
-                    lesson=schedule.lesson.title,
+                    subtitle=schedule.lesson.title,
                     description=f"Udało się! Potwierdzamy realizację lekcji, która odbędzie się {start_time} (PL) i będzie prowadzona przez {lecturer_full_name}.",
                     path=f"/account/lessons?sort_by=-created_at&page_size=10&lesson_title={urllib.parse.quote_plus(schedule.lesson.title)}",
                     icon="mdi:school",
@@ -89,7 +89,7 @@ def confirm_reservations():
                 notify(
                     profile=reservation.student.profile,
                     title="Brak realizacji szkolenia",
-                    lesson=schedule.lesson.title,
+                    subtitle=schedule.lesson.title,
                     description=f"Niestety, nie udało się zrealizować lekcję, która planowo odbyłaby się {start_time} (PL) i byłaby prowadzona przez {lecturer_full_name} z powodu niewystarczającej ilości zapisów.",
                     path=f"/account/lessons?sort_by=-created_at&page_size=10&lesson_title={urllib.parse.quote_plus(schedule.lesson.title)}",
                     icon="mdi:school",
@@ -105,7 +105,7 @@ def confirm_reservations():
             notify(
                 profile=schedule.lecturer.profile,
                 title="Potwierdzenie realizacji szkolenia",
-                lesson=schedule.lesson.title,
+                subtitle=schedule.lesson.title,
                 description=f"Udało się! Potwierdzamy realizację lekcji, która odbędzie się {start_time} (PL).",
                 path=f"/account/teacher/calendar?time_from={schedule.start_time.strftime('%Y-%m-%d')}&view=day",
                 icon="mdi:school",
@@ -120,7 +120,7 @@ def confirm_reservations():
             notify(
                 profile=schedule.lecturer.profile,
                 title="Brak realizacji szkolenia",
-                lesson=schedule.lesson.title,
+                subtitle=schedule.lesson.title,
                 description=f"Niestety, nie udało się zrealizować lekcję, która planowo odbyłaby się {start_time} (PL) z powodu niewystarczającej ilości zapisów.",
                 path=f"/account/teacher/calendar?time_from={schedule.start_time.strftime('%Y-%m-%d')}&view=day",
                 icon="mdi:school",

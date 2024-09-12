@@ -51,7 +51,7 @@ class NotificationTest(APITestCase):
                 create_notification(
                     profile=self.profile.profile,
                     title=f"title_{i}",
-                    lesson=f"lesson{i}",
+                    subtitle=f"subtitle{i}",
                     description=f"description{i}",
                     status="NEW",
                     path=f"path{i}",
@@ -65,7 +65,7 @@ class NotificationTest(APITestCase):
                 create_notification(
                     profile=self.lecturer_profile.profile,
                     title=f"title_{i}",
-                    lesson=f"lesson{i}",
+                    subtitle=f"subtitle{i}",
                     description=f"description{i}",
                     status="NEW",
                     path=f"path{i}",
@@ -75,7 +75,7 @@ class NotificationTest(APITestCase):
 
             self.edit_data = {
                 "title": self.student_notifications[0].title,
-                "lesson": self.student_notifications[0].lesson,
+                "subtitle": self.student_notifications[0].subtitle,
                 "description": self.student_notifications[0].description,
                 "status": "R",
                 "path": self.student_notifications[0].path,
@@ -168,7 +168,7 @@ class NotificationUtilsTest(APITestCase):
                 create_notification(
                     profile=self.profile.profile,
                     title=f"title_{i}",
-                    lesson=f"lesson{i}",
+                    subtitle=f"subtitle{i}",
                     description=f"description{i}",
                     status="READ",
                     path=f"path{i}",
@@ -181,7 +181,7 @@ class NotificationUtilsTest(APITestCase):
                 create_notification(
                     profile=self.lecturer_profile.profile,
                     title=f"title_{i}",
-                    lesson=f"lesson{i}",
+                    subtitle=f"subtitle{i}",
                     description=f"description{i}",
                     status="READ",
                     path=f"path{i}",
@@ -203,7 +203,7 @@ class NotificationUtilsTest(APITestCase):
         notify(
             profile=self.lecturer_profile.profile,
             title="test_title",
-            lesson="test_lesson",
+            subtitle="test_lesson",
             description="test_description",
             path="test_path",
             icon="test_icon",

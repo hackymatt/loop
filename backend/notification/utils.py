@@ -14,17 +14,16 @@ def remove_old_notifications():
 def notify(
     profile,
     title: str,
-    lesson: str,
+    subtitle: str,
     description: str,
     path: str,
     icon: str,
 ):
-    return Notification.objects.create(
+    return Notification.objects.get_or_create(
         profile=profile,
         title=title,
-        lesson=lesson,
+        subtitle=subtitle,
         description=description,
-        status="NEW",
         path=path,
         icon=icon,
     )

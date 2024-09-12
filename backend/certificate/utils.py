@@ -195,7 +195,7 @@ def generate_certificates():
             notify(
                 profile=student_obj.profile,
                 title="Gratulacje! Otrzymujesz nowe certyfikaty",
-                lesson="",
+                subtitle=f"Liczba certyfikatów: {certificates_count}",
                 description=f"Poniżej znajduje się lista nowo otrzymanych certyfikatów: {certificate_str}.",
                 path=f"/account/certificates?sort_by=-completed_at&page_size=10&completed_at={datetime.now().strftime('%Y-%m-%d')}",
                 icon="mdi:certificate",

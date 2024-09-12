@@ -11,7 +11,7 @@ from lesson.models import (
     LessonPriceHistory,
 )
 from technology.models import Technology
-from profile.models import LecturerProfile
+from profile.models import LecturerProfile, Profile
 from review.models import Review
 from purchase.models import Purchase
 from teaching.models import Teaching
@@ -19,6 +19,20 @@ from django.db.models.functions import Concat
 from django.db.models import Avg, Value, Q
 from django.conf import settings
 from const import MIN_LESSON_DURATION_MINS
+from notification.utils import notify
+import urllib.parse
+
+
+def notify_lecturer(lesson):
+    for profile in Profile.objects.filter(user_type="W").all():
+        notify(
+            profile=profile,
+            title="Nowa lekcja w ofercie",
+            subtitle=lesson.title,
+            description="Właśnie dodaliśmy nową lekcję. Zacznij ją prowadzić.",
+            path=f"/account/teacher/teaching/?sort_by=title&page_size=10&title={urllib.parse.quote_plus(lesson.title)}",
+            icon="mdi:teach",
+        )
 
 
 def get_lecturers(self, lessons):
@@ -164,6 +178,9 @@ class LessonSerializer(ModelSerializer):
         lesson = self.add_technology(lesson=lesson, technologies=technologies)
         lesson.save()
 
+        if lesson.active:
+            notify_lecturer(lesson=lesson)
+
         return lesson
 
     def update(self, instance, validated_data):
@@ -181,6 +198,9 @@ class LessonSerializer(ModelSerializer):
         instance.technologies.clear()
         instance = self.add_technology(lesson=instance, technologies=technologies)
         instance.save()
+
+        if instance.active:
+            notify_lecturer(lesson=instance)
 
         return instance
 
