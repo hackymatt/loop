@@ -14,6 +14,8 @@ from django.utils.timezone import make_aware
 from pytz import timezone, utc
 from mailer.mailer import Mailer
 from const import MIN_LESSON_DURATION_MINS, CANCELLATION_TIME
+from notification.utils import notify
+import urllib.parse
 
 
 class LecturerSerializer(ModelSerializer):
@@ -160,22 +162,12 @@ class ReservationSerializer(ModelSerializer):
         reservations = Reservation.objects.filter(schedule=lesson_schedule).all()
         students_count = reservations.count()
 
-        # notify student
-        data = {
-            **{
-                "lesson_title": lesson.title,
-                "lecturer_full_name": f"{schedule.lecturer.profile.user.first_name} {schedule.lecturer.profile.user.last_name}",
-                "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
-                .astimezone(timezone("Europe/Warsaw"))
-                .strftime("%d-%m-%Y %H:%M"),
-            }
-        }
-        mailer.send(
-            email_template="add_reservation.html",
-            to=[profile.user.email],
-            subject=f"Potwierdzenie rezerwacji lekcji {lesson.title}",
-            data=data,
+        start_time = (
+            schedule.start_time.replace(tzinfo=utc)
+            .astimezone(timezone("Europe/Warsaw"))
+            .strftime("%d-%m-%Y %H:%M")
         )
+        lecturer_full_name = f"{schedule.lecturer.profile.user.first_name} {schedule.lecturer.profile.user.last_name}"
 
         if (schedule.start_time - make_aware(datetime.now())) < timedelta(
             hours=CANCELLATION_TIME
@@ -195,10 +187,8 @@ class ReservationSerializer(ModelSerializer):
             data = {
                 **{
                     "lesson_title": schedule.lesson.title,
-                    "lecturer_full_name": f"{schedule.lecturer.profile.user.first_name} {schedule.lecturer.profile.user.last_name}",
-                    "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
-                    .astimezone(timezone("Europe/Warsaw"))
-                    .strftime("%d-%m-%Y %H:%M"),
+                    "lecturer_full_name": lecturer_full_name,
+                    "lesson_start_time": start_time,
                     "meeting_url": schedule.meeting.url,
                 }
             }
@@ -208,15 +198,22 @@ class ReservationSerializer(ModelSerializer):
                 subject="Potwierdzenie realizacji szkolenia",
                 data=data,
             )
+            notify(
+                profile=profile,
+                title="Potwierdzenie realizacji szkolenia",
+                subtitle=lesson.title,
+                description=f"Udało się! Potwierdzamy realizację lekcji, która odbędzie się {start_time} (PL) i będzie prowadzona przez {lecturer_full_name}.",
+                path=f"/account/lessons?sort_by=-created_at&page_size=10&lesson_title={urllib.parse.quote_plus(schedule.lesson.title)}",
+                icon="mdi:school",
+            )
 
         # notify lecturer
+        student_full_name = f"{profile.user.first_name} {profile.user.last_name}"
         data = {
             **{
                 "lesson_title": lesson.title,
-                "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
-                .astimezone(timezone("Europe/Warsaw"))
-                .strftime("%d-%m-%Y %H:%M"),
-                "student_full_name": f"{profile.user.first_name} {profile.user.last_name}",
+                "lesson_start_time": start_time,
+                "student_full_name": student_full_name,
                 "students_count": students_count,
             }
         }
@@ -225,6 +222,14 @@ class ReservationSerializer(ModelSerializer):
             to=[schedule.lecturer.profile.user.email],
             subject=f"Nowy zapis na lekcję {lesson.title}",
             data=data,
+        )
+        notify(
+            profile=schedule.lecturer.profile,
+            title="Nowy zapis na lekcję",
+            subtitle=lesson.title,
+            description=f"Lista potencjalnych uczestników lekcji, która planowo odbędzie się {start_time} (PL) została powiększona o nowy zapis studenta {student_full_name}. Aktualna liczba uczestników: {students_count}.",
+            path=f"/account/teacher/calendar?time_from={schedule.start_time.strftime('%Y-%m-%d')}&view=day",
+            icon="mdi:invoice-text-new",
         )
 
         return reservation

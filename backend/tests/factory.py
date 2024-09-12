@@ -11,6 +11,7 @@ from review.models import Review
 from module.models import Module
 from purchase.models import Purchase
 from newsletter.models import Newsletter
+from notification.models import Notification
 from schedule.models import Schedule, Meeting
 from wishlist.models import Wishlist
 from cart.models import Cart
@@ -174,6 +175,7 @@ def create_course_obj(
     topics,
     image: str = None,
     video: str = None,
+    active: bool = True,
 ):
     return {
         "title": title,
@@ -184,6 +186,7 @@ def create_course_obj(
         "topics": topics,
         "image": image,
         "video": video,
+        "active": active,
     }
 
 
@@ -243,6 +246,7 @@ def create_lesson_obj(
     price: str,
     technologies,
     id: int = -1,
+    active: bool = True,
 ):
     return {
         "id": id,
@@ -252,6 +256,7 @@ def create_lesson_obj(
         "github_url": github_url,
         "price": price,
         "technologies": technologies,
+        "active": active,
     }
 
 
@@ -465,4 +470,24 @@ def create_certificate(entity_type, entity, student):
         title=entity.title,
         duration=duration,
         student=student,
+    )
+
+
+def create_notification(
+    profile: Profile,
+    title: str,
+    subtitle: str,
+    description: str,
+    status: str,
+    path: str,
+    icon: str,
+):
+    return Notification.objects.create(
+        profile=profile,
+        title=title,
+        subtitle=subtitle,
+        description=description,
+        status=status,
+        path=path,
+        icon=icon,
     )

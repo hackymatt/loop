@@ -9,7 +9,13 @@ from .factory import (
     create_coupon_obj,
     create_coupon_user,
 )
-from .helpers import login, coupons_number, is_data_match, get_coupon
+from .helpers import (
+    login,
+    coupons_number,
+    is_data_match,
+    get_coupon,
+    notifications_number,
+)
 from django.contrib import auth
 import json
 from datetime import datetime, timedelta
@@ -116,12 +122,40 @@ class CouponTest(APITestCase):
             10,
         )
 
+        self.new_coupon_2 = create_coupon_obj(
+            "new_coupon",
+            20,
+            True,
+            False,
+            [],
+            True,
+            1,
+            1,
+            True,
+            make_aware(datetime.now() + timedelta(days=5)),
+            10,
+        )
+
         self.amend_coupon = create_coupon_obj(
             "new_coupon",
             10,
             True,
             False,
             [self.profile.id],
+            True,
+            1,
+            1,
+            True,
+            make_aware(datetime.now() + timedelta(days=5)),
+            10,
+        )
+
+        self.amend_coupon_2 = create_coupon_obj(
+            "new_coupon",
+            10,
+            True,
+            True,
+            [],
             True,
             1,
             1,
@@ -138,7 +172,7 @@ class CouponTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_coupons_not_admin(self):
-        # no login
+        # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
@@ -164,7 +198,7 @@ class CouponTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_coupon_not_admin(self):
-        # no login
+        # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
@@ -190,6 +224,7 @@ class CouponTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(coupons_number(), 6)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_coupons_not_admin(self):
         # login
@@ -200,8 +235,9 @@ class CouponTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(coupons_number(), 6)
+        self.assertEqual(notifications_number(), 0)
 
-    def test_create_coupons_authenticated(self):
+    def test_create_coupons_authenticated_1(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -213,6 +249,21 @@ class CouponTest(APITestCase):
         data.pop("users")
         self.assertTrue(is_data_match(get_coupon(data["id"]), data))
         self.assertEqual(coupons_number(), 7)
+        self.assertEqual(notifications_number(), 2)
+
+    def test_create_coupons_authenticated_2(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        data = self.new_coupon_2
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        data = json.loads(response.content)
+        data.pop("users")
+        self.assertTrue(is_data_match(get_coupon(data["id"]), data))
+        self.assertEqual(coupons_number(), 7)
+        self.assertEqual(notifications_number(), 0)
 
     def test_update_coupons_unauthenticated(self):
         # no login
@@ -221,6 +272,7 @@ class CouponTest(APITestCase):
         data = self.amend_coupon
         response = self.client.put(f"{self.endpoint}/{self.coupon.id}", data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(notifications_number(), 0)
 
     def test_update_coupons_not_admin(self):
         # login
@@ -230,8 +282,9 @@ class CouponTest(APITestCase):
         data = self.amend_coupon
         response = self.client.put(f"{self.endpoint}/{self.coupon.id}", data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(notifications_number(), 0)
 
-    def test_update_coupons_authenticated(self):
+    def test_update_coupons_authenticated_1(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -242,6 +295,20 @@ class CouponTest(APITestCase):
         data = json.loads(response.content)
         data.pop("users")
         self.assertTrue(is_data_match(get_coupon(data["id"]), data))
+        self.assertEqual(notifications_number(), 1)
+
+    def test_update_coupons_authenticated_2(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        data = self.amend_coupon_2
+        response = self.client.put(f"{self.endpoint}/{self.coupon.id}", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        data.pop("users")
+        self.assertTrue(is_data_match(get_coupon(data["id"]), data))
+        self.assertEqual(notifications_number(), 2)
 
     def test_delete_coupons_unauthenticated(self):
         # no login
@@ -368,7 +435,7 @@ class CouponUserTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_coupon_usage_not_admin(self):
-        # no login
+        # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
@@ -394,7 +461,7 @@ class CouponUserTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_coupon_usage_not_admin(self):
-        # no login
+        # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data

@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     "finance",
     "coupon",
     "certificate",
+    "notification",
 ]
 
 MIDDLEWARE = [
@@ -115,7 +116,7 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle",
     ],
-    "DEFAULT_THROTTLE_RATES": {"anon": "500/hour", "user": "1000/hour"},
+    "DEFAULT_THROTTLE_RATES": {"anon": "750/hour", "user": "1500/hour"},
 }
 
 if not DEBUG:
@@ -192,6 +193,7 @@ CRONJOBS = (
         ("*/30 * * * *", "core.cron.confirm_lessons"),
         ("0 0 * * *", "core.cron.remind_lessons_review"),
         ("0 0 * * *", "core.cron.create_certificates"),
+        ("0 0 * * *", "core.cron.cleanse_notifications"),
     ]
     if not LOCAL
     else []

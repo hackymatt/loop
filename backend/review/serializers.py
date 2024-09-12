@@ -10,6 +10,7 @@ from rest_framework.serializers import (
 from review.models import Review
 from profile.models import Profile, LecturerProfile, StudentProfile
 from purchase.models import Purchase
+from notification.utils import notify
 
 
 class StudentSerializer(ModelSerializer):
@@ -129,6 +130,17 @@ class ReviewSerializer(ModelSerializer):
     def create(self, validated_data):
         user = self.context["request"].user
         profile = Profile.objects.get(user=user)
-        return Review.objects.create(
+        review = Review.objects.create(
             **validated_data, student=StudentProfile.objects.get(profile=profile)
         )
+
+        notify(
+            profile=review.lecturer.profile,
+            title="Otrzymano nową recenzję",
+            subtitle=review.lesson.title,
+            description=f"Otrzymano nową recenzję. Ocena {review.rating}, komentarz: {review.review}.",
+            path=f"/account/teacher/reviews/?sort_by=-created_at&page_size=10&lesson_id={review.lesson.id}",
+            icon="mdi:star-rate",
+        )
+
+        return review

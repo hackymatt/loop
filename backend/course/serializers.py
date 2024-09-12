@@ -20,6 +20,20 @@ from django.db.models.functions import Concat
 from django.db.models import Sum, Avg, Min, Value, Q
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
+from notification.utils import notify
+import urllib.parse
+
+
+def notify_students(course):
+    for profile in Profile.objects.filter(user_type="S").all():
+        notify(
+            profile=profile,
+            title="Nowa lekcja w ofercie",
+            subtitle=course.title,
+            description="Właśnie dodaliśmy nowy kurs. Sprawdź go już teraz.",
+            path=f"/course/{course.id}",
+            icon="mdi:account-student",
+        )
 
 
 class VideoBase64File(Base64FileField):
@@ -646,6 +660,9 @@ class CourseSerializer(ModelSerializer):
         course = self.add_topics(course=course, topics=topics)
         course.save()
 
+        if course.active:
+            notify_students(course=course)
+
         return course
 
     def update(self, instance, validated_data):
@@ -669,6 +686,9 @@ class CourseSerializer(ModelSerializer):
         instance = self.add_topics(course=instance, topics=topics)
 
         instance.save()
+
+        if instance.active:
+            notify_students(course=instance)
 
         return instance
 

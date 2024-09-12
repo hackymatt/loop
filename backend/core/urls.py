@@ -21,6 +21,7 @@ from course.views import (
     CourseViewSet,
     BestCourseViewSet,
 )
+from notification.views import NotificationViewSet
 from certificate.views import CertificateViewSet, CertificateInfoViewSet
 from lesson.views import (
     LessonViewSet,
@@ -103,6 +104,8 @@ router.register(r"finance-history", FinanceHistoryViewSet, basename="finance_his
 router.register(r"earnings", EarningViewSet, basename="earnings")
 router.register(r"coupons", CouponViewSet, basename="coupons")
 router.register(r"coupon-usage", CouponUserViewSet, basename="coupon_usage")
+router.register(r"notifications", NotificationViewSet, basename="notifications")
+
 
 api_urlpatterns = [
     path("", include(router.urls)),

@@ -21,6 +21,7 @@ from .helpers import (
     profiles_number,
     mock_send_message,
     get_schedule,
+    notifications_number,
 )
 from django.contrib import auth
 from datetime import datetime, timedelta
@@ -236,6 +237,7 @@ class UnregisterTest(TestCase):
         self.assertEqual(profiles_number(), 6)
         self.assertEqual(users_number(), 6)
         self.assertEqual(_send_message_mock.call_count, 1)
+        self.assertEqual(notifications_number(), 1)
 
     @patch.object(GmailApi, "_send_message")
     def test_delete_authenticated_student_1(self, _send_message_mock):
@@ -251,6 +253,7 @@ class UnregisterTest(TestCase):
         self.assertEqual(users_number(), 6)
         self.assertEqual(_send_message_mock.call_count, 1)
         self.assertTrue(get_schedule(self.future_schedule_1.id).lesson is None)
+        self.assertEqual(notifications_number(), 1)
 
     @patch.object(GmailApi, "_send_message")
     def test_delete_authenticated_student_2(self, _send_message_mock):
@@ -271,3 +274,4 @@ class UnregisterTest(TestCase):
         self.assertEqual(profiles_number(), 6)
         self.assertEqual(users_number(), 6)
         self.assertEqual(_send_message_mock.call_count, 0)
+        self.assertEqual(notifications_number(), 0)

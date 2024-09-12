@@ -9,6 +9,7 @@ from django.db.models import F, Sum
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from mailer.mailer import Mailer
+from notification.utils import notify
 from django.conf import settings
 
 
@@ -56,7 +57,7 @@ def add_certificate(entity_type, entity, student):
 
 def transform_list(input_list):
     # Mapping of old keys to new keys
-    key_mapping = {"L": "Lesson", "M": "Module", "K": "Course"}
+    key_mapping = {"L": "Lekcje", "M": "Moduły", "K": "Kursy"}
 
     transformed = []
 
@@ -187,4 +188,15 @@ def generate_certificates():
                 to=[student_obj.profile.user.email],
                 subject="Gratulacje! Otrzymujesz nowe certyfikaty",
                 data=data,
+            )
+            certificate_str = ", ".join(
+                [certificate["name"] for certificate in certificates]
+            )
+            notify(
+                profile=student_obj.profile,
+                title="Gratulacje! Otrzymujesz nowe certyfikaty",
+                subtitle=f"Liczba certyfikatów: {certificates_count}",
+                description=f"Poniżej znajduje się lista nowo otrzymanych certyfikatów: {certificate_str}.",
+                path=f"/account/certificates?sort_by=-completed_at&page_size=10&completed_at={datetime.now().strftime('%Y-%m-%d')}",
+                icon="mdi:certificate",
             )

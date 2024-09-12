@@ -1,13 +1,12 @@
 import requests
-
 from typing import Dict, Any
 from django.conf import settings
 from rest_framework.serializers import ValidationError
 from django.core.files.base import ContentFile
-
 from django.contrib.auth.models import User
 from profile.models import Profile, StudentProfile, AdminProfile, LecturerProfile
 from newsletter.models import Newsletter
+from notification.utils import notify
 
 GOOGLE_ACCESS_TOKEN_OBTAIN_URL = "https://oauth2.googleapis.com/token"
 GOOGLE_USER_INFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
@@ -193,11 +192,21 @@ def create_user(username, email, first_name, last_name, dob, gender, image, join
     user.is_active = True
     user.save()
 
-    profile, _ = Profile.objects.get_or_create(user=user)
+    profile, created = Profile.objects.get_or_create(user=user)
     profile.dob = dob
     profile.gender = gender
     profile.join_type = join_type
     profile.save()
+
+    if created:
+        notify(
+            profile=profile,
+            title="Witamy w loop",
+            subtitle="",
+            description="Proszę uzupełnij swoje dane osobowe.",
+            path="/account/personal",
+            icon="mdi:user-details",
+        )
 
     user_type = profile.user_type
     if user_type[0] == "A":

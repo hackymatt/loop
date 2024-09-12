@@ -27,6 +27,7 @@ from .helpers import (
     get_review,
     is_review_found,
     mock_send_message,
+    notifications_number,
 )
 from django.contrib import auth
 import json
@@ -253,6 +254,7 @@ class ReviewTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(reviews_number(), 5)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_review_authenticated_not_purchased(self):
         # login
@@ -268,6 +270,7 @@ class ReviewTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(reviews_number(), 5)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_review_authenticated_already_created(self):
         # login
@@ -283,6 +286,7 @@ class ReviewTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(reviews_number(), 5)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_review_authenticated_incorrect_rating(self):
         # login
@@ -298,6 +302,7 @@ class ReviewTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(reviews_number(), 5)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_review_authenticated(self):
         # login
@@ -313,6 +318,7 @@ class ReviewTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(reviews_number(), 6)
+        self.assertEqual(notifications_number(), 1)
 
     def test_update_review_unauthenticated(self):
         # no login
@@ -980,3 +986,4 @@ class ReviewConfirmationTest(TestCase):
         self.assertEqual(reviews_number(), 1)
         remind_review()
         self.assertEqual(_send_message_mock.call_count, 1)
+        self.assertEqual(notifications_number(), 1)

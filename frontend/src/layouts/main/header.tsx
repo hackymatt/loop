@@ -1,4 +1,8 @@
+/* eslint-disable import/no-duplicates */
+import { pl } from "date-fns/locale";
+import { formatDistance } from "date-fns";
 import { useMemo, useEffect } from "react";
+import { formatInTimeZone } from "date-fns-tz";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -8,12 +12,18 @@ import Container from "@mui/material/Container";
 import { useTheme } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
 import {
+  List,
+  Link,
   Badge,
+  Avatar,
   Divider,
   Popover,
+  ListItem,
+  Typography,
   ListItemIcon,
   ListItemText,
   ListItemButton,
+  ListItemAvatar,
   buttonBaseClasses,
 } from "@mui/material";
 
@@ -21,21 +31,27 @@ import { paths } from "src/routes/paths";
 import { usePathname } from "src/routes/hooks";
 import { RouterLink } from "src/routes/components";
 
-import { usePopover } from "src/hooks/use-popover";
 import { useOffSetTop } from "src/hooks/use-off-set-top";
 import { useResponsive } from "src/hooks/use-responsive";
+import { usePopover, UsePopoverReturn } from "src/hooks/use-popover";
+
+import { getTimezone } from "src/utils/get-timezone";
 
 import { bgBlur } from "src/theme/css";
 import { useCartsRecordsCount } from "src/api/carts/carts";
 import { useWishlistsRecordsCount } from "src/api/wishlists/wishlists";
+import { useNotifications } from "src/api/notifications/notifications";
+import { useEditNotification } from "src/api/notifications/notification";
 import { adminNavigations, studentNavigations, teacherNavigations } from "src/consts/navigations";
 
 import Logo from "src/components/logo";
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
+import TextMaxLine from "src/components/text-max-line";
 
 import { UserType } from "src/types/user";
+import { INotificationProp, NotificationStatus } from "src/types/notification";
 
 import NavMobile from "./nav/mobile";
 import NavDesktop from "./nav/desktop";
@@ -53,8 +69,7 @@ type Props = {
 export default function Header({ headerOnDark }: Props) {
   const theme = useTheme();
 
-  const { enqueueSnackbar } = useToastContext();
-
+  const openNotifications = usePopover();
   const openMenu = usePopover();
 
   const offset = useOffSetTop();
@@ -63,36 +78,27 @@ export default function Header({ headerOnDark }: Props) {
 
   const mdUp = useResponsive("up", "md");
 
-  const { logoutUser, isLoggedIn, userType } = useUserContext();
-
-  const navigations = useMemo(
-    () =>
-      ({
-        [UserType.Admin]: adminNavigations,
-        [UserType.Wykładowca]: teacherNavigations,
-        [UserType.Student]: studentNavigations,
-      })[userType],
-    [userType],
-  );
+  const { isLoggedIn, userType } = useUserContext();
 
   const { data: wishlistRecords } = useWishlistsRecordsCount({ page_size: -1 }, isLoggedIn);
   const { data: cartRecords } = useCartsRecordsCount({ page_size: -1 }, isLoggedIn);
+
+  const { data: newNotifications } = useNotifications(
+    { status: NotificationStatus.NEW.slice(0, 1), page_size: -1 },
+    isLoggedIn,
+    60000,
+  );
+
+  const { data: notifications, refetch: refreshNotifications } = useNotifications(
+    { sort_by: "-created_at", page_size: -1 },
+    isLoggedIn,
+  );
 
   const wishlistItems = useMemo(
     () => (isLoggedIn ? wishlistRecords : 0),
     [isLoggedIn, wishlistRecords],
   );
   const cartItems = useMemo(() => (isLoggedIn ? cartRecords : 0), [isLoggedIn, cartRecords]);
-
-  const handleLogout = async () => {
-    try {
-      await logoutUser({});
-      enqueueSnackbar("Wylogowano pomyślnie", { variant: "success" });
-    } catch (error) {
-      enqueueSnackbar("Wystąpił błąd", { variant: "error" });
-    }
-    openMenu.onClose();
-  };
 
   useEffect(() => {
     if (openMenu.open) {
@@ -133,8 +139,34 @@ export default function Header({ headerOnDark }: Props) {
         </>
       )}
 
-      <Stack spacing={3} direction="row" alignItems="center" justifyContent="flex-end">
-        <Badge badgeContent={wishlistItems} color="primary">
+      <Stack spacing={3} direction="row" alignItems="center" flexGrow={1} justifyContent="flex-end">
+        {isLoggedIn ? (
+          <Badge badgeContent={newNotifications?.length ?? 0} max={99} color="primary">
+            <IconButton
+              size="small"
+              color="inherit"
+              sx={{ p: 0 }}
+              onClick={(event) => {
+                refreshNotifications();
+                openNotifications.onOpen(event);
+              }}
+            >
+              <Iconify icon="carbon:notification" width={24} />
+            </IconButton>
+          </Badge>
+        ) : (
+          <IconButton
+            component={RouterLink}
+            href={paths.login}
+            size="small"
+            color="inherit"
+            sx={{ p: 0 }}
+          >
+            <Iconify icon="carbon:notification" width={24} />
+          </IconButton>
+        )}
+
+        <Badge badgeContent={wishlistItems} max={99} color="primary">
           <IconButton
             component={RouterLink}
             href={isLoggedIn ? paths.wishlist : paths.login}
@@ -147,7 +179,7 @@ export default function Header({ headerOnDark }: Props) {
           </IconButton>
         </Badge>
 
-        <Badge badgeContent={cartItems} color="primary">
+        <Badge badgeContent={cartItems} max={99} color="primary">
           <IconButton
             component={RouterLink}
             href={isLoggedIn ? paths.cart : paths.login}
@@ -177,62 +209,12 @@ export default function Header({ headerOnDark }: Props) {
         )}
       </Stack>
 
-      <Popover
-        open={openMenu.open}
-        anchorEl={openMenu.anchorEl}
-        onClose={openMenu.onClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
-        slotProps={{
-          paper: {
-            sx: {
-              width: 220,
-              [`& .${buttonBaseClasses.root}`]: {
-                px: 1.5,
-                py: 0.75,
-                height: "auto",
-              },
-            },
-          },
-        }}
-      >
-        <Box component="nav">
-          <Stack sx={{ my: 1, px: 2 }}>
-            {navigations?.map((navigation) => (
-              <NavItem
-                key={navigation.title}
-                title={navigation.title}
-                path={navigation.path}
-                icon={navigation.icon}
-                children={navigation.children}
-              />
-            ))}
-          </Stack>
-        </Box>
+      <NotificationsPopover
+        openNotifications={openNotifications}
+        notifications={notifications ?? []}
+      />
 
-        <Divider sx={{ my: 0.5, borderStyle: "dashed" }} />
-
-        <Stack sx={{ my: 1, px: 2 }}>
-          <ListItemButton
-            sx={{
-              px: 1,
-              height: 44,
-              borderRadius: 1,
-            }}
-            onClick={handleLogout}
-          >
-            <ListItemIcon>
-              <Iconify icon="carbon:logout" />
-            </ListItemIcon>
-            <ListItemText
-              primary="Wyloguj"
-              primaryTypographyProps={{
-                typography: "body2",
-              }}
-            />
-          </ListItemButton>
-        </Stack>
-      </Popover>
+      <AccountPopover openMenu={openMenu} />
     </Stack>
   );
 
@@ -275,5 +257,242 @@ export default function Header({ headerOnDark }: Props) {
 
       {offset && <HeaderShadow />}
     </AppBar>
+  );
+}
+
+function NotificationItem({
+  notification,
+  onClick,
+}: {
+  notification: INotificationProp;
+  onClick?: (notification: INotificationProp) => void;
+}) {
+  const { enqueueSnackbar } = useToastContext();
+
+  const { mutateAsync: editNotification } = useEditNotification(notification.id);
+
+  const handleEditNotification = async () => {
+    try {
+      await editNotification({ ...notification, status: NotificationStatus.READ });
+    } catch {
+      enqueueSnackbar("Wystąpił błąd", { variant: "error" });
+    }
+  };
+
+  return (
+    <ListItem disablePadding>
+      <ListItemButton
+        sx={{
+          px: 1,
+          height: 44,
+          borderRadius: 1,
+          pl: 2,
+        }}
+        onClick={async () => {
+          if (notification.status === NotificationStatus.NEW) {
+            await handleEditNotification();
+          }
+          if (onClick) {
+            onClick(notification);
+          }
+        }}
+      >
+        <ListItemAvatar>
+          <Avatar
+            color={notification.status === "NEW" ? "primary" : "inherit"}
+            sx={{ width: 28, height: 28 }}
+          >
+            <Iconify icon={notification.icon} />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          primary={notification.title}
+          secondary={
+            <>
+              <Typography
+                component="span"
+                variant="body2"
+                sx={{ color: "text.primary", display: "inline" }}
+              >
+                {notification.subtitle}
+              </Typography>
+              <TextMaxLine variant="body2" line={3}>
+                {notification.description}
+              </TextMaxLine>
+              <Typography component="span" variant="caption" sx={{ display: "inline" }}>
+                {formatDistance(
+                  new Date(
+                    formatInTimeZone(notification.createdAt, getTimezone(), "yyyy-MM-dd HH:mm:ss"),
+                  ),
+                  new Date(),
+                  {
+                    addSuffix: true,
+                    locale: pl,
+                  },
+                )}
+              </Typography>
+            </>
+          }
+        />
+      </ListItemButton>
+    </ListItem>
+  );
+}
+
+function NotificationsPopover({
+  openNotifications,
+  notifications,
+}: {
+  openNotifications: UsePopoverReturn;
+  notifications: INotificationProp[];
+}) {
+  const { enqueueSnackbar } = useToastContext();
+
+  function handleCopy(text: string) {
+    navigator.clipboard.writeText(text);
+    enqueueSnackbar("Skopiowano do schowka", { variant: "success" });
+  }
+
+  return (
+    <Popover
+      open={openNotifications.open}
+      anchorEl={openNotifications.anchorEl}
+      onClose={openNotifications.onClose}
+      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      transformOrigin={{ vertical: "top", horizontal: "left" }}
+      slotProps={{
+        paper: {
+          sx: {
+            width: 360,
+            mt: 1,
+            maxHeight: "calc(100% / 4 * 3)",
+            [`& .${buttonBaseClasses.root}`]: {
+              px: 1.5,
+              py: 0.75,
+              height: "auto",
+            },
+          },
+        },
+      }}
+    >
+      <Box component="nav">
+        <List sx={{ width: "100%", maxWidth: 360 }}>
+          {notifications.length > 0 ? (
+            notifications.map((notification: INotificationProp) =>
+              notification.path ? (
+                <Link
+                  component={RouterLink}
+                  href={notification.path}
+                  underline="none"
+                  color={notification.status === NotificationStatus.NEW ? "primary" : "inherit"}
+                >
+                  <NotificationItem notification={notification} />
+                </Link>
+              ) : (
+                <Link
+                  underline="none"
+                  color={notification.status === NotificationStatus.NEW ? "primary" : "inherit"}
+                >
+                  <NotificationItem
+                    notification={notification}
+                    onClick={(n: INotificationProp) => handleCopy(n.subtitle ?? "")}
+                  />
+                </Link>
+              ),
+            )
+          ) : (
+            <ListItem>
+              <ListItemText primary="Brak powiadomień" />
+            </ListItem>
+          )}
+        </List>
+      </Box>
+    </Popover>
+  );
+}
+
+function AccountPopover({ openMenu }: { openMenu: UsePopoverReturn }) {
+  const { enqueueSnackbar } = useToastContext();
+
+  const { logoutUser, userType } = useUserContext();
+
+  const navigations = useMemo(
+    () =>
+      ({
+        [UserType.Admin]: adminNavigations,
+        [UserType.Wykładowca]: teacherNavigations,
+        [UserType.Student]: studentNavigations,
+      })[userType],
+    [userType],
+  );
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser({});
+      enqueueSnackbar("Wylogowano pomyślnie", { variant: "success" });
+    } catch (error) {
+      enqueueSnackbar("Wystąpił błąd", { variant: "error" });
+    }
+    openMenu.onClose();
+  };
+
+  return (
+    <Popover
+      open={openMenu.open}
+      anchorEl={openMenu.anchorEl}
+      onClose={openMenu.onClose}
+      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      slotProps={{
+        paper: {
+          sx: {
+            width: 220,
+            mt: 1,
+            [`& .${buttonBaseClasses.root}`]: {
+              px: 1.5,
+              py: 0.75,
+              height: "auto",
+            },
+          },
+        },
+      }}
+    >
+      <Box component="nav">
+        <List sx={{ width: "100%", maxWidth: 360 }}>
+          {navigations?.map((navigation) => (
+            <NavItem
+              key={navigation.title}
+              title={navigation.title}
+              path={navigation.path}
+              icon={navigation.icon}
+              children={navigation.children}
+            />
+          ))}
+        </List>
+      </Box>
+
+      <Divider sx={{ my: 0.5, borderStyle: "dashed" }} />
+
+      <List sx={{ width: "100%", maxWidth: 360 }}>
+        <ListItemButton
+          sx={{
+            px: 1,
+            height: 44,
+            borderRadius: 1,
+          }}
+          onClick={handleLogout}
+        >
+          <ListItemIcon>
+            <Iconify icon="carbon:logout" />
+          </ListItemIcon>
+          <ListItemText
+            primary="Wyloguj"
+            primaryTypographyProps={{
+              typography: "body2",
+            }}
+          />
+        </ListItemButton>
+      </List>
+    </Popover>
   );
 }

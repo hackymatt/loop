@@ -87,7 +87,7 @@ class NewsletterEntriesTest(APITestCase):
         self.assertEqual(count, 20)
 
     def test_get_newsletter_entry_unauthenticated(self):
-        # login
+        # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(f"{self.endpoint}/{self.active_newsletters[0].id}")
