@@ -16,10 +16,10 @@ class Notification(BaseModel):
     )
     profile = ForeignKey(Profile, on_delete=CASCADE)
     title = CharField()
-    subtitle = CharField()
+    subtitle = CharField(null=True, blank=True)
     description = TextField()
     status = CharField(choices=STATUS_CHOICES, null=False, default="N")
-    path = CharField()
+    path = CharField(null=True, blank=True)
     icon = CharField()
 
     class Meta:

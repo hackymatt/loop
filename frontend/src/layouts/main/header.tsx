@@ -2,6 +2,7 @@
 import { pl } from "date-fns/locale";
 import { formatDistance } from "date-fns";
 import { useMemo, useEffect } from "react";
+import { formatInTimeZone } from "date-fns-tz";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -34,10 +35,13 @@ import { useOffSetTop } from "src/hooks/use-off-set-top";
 import { useResponsive } from "src/hooks/use-responsive";
 import { usePopover, UsePopoverReturn } from "src/hooks/use-popover";
 
+import { getTimezone } from "src/utils/get-timezone";
+
 import { bgBlur } from "src/theme/css";
 import { useCartsRecordsCount } from "src/api/carts/carts";
 import { useWishlistsRecordsCount } from "src/api/wishlists/wishlists";
 import { useNotifications } from "src/api/notifications/notifications";
+import { useEditNotification } from "src/api/notifications/notification";
 import { adminNavigations, studentNavigations, teacherNavigations } from "src/consts/navigations";
 
 import Logo from "src/components/logo";
@@ -47,7 +51,7 @@ import { useToastContext } from "src/components/toast";
 import TextMaxLine from "src/components/text-max-line";
 
 import { UserType } from "src/types/user";
-import { INotificationProp } from "src/types/notification";
+import { INotificationProp, NotificationStatus } from "src/types/notification";
 
 import NavMobile from "./nav/mobile";
 import NavDesktop from "./nav/desktop";
@@ -78,7 +82,14 @@ export default function Header({ headerOnDark }: Props) {
 
   const { data: wishlistRecords } = useWishlistsRecordsCount({ page_size: -1 }, isLoggedIn);
   const { data: cartRecords } = useCartsRecordsCount({ page_size: -1 }, isLoggedIn);
-  const { data: notifications } = useNotifications(
+
+  const { data: newNotifications } = useNotifications(
+    { status: NotificationStatus.NEW.slice(0, 1), page_size: -1 },
+    isLoggedIn,
+    60000,
+  );
+
+  const { data: notifications, refetch: refreshNotifications } = useNotifications(
     { sort_by: "-created_at", page_size: -1 },
     isLoggedIn,
   );
@@ -130,12 +141,15 @@ export default function Header({ headerOnDark }: Props) {
 
       <Stack spacing={3} direction="row" alignItems="center" flexGrow={1} justifyContent="flex-end">
         {isLoggedIn ? (
-          <Badge badgeContent={notifications?.length ?? 0} max={99} color="primary">
+          <Badge badgeContent={newNotifications?.length ?? 0} max={99} color="primary">
             <IconButton
               size="small"
               color="inherit"
               sx={{ p: 0 }}
-              onClick={openNotifications.onOpen}
+              onClick={(event) => {
+                refreshNotifications();
+                openNotifications.onOpen(event);
+              }}
             >
               <Iconify icon="carbon:notification" width={24} />
             </IconButton>
@@ -251,8 +265,20 @@ function NotificationItem({
   onClick,
 }: {
   notification: INotificationProp;
-  onClick?: (text: string) => void;
+  onClick?: (notification: INotificationProp) => void;
 }) {
+  const { enqueueSnackbar } = useToastContext();
+
+  const { mutateAsync: editNotification } = useEditNotification(notification.id);
+
+  const handleEditNotification = async () => {
+    try {
+      await editNotification({ ...notification, status: NotificationStatus.READ });
+    } catch {
+      enqueueSnackbar("Wystąpił błąd", { variant: "error" });
+    }
+  };
+
   return (
     <ListItem disablePadding>
       <ListItemButton
@@ -262,7 +288,14 @@ function NotificationItem({
           borderRadius: 1,
           pl: 2,
         }}
-        onClick={() => onClick && onClick(notification?.subtitle ?? "")}
+        onClick={async () => {
+          if (notification.status === NotificationStatus.NEW) {
+            await handleEditNotification();
+          }
+          if (onClick) {
+            onClick(notification);
+          }
+        }}
       >
         <ListItemAvatar>
           <Avatar
@@ -287,10 +320,16 @@ function NotificationItem({
                 {notification.description}
               </TextMaxLine>
               <Typography component="span" variant="caption" sx={{ display: "inline" }}>
-                {formatDistance(new Date(notification.createdAt), new Date(), {
-                  addSuffix: true,
-                  locale: pl,
-                })}
+                {formatDistance(
+                  new Date(
+                    formatInTimeZone(notification.createdAt, getTimezone(), "yyyy-MM-dd HH:mm:ss"),
+                  ),
+                  new Date(),
+                  {
+                    addSuffix: true,
+                    locale: pl,
+                  },
+                )}
               </Typography>
             </>
           }
@@ -341,14 +380,22 @@ function NotificationsPopover({
           {notifications.length > 0 ? (
             notifications.map((notification: INotificationProp) =>
               notification.path ? (
-                <Link component={RouterLink} href={notification.path} underline="none">
+                <Link
+                  component={RouterLink}
+                  href={notification.path}
+                  underline="none"
+                  color={notification.status === NotificationStatus.NEW ? "primary" : "inherit"}
+                >
                   <NotificationItem notification={notification} />
                 </Link>
               ) : (
-                <Link underline="none">
+                <Link
+                  underline="none"
+                  color={notification.status === NotificationStatus.NEW ? "primary" : "inherit"}
+                >
                   <NotificationItem
                     notification={notification}
-                    onClick={(text: string) => handleCopy(text)}
+                    onClick={(n: INotificationProp) => handleCopy(n.subtitle ?? "")}
                   />
                 </Link>
               ),

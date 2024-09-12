@@ -25,6 +25,7 @@ from .factory import (
     create_meeting,
     create_module,
     create_certificate,
+    create_notification,
 )
 from .helpers import login
 from django.contrib import auth
@@ -4819,6 +4820,93 @@ class CertificateFilterTest(APITestCase):
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 2)
+        values = list(set([variable in record[column] for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+
+class NotificationFilterTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/notifications"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
+
+        self.lecturer_data = {
+            "email": "lecturer_1@example.com",
+            "password": "TestPassword123",
+        }
+        self.lecturer_user = create_user(
+            first_name="l1_first_name",
+            last_name="l1_last_name",
+            email=self.lecturer_data["email"],
+            password=self.lecturer_data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
+
+        self.student_notifications = [
+            create_notification(
+                profile=self.profile.profile,
+                title=f"title",
+                subtitle=f"subtitle",
+                description=f"description",
+                status="READ",
+                path=f"path",
+                icon=f"icon",
+            )
+        ]
+        for i in range(50):
+            self.student_notifications.append(
+                create_notification(
+                    profile=self.profile.profile,
+                    title=f"title_{i}",
+                    subtitle=f"subtitle{i}",
+                    description=f"description{i}",
+                    status="NEW",
+                    path=f"path{i}",
+                    icon=f"icon{i}",
+                )
+            )
+
+        self.lecturer_notifications = []
+        for i in range(100):
+            self.lecturer_notifications.append(
+                create_notification(
+                    profile=self.lecturer_profile.profile,
+                    title=f"title_{i}",
+                    subtitle=f"subtitle{i}",
+                    description=f"description{i}",
+                    status="NEW",
+                    path=f"path{i}",
+                    icon=f"icon{i}",
+                )
+            )
+
+    def test_status_filter(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "status"
+        variable = self.student_notifications[0].status
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
         values = list(set([variable in record[column] for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])

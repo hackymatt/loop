@@ -77,7 +77,7 @@ class NotificationTest(APITestCase):
                 "title": self.student_notifications[0].title,
                 "subtitle": self.student_notifications[0].subtitle,
                 "description": self.student_notifications[0].description,
-                "status": "R",
+                "status": "READ",
                 "path": self.student_notifications[0].path,
                 "icon": self.student_notifications[0].icon,
             }

@@ -78,6 +78,14 @@ class UserSerializer(ModelSerializer):
                 AdminProfile.objects.get_or_create(profile=instance)
             elif user_type[0] == "W":
                 LecturerProfile.objects.get_or_create(profile=instance)
+                notify(
+                    profile=instance,
+                    title="Gratulacje! Jesteś nauczycielem",
+                    subtitle="",
+                    description="Zostałeś nauczycielem, w celu prowadzenia szkoleń uzupełnij swój profil instruktora.",
+                    path="/account/teacher/profile",
+                    icon="mdi:teach",
+                )
             else:
                 StudentProfile.objects.get_or_create(profile=instance)
 
@@ -109,7 +117,7 @@ class UserSerializer(ModelSerializer):
                     profile=instance,
                     title="Stawka została zmieniona",
                     subtitle="",
-                    description=f"Twoje wynagrodzenie uległo zmianie. Stawka godzinowa: {rate}, prowizja: {commission}",
+                    description=f"Twoje wynagrodzenie uległo zmianie. Stawka godzinowa: {rate} zł, prowizja: {commission}.",
                     path="/account/teacher/finance",
                     icon="mdi:finance",
                 )
@@ -136,15 +144,5 @@ class UserSerializer(ModelSerializer):
 
         Profile.objects.filter(pk=instance.pk).update(**validated_data)
         instance = Profile.objects.get(pk=instance.pk)
-
-        if user_type[0] == "W":
-            notify(
-                profile=instance,
-                title="Gratulacje! Jesteś nauczycielem",
-                subtitle="",
-                description="Zostałeś nauczycielem, w celu prowadzenia szkoleń uzupełnij swój profil instruktora.",
-                path="/account/teacher/profile",
-                icon="mdi:teach",
-            )
 
         return instance
