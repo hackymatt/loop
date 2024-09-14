@@ -57,11 +57,15 @@ export type ICourseModuleProp = {
   progress?: number;
 };
 
+export type IScheduleStudentProp = { id: string; name: string; gender: IGender; image: string };
+
 export type IScheduleProp = {
   id: string;
   startTime: string;
   endTime: string;
   lesson: Pick<ICourseLessonProp, "id" | "title">;
+  meetingUrl?: string;
+  students: IScheduleStudentProp[];
   studentsRequired: number;
 };
 

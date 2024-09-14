@@ -25,10 +25,10 @@ import urllib.parse
 
 
 def notify_students(course):
-    for profile in Profile.objects.filter(user_type="S").all():
+    for student in StudentProfile.objects.all():
         notify(
-            profile=profile,
-            title="Nowa lekcja w ofercie",
+            profile=student.profile,
+            title="Nowy kurs w ofercie",
             subtitle=course.title,
             description="Właśnie dodaliśmy nowy kurs. Sprawdź go już teraz.",
             path=f"/course/{course.id}",

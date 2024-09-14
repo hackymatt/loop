@@ -80,20 +80,30 @@ export default function Header({ headerOnDark }: Props) {
 
   const { isLoggedIn, userType } = useUserContext();
 
-  const { data: wishlistRecords } = useWishlistsRecordsCount({ page_size: -1 }, isLoggedIn);
-  const { data: cartRecords } = useCartsRecordsCount({ page_size: -1 }, isLoggedIn);
-
-  const { data: newNotifications } = useNotifications(
-    { status: NotificationStatus.NEW.slice(0, 1), page_size: -1 },
-    isLoggedIn,
-    60000,
+  const { data: wishlistRecords } = useWishlistsRecordsCount(
+    { page_size: -1 },
+    isLoggedIn && userType === UserType.Student,
+  );
+  const { data: cartRecords } = useCartsRecordsCount(
+    { page_size: -1 },
+    isLoggedIn && userType === UserType.Student,
   );
 
   const { data: notifications, refetch: refreshNotifications } = useNotifications(
     { sort_by: "-created_at", page_size: -1 },
-    isLoggedIn,
+    isLoggedIn && userType !== UserType.Admin,
+    60000,
   );
 
+  const notificationItems = useMemo(
+    () =>
+      isLoggedIn
+        ? notifications?.filter(
+            (notification: INotificationProp) => notification.status === NotificationStatus.NEW,
+          )?.length ?? 0
+        : 0,
+    [isLoggedIn, notifications],
+  );
   const wishlistItems = useMemo(
     () => (isLoggedIn ? wishlistRecords : 0),
     [isLoggedIn, wishlistRecords],
@@ -141,7 +151,7 @@ export default function Header({ headerOnDark }: Props) {
 
       <Stack spacing={3} direction="row" alignItems="center" flexGrow={1} justifyContent="flex-end">
         {isLoggedIn ? (
-          <Badge badgeContent={newNotifications?.length ?? 0} max={99} color="primary">
+          <Badge badgeContent={notificationItems} max={99} color="primary">
             <IconButton
               size="small"
               color="inherit"
@@ -150,6 +160,7 @@ export default function Header({ headerOnDark }: Props) {
                 refreshNotifications();
                 openNotifications.onOpen(event);
               }}
+              disabled={userType === UserType.Admin}
             >
               <Iconify icon="carbon:notification" width={24} />
             </IconButton>
@@ -381,6 +392,7 @@ function NotificationsPopover({
             notifications.map((notification: INotificationProp) =>
               notification.path ? (
                 <Link
+                  key={notification.id}
                   component={RouterLink}
                   href={notification.path}
                   underline="none"
@@ -390,6 +402,7 @@ function NotificationsPopover({
                 </Link>
               ) : (
                 <Link
+                  key={notification.id}
                   underline="none"
                   color={notification.status === NotificationStatus.NEW ? "primary" : "inherit"}
                 >
