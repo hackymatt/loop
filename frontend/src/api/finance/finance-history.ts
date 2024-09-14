@@ -14,7 +14,6 @@ const endpoint = "/finance-history" as const;
 type ILecturer = {
   id: string;
   full_name: string;
-  email: string;
   image: string | null;
   gender: IGender;
 };

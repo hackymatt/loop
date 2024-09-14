@@ -28,9 +28,7 @@ def confirm_reservations():
 
         if is_lesson_success:
             # create meeting
-            meeting_manager = MeetingManager(
-                lecturer_email=schedule.lecturer.profile.user.email
-            )
+            meeting_manager = MeetingManager()
             event = meeting_manager.create(
                 title=schedule.lesson.title,
                 description=schedule.lesson.description,

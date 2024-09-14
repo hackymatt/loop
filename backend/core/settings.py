@@ -271,7 +271,8 @@ else:
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "")
-EMAIL_FROM = os.getenv("EMAIL_FROM", "")
+NOREPLY_EMAIL = os.getenv("NOREPLY_EMAIL", "")
+MEETINGS_EMAIL = os.getenv("MEETINGS_EMAIL", "")
 GOOGLE_CREDENTIALS = json.loads(
     base64.urlsafe_b64decode(os.getenv("GOOGLE_CREDENTIALS", "e30=")).decode()
 )

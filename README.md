@@ -33,3 +33,11 @@ helm dep update
 helm upgrade --install -f values-dev.yaml loop . -n default
 
 cat civo-kubeconfig | base64
+
+Monitoring:
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+kubectl port-forward svc/prometheus-kube-prometheus-prometheus 9090 -n monitoring
+kubectl port-forward svc/prometheus-grafana 4000:80 -n monitoring

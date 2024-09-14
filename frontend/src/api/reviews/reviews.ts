@@ -16,14 +16,12 @@ const endpoint = "/reviews" as const;
 
 type IStudent = {
   first_name: string;
-  email: string;
   gender: IGender | null;
   image: string | null;
 };
 
 type ILecturer = {
   full_name: string;
-  email: string;
   gender: IGender | null;
   image: string | null;
 };

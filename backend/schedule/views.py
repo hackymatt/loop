@@ -92,9 +92,7 @@ class ManageScheduleViewSet(ModelViewSet):
                 )
 
             if meeting:
-                meeting_manager = MeetingManager(
-                    lecturer_email=schedule.lecturer.profile.user.email
-                )
+                meeting_manager = MeetingManager()
                 meeting_manager.delete(event_id=schedule.meeting.event_id)
 
         return deletion

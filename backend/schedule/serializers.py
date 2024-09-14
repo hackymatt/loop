@@ -1,8 +1,6 @@
 from rest_framework.serializers import (
     ModelSerializer,
     SerializerMethodField,
-    URLField,
-    EmailField,
     CharField,
     ImageField,
 )

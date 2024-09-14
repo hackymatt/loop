@@ -14,7 +14,6 @@ const endpoint = "/lesson-price-history" as const;
 type ILecturer = {
   full_name: string;
   id: string;
-  email: string;
   image: string | null;
   gender: IGender | null;
 };

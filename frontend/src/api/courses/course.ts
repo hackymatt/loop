@@ -15,7 +15,6 @@ type ILevel = "P" | "Ś" | "Z" | "E";
 type ILecturer = {
   full_name: string;
   id: string;
-  email: string;
   image: string | null;
   gender: IGender | null;
   lessons_count: number;
