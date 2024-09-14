@@ -392,6 +392,7 @@ function NotificationsPopover({
             notifications.map((notification: INotificationProp) =>
               notification.path ? (
                 <Link
+                  key={notification.id}
                   component={RouterLink}
                   href={notification.path}
                   underline="none"
@@ -401,6 +402,7 @@ function NotificationsPopover({
                 </Link>
               ) : (
                 <Link
+                  key={notification.id}
                   underline="none"
                   color={notification.status === NotificationStatus.NEW ? "primary" : "inherit"}
                 >

@@ -358,6 +358,21 @@ class ScheduleTest(TestCase):
         count = data["records_count"]
         self.assertEqual(count, 12)
 
+    def test_get_schedules_authenticated_2(self):
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        self.schedules[0].meeting = create_meeting(
+            event_id="test_event_id", url="https://example.com"
+        )
+        self.schedules[0].save()
+        response = self.client.get(self.endpoint)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 12)
+
     def test_get_schedule_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -440,7 +455,26 @@ class ScheduleTest(TestCase):
 
     @patch.object(GmailApi, "_send_message")
     @patch.object(CalendarApi, "delete")
-    def test_delete_schedule_authenticated_lesson(
+    def test_delete_schedule_authenticated_lesson_no_meeting(
+        self, delete_mock, _send_message_mock
+    ):
+        mock_delete_event(mock=delete_mock)
+        mock_send_message(mock=_send_message_mock)
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.delete(f"{self.endpoint}/{self.delete_schedule.id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(is_schedule_found(self.delete_schedule.id))
+        self.assertEqual(schedule_number(), 21)
+        self.assertEqual(_send_message_mock.call_count, 2)
+        self.assertEqual(delete_mock.call_count, 0)
+        self.assertEqual(notifications_number(), 2)
+
+    @patch.object(GmailApi, "_send_message")
+    @patch.object(CalendarApi, "delete")
+    def test_delete_schedule_authenticated_lesson_meeting(
         self, delete_mock, _send_message_mock
     ):
         mock_delete_event(mock=delete_mock)

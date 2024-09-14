@@ -11,7 +11,7 @@ from lesson.models import (
     LessonPriceHistory,
 )
 from technology.models import Technology
-from profile.models import LecturerProfile, Profile
+from profile.models import LecturerProfile
 from review.models import Review
 from purchase.models import Purchase
 from teaching.models import Teaching
@@ -24,9 +24,9 @@ import urllib.parse
 
 
 def notify_lecturer(lesson):
-    for profile in Profile.objects.filter(user_type="W").all():
+    for lecturer in LecturerProfile.objects.all():
         notify(
-            profile=profile,
+            profile=lecturer.profile,
             title="Nowa lekcja w ofercie",
             subtitle=lesson.title,
             description="Właśnie dodaliśmy nową lekcję. Zacznij ją prowadzić.",

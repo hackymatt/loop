@@ -168,7 +168,7 @@ export default function TeachersView() {
             >
               <List>
                 {SORT_OPTIONS.map((option) => (
-                  <ListItem disablePadding>
+                  <ListItem key={option.value} disablePadding>
                     <ListItemButton
                       key={option.value}
                       selected={(query.sort_by ?? "-rating") === option.value}

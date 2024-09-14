@@ -51,6 +51,7 @@ class ManageScheduleViewSet(ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         schedule = super().get_object()
         lesson = schedule.lesson
+        meeting = schedule.meeting
         profiles = [
             reservation.student.profile
             for reservation in Reservation.objects.filter(schedule=schedule).all()
@@ -90,10 +91,11 @@ class ManageScheduleViewSet(ModelViewSet):
                     icon="mdi:calendar-remove",
                 )
 
-            meeting_manager = MeetingManager(
-                lecturer_email=schedule.lecturer.profile.user.email
-            )
-            meeting_manager.delete(event_id=schedule.meeting.event_id)
+            if meeting:
+                meeting_manager = MeetingManager(
+                    lecturer_email=schedule.lecturer.profile.user.email
+                )
+                meeting_manager.delete(event_id=schedule.meeting.event_id)
 
         return deletion
 
