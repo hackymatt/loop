@@ -67,6 +67,10 @@ def get_lecturer_profile(profile: Profile):
     return LecturerProfile.objects.get(profile=profile)
 
 
+def get_lecturer(id: int):
+    return LecturerProfile.objects.get(pk=id)
+
+
 def get_student_profile(profile: Profile):
     return StudentProfile.objects.get(profile=profile)
 

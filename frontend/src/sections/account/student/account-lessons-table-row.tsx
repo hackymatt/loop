@@ -28,9 +28,10 @@ type Props = {
   row: IPurchaseItemProp;
   onAdd: (purchase: IPurchaseItemProp) => void;
   onDelete: (purchase: IPurchaseItemProp) => void;
+  onSendMessage: (purchase: IPurchaseItemProp) => void;
 };
 
-export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) {
+export default function AccountLessonsTableRow({ row, onAdd, onDelete, onSendMessage }: Props) {
   const openOptions = usePopover();
 
   const handleAdd = useCallback(() => {
@@ -42,6 +43,11 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
     openOptions.onClose();
     onDelete(row);
   }, [openOptions, onDelete, row]);
+
+  const handleSendMessage = useCallback(() => {
+    openOptions.onClose();
+    onSendMessage(row);
+  }, [openOptions, onSendMessage, row]);
 
   const inputStyles = {
     pl: 1,
@@ -142,6 +148,13 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
           <MenuItem onClick={handleAdd} sx={{ mr: 1, color: "success.main" }}>
             <Iconify icon="carbon:add" sx={{ mr: 0.5 }} />
             <Typography variant="body2">Dodaj rezerwację</Typography>
+          </MenuItem>
+        )}
+
+        {!isNew && (
+          <MenuItem onClick={handleSendMessage} sx={{ color: "success.main" }}>
+            <Iconify icon="carbon:email" sx={{ mr: 0.5 }} />
+            <Typography variant="body2">Napisz do instruktora</Typography>
           </MenuItem>
         )}
 
