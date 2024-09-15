@@ -4,7 +4,7 @@ import Iconify from "src/components/iconify";
 
 import { ReviewStatus } from "src/types/purchase";
 
-const userNavigations = [
+const userNavigation = [
   {
     title: "Dane osobowe",
     path: paths.account.personal,
@@ -17,10 +17,16 @@ const userNavigations = [
     icon: <Iconify icon="carbon:password" />,
     children: [],
   },
+  {
+    title: "Wiadomości",
+    path: `${paths.account.messages}/?sort_by=-created_at&page_size=10`,
+    icon: <Iconify icon="carbon:email" />,
+    children: [],
+  },
 ];
 
-export const studentNavigations = [
-  ...userNavigations,
+export const studentNavigation = [
+  ...userNavigation,
   ...[
     {
       title: "Lekcje",
@@ -43,8 +49,8 @@ export const studentNavigations = [
   ],
 ];
 
-export const teacherNavigations = [
-  ...userNavigations,
+export const teacherNavigation = [
+  ...userNavigation,
   ...[
     {
       title: "Profil instruktora",
@@ -85,8 +91,8 @@ export const teacherNavigations = [
   ],
 ];
 
-export const adminNavigations = [
-  ...userNavigations,
+export const adminNavigation = [
+  ...userNavigation,
   ...[
     {
       title: "Kursy",

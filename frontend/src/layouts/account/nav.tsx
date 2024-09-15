@@ -20,7 +20,7 @@ import { RouterLink } from "src/routes/components";
 import { useResponsive } from "src/hooks/use-responsive";
 
 import { useUserDetails } from "src/api/auth/details";
-import { adminNavigations, studentNavigations, teacherNavigations } from "src/consts/navigations";
+import { adminNavigation, studentNavigation, teacherNavigation } from "src/consts/navigations";
 
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
@@ -52,9 +52,9 @@ export default function Nav({ open, onClose }: Props) {
   const navigations = useMemo(
     () =>
       ({
-        [UserType.Admin]: adminNavigations,
-        [UserType.Wykładowca]: teacherNavigations,
-        [UserType.Student]: studentNavigations,
+        [UserType.Admin]: adminNavigation,
+        [UserType.Wykładowca]: teacherNavigation,
+        [UserType.Student]: studentNavigation,
       })[userType],
     [userType],
   );

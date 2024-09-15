@@ -11,10 +11,13 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
+import { useCreateMessage } from "src/api/message/messages";
+
 import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
 
 import { ITeamMemberProps } from "src/types/team";
+import { MessageStatus } from "src/types/message";
 
 import { schema, defaultValues } from "./message";
 import { useMessageFields } from "./message-fields";
@@ -31,6 +34,8 @@ interface Props extends DialogProps {
 export default function MessageForm({ teacher, onClose, ...other }: Props) {
   const { enqueueSnackbar } = useToastContext();
 
+  const { mutateAsync: createMessage } = useCreateMessage();
+
   const methods = useForm({
     resolver: yupResolver(schema),
     defaultValues,
@@ -46,7 +51,11 @@ export default function MessageForm({ teacher, onClose, ...other }: Props) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      // await createReview({ ...data, ...constValues });
+      await createMessage({
+        ...data,
+        recipient: teacher.id,
+        status: MessageStatus.NEW,
+      });
       reset();
       onClose();
       enqueueSnackbar("Wiadomość została wysłana", { variant: "success" });

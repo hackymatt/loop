@@ -7,6 +7,9 @@ from rest_framework.serializers import (
 )
 from message.models import Message
 from profile.models import Profile
+from notification.utils import notify
+from mailer.mailer import Mailer
+import urllib.parse
 
 
 class ProfileSerializer(ModelSerializer):
@@ -37,16 +40,10 @@ class MessageGetSerializer(ModelSerializer):
         model = Message
         fields = "__all__"
 
-    def update(self, instance, validated_data):
-        status = validated_data.pop("get_status_display", instance.status)
-
-        Message.objects.filter(pk=instance.pk).update(**validated_data, status=status)
-        instance = Message.objects.get(pk=instance.pk)
-
-        return instance
-
 
 class MessageSerializer(ModelSerializer):
+    status = CharField(source="get_status_display")
+
     class Meta:
         model = Message
         exclude = ("sender",)
@@ -58,6 +55,30 @@ class MessageSerializer(ModelSerializer):
 
         obj, _ = Message.objects.get_or_create(
             sender=sender, status=status, **validated_data
+        )
+
+        notify(
+            profile=obj.recipient,
+            title="Otrzymano nową wiadomość",
+            subtitle=obj.subject,
+            description=obj.body,
+            path=f"/account/messages?sort_by=-created_at&page_size=10&search={urllib.parse.quote_plus(obj.subject)}",
+            icon="mdi:email",
+        )
+
+        mailer = Mailer()
+        data = {
+            **{
+                "full_name": f"{sender.user.first_name} {sender.user.last_name}",
+                "subject": obj.subject,
+                "message": obj.body,
+            }
+        }
+        mailer.send(
+            email_template="message.html",
+            to=[obj.recipient.user.email],
+            subject="Nowa wiadomość",
+            data=data,
         )
 
         return obj

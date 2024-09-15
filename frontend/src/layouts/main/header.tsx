@@ -42,7 +42,7 @@ import { useCartsRecordsCount } from "src/api/carts/carts";
 import { useWishlistsRecordsCount } from "src/api/wishlists/wishlists";
 import { useNotifications } from "src/api/notifications/notifications";
 import { useEditNotification } from "src/api/notifications/notification";
-import { adminNavigations, studentNavigations, teacherNavigations } from "src/consts/navigations";
+import { adminNavigation, studentNavigation, teacherNavigation } from "src/consts/navigations";
 
 import Logo from "src/components/logo";
 import Iconify from "src/components/iconify";
@@ -432,9 +432,9 @@ function AccountPopover({ openMenu }: { openMenu: UsePopoverReturn }) {
   const navigations = useMemo(
     () =>
       ({
-        [UserType.Admin]: adminNavigations,
-        [UserType.Wykładowca]: teacherNavigations,
-        [UserType.Student]: studentNavigations,
+        [UserType.Admin]: adminNavigation,
+        [UserType.Wykładowca]: teacherNavigation,
+        [UserType.Student]: studentNavigation,
       })[userType],
     [userType],
   );
