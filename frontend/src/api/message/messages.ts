@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
-import { IGender } from "src/types/testimonial";
+import { UserType } from "src/types/user";
 import { IMessageProp } from "src/types/message";
 import { IQueryParams } from "src/types/query-params";
 
@@ -16,8 +16,7 @@ const endpoint = "/messages" as const;
 type IProfile = {
   id: string;
   full_name: string;
-  gender: IGender;
-  image: string | null;
+  user_type: UserType;
 };
 
 type IMessage = {
@@ -33,8 +32,8 @@ type IMessage = {
 
 type ICreateMessage = Omit<
   IMessage,
-  "id" | "sender" | "recipient" | "modified_at" | "created_at"
-> & { recipient: string };
+  "id" | "sender" | "recipient" | "user_type" | "modified_at" | "created_at"
+> & { recipient_id?: string; recipient_uuid?: string; recipient_type?: UserType };
 
 type ICreateMessageReturn = ICreateMessage;
 
@@ -47,29 +46,22 @@ export const messagesQuery = (query?: IQueryParams) => {
     const { results, records_count, pages_count } = data;
     const modifiedResults = results.map(
       ({ id, sender, recipient, subject, body, status, modified_at, created_at }: IMessage) => {
-        const {
-          id: senderId,
-          full_name: senderName,
-          gender: senderGender,
-          image: senderImage,
-        } = sender;
-        const {
-          id: recipientId,
-          full_name: recipientName,
-          gender: recipientGender,
-          image: recipientImage,
-        } = recipient;
+        const { id: senderId, full_name: senderName, user_type: senderType } = sender;
+        const { id: recipientId, full_name: recipientName, user_type: recipientType } = recipient;
         return {
           id,
           subject,
           body,
           status,
-          sender: { id: senderId, name: senderName, gender: senderGender, image: senderImage },
+          sender: {
+            id: senderId,
+            name: senderName,
+            type: senderType,
+          },
           recipient: {
             id: recipientId,
             name: recipientName,
-            gender: recipientGender,
-            image: recipientImage,
+            type: recipientType,
           },
           modifiedAt: modified_at,
           createdAt: created_at,

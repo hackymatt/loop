@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -11,15 +12,13 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { fDateTime } from "src/utils/format-time";
-
 import { useCreateMessage } from "src/api/message/messages";
+import { useMessage, useEditMessage } from "src/api/message/message";
 
 import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
 
-import { MessageStatus } from "src/types/message";
-import { IPurchaseItemProp } from "src/types/purchase";
+import { IMessageProp, MessageStatus } from "src/types/message";
 
 import { schema, defaultValues } from "./message";
 import { useMessageFields } from "./message-fields";
@@ -27,22 +26,38 @@ import { useMessageFields } from "./message-fields";
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  purchase: IPurchaseItemProp;
+  message: IMessageProp;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function MessageForm({ purchase, onClose, ...other }: Props) {
+export default function MessageReplyForm({ message, onClose, ...other }: Props) {
   const { enqueueSnackbar } = useToastContext();
 
   const { mutateAsync: createMessage } = useCreateMessage();
+  const { data: messageData } = useMessage(message.id);
+  const { mutateAsync: editMessage } = useEditMessage(message.id);
+
+  useEffect(() => {
+    const handleEdit = async () => {
+      try {
+        await editMessage({
+          ...messageData,
+          status: MessageStatus.READ,
+        });
+      } catch {
+        enqueueSnackbar("Wystąpił błąd", { variant: "error" });
+      }
+    };
+    handleEdit();
+  }, [editMessage, enqueueSnackbar, messageData]);
 
   const methods = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       ...defaultValues,
-      subject: `Pytanie dotyczące lekcji ${purchase.lessonTitle} (${fDateTime(purchase.lessonSlot[0])})`,
+      subject: `Re: ${message.subject}`,
     },
   });
 
@@ -58,7 +73,7 @@ export default function MessageForm({ purchase, onClose, ...other }: Props) {
     try {
       await createMessage({
         ...data,
-        recipient: purchase.teacher.id,
+        recipient_uuid: message.sender.id,
         status: MessageStatus.NEW,
       });
       reset();
@@ -76,7 +91,7 @@ export default function MessageForm({ purchase, onClose, ...other }: Props) {
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <DialogTitle
           sx={{ typography: "h3", pb: 3 }}
-        >{`Nowa wiadomość do ${purchase.teacher.name}`}</DialogTitle>
+        >{`Nowa wiadomość do ${message.sender.name}`}</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
           <Stack spacing={1}>

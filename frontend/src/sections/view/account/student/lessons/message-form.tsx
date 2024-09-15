@@ -18,6 +18,7 @@ import { useCreateMessage } from "src/api/message/messages";
 import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
 
+import { UserType } from "src/types/user";
 import { MessageStatus } from "src/types/message";
 import { IPurchaseItemProp } from "src/types/purchase";
 
@@ -58,7 +59,8 @@ export default function MessageForm({ purchase, onClose, ...other }: Props) {
     try {
       await createMessage({
         ...data,
-        recipient: purchase.teacher.id,
+        recipient_id: purchase.teacher.id,
+        recipient_type: UserType.Wykładowca,
         status: MessageStatus.NEW,
       });
       reset();

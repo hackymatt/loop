@@ -1,15 +1,19 @@
-import { IGender } from "./testimonial";
+import { UserType } from "./user";
 
 export enum MessageStatus {
   NEW = "NEW",
   READ = "READ",
 }
 
+export enum MessageType {
+  INBOX = "INBOX",
+  SENT = "SENT",
+}
+
 export type IMessageUserProp = {
   id: string;
   name: string;
-  gender: IGender;
-  image: string;
+  type: UserType;
 };
 
 export type IMessageProp = {

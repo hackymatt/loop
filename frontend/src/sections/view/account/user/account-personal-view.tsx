@@ -1,7 +1,7 @@
 "use client";
 
 import * as Yup from "yup";
-import { useMemo, useEffect } from "react";
+import { useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 
@@ -59,8 +59,6 @@ export default function AccountPersonalView() {
     image: Yup.string().nullable(),
   };
 
-  const date18YearsAgo = useMemo(() => new Date().setFullYear(new Date().getFullYear() - 18), []);
-
   const AccountPersonalSchema = Yup.object().shape(userSchemaObject);
 
   const defaultValues = {
@@ -72,7 +70,7 @@ export default function AccountPersonalView() {
     zip_code: userDetails?.zip_code ?? "",
     city: userDetails?.city ?? "",
     country: userDetails?.country ?? "",
-    dob: userDetails?.dob ? new Date(userDetails?.dob) : date18YearsAgo,
+    dob: userDetails?.dob ? new Date(userDetails?.dob) : undefined,
     gender: userDetails?.gender ? userDetails.gender : "Mężczyzna",
   };
 
@@ -100,11 +98,11 @@ export default function AccountPersonalView() {
         zip_code: userDetails?.zip_code ?? "",
         city: userDetails?.city ?? "",
         country: userDetails?.country ?? "",
-        dob: userDetails?.dob ? new Date(userDetails?.dob) : date18YearsAgo,
+        dob: userDetails?.dob ? new Date(userDetails?.dob) : undefined,
         gender: userDetails?.gender !== null ? userDetails.gender : "Mężczyzna",
       });
     }
-  }, [date18YearsAgo, reset, userDetails]);
+  }, [reset, userDetails]);
 
   const onSubmit = handleSubmit(async (data) => {
     delete data.image;

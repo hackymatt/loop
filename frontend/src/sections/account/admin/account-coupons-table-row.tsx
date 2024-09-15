@@ -4,9 +4,9 @@ import Popover from "@mui/material/Popover";
 import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
+import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import { Divider, Typography } from "@mui/material";
-import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
 import { usePopover } from "src/hooks/use-popover";
 
@@ -45,31 +45,20 @@ export default function AccountCouponsTableRow({ row, onEdit, onDelete, onViewUs
     onViewUsage(row);
   }, [openOptions, onViewUsage, row]);
 
-  const inputStyles = {
-    pl: 1,
-    [`&.${inputBaseClasses.focused}`]: {
-      bgcolor: "action.selected",
-    },
-    width: 1,
-  };
-
   const isActive = useMemo(() => row.active, [row.active]);
 
   return (
     <>
       <TableRow hover>
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.code} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.code} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase
-            value={row.is_percentage ? fPercent(row.discount) : fCurrency(row.discount)}
-            sx={inputStyles}
-          />
+        <TableCell>
+          <InputBase value={row.is_percentage ? fPercent(row.discount) : fCurrency(row.discount)} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
+        <TableCell>
           <Label
             sx={{ textTransform: "uppercase" }}
             color={(isActive && "success") || (!isActive && "error") || "default"}
@@ -78,8 +67,8 @@ export default function AccountCouponsTableRow({ row, onEdit, onDelete, onViewUs
           </Label>
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={fDateTime(row.expiration_date)} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={fDateTime(row.expiration_date)} />
         </TableCell>
 
         <TableCell align="right" padding="none">

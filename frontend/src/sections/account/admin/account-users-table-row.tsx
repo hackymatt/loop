@@ -4,9 +4,9 @@ import Popover from "@mui/material/Popover";
 import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
+import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import { Divider, Typography } from "@mui/material";
-import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
 import { usePopover } from "src/hooks/use-popover";
 
@@ -38,17 +38,6 @@ export default function AccountUsersTableRow({ row, onEdit, onFinanceHistoryView
     onFinanceHistoryView(row);
   }, [openOptions, onFinanceHistoryView, row]);
 
-  const inputStyles = {
-    borderRadius: 0.75,
-    [`& .${inputBaseClasses.input}`]: {
-      pl: 1,
-      typography: "body2",
-    },
-    [`&.${inputBaseClasses.focused}`]: {
-      bgcolor: "action.selected",
-    },
-  };
-
   const isActive = useMemo(() => row.active, [row.active]);
 
   const isAdmin = useMemo(() => row.user_type === UserType.Admin, [row.user_type]);
@@ -67,23 +56,23 @@ export default function AccountUsersTableRow({ row, onEdit, onFinanceHistoryView
           <Iconify icon={isActive ? "carbon:checkmark-filled" : "carbon:close-filled"} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.first_name} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.first_name} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.last_name} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.last_name} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.email} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.email} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.gender} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.gender} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
+        <TableCell>
           <Label
             sx={{ textTransform: "uppercase" }}
             color={(isAdmin && "error") || (isTeacher && "warning") || "default"}
@@ -92,7 +81,7 @@ export default function AccountUsersTableRow({ row, onEdit, onFinanceHistoryView
           </Label>
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
+        <TableCell>
           <InputBase value={fDate(row.created_at)} />
         </TableCell>
 

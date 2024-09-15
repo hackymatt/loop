@@ -16,6 +16,7 @@ import { useCreateMessage } from "src/api/message/messages";
 import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
 
+import { UserType } from "src/types/user";
 import { ITeamMemberProps } from "src/types/team";
 import { MessageStatus } from "src/types/message";
 
@@ -53,7 +54,8 @@ export default function MessageForm({ teacher, onClose, ...other }: Props) {
     try {
       await createMessage({
         ...data,
-        recipient: teacher.id,
+        recipient_id: teacher.id,
+        recipient_type: UserType.Wykładowca,
         status: MessageStatus.NEW,
       });
       reset();

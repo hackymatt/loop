@@ -4,9 +4,9 @@ import Popover from "@mui/material/Popover";
 import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
+import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import { Stack, Avatar, Divider, Typography } from "@mui/material";
-import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
 import { usePopover } from "src/hooks/use-popover";
 
@@ -44,13 +44,6 @@ export default function AccountReviewsTableRow({ row, onAdd, onEdit, onDelete }:
     onDelete(row);
   }, [openOptions, onDelete, row]);
 
-  const inputStyles = {
-    pl: 1,
-    [`&.${inputBaseClasses.focused}`]: {
-      bgcolor: "action.selected",
-    },
-  };
-
   const genderAvatarUrl =
     row?.teacher.gender === "Kobieta"
       ? "/assets/images/avatar/avatar_female.jpg"
@@ -68,11 +61,11 @@ export default function AccountReviewsTableRow({ row, onAdd, onEdit, onDelete }:
   return (
     <>
       <TableRow hover>
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.lessonTitle} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.lessonTitle} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
+        <TableCell>
           <Label
             sx={{ textTransform: "uppercase" }}
             color={(isCompleted && "success") || (isPending && "warning") || "default"}
@@ -81,7 +74,7 @@ export default function AccountReviewsTableRow({ row, onAdd, onEdit, onDelete }:
           </Label>
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
+        <TableCell>
           <InputBase value={fDateTime(row.lessonSlot[0])} />
         </TableCell>
 

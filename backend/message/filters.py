@@ -11,8 +11,8 @@ from django.db.models.functions import Concat
 def get_type(queryset):
     messages = queryset.annotate(
         type=Case(
-            When(profile=F("to"), then=Value("Inbox")),
-            default=Value("Sent"),
+            When(profile_id=F("recipient__id"), then=Value("INBOX")),
+            default=Value("SENT"),
             output_field=CharField(),
         )
     )

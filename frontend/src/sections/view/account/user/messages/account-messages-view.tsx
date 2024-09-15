@@ -19,38 +19,39 @@ import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
 
-import { useLecturers } from "src/api/lecturers/lecturers";
-import { usePurchase, usePurchasePageCount } from "src/api/purchase/purchase";
+import { useMessages, useMessagesPagesCount } from "src/api/message/messages";
 
 import Scrollbar from "src/components/scrollbar";
 
-import { IQueryParamValue } from "src/types/query-params";
-import { LessonStatus, IPurchaseItemProp } from "src/types/purchase";
+import AccountMessagesTableRow from "src/sections/account/account-messages-table-row";
 
-import MessageForm from "./message-form";
-import ReservationNewForm from "./reservation-new-form";
+import { IQueryParamValue } from "src/types/query-params";
+import { MessageType, IMessageProp } from "src/types/message";
+
+import MessageReadForm from "./message-read-form";
+import MessageReplyForm from "./message-reply-form";
 import FilterSearch from "../../../../filters/filter-search";
-import ReservationDeleteForm from "./reservation-delete-form";
-import FilterTeacher from "../../../../filters/filter-teacher";
 import AccountTableHead from "../../../../account/account-table-head";
-import AccountLessonsTableRow from "../../../../account/student/account-lessons-table-row";
 
 // ----------------------------------------------------------------------
 
 const TABS = [
-  { id: "", label: "Wszystkie lekcje" },
-  { id: LessonStatus.nowa, label: "Nowe" },
-  { id: LessonStatus.zaplanowana, label: "Zaplanowane" },
-  { id: LessonStatus.potwierdzona, label: "Potwierdzone" },
-  { id: LessonStatus.zakończona, label: "Zakończone" },
+  { id: MessageType.INBOX, label: "Otrzymane" },
+  { id: MessageType.SENT, label: "Wysłane" },
 ];
 
-const TABLE_HEAD = [
-  { id: "lesson_title", label: "Nazwa lekcji", minWidth: 250 },
-  { id: "lesson_status", label: "Status" },
-  { id: "reservation_date", label: "Termin" },
-  { id: "lecturer_id", label: "Instruktor" },
-  { id: "created_at", label: "Data zakupu" },
+const INBOX_TABLE_HEAD = [
+  { id: "sender", label: "Od" },
+  { id: "subject", label: "Tytuł" },
+  { id: "status", label: "Status" },
+  { id: "created_at", label: "Data otrzymania" },
+  { id: "" },
+];
+
+const SENT_TABLE_HEAD = [
+  { id: "recipient", label: "Do" },
+  { id: "subject", label: "Tytuł" },
+  { id: "created_at", label: "Data wysłania" },
   { id: "" },
 ];
 
@@ -59,28 +60,24 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, { label: "Wszystkie", value: -1 }];
 // ----------------------------------------------------------------------
 
 export default function AccountMessagesView() {
-  const addReservationFormOpen = useBoolean();
-  const deleteReservationFormOpen = useBoolean();
-  const sendMessageFormOpen = useBoolean();
+  const newMessageFormOpen = useBoolean();
+  const readMessageFormOpen = useBoolean();
 
-  const [addedPurchase, setAddedPurchase] = useState<IPurchaseItemProp>();
-  const [deletedPurchase, setDeletedPurchase] = useState<IPurchaseItemProp>();
-  const [messagePurchase, setMessagePurchase] = useState<IPurchaseItemProp>();
+  const [newMessage, setNewMessage] = useState<IMessageProp>();
+  const [readMessage, setReadMessage] = useState<IMessageProp>();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const { data: pagesCount } = usePurchasePageCount(filters);
-  const { data: lessons } = usePurchase(filters);
-
-  const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: -1 });
+  const { data: pagesCount } = useMessagesPagesCount(filters);
+  const { data: messages } = useMessages(filters);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
   const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "created_at";
   const order = filters?.sort_by && !filters.sort_by.startsWith("-") ? "asc" : "desc";
-  const tab = filters?.lesson_status ? filters.lesson_status : "";
+  const tab = filters?.type ? filters.type : "";
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -95,7 +92,7 @@ export default function AccountMessagesView() {
 
   const handleChangeTab = useCallback(
     (event: React.SyntheticEvent, newValue: string) => {
-      handleChange("lesson_status", newValue);
+      handleChange("type", newValue);
     },
     [handleChange],
   );
@@ -123,34 +120,26 @@ export default function AccountMessagesView() {
     [handleChange],
   );
 
-  const handleAddReservation = useCallback(
-    (purchase: IPurchaseItemProp) => {
-      setAddedPurchase(purchase);
-      addReservationFormOpen.onToggle();
+  const handleAdd = useCallback(
+    (message: IMessageProp) => {
+      setNewMessage(message);
+      newMessageFormOpen.onToggle();
     },
-    [addReservationFormOpen],
+    [newMessageFormOpen],
   );
 
-  const handleDeleteReservation = useCallback(
-    (purchase: IPurchaseItemProp) => {
-      setDeletedPurchase(purchase);
-      deleteReservationFormOpen.onToggle();
+  const handleRead = useCallback(
+    (message: IMessageProp) => {
+      setReadMessage(message);
+      readMessageFormOpen.onToggle();
     },
-    [deleteReservationFormOpen],
-  );
-
-  const handleSendMessage = useCallback(
-    (purchase: IPurchaseItemProp) => {
-      setMessagePurchase(purchase);
-      sendMessageFormOpen.onToggle();
-    },
-    [sendMessageFormOpen],
+    [readMessageFormOpen],
   );
 
   return (
     <>
       <Typography variant="h5" sx={{ mb: 3 }}>
-        Lekcje
+        Wiadomości
       </Typography>
 
       <Tabs
@@ -167,18 +156,10 @@ export default function AccountMessagesView() {
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 5, mb: 3 }}>
         <FilterSearch
-          value={filters?.lesson_title ?? ""}
-          onChangeSearch={(value) => handleChange("lesson_title", value)}
-          placeholder="Nazwa lekcji..."
+          value={filters?.search ?? ""}
+          onChangeSearch={(value) => handleChange("search", value)}
+          placeholder="Szukaj..."
         />
-
-        {teachers && (
-          <FilterTeacher
-            value={filters?.lecturer_id ?? ""}
-            options={teachers ?? []}
-            onChange={(value) => handleChange("lecturer_id", value)}
-          />
-        )}
 
         <DatePicker
           value={filters?.created_at ? new Date(filters.created_at) : null}
@@ -215,18 +196,18 @@ export default function AccountMessagesView() {
               order={order}
               orderBy={orderBy}
               onSort={handleSort}
-              headCells={TABLE_HEAD}
+              headCells={tab === MessageType.INBOX ? INBOX_TABLE_HEAD : SENT_TABLE_HEAD}
             />
 
-            {lessons && (
+            {messages && (
               <TableBody>
-                {lessons.map((row) => (
-                  <AccountLessonsTableRow
+                {messages.map((row) => (
+                  <AccountMessagesTableRow
                     key={row.id}
                     row={row}
-                    onAdd={handleAddReservation}
-                    onDelete={handleDeleteReservation}
-                    onSendMessage={handleSendMessage}
+                    type={tab as MessageType}
+                    onAdd={handleAdd}
+                    onRead={handleRead}
                   />
                 ))}
               </TableBody>
@@ -249,27 +230,19 @@ export default function AccountMessagesView() {
         />
       </Box>
 
-      {addedPurchase && (
-        <ReservationNewForm
-          purchase={addedPurchase}
-          open={addReservationFormOpen.value}
-          onClose={addReservationFormOpen.onFalse}
+      {newMessage && (
+        <MessageReplyForm
+          message={newMessage}
+          open={newMessageFormOpen.value}
+          onClose={newMessageFormOpen.onFalse}
         />
       )}
 
-      {deletedPurchase && (
-        <ReservationDeleteForm
-          purchase={deletedPurchase}
-          open={deleteReservationFormOpen.value}
-          onClose={deleteReservationFormOpen.onFalse}
-        />
-      )}
-
-      {messagePurchase && (
-        <MessageForm
-          purchase={messagePurchase}
-          open={sendMessageFormOpen.value}
-          onClose={sendMessageFormOpen.onFalse}
+      {readMessage && (
+        <MessageReadForm
+          message={readMessage}
+          open={readMessageFormOpen.value}
+          onClose={readMessageFormOpen.onFalse}
         />
       )}
     </>

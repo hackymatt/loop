@@ -4,7 +4,7 @@ from message.serializers import MessageSerializer, MessageGetSerializer
 from message.models import Message
 from message.filters import MessageFilter
 from profile.models import Profile
-from django.db.models import Q
+from django.db.models import Q, Value
 
 
 class MessageViewSet(ModelViewSet):
@@ -22,11 +22,13 @@ class MessageViewSet(ModelViewSet):
         user = self.request.user
         profile = Profile.objects.get(user=user)
         return self.queryset.filter(Q(sender=profile) | Q(recipient=profile)).annotate(
-            profile=profile
+            profile_id=Value(profile.id)
         )
 
     def get_serializer_class(self):
-        if self.action == "get":
+        if self.action == "list":
+            return MessageGetSerializer
+        elif self.action == "retrieve":
             return MessageGetSerializer
         else:
             return self.serializer_class

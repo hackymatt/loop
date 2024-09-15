@@ -4,9 +4,9 @@ import Popover from "@mui/material/Popover";
 import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
+import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import { Link, Divider, Typography } from "@mui/material";
-import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
 import { paths } from "src/routes/paths";
 
@@ -40,14 +40,6 @@ export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props)
     onDelete(row);
   }, [openOptions, onDelete, row]);
 
-  const inputStyles = {
-    pl: 1,
-    [`&.${inputBaseClasses.focused}`]: {
-      bgcolor: "action.selected",
-    },
-    width: 1,
-  };
-
   const isActive = useMemo(() => row.active, [row.active]);
 
   const isInactive = useMemo(() => !row.active, [row.active]);
@@ -55,15 +47,15 @@ export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props)
   return (
     <>
       <TableRow hover>
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.slug} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.slug} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.totalHours * 60} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.totalHours * 60} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
+        <TableCell>
           <Label
             sx={{ textTransform: "uppercase" }}
             color={(isActive && "success") || (isInactive && "error") || "default"}
@@ -72,12 +64,12 @@ export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props)
           </Label>
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={fCurrency(row.price ?? 0)} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={fCurrency(row.price ?? 0)} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.level} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.level} />
         </TableCell>
 
         <TableCell align="right" padding="none">

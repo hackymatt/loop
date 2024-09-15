@@ -4,9 +4,9 @@ import Popover from "@mui/material/Popover";
 import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
+import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import { Link, Divider, Typography } from "@mui/material";
-import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
 import { usePopover } from "src/hooks/use-popover";
 
@@ -44,14 +44,6 @@ export default function AccountTeachingsTableRow({ row, onView, onAdd, onDelete 
     onView(row);
   }, [openOptions, onView, row]);
 
-  const inputStyles = {
-    pl: 1,
-    [`&.${inputBaseClasses.focused}`]: {
-      bgcolor: "action.selected",
-    },
-    width: 1,
-  };
-
   const isActive = useMemo(() => row.active, [row.active]);
 
   const isInactive = useMemo(() => !row.active, [row.active]);
@@ -63,15 +55,15 @@ export default function AccountTeachingsTableRow({ row, onView, onAdd, onDelete 
   return (
     <>
       <TableRow hover>
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.title} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.title} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.duration} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.duration} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
+        <TableCell>
           <Label
             sx={{ textTransform: "uppercase" }}
             color={(isActive && "success") || (isInactive && "error") || "default"}
@@ -80,7 +72,7 @@ export default function AccountTeachingsTableRow({ row, onView, onAdd, onDelete 
           </Label>
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
+        <TableCell>
           <Label
             sx={{ textTransform: "uppercase" }}
             color={(isTeaching && "success") || (isNotTeaching && "error") || "default"}
@@ -89,8 +81,8 @@ export default function AccountTeachingsTableRow({ row, onView, onAdd, onDelete 
           </Label>
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={fCurrency(row.price ?? 0)} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={fCurrency(row.price ?? 0)} />
         </TableCell>
 
         <TableCell align="right" padding="none">

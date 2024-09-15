@@ -2,6 +2,7 @@ import { paths } from "src/routes/paths";
 
 import Iconify from "src/components/iconify";
 
+import { MessageType } from "src/types/message";
 import { ReviewStatus } from "src/types/purchase";
 
 const userNavigation = [
@@ -19,7 +20,7 @@ const userNavigation = [
   },
   {
     title: "Wiadomości",
-    path: `${paths.account.messages}/?sort_by=-created_at&page_size=10`,
+    path: `${paths.account.messages}/?sort_by=-created_at&page_size=10&type=${MessageType.INBOX}`,
     icon: <Iconify icon="carbon:email" />,
     children: [],
   },
