@@ -41,17 +41,20 @@ const TABS = [
 ];
 
 const INBOX_TABLE_HEAD = [
-  { id: "sender", label: "Od" },
-  { id: "subject", label: "Tytuł" },
+  { id: "sender", label: "Od", minWidth: 200 },
+  { id: "subject", label: "Tytuł", minWidth: 150 },
+  { id: "body", label: "Treść", minWidth: 160, maxWidth: 180 },
   { id: "status", label: "Status" },
-  { id: "created_at", label: "Data otrzymania" },
+  { id: "created_at", label: "Data otrzymania", minWidth: 150 },
   { id: "" },
 ];
 
 const SENT_TABLE_HEAD = [
-  { id: "recipient", label: "Do" },
-  { id: "subject", label: "Tytuł" },
-  { id: "created_at", label: "Data wysłania" },
+  { id: "recipient", label: "Do", minWidth: 200 },
+  { id: "subject", label: "Tytuł", minWidth: 150 },
+  { id: "body", label: "Treść", minWidth: 160, maxWidth: 180 },
+  { id: "status", label: "Status" },
+  { id: "created_at", label: "Data wysłania", minWidth: 150 },
   { id: "" },
 ];
 
@@ -241,6 +244,7 @@ export default function AccountMessagesView() {
       {readMessage && (
         <MessageReadForm
           message={readMessage}
+          type={tab as MessageType}
           open={readMessageFormOpen.value}
           onClose={readMessageFormOpen.onFalse}
         />

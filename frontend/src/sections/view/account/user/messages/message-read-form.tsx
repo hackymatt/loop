@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -12,7 +12,7 @@ import { useMessage, useEditMessage } from "src/api/message/message";
 
 import { useToastContext } from "src/components/toast";
 
-import { IMessageProp, MessageStatus, MessageType } from "src/types/message";
+import { MessageType, IMessageProp, MessageStatus } from "src/types/message";
 
 // ----------------------------------------------------------------------
 
@@ -26,6 +26,7 @@ interface Props extends DialogProps {
 
 export default function MessageReadForm({ message, type, onClose, ...other }: Props) {
   const { enqueueSnackbar } = useToastContext();
+  const [read, setRead] = useState<boolean>(false);
 
   const { data: messageData } = useMessage(message.id);
   const { mutateAsync: editMessage } = useEditMessage(message.id);
@@ -41,13 +42,24 @@ export default function MessageReadForm({ message, type, onClose, ...other }: Pr
         enqueueSnackbar("Wystąpił błąd", { variant: "error" });
       }
     };
-    if (type === MessageType.INBOX) {
-      handleEdit();
+    if (!read && message.status === MessageStatus.NEW && messageData) {
+      if (type === MessageType.INBOX) {
+        handleEdit();
+      }
     }
-  }, [editMessage, enqueueSnackbar, messageData, type]);
+    setRead(true);
+  }, [editMessage, enqueueSnackbar, message.status, messageData, read, type]);
 
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
+    <Dialog
+      fullWidth
+      maxWidth="sm"
+      onClose={() => {
+        setRead(false);
+        onClose();
+      }}
+      {...other}
+    >
       <DialogTitle
         sx={{ typography: "h3", pb: 3 }}
       >{`Wiadomość od ${message.sender.name}`}</DialogTitle>
@@ -55,12 +67,19 @@ export default function MessageReadForm({ message, type, onClose, ...other }: Pr
       <DialogContent sx={{ py: 0 }}>
         <Stack spacing={1}>
           <TextField label="Tytuł" value={message.subject} />
-          <TextField label="Wiadomość" rows={3} multiline value={message.body} />
+          <TextField label="Treść" rows={3} multiline value={message.body} />
         </Stack>
       </DialogContent>
 
       <DialogActions>
-        <Button variant="outlined" onClick={onClose} color="inherit">
+        <Button
+          variant="outlined"
+          onClick={() => {
+            setRead(false);
+            onClose();
+          }}
+          color="inherit"
+        >
           Anuluj
         </Button>
       </DialogActions>

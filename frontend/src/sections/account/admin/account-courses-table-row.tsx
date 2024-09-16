@@ -48,11 +48,11 @@ export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props)
     <>
       <TableRow hover>
         <TableCell>
-          <InputBase value={row.slug} />
+          <InputBase value={row.slug} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell>
-          <InputBase value={row.totalHours * 60} />
+          <InputBase value={`${row.totalHours * 60} min`} />
         </TableCell>
 
         <TableCell>
@@ -69,7 +69,7 @@ export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props)
         </TableCell>
 
         <TableCell>
-          <InputBase value={row.level} />
+          <InputBase value={row.level} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell align="right" padding="none">

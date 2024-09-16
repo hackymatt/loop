@@ -46,11 +46,11 @@ export default function AccountLessonsTableRow({ row, onEdit, onPriceHistoryView
     <>
       <TableRow hover>
         <TableCell>
-          <InputBase value={row.title} />
+          <InputBase value={row.title} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell>
-          <InputBase value={row.duration} />
+          <InputBase value={`${row.duration} min`} />
         </TableCell>
 
         <TableCell>

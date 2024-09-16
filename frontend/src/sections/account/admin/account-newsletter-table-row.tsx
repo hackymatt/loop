@@ -24,11 +24,11 @@ export default function AccountNewsletterTableRow({ row }: Props) {
   return (
     <TableRow hover>
       <TableCell>
-        <InputBase value={row.uuid} />
+        <InputBase value={row.uuid} sx={{ width: 1 }} />
       </TableCell>
 
       <TableCell>
-        <InputBase value={row.email} />
+        <InputBase value={row.email} sx={{ width: 1 }} />
       </TableCell>
 
       <TableCell>

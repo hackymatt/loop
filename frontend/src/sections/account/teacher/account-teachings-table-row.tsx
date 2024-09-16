@@ -56,11 +56,11 @@ export default function AccountTeachingsTableRow({ row, onView, onAdd, onDelete 
     <>
       <TableRow hover>
         <TableCell>
-          <InputBase value={row.title} />
+          <InputBase value={row.title} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell>
-          <InputBase value={row.duration} />
+          <InputBase value={`${row.duration} min`} />
         </TableCell>
 
         <TableCell>

@@ -52,33 +52,35 @@ export default function AccountMessagesTableRow({ row, type, onAdd, onRead }: Pr
       <TableRow hover>
         {isInbox && (
           <TableCell>
-            <InputBase value={row.sender.name} />
+            <InputBase value={row.sender.name} sx={{ width: 1 }} />
           </TableCell>
         )}
 
         {isSent && (
           <TableCell>
-            <InputBase value={row.recipient.name} />
+            <InputBase value={row.recipient.name} sx={{ width: 1 }} />
           </TableCell>
         )}
 
         <TableCell>
-          <InputBase value={row.subject} />
+          <InputBase value={row.subject} sx={{ width: 1 }} />
         </TableCell>
 
-        {isInbox && (
-          <TableCell>
-            <Label
-              sx={{ textTransform: "uppercase" }}
-              color={(isNew && "error") || (isRead && "success") || "default"}
-            >
-              {isNew ? "NOWA" : "PRZECZYTANA"}
-            </Label>
-          </TableCell>
-        )}
+        <TableCell>
+          <InputBase value={row.body} sx={{ width: 1 }} />
+        </TableCell>
 
         <TableCell>
-          <InputBase value={fDate(row.createdAt)} />
+          <Label
+            sx={{ textTransform: "uppercase" }}
+            color={(isNew && "error") || (isRead && "success") || "default"}
+          >
+            {isNew ? "NOWA" : "PRZECZYTANA"}
+          </Label>
+        </TableCell>
+
+        <TableCell>
+          <InputBase value={fDate(row.createdAt)} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell align="right" padding="none">

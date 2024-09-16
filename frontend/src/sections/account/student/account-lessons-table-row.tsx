@@ -76,7 +76,7 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete, onSendMes
     <>
       <TableRow hover>
         <TableCell>
-          <InputBase value={row.lessonTitle} />
+          <InputBase value={row.lessonTitle} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell>

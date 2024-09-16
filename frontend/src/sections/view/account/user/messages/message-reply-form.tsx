@@ -1,5 +1,5 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import Stack from "@mui/material/Stack";
@@ -34,6 +34,7 @@ interface Props extends DialogProps {
 
 export default function MessageReplyForm({ message, onClose, ...other }: Props) {
   const { enqueueSnackbar } = useToastContext();
+  const [read, setRead] = useState<boolean>(false);
 
   const { mutateAsync: createMessage } = useCreateMessage();
   const { data: messageData } = useMessage(message.id);
@@ -50,8 +51,11 @@ export default function MessageReplyForm({ message, onClose, ...other }: Props) 
         enqueueSnackbar("Wystąpił błąd", { variant: "error" });
       }
     };
-    handleEdit();
-  }, [editMessage, enqueueSnackbar, messageData]);
+    if (!read && message.status === MessageStatus.NEW && messageData) {
+      handleEdit();
+    }
+    setRead(true);
+  }, [editMessage, enqueueSnackbar, message.status, messageData, read]);
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -87,7 +91,15 @@ export default function MessageReplyForm({ message, onClose, ...other }: Props) 
   const { fields } = useMessageFields();
 
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
+    <Dialog
+      fullWidth
+      maxWidth="sm"
+      onClose={() => {
+        setRead(false);
+        onClose();
+      }}
+      {...other}
+    >
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <DialogTitle
           sx={{ typography: "h3", pb: 3 }}
@@ -101,7 +113,14 @@ export default function MessageReplyForm({ message, onClose, ...other }: Props) 
         </DialogContent>
 
         <DialogActions>
-          <Button variant="outlined" onClick={onClose} color="inherit">
+          <Button
+            variant="outlined"
+            onClick={() => {
+              setRead(false);
+              onClose();
+            }}
+            color="inherit"
+          >
             Anuluj
           </Button>
 

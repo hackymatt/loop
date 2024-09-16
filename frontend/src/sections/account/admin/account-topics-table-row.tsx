@@ -41,7 +41,7 @@ export default function AccountTopicsTableRow({ row, onEdit, onDelete }: Props) 
     <>
       <TableRow hover>
         <TableCell>
-          <InputBase value={row.name} />
+          <InputBase value={row.name} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell>

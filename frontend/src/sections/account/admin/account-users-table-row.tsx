@@ -57,19 +57,19 @@ export default function AccountUsersTableRow({ row, onEdit, onFinanceHistoryView
         </TableCell>
 
         <TableCell>
-          <InputBase value={row.first_name} />
+          <InputBase value={row.first_name} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell>
-          <InputBase value={row.last_name} />
+          <InputBase value={row.last_name} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell>
-          <InputBase value={row.email} />
+          <InputBase value={row.email} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell>
-          <InputBase value={row.gender} />
+          <InputBase value={row.gender} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell>
@@ -82,7 +82,7 @@ export default function AccountUsersTableRow({ row, onEdit, onFinanceHistoryView
         </TableCell>
 
         <TableCell>
-          <InputBase value={fDate(row.created_at)} />
+          <InputBase value={fDate(row.created_at)} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell align="right" padding="none">
