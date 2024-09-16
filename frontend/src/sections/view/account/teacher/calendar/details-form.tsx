@@ -1,5 +1,5 @@
 import { EventClickArg } from "@fullcalendar/core";
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 
 import { LoadingButton } from "@mui/lab";
 import Button from "@mui/material/Button";
@@ -12,6 +12,7 @@ import {
   Avatar,
   ListItem,
   Typography,
+  IconButton,
   DialogTitle,
   ListItemText,
   ListItemAvatar,
@@ -23,6 +24,7 @@ import Iconify from "src/components/iconify";
 
 import { IScheduleStudentProp } from "src/types/course";
 
+import MessageForm from "./message-form";
 import LessonCancelForm from "./lesson-cancel-form";
 
 // ----------------------------------------------------------------------
@@ -44,18 +46,29 @@ export default function DetailsForm({
   ...other
 }: Props) {
   const confirmCancellationFormOpen = useBoolean();
+  const sendMessageFormOpen = useBoolean();
+
+  const [messageStudents, setMessageStudents] = useState<IScheduleStudentProp[]>();
 
   const handleLessonCancel = useCallback(async () => {
     confirmCancellationFormOpen.onFalse();
     onConfirm(eventDetails);
   }, [confirmCancellationFormOpen, eventDetails, onConfirm]);
 
+  const handleMessage = useCallback(
+    async (students: IScheduleStudentProp[]) => {
+      setMessageStudents(students);
+      sendMessageFormOpen.onToggle();
+    },
+    [sendMessageFormOpen],
+  );
+
   const isReady = useMemo(
     () => eventDetails.event.extendedProps.ready,
     [eventDetails.event.extendedProps.ready],
   );
 
-  const students = useMemo(
+  const students: IScheduleStudentProp[] = useMemo(
     () => eventDetails.event.extendedProps.students,
     [eventDetails.event.extendedProps.students],
   );
@@ -92,14 +105,47 @@ export default function DetailsForm({
             <Typography color={isReady ? "success" : "error"}>{students?.length ?? 0}</Typography>
           </Stack>
 
-          <List sx={{ width: "100%" }}>
+          {(students?.length ?? 0) > 0 && (
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              spacing={1}
+              paddingTop={2}
+            >
+              <Typography>Studenci:</Typography>
+              <Button
+                size="small"
+                variant="text"
+                endIcon={<Iconify icon="carbon:email" />}
+                onClick={() => handleMessage(students)}
+              >
+                Napisz do wszystkich
+              </Button>
+            </Stack>
+          )}
+
+          <List
+            sx={{
+              width: "100%",
+            }}
+          >
             {students?.map((student: IScheduleStudentProp) => {
               const genderImageUrl =
                 student.gender === "Kobieta"
                   ? "/assets/images/avatar/avatar_female.jpg"
                   : "/assets/images/avatar/avatar_male.jpg";
               return (
-                <ListItem key={student.id} alignItems="center">
+                <ListItem
+                  key={student.id}
+                  alignItems="center"
+                  secondaryAction={
+                    <IconButton edge="end" onClick={() => handleMessage([student])}>
+                      <Iconify icon="carbon:email" />
+                    </IconButton>
+                  }
+                  sx={{ border: (t) => `solid 1px ${t.palette.divider}` }}
+                >
                   <ListItemAvatar>
                     <Avatar src={student.image || genderImageUrl} />
                   </ListItemAvatar>
@@ -132,6 +178,15 @@ export default function DetailsForm({
         onConfirm={handleLessonCancel}
         onClose={confirmCancellationFormOpen.onFalse}
       />
+
+      {messageStudents && (
+        <MessageForm
+          students={messageStudents}
+          info={eventDetails.event}
+          open={sendMessageFormOpen.value}
+          onClose={sendMessageFormOpen.onFalse}
+        />
+      )}
     </>
   );
 }

@@ -4,7 +4,7 @@ from rest_framework.serializers import (
     SerializerMethodField,
     ImageField,
     UUIDField,
-    IntegerField
+    IntegerField,
 )
 from message.models import Message
 from profile.models import Profile, StudentProfile, LecturerProfile, AdminProfile
@@ -52,7 +52,10 @@ class MessageSerializer(ModelSerializer):
 
     class Meta:
         model = Message
-        exclude = ("sender", "recipient",)
+        exclude = (
+            "sender",
+            "recipient",
+        )
 
     def create(self, validated_data):
         status = validated_data.pop("get_status_display")
@@ -61,7 +64,7 @@ class MessageSerializer(ModelSerializer):
         recipient_type = validated_data.pop("recipient_type", None)
 
         user = self.context["request"].user
-        sender = Profile.objects.get(user=user)        
+        sender = Profile.objects.get(user=user)
 
         if recipient_id:
             if recipient_type[0] == "S":
