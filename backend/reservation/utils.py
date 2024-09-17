@@ -29,8 +29,9 @@ def confirm_reservations():
         if is_lesson_success:
             # create meeting
             meeting_manager = MeetingManager()
+            meeting_id = "{:06d}".format(schedule.id)
             event = meeting_manager.create(
-                title=schedule.lesson.title,
+                title=f"{schedule.lesson.title} ({meeting_id})",
                 description=schedule.lesson.description,
                 start_time=schedule.start_time,
                 end_time=schedule.end_time,

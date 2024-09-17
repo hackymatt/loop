@@ -1,5 +1,7 @@
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
+from django.test import TestCase
+from unittest.mock import patch
 from .factory import (
     create_user,
     create_profile,
@@ -8,15 +10,17 @@ from .factory import (
     create_admin_profile,
     create_message,
 )
-from .helpers import login, messages_number
+from .helpers import login, messages_number, notifications_number, mock_send_message
 from django.contrib import auth
 import json
 from message.utils import remove_old_messages
 from datetime import timedelta
+from utils.google.gmail import GmailApi
 
 
-class MessageTest(APITestCase):
+class MessageTest(TestCase):
     def setUp(self):
+        self.client = APIClient()
         self.endpoint = "/api/messages"
         self.admin_data = {
             "email": "admin_test_email@example.com",
@@ -163,7 +167,9 @@ class MessageTest(APITestCase):
         response = self.client.post(self.endpoint, data=self.create_data_1)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_create_message_authenticated_1(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_create_message_authenticated_1(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -173,8 +179,12 @@ class MessageTest(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(data["status"], self.create_data_1["status"])
         self.assertEqual(data["recipient_id"], self.profile.profile.id)
+        self.assertEqual(notifications_number(), 1)
+        self.assertEqual(_send_message_mock.call_count, 1)
 
-    def test_create_message_authenticated_2(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_create_message_authenticated_2(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -184,8 +194,12 @@ class MessageTest(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(data["status"], self.create_data_2["status"])
         self.assertEqual(data["recipient_id"], self.lecturer_profile.profile.id)
+        self.assertEqual(notifications_number(), 1)
+        self.assertEqual(_send_message_mock.call_count, 1)
 
-    def test_create_message_authenticated_3(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_create_message_authenticated_3(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -195,8 +209,12 @@ class MessageTest(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(data["status"], self.create_data_3["status"])
         self.assertEqual(data["recipient_id"], self.admin_profile.profile.id)
+        self.assertEqual(notifications_number(), 1)
+        self.assertEqual(_send_message_mock.call_count, 1)
 
-    def test_create_message_authenticated_4(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_create_message_authenticated_4(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -206,6 +224,8 @@ class MessageTest(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(data["status"], self.create_data_4["status"])
         self.assertEqual(data["recipient_id"], self.lecturer_profile.profile.id)
+        self.assertEqual(notifications_number(), 1)
+        self.assertEqual(_send_message_mock.call_count, 1)
 
     def test_edit_message_unauthenticated(self):
         # no login
