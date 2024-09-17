@@ -38,7 +38,7 @@ export default function AccountCertificatesTableRow({ row }: Props) {
     <>
       <TableRow hover>
         <TableCell>
-          <InputBase value={row.title} />
+          <InputBase value={row.title} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell>
