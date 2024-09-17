@@ -12,6 +12,7 @@ from module.models import Module
 from purchase.models import Purchase
 from newsletter.models import Newsletter
 from notification.models import Notification
+from message.models import Message
 from schedule.models import Schedule, Meeting
 from wishlist.models import Wishlist
 from cart.models import Cart
@@ -490,4 +491,20 @@ def create_notification(
         status=status,
         path=path,
         icon=icon,
+    )
+
+
+def create_message(
+    sender: Profile,
+    recipient: Profile,
+    subject: str,
+    body: str,
+    status: str,
+):
+    return Message.objects.create(
+        sender=sender,
+        recipient=recipient,
+        subject=subject,
+        body=body,
+        status=status,
     )
