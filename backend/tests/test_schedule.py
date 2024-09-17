@@ -440,15 +440,34 @@ class ScheduleTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     @patch.object(GmailApi, "_send_message")
+    def test_delete_schedule_authenticated_completed(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        self.delete_schedule.start_time = datetime.now().replace(
+            minute=0, second=0, microsecond=0
+        ) - timedelta(hours=1)
+        self.delete_schedule.end_time = datetime.now().replace(
+            minute=30, second=0, microsecond=0
+        ) - timedelta(hours=1)
+        self.delete_schedule.save()
+        response = self.client.delete(f"{self.endpoint}/{self.delete_schedule.id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    @patch.object(GmailApi, "_send_message")
     def test_delete_schedule_authenticated_no_lesson(self, _send_message_mock):
         mock_send_message(mock=_send_message_mock)
         # login
         login(self, self.lecturer_data["email"], self.lecturer_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        response = self.client.delete(f"{self.endpoint}/{self.schedules[1].id}")
+        self.delete_schedule.lesson = None
+        self.delete_schedule.save()
+        response = self.client.delete(f"{self.endpoint}/{self.delete_schedule.id}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(is_schedule_found(self.schedules[1].id))
+        self.assertFalse(is_schedule_found(self.delete_schedule.id))
         self.assertEqual(schedule_number(), 21)
         self.assertEqual(_send_message_mock.call_count, 0)
         self.assertEqual(notifications_number(), 0)

@@ -20,7 +20,6 @@ type ILecturer = {
   id: string;
   full_name: string;
   description: string | null;
-  email: string;
   linkedin_url: string | null;
   title: string | null;
   image: string | null;
@@ -48,7 +47,6 @@ export const lecturerQuery = (id: string) => {
         id: teacherId,
         full_name,
         description,
-        email,
         linkedin_url,
         title,
         image,
@@ -67,7 +65,6 @@ export const lecturerQuery = (id: string) => {
         name: full_name,
         description,
         linkedinUrl: linkedin_url,
-        email,
         role: title,
         avatarUrl: image,
         gender,

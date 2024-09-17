@@ -10,13 +10,19 @@ import Typography from "@mui/material/Typography";
 
 import { paths } from "src/routes/paths";
 
+import { useBoolean } from "src/hooks/use-boolean";
+
 import { fShortenNumber } from "src/utils/format-number";
 
 import Image from "src/components/image";
 import Iconify from "src/components/iconify";
+import { useUserContext } from "src/components/user";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
+import { UserType } from "src/types/user";
 import { ITeamMemberProps } from "src/types/team";
+
+import MessageForm from "./message-form";
 
 // ----------------------------------------------------------------------
 
@@ -29,7 +35,6 @@ export default function TeacherDetailsHero({ teacher }: Props) {
     name,
     description,
     role,
-    email,
     linkedinUrl,
     avatarUrl,
     totalHours,
@@ -38,6 +43,10 @@ export default function TeacherDetailsHero({ teacher }: Props) {
     totalStudents,
     lessons,
   } = teacher;
+
+  const sendMessageFormOpen = useBoolean();
+
+  const { isLoggedIn, userType } = useUserContext();
 
   const genderAvatarUrl =
     teacher.gender === "Kobieta"
@@ -104,18 +113,6 @@ export default function TeacherDetailsHero({ teacher }: Props) {
                     "& > *": { my: 0.5, mr: 3 },
                   }}
                 >
-                  {email && (
-                    <Stack spacing={1}>
-                      <Stack direction="row" alignItems="center" sx={{ typography: "subtitle2" }}>
-                        <Iconify icon="carbon:email" width={24} sx={{ mr: 1 }} /> Email
-                      </Stack>
-
-                      <Link color="inherit" variant="body2" href={`mailto:${email}`}>
-                        {email}
-                      </Link>
-                    </Stack>
-                  )}
-
                   {linkedinUrl && (
                     <Stack spacing={1}>
                       <Stack direction="row" alignItems="center" sx={{ typography: "subtitle2" }}>
@@ -133,6 +130,37 @@ export default function TeacherDetailsHero({ teacher }: Props) {
                       </Link>
                     </Stack>
                   )}
+
+                  <Stack spacing={1}>
+                    <Stack direction="row" alignItems="center" sx={{ typography: "subtitle2" }}>
+                      <Iconify icon="carbon:email" width={24} sx={{ mr: 1 }} />
+                      Kontakt
+                    </Stack>
+
+                    {isLoggedIn ? (
+                      <Link
+                        color="inherit"
+                        variant="body2"
+                        onClick={() => {
+                          if (userType === UserType.Student) {
+                            sendMessageFormOpen.onToggle();
+                          }
+                        }}
+                        sx={{ cursor: "pointer" }}
+                      >
+                        Napisz do mnie
+                      </Link>
+                    ) : (
+                      <Link
+                        color="inherit"
+                        variant="body2"
+                        href={paths.login}
+                        sx={{ cursor: "pointer" }}
+                      >
+                        Napisz do mnie
+                      </Link>
+                    )}
+                  </Stack>
                 </Stack>
               </Stack>
 
@@ -152,10 +180,10 @@ export default function TeacherDetailsHero({ teacher }: Props) {
                     </Box>
 
                     {totalReviews && (
-                      <Link variant="body2" sx={{ color: "text.secondary" }}>
+                      <Typography variant="body2" sx={{ color: "text.secondary" }}>
                         ({fShortenNumber(totalReviews)}{" "}
                         {polishPlurals("recenzja", "recenzje", "recenzji", totalReviews)})
-                      </Link>
+                      </Typography>
                     )}
                   </Stack>
                 )}
@@ -203,6 +231,12 @@ export default function TeacherDetailsHero({ teacher }: Props) {
           </Grid>
         </Grid>
       </Container>
+
+      <MessageForm
+        teacher={teacher}
+        open={sendMessageFormOpen.value}
+        onClose={sendMessageFormOpen.onFalse}
+      />
     </Box>
   );
 }

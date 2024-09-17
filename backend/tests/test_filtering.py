@@ -26,6 +26,7 @@ from .factory import (
     create_module,
     create_certificate,
     create_notification,
+    create_message,
 )
 from .helpers import login
 from django.contrib import auth
@@ -4907,6 +4908,105 @@ class NotificationFilterTest(APITestCase):
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 1)
+        values = list(set([variable in record[column] for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+
+class MessageFilterTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/messages"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
+
+        self.lecturer_data = {
+            "email": "lecturer_1@example.com",
+            "password": "TestPassword123",
+        }
+        self.lecturer_user = create_user(
+            first_name="l1_first_name",
+            last_name="l1_last_name",
+            email=self.lecturer_data["email"],
+            password=self.lecturer_data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
+
+        self.student_messages = []
+        for i in range(50):
+            self.student_messages.append(
+                create_message(
+                    sender=self.lecturer_profile.profile,
+                    recipient=self.profile.profile,
+                    subject=f"subject{i}",
+                    body=f"body{i}",
+                    status="NEW",
+                )
+            )
+
+        self.lecturer_messages = []
+        for i in range(100):
+            self.lecturer_messages.append(
+                create_message(
+                    sender=self.profile.profile,
+                    recipient=self.lecturer_profile.profile,
+                    subject=f"subject{i}",
+                    body=f"body{i}",
+                    status="NEW",
+                )
+            )
+
+        self.fields = ["sender", "recipient", "subject", "status", "created_at"]
+
+    def test_type_filter(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "type"
+        variable = "SENT"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 100)
+        values = list(
+            set(
+                [
+                    str(self.profile.profile.uuid) == record["sender"]["id"]
+                    for record in results
+                ]
+            )
+        )
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_status_filter(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "status"
+        variable = self.student_messages[0].status
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 150)
         values = list(set([variable in record[column] for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])

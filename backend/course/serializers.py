@@ -2,7 +2,6 @@ from rest_framework.serializers import (
     ModelSerializer,
     SerializerMethodField,
     CharField,
-    EmailField,
     IntegerField,
 )
 from drf_extra_fields.fields import Base64ImageField, Base64FileField
@@ -21,7 +20,6 @@ from django.db.models import Sum, Avg, Min, Value, Q
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from notification.utils import notify
-import urllib.parse
 
 
 def notify_students(course):
@@ -289,7 +287,7 @@ def get_progress(lessons, user):
     student_lessons = Reservation.objects.filter(
         student=student_profile,
         lesson__in=lessons,
-        schedule__start_time__lte=make_aware(datetime.now()),
+        schedule__end_time__lte=make_aware(datetime.now()),
     )
     return student_lessons.count() / len(lessons)
 
@@ -323,7 +321,6 @@ class TopicSerializer(ModelSerializer):
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
-    email = EmailField(source="profile.user.email")
     gender = CharField(source="profile.get_gender_display")
     image = Base64ImageField(source="profile.image", required=True)
 
@@ -331,7 +328,6 @@ class LecturerSerializer(ModelSerializer):
         model = Profile
         fields = (
             "id",
-            "email",
             "full_name",
             "gender",
             "image",
@@ -343,7 +339,6 @@ class LecturerSerializer(ModelSerializer):
 
 class LecturerDetailsSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
-    email = EmailField(source="profile.user.email")
     gender = CharField(source="profile.get_gender_display")
     image = Base64ImageField(source="profile.image", required=True)
     rating = SerializerMethodField("get_user_rating")
@@ -354,7 +349,6 @@ class LecturerDetailsSerializer(ModelSerializer):
         model = LecturerProfile
         fields = (
             "id",
-            "email",
             "full_name",
             "gender",
             "title",

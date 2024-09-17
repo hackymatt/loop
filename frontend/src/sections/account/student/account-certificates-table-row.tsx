@@ -4,9 +4,9 @@ import Popover from "@mui/material/Popover";
 import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
+import InputBase from "@mui/material/InputBase";
 import { Link, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
 import { usePopover } from "src/hooks/use-popover";
 
@@ -28,13 +28,6 @@ type Props = {
 export default function AccountCertificatesTableRow({ row }: Props) {
   const openOptions = usePopover();
 
-  const inputStyles = {
-    pl: 1,
-    [`&.${inputBaseClasses.focused}`]: {
-      bgcolor: "action.selected",
-    },
-  };
-
   const isModule = useMemo(() => row.type === CertificateType.MODULE, [row.type]);
 
   const isCourse = useMemo(() => row.type === CertificateType.COURSE, [row.type]);
@@ -44,11 +37,11 @@ export default function AccountCertificatesTableRow({ row }: Props) {
   return (
     <>
       <TableRow hover>
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.title} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.title} sx={{ width: 1 }} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
+        <TableCell>
           <Label
             sx={{ textTransform: "uppercase" }}
             color={(isCourse && "success") || (isModule && "warning") || "default"}

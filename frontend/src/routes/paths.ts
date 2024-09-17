@@ -26,6 +26,7 @@ export const paths = {
     root: "/account",
     personal: "/account/personal",
     manage: "/account/manage",
+    messages: "/account/messages",
     admin: {
       courses: {
         list: "/account/admin/courses/list",

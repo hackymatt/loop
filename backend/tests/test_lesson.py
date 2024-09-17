@@ -24,6 +24,7 @@ from .helpers import (
     get_technology,
     lessons_number,
     notifications_number,
+    get_lecturer,
 )
 from django.contrib import auth
 import json
@@ -403,11 +404,11 @@ class LessonTest(APITestCase):
                 user_data = filter_dict(lecturer_data, self.user_columns)
                 profile_data = filter_dict(lecturer_data, self.profile_columns)
                 self.assertTrue(
-                    is_data_match(get_user(lecturer_data["email"]), user_data)
+                    is_data_match(get_lecturer(lecturer_data["id"]), user_data)
                 )
                 self.assertTrue(
                     is_data_match(
-                        get_profile(get_user(lecturer_data["email"])), profile_data
+                        get_lecturer(lecturer_data["id"]).profile, profile_data
                     )
                 )
 
@@ -438,11 +439,9 @@ class LessonTest(APITestCase):
         for lecturer_data in lecturers_data:
             user_data = filter_dict(lecturer_data, self.user_columns)
             profile_data = filter_dict(lecturer_data, self.profile_columns)
-            self.assertTrue(is_data_match(get_user(lecturer_data["email"]), user_data))
+            self.assertTrue(is_data_match(get_lecturer(lecturer_data["id"]), user_data))
             self.assertTrue(
-                is_data_match(
-                    get_profile(get_user(lecturer_data["email"])), profile_data
-                )
+                is_data_match(get_lecturer(lecturer_data["id"]).profile, profile_data)
             )
 
     def test_get_lesson_authorized(self):
@@ -473,11 +472,9 @@ class LessonTest(APITestCase):
         for lecturer_data in lecturers_data:
             user_data = filter_dict(lecturer_data, self.user_columns)
             profile_data = filter_dict(lecturer_data, self.profile_columns)
-            self.assertTrue(is_data_match(get_user(lecturer_data["email"]), user_data))
+            self.assertTrue(is_data_match(get_lecturer(lecturer_data["id"]), user_data))
             self.assertTrue(
-                is_data_match(
-                    get_profile(get_user(lecturer_data["email"])), profile_data
-                )
+                is_data_match(get_lecturer(lecturer_data["id"]).profile, profile_data)
             )
 
     def test_create_lesson_unauthenticated(self):

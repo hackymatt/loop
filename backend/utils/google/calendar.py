@@ -1,14 +1,15 @@
 from utils.google.service import build_service
 import uuid
+from django.conf import settings
 
 
 class CalendarApi:
-    def __init__(self, on_behalf_of):
+    def __init__(self):
         scopes = ["https://www.googleapis.com/auth/calendar.events"]
         self.service = build_service(
             service_name="calendar",
             service_version="v3",
-            on_behalf_of=on_behalf_of,
+            on_behalf_of=settings.MEETINGS_EMAIL,
             scopes=scopes,
         )
 

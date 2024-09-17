@@ -14,7 +14,6 @@ const endpoint = "/lesson-lecturers" as const;
 type ILecturer = {
   id: string;
   first_name: string;
-  email: string;
   image: string | null;
   gender: IGender;
 };
@@ -41,12 +40,11 @@ export const lessonLecturersQuery = (query?: IQueryParams) => {
     }
     const { results, records_count, pages_count } = data;
     const modifiedResults = results.map(({ lecturer }: ILessonLecturer) => {
-      const { id, first_name, email, gender, image } = lecturer;
+      const { id, first_name, gender, image } = lecturer;
       return {
         id,
         name: first_name,
         gender,
-        email,
         avatarUrl: image,
       };
     });

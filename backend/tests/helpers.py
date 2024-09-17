@@ -11,6 +11,7 @@ from review.models import Review
 from module.models import Module
 from newsletter.models import Newsletter
 from notification.models import Notification
+from message.models import Message
 from schedule.models import Schedule
 from reservation.models import Reservation
 from teaching.models import Teaching
@@ -65,6 +66,10 @@ def get_admin_profile(profile: Profile):
 
 def get_lecturer_profile(profile: Profile):
     return LecturerProfile.objects.get(profile=profile)
+
+
+def get_lecturer(id: int):
+    return LecturerProfile.objects.get(pk=id)
 
 
 def get_student_profile(profile: Profile):
@@ -237,6 +242,10 @@ def certificates_number():
 
 def notifications_number():
     return Notification.objects.count()
+
+
+def messages_number():
+    return Message.objects.count()
 
 
 def mock_send_message(mock):

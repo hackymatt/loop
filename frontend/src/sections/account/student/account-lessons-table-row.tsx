@@ -1,13 +1,12 @@
 import { useMemo, useCallback } from "react";
 
-import { Stack } from "@mui/system";
 import Popover from "@mui/material/Popover";
 import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
+import InputBase from "@mui/material/InputBase";
+import { Link, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import { Link, Avatar, Typography } from "@mui/material";
-import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
 import { usePopover } from "src/hooks/use-popover";
 
@@ -28,9 +27,10 @@ type Props = {
   row: IPurchaseItemProp;
   onAdd: (purchase: IPurchaseItemProp) => void;
   onDelete: (purchase: IPurchaseItemProp) => void;
+  onSendMessage: (purchase: IPurchaseItemProp) => void;
 };
 
-export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) {
+export default function AccountLessonsTableRow({ row, onAdd, onDelete, onSendMessage }: Props) {
   const openOptions = usePopover();
 
   const handleAdd = useCallback(() => {
@@ -43,20 +43,10 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
     onDelete(row);
   }, [openOptions, onDelete, row]);
 
-  const inputStyles = {
-    pl: 1,
-    [`&.${inputBaseClasses.focused}`]: {
-      bgcolor: "action.selected",
-    },
-    width: 1,
-  };
-
-  const genderAvatarUrl =
-    row?.teacher.gender === "Kobieta"
-      ? "/assets/images/avatar/avatar_female.jpg"
-      : "/assets/images/avatar/avatar_male.jpg";
-
-  const avatarUrl = row?.teacher.avatarUrl || genderAvatarUrl;
+  const handleSendMessage = useCallback(() => {
+    openOptions.onClose();
+    onSendMessage(row);
+  }, [openOptions, onSendMessage, row]);
 
   const isCompleted = useMemo(
     () => row.lessonStatus === LessonStatus.zakończona,
@@ -85,11 +75,11 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
   return (
     <>
       <TableRow hover>
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.lessonTitle} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.lessonTitle} sx={{ width: 1 }} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
+        <TableCell>
           <Label
             sx={{ textTransform: "uppercase" }}
             color={
@@ -104,15 +94,12 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
           </Label>
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
+        <TableCell>
           <InputBase value={fDateTime(row.lessonSlot[0])} />
         </TableCell>
 
         <TableCell>
-          <Stack spacing={0.5} direction="row" alignItems="center">
-            {row.teacher.name && <Avatar src={avatarUrl} sx={{ width: 36, height: 36 }} />}
-            <Typography variant="body2">{row.teacher.name}</Typography>
-          </Stack>
+          <InputBase value={row.teacher.name} />
         </TableCell>
 
         <TableCell>
@@ -142,6 +129,13 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
           <MenuItem onClick={handleAdd} sx={{ mr: 1, color: "success.main" }}>
             <Iconify icon="carbon:add" sx={{ mr: 0.5 }} />
             <Typography variant="body2">Dodaj rezerwację</Typography>
+          </MenuItem>
+        )}
+
+        {!isNew && (
+          <MenuItem onClick={handleSendMessage} sx={{ color: "success.main" }}>
+            <Iconify icon="carbon:email" sx={{ mr: 0.5 }} />
+            <Typography variant="body2">Napisz do instruktora</Typography>
           </MenuItem>
         )}
 

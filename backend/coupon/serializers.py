@@ -18,7 +18,7 @@ def notify_users(users: List[StudentProfile], coupon: Coupon):
                 profile=user.profile,
                 title=f"Otrzymujesz nowy kupon zniżkowy na -{coupon.discount}{discount_type}",
                 subtitle=coupon.code,
-                description=f"Wykorzystaj powyższy kupon do {coupon.expiration_date.strftime('%Y-%m-%d')}.",
+                description=f"Wykorzystaj powyższy kupon do {coupon.expiration_date.strftime('%d-%m-%Y')}.",
                 path="",
                 icon="mdi:coupon",
             )

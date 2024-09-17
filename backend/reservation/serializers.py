@@ -1,12 +1,9 @@
 from rest_framework.serializers import (
     ModelSerializer,
-    CharField,
-    EmailField,
     ValidationError,
 )
 from reservation.models import Reservation
-from profile.models import Profile, LecturerProfile, StudentProfile
-from lesson.models import Lesson, Technology
+from profile.models import Profile, StudentProfile
 from schedule.models import Schedule
 from schedule.utils import MeetingManager
 from datetime import datetime, timedelta
@@ -16,52 +13,6 @@ from mailer.mailer import Mailer
 from const import MIN_LESSON_DURATION_MINS, CANCELLATION_TIME
 from notification.utils import notify
 import urllib.parse
-
-
-class LecturerSerializer(ModelSerializer):
-    first_name = CharField(source="profile.user.first_name")
-    last_name = CharField(source="profile.user.last_name")
-    email = EmailField(source="profile.user.email")
-
-    class Meta:
-        model = LecturerProfile
-        fields = (
-            "first_name",
-            "last_name",
-            "email",
-        )
-
-
-class TechnologySerializer(ModelSerializer):
-    class Meta:
-        model = Technology
-        fields = "__all__"
-
-
-class LessonSerializer(ModelSerializer):
-    class Meta:
-        model = Lesson
-        fields = "__all__"
-
-
-class ScheduleSerializer(ModelSerializer):
-    lecturer = LecturerSerializer()
-
-    class Meta:
-        model = Schedule
-        fields = "__all__"
-
-
-class ReservationGetSerializer(ModelSerializer):
-    lesson = LessonSerializer()
-    schedule = ScheduleSerializer()
-
-    class Meta:
-        model = Reservation
-        fields = (
-            "lesson",
-            "schedule",
-        )
 
 
 class ReservationSerializer(ModelSerializer):
@@ -172,9 +123,7 @@ class ReservationSerializer(ModelSerializer):
         if (schedule.start_time - make_aware(datetime.now())) < timedelta(
             hours=CANCELLATION_TIME
         ):
-            meeting_manager = MeetingManager(
-                lecturer_email=schedule.lecturer.profile.user.email
-            )
+            meeting_manager = MeetingManager()
             meeting_manager.update(
                 event_id=schedule.meeting.event_id,
                 title=schedule.lesson.title,

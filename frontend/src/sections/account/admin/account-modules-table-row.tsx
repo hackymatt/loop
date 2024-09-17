@@ -4,9 +4,9 @@ import Popover from "@mui/material/Popover";
 import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
+import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import { Divider, Typography } from "@mui/material";
-import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
 import { usePopover } from "src/hooks/use-popover";
 
@@ -35,23 +35,15 @@ export default function AccountModulesTableRow({ row, onEdit, onDelete }: Props)
     onDelete(row);
   }, [openOptions, onDelete, row]);
 
-  const inputStyles = {
-    pl: 1,
-    [`&.${inputBaseClasses.focused}`]: {
-      bgcolor: "action.selected",
-    },
-    width: 1,
-  };
-
   return (
     <>
       <TableRow hover>
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.title} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.title} sx={{ width: 1 }} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.lessonsCount} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.lessonsCount} />
         </TableCell>
 
         <TableCell align="right" padding="none">

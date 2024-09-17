@@ -185,18 +185,20 @@ def get_image_content(url: str, provider: str) -> str:
 
 
 def create_user(username, email, first_name, last_name, dob, gender, image, join_type):
-    user, _ = User.objects.get_or_create(email=email)
-    user.username = username
-    user.first_name = first_name
-    user.last_name = last_name
-    user.is_active = True
-    user.save()
+    user, created = User.objects.get_or_create(email=email)
+    if created:
+        user.username = username
+        user.first_name = first_name
+        user.last_name = last_name
+        user.is_active = True
+        user.save()
 
     profile, created = Profile.objects.get_or_create(user=user)
-    profile.dob = dob
-    profile.gender = gender
-    profile.join_type = join_type
-    profile.save()
+    if created:
+        profile.dob = dob
+        profile.gender = gender
+        profile.join_type = join_type
+        profile.save()
 
     if created:
         notify(
@@ -216,7 +218,7 @@ def create_user(username, email, first_name, last_name, dob, gender, image, join
     else:
         StudentProfile.objects.get_or_create(profile=profile)
 
-    if image:
+    if created and image:
         profile.image.save(f"{profile.uuid}.jpg", image)
 
     newsletter, created = Newsletter.objects.get_or_create(email=email)

@@ -2,7 +2,6 @@ from rest_framework.serializers import (
     ModelSerializer,
     CharField,
     IntegerField,
-    EmailField,
     ImageField,
     SerializerMethodField,
     ValidationError,
@@ -15,7 +14,6 @@ from notification.utils import notify
 
 class StudentSerializer(ModelSerializer):
     first_name = CharField(source="profile.user.first_name")
-    email = EmailField(source="profile.user.email")
     gender = CharField(source="profile.get_gender_display")
     image = ImageField(source="profile.image")
 
@@ -23,7 +21,6 @@ class StudentSerializer(ModelSerializer):
         model = StudentProfile
         fields = (
             "first_name",
-            "email",
             "gender",
             "image",
         )
@@ -31,7 +28,6 @@ class StudentSerializer(ModelSerializer):
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
-    email = EmailField(source="profile.user.email")
     gender = CharField(source="profile.get_gender_display")
     image = ImageField(source="profile.image")
 
@@ -39,7 +35,6 @@ class LecturerSerializer(ModelSerializer):
         model = LecturerProfile
         fields = (
             "full_name",
-            "email",
             "gender",
             "image",
         )

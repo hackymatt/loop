@@ -2,10 +2,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from reservation.serializers import (
-    ReservationSerializer,
-    ReservationGetSerializer,
-)
+from reservation.serializers import ReservationSerializer
 from reservation.models import Reservation
 from profile.models import Profile
 from schedule.models import Schedule
@@ -15,15 +12,10 @@ from const import CANCELLATION_TIME, MIN_LESSON_DURATION_MINS
 
 
 class ReservationViewSet(ModelViewSet):
-    http_method_names = ["get", "post", "delete"]
+    http_method_names = ["post", "delete"]
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
     permission_classes = [IsAuthenticated]
-
-    def get_serializer_class(self, *args, **kwargs):
-        if self.request.method == "GET":
-            return ReservationGetSerializer
-        return self.serializer_class
 
     def get_queryset(self):
         user = self.request.user

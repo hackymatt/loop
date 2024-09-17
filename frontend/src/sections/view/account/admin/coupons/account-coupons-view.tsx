@@ -49,10 +49,10 @@ const TABS = [
 ];
 
 const TABLE_HEAD = [
-  { id: "code", label: "Kupon" },
-  { id: "discount", label: "Zniżka" },
-  { id: "active", label: "Status", minWidth: 200 },
-  { id: "expiration_date", label: "Data ważności", maxWidth: 100 },
+  { id: "code", label: "Kupon", minWidth: 200 },
+  { id: "discount", label: "Zniżka", maxWidth: 100 },
+  { id: "active", label: "Status" },
+  { id: "expiration_date", label: "Data ważności", minWidth: 150 },
   { id: "", width: 25 },
 ];
 

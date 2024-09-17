@@ -6,7 +6,7 @@ from utils.google.gmail import GmailApi
 
 class Mailer:
     def __init__(self):
-        self.gmail_api = GmailApi(on_behalf_of=settings.EMAIL_FROM)
+        self.gmail_api = GmailApi(on_behalf_of=settings.NOREPLY_EMAIL)
 
     def send(self, email_template: str, to: List[str], subject: str, data):
         email_body = render_to_string(
@@ -20,7 +20,7 @@ class Mailer:
             },
         )
         return self.gmail_api.send(
-            settings.EMAIL_FROM,
+            settings.NOREPLY_EMAIL,
             email_to=", ".join(to),
             email_subject=subject,
             email_body=email_body,

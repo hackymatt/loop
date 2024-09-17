@@ -9,7 +9,6 @@ const endpoint = "/best-reviews" as const;
 
 type IStudent = {
   first_name: string;
-  email: string;
   gender: IGender | null;
   image: string | null;
 };

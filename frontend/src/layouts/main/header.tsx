@@ -42,7 +42,7 @@ import { useCartsRecordsCount } from "src/api/carts/carts";
 import { useWishlistsRecordsCount } from "src/api/wishlists/wishlists";
 import { useNotifications } from "src/api/notifications/notifications";
 import { useEditNotification } from "src/api/notifications/notification";
-import { adminNavigations, studentNavigations, teacherNavigations } from "src/consts/navigations";
+import { adminNavigation, studentNavigation, teacherNavigation } from "src/consts/navigations";
 
 import Logo from "src/components/logo";
 import Iconify from "src/components/iconify";
@@ -151,7 +151,11 @@ export default function Header({ headerOnDark }: Props) {
 
       <Stack spacing={3} direction="row" alignItems="center" flexGrow={1} justifyContent="flex-end">
         {isLoggedIn ? (
-          <Badge badgeContent={notificationItems} max={99} color="primary">
+          <Badge
+            badgeContent={userType !== UserType.Admin ? notificationItems : 0}
+            max={99}
+            color="primary"
+          >
             <IconButton
               size="small"
               color="inherit"
@@ -177,7 +181,11 @@ export default function Header({ headerOnDark }: Props) {
           </IconButton>
         )}
 
-        <Badge badgeContent={wishlistItems} max={99} color="primary">
+        <Badge
+          badgeContent={userType === UserType.Student ? wishlistItems : 0}
+          max={99}
+          color="primary"
+        >
           <IconButton
             component={RouterLink}
             href={isLoggedIn ? paths.wishlist : paths.login}
@@ -190,7 +198,11 @@ export default function Header({ headerOnDark }: Props) {
           </IconButton>
         </Badge>
 
-        <Badge badgeContent={cartItems} max={99} color="primary">
+        <Badge
+          badgeContent={userType === UserType.Student ? cartItems : 0}
+          max={99}
+          color="primary"
+        >
           <IconButton
             component={RouterLink}
             href={isLoggedIn ? paths.cart : paths.login}
@@ -432,9 +444,9 @@ function AccountPopover({ openMenu }: { openMenu: UsePopoverReturn }) {
   const navigations = useMemo(
     () =>
       ({
-        [UserType.Admin]: adminNavigations,
-        [UserType.Wykładowca]: teacherNavigations,
-        [UserType.Student]: studentNavigations,
+        [UserType.Admin]: adminNavigation,
+        [UserType.Wykładowca]: teacherNavigation,
+        [UserType.Student]: studentNavigation,
       })[userType],
     [userType],
   );

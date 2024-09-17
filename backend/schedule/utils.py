@@ -5,8 +5,8 @@ from datetime import datetime
 
 
 class MeetingManager:
-    def __init__(self, lecturer_email):
-        self.calendar_api = CalendarApi(on_behalf_of=lecturer_email)
+    def __init__(self):
+        self.calendar_api = CalendarApi()
 
     def _create_lecturer(self, lecturer: LecturerProfile):
         return {

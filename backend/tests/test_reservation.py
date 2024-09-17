@@ -365,24 +365,6 @@ class ReservationTest(TestCase):
         self.long_timeslot_3.lesson = self.lesson_4
         self.long_timeslot_3.save()
 
-    def test_get_reservation_unauthenticated(self):
-        # no login
-        self.assertFalse(auth.get_user(self.client).is_authenticated)
-        # get data
-        response = self.client.get(self.endpoint)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_get_reservation_authenticated(self):
-        # login
-        login(self, self.data["email"], self.data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # get data
-        response = self.client.get(self.endpoint)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
-        count = data["records_count"]
-        self.assertEqual(count, 3)
-
     @patch.object(GmailApi, "_send_message")
     def test_create_reservation_unauthenticated(self, _send_message_mock):
         mock_send_message(mock=_send_message_mock)

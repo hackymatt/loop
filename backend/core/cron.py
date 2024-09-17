@@ -3,6 +3,7 @@ from reservation.utils import confirm_reservations
 from review.utils import remind_review
 from certificate.utils import generate_certificates
 from notification.utils import remove_old_notifications
+from message.utils import remove_old_messages
 
 
 def create_backup():
@@ -36,5 +37,12 @@ def create_certificates():
 def cleanse_notifications():
     try:
         remove_old_notifications()
+    except Exception:
+        pass
+
+
+def cleanse_messages():
+    try:
+        remove_old_messages()
     except Exception:
         pass

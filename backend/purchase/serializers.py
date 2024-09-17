@@ -1,7 +1,6 @@
 from rest_framework.serializers import (
     ModelSerializer,
     SerializerMethodField,
-    EmailField,
     CharField,
     ImageField,
     ValidationError,
@@ -63,7 +62,6 @@ class LessonSerializer(ModelSerializer):
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
-    email = EmailField(source="profile.user.email")
     gender = CharField(source="profile.get_gender_display")
     image = ImageField(source="profile.image")
 
@@ -72,7 +70,6 @@ class LecturerSerializer(ModelSerializer):
         fields = (
             "id",
             "full_name",
-            "email",
             "gender",
             "image",
         )
@@ -151,10 +148,11 @@ class PurchaseGetSerializer(ModelSerializer):
         reservation = get_reservation(purchase=purchase)
 
         if reservation.exists():
-            schedule_time = reservation.first().schedule.start_time
-            if make_aware(datetime.now()) >= schedule_time:
+            start_time = reservation.first().schedule.start_time
+            end_time = reservation.first().schedule.end_time
+            if make_aware(datetime.now()) >= end_time:
                 return LessonStatus.COMPLETED
-            elif (schedule_time - make_aware(datetime.now())) < timedelta(
+            elif (start_time - make_aware(datetime.now())) < timedelta(
                 hours=CANCELLATION_TIME
             ):
                 return LessonStatus.CONFIRMED

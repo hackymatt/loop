@@ -32,9 +32,13 @@ type ISchedule = {
   lesson: ILesson | null;
   meeting_url: string | null;
   students: IStudent[];
+  students_required: number;
 };
 
-type ICreateSchedule = Omit<ISchedule, "id" | "lesson" | "meeting_url" | "students">;
+type ICreateSchedule = Omit<
+  ISchedule,
+  "id" | "lesson" | "meeting_url" | "students" | "students_required"
+>;
 type ICreateScheduleReturn = ICreateSchedule;
 export const schedulesQuery = (query?: IQueryParams) => {
   const url = endpoint;
@@ -53,7 +57,15 @@ export const schedulesQuery = (query?: IQueryParams) => {
     }
     const { results, records_count, pages_count } = data;
     const modifiedResults = results.map(
-      ({ id, start_time, end_time, lesson, meeting_url, students }: ISchedule) => ({
+      ({
+        id,
+        start_time,
+        end_time,
+        lesson,
+        meeting_url,
+        students,
+        students_required,
+      }: ISchedule) => ({
         id,
         startTime: start_time,
         endTime: end_time,
@@ -65,6 +77,7 @@ export const schedulesQuery = (query?: IQueryParams) => {
           gender,
           image,
         })),
+        studentsRequired: students_required,
       }),
     );
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };

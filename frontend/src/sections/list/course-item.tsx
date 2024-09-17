@@ -185,10 +185,10 @@ export default function CourseItem({ course, vertical }: Props) {
                 {Number.isInteger(ratingNumber) ? `${ratingNumber}.0` : ratingNumber}
               </Box>
 
-              <Link variant="body2" sx={{ color: "text.secondary" }}>
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
                 ({fShortenNumber(totalReviews)}{" "}
                 {polishPlurals("recenzja", "recenzje", "recenzji", totalReviews)})
-              </Link>
+              </Typography>
             </Stack>
           )}
 

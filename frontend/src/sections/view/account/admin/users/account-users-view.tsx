@@ -47,12 +47,9 @@ const TABS = [
 
 const TABLE_HEAD = [
   { id: "active", label: "Aktywny" },
-  { id: "first_name", label: "Imię" },
-  { id: "last_name", label: "Nazwisko" },
-  { id: "email", label: "Email", minWidth: 200 },
-  { id: "gender", label: "Płeć", maxWidth: 100 },
+  { id: "email", label: "Email", minWidth: 250 },
   { id: "user_type", label: "Typ" },
-  { id: "created_at", label: "Data", minWidth: 110 },
+  { id: "created_at", label: "Data", minWidth: 150 },
   { id: "", width: 25 },
 ];
 

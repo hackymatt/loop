@@ -16,7 +16,6 @@ const endpoint = "/purchase" as const;
 type ILecturer = {
   id: string;
   full_name: string;
-  email: string;
   gender: IGender | null;
   image: string | null;
 };
@@ -98,7 +97,6 @@ export const purchaseQuery = (query?: IQueryParams) => {
             ? {
                 id: reservation?.schedule.lecturer.id,
                 name: reservation?.schedule.lecturer.full_name,
-                email: reservation?.schedule.lecturer.email,
                 avatarUrl: reservation?.schedule.lecturer.image,
                 gender: reservation?.schedule.lecturer.gender,
               }

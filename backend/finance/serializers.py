@@ -1,7 +1,6 @@
 from rest_framework.serializers import (
     ModelSerializer,
     CharField,
-    EmailField,
     SerializerMethodField,
 )
 from drf_extra_fields.fields import Base64ImageField
@@ -11,7 +10,6 @@ from profile.models import LecturerProfile
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
-    email = EmailField(source="profile.user.email")
     gender = CharField(source="profile.get_gender_display")
     image = Base64ImageField(source="profile.image", required=True)
 
@@ -19,7 +17,6 @@ class LecturerSerializer(ModelSerializer):
         model = LecturerProfile
         fields = (
             "id",
-            "email",
             "full_name",
             "gender",
             "image",

@@ -2,9 +2,10 @@ import { paths } from "src/routes/paths";
 
 import Iconify from "src/components/iconify";
 
+import { MessageType } from "src/types/message";
 import { ReviewStatus } from "src/types/purchase";
 
-const userNavigations = [
+const userNavigation = [
   {
     title: "Dane osobowe",
     path: paths.account.personal,
@@ -17,10 +18,16 @@ const userNavigations = [
     icon: <Iconify icon="carbon:password" />,
     children: [],
   },
+  {
+    title: "Wiadomości",
+    path: `${paths.account.messages}/?sort_by=-created_at&page_size=10&type=${MessageType.INBOX}`,
+    icon: <Iconify icon="carbon:email" />,
+    children: [],
+  },
 ];
 
-export const studentNavigations = [
-  ...userNavigations,
+export const studentNavigation = [
+  ...userNavigation,
   ...[
     {
       title: "Lekcje",
@@ -43,8 +50,8 @@ export const studentNavigations = [
   ],
 ];
 
-export const teacherNavigations = [
-  ...userNavigations,
+export const teacherNavigation = [
+  ...userNavigation,
   ...[
     {
       title: "Profil instruktora",
@@ -59,15 +66,15 @@ export const teacherNavigations = [
       children: [],
     },
     {
-      title: "Terminarz",
-      path: paths.account.teacher.calendar,
-      icon: <Iconify icon="carbon:calendar" />,
-      children: [],
-    },
-    {
       title: "Nauczanie",
       path: `${paths.account.teacher.teaching}/?sort_by=title&page_size=10`,
       icon: <Iconify icon="carbon:education" />,
+      children: [],
+    },
+    {
+      title: "Terminarz",
+      path: paths.account.teacher.calendar,
+      icon: <Iconify icon="carbon:calendar" />,
       children: [],
     },
     {
@@ -85,8 +92,8 @@ export const teacherNavigations = [
   ],
 ];
 
-export const adminNavigations = [
-  ...userNavigations,
+export const adminNavigation = [
+  ...userNavigation,
   ...[
     {
       title: "Kursy",
