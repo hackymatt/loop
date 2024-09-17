@@ -364,10 +364,10 @@ export default function TeacherDetailsLessonItem({
                     </Box>
 
                     {details?.totalReviews && (
-                      <Link variant="body2" sx={{ color: "text.secondary" }}>
+                      <Typography variant="body2" sx={{ color: "text.secondary" }}>
                         ({fShortenNumber(details.totalReviews)}{" "}
                         {polishPlurals("recenzja", "recenzje", "recenzji", details.totalReviews)})
-                      </Link>
+                      </Typography>
                     )}
                   </Stack>
                 )}

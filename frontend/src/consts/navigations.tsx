@@ -66,15 +66,15 @@ export const teacherNavigation = [
       children: [],
     },
     {
-      title: "Terminarz",
-      path: paths.account.teacher.calendar,
-      icon: <Iconify icon="carbon:calendar" />,
-      children: [],
-    },
-    {
       title: "Nauczanie",
       path: `${paths.account.teacher.teaching}/?sort_by=title&page_size=10`,
       icon: <Iconify icon="carbon:education" />,
+      children: [],
+    },
+    {
+      title: "Terminarz",
+      path: paths.account.teacher.calendar,
+      icon: <Iconify icon="carbon:calendar" />,
       children: [],
     },
     {

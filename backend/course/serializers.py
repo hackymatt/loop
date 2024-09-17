@@ -287,7 +287,7 @@ def get_progress(lessons, user):
     student_lessons = Reservation.objects.filter(
         student=student_profile,
         lesson__in=lessons,
-        schedule__start_time__lte=make_aware(datetime.now()),
+        schedule__end_time__lte=make_aware(datetime.now()),
     )
     return student_lessons.count() / len(lessons)
 

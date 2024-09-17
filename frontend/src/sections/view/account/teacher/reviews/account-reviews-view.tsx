@@ -60,7 +60,7 @@ export default function AccountReviewsView() {
     <Stack direction="column" spacing={8}>
       <Grid xs={12} md={7} lg={8} sx={{ maxWidth: 750 }}>
         <ReviewToolbar
-          lesson={filters.lesson_id ?? ""}
+          lesson={filters?.lesson_id ?? ""}
           lessonOptions={(teachings ?? []).map(
             (teaching: ITeachingProp) =>
               ({

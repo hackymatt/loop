@@ -86,10 +86,10 @@ function TeacherItem({ teacher }: TeacherItemProps) {
               </Box>
 
               {teacher.totalReviews && (
-                <Link variant="body2" sx={{ color: "text.secondary" }}>
+                <Typography variant="body2" sx={{ color: "text.secondary" }}>
                   ({fShortenNumber(teacher.totalReviews)}{" "}
                   {polishPlurals("recenzja", "recenzje", "recenzji", teacher.totalReviews)})
-                </Link>
+                </Typography>
               )}
             </Stack>
           )}

@@ -128,10 +128,10 @@ export default function TeacherItem({ teacher, vertical }: Props) {
               )}
 
               {totalReviews && totalReviews > 0 && (
-                <Link variant="body2" sx={{ color: "text.secondary" }}>
+                <Typography variant="body2" sx={{ color: "text.secondary" }}>
                   ({fShortenNumber(totalReviews)}{" "}
                   {polishPlurals("recenzja", "recenzje", "recenzji", totalReviews)})
-                </Link>
+                </Typography>
               )}
             </Stack>
           )}

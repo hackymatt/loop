@@ -46,7 +46,7 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
   const handleApplyCoupon = async () => {
     setCouponError("");
     if (coupon) {
-      const validatedCoupon = await validateCoupon(coupon, total);
+      const validatedCoupon = await validateCoupon(coupon, total * 100);
       const { status, data } = validatedCoupon;
 
       if (status !== 200) {

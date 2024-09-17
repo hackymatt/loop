@@ -16,11 +16,11 @@ export default function AccountCouponUsageTableRow({ row }: Props) {
   return (
     <TableRow hover>
       <TableCell>
-        <InputBase value={row.user.email} />
+        <InputBase value={row.user.email} sx={{ width: 1 }} />
       </TableCell>
 
       <TableCell>
-        <InputBase value={row.coupon.code} />
+        <InputBase value={row.coupon.code} sx={{ width: 1 }} />
       </TableCell>
 
       <TableCell>

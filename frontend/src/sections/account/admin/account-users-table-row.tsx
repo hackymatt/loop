@@ -57,19 +57,7 @@ export default function AccountUsersTableRow({ row, onEdit, onFinanceHistoryView
         </TableCell>
 
         <TableCell>
-          <InputBase value={row.first_name} sx={{ width: 1 }} />
-        </TableCell>
-
-        <TableCell>
-          <InputBase value={row.last_name} sx={{ width: 1 }} />
-        </TableCell>
-
-        <TableCell>
           <InputBase value={row.email} sx={{ width: 1 }} />
-        </TableCell>
-
-        <TableCell>
-          <InputBase value={row.gender} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell>

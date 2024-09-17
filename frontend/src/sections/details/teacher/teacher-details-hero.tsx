@@ -180,10 +180,10 @@ export default function TeacherDetailsHero({ teacher }: Props) {
                     </Box>
 
                     {totalReviews && (
-                      <Link variant="body2" sx={{ color: "text.secondary" }}>
+                      <Typography variant="body2" sx={{ color: "text.secondary" }}>
                         ({fShortenNumber(totalReviews)}{" "}
                         {polishPlurals("recenzja", "recenzje", "recenzji", totalReviews)})
-                      </Link>
+                      </Typography>
                     )}
                   </Stack>
                 )}

@@ -42,6 +42,7 @@ class ManageScheduleGetSerializer(ModelSerializer):
     lesson = LessonSerializer()
     meeting_url = SerializerMethodField()
     students = SerializerMethodField()
+    students_required = SerializerMethodField("get_students_required")
 
     class Meta:
         model = Schedule
@@ -61,6 +62,13 @@ class ManageScheduleGetSerializer(ModelSerializer):
         ids = Reservation.objects.filter(schedule=schedule).values("student")
         students = StudentProfile.objects.filter(id__in=ids).all()
         return StudentSerializer(students, many=True).data
+
+    def get_students_required(self, schedule):
+        return max(
+            MINIMUM_STUDENTS_REQUIRED
+            - Reservation.objects.filter(schedule=schedule).count(),
+            0,
+        )
 
 
 class ManageScheduleSerializer(ModelSerializer):

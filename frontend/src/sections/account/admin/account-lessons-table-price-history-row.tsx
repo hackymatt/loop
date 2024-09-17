@@ -17,7 +17,7 @@ export default function AccountLessonsPriceHistoryTableRow({ row }: Props) {
   return (
     <TableRow hover>
       <TableCell>
-        <InputBase value={row.lesson.title} />
+        <InputBase value={row.lesson.title} sx={{ width: 1 }} />
       </TableCell>
 
       <TableCell>

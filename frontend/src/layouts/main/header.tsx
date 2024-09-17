@@ -151,7 +151,11 @@ export default function Header({ headerOnDark }: Props) {
 
       <Stack spacing={3} direction="row" alignItems="center" flexGrow={1} justifyContent="flex-end">
         {isLoggedIn ? (
-          <Badge badgeContent={notificationItems} max={99} color="primary">
+          <Badge
+            badgeContent={userType !== UserType.Admin ? notificationItems : 0}
+            max={99}
+            color="primary"
+          >
             <IconButton
               size="small"
               color="inherit"
@@ -177,7 +181,11 @@ export default function Header({ headerOnDark }: Props) {
           </IconButton>
         )}
 
-        <Badge badgeContent={wishlistItems} max={99} color="primary">
+        <Badge
+          badgeContent={userType === UserType.Student ? wishlistItems : 0}
+          max={99}
+          color="primary"
+        >
           <IconButton
             component={RouterLink}
             href={isLoggedIn ? paths.wishlist : paths.login}
@@ -190,7 +198,11 @@ export default function Header({ headerOnDark }: Props) {
           </IconButton>
         </Badge>
 
-        <Badge badgeContent={cartItems} max={99} color="primary">
+        <Badge
+          badgeContent={userType === UserType.Student ? cartItems : 0}
+          max={99}
+          color="primary"
+        >
           <IconButton
             component={RouterLink}
             href={isLoggedIn ? paths.cart : paths.login}

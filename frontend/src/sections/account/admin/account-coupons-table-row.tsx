@@ -51,7 +51,7 @@ export default function AccountCouponsTableRow({ row, onEdit, onDelete, onViewUs
     <>
       <TableRow hover>
         <TableCell>
-          <InputBase value={row.code} />
+          <InputBase value={row.code} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell>

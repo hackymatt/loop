@@ -1,5 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework.response import Response
+from rest_framework import status
 from utils.permissions.permissions import IsLecturer
 from schedule.serializers import (
     ManageScheduleSerializer,
@@ -50,6 +52,15 @@ class ManageScheduleViewSet(ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         schedule = super().get_object()
+
+        if (make_aware(datetime.now()) - schedule.start_time) > timedelta(
+            microseconds=0
+        ):
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"schedule": "Nie można odwołać już lekcji."},
+            )
+
         lesson = schedule.lesson
         meeting = schedule.meeting
         profiles = [

@@ -68,6 +68,11 @@ export default function DetailsForm({
     [eventDetails.event.extendedProps.ready],
   );
 
+  const canBeCancelled = useMemo(
+    () => new Date() > eventDetails.event.start!,
+    [eventDetails.event.start],
+  );
+
   const students: IScheduleStudentProp[] = useMemo(
     () => eventDetails.event.extendedProps.students,
     [eventDetails.event.extendedProps.students],
@@ -86,7 +91,7 @@ export default function DetailsForm({
             target="_blank"
             startIcon={<Iconify icon="logos:google-meet" />}
             sx={{ mr: 3 }}
-            disabled={!isReady}
+            disabled={eventDetails.event.url === ""}
           >
             Dołącz
           </Button>
@@ -95,14 +100,14 @@ export default function DetailsForm({
         <DialogContent sx={{ py: 0 }}>
           <Stack direction="row" spacing={1}>
             <Typography>Minimalna ilość zapisów:</Typography>
-            <Typography color={isReady ? "success" : "error"}>
+            <Typography color={isReady ? "primary" : "error"}>
               {isReady ? "osiągnięta" : "nieosiągnięta"}
             </Typography>
           </Stack>
 
           <Stack direction="row" spacing={1}>
             <Typography>Aktualna liczba studentów:</Typography>
-            <Typography color={isReady ? "success" : "error"}>{students?.length ?? 0}</Typography>
+            <Typography color={isReady ? "primary" : "error"}>{students?.length ?? 0}</Typography>
           </Stack>
 
           {(students?.length ?? 0) > 0 && (
@@ -166,6 +171,7 @@ export default function DetailsForm({
             type="submit"
             variant="contained"
             onClick={confirmCancellationFormOpen.onToggle}
+            disabled={canBeCancelled}
           >
             Odwołaj
           </LoadingButton>
