@@ -162,7 +162,13 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete, onSendMes
           <>
             {hasRecordings && <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />}
             {row.recordings.map((recording: IRecordingProp, index: number) => (
-              <Link href={recording.url} target="_blank" underline="none" color="inherit">
+              <Link
+                key={recording.name}
+                href={recording.url}
+                target="_blank"
+                underline="none"
+                color="inherit"
+              >
                 <MenuItem>
                   <Iconify icon="carbon:download" sx={{ mr: 0.5 }} />
                   <Typography variant="body2">
