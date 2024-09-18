@@ -1,7 +1,9 @@
 "use client";
 
 import { AxiosError } from "axios";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
+
+import { useLocalStorage } from "src/hooks/use-local-storage";
 
 import { useVerify } from "src/api/auth/verify";
 import { useLogout } from "src/api/auth/logout";
@@ -31,16 +33,40 @@ enum LoginTypes {
   GITHUB = "github",
 }
 
-export function UserProvider({ children }: Props) {
-  type LoginType = LoginTypes.EMAIL | LoginTypes.GOOGLE | LoginTypes.FACEBOOK | LoginTypes.GITHUB;
+type User = {
+  isRegistered: boolean;
+  isLoggedIn: boolean;
+  isUnverified: boolean;
+  isPasswordReset: boolean;
+  email: string;
+  userType: UserType;
+  loginType: LoginTypes;
+};
 
-  const [isRegistered, setIsRegistered] = useState<boolean>(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [isUnverified, setIsUnverified] = useState<boolean>(false);
-  const [isPasswordReset, setIsPasswordReset] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [userType, setUserType] = useState<string>(UserType.Student);
-  const [loginType, setLoginType] = useState<LoginType>();
+const defaultSettings = {
+  isRegistered: false,
+  isLoggedIn: false,
+  isUnverified: false,
+  isPasswordReset: false,
+  email: "",
+  userType: UserType.Student,
+  loginType: LoginTypes.EMAIL,
+};
+
+const STORAGE_KEY = "user";
+
+export function UserProvider({ children }: Props) {
+  const { state, update } = useLocalStorage(STORAGE_KEY, defaultSettings);
+
+  const [user, setUser] = useState<User>(state);
+
+  const updateUser = useCallback(
+    (key: keyof User, value: any) => {
+      setUser((prev: User) => ({ ...prev, [key]: value }));
+      update(key, value);
+    },
+    [update],
+  );
 
   const {
     mutateAsync: register,
@@ -66,7 +92,7 @@ export function UserProvider({ children }: Props) {
     isError: isErrorLogin,
     error: loginError,
     isLoading: isLoadingLogin,
-  } = useLogin(() => setLoginType(LoginTypes.EMAIL));
+  } = useLogin(() => updateUser("loginType", LoginTypes.EMAIL));
   const {
     mutateAsync: loginGoogle,
     data: loginGoogleData,
@@ -74,7 +100,7 @@ export function UserProvider({ children }: Props) {
     isError: isErrorLoginGoogle,
     error: loginGoogleError,
     isLoading: isLoadingLoginGoogle,
-  } = useLoginGoogle(() => setLoginType(LoginTypes.GOOGLE));
+  } = useLoginGoogle(() => updateUser("loginType", LoginTypes.GOOGLE));
   const {
     mutateAsync: loginFacebook,
     data: loginFacebookData,
@@ -82,7 +108,7 @@ export function UserProvider({ children }: Props) {
     isError: isErrorLoginFacebook,
     error: loginFacebookError,
     isLoading: isLoadingLoginFacebook,
-  } = useLoginFacebook(() => setLoginType(LoginTypes.FACEBOOK));
+  } = useLoginFacebook(() => updateUser("loginType", LoginTypes.FACEBOOK));
   const {
     mutateAsync: loginGithub,
     data: loginGithubData,
@@ -90,7 +116,7 @@ export function UserProvider({ children }: Props) {
     isError: isErrorLoginGithub,
     error: loginGithubError,
     isLoading: isLoadingLoginGithub,
-  } = useLoginGithub(() => setLoginType(LoginTypes.GITHUB));
+  } = useLoginGithub(() => updateUser("loginType", LoginTypes.GITHUB));
   const {
     mutateAsync: logout,
     isSuccess: isSuccessLogout,
@@ -116,80 +142,79 @@ export function UserProvider({ children }: Props) {
 
   useEffect(() => {
     if (isSuccessRegister) {
-      setIsUnverified(true);
-      setIsRegistered(true);
-      setEmail(registerData.email);
+      updateUser("isUnverified", true);
+      updateUser("isRegistered", true);
+      updateUser("email", registerData.email);
     }
-  }, [isSuccessRegister, registerData?.email]);
+  }, [isSuccessRegister, registerData?.email, updateUser]);
 
   useEffect(() => {
     if (isSuccessUnregister) {
-      setIsUnverified(true);
-      setIsRegistered(false);
-      setIsLoggedIn(false);
+      updateUser("isUnverified", true);
+      updateUser("isRegistered", false);
+      updateUser("isLoggedIn", false);
     }
-  }, [isSuccessUnregister]);
+  }, [isSuccessUnregister, updateUser]);
 
   useEffect(() => {
     if (isSuccessVerify) {
-      setIsRegistered(false);
-      setIsUnverified(false);
+      updateUser("isRegistered", false);
+      updateUser("isUnverified", false);
     }
-  }, [isSuccessVerify]);
+  }, [isSuccessVerify, updateUser]);
 
   useEffect(() => {
-    setIsLoggedIn(false);
-    setUserType(UserType.Student);
-    switch (loginType) {
+    switch (user.loginType) {
       case LoginTypes.GOOGLE:
         if (isSuccessLoginGoogle) {
-          setIsLoggedIn(true);
-          setUserType(loginGoogleData?.user_type ?? UserType.Student);
+          updateUser("isLoggedIn", true);
+          updateUser("userType", loginGoogleData?.user_type ?? UserType.Student);
         }
         break;
       case LoginTypes.FACEBOOK:
         if (isSuccessLoginFacebook) {
-          setIsLoggedIn(true);
-          setUserType(loginFacebookData?.user_type ?? UserType.Student);
+          updateUser("isLoggedIn", true);
+          updateUser("userType", loginFacebookData?.user_type ?? UserType.Student);
         }
         break;
       case LoginTypes.GITHUB:
         if (isSuccessLoginGithub) {
-          setIsLoggedIn(true);
-          setUserType(loginGithubData?.user_type ?? UserType.Student);
+          updateUser("isLoggedIn", true);
+          updateUser("userType", loginGithubData?.user_type ?? UserType.Student);
         }
         break;
       default:
         if (isSuccessLogin) {
-          setIsLoggedIn(true);
-          setUserType(loginData?.user_type ?? UserType.Student);
+          updateUser("isLoggedIn", true);
+          updateUser("userType", loginData?.user_type ?? UserType.Student);
         }
         break;
     }
   }, [
     isSuccessLogin,
-    isSuccessLoginGoogle,
     isSuccessLoginFacebook,
     isSuccessLoginGithub,
+    isSuccessLoginGoogle,
     loginData?.user_type,
-    loginGoogleData?.user_type,
     loginFacebookData?.user_type,
     loginGithubData?.user_type,
-    loginType,
+    loginGoogleData?.user_type,
+    updateUser,
+    user.loginType,
   ]);
 
   useEffect(() => {
     if (isSuccessLogout) {
-      setIsLoggedIn(false);
-      setUserType(UserType.Student);
+      updateUser("isLoggedIn", false);
+      updateUser("userType", UserType.Student);
     }
-  }, [isSuccessLogout]);
+  }, [isSuccessLogout, updateUser]);
 
   useEffect(() => {
     if (isSuccessPasswordReset) {
-      setIsPasswordReset(true);
+      updateUser("isPasswordReset", true);
     }
-  }, [isSuccessPasswordReset]);
+  }, [isSuccessPasswordReset, updateUser]);
 
   useEffect(() => {
     if (isErrorLogin || isErrorLoginGoogle || isErrorLoginFacebook || isErrorLoginGithub) {
@@ -198,9 +223,9 @@ export function UserProvider({ children }: Props) {
           ((loginError || loginGoogleError || loginFacebookError || loginGithubError) as AxiosError)
             .response?.status === 403
         ) {
-          setEmail(((loginError as AxiosError).response?.data as ILoginReturn).email);
-          setIsRegistered(true);
-          setIsUnverified(true);
+          updateUser("email", ((loginError as AxiosError).response?.data as ILoginReturn).email);
+          updateUser("isRegistered", true);
+          updateUser("isUnverified", true);
         }
       }
     }
@@ -213,17 +238,18 @@ export function UserProvider({ children }: Props) {
     loginFacebookError,
     loginGithubError,
     loginGoogleError,
+    updateUser,
   ]);
 
   const memoizedValue = useMemo(
     () => ({
       isLoading,
-      isRegistered,
-      isLoggedIn,
-      isUnverified,
-      isPasswordReset,
-      email,
-      userType,
+      isRegistered: state.isRegistered,
+      isLoggedIn: state.isLoggedIn,
+      isUnverified: state.isUnverified,
+      isPasswordReset: state.isPasswordReset,
+      email: state.email,
+      userType: state.userType,
       registerUser: register,
       unregisterUser: unregister,
       verifyUser: verify,
@@ -237,22 +263,22 @@ export function UserProvider({ children }: Props) {
     }),
     [
       isLoading,
-      isRegistered,
-      isLoggedIn,
-      isUnverified,
-      isPasswordReset,
-      email,
-      userType,
-      register,
-      unregister,
-      verify,
       login,
-      loginGoogle,
       loginFacebook,
       loginGithub,
+      loginGoogle,
       logout,
-      verifyCode,
+      register,
       resetPassword,
+      state.email,
+      state.isLoggedIn,
+      state.isPasswordReset,
+      state.isRegistered,
+      state.isUnverified,
+      state.userType,
+      unregister,
+      verify,
+      verifyCode,
     ],
   );
 

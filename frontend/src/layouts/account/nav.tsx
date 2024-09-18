@@ -1,7 +1,7 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState, useEffect } from "react";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
@@ -45,7 +45,7 @@ export default function Nav({ open, onClose }: Props) {
 
   const mdUp = useResponsive("up", "md");
 
-  const { logoutUser, isLoggedIn, userType } = useUserContext();
+  const { logoutUser, userType } = useUserContext();
 
   const { data: userDetails } = useUserDetails();
 
@@ -62,17 +62,12 @@ export default function Nav({ open, onClose }: Props) {
   const handleLogout = async () => {
     try {
       await logoutUser({});
+      push(paths.login);
       enqueueSnackbar("Wylogowano pomyślnie", { variant: "success" });
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd", { variant: "error" });
     }
   };
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      push(paths.login);
-    }
-  }, [isLoggedIn, push]);
 
   const renderContent = (
     <Stack
