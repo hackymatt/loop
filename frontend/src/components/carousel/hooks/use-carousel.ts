@@ -1,21 +1,21 @@
-import { useMemo } from 'react';
-import useEmblaCarousel from 'embla-carousel-react';
-import type { EmblaPluginType } from 'embla-carousel';
+import { useMemo } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import type { EmblaPluginType } from "embla-carousel";
 
-import { useThumbs } from './use-thumbs';
-import { useCarouselDots } from './use-carousel-dots';
-import { useParallax } from './use-carousel-parallax';
-import { useCarouselArrows } from './use-carousel-arrows';
-import { useCarouselProgress } from './use-carousel-progress';
-import { useCarouselAutoPlay } from './use-carousel-auto-play';
-import { useCarouselAutoScroll } from './use-carousel-auto-scroll';
-import type { CarouselOptions, UseCarouselReturn } from '../types';
+import { useThumbs } from "./use-thumbs";
+import { useCarouselDots } from "./use-carousel-dots";
+import { useParallax } from "./use-carousel-parallax";
+import { useCarouselArrows } from "./use-carousel-arrows";
+import { useCarouselProgress } from "./use-carousel-progress";
+import { useCarouselAutoPlay } from "./use-carousel-auto-play";
+import { useCarouselAutoScroll } from "./use-carousel-auto-scroll";
+import type { CarouselOptions, UseCarouselReturn } from "../types";
 
 // ----------------------------------------------------------------------
 
 export const useCarousel = (
   options?: CarouselOptions,
-  plugins?: EmblaPluginType[]
+  plugins?: EmblaPluginType[],
 ): UseCarouselReturn => {
   const [mainRef, mainApi] = useEmblaCarousel(options, plugins);
 
@@ -36,13 +36,13 @@ export const useCarousel = (
   useParallax(mainApi, options?.parallax);
 
   const controls = useMemo(() => {
-    if (pluginNames?.includes('autoplay')) {
+    if (pluginNames?.includes("autoplay")) {
       return {
         onClickPrev: () => _autoplay.onClickAutoplay(onClickPrev),
         onClickNext: () => _autoplay.onClickAutoplay(onClickNext),
       };
     }
-    if (pluginNames?.includes('autoScroll')) {
+    if (pluginNames?.includes("autoScroll")) {
       return {
         onClickPrev: () => _autoScroll.onClickAutoplay(onClickPrev),
         onClickNext: () => _autoScroll.onClickAutoplay(onClickNext),

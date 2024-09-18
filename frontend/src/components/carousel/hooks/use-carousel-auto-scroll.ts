@@ -1,8 +1,8 @@
-import type {} from 'embla-carousel-auto-scroll';
-import type { EmblaCarouselType } from 'embla-carousel';
-import { useState, useEffect, useCallback } from 'react';
+import type {} from "embla-carousel-auto-scroll";
+import type { EmblaCarouselType } from "embla-carousel";
+import { useState, useEffect, useCallback } from "react";
 
-import type { UseCarouselAutoPlayReturn } from '../types';
+import type { UseCarouselAutoPlayReturn } from "../types";
 
 // ----------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ export function useCarouselAutoScroll(mainApi?: EmblaCarouselType): UseCarouselA
       resetOrStop();
       callback();
     },
-    [mainApi]
+    [mainApi],
   );
 
   const onTogglePlay = useCallback(() => {
@@ -37,9 +37,9 @@ export function useCarouselAutoScroll(mainApi?: EmblaCarouselType): UseCarouselA
 
     setIsPlaying(autoScroll.isPlaying());
     mainApi
-      .on('autoScroll:play', () => setIsPlaying(true))
-      .on('autoScroll:stop', () => setIsPlaying(false))
-      .on('reInit', () => setIsPlaying(false));
+      .on("autoScroll:play", () => setIsPlaying(true))
+      .on("autoScroll:stop", () => setIsPlaying(false))
+      .on("reInit", () => setIsPlaying(false));
   }, [mainApi]);
 
   return { isPlaying, onTogglePlay, onClickAutoplay };

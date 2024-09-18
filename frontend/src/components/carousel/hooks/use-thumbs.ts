@@ -1,17 +1,17 @@
-import useEmblaCarousel from 'embla-carousel-react';
-import type { EmblaCarouselType } from 'embla-carousel';
-import { useState, useEffect, useCallback } from 'react';
+import useEmblaCarousel from "embla-carousel-react";
+import type { EmblaCarouselType } from "embla-carousel";
+import { useState, useEffect, useCallback } from "react";
 
-import type { CarouselOptions, UseCarouselThumbsReturn } from '../types';
+import type { CarouselOptions, UseCarouselThumbsReturn } from "../types";
 
 // ----------------------------------------------------------------------
 
 export function useThumbs(
   mainApi?: EmblaCarouselType,
-  options?: Partial<CarouselOptions>
+  options?: Partial<CarouselOptions>,
 ): UseCarouselThumbsReturn {
   const [thumbsRef, thumbsApi] = useEmblaCarousel({
-    containScroll: 'keepSnaps',
+    containScroll: "keepSnaps",
     dragFree: true,
     ...options,
   });
@@ -23,7 +23,7 @@ export function useThumbs(
       if (!mainApi || !thumbsApi) return;
       mainApi.scrollTo(index);
     },
-    [mainApi, thumbsApi]
+    [mainApi, thumbsApi],
   );
 
   const onSelect = useCallback(() => {
@@ -35,8 +35,8 @@ export function useThumbs(
   useEffect(() => {
     if (!mainApi) return;
     onSelect();
-    mainApi.on('select', onSelect);
-    mainApi.on('reInit', onSelect);
+    mainApi.on("select", onSelect);
+    mainApi.on("reInit", onSelect);
   }, [mainApi, onSelect]);
 
   return {
