@@ -1,5 +1,5 @@
 from reservation.models import Reservation
-from schedule.models import Schedule, Meeting
+from schedule.models import Schedule, Meeting, Recording
 from schedule.utils import MeetingManager
 from django.db.models import F
 from datetime import datetime, timedelta
@@ -9,6 +9,13 @@ from mailer.mailer import Mailer
 from const import CANCELLATION_TIME, MINIMUM_STUDENTS_REQUIRED
 from notification.utils import notify
 import urllib.parse
+from utils.google.drive import DriveApi
+import re
+
+
+def get_meeting_title(schedule):
+    meeting_id = "{:07d}".format(schedule.id)
+    return f"{schedule.lesson.title} #{meeting_id}#"
 
 
 def confirm_reservations():
@@ -29,9 +36,8 @@ def confirm_reservations():
         if is_lesson_success:
             # create meeting
             meeting_manager = MeetingManager()
-            meeting_id = "{:06d}".format(schedule.id)
             event = meeting_manager.create(
-                title=f"{schedule.lesson.title} ({meeting_id})",
+                title=get_meeting_title(schedule=schedule),
                 description=schedule.lesson.description,
                 start_time=schedule.start_time,
                 end_time=schedule.end_time,
@@ -128,3 +134,34 @@ def confirm_reservations():
             reservations.delete()
 
         schedule.save()
+
+
+def pull_recordings():
+    one_hour_ago = (datetime.now(utc) - timedelta(hours=1)).isoformat()
+
+    drive_api = DriveApi()
+    recordings = drive_api.get_recordings(
+        query=f"modifiedTime >= '{one_hour_ago}' and mimeType='video/mp4'"
+    )
+
+    for recording in recordings:
+        file_id = recording["id"]
+        file_name = recording["name"]
+        file_url = recording["webContentLink"]
+
+        match = re.search(r"#(\d+)#", file_name)
+        if match:
+            drive_api.set_permissions(
+                file_id=file_id, permissions={"type": "anyone", "role": "reader"}
+            )
+
+            schedule_id = match.group(1)
+            schedule = Schedule.objects.get(pk=schedule_id)
+            Recording.objects.get_or_create(
+                schedule=schedule,
+                file_id=file_id,
+                file_name=file_name,
+                file_url=file_url,
+            )
+        else:
+            print(f"Schedule Id not found withing file name {file_name}")

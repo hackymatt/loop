@@ -1,5 +1,5 @@
 from django.core.management import call_command, CommandError
-from reservation.utils import confirm_reservations
+from reservation.utils import confirm_reservations, pull_recordings
 from review.utils import remind_review
 from certificate.utils import generate_certificates
 from notification.utils import remove_old_notifications
@@ -16,6 +16,13 @@ def create_backup():
 def confirm_lessons():
     try:
         confirm_reservations()
+    except Exception:
+        pass
+
+
+def get_recordings():
+    try:
+        pull_recordings()
     except Exception:
         pass
 

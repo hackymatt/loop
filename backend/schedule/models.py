@@ -78,3 +78,26 @@ class Schedule(BaseModel):
                 ]
             ),
         ]
+
+
+class Recording(BaseModel):
+    schedule = ForeignKey(Schedule, on_delete=CASCADE)
+    file_id = CharField()
+    file_name = CharField()
+    file_url = URLField()
+
+    class Meta:
+        db_table = "recording"
+        ordering = ["id"]
+        indexes = [
+            Index(
+                fields=[
+                    "file_id",
+                ]
+            ),
+            Index(
+                fields=[
+                    "file_name",
+                ]
+            ),
+        ]

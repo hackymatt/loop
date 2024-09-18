@@ -192,6 +192,7 @@ CRONJOBS = (
     [
         (DBBACKUP_FREQ[ENV], "core.cron.create_backup"),
         ("*/30 * * * *", "core.cron.confirm_lessons"),
+        ("0 * * * *", "core.cron.get_recordings"),
         ("0 0 * * *", "core.cron.remind_lessons_review"),
         ("0 0 * * *", "core.cron.create_certificates"),
         ("0 0 * * *", "core.cron.cleanse_notifications"),

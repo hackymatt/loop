@@ -12,7 +12,7 @@ from module.models import Module
 from newsletter.models import Newsletter
 from notification.models import Notification
 from message.models import Message
-from schedule.models import Schedule
+from schedule.models import Schedule, Recording
 from reservation.models import Reservation
 from teaching.models import Teaching
 from cart.models import Cart
@@ -244,6 +244,10 @@ def notifications_number():
     return Notification.objects.count()
 
 
+def recordings_number():
+    return Recording.objects.count()
+
+
 def messages_number():
     return Message.objects.count()
 
@@ -261,4 +265,30 @@ def mock_update_event(mock):
 
 
 def mock_delete_event(mock):
+    mock.return_value = {}
+
+
+def mock_get_recordings(mock, schedule_ids):
+    data = [
+        {
+            "id": 1,
+            "name": f"Dummy name",
+            "webContentLink": f"https://example.com/1",
+        }
+    ]
+    for schedule_id in schedule_ids:
+        meeting_id = "{:07d}".format(schedule_id)
+        id = str(uuid.uuid4())
+        data.append(
+            {
+                "id": id,
+                "name": f"Dummy name #{meeting_id}#",
+                "webContentLink": f"https://example.com/{id}",
+            }
+        )
+
+    mock.return_value = data
+
+
+def mock_set_permissions(mock):
     mock.return_value = {}

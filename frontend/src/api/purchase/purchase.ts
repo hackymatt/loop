@@ -44,6 +44,11 @@ type IReservation = {
   schedule: ISchedule;
 };
 
+type IRecording = {
+  file_name: string;
+  file_url: string;
+};
+
 type IPurchase = {
   id: string;
   lesson: ILesson;
@@ -54,6 +59,7 @@ type IPurchase = {
   created_at: string;
   price: number;
   meeting_url?: string;
+  recordings: IRecording[];
 };
 
 type ICreatePurchase = {
@@ -80,6 +86,7 @@ export const purchaseQuery = (query?: IQueryParams) => {
         review_status,
         review,
         meeting_url,
+        recordings,
         created_at,
       }: IPurchase) => {
         const { id: lessonId, title: lessonTitle, duration } = lesson;
@@ -106,6 +113,10 @@ export const purchaseQuery = (query?: IQueryParams) => {
           ratingNumber: review?.rating,
           review: review?.review,
           meetingUrl: meeting_url,
+          recordings: recordings.map(({ file_name, file_url }: IRecording) => ({
+            name: file_name,
+            url: file_url,
+          })),
           createdAt: created_at,
         };
       },
