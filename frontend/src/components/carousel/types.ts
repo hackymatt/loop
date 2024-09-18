@@ -1,6 +1,7 @@
-import type { Theme, SxProps } from '@mui/material/styles';
-import type { UseEmblaCarouselType } from 'embla-carousel-react';
-import type { EmblaOptionsType, EmblaCarouselType } from 'embla-carousel';
+import type { UseEmblaCarouselType } from "embla-carousel-react";
+import type { EmblaOptionsType, EmblaCarouselType } from "embla-carousel";
+
+import type { Theme, SxProps } from "@mui/material/styles";
 
 // ----------------------------------------------------------------------
 
@@ -14,9 +15,9 @@ export type UseCarouselDotsReturn = {
   onClickDot: (index: number) => void;
 };
 
-export type CarouselDotButtonsProps = Omit<UseCarouselDotsReturn, 'dotCount'> & {
+export type CarouselDotButtonsProps = Omit<UseCarouselDotsReturn, "dotCount"> & {
   gap?: number;
-  variant?: 'circular' | 'rounded' | 'number';
+  variant?: "circular" | "rounded" | "number";
   slotProps?: {
     dot?: {
       size?: number;
@@ -40,9 +41,9 @@ export type UseCarouselArrowsReturn = {
 
 export type CarouselArrowButtonProps = {
   svgSize?: number;
-  variant: 'prev' | 'next';
+  variant: "prev" | "next";
   svgIcon?: React.ReactNode;
-  options?: CarouselArrowButtonsProps['options'];
+  options?: CarouselArrowButtonsProps["options"];
 };
 
 export type CarouselArrowButtonsProps = UseCarouselArrowsReturn & {
@@ -50,10 +51,10 @@ export type CarouselArrowButtonsProps = UseCarouselArrowsReturn & {
   selectedIndex?: number;
   options?: Partial<CarouselOptions>;
   slotProps?: {
-    prevBtn?: Pick<CarouselArrowButtonProps, 'svgIcon' | 'svgSize'> & {
+    prevBtn?: Pick<CarouselArrowButtonProps, "svgIcon" | "svgSize"> & {
       sx?: SxProps<Theme>;
     };
-    nextBtn?: Pick<CarouselArrowButtonProps, 'svgIcon' | 'svgSize'> & {
+    nextBtn?: Pick<CarouselArrowButtonProps, "svgIcon" | "svgSize"> & {
       sx?: SxProps<Theme>;
     };
   };
@@ -131,7 +132,7 @@ export type CarouselBaseOptions = EmblaOptionsType & {
 export type CarouselOptions = CarouselBaseOptions & {
   thumbs?: CarouselBaseOptions;
   breakpoints?: {
-    [key: string]: Omit<CarouselBaseOptions, 'slidesToShow'>;
+    [key: string]: Omit<CarouselBaseOptions, "slidesToShow">;
   };
 };
 
