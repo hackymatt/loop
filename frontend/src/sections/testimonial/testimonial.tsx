@@ -1,13 +1,14 @@
-import { useEffect } from "react";
-
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Unstable_Grid2";
 import Container from "@mui/material/Container";
-import { useTheme } from "@mui/material/styles";
+import Box, { BoxProps } from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
-import Carousel, { useCarousel, CarouselArrows } from "src/components/carousel";
+import {
+  Carousel,
+  useCarousel,
+  CarouselThumbs,
+  CarouselArrowFloatButtons,
+} from "src/components/carousel";
 
 import { ITestimonialProps } from "src/types/testimonial";
 
@@ -15,104 +16,82 @@ import { TestimonialItemContent, TestimonialItemThumbnail } from "./testimonial-
 
 // ----------------------------------------------------------------------
 
-type Props = {
+type Props = BoxProps & {
   testimonials: ITestimonialProps[];
 };
 
-export default function Testimonial({ testimonials }: Props) {
-  const theme = useTheme();
-
-  const carouselLarge = useCarousel({
-    slidesToShow: 1,
-    draggable: false,
-    slidesToScroll: 1,
-    adaptiveHeight: true,
+export default function Testimonial({ testimonials, sx, ...other }: Props) {
+  const carousel = useCarousel({
+    loop: true,
+    startIndex: 1,
+    thumbs: {
+      loop: true,
+      slidesToShow: "auto",
+    },
   });
-
-  const carouselThumb = useCarousel({
-    autoplay: true,
-    slidesToShow: 5,
-    centerMode: true,
-    swipeToSlide: true,
-    autoplaySpeed: 3000,
-    focusOnSelect: true,
-    centerPadding: "0px",
-    rtl: Boolean(theme.direction === "rtl"),
-
-    responsive: [
-      {
-        breakpoint: theme.breakpoints.values.sm,
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-    ],
-  });
-
-  useEffect(() => {
-    carouselLarge.onSetNav();
-    carouselThumb.onSetNav();
-  }, [carouselLarge, carouselThumb]);
 
   return (
     <Box
+      component="section"
       sx={{
         bgcolor: "background.neutral",
-        textAlign: "center",
-        overflow: "hidden",
         py: { xs: 10, md: 15 },
+        ...sx,
       }}
+      {...other}
     >
       <Container sx={{ position: "relative" }}>
+        <CarouselArrowFloatButtons
+          {...carousel.arrows}
+          options={carousel.options}
+          slotProps={{
+            prevBtn: { sx: { left: 16 } },
+            nextBtn: { sx: { right: 16 } },
+          }}
+          sx={{
+            borderRadius: "50%",
+            color: "text.primary",
+            bgcolor: "transparent",
+            display: { xs: "none", md: "flex" },
+          }}
+        />
+
         <Grid container spacing={3} justifyContent="center">
           <Grid xs={12} md={6}>
-            <Typography variant="h2" sx={{ mb: 5 }}>
+            <Typography variant="h2" sx={{ mb: 5, textAlign: "center" }}>
               Co mówią nasi uczniowie
             </Typography>
 
-            <CarouselArrows
-              onNext={carouselThumb.onNext}
-              onPrev={carouselThumb.onPrev}
-              leftButtonProps={{
-                sx: { display: { xs: "none", md: "inline-flex" } },
-              }}
-              rightButtonProps={{
-                sx: { display: { xs: "none", md: "inline-flex" } },
-              }}
-            >
-              <Carousel
-                {...carouselLarge.carouselSettings}
-                asNavFor={carouselThumb.nav}
-                ref={carouselLarge.carouselRef}
-              >
-                {testimonials.map((testimonial) => (
-                  <TestimonialItemContent key={testimonial.id} testimonial={testimonial} />
-                ))}
-              </Carousel>
+            <Carousel carousel={carousel}>
+              {testimonials.map((testimonial) => (
+                <TestimonialItemContent key={testimonial.id} testimonial={testimonial} />
+              ))}
+            </Carousel>
 
-              <Box sx={{ mb: 3, mx: "auto", maxWidth: { xs: 360, sm: 420 } }}>
-                <Carousel
-                  {...carouselThumb.carouselSettings}
-                  asNavFor={carouselLarge.nav}
-                  ref={carouselThumb.carouselRef}
-                >
-                  {testimonials.map((testimonial, index) => (
-                    <TestimonialItemThumbnail
-                      key={testimonial.id}
-                      testimonial={testimonial}
-                      selected={carouselLarge.currentIndex === index}
-                    />
-                  ))}
-                </Carousel>
-              </Box>
-            </CarouselArrows>
+            <CarouselThumbs
+              ref={carousel.thumbs.thumbsRef}
+              options={carousel.options?.thumbs}
+              slotProps={{ disableMask: true }}
+              sx={{ width: { xs: 1, sm: 480 } }}
+            >
+              {testimonials.map((testimonial, index) => (
+                <TestimonialItemThumbnail
+                  key={testimonial.id}
+                  testimonial={testimonial}
+                  selected={index === carousel.thumbs.selectedIndex}
+                  onClick={() => carousel.thumbs.onClickThumb(index)}
+                />
+              ))}
+            </CarouselThumbs>
 
             {testimonials.map(
               (testimonial, index) =>
-                carouselLarge.currentIndex === index && (
-                  <Stack key={testimonial.id} spacing={0.5}>
-                    <Typography variant="h6">{testimonial.name}</Typography>
-                  </Stack>
+                index === carousel.thumbs.selectedIndex && (
+                  <Box key={testimonial.id} sx={{ mt: 3, textAlign: "center" }}>
+                    <Typography variant="h6" sx={{ mb: 0.5 }}>
+                      {testimonial.name}
+                    </Typography>
+                  </Box>
                 ),
             )}
           </Grid>

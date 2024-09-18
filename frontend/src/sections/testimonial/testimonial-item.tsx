@@ -1,5 +1,6 @@
 import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
+import { Box, BoxProps } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
 import Iconify from "src/components/iconify";
@@ -39,12 +40,17 @@ export function TestimonialItemContent({ testimonial }: TestimonialItemContentPr
 
 // ----------------------------------------------------------------------
 
-type TestimonialItemThumbnailProps = {
-  testimonial: ITestimonialProps;
+type TestimonialItemThumbnailProps = BoxProps & {
   selected: boolean;
+  testimonial: ITestimonialProps;
 };
 
-export function TestimonialItemThumbnail({ testimonial, selected }: TestimonialItemThumbnailProps) {
+export function TestimonialItemThumbnail({
+  sx,
+  selected,
+  testimonial,
+  ...other
+}: TestimonialItemThumbnailProps) {
   const genderAvatarUrl =
     testimonial.gender === "Kobieta"
       ? "/assets/images/avatar/avatar_female.jpg"
@@ -53,13 +59,12 @@ export function TestimonialItemThumbnail({ testimonial, selected }: TestimonialI
   const avatarUrl = testimonial.avatarUrl || genderAvatarUrl;
 
   return (
-    <Stack
-      sx={{
-        width: 96,
-        height: 96,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+    <Box
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      sx={{ width: 96, height: 96, ...sx }}
+      {...other}
     >
       <Avatar
         src={avatarUrl}
@@ -68,13 +73,10 @@ export function TestimonialItemThumbnail({ testimonial, selected }: TestimonialI
           height: 48,
           opacity: 0.48,
           cursor: "pointer",
-          transition: (theme) => theme.transitions.create("all"),
-          ...(selected && {
-            opacity: 1,
-            transform: "scale(2)",
-          }),
+          transition: (theme) => theme.transitions.create(["width", "height"]),
+          ...(selected && { width: 1, height: 1, opacity: 1 }),
         }}
       />
-    </Stack>
+    </Box>
   );
 }

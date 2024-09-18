@@ -1,4 +1,5 @@
 import CountUp from "react-countup";
+import AutoScroll from "embla-carousel-auto-scroll";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -20,6 +21,7 @@ import { useStatistics } from "src/api/statistics/statistics";
 import HeroIllustration from "src/assets/illustrations/hero-illustration";
 
 import Iconify from "src/components/iconify";
+import { Carousel, useCarousel } from "src/components/carousel";
 
 export default function LandingHero() {
   const theme = useTheme();
@@ -48,6 +50,15 @@ export default function LandingHero() {
 
   const showStats = statsSummary.every((item) => item.value > 0);
 
+  const carousel = useCarousel(
+    {
+      loop: true,
+      slidesToShow: "auto",
+      slideSpacing: "80px",
+    },
+    [AutoScroll({ playOnInit: true, speed: 0.5 })],
+  );
+
   return (
     <Box
       sx={{
@@ -58,6 +69,7 @@ export default function LandingHero() {
         overflow: "hidden",
       }}
     >
+      <Carousel carousel={carousel}>{Array(100).fill("A")}</Carousel>
       <Container
         sx={{
           py: 15,
