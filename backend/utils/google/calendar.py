@@ -41,8 +41,7 @@ class CalendarApi:
             "attendees": [
                 {
                     "email": lecturer["email"],
-                    "displayName": f"{lecturer_full_name} (Trener)",
-                    "organizer": True,
+                    "displayName": f"{lecturer_full_name} (Instruktor)",
                     "responseStatus": "accepted",
                 },
                 *attendees,

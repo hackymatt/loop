@@ -29,15 +29,19 @@ from .helpers import (
     mock_send_message,
     mock_create_event,
     mock_update_event,
+    mock_get_recordings,
+    mock_set_permissions,
     notifications_number,
+    recordings_number,
 )
 from django.contrib import auth
 import json
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
-from reservation.utils import confirm_reservations
+from reservation.utils import confirm_reservations, pull_recordings
 from utils.google.gmail import GmailApi
 from utils.google.calendar import CalendarApi
+from utils.google.drive import DriveApi
 
 
 class ReservationTest(TestCase):
@@ -810,3 +814,44 @@ class ReservationConfirmationTest(TestCase):
         self.assertEqual(_send_message_mock.call_count, 6)
         self.assertEqual(create_event_mock.call_count, 1)
         self.assertEqual(notifications_number(), 6)
+
+
+class RecordingsTest(TestCase):
+    def setUp(self):
+        self.lecturer_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_1@example.com",
+            password="Password124!",
+            is_active=True,
+        )
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
+
+        self.schedules = [
+            create_schedule(
+                lecturer=self.lecturer_profile,
+                start_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * i)
+                ),
+                end_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * (i + 1))
+                ),
+            )
+            for i in range(10)
+        ]
+
+    @patch.object(DriveApi, "set_permissions")
+    @patch.object(DriveApi, "get_recordings")
+    def test_reservation_confirmation(self, get_recordings_mock, set_permissions_mock):
+        schedule_ids = [schedule.id for schedule in self.schedules]
+        mock_get_recordings(mock=get_recordings_mock, schedule_ids=schedule_ids)
+        mock_set_permissions(mock=set_permissions_mock)
+        self.assertEqual(recordings_number(), 0)
+        pull_recordings()
+        self.assertEqual(recordings_number(), len(schedule_ids))
+        self.assertEqual(get_recordings_mock.call_count, 1)
+        self.assertEqual(set_permissions_mock.call_count, len(schedule_ids))

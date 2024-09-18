@@ -1,15 +1,17 @@
 from rest_framework.serializers import (
     ModelSerializer,
+    Serializer,
     SerializerMethodField,
     CharField,
     ImageField,
+    URLField,
     ValidationError,
 )
 from purchase.models import Purchase
 from lesson.models import Lesson, Technology
 from profile.models import Profile, LecturerProfile, StudentProfile
 from reservation.models import Reservation
-from schedule.models import Schedule
+from schedule.models import Schedule, Recording
 from review.models import Review
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
@@ -115,6 +117,15 @@ class ReservationSerializer(ModelSerializer):
         )
 
 
+class RecordingSerializer(ModelSerializer):
+    class Meta:
+        model = Recording
+        fields = (
+            "file_name",
+            "file_url",
+        )
+
+
 class PurchaseGetSerializer(ModelSerializer):
     lesson = LessonSerializer()
     lesson_status = SerializerMethodField("get_lesson_status")
@@ -122,6 +133,7 @@ class PurchaseGetSerializer(ModelSerializer):
     review_status = SerializerMethodField("get_review_status")
     review = SerializerMethodField("get_review_details")
     meeting_url = SerializerMethodField("get_meeting_url")
+    recordings = SerializerMethodField("get_recordings_url")
 
     class Meta:
         model = Purchase
@@ -143,6 +155,16 @@ class PurchaseGetSerializer(ModelSerializer):
                 return None
         else:
             return None
+
+    def get_recordings_url(self, purchase):
+        reservation = get_reservation(purchase=purchase)
+
+        if reservation.exists():
+            schedule = reservation.first().schedule
+            recordings = Recording.objects.filter(schedule=schedule)
+            return RecordingSerializer(recordings, many=True).data
+        else:
+            return []
 
     def get_lesson_status(self, purchase):
         reservation = get_reservation(purchase=purchase)
