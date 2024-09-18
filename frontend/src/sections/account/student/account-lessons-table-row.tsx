@@ -5,8 +5,8 @@ import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import InputBase from "@mui/material/InputBase";
-import { Link, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
+import { Link, Divider, Typography } from "@mui/material";
 
 import { usePopover } from "src/hooks/use-popover";
 
@@ -15,7 +15,7 @@ import { fDate, fDateTime } from "src/utils/format-time";
 import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 
-import { LessonStatus, IPurchaseItemProp } from "src/types/purchase";
+import { LessonStatus, IRecordingProp, IPurchaseItemProp } from "src/types/purchase";
 
 // ----------------------------------------------------------------------
 
@@ -71,6 +71,9 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete, onSendMes
       CANCELLATION_TIME,
     [row.lessonSlot],
   );
+
+  const hasRecordings = useMemo(() => row.recordings.length > 0, [row.recordings.length]);
+  const moreThanOneRecording = useMemo(() => row.recordings.length > 1, [row.recordings.length]);
 
   return (
     <>
@@ -153,6 +156,22 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete, onSendMes
               <Typography variant="body2">Dołącz do spotkania</Typography>
             </MenuItem>
           </Link>
+        )}
+
+        {isCompleted && (
+          <>
+            {hasRecordings && <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />}
+            {row.recordings.map((recording: IRecordingProp, index: number) => (
+              <Link href={recording.url} target="_blank" underline="none" color="inherit">
+                <MenuItem>
+                  <Iconify icon="carbon:download" sx={{ mr: 0.5 }} />
+                  <Typography variant="body2">
+                    Pobierz nagranie{moreThanOneRecording ? ` #${index + 1}` : ""}
+                  </Typography>
+                </MenuItem>
+              </Link>
+            ))}
+          </>
         )}
       </Popover>
     </>

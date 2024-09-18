@@ -137,7 +137,7 @@ def confirm_reservations():
 
 
 def pull_recordings():
-    one_hour_ago = (make_aware(datetime.now()) - timedelta(hours=1)).isoformat() + "Z"
+    one_hour_ago = (datetime.now(utc) - timedelta(hours=1)).isoformat()
 
     drive_api = DriveApi()
     recordings = drive_api.get_recordings(
