@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": ["dom", "esnext", "dom.iterable"],
     "strict": true,
     "noEmit": true,
     "allowJs": true,

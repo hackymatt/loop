@@ -72,8 +72,6 @@ export default function LandingFeaturedCourses({ courses }: Props) {
               key={course.id}
               sx={{
                 px: 2,
-                pt: { xs: 8, md: 10 },
-                pb: { xs: 10, md: 15 },
               }}
             >
               <CourseItem course={course} vertical />

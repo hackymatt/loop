@@ -73,4 +73,7 @@ export const paths = {
   register: "/register",
   forgotPassword: "/forgot-password",
   verify: "/verify",
+  tests: {
+    predisposition: "/tests/predisposition",
+  },
 };

@@ -81,7 +81,7 @@ export default function About() {
         <Grid xs={12} md={6} lg={6}>
           <Image
             alt="about"
-            src="/assets/images/course/course_about.jpg"
+            src="/assets/images/general/about-summary.webp"
             ratio="3/4"
             sx={{ borderRadius: 2 }}
           />

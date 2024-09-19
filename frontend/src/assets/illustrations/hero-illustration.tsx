@@ -52,7 +52,7 @@ function HeroIllustration({ sx, ...other }: BoxProps) {
           visibleByDefault
           disabledEffect
           alt="teacher"
-          src="/assets/images/course/course_teacher_hero.png"
+          src="/assets/images/general/teacher-hero.webp"
           sx={{ width: 546, height: 650 }}
         />
       </Box>
