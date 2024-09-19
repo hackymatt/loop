@@ -71,9 +71,17 @@ export default function Newsletter() {
 
 interface Props extends LoadingButtonProps {
   buttonLabel: string;
+  showSnackbar?: boolean;
+  onSuccess?: VoidFunction;
+  onFailure?: VoidFunction;
 }
 
-export function NewsletterEmail({ buttonLabel = "Zapisz" }: Props) {
+export function NewsletterEmail({
+  buttonLabel = "Zapisz",
+  showSnackbar = true,
+  onSuccess,
+  onFailure,
+}: Props) {
   const { enqueueSnackbar } = useToastContext();
 
   const { mutateAsync: register } = useRegisterNewsletter();
@@ -108,9 +116,13 @@ export function NewsletterEmail({ buttonLabel = "Zapisz" }: Props) {
     clearErrors();
     try {
       await register({ email: data.email });
-      enqueueSnackbar("Zapisano do newslettera", { variant: "success" });
+      if (showSnackbar) {
+        enqueueSnackbar("Zapisano do newslettera", { variant: "success" });
+      }
+      onSuccess?.();
       reset();
     } catch (error) {
+      onFailure?.();
       handleFormError(error);
     }
   });

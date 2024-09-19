@@ -2,10 +2,7 @@
 
 import { m } from "framer-motion";
 
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-
-import { RouterLink } from "src/routes/components";
 
 import Image from "src/components/image";
 import { varBounce, MotionContainer } from "src/components/animate";
@@ -38,10 +35,6 @@ export default function MaintenanceView() {
           }}
         />
       </m.div>
-
-      <Button component={RouterLink} href="/" size="large" color="inherit" variant="contained">
-        Wróć do strony głównej
-      </Button>
     </MotionContainer>
   );
 }

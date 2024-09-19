@@ -39,7 +39,7 @@ export default function LandingIntroduce() {
           <Grid xs={12} md={6} lg={5}>
             <Image
               alt="about"
-              src="/assets/images/course/course_6.jpg"
+              src="/assets/images/general/course-6.webp"
               ratio="4/6"
               sx={{ borderRadius: 2 }}
             />

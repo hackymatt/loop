@@ -7,6 +7,8 @@ import Divider from "@mui/material/Divider";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
 
+import { paths } from "src/routes/paths";
+
 import { useResponsive } from "src/hooks/use-responsive";
 
 import { createMetadata } from "src/utils/create-metadata";
@@ -95,8 +97,8 @@ export default function CourseView({ id }: { id: string }) {
                 advertisement={{
                   title: "Wejdź do IT",
                   description: "Sprawdź nasze kursy przygotowujące do pracy programisty",
-                  imageUrl: "/assets/images/course/course_8.jpg",
-                  path: "/assets/images/course/course_8.jpg",
+                  imageUrl: "/assets/images/general/course-8.webp",
+                  path: paths.courses,
                 }}
               />
             </Stack>

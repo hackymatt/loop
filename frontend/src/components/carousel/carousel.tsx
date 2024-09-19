@@ -87,6 +87,7 @@ export function Carousel({
         slideSpacing={slideSpacing}
         className={carouselClasses.container}
         sx={{
+          p: 0,
           ...(carousel.pluginNames?.includes("autoHeight") && {
             alignItems: "flex-start",
             transition: (theme) =>

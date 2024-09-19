@@ -3,7 +3,8 @@ import { MetadataRoute } from "next";
 import { ENV } from "src/config-global";
 
 export default function manifest(): MetadataRoute.Manifest {
-  const env = ENV === "PROD" ? "" : `-${ENV.toLocaleLowerCase()}`;
+  const envModified = ENV === "LOCAL" ? "DEV" : ENV;
+  const env = envModified === "PROD" ? "" : `-${envModified.toLocaleLowerCase()}`;
   return {
     name: `loop${env} - szkoła programowania`,
     short_name: `loop${env}`,
@@ -20,13 +21,13 @@ export default function manifest(): MetadataRoute.Manifest {
       {
         purpose: "maskable",
         sizes: "512x512",
-        src: `logo/pwa/${ENV.toLocaleLowerCase()}/maskable.png`,
+        src: `logo/pwa/${envModified.toLocaleLowerCase()}/maskable.png`,
         type: "image/png",
       },
       {
         purpose: "any",
         sizes: "512x512",
-        src: `logo/pwa/${ENV.toLocaleLowerCase()}/rounded.png`,
+        src: `logo/pwa/${envModified.toLocaleLowerCase()}/rounded.png`,
         type: "image/png",
       },
     ],
