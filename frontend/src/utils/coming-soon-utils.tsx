@@ -17,12 +17,12 @@ const useShowComingSoon = () => {
   return diff > 0 && (process.env.NEXT_PUBLIC_ENV ?? "LOCAL") === "PROD" && !state.admin;
 };
 
-export function ComingSoonViewUtil({ defaultView }: { defaultView: ReactNode }) {
+export function ViewUtil({ defaultView }: { defaultView: ReactNode }) {
   const showComingSoon = useShowComingSoon();
   return showComingSoon ? <ComingSoonView startDate={START_DATE} /> : defaultView;
 }
 
-export function ComingSoonLayoutUtil({
+export function LayoutUtil({
   defaultLayout,
   children,
 }: {
