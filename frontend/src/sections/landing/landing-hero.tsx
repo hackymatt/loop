@@ -54,7 +54,7 @@ export default function LandingHero() {
       sx={{
         ...bgGradient({
           color: alpha(theme.palette.background.default, 0.9),
-          imgUrl: "/assets/background/overlay_1.jpg",
+          imgUrl: "/assets/background/overlay-1.webp",
         }),
         overflow: "hidden",
       }}
@@ -323,7 +323,7 @@ function LandingSuggestions() {
         <Grid xs={12} md={6} lg={7}>
           <Image
             alt="about"
-            src="/assets/images/general/course-7.webp"
+            src="/assets/images/general/course-9.webp"
             sx={{ borderRadius: 2, height: 670 }}
           />
         </Grid>
@@ -374,7 +374,7 @@ function LandingNewTeacher() {
         <Grid xs={12} md={6} lg={7}>
           <Image
             alt="about"
-            src="/assets/images/general/course-7.webp"
+            src="/assets/images/general/course-2.webp"
             sx={{ borderRadius: 2, height: 670 }}
           />
         </Grid>
