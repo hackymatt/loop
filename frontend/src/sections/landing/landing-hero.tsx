@@ -36,12 +36,18 @@ export default function LandingHero() {
   const carousel = useCarousel(
     {
       loop: true,
-      duration: 80,
+      duration: 100,
     },
     [Autoplay({ delay: 5000 }), Fade()],
   );
 
-  const landingPages = [<LandingMain />, <LandingAbout />, <LandingUserTest />];
+  const landingPages = [
+    <LandingMain />,
+    <LandingUserTest />,
+    <LandingAbout />,
+    <LandingSuggestions />,
+    <LandingNewTeacher />,
+  ];
 
   return (
     <Box
@@ -257,6 +263,108 @@ function LandingAbout() {
               endIcon={<Iconify icon="carbon:chevron-right" />}
             >
               Sprawdź informacje
+            </Button>
+          </Stack>
+        </Stack>
+      </Grid>
+
+      {mdUp && (
+        <Grid xs={12} md={6} lg={7}>
+          <Image
+            alt="about"
+            src="/assets/images/general/course-7.webp"
+            sx={{ borderRadius: 2, height: 670 }}
+          />
+        </Grid>
+      )}
+    </Grid>
+  );
+}
+
+function LandingSuggestions() {
+  const mdUp = useResponsive("up", "md");
+
+  return (
+    <Grid container spacing={3} display="flex" flexDirection={{ xs: "column", md: "row" }}>
+      <Grid xs={12} md={6} lg={5}>
+        <Stack
+          sx={{
+            textAlign: { xs: "center", md: "unset" },
+          }}
+        >
+          <Typography variant="h1">
+            Nie znalazłeś kursu? Zróbmy to{" "}
+            <Box component="span" sx={{ color: "primary.main", textDecoration: "underline" }}>
+              razem
+            </Box>{" "}
+            !
+          </Typography>
+
+          <Typography sx={{ color: "text.secondary", mt: 3, mb: 5 }}>
+            Nie znalazłeś kursu, którego szukasz? Skontaktuj się z nami, a pomożemy stworzyć program
+            dostosowany do Twoich potrzeb!
+          </Typography>
+
+          <Stack spacing={3} alignItems="center" direction={{ xs: "column", md: "row" }}>
+            <Button
+              color="inherit"
+              size="large"
+              variant="contained"
+              href={paths.contact}
+              endIcon={<Iconify icon="carbon:chevron-right" />}
+            >
+              Wyślij sugestię
+            </Button>
+          </Stack>
+        </Stack>
+      </Grid>
+
+      {mdUp && (
+        <Grid xs={12} md={6} lg={7}>
+          <Image
+            alt="about"
+            src="/assets/images/general/course-7.webp"
+            sx={{ borderRadius: 2, height: 670 }}
+          />
+        </Grid>
+      )}
+    </Grid>
+  );
+}
+
+function LandingNewTeacher() {
+  const mdUp = useResponsive("up", "md");
+
+  return (
+    <Grid container spacing={3} display="flex" flexDirection={{ xs: "column", md: "row" }}>
+      <Grid xs={12} md={6} lg={5}>
+        <Stack
+          sx={{
+            textAlign: { xs: "center", md: "unset" },
+          }}
+        >
+          <Typography variant="h1">
+            Dołącz do{" "}
+            <Box component="span" sx={{ color: "primary.main", textDecoration: "underline" }}>
+              nas
+            </Box>{" "}
+            i inspiruj innych!
+          </Typography>
+
+          <Typography sx={{ color: "text.secondary", mt: 3, mb: 5 }}>
+            Chcesz dołączyć do naszego zespołu instruktorów? Napisz do nas i podziel się swoją
+            pasją!
+          </Typography>
+
+          <Stack spacing={3} alignItems="center" direction={{ xs: "column", md: "row" }}>
+            <Button
+              color="inherit"
+              size="large"
+              variant="contained"
+              href={paths.contact}
+              endIcon={<Iconify icon="carbon:chevron-right" />}
+            >
+              Wyślij sugestię
             </Button>
           </Stack>
         </Stack>
