@@ -4,6 +4,11 @@
 
 {% block content %}Od teraz będziesz otrzymywał
 informację na temat naszych aktualnych ofert i promocji.<br /><br />
+
+{% if discount %}
+  Twój kupon zniżkowy do wykorzystania przy pierwszym zakupie to: <b>{{ discount }}</b>.<br /><br />
+{% endif %}
+
 W celu anulowania subskrypcji kliknij w poniższy przycisk:
 <div
   style="

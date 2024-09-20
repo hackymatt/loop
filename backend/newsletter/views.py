@@ -4,10 +4,13 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from newsletter.serializers import NewsletterEntrySerializer, NewsletterSerializer
 from newsletter.models import Newsletter
 from newsletter.filters import NewsletterFilter
+from coupon.models import Coupon
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from mailer.mailer import Mailer
 import json
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
 
 
 class NewsletterEntriesViewSet(ModelViewSet):
@@ -23,25 +26,42 @@ class NewsletterSubscribeViewSet(ModelViewSet):
 
     @csrf_exempt
     def subscribe(request):
+        send_email = False
         data = json.loads(request.body)
         instance, created = Newsletter.objects.get_or_create(**data)
         if not created:
+            send_email = not instance.active
             instance.active = True
             instance.save()
 
-        mailer = Mailer()
-        data = {
-            **{
-                "unsubscribe_url": f"{settings.BASE_FRONTEND_URL}/newsletter-unsubscribe/"
-                + str(instance.uuid),
+        if send_email or created:
+            mailer = Mailer()
+            data = {
+                **{
+                    "unsubscribe_url": f"{settings.BASE_FRONTEND_URL}/newsletter-unsubscribe/"
+                    + str(instance.uuid),
+                }
             }
-        }
-        mailer.send(
-            email_template="subscribe.html",
-            to=[instance.email],
-            subject="Potwierdzenie rejestracji w newsletterze",
-            data=data,
-        )
+            if created:
+                coupon, _ = Coupon.objects.get_or_create(
+                    code="programista20",
+                    discount=20,
+                    is_percentage=True,
+                    all_users=True,
+                    is_infinite=True,
+                    uses_per_user=1,
+                    active=True,
+                    expiration_date=make_aware(
+                        datetime.now() + timedelta(weeks=52 * 99)
+                    ),
+                )
+                data = {**data, **{"discount": coupon.code}}
+            mailer.send(
+                email_template="subscribe.html",
+                to=[instance.email],
+                subject="Potwierdzenie rejestracji w newsletterze",
+                data=data,
+            )
 
         return JsonResponse(NewsletterSerializer(instance).data)
 
