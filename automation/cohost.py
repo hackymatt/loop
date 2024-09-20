@@ -1,6 +1,7 @@
 import os
 from datetime import datetime, timedelta
 import time
+import schedule
 from dotenv import load_dotenv
 
 from webdriver_manager.chrome import ChromeDriverManager
@@ -110,4 +111,12 @@ if __name__ == "__main__":
     date_input = f"{tomorrow.year}/{tomorrow.month}/{tomorrow.day}"
     print("Executing for a date: " + date_input)
 
-    set_cohost(email=email_secret, password=password_secret, date=date_input)
+    schedule.every().day.at("23:00").do(
+        lambda: set_cohost(
+            email=email_secret, password=password_secret, date=date_input
+        )
+    )
+
+    while True:
+        schedule.run_pending()
+        time.sleep(60)

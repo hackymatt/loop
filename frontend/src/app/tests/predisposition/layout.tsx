@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutUtil } from "src/utils/coming-soon-utils";
+import { LayoutUtil } from "src/utils/page-utils";
 
 import MainLayout from "src/layouts/main";
 

@@ -1,5 +1,5 @@
 import { createMetadata } from "src/utils/create-metadata";
-import { ViewUtil } from "src/utils/coming-soon-utils";
+import { ViewUtil } from "src/utils/page-utils";
 
 import PredispositionTestView from "src/sections/view/predisposition-test-view";
 
