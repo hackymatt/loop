@@ -364,7 +364,7 @@ function LandingNewTeacher() {
               href={paths.contact}
               endIcon={<Iconify icon="carbon:chevron-right" />}
             >
-              Wyślij sugestię
+              Wyślij zgłoszenie
             </Button>
           </Stack>
         </Stack>
