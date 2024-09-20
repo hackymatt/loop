@@ -1,20 +1,20 @@
 import * as Yup from "yup";
+import { m } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 import { Stack, InputAdornment } from "@mui/material";
 import { LoadingButton, LoadingButtonProps } from "@mui/lab";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
+import { textGradient } from "src/theme/css";
 import { newsletterAcceptance } from "src/consts/acceptances";
 import { useRegisterNewsletter } from "src/api/newsletter/register";
 
-import Image from "src/components/image";
 import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFCheckbox, RHFTextField } from "src/components/hook-form";
 
@@ -23,47 +23,75 @@ import FormProvider, { RHFCheckbox, RHFTextField } from "src/components/hook-for
 export default function Newsletter() {
   return (
     <Box
+      component="section"
       sx={{
-        py: { xs: 10, md: 15 },
         overflow: "hidden",
+        position: "relative",
         bgcolor: "primary.lighter",
+        py: { xs: 10, md: 15 },
       }}
     >
+      <Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          my: "auto",
+          width: 760,
+          height: 760,
+          opacity: 0.14,
+          position: "absolute",
+          transform: "translateX(-50%)",
+        }}
+      >
+        <Box
+          component={m.img}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 60, ease: "linear", repeat: Infinity }}
+          alt="Texture"
+          loading="lazy"
+          src="/assets/background/texture-3.webp"
+        />
+      </Box>
+
       <Container>
-        <Grid
-          container
-          spacing={{ xs: 5, md: 3 }}
-          alignItems={{ md: "center" }}
-          justifyContent={{ md: "space-between" }}
-          direction={{ xs: "column-reverse", md: "row" }}
+        <Box
+          sx={{
+            mx: "auto",
+            maxWidth: 480,
+            textAlign: "center",
+          }}
         >
-          <Grid xs={12} md={5} sx={{ textAlign: "center", color: "grey.800" }}>
-            <Typography variant="h3">
-              Bądź na bieżąco z naszą aktualną ofertą i promocjami
+          <Box gap={2} display="flex" alignItems="center" justifyContent="center">
+            <Box component="span" sx={{ textAlign: "right", typography: "h5" }}>
+              Zarejestruj się już teraz i otrzymaj <br /> zniżkę na swój pierwszy zakup
+            </Box>
+            <Box
+              component="span"
+              sx={(theme) => ({
+                ...textGradient(
+                  `90deg, ${theme.palette.primary.main} 20%, ${theme.palette.secondary.main} 100%`,
+                ),
+                typography: "h1",
+              })}
+            >
+              20%
+            </Box>
+          </Box>
+
+          <Typography sx={{ mt: 2.5, mb: 5 }}>
+            Zapisz się do newslettera{" "}
+            <Typography
+              variant="overline"
+              color="primary"
+              sx={{ fontSize: 17, textTransform: "none" }}
+            >
+              loop
             </Typography>
+          </Typography>
 
-            <Typography sx={{ mt: 2.5, mb: 5 }}>
-              Zapisz się do newslettera{" "}
-              <Typography
-                variant="overline"
-                color="primary"
-                sx={{ fontSize: 17, textTransform: "none" }}
-              >
-                loop
-              </Typography>
-            </Typography>
-
-            <NewsletterEmail buttonLabel="Zapisz" />
-          </Grid>
-
-          <Grid xs={12} md={5}>
-            <Image
-              alt="newsletter"
-              src="/assets/illustrations/illustration_newsletter.svg"
-              sx={{ maxWidth: 366, mx: "auto" }}
-            />
-          </Grid>
-        </Grid>
+          <NewsletterEmail buttonLabel="Zapisz" />
+        </Box>
       </Container>
     </Box>
   );
@@ -146,7 +174,7 @@ export function NewsletterEmail({
               </LoadingButton>
             </InputAdornment>
           ),
-          sx: { p: 0 },
+          sx: { pr: 0.5 },
         }}
       />
 

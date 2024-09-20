@@ -19,7 +19,7 @@ export default function SupportHero({ onSearch }: { onSearch: (searchText: strin
       sx={{
         ...bgGradient({
           color: alpha(theme.palette.grey[900], 0.8),
-          imgUrl: "/assets/background/overlay_2.jpg",
+          imgUrl: "/assets/background/overlay-2.webp",
         }),
         py: 5,
         px: 2.5,

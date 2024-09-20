@@ -24,7 +24,7 @@ export default function AuthBackgroundLayout({ children }: Props) {
         sx={{
           ...bgGradient({
             color: alpha(theme.palette.background.default, 0.9),
-            imgUrl: "/assets/background/overlay_1.jpg",
+            imgUrl: "/assets/background/overlay-1.webp",
           }),
           px: 2,
           py: 12,
