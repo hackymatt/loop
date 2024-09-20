@@ -10,5 +10,7 @@
 secrets.yaml
 secrets.sh
 
+.idea
+
 auth
 !auth/
