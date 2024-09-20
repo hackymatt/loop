@@ -1,138 +1,144 @@
-# Django #
-*.log
-*.pot
-*.pyc
-__pycache__
-db.sqlite3
-media
-static
-
-# Backup files # 
-*.bak 
-
-# If you are using PyCharm # 
-# User-specific stuff
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/**/usage.statistics.xml
-.idea/**/dictionaries
-.idea/**/shelf
-
-# AWS User-specific
-.idea/**/aws.xml
-
-# Generated files
-.idea/**/contentModel.xml
-
-# Sensitive or high-churn files
-.idea/**/dataSources/
-.idea/**/dataSources.ids
-.idea/**/dataSources.local.xml
-.idea/**/sqlDataSources.xml
-.idea/**/dynamic.xml
-.idea/**/uiDesigner.xml
-.idea/**/dbnavigator.xml
-
-# Gradle
-.idea/**/gradle.xml
-.idea/**/libraries
-
-# File-based project format
+projectFilesBackup/
 *.iws
+.DS_Store
+.svn
+.credentials.dat
+.ijwb
+mockpiframe.log
+mockpiframe.log.lck
+junitvmwatcher*.properties
+test-output/
+.*.swp
+*~
+.aspect/
+common/build
+/build/
+cpp/iedriver/IEReturnTypes.h
+dotnet/.idea/
+dotnet/packages/
+java/client/src/org/openqa/selenium/ie/IeReturnTypes.java
+java/server/test/org/openqa/selenium/example
+javascript/deps.js
+javascript/node/selenium-webdriver/node_modules/
+javascript/node/selenium-webdriver/lib/atoms/find-elements.js
+javascript/node/selenium-webdriver/lib/atoms/get-attribute.js
+javascript/node/selenium-webdriver/lib/atoms/is-displayed.js
+javascript/node/selenium-webdriver/lib/atoms/mutation-listener.js
+javascript/safari-driver/node_modules/
+javascript/webdriver/devtools/types/
+.idea/vcs.xml
+.idea/workspace.xml
+.idea/dictionaries/
+.idea/scopes/
+.idea/sonarlint/
+.idea/qaplug_profiles.xml
+out
+cpp/IEDriver/sizzle.h
+third_party/gecko-*
+cpp/iedriver/Generated/atoms.h
+cpp/iedriver/sizzle.h
+chromedriver.log
+junit*.properties
+*.rbc
+.rbx
+.yardoc
+rb/.yardoc
+.tm_properties
+maven/*/src
+maven/target
+maven/*/target
+maven/.idea
+maven/*.iml
+maven/*/*.iml
+maven-metadata-.xml
+maven-metadata-.xml.sha1
+node_modules/
+resolver-status.properties
+java/build/
+java/client/build/
+java/client/log.txt
+java/client/iedriver.log
+java/server/build/
+__pycache__
+.tox
+*.pyc
+dist/
+py/selenium/webdriver/common/devtools/**/*
+!py/selenium/webdriver/common/devtools/util.py
+py/selenium/webdriver/common/linux/
+py/selenium/webdriver/common/macos/
+py/selenium/webdriver/common/mutation-listener.js
+py/selenium/webdriver/common/windows/
+py/selenium/webdriver/firefox/webdriver_prefs.json
+py/selenium/webdriver/remote/findElements.js
+py/selenium/webdriver/remote/getAttribute.js
+py/selenium/webdriver/remote/isDisplayed.js
+py/docs/build/
+py/docs/source/**/*
+py/build/
+py/LICENSE
+py/pytestdebug.log
+py/python.iml
+selenium.egg-info/
+third_party/java/jetty/jetty-repacked.jar
+*.user
+*.cache
+dotnet/**/bin/
+obj/
+*.opensdf
+*.suo
+*.sdf
+*.vs
+*.opendb
+*.VC.db
+*.aps
+launchSettings.json
+Generated/
+ipch/
+/iedriver.log
+/phantomjsdriver.log
+geckodriver.log
+ghostdriver.log
+.tags
+GPATH
+GRTAGS
+GSYMS
+GTAGS
+/rb/.bundle
+/rb/.idea
+rb/bin/
+rb/lib/selenium/devtools/v1*
+rb/.gem_rbs_collection/
+.sonar/
+.idea/sonarIssues.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/misc.xml
+third_party/py/googlestorage/client_secrets.json
+.venv
+venv
+venv3
+py/.idea
+rust/target
+rust/.idea
 
-# IntelliJ
-out/
+# Bazel stuff
+bazel-bin
+bazel-genfiles
+bazel-out
+bazel-selenium
+bazel-testlogs
+MODULE.bazel.lock
 
-# JIRA plugin
-atlassian-ide-plugin.xml
+/.vscode/
+/.scannerwork/
+/.bazelrc.local
 
-# Python # 
-*.py[cod] 
-*$py.class 
+# Engflow
+*.crt
+*.key
+javascript/node/selenium-webdriver/.vscode/settings.json
 
-# Distribution / packaging 
-.Python build/ 
-develop-eggs/ 
-dist/ 
-downloads/ 
-eggs/ 
-.eggs/ 
-lib/ 
-lib64/ 
-parts/ 
-sdist/ 
-var/ 
-wheels/ 
-*.egg-info/ 
-.installed.cfg 
-*.egg 
-*.manifest 
-*.spec 
-
-# Installer logs 
-pip-log.txt 
-pip-delete-this-directory.txt 
-
-# Unit test / coverage reports 
-htmlcov/ 
-.tox/ 
-.coverage 
-.coverage.* 
-.cache 
-.pytest_cache/ 
-nosetests.xml 
-coverage.xml 
-*.cover 
-.hypothesis/ 
-
-# Jupyter Notebook 
-.ipynb_checkpoints 
-
-# pyenv 
-.python-version 
-
-# celery 
-celerybeat-schedule.* 
-
-# SageMath parsed files 
-*.sage.py 
-
-# Environments 
-.env 
-.venv 
-env/ 
-venv/ 
-ENV/ 
-env.bak/ 
-venv.bak/ 
-
-# mkdocs documentation 
-/site 
-
-# mypy 
-.mypy_cache/ 
-
-# Sublime Text # 
-*.tmlanguage.cache 
-*.tmPreferences.cache 
-*.stTheme.cache 
-*.sublime-workspace 
-*.sublime-project 
-
-# sftp configuration file 
-sftp-config.json 
-
-# Package control specific files Package 
-Control.last-run 
-Control.ca-list 
-Control.ca-bundle 
-Control.system-ca-bundle 
-GitHub.sublime-settings 
-
-# Visual Studio Code # 
-.vscode/* 
-!.vscode/settings.json 
-!.vscode/tasks.json 
-!.vscode/launch.json 
-!.vscode/extensions.json 
-.history
+dotnet-bin
+.metadata/
+.npmrc
