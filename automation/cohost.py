@@ -1,25 +1,17 @@
 import os
+import sys
 from datetime import datetime, timedelta
 import time
 import schedule
 from dotenv import load_dotenv
-
-from webdriver_manager.chrome import ChromeDriverManager
-
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from utils import set_up_chrome
 
 
 def set_cohost(email, password, date):
     # set options and driver
-    service = webdriver.ChromeService(ChromeDriverManager().install())
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument("--disable-popup-blocking")
-    chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-    chrome_options.add_argument("--start-maximized")
-    chrome_options.add_argument("--disable-search-engine-choice-screen")
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    driver = set_up_chrome()
 
     # login to google
     driver.get("https://accounts.google.com/signin")
@@ -110,6 +102,7 @@ if __name__ == "__main__":
     tomorrow = datetime.now() + timedelta(days=1)
     date_input = f"{tomorrow.year}/{tomorrow.month}/{tomorrow.day}"
     print("Executing for a date: " + date_input)
+    sys.stdout.flush()
 
     schedule.every().day.at("23:00").do(
         lambda: set_cohost(
