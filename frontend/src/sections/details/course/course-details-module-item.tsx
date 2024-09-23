@@ -121,7 +121,7 @@ export default function CourseDetailsModuleItem({
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h6" sx={{ textAlign: "right" }}>
-            {module?.priceSale && (
+            {module?.priceSale !== undefined && (
               <Box
                 component="span"
                 sx={{
@@ -133,8 +133,8 @@ export default function CourseDetailsModuleItem({
                 {fCurrency(module.priceSale)}
               </Box>
             )}
-            {module?.price ? fCurrency(module.price) : null}
-            {module?.priceSale && module?.lowest30DaysPrice && (
+            {module?.price !== undefined ? fCurrency(module.price) : null}
+            {module?.priceSale !== undefined && module?.lowest30DaysPrice !== undefined && (
               <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "center" }}>
                 Najniższa cena z 30 dni przed: {fCurrency(module.lowest30DaysPrice)}
               </Typography>

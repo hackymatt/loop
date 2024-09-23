@@ -265,7 +265,7 @@ export default function TeacherDetailsLessonItem({
 
           <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Typography variant="h6" sx={{ textAlign: "right" }}>
-              {lesson?.priceSale && (
+              {lesson?.priceSale !== undefined && (
                 <Box
                   component="span"
                   sx={{
@@ -277,8 +277,8 @@ export default function TeacherDetailsLessonItem({
                   {fCurrency(lesson.priceSale)}
                 </Box>
               )}
-              {lesson?.price ? fCurrency(lesson.price) : null}
-              {lesson?.priceSale && lesson?.lowest30DaysPrice && (
+              {lesson?.price !== undefined ? fCurrency(lesson.price) : null}
+              {lesson?.priceSale !== undefined && lesson?.lowest30DaysPrice !== undefined && (
                 <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "center" }}>
                   Najniższa cena z 30 dni przed: {fCurrency(lesson.lowest30DaysPrice)}
                 </Typography>
