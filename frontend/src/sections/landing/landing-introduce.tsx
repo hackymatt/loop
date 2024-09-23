@@ -40,7 +40,7 @@ export default function LandingIntroduce() {
             <Image
               alt="about"
               src="/assets/images/general/course-6.webp"
-              ratio="4/6"
+              ratio="3/4"
               sx={{ borderRadius: 2 }}
             />
           </Grid>
@@ -52,6 +52,22 @@ export default function LandingIntroduce() {
           </Typography>
 
           <Stack sx={{ gap: 2, textAlign: "justify" }}>
+            <Typography sx={{ color: "text.secondary" }}>
+              Nazwa{" "}
+              <Typography
+                variant="overline"
+                color="primary"
+                sx={{ fontSize: 17, textTransform: "none" }}
+              >
+                loop
+              </Typography>{" "}
+              odzwierciedla jedną z najważniejszych struktur w programowaniu — pętlę (ang. loop).
+              Symbolizuje ciągłe doskonalenie, powtarzalność i nieustanny rozwój — wartości, które
+              są kluczowe w nauce programowania. Dzięki regularnemu powtarzaniu i ulepszaniu swoich
+              umiejętności można osiągnąć biegłość w kodowaniu, a to właśnie chcemy umożliwić
+              każdemu, kto dołączy do naszych kursów.
+            </Typography>
+
             <Typography sx={{ color: "text.secondary" }}>
               W{" "}
               <Typography

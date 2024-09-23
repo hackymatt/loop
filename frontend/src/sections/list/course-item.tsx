@@ -128,7 +128,7 @@ export default function CourseItem({ course, vertical }: Props) {
             )}
 
             <Typography variant="h4" sx={{ textAlign: "right" }}>
-              {priceSale && (
+              {priceSale !== undefined && (
                 <Box
                   component="span"
                   sx={{
@@ -141,7 +141,7 @@ export default function CourseItem({ course, vertical }: Props) {
                 </Box>
               )}
               {fCurrency(price)}
-              {priceSale && lowest30DaysPrice && (
+              {priceSale !== undefined && lowest30DaysPrice !== undefined && (
                 <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "center" }}>
                   Najniższa cena z 30 dni przed: {fCurrency(lowest30DaysPrice)}
                 </Typography>

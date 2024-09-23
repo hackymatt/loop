@@ -1,0 +1,115 @@
+import os
+import sys
+from datetime import datetime, timedelta
+import time
+import schedule
+from dotenv import load_dotenv
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from utils import set_up_chrome
+
+
+def set_cohost(email, password, date):
+    # set options and driver
+    driver = set_up_chrome()
+
+    # login to google
+    driver.get("https://accounts.google.com/signin")
+    time.sleep(5)
+
+    # enter email
+    email_input = driver.find_element(By.ID, "identifierId")
+    email_input.send_keys(email)
+    email_input.send_keys(Keys.ENTER)
+    time.sleep(2)
+
+    # enter password
+    password_input = driver.find_element(By.NAME, "Passwd")
+    password_input.send_keys(password)
+    password_input.send_keys(Keys.ENTER)
+    time.sleep(5)
+
+    # open day calendar
+    driver.get(f"https://calendar.google.com/calendar/u/0/r/day/{date}?pli=1")
+    time.sleep(5)
+
+    # find events
+    events = driver.find_elements(
+        By.XPATH, "//div[@role='gridcell']//div[@role='button']"
+    )
+
+    # iterate over events
+    for event in events:
+        # open event
+        event.click()
+        time.sleep(2)
+
+        # edit event
+        edit_button = driver.find_element(
+            By.XPATH, "//button[@aria-label='Edit event']"
+        )
+        edit_button.click()
+        time.sleep(5)
+
+        # video call options
+        options_button = driver.find_element(
+            By.XPATH, "//button[@aria-label='Video call options']"
+        )
+        options_button.click()
+        time.sleep(5)
+
+        # TODO: add cohost
+
+        # switch to video call options frame
+        iframe_element = driver.find_element(
+            By.XPATH, "//iframe[@title='Video call options']"
+        )
+        driver.switch_to.frame(iframe_element)
+        time.sleep(2)
+
+        # save video call options
+        save_button = driver.find_element(By.XPATH, "//span[text()='Save']")
+        save_button.click()
+        time.sleep(2)
+
+        # switch back to main window
+        driver.switch_to.default_content()
+        time.sleep(2)
+
+        # save meeting
+        save_button = driver.find_element(By.XPATH, "//button[@aria-label='Save']")
+        save_button.click()
+        time.sleep(2)
+
+    # close browser
+    driver.quit()
+
+
+if __name__ == "__main__":
+    # load environment variables from .env file
+    load_dotenv()
+
+    # read email and password from environment variables
+    email_secret = os.getenv("MEETINGS_EMAIL")
+    password_secret = os.getenv("MEETINGS_PASSWORD")
+
+    # check if email or password is missing
+    if not email_secret:
+        raise ValueError("Email is missing from the environment variables.")
+    if not password_secret:
+        raise ValueError("Password is missing from the environment variables.")
+
+    tomorrow = datetime.now() + timedelta(days=1)
+    date_input = f"{tomorrow.year}/{tomorrow.month}/{tomorrow.day}"
+    print("Executing for a date: " + date_input)
+    sys.stdout.flush()
+
+    schedule.every().day.at("23:00").do(
+        lambda: set_cohost(
+            email=email_secret, password=password_secret, date=date_input
+        )
+    )
+
+    while True:
+        schedule.run_pending()
+        time.sleep(60)

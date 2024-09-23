@@ -108,23 +108,25 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
         )}
       </Stack>
 
-      <TextField
-        value={coupon ?? ""}
-        onChange={(event) => setCoupon(event.target.value)}
-        hiddenLabel
-        placeholder="Kod zniżkowy"
-        error={!!couponError}
-        helperText={couponError}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <LoadingButton disabled={coupon === ""} onClick={handleApplyCoupon} loading={false}>
-                Zastosuj
-              </LoadingButton>
-            </InputAdornment>
-          ),
-        }}
-      />
+      {total > 0 && (
+        <TextField
+          value={coupon ?? ""}
+          onChange={(event) => setCoupon(event.target.value)}
+          hiddenLabel
+          placeholder="Kod zniżkowy"
+          error={!!couponError}
+          helperText={couponError}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <LoadingButton disabled={coupon === ""} onClick={handleApplyCoupon} loading={false}>
+                  Zastosuj
+                </LoadingButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+      )}
 
       {selectedCoupon && (
         <LoadingButton

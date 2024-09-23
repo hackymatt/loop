@@ -81,7 +81,7 @@ export default function CourseDetailsInfo({ course }: Props) {
       <Stack spacing={3}>
         <Stack>
           <Stack direction="row" justifyContent="left" sx={{ typography: "h3" }}>
-            {!!course.priceSale && (
+            {course.priceSale !== undefined && (
               <Box
                 component="span"
                 sx={{
@@ -95,7 +95,7 @@ export default function CourseDetailsInfo({ course }: Props) {
             )}
             {fCurrency(course.price)}
           </Stack>
-          {!!course.priceSale && course.lowest30DaysPrice && (
+          {!!course.priceSale !== undefined && course.lowest30DaysPrice !== undefined && (
             <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "left" }}>
               Najniższa cena z 30 dni przed: {fCurrency(course.lowest30DaysPrice)}
             </Typography>

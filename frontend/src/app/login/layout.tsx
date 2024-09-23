@@ -1,6 +1,6 @@
 "use client";
 
-import { ComingSoonLayoutUtil } from "src/utils/coming-soon-utils";
+import { LayoutUtil } from "src/utils/page-utils";
 
 import AuthIllustrationLayout from "src/layouts/auth/illustration";
 
@@ -12,7 +12,7 @@ type Props = {
 
 export default function Layout({ children }: Props) {
   return (
-    <ComingSoonLayoutUtil
+    <LayoutUtil
       defaultLayout={<AuthIllustrationLayout>{children}</AuthIllustrationLayout>}
       children={children}
     />

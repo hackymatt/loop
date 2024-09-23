@@ -38,7 +38,7 @@ export default function LandingHero() {
       loop: true,
       duration: 100,
     },
-    [Autoplay({ delay: 5000 }), Fade()],
+    [Autoplay({ delay: 10000 }), Fade()],
   );
 
   const landingPages = [

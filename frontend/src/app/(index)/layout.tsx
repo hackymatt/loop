@@ -1,6 +1,6 @@
 "use client";
 
-import { ComingSoonLayoutUtil } from "src/utils/coming-soon-utils";
+import { LayoutUtil } from "src/utils/page-utils";
 
 import MainLayout from "src/layouts/main";
 
@@ -12,7 +12,7 @@ type Props = {
 
 export default function Layout({ children }: Props) {
   return (
-    <ComingSoonLayoutUtil
+    <LayoutUtil
       defaultLayout={<MainLayout disabledSpacing>{children}</MainLayout>}
       children={children}
     />
