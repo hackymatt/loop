@@ -24,6 +24,7 @@ type ILesson = {
   id: string;
   title: string;
   duration: number;
+  github_url: string;
 };
 
 type IReview = {
@@ -89,11 +90,12 @@ export const purchaseQuery = (query?: IQueryParams) => {
         recordings,
         created_at,
       }: IPurchase) => {
-        const { id: lessonId, title: lessonTitle, duration } = lesson;
+        const { id: lessonId, title: lessonTitle, duration, github_url } = lesson;
         return {
           id,
           lessonId,
           lessonTitle,
+          lessonResource: github_url,
           lessonDuration: duration,
           lessonStatus: lesson_status,
           lessonSlot: reservation

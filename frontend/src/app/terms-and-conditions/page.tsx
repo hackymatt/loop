@@ -1,5 +1,5 @@
-import { createMetadata } from "src/utils/create-metadata";
 import { ViewUtil } from "src/utils/page-utils";
+import { createMetadata } from "src/utils/create-metadata";
 
 import TermsAndConditionsView from "src/sections/view/terms-and-conditions-view";
 

@@ -10,7 +10,7 @@
     "build": "next build",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "lint:check": "eslint \"src/**/*.{js,jsx,ts,tsx}\"",
+    "lint:check": "eslint \"src/**/*.{js,jsx,ts,tsx}\" --max-warnings=0",
     "lint:fix": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
     "prettier:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
     "prettier:fix": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",

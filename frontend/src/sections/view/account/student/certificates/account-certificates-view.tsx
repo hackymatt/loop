@@ -42,7 +42,7 @@ const TABS = [
 
 const TABLE_HEAD = [
   { id: "title", label: "Nazwa", minWidth: 250 },
-  { id: "type", label: "Typ" },
+  { id: "type", label: "Typ", minWidth: 250 },
   { id: "completed_at", label: "Data ukończenia" },
   { id: "" },
 ];

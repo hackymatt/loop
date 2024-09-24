@@ -25,6 +25,7 @@ export type IPurchaseItemProp = {
   id: string;
   lessonId: string;
   lessonTitle: string;
+  lessonResource: string;
   lessonDuration: number;
   lessonStatus: ILessonStatus;
   lessonSlot: string[];
