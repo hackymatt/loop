@@ -142,7 +142,7 @@ function HeroIllustration({ sx, ...other }: BoxProps) {
       <Box
         {...varUp}
         component={m.div}
-        sx={{ zIndex: 8, top: 210, right: 0, position: "absolute" }}
+        sx={{ zIndex: 8, top: 210, right: 10, position: "absolute" }}
       >
         <Image
           visibleByDefault

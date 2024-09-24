@@ -19,6 +19,11 @@ import SupportNav, { MoreHelp } from "../support/support-nav";
 
 const TOPICS = [
   {
+    title: "Wszystko",
+    icon: "/assets/icons/faq/ic_questions.svg",
+    content: [...accountFAQ, ...lessonFAQ, ...reservationFAQ, ...certificateFAQ, ...paymentFAQ],
+  },
+  {
     title: "Konto",
     icon: "/assets/icons/faq/ic_account.svg",
     content: accountFAQ,
@@ -50,7 +55,7 @@ const TOPICS = [
 export default function SupportView() {
   const mdUp = useResponsive("up", "md");
 
-  const [topic, setTopic] = useState("Konto");
+  const [topic, setTopic] = useState("Wszystko");
   const [searchText, setSearchText] = useState<string>("");
 
   const mobileOpen = useBoolean();

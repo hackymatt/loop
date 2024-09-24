@@ -52,7 +52,6 @@ class LessonSerializer(ModelSerializer):
     class Meta:
         model = Lesson
         exclude = (
-            "github_url",
             "active",
             "technologies",
             "description",
