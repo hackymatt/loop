@@ -11,6 +11,6 @@ describe("createMetadata", () => {
   // Test with an empty string as the title input
   it("should handle empty string input correctly", () => {
     const result = createMetadata("");
-    expect(result.title).toBe(" | loop");
+    expect(result.title).toBe(" • loop");
   });
 });
