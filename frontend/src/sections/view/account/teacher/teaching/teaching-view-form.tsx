@@ -66,7 +66,7 @@ export default function TeachingViewForm({ teaching, onClose, ...other }: Props)
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj lekcję</DialogTitle>
+          <DialogTitle sx={{ typography: "h3", pb: 3 }}>Szczegóły lekcji</DialogTitle>
           {fields.active}
         </Stack>
 
