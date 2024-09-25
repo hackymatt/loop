@@ -121,7 +121,7 @@ export default function Header({ headerOnDark }: Props) {
     <Stack direction="row" justifyContent="space-between" alignItems="center" width={1}>
       {mdUp && (
         <>
-          <Box sx={{ lineHeight: 0, position: "relative" }}>
+          <Box sx={{ lineHeight: 0, position: "relative", mt: 0.5 }}>
             <Logo />
           </Box>
           <>
@@ -143,7 +143,7 @@ export default function Header({ headerOnDark }: Props) {
       {!mdUp && (
         <>
           <NavMobile data={navConfig} />
-          <Box sx={{ lineHeight: 0, alignContent: "center" }}>
+          <Box sx={{ lineHeight: 0, alignContent: "center", mt: 0.5 }}>
             <Logo />
           </Box>
         </>
