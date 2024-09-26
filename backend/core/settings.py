@@ -51,6 +51,7 @@ SECURE_HSTS_PRELOAD = True
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOST", "localhost").split(",")
 ALLOWED_HOSTS.append(gethostbyname(gethostname()))
+ALLOWED_HOSTS.append("backend")
 
 # Application definition
 

@@ -43,18 +43,22 @@ class NewsletterSubscribeViewSet(ModelViewSet):
                 }
             }
             if created:
-                coupon, _ = Coupon.objects.get_or_create(
-                    code="programista20",
-                    discount=20,
-                    is_percentage=True,
-                    all_users=True,
-                    is_infinite=True,
-                    uses_per_user=1,
-                    active=True,
-                    expiration_date=make_aware(
-                        datetime.now() + timedelta(weeks=52 * 99)
-                    ),
-                )
+                coupons = Coupon.objects.filter(code="programista20")
+                if coupons.exists():
+                    coupon = coupons.first()
+                else:
+                    coupon = Coupon.objects.create(
+                        code="programista20",
+                        discount=20,
+                        is_percentage=True,
+                        all_users=True,
+                        is_infinite=True,
+                        uses_per_user=1,
+                        active=True,
+                        expiration_date=make_aware(
+                            datetime.now() + timedelta(weeks=52 * 99)
+                        ),
+                    )
                 data = {**data, **{"discount": coupon.code}}
             mailer.send(
                 email_template="subscribe.html",
