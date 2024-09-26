@@ -30,7 +30,7 @@ def send_messages(email, password, tracker_path, query, message):
     # search for term
     people_url = "https://www.linkedin.com/search/results/people/"
     driver.get(
-        f"{people_url}?keywords={query_encoded}&origin=SWITCH_SEARCH_VERTICAL&sid=aAl"
+        f'{people_url}?geoUrn=%5B"105072130"%5D&keywords={query_encoded}&origin=SWITCH_SEARCH_VERTICAL&sid=aAl'
     )
     time.sleep(5)
 
@@ -47,7 +47,7 @@ def send_messages(email, password, tracker_path, query, message):
     for page in range(1, last_page):
         # search for page
         driver.get(
-            f"{people_url}?keywords={query_encoded}&origin=SWITCH_SEARCH_VERTICAL&page={page}&sid=aAl"
+            f'{people_url}?geoUrn=%5B"105072130"%5D&keywords={query_encoded}&origin=SWITCH_SEARCH_VERTICAL&page={page}&sid=aAl'
         )
         time.sleep(5)
 

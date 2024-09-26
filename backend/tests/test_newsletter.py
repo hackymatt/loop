@@ -8,6 +8,7 @@ from .factory import (
     create_admin_profile,
     create_student_profile,
     create_newsletter,
+    create_coupon,
 )
 from .helpers import (
     login,
@@ -18,6 +19,8 @@ from .helpers import (
 )
 from django.contrib import auth
 import json
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
 from utils.google.gmail import GmailApi
 
 
@@ -119,7 +122,30 @@ class NewsletterSubscribeTest(TestCase):
         self.client = APIClient()
 
     @patch.object(GmailApi, "_send_message")
-    def test_subscribe_to_newsletter_without_history(self, _send_message_mock):
+    def test_subscribe_to_newsletter_without_history_with_coupon(
+        self, _send_message_mock
+    ):
+        mock_send_message(mock=_send_message_mock)
+        # post data
+        data = {"email": "test@example.com"}
+        create_coupon(
+            code="programista20",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=11)),
+        )
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(newsletters_number(), 1)
+        self.assertEqual(_send_message_mock.call_count, 1)
+
+    @patch.object(GmailApi, "_send_message")
+    def test_subscribe_to_newsletter_without_history_without_coupon(
+        self, _send_message_mock
+    ):
         mock_send_message(mock=_send_message_mock)
         # post data
         data = {"email": "test@example.com"}
