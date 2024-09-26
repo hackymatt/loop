@@ -1,12 +1,13 @@
 import { toPng } from "html-to-image";
 import { useRef, useMemo } from "react";
 
-import { Stack, Button, Container, Typography } from "@mui/material";
+import { Stack, alpha, Button, useTheme, Container, Typography } from "@mui/material";
 
 import { fDate } from "src/utils/format-time";
 import { createMetadata } from "src/utils/create-metadata";
 
 import { grey } from "src/theme/palette";
+import { bgGradient } from "src/theme/css";
 import { BASE_URL } from "src/config-global";
 import { useCertificate } from "src/api/certificates/certificate";
 
@@ -24,6 +25,7 @@ interface IProps {
 }
 
 export default function Certificate({ id }: IProps) {
+  const theme = useTheme();
   const elementRef = useRef(null);
 
   const { enqueueSnackbar } = useToastContext();
@@ -95,7 +97,10 @@ export default function Certificate({ id }: IProps) {
           borderWidth: "thin",
           borderColor: grey[300],
           borderRadius: "8px",
-          backgroundColor: grey[100],
+          ...bgGradient({
+            color: alpha(theme.palette.background.default, 0.95),
+            imgUrl: "/assets/background/overlay-2.webp",
+          }),
         }}
       >
         <Stack spacing={8}>
