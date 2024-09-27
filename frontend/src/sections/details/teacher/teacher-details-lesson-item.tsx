@@ -278,11 +278,14 @@ export default function TeacherDetailsLessonItem({
                 </Box>
               )}
               {lesson?.price !== undefined ? fCurrency(lesson.price) : null}
-              {lesson?.priceSale !== undefined && lesson?.lowest30DaysPrice !== undefined && (
-                <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "center" }}>
-                  Najniższa cena z 30 dni przed: {fCurrency(lesson.lowest30DaysPrice)}
-                </Typography>
-              )}
+              {lesson?.priceSale !== undefined &&
+                lesson?.priceSale !== null &&
+                lesson?.lowest30DaysPrice !== undefined &&
+                lesson?.lowest30DaysPrice !== null && (
+                  <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "center" }}>
+                    Najniższa cena z 30 dni przed: {fCurrency(lesson.lowest30DaysPrice)}
+                  </Typography>
+                )}
             </Typography>
           </Stack>
 

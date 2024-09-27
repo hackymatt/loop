@@ -95,11 +95,14 @@ export default function CourseDetailsInfo({ course }: Props) {
             )}
             {fCurrency(course.price)}
           </Stack>
-          {!!course.priceSale !== undefined && course.lowest30DaysPrice !== undefined && (
-            <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "left" }}>
-              Najniższa cena z 30 dni przed: {fCurrency(course.lowest30DaysPrice)}
-            </Typography>
-          )}
+          {course.priceSale !== undefined &&
+            course.priceSale !== null &&
+            course.lowest30DaysPrice !== undefined &&
+            course.lowest30DaysPrice !== null && (
+              <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "left" }}>
+                Najniższa cena z 30 dni przed: {fCurrency(course.lowest30DaysPrice)}
+              </Typography>
+            )}
         </Stack>
 
         <Stack spacing={2}>

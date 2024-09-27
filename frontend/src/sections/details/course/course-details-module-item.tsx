@@ -134,11 +134,14 @@ export default function CourseDetailsModuleItem({
               </Box>
             )}
             {module?.price !== undefined ? fCurrency(module.price) : null}
-            {module?.priceSale !== undefined && module?.lowest30DaysPrice !== undefined && (
-              <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "center" }}>
-                Najniższa cena z 30 dni przed: {fCurrency(module.lowest30DaysPrice)}
-              </Typography>
-            )}
+            {module?.priceSale !== undefined &&
+              module?.priceSale !== null &&
+              module?.lowest30DaysPrice !== undefined &&
+              module?.lowest30DaysPrice !== null && (
+                <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "center" }}>
+                  Najniższa cena z 30 dni przed: {fCurrency(module.lowest30DaysPrice)}
+                </Typography>
+              )}
           </Typography>
         </Stack>
 
