@@ -1,28 +1,11 @@
 import { MetadataRoute } from "next";
 
-import { Api } from "src/api/service";
 import { ENV } from "src/config-global";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const env = ENV === "PROD" ? "" : `${ENV.toLocaleLowerCase()}.`;
 
-  let courses;
-  try {
-    const response = await Api.get("/courses");
-    const { data } = response;
-    courses = data.results;
-  } catch (error) {
-    courses = [];
-  }
-
-  const coursesSitemap = courses.map((item: any) => ({
-    url: `https://www.${env}loop.edu.pl/course/${item.id}`,
-    lastModified: new Date().toISOString(),
-    changeFrequency: "daily",
-    priority: 0.8,
-  }));
-
-  const generalSiteMap = [
+  return [
     {
       url: `https://www.${env}loop.edu.pl`,
       lastModified: new Date().toISOString(),
@@ -84,6 +67,4 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     },
   ];
-
-  return [...generalSiteMap, ...coursesSitemap];
 }
