@@ -14,6 +14,7 @@ type ILecturer = {
   title: string | null;
   image: string | null;
   gender: IGender;
+  linkedin_url: string;
 };
 
 export const bestLecturersQuery = () => {
@@ -22,13 +23,16 @@ export const bestLecturersQuery = () => {
   const queryFn = async () => {
     const { data } = await Api.get(url);
     const { results, records_count } = data;
-    const modifiedResults = results.map(({ id, full_name, title, image, gender }: ILecturer) => ({
-      id,
-      name: full_name,
-      role: title,
-      photo: image,
-      gender,
-    }));
+    const modifiedResults = results.map(
+      ({ id, full_name, title, image, gender, linkedin_url }: ILecturer) => ({
+        id,
+        name: full_name,
+        role: title,
+        avatarUrl: image,
+        gender,
+        linkedinUrl: linkedin_url,
+      }),
+    );
     return { results: modifiedResults, count: records_count };
   };
 

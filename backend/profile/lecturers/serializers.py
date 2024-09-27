@@ -155,6 +155,7 @@ class LecturerSerializer(ModelSerializer):
             "lessons_count",
             "lessons_duration",
             "students_count",
+            "linkedin_url",
         )
 
     def get_full_name(self, lecturer):
@@ -275,6 +276,7 @@ class BestLecturerSerializer(ModelSerializer):
             "gender",
             "title",
             "image",
+            "linkedin_url",
         )
 
     def get_full_name(self, lecturer):

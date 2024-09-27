@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
-import { IconButton } from "@mui/material";
+import { Link, IconButton } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { alpha, styled } from "@mui/material/styles";
 
@@ -11,6 +11,7 @@ import { RouterLink } from "src/routes/components";
 import { bgGradient } from "src/theme/css";
 
 import Image from "src/components/image";
+import Iconify from "src/components/iconify";
 
 import { ITeamMemberProps } from "src/types/team";
 
@@ -42,7 +43,7 @@ type Props = {
 };
 
 export default function TeamItem({ member }: Props) {
-  const { id, name, role, avatarUrl, gender } = member;
+  const { id, name, role, avatarUrl, gender, linkedinUrl } = member;
 
   const genderAvatarUrl =
     gender === "Kobieta"
@@ -52,39 +53,35 @@ export default function TeamItem({ member }: Props) {
   const photoUrl = avatarUrl || genderAvatarUrl;
 
   return (
-    <Card>
-      <Stack spacing={0.5} sx={{ textAlign: "center", pt: 3, pb: 1.5 }}>
-        <Typography variant="h6">{name}</Typography>
+    <Link component={RouterLink} href={`${paths.teacher}/${id}`} color="inherit" underline="none">
+      <Card>
+        <Stack spacing={0.5} sx={{ textAlign: "center", pt: 3, pb: 1.5 }}>
+          <Typography variant="h6">{name}</Typography>
 
-        <Typography variant="body2" sx={{ color: "text.disabled" }}>
-          {role}
-        </Typography>
-      </Stack>
+          <Typography variant="body2" sx={{ color: "text.disabled" }}>
+            {role}
+          </Typography>
+        </Stack>
 
-      <Box sx={{ position: "relative" }}>
-        <Shape />
+        <Box sx={{ position: "relative" }}>
+          <Shape />
 
-        <StyledOverlay>
-          <Stack
-            direction="row"
-            justifyContent="center"
-            sx={{ width: 1, zIndex: 9, bottom: 24, position: "absolute" }}
-          >
-            <IconButton
-              component={RouterLink}
-              href={`${paths.teacher}/${id}`}
-              sx={{ color: "common.white" }}
+          <StyledOverlay>
+            <Stack
+              direction="row"
+              justifyContent="center"
+              sx={{ width: 1, zIndex: 9, bottom: 24, position: "absolute" }}
             >
-              <Typography variant="body2" sx={{ color: "common.white" }}>
-                Zobacz profil
-              </Typography>
-            </IconButton>
-          </Stack>
-        </StyledOverlay>
+              <IconButton component="a" href={linkedinUrl} target="_blank">
+                <Iconify icon="carbon:logo-linkedin" color="#007EBB" />
+              </IconButton>
+            </Stack>
+          </StyledOverlay>
 
-        <Image src={photoUrl} alt={name} ratio="1/1" />
-      </Box>
-    </Card>
+          <Image src={photoUrl} alt={name} ratio="1/1" />
+        </Box>
+      </Card>
+    </Link>
   );
 }
 
