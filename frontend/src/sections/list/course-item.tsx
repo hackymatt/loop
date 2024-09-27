@@ -70,9 +70,9 @@ export default function CourseItem({ course, vertical }: Props) {
           alt={slug}
           src={coverUrl}
           sx={{
-            height: 1,
             objectFit: "cover",
-            width: { sm: 240 },
+            width: { xs: 1, md: 240 },
+            height: { xs: 240, md: 1 },
             ...(vertical && {
               width: { sm: 1 },
             }),
@@ -154,12 +154,13 @@ export default function CourseItem({ course, vertical }: Props) {
 
           <Stack spacing={1}>
             <Link component={RouterLink} href={`${paths.course}/${id}`} color="inherit">
-              <TextMaxLine variant="h6" line={1}>
+              <TextMaxLine variant="h6" line={2}>
                 {slug}
               </TextMaxLine>
             </Link>
 
             <TextMaxLine
+              line={3}
               variant="body2"
               color="text.secondary"
               sx={{

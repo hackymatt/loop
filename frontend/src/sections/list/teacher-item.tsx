@@ -64,9 +64,9 @@ export default function TeacherItem({ teacher, vertical }: Props) {
           alt={name}
           src={photoUrl}
           sx={{
-            height: 1,
             objectFit: "cover",
-            width: { sm: 240 },
+            width: { xs: 1, md: 240 },
+            height: { xs: 240, md: 1 },
             ...(vertical && {
               width: { sm: 1 },
             }),
