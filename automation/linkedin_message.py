@@ -32,10 +32,16 @@ def send_messages(email, password, tracker_path, query, message):
     driver.get(
         f'{people_url}?geoUrn=%5B"105072130"%5D&keywords={query_encoded}&origin=SWITCH_SEARCH_VERTICAL&sid=aAl'
     )
-    time.sleep(5)
+    time.sleep(10)
+
+    # Scroll to ensure any lazy-loaded elements are rendered
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+    time.sleep(10)
 
     # determine last page number
-    pagination = driver.find_elements(By.CLASS_NAME, "artdeco-pagination__indicator")
+    pagination = driver.find_elements(By.XPATH, '//ul[contains(@class, "artdeco-pagination__pages")]/li')
+
     if pagination:
         last_page = int(pagination[-1].text)
     else:
@@ -147,10 +153,14 @@ if __name__ == "__main__":
     if not tracker_path_secret:
         raise ValueError("Tracker path is missing from the environment variables.")
 
-    send_messages(
-        email=email_secret,
-        password=password_secret,
-        tracker_path=tracker_path_secret,
-        query="nauczyciel programowania",
-        message="Cześć",
-    )
+    try:
+        send_messages(
+            email=email_secret,
+            password=password_secret,
+            tracker_path=tracker_path_secret,
+            query="(instruktor OR nauczyciel OR wykładowca OR trener OR lecturer) AND (Giganci Programowania)",
+            message="Cześć",
+        )
+    except Exception as error:
+        print(error)
+        sys.stdout.flush()

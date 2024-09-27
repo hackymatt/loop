@@ -91,11 +91,14 @@ export default function TeacherDetailsInfo({ teacher }: Props) {
             )}
             {fCurrency(teacher.lessonsPrice ?? 0)}
           </Stack>
-          {!!teacher.lessonsPreviousPrice && teacher.lessonsLowest30DaysPrice && (
-            <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "left" }}>
-              Najniższa cena z 30 dni przed: {fCurrency(teacher.lessonsLowest30DaysPrice)}
-            </Typography>
-          )}
+          {teacher.lessonsPreviousPrice !== undefined &&
+            teacher.lessonsPreviousPrice !== null &&
+            teacher.lessonsLowest30DaysPrice !== undefined &&
+            teacher.lessonsLowest30DaysPrice !== null && (
+              <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "left" }}>
+                Najniższa cena z 30 dni przed: {fCurrency(teacher.lessonsLowest30DaysPrice)}
+              </Typography>
+            )}
         </Stack>
 
         <Stack spacing={2}>

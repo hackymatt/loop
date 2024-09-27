@@ -141,11 +141,14 @@ export default function CourseItem({ course, vertical }: Props) {
                 </Box>
               )}
               {fCurrency(price)}
-              {priceSale !== undefined && lowest30DaysPrice !== undefined && (
-                <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "center" }}>
-                  Najniższa cena z 30 dni przed: {fCurrency(lowest30DaysPrice)}
-                </Typography>
-              )}
+              {priceSale !== undefined &&
+                priceSale !== null &&
+                lowest30DaysPrice !== undefined &&
+                lowest30DaysPrice !== null && (
+                  <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "center" }}>
+                    Najniższa cena z 30 dni przed: {fCurrency(lowest30DaysPrice)}
+                  </Typography>
+                )}
             </Typography>
           </Stack>
 

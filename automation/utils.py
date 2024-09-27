@@ -10,6 +10,9 @@ def set_up_chrome():
     chrome_options.add_argument("--disable-blink-features=AutomationControlled")
     chrome_options.add_argument("--start-maximized")
     chrome_options.add_argument("--disable-search-engine-choice-screen")
+    chrome_options.add_argument('--disable-extensions')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
     return webdriver.Chrome(service=service, options=chrome_options)
 
 
