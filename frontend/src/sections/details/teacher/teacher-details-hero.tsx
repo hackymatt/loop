@@ -126,7 +126,7 @@ export default function TeacherDetailsHero({ teacher }: Props) {
                       </Stack>
 
                       <Link color="inherit" variant="body2" href={linkedinUrl} target="_blank">
-                        {linkedinUrl}
+                        Zobacz profil
                       </Link>
                     </Stack>
                   )}
