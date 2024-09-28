@@ -12,6 +12,10 @@ frontend:
   enabled: true
   tag: latest.dev
   replicas: 1
+  env:
+    ENV: "DEV"
+    BASE_URL: "https://dev.loop.edu.pl"
+    API_URL: "https://dev.loop.edu.pl/api"
 
 nginx:
   enabled: true
