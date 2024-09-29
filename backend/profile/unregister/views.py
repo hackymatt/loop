@@ -2,7 +2,6 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-from django.conf import settings
 from profile.models import Profile, LecturerProfile, StudentProfile
 from reservation.models import Reservation
 from schedule.models import Schedule
@@ -12,6 +11,7 @@ from pytz import timezone, utc
 from mailer.mailer import Mailer
 from notification.utils import notify
 import urllib.parse
+from config_global import DUMMY_STUDENT_EMAIL, DUMMY_LECTURER_EMAIL
 
 
 class ProfileUnregisterViewSet(ModelViewSet):
@@ -28,7 +28,7 @@ class ProfileUnregisterViewSet(ModelViewSet):
 
         now = make_aware(datetime.now())
         if user_type[0] == "S":
-            dummy_user = User.objects.get(email=settings.DUMMY_STUDENT_EMAIL)
+            dummy_user = User.objects.get(email=DUMMY_STUDENT_EMAIL)
             dummy_profile = Profile.objects.get(user=dummy_user)
             past_reservations = Reservation.objects.filter(
                 student__profile=profile, schedule__start_time__lt=now
@@ -79,7 +79,7 @@ class ProfileUnregisterViewSet(ModelViewSet):
                     schedule_obj.lesson = None
                     schedule_obj.save()
         else:
-            dummy_user = User.objects.get(email=settings.DUMMY_LECTURER_EMAIL)
+            dummy_user = User.objects.get(email=DUMMY_LECTURER_EMAIL)
             dummy_profile = Profile.objects.get(user=dummy_user)
             past_schedules = Schedule.objects.filter(
                 lecturer__profile=profile, start_time__lt=now, lesson__isnull=False

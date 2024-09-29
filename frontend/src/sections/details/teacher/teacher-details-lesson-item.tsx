@@ -66,6 +66,8 @@ type LessonItemProps = {
   loading: boolean;
 };
 
+type SlotProps = { time: string; studentsRequired: number };
+
 const DEFAULT_USER = { id: "", avatarUrl: "", name: "Wszyscy" } as const;
 
 // ----------------------------------------------------------------------
@@ -137,7 +139,16 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
       };
     });
 
-    return Array.from(new Set(allSlots)).sort();
+    const filteredSlots = Object.values(
+      allSlots?.reduce((acc: { [key: string]: SlotProps }, slot) => {
+        if (!acc[slot.time] || slot.studentsRequired < acc[slot.time].studentsRequired) {
+          acc[slot.time] = slot;
+        }
+        return acc;
+      }, {}) ?? {},
+    );
+
+    return Array.from(new Set(filteredSlots)).sort();
   }, [lessonSchedules]);
 
   const [slot, setSlot] = useState<string>(slots?.[0]?.time);

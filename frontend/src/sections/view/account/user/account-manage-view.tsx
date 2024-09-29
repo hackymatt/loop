@@ -18,6 +18,7 @@ import { useRouter } from "src/routes/hooks/use-router";
 import { useBoolean } from "src/hooks/use-boolean";
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
+import { MIN_PASSWORD_LENGTH } from "src/config-global";
 import { usePasswordChange } from "src/api/auth/password-change";
 
 import Iconify from "src/components/iconify";
@@ -45,7 +46,7 @@ export default function AccountManageView() {
     old_password: Yup.string().required("Hasło jest wymagane"),
     password: Yup.string()
       .required("Hasło jest wymagane")
-      .min(8, "Hasło musi mieć minimum 8 znaków")
+      .min(MIN_PASSWORD_LENGTH, `Hasło musi mieć minimum ${MIN_PASSWORD_LENGTH} znaków`)
       .matches(/^(?=.*[A-Z])/, "Hasło musi składać się z minimum jednej dużej litery.")
       .matches(/^(?=.*[a-z])/, "Hasło musi składać się z minimum jednej małej litery.")
       .matches(/^(?=.*[0-9])/, "Hasło musi składać się z minimum jednej cyfry")

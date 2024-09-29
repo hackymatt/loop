@@ -1,5 +1,7 @@
 import * as Yup from "yup";
 
+import { LESSON_DURATION_MULTIPLIER } from "src/config-global";
+
 export const defaultValues = {
   active: false,
   title: "",
@@ -25,11 +27,14 @@ export const schema = Yup.object().shape({
   price: Yup.number().required("Cena jest wymagana").min(0, "Cena musi być większa bądź równa 0"),
   duration: Yup.number()
     .required("Czas trwania jest wymagany")
-    .min(30, "Czas trwania musi być większy bądź równy 30 minut")
+    .min(
+      LESSON_DURATION_MULTIPLIER,
+      `Czas trwania musi być większy bądź równy ${LESSON_DURATION_MULTIPLIER} minut`,
+    )
     .test(
-      "by30minutes",
-      "Czas trwania musi być wielokrotnością 30 minut",
-      (number) => number % 30 === 0,
+      `by${LESSON_DURATION_MULTIPLIER}minutes`,
+      `Czas trwania musi być wielokrotnością ${LESSON_DURATION_MULTIPLIER} minut`,
+      (number) => number % LESSON_DURATION_MULTIPLIER === 0,
     ),
   github_url: Yup.string().required("Link do repozytorium jest wymagany"),
   technologies: Yup.array()

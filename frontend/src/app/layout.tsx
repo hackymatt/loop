@@ -24,11 +24,6 @@ export const viewport = {
 };
 
 export const metadata = {
-  title: "loop",
-  description:
-    "Platforma firmy loop oferującej kursy programowania online dla przyszłych i obecnych programistów",
-  keywords:
-    "loop,szkoła,szkoła programowania,kursy,programowanie,it,tanio,profesjonalnie,online,zdalne",
   manifest: "/manifest.json",
   icons: [{ rel: "icon", url: "/favicon/favicon.ico" }],
 };

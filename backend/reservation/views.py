@@ -8,7 +8,7 @@ from profile.models import Profile
 from schedule.models import Schedule
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
-from const import CANCELLATION_TIME, MIN_LESSON_DURATION_MINS
+from config_global import CANCELLATION_TIME, LESSON_DURATION_MULTIPLIER
 
 
 class ReservationViewSet(ModelViewSet):
@@ -45,7 +45,7 @@ class ReservationViewSet(ModelViewSet):
 
         if other_reservations.count() == 0:
             duration = (schedule.end_time - schedule.start_time).total_seconds() / 60
-            timeslots_count = int(duration / MIN_LESSON_DURATION_MINS)
+            timeslots_count = int(duration / LESSON_DURATION_MULTIPLIER)
 
             if timeslots_count == 1:
                 schedule.lesson = None

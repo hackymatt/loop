@@ -16,10 +16,10 @@ from purchase.models import Purchase
 from teaching.models import Teaching
 from django.db.models.functions import Concat
 from django.db.models import Avg, Value, Q
-from django.conf import settings
-from const import MIN_LESSON_DURATION_MINS
+from config_global import LESSON_DURATION_MULTIPLIER
 from notification.utils import notify
 import urllib.parse
+from config_global import GITHUB_REPO
 
 
 def notify_lecturer(lesson):
@@ -146,18 +146,17 @@ class LessonSerializer(ModelSerializer):
         )
 
     def validate_duration(self, duration):
-        if duration % MIN_LESSON_DURATION_MINS != 0:
+        if duration % LESSON_DURATION_MULTIPLIER != 0:
             raise ValidationError(
-                f"Czas lekcji musi być wielokrotnością {MIN_LESSON_DURATION_MINS} minut."
+                f"Czas lekcji musi być wielokrotnością {LESSON_DURATION_MULTIPLIER} minut."
             )
 
         return duration
 
     def validate_github_url(self, github_url):
-        github_repo = settings.GITHUB_REPO
-        if not github_url.startswith(github_repo):
+        if not github_url.startswith(GITHUB_REPO):
             raise ValidationError(
-                f"Github url musi być rozpoczynać się na {github_repo} minut."
+                f"Github url musi być rozpoczynać się na {GITHUB_REPO} minut."
             )
 
         return github_url

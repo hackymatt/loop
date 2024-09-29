@@ -28,8 +28,8 @@ import {
 } from "@mui/material";
 
 import { paths } from "src/routes/paths";
-import { usePathname } from "src/routes/hooks";
 import { RouterLink } from "src/routes/components";
+import { useRouter, usePathname } from "src/routes/hooks";
 
 import { useOffSetTop } from "src/hooks/use-off-set-top";
 import { useResponsive } from "src/hooks/use-responsive";
@@ -438,6 +438,8 @@ function NotificationsPopover({
 
 function AccountPopover({ openMenu }: { openMenu: UsePopoverReturn }) {
   const { enqueueSnackbar } = useToastContext();
+  const pathname = usePathname();
+  const { push } = useRouter();
 
   const { logoutUser, userType } = useUserContext();
 
@@ -454,6 +456,9 @@ function AccountPopover({ openMenu }: { openMenu: UsePopoverReturn }) {
   const handleLogout = async () => {
     try {
       await logoutUser({});
+      if (pathname.includes(paths.account.root)) {
+        push(paths.login);
+      }
       enqueueSnackbar("Wylogowano pomyślnie", { variant: "success" });
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd", { variant: "error" });

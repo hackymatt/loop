@@ -99,7 +99,7 @@ export default function AccountScheduleView() {
   const events = useMemo(
     () =>
       schedules?.map((schedule: IScheduleProp) => {
-        const isBooked = !!schedule?.meetingUrl;
+        const isConfirmed = !!schedule?.meetingUrl;
         const base = {
           id: schedule.id,
           groupId: "1",
@@ -108,17 +108,23 @@ export default function AccountScheduleView() {
           end: schedule.endTime,
           color: schedule.lesson?.title ? stc(schedule.lesson.title) : "",
           url: "",
-          extendedProps: {
-            ready: schedule.studentsRequired === 0,
-            students: schedule?.students ?? [],
-          },
         };
-        return isBooked
+        const isReserved = base.title !== AVAILABLE_STATUS;
+        const reserved = isReserved
           ? {
               ...base,
-              url: schedule?.meetingUrl,
+              extendedProps: {
+                ready: schedule.studentsRequired === 0,
+                students: schedule?.students ?? [],
+              },
             }
           : base;
+        return isConfirmed
+          ? {
+              ...reserved,
+              url: schedule?.meetingUrl,
+            }
+          : reserved;
       }),
     [schedules],
   );

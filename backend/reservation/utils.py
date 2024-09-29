@@ -1,12 +1,12 @@
 from reservation.models import Reservation
 from schedule.models import Schedule, Meeting, Recording
-from schedule.utils import MeetingManager
+from schedule.utils import MeetingManager, get_min_students_required
 from django.db.models import F
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from pytz import timezone, utc
 from mailer.mailer import Mailer
-from const import CANCELLATION_TIME, MINIMUM_STUDENTS_REQUIRED
+from config_global import CANCELLATION_TIME
 from notification.utils import notify
 import urllib.parse
 from utils.google.drive import DriveApi
@@ -31,7 +31,9 @@ def confirm_reservations():
     for schedule in schedules:
         reservations = Reservation.objects.filter(schedule=schedule)
 
-        is_lesson_success = reservations.count() >= MINIMUM_STUDENTS_REQUIRED
+        is_lesson_success = reservations.count() >= get_min_students_required(
+            lecturer=schedule.lecturer, lesson=schedule.lesson
+        )
 
         if is_lesson_success:
             # create meeting
@@ -164,4 +166,4 @@ def pull_recordings():
                 file_url=file_url,
             )
         else:
-            print(f"Schedule Id not found withing file name {file_name}")
+            print(f"Schedule Id not found with file name {file_name}")

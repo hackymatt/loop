@@ -1,18 +1,17 @@
 from django.db import migrations
 from django.contrib.auth import get_user_model
-from django.conf import settings
 from profile.models import Profile, LecturerProfile
+from config_global import DUMMY_LECTURER_EMAIL, DUMMY_LECTURER_PASSWORD
 
 
 def generate_dummy_lecturer(apps, schema_editor):
-    email = settings.DUMMY_LECTURER_EMAIL
-    password = settings.DUMMY_LECTURER_PASSWORD
-
     user = get_user_model()
 
-    if not user.objects.filter(email=email).exists():
-        lecturer = user.objects.create(username=email, email=email)
-        lecturer.set_password(password)
+    if not user.objects.filter(email=DUMMY_LECTURER_EMAIL).exists():
+        lecturer = user.objects.create(
+            username=DUMMY_LECTURER_EMAIL, email=DUMMY_LECTURER_EMAIL
+        )
+        lecturer.set_password(DUMMY_LECTURER_PASSWORD)
         lecturer.save()
 
         profile = Profile.objects.create(user=lecturer, user_type="W")

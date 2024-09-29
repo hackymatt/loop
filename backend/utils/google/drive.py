@@ -1,5 +1,5 @@
 from utils.google.service import build_service
-from django.conf import settings
+from config_global import MEETINGS_EMAIL
 
 
 class DriveApi:
@@ -11,7 +11,7 @@ class DriveApi:
         self.service = build_service(
             service_name="drive",
             service_version="v3",
-            on_behalf_of=settings.MEETINGS_EMAIL,
+            on_behalf_of=MEETINGS_EMAIL,
             scopes=scopes,
         )
 

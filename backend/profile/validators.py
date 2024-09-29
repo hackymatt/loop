@@ -1,5 +1,5 @@
 from rest_framework.serializers import ValidationError
-from const import MIN_PASSWORD_LENGTH
+from config_global import MIN_PASSWORD_LENGTH
 
 
 def validate_password_strength(password):

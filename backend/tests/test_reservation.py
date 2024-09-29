@@ -18,6 +18,7 @@ from .factory import (
     create_reservation,
     create_meeting,
     create_module,
+    create_finance,
 )
 from .helpers import (
     login,
@@ -685,6 +686,7 @@ class ReservationConfirmationTest(TestCase):
         self.lecturer_profile = create_lecturer_profile(
             profile=create_profile(user=self.lecturer_user, user_type="W")
         )
+        create_finance(lecturer=self.lecturer_profile, rate=100, commission=0)
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -696,7 +698,7 @@ class ReservationConfirmationTest(TestCase):
             description="bbbb",
             duration="90",
             github_url="https://github.com/loopedupl/lesson",
-            price="9.99",
+            price="109.99",
             technologies=[self.technology_1],
         )
         self.lesson_2 = create_lesson(
@@ -704,7 +706,7 @@ class ReservationConfirmationTest(TestCase):
             description="bbbb",
             duration="30",
             github_url="https://github.com/loopedupl/lesson",
-            price="2.99",
+            price="52.99",
             technologies=[self.technology_1],
         )
 
@@ -846,7 +848,7 @@ class RecordingsTest(TestCase):
 
     @patch.object(DriveApi, "set_permissions")
     @patch.object(DriveApi, "get_recordings")
-    def test_reservation_confirmation(self, get_recordings_mock, set_permissions_mock):
+    def test_pull_recordings(self, get_recordings_mock, set_permissions_mock):
         schedule_ids = [schedule.id for schedule in self.schedules]
         mock_get_recordings(mock=get_recordings_mock, schedule_ids=schedule_ids)
         mock_set_permissions(mock=set_permissions_mock)

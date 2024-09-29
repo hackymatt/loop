@@ -5,10 +5,10 @@ from rest_framework.serializers import (
     ImageField,
 )
 from schedule.models import Schedule
+from schedule.utils import get_min_students_required
 from profile.models import Profile, LecturerProfile, StudentProfile
 from lesson.models import Lesson
 from reservation.models import Reservation
-from const import MINIMUM_STUDENTS_REQUIRED
 
 
 class StudentSerializer(ModelSerializer):
@@ -64,8 +64,12 @@ class ManageScheduleGetSerializer(ModelSerializer):
         return StudentSerializer(students, many=True).data
 
     def get_students_required(self, schedule):
+        if not schedule.lesson:
+            return None
         return max(
-            MINIMUM_STUDENTS_REQUIRED
+            get_min_students_required(
+                lecturer=schedule.lecturer, lesson=schedule.lesson
+            )
             - Reservation.objects.filter(schedule=schedule).count(),
             0,
         )
@@ -99,8 +103,15 @@ class ScheduleSerializer(ModelSerializer):
         )
 
     def get_students_required(self, schedule):
+        lesson_id = self.context["request"].query_params.get("lesson_id")
+        lessons = Lesson.objects.filter(pk=lesson_id).all()
+        if not lessons.exists():
+            return None
+
         return max(
-            MINIMUM_STUDENTS_REQUIRED
+            get_min_students_required(
+                lecturer=schedule.lecturer, lesson=lessons.first()
+            )
             - Reservation.objects.filter(schedule=schedule).count(),
             0,
         )

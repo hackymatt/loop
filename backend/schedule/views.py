@@ -20,7 +20,7 @@ from django.db.models import F
 from django.db.models.functions import TruncDate
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
-from const import CANCELLATION_TIME
+from config_global import CANCELLATION_TIME
 from notification.utils import notify
 import urllib.parse
 

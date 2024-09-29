@@ -24,7 +24,7 @@ import json
 from django.contrib import auth
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
-from const import CANCELLATION_TIME
+from config_global import CANCELLATION_TIME
 import uuid
 
 
