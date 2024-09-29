@@ -51,6 +51,37 @@ export default function CourseView({ id }: { id: string }) {
     [course?.modules],
   );
 
+  const technologyKeywords = useMemo(
+    () =>
+      course?.category
+        .map((category: string) => [
+          `${category} online`,
+          `nauka ${category}`,
+          `programowanie ${category}`,
+          `${category} od podstaw`,
+          `certyfikat ${category}`,
+          `zajęcia z ${category}`,
+        ])
+        .flat(),
+    [course?.category],
+  );
+
+  const metadata = useMemo(
+    () =>
+      createMetadata(
+        `Kurs: ${course.slug}`,
+        `Zapisz się na kurs ${course.slug} w loop i naucz się programować. Oferujemy praktyczne lekcje online z certyfikatem ukończenia oraz wsparcie doświadczonych instruktorów.`,
+        [
+          `kurs ${course.slug}`,
+          "kursy programowania",
+          "szkoła programowania loop",
+          "kurs programowania",
+          ...technologyKeywords,
+        ],
+      ),
+    [course.slug, technologyKeywords],
+  );
+
   const isLoading = isLoadingCourse || isLoadingBestCourse;
 
   if (isLoading) {
@@ -63,7 +94,7 @@ export default function CourseView({ id }: { id: string }) {
 
   return (
     <>
-      <title>{createMetadata(`Kurs: ${course.slug}`).title}</title>
+      <title>{metadata.title}</title>
 
       <CourseDetailsHero course={course} />
 

@@ -9,11 +9,11 @@ export const termsAndConditions = [
     content: (
       <Typography sx={{ textAlign: "justify" }}>
         <Typography>
-          1. Serwis internetowy – serwis znajdujący się pod adresem niniejszej strony internetowej,
+          1. Serwis internetowy — serwis znajdujący się pod adresem niniejszej strony internetowej,
           za pośrednictwem którego Sprzedawca świadczy usługi drogą elektroniczną.
         </Typography>
         <Typography>
-          2. Sprzedawca – właściciel strony internetowej – loop Mateusz Szczepek, NIP: 6861677925,
+          2. Sprzedawca — właściciel strony internetowej — loop Mateusz Szczepek, NIP: 6861677925,
           REGON: 529269876, e-mail:{" "}
           <Link color="inherit" href="mailto:info@loop.edu.pl">
             info@loop.edu.pl
@@ -21,7 +21,7 @@ export const termsAndConditions = [
           .
         </Typography>
         <Typography>
-          3. Adres Sprzedawcy – ilekroć w Regulaminie jest mowa o adresie Sprzedawcy, rozumie się
+          3. Adres Sprzedawcy — ilekroć w Regulaminie jest mowa o adresie Sprzedawcy, rozumie się
           przez to adres mailowy (zakładka{" "}
           <Link target="_blank" rel="noopener" href={paths.contact} color="text.primary">
             kontakt
@@ -29,52 +29,52 @@ export const termsAndConditions = [
           ).
         </Typography>
         <Typography>
-          4. Klient – osoba fizyczna posiadająca pełną zdolność do czynności prawnych, a w
+          4. Klient — osoba fizyczna posiadająca pełną zdolność do czynności prawnych, a w
           przypadkach przewidzianych przez przepisy powszechnie obowiązujące także osoba fizyczna
           posiadająca ograniczoną zdolność do czynności prawnych, osoba prawna albo jednostka
           organizacyjna nieposiadająca osobowości prawnej, której ustawa przyznaje zdolność prawną,
           która zawarła lub zamierza zawrzeć umowę o świadczenie usług.
         </Typography>
         <Typography>
-          5. Konsument – art. 221 KC: osoba fizyczna dokonująca ze Sprzedawcą czynności prawnej
+          5. Konsument — art. 221 KC: osoba fizyczna dokonująca ze Sprzedawcą czynności prawnej
           niezwiązanej bezpośrednio z jej działalnością gospodarczą lub zawodową.
         </Typography>
         <Typography>
-          6. Umowa o świadczenie usług – umowa dotycząca usługi zamieszczonej na stronie Serwisu
+          6. Umowa o świadczenie usług — umowa dotycząca usługi zamieszczonej na stronie Serwisu
           internetowego zawierana albo zawarta między Klientem a Sprzedawcą za pośrednictwem Serwisu
           internetowego.
         </Typography>
         <Typography>
-          7. Usługa – usługa, którą Klient nabywa za pośrednictwem Serwisu internetowego.
+          7. Usługa — usługa, którą Klient nabywa za pośrednictwem Serwisu internetowego.
         </Typography>
         <Typography>
-          8. Zamówienie – oświadczenie woli Klienta, złożone za pośrednictwem Serwisu internetowego
+          8. Zamówienie — oświadczenie woli Klienta, złożone za pośrednictwem Serwisu internetowego
           określające: rodzaj i zakres Usługi dostępnej w Serwisie internetowym w chwili składania
           zamówienia, sposób zapłaty oraz dane Klienta.
         </Typography>
         <Typography>
-          9. Formularz zamówienia – elektroniczna usługa, formularz na nośniku elektronicznym
+          9. Formularz zamówienia — elektroniczna usługa, formularz na nośniku elektronicznym
           dostępny w Serwisie internetowym, umożliwiający złożenie i realizację Zamówienia.
         </Typography>
         <Typography>
-          10. Czas realizacji zamówienia – czas, w jakim zamówienie złożone przez Klienta Serwisu
+          10. Czas realizacji zamówienia — czas, w jakim zamówienie złożone przez Klienta Serwisu
           internetowego zostanie zrealizowane przez Sprzedawcę.
         </Typography>
         <Typography>
-          11. Dzień roboczy – jeden dzień od poniedziałku do piątku z wyłączeniem dni ustawowo
+          11. Dzień roboczy — jeden dzień od poniedziałku do piątku z wyłączeniem dni ustawowo
           wolnych od pracy.
         </Typography>
         <Typography>
-          12. Ceny – ceny usług w Serwisie są stałe w danym czasie i nie wpływają na nie żadne
+          12. Ceny — ceny usług w Serwisie są stałe w danym czasie i nie wpływają na nie żadne
           algorytmy ustalania cen, niezależnie od tego, jak Klient trafia na stronę, jakich
           przeglądarek używa, oraz nie ma znaczenia płeć, wiek itp.
         </Typography>
         <Typography>
-          13. Ustawa o prawach Konsumenta, ustawa – ustawa z dnia 30 maja 2014 r. o prawach
+          13. Ustawa o prawach Konsumenta, ustawa — ustawa z dnia 30 maja 2014 r. o prawach
           Konsumenta (Dz.U. z 2014 r. poz. 827 z późniejszymi zmianami).
         </Typography>
         <Typography>
-          14. RODO – Rozporządzenie Rady UE 2016/679 (z dnia 27 kwietnia 2016 r.).
+          14. RODO — Rozporządzenie Rady UE 2016/679 (z dnia 27 kwietnia 2016 r.).
         </Typography>
       </Typography>
     ),
@@ -94,7 +94,7 @@ export const termsAndConditions = [
         </Typography>
         <Typography>
           2. Sprzedawca oświadcza, że usługi są zgodne z umową, w aspektach takich jak opis, rodzaj,
-          jakość i funkcjonalność, a w odniesieniu do usług cyfrowych – również kompatybilność,
+          jakość i funkcjonalność, a w odniesieniu do usług cyfrowych — również kompatybilność,
           interoperacyjność i dostępność aktualizacji; ale również przydatność do szczególnego celu,
           do którego jest potrzebny konsumentowi, o którym konsument powiadomił przedsiębiorcę
           najpóźniej w momencie zawarcia umowy i który przedsiębiorca zaakceptował. Ponadto, aby
@@ -121,10 +121,10 @@ export const termsAndConditions = [
             zmieniająca dyrektywę Rady 93/13/EWG i dyrektywy Parlamentu Europejskiego i Rady
             98/6/WE, 2005/29/WE oraz 2011/83/UE w odniesieniu do lepszego egzekwowania i
             unowocześnienia unijnych przepisów dotyczących ochrony konsumenta, OJ L 328, 18.12.2019,
-            s. 7–28.{" "}
+            s. 7—28.{" "}
           </Typography>
           <Typography sx={{ ml: 3 }}>
-            • Fałszowanie opinii w Internecie – doświadczenia konsumentów, na podstawie badania PBS
+            • Fałszowanie opinii w Internecie — doświadczenia konsumentów, na podstawie badania PBS
             Sp. z o.o. na zlecenie UOKIK, publikacja dostępna
             https://uokik.gov.pl/aktualnosci.php?news_id=17411{" "}
           </Typography>
@@ -134,19 +134,19 @@ export const termsAndConditions = [
             rynku wewnętrznym oraz zmieniająca dyrektywę Rady 84/450/EWG, dyrektywy 97/7/WE,
             98/27/WE i 2002/65/WE Parlamentu Europejskiego i Rady oraz rozporządzenie (WE) nr
             2006/2004 Parlamentu Europejskiego i Rady („Dyrektywa o nieuczciwych praktykach
-            handlowych”) (OJ L 149, 11.06.2005, p. 22–39, z późn. zmianami).{" "}
+            handlowych”) (OJ L 149, 11.06.2005, p. 22—39, z późn. zmianami).{" "}
           </Typography>
           <Typography sx={{ ml: 3 }}>
-            • Zawiadomienie Komisji – Wytyczne dotyczące wykładni i stosowania dyrektywy 2005/29/WE
+            • Zawiadomienie Komisji — Wytyczne dotyczące wykładni i stosowania dyrektywy 2005/29/WE
             Parlamentu Europejskiego i Rady dotyczącej nieuczciwych praktyk handlowych stosowanych
             przez przedsiębiorstwa wobec konsumentów na rynku wewnętrznym, OJ C 526, 29.12.2021, s.
-            1–129.{" "}
+            1—129.{" "}
           </Typography>
           <Typography sx={{ ml: 3 }}>
             • Dyrektywa Parlamentu Europejskiego i Rady 2011/83/UE z dnia 25 października 2011 r. w
             sprawie praw konsumentów, zmieniająca dyrektywę Rady 93/13/EWG i dyrektywę 1999/44/WE
             Parlamentu Europejskiego i Rady oraz uchylająca dyrektywę Rady 85/577/EWG i dyrektywę
-            97/7/WE Parlamentu Europejskiego i Rady (OJ L 304, 22.11.2011, p. 64–88, z późn.
+            97/7/WE Parlamentu Europejskiego i Rady (OJ L 304, 22.11.2011, p. 64—88, z późn.
             zmianami).
           </Typography>
         </Typography>
@@ -330,7 +330,7 @@ export const termsAndConditions = [
         <Typography>
           5. Klient finalizując zakup w odpowiednim okienku zamówienia zaznacza opcję „Wyrażam zgodę
           na przetwarzanie moich danych osobowych zawartych w formularzu w celu i zakresie
-          niezbędnym do realizacji usługi i tylko w takim celu.” – jest ona niezbędna do zawarcia
+          niezbędnym do realizacji usługi i tylko w takim celu.” — jest ona niezbędna do zawarcia
           umowy. Podanie przez Państwa danych osobowych jest niezbędne do złożenia zamówienia,
           niepodanie danych osobowych będzie równoznaczne z odstąpieniem od zawarcia umowy.
         </Typography>
@@ -416,7 +416,7 @@ export const termsAndConditions = [
     content: (
       <Typography sx={{ textAlign: "justify" }}>
         <Typography>
-          1. Sprzedawca rzetelnie realizuje zamówienia Klienta według kolejności ich wpłynięcia –
+          1. Sprzedawca rzetelnie realizuje zamówienia Klienta według kolejności ich wpłynięcia —
           każde zamówienie jest dla nas priorytetowe i bardzo ważne!
         </Typography>
         <Typography>
@@ -518,10 +518,10 @@ export const termsAndConditions = [
           prawo do odstąpienia od umowy zawartej na odległość bez podawania przyczyny.
         </Typography>
         <Typography>
-          2. Zgodnie z art. 38 pkt. 13 ustawy o prawach konsumenta – „o dostarczanie treści
+          2. Zgodnie z art. 38 pkt. 13 ustawy o prawach konsumenta — „o dostarczanie treści
           cyfrowych, które nie są zapisane na nośniku materialnym, jeżeli spełnianie świadczenia
           rozpoczęło się za wyraźną zgodą konsumenta przed upływem terminu do odstąpienia od umowy i
-          po poinformowaniu go przez przedsiębiorcę o utracie prawa odstąpienia od umowy.” – w
+          po poinformowaniu go przez przedsiębiorcę o utracie prawa odstąpienia od umowy.” — w
           takiej sytuacji prawo odstąpienia nie przysługuje.
         </Typography>
         <Typography>

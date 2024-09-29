@@ -37,7 +37,7 @@ export const dataAcceptance = (
 export const newsletterAcceptance = (
   <Typography variant="caption" align="left" sx={{ color: "text.secondary", textAlign: "justify" }}>
     Wyrażam zgodę na otrzymywanie na podany adres poczty elektronicznej informacji handlowych
-    dotyczących usług oraz w celu otrzymywania newslettera – więcej informacji uzyskają Państwo{" "}
+    dotyczących usług oraz w celu otrzymywania newslettera — więcej informacji uzyskają Państwo{" "}
     <Link
       target="_blank"
       rel="noopener"
