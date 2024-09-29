@@ -10,8 +10,8 @@ from review.models import Review
 from teaching.models import Teaching
 from django.db.models import OuterRef, Subquery, Value, Avg, Count, Q
 from django.contrib.auth.models import User
-from django.conf import settings
 from random import sample
+from config_global import DUMMY_LECTURER_EMAIL
 
 
 class LecturerViewSet(ModelViewSet):
@@ -39,7 +39,7 @@ class LecturerViewSet(ModelViewSet):
             .values("total_lessons_count")
         )
 
-        dummy_user = User.objects.get(email=settings.DUMMY_LECTURER_EMAIL)
+        dummy_user = User.objects.get(email=DUMMY_LECTURER_EMAIL)
         queryset = self.queryset.exclude(profile__user=dummy_user)
         return (
             queryset.annotate(lessons_count=Subquery(total_lessons_count))
@@ -75,7 +75,7 @@ class BestLecturerViewSet(ModelViewSet):
         return lecturers
 
     def get_queryset(self):
-        dummy_user = User.objects.get(email=settings.DUMMY_LECTURER_EMAIL)
+        dummy_user = User.objects.get(email=DUMMY_LECTURER_EMAIL)
         queryset = self.queryset.exclude(profile__user=dummy_user)
 
         queryset = self.get_rating(queryset=queryset).filter(rating__gte=4)

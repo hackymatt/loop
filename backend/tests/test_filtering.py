@@ -34,7 +34,7 @@ import json
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from random import sample
-from const import CANCELLATION_TIME
+from config_global import CANCELLATION_TIME
 import uuid
 
 
@@ -808,6 +808,8 @@ class ScheduleFilterTest(APITestCase):
         self.lecturer_profile_2 = create_lecturer_profile(
             profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
+        create_finance(lecturer=self.lecturer_profile_1, rate=150, commission=0)
+        create_finance(lecturer=self.lecturer_profile_2, rate=120, commission=10)
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -998,6 +1000,8 @@ class ScheduleFilterTest(APITestCase):
             schedule=self.schedules[0],
             purchase=self.purchase_1,
         )
+        self.schedules[0].lesson = self.lesson_1
+        self.schedules[0].save()
         self.purchase_2 = create_purchase(
             lesson=self.lesson_2,
             student=self.profile,
@@ -1009,6 +1013,8 @@ class ScheduleFilterTest(APITestCase):
             schedule=self.schedules[1],
             purchase=self.purchase_2,
         )
+        self.schedules[1].lesson = self.lesson_2
+        self.schedules[1].save()
 
     def test_reserved_filter(self):
         # login

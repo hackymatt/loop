@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from pytz import timezone, utc
 from mailer.mailer import Mailer
-from const import MIN_LESSON_DURATION_MINS, CANCELLATION_TIME
+from config_global import LESSON_DURATION_MULTIPLIER, CANCELLATION_TIME
 from notification.utils import notify
 import urllib.parse
 
@@ -34,7 +34,7 @@ class ReservationSerializer(ModelSerializer):
 
     def get_timeslots(self, schedule, lesson):
         duration = lesson.duration
-        required_timeslots = duration / MIN_LESSON_DURATION_MINS
+        required_timeslots = duration / LESSON_DURATION_MULTIPLIER
         lecturer = schedule.lecturer
         start_time = schedule.start_time
         end_time = start_time + timedelta(minutes=30 * required_timeslots)
@@ -53,7 +53,7 @@ class ReservationSerializer(ModelSerializer):
             ).all()
         )
 
-        if timeslots.count() == (duration / MIN_LESSON_DURATION_MINS):
+        if timeslots.count() == (duration / LESSON_DURATION_MULTIPLIER):
             return timeslots
         elif timeslots.count() == 1 and timeslots.first().lesson == lesson:
             return timeslots

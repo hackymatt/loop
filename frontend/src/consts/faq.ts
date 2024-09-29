@@ -1,3 +1,5 @@
+import { CANCELLATION_TIME } from "src/config-global";
+
 export const accountFAQ = [
   {
     question: "Jak mogę założyć konto w loop?",
@@ -150,18 +152,15 @@ export const reservationFAQ = [
   },
   {
     question: "Czy lekcja odbędzie się, jeśli zapisze się zbyt mało osób?",
-    answer:
-      "Lekcja odbędzie się tylko wtedy, gdy zostanie osiągnięta minimalna liczba uczestników. Na 24 godziny przed planowanym terminem otrzymasz potwierdzenie, czy lekcja się odbędzie.",
+    answer: `Lekcja odbędzie się tylko wtedy, gdy zostanie osiągnięta minimalna liczba uczestników. Na ${CANCELLATION_TIME} godziny przed planowanym terminem otrzymasz potwierdzenie, czy lekcja się odbędzie.`,
   },
   {
     question: "Kiedy otrzymam potwierdzenie, że lekcja się odbędzie?",
-    answer:
-      "Potwierdzenie otrzymasz na 24 godziny przed planowaną lekcją. Powiadomimy Cię, czy lekcja odbędzie się zgodnie z planem, czy zostanie odwołana z powodu zbyt małej liczby uczestników.",
+    answer: `Potwierdzenie otrzymasz na ${CANCELLATION_TIME} godziny przed planowaną lekcją. Powiadomimy Cię, czy lekcja odbędzie się zgodnie z planem, czy zostanie odwołana z powodu zbyt małej liczby uczestników.`,
   },
   {
     question: "Czy mogę odwołać rezerwację lekcji?",
-    answer:
-      "Tak, możesz odwołać swoją rezerwację do 24 godzin przed planowanym rozpoczęciem lekcji.",
+    answer: `Tak, możesz odwołać swoją rezerwację do ${CANCELLATION_TIME} godzin przed planowanym rozpoczęciem lekcji.`,
   },
   {
     question:
@@ -171,7 +170,7 @@ export const reservationFAQ = [
   },
   {
     question: "Czy mogę zmienić termin zarezerwowanej lekcji?",
-    answer: "Tak, termin można zmienić do 24 godzin przed rozpoczęciem lekcji.",
+    answer: `Tak, termin można zmienić do ${CANCELLATION_TIME} godzin przed rozpoczęciem lekcji.`,
   },
   {
     question: "Czy rezerwacja jest wymagana po zakupie każdej lekcji?",

@@ -301,3 +301,9 @@ GITHUB_CLIENT_ID = os.environ.get("GITHUB_CLIENT_ID", "")
 GITHUB_CLIENT_SECRET = os.environ.get("GITHUB_CLIENT_SECRET", "")
 
 GITHUB_REPO = os.environ.get("GITHUB_REPO", "")
+
+MIN_PASSWORD_LENGTH = int(os.environ.get("MIN_PASSWORD_LENGTH", "8"))
+LESSON_DURATION_MULTIPLIER = int(os.environ.get("LESSON_DURATION_MULTIPLIER", "30"))
+CANCELLATION_TIME = int(os.environ.get("CANCELLATION_TIME", "24"))
+REMINDER_TIME = int(os.environ.get("REMINDER_TIME", "24"))
+MIN_STUDENTS_THRESHOLD = int(os.environ.get("MIN_STUDENTS_THRESHOLD", "2"))

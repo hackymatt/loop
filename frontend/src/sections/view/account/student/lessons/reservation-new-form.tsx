@@ -37,6 +37,8 @@ interface Props extends DialogProps {
   onClose: VoidFunction;
 }
 
+type SlotProps = { time: string; studentsRequired: number };
+
 const DEFAULT_USER = { id: "", avatarUrl: "", name: "Wszyscy" } as const;
 
 // ----------------------------------------------------------------------
@@ -114,7 +116,16 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
       };
     });
 
-    return Array.from(new Set(allSlots)).sort();
+    const filteredSlots = Object.values(
+      allSlots?.reduce((acc: { [key: string]: SlotProps }, slot) => {
+        if (!acc[slot.time] || slot.studentsRequired < acc[slot.time].studentsRequired) {
+          acc[slot.time] = slot;
+        }
+        return acc;
+      }, {}) ?? {},
+    );
+
+    return Array.from(new Set(filteredSlots)).sort();
   }, [lessonSchedules]);
 
   const [slot, setSlot] = useState<string>(slots?.[0]?.time);
@@ -130,8 +141,11 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
       const dt = new Date(`${date}T${slot}:00Z`);
       const time = new Date(dt.valueOf() + dt.getTimezoneOffset() * 60 * 1000);
       const startTime = formatInTimeZone(time, "UTC", "yyyy-MM-dd'T'HH:mm:ss'Z'");
-      const schedule = lessonSchedules.find(
+      const schedules = lessonSchedules.filter(
         (lessonSchedule: IScheduleProp) => lessonSchedule.startTime === startTime,
+      );
+      const schedule = schedules.reduce((min: IScheduleProp, lessonSchedule: IScheduleProp) =>
+        lessonSchedule.studentsRequired < min.studentsRequired ? lessonSchedule : min,
       );
       if (schedule) {
         try {

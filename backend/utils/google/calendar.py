@@ -1,6 +1,6 @@
 from utils.google.service import build_service
 import uuid
-from django.conf import settings
+from config_global import MEETINGS_EMAIL
 
 
 class CalendarApi:
@@ -9,7 +9,7 @@ class CalendarApi:
         self.service = build_service(
             service_name="calendar",
             service_version="v3",
-            on_behalf_of=settings.MEETINGS_EMAIL,
+            on_behalf_of=MEETINGS_EMAIL,
             scopes=scopes,
         )
 

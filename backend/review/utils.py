@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from pytz import timezone, utc
 from mailer.mailer import Mailer
-from const import REMINDER_TIME
+from config_global import REMINDER_TIME
 from notification.utils import notify
 import urllib.parse
 

@@ -12,6 +12,11 @@ data:
   ALLOWED_HOST: {{ .Values.env.ALLOWED_HOST }}
   BASE_URL: {{ .Values.env.BASE_URL }}
   GITHUB_REPO: "https://github.com/loopedupl/"
+  MIN_PASSWORD_LENGTH: "8"
+  LESSON_DURATION_MULTIPLIER: "30"
+  CANCELLATION_TIME: "24"
+  REMINDER_TIME: "24"
+  MIN_STUDENTS_THRESHOLD: "2"
   DB_NAME: "postgres"
   DB_HOST: "postgresql"
   DB_PORT: "5432"

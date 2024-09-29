@@ -14,6 +14,7 @@ from .factory import (
     create_schedule,
     create_teaching,
     create_module,
+    create_finance,
 )
 from .helpers import login
 from django.contrib import auth
@@ -86,6 +87,8 @@ class LessonSchedulesTest(APITestCase):
         self.lecturer_profile_2 = create_lecturer_profile(
             profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
+        create_finance(lecturer=self.lecturer_profile_1, rate=100, commission=10)
+        create_finance(lecturer=self.lecturer_profile_2, rate=120, commission=0)
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -274,6 +277,17 @@ class LessonSchedulesTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(self.endpoint)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertTrue(count >= 10 and count <= 14)
+
+    def test_get_schedules_authenticated_2(self):
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}?lesson_id={self.lesson_1.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]

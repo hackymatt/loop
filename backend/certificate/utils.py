@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from mailer.mailer import Mailer
 from notification.utils import notify
-from django.conf import settings
+from config_global import FRONTEND_URL
 
 
 def get_progress(lessons, student_profile):
@@ -113,7 +113,7 @@ def generate_certificates():
                     {
                         "type": "L",
                         "name": lesson_obj.title,
-                        "url": f"{settings.BASE_FRONTEND_URL}/certificate/{certificate.uuid}",
+                        "url": f"{FRONTEND_URL}/certificate/{certificate.uuid}",
                     }
                 )
 
@@ -137,7 +137,7 @@ def generate_certificates():
                             {
                                 "type": "M",
                                 "name": module_obj.title,
-                                "url": f"{settings.BASE_FRONTEND_URL}/certificate/{certificate.uuid}",
+                                "url": f"{FRONTEND_URL}/certificate/{certificate.uuid}",
                             }
                         )
 
@@ -170,7 +170,7 @@ def generate_certificates():
                             {
                                 "type": "K",
                                 "name": course_obj.title,
-                                "url": f"{settings.BASE_FRONTEND_URL}/certificate/{certificate.uuid}",
+                                "url": f"{FRONTEND_URL}/certificate/{certificate.uuid}",
                             }
                         )
 

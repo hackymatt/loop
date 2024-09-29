@@ -6,6 +6,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
 
+import { CANCELLATION_TIME } from "src/config-global";
+
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
@@ -23,11 +25,11 @@ export default function ReservationConfirmForm({ loading, onConfirm, onClose, ..
 
       <DialogContent sx={{ py: 0 }}>
         <Typography>
-          Czy na pewno chcesz zarezerwować ten termin? Potwierdzenie realizacji wraz z linkiem do
-          spotkania otrzymasz 24 godziny przed planowanym rozpoczęciem zajęć.
+          {`Czy na pewno chcesz zarezerwować ten termin? Potwierdzenie realizacji wraz z linkiem do
+          spotkania otrzymasz ${CANCELLATION_TIME} godziny przed planowanym rozpoczęciem zajęć.`}
         </Typography>
         <Alert variant="outlined" severity="warning" sx={{ mt: 2 }}>
-          Odwołanie rezerwacji jest możliwe do 24 godzin przed rozpoczęciem zajęć.
+          {`Odwołanie rezerwacji jest możliwe do ${CANCELLATION_TIME} godzin przed rozpoczęciem zajęć.`}
         </Alert>
       </DialogContent>
 

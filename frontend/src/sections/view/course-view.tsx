@@ -69,17 +69,17 @@ export default function CourseView({ id }: { id: string }) {
   const metadata = useMemo(
     () =>
       createMetadata(
-        `Kurs: ${course.slug}`,
-        `Zapisz się na kurs ${course.slug} w loop i naucz się programować. Oferujemy praktyczne lekcje online z certyfikatem ukończenia oraz wsparcie doświadczonych instruktorów.`,
+        `Kurs: ${course?.slug}`,
+        `Zapisz się na kurs ${course?.slug} w loop i naucz się programować. Oferujemy praktyczne lekcje online z certyfikatem ukończenia oraz wsparcie doświadczonych instruktorów.`,
         [
-          `kurs ${course.slug}`,
+          `kurs ${course?.slug}`,
           "kursy programowania",
           "szkoła programowania loop",
           "kurs programowania",
-          ...technologyKeywords,
+          ...(technologyKeywords ?? []),
         ],
       ),
-    [course.slug, technologyKeywords],
+    [course?.slug, technologyKeywords],
   );
 
   const isLoading = isLoadingCourse || isLoadingBestCourse;
@@ -95,6 +95,8 @@ export default function CourseView({ id }: { id: string }) {
   return (
     <>
       <title>{metadata.title}</title>
+      <meta name="description" content={metadata.description} />
+      <meta name="keywords" content={metadata.keywords} />
 
       <CourseDetailsHero course={course} />
 

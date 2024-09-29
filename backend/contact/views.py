@@ -2,8 +2,8 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from mailer.mailer import Mailer
-from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
+from config_global import CONTACT_EMAIL
 
 
 class ContactViewSet(ViewSet):
@@ -29,7 +29,7 @@ class ContactViewSet(ViewSet):
         }
         mailer.send(
             email_template="contact.html",
-            to=[settings.CONTACT_EMAIL],
+            to=[CONTACT_EMAIL],
             subject="Nowa wiadomość ze strony",
             data=data,
         )

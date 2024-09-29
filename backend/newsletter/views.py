@@ -6,11 +6,11 @@ from newsletter.models import Newsletter
 from newsletter.filters import NewsletterFilter
 from coupon.models import Coupon
 from django.views.decorators.csrf import csrf_exempt
-from django.conf import settings
 from mailer.mailer import Mailer
 import json
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
+from config_global import FRONTEND_URL
 
 
 class NewsletterEntriesViewSet(ModelViewSet):
@@ -38,7 +38,7 @@ class NewsletterSubscribeViewSet(ModelViewSet):
             mailer = Mailer()
             data = {
                 **{
-                    "unsubscribe_url": f"{settings.BASE_FRONTEND_URL}/newsletter-unsubscribe/"
+                    "unsubscribe_url": f"{FRONTEND_URL}/newsletter-unsubscribe/"
                     + str(instance.uuid),
                 }
             }

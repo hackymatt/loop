@@ -23,6 +23,7 @@ import { useQueryParams } from "src/hooks/use-query-params";
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 import { useGoogleAuth, useGithubAuth, useFacebookAuth } from "src/hooks/use-social-auth";
 
+import { MIN_PASSWORD_LENGTH } from "src/config-global";
 import { dataAcceptance, generalAcceptance, newsletterAcceptance } from "src/consts/acceptances";
 
 import Iconify from "src/components/iconify";
@@ -61,7 +62,7 @@ export default function RegisterView() {
     email: Yup.string().required("Adres e-mail jest wymagany").email("Podaj poprawny adres e-mail"),
     password: Yup.string()
       .required("Hasło jest wymagane")
-      .min(8, "Hasło musi mieć minimum 8 znaków")
+      .min(MIN_PASSWORD_LENGTH, `Hasło musi mieć minimum ${MIN_PASSWORD_LENGTH} znaków`)
       .matches(/^(?=.*[A-Z])/, "Hasło musi składać się z minimum jednej dużej litery.")
       .matches(/^(?=.*[a-z])/, "Hasło musi składać się z minimum jednej małej litery.")
       .matches(/^(?=.*[0-9])/, "Hasło musi składać się z minimum jednej cyfry")

@@ -6,14 +6,14 @@ from django.db.models import (
     PROTECT,
     Index,
 )
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from lesson.models import Lesson
 from profile.models import Profile, StudentProfile
+from config_global import DUMMY_STUDENT_EMAIL
 
 
 def get_dummy_student_profile():
-    user = get_user_model().objects.get(email=settings.DUMMY_STUDENT_EMAIL)
+    user = get_user_model().objects.get(email=DUMMY_STUDENT_EMAIL)
     profile = Profile.objects.get(user=user)
     return StudentProfile.objects.get(profile=profile)
 
