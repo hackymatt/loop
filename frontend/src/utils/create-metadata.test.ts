@@ -1,16 +1,31 @@
+import packageInfo from "package.json";
+
 import { createMetadata } from "./create-metadata";
 
 describe("createMetadata", () => {
-  // Verify the function returns an object with a 'title' property
-  it("should return an object with a title property when called", () => {
-    const result = createMetadata("Test");
-    expect(result).toHaveProperty("title");
-    expect(typeof result.title).toBe("string");
+  // Generates metadata with a valid title, description, and keywords
+  it("should generate metadata with a valid title, description, and keywords", () => {
+    const title = "Test Title";
+    const description = "Test Description";
+    const keywords = ["keyword1", "keyword2"];
+
+    const result = createMetadata(title, description, keywords);
+
+    expect(result.title).toBe(`Test Title • ${packageInfo.name}`);
+    expect(result.description).toBe(description);
+    expect(result.keywords).toBe("keyword1,keyword2");
   });
 
-  // Test with an empty string as the title input
-  it("should handle empty string input correctly", () => {
-    const result = createMetadata("");
-    expect(result.title).toBe(" • loop");
+  // Handles empty title string
+  it("should handle empty title string", () => {
+    const title = "";
+    const description = "Test Description";
+    const keywords = ["keyword1", "keyword2"];
+
+    const result = createMetadata(title, description, keywords);
+
+    expect(result.title).toBe(` • ${packageInfo.name}`);
+    expect(result.description).toBe(description);
+    expect(result.keywords).toBe("keyword1,keyword2");
   });
 });

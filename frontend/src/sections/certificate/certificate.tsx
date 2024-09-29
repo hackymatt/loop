@@ -52,6 +52,14 @@ export default function Certificate({ id }: IProps) {
     }
   }, [certificateData?.type]);
 
+  const metadata = useMemo(
+    () =>
+      createMetadata(
+        `Certyfikat ukończenia ${type.toLowerCase()} ${certificateData?.title} dla ${certificateData?.studentName}`,
+      ),
+    [certificateData?.studentName, certificateData?.title, type],
+  );
+
   if (isLoading) {
     return <SplashScreen />;
   }
@@ -79,13 +87,7 @@ export default function Certificate({ id }: IProps) {
 
   return (
     <>
-      <title>
-        {
-          createMetadata(
-            `Certyfikat ukończenia ${type.toLowerCase()} ${certificateData?.title} dla ${certificateData?.studentName}`,
-          ).title
-        }
-      </title>
+      <title>{metadata.title}</title>
 
       <Container
         ref={elementRef}

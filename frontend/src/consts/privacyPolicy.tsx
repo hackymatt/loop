@@ -266,7 +266,7 @@ export const privacyPolicy = [
           5. Możemy przesyłać dane osobowe do serwerów znajdujących się poza krajem zamieszkania
           użytkownika lub do podmiotów powiązanych, stron trzecich z siedzibą w innych krajach w tym
           krajach z obszaru EOG (Europejski Obszar Gospodarczy, EOG ang. European Economic Area, EEA
-          – strefa wolnego handlu i Wspólny Rynek, obejmujące państwa Unii Europejskiej i
+          — strefa wolnego handlu i Wspólny Rynek, obejmujące państwa Unii Europejskiej i
           Europejskiego Stowarzyszenia Wolnego Handlu EFTA) w celu przetwarzania danych osobowych
           przez takie podmioty w naszym imieniu zgodnie z postanowieniami niniejszej Polityki
           prywatności oraz obowiązującymi przepisami prawa, zwyczajami jak i regulacjami dotyczącymi
@@ -283,13 +283,13 @@ export const privacyPolicy = [
           <Typography sx={{ ml: 3 }}>b) zapobiegania nadużyciom lub przestępstwom;</Typography>
           <Typography sx={{ ml: 3 }}>c) statystycznych i archiwizacyjnych.</Typography>
           <Typography sx={{ ml: 3 }}>
-            d) działania marketingowe – na czas trwania umowy, udzielenia odrębnej zgody na
-            przetwarzanie takich danych – do czasu zakończenia działań związanych z obsługą
+            d) działania marketingowe — na czas trwania umowy, udzielenia odrębnej zgody na
+            przetwarzanie takich danych — do czasu zakończenia działań związanych z obsługą
             transakcji, wniesienia przez Ciebie sprzeciwu wobec takiego przetwarzania lub wycofania
             zgody.
           </Typography>
           <Typography sx={{ ml: 3 }}>
-            e) działania okołosprzedażowe i promocyjne – np. konkursy, akcje promocyjne – na czas
+            e) działania okołosprzedażowe i promocyjne — np. konkursy, akcje promocyjne — na czas
             trwania i rozliczenia takich akcji.
           </Typography>
           <Typography sx={{ ml: 3 }}>
@@ -414,8 +414,8 @@ export const privacyPolicy = [
           oprogramowaniu.
         </Typography>
         <Typography>
-          2. Dane dostępowe do usług oferowanych w sieci Internet to – np. loginy, hasła, PIN,
-          certyfikaty elektroniczne itp., – powinny być zabezpieczone w miejscu niedostępnym dla
+          2. Dane dostępowe do usług oferowanych w sieci Internet to — np. loginy, hasła, PIN,
+          certyfikaty elektroniczne itp., — powinny być zabezpieczone w miejscu niedostępnym dla
           innych i niemożliwym do włamania z poziomu sieci internetowej. Nie należy ich ujawniać lub
           przechowywać na urządzeniu w formie, która umożliwia nieautoryzowany dostęp i odczyt przez
           osoby do tego nieuprawnione.
