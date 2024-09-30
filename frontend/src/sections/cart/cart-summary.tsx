@@ -168,7 +168,7 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
         onClick={handleClick}
         loading={isLoading}
       >
-        Przejdź do płatności
+        Zamawiam i płacę
       </LoadingButton>
     </Stack>
   );

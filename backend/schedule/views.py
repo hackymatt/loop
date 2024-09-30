@@ -127,7 +127,7 @@ class ScheduleAvailableDateViewSet(ModelViewSet):
         .annotate(date=TruncDate(F("start_time")))
         .values("date")
         .distinct()
-        .order_by()
+        .order_by("date")
     )
     serializer_class = ScheduleAvailableDateSerializer
     filterset_class = ScheduleAvailableDateFilter

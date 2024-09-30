@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useEffect } from "react";
+import { useMemo } from "react";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -61,12 +61,6 @@ export default function WishlistView() {
       enqueueSnackbar("Wystąpił błąd podczas dodawania do koszyka", { variant: "error" });
     }
   };
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      push(paths.login);
-    }
-  }, [isLoggedIn, push]);
 
   return (
     <Container

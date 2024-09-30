@@ -1,7 +1,7 @@
 "use client";
 
 import { AxiosError } from "axios";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 
 import { Stack } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -18,7 +18,6 @@ import { useDeleteCart } from "src/api/carts/cart";
 import { useCreatePurchase } from "src/api/purchase/purchase";
 
 import Iconify from "src/components/iconify";
-import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
 
 import { ICartProp } from "src/types/cart";
@@ -31,7 +30,6 @@ import CartSummary from "../cart/cart-summary";
 
 export default function CartView() {
   const { enqueueSnackbar } = useToastContext();
-  const { isLoggedIn } = useUserContext();
   const { push } = useRouter();
 
   const [error, setError] = useState<IPurchaseError | undefined>();
@@ -61,12 +59,6 @@ export default function CartView() {
       enqueueSnackbar("Wystąpił błąd podczas zakupu", { variant: "error" });
     }
   };
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      push(paths.login);
-    }
-  }, [isLoggedIn, push]);
 
   return (
     <Container

@@ -61,7 +61,7 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, { label: "Wszystkie", value: -1 }];
 // ----------------------------------------------------------------------
 
 export default function AccountCouponsView() {
-  const router = useRouter();
+  const { push } = useRouter();
 
   const newCouponFormOpen = useBoolean();
   const editCouponFormOpen = useBoolean();
@@ -142,11 +142,9 @@ export default function AccountCouponsView() {
 
   const handleViewUsage = useCallback(
     (coupon: ICouponProps) => {
-      router.push(
-        `${paths.account.admin.coupons.usage}/?coupon_code=${coupon.code}&sort_by=-created_at`,
-      );
+      push(`${paths.account.admin.coupons.usage}/?coupon_code=${coupon.code}&sort_by=-created_at`);
     },
-    [router],
+    [push],
   );
 
   return (

@@ -1,7 +1,6 @@
 "use client";
 
 import * as Yup from "yup";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -35,7 +34,7 @@ import AccountDeleteForm from "./account-delete-form";
 export default function AccountManageView() {
   const { enqueueSnackbar } = useToastContext();
   const { push } = useRouter();
-  const { logoutUser, isLoggedIn, userType } = useUserContext();
+  const { logoutUser, userType } = useUserContext();
 
   const passwordShow = useBoolean();
   const deleteAccountFormOpen = useBoolean();
@@ -80,17 +79,12 @@ export default function AccountManageView() {
       await changePassword(data);
       reset();
       await logoutUser({});
+      push(paths.login);
       enqueueSnackbar("Hasło zostało zmienione. Zaloguj się ponownie.", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }
   });
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      push(paths.login);
-    }
-  }, [isLoggedIn, push]);
 
   return (
     <>
