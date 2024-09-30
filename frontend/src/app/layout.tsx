@@ -9,9 +9,10 @@ import { LocalizationProvider } from "src/locales";
 
 import ProgressBar from "src/components/progress-bar";
 import { MotionLazy } from "src/components/animate/motion-lazy";
-import { SettingsDrawer, SettingsProvider } from "src/components/settings";
+import { SettingsProvider } from "src/components/settings";
 import { UserProvider } from "src/components/user";
 import { ToastProvider } from "src/components/toast";
+import CookiesManager from "src/components/cookies/cookies-manager";
 import { ReactQueryProvider } from "./(index)/react-query-provider";
 
 // ----------------------------------------------------------------------
@@ -50,7 +51,7 @@ export default function RootLayout({ children }: Props) {
                   <ToastProvider>
                     <MotionLazy>
                       <ProgressBar />
-                      <SettingsDrawer />
+                      <CookiesManager />
                       {children}
                     </MotionLazy>
                   </ToastProvider>
