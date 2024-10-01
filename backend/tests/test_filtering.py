@@ -4184,7 +4184,7 @@ class EarningsFilterTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         column = "month"
-        variable = str(self.purchases[0].created_at)[5:7]
+        variable = str(self.reservations[0].schedule.end_time)[5:7]
         if variable[0] == "0":
             variable = variable[1]
         variable = int(variable)
