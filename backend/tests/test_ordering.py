@@ -294,10 +294,27 @@ class CourseOrderTest(APITestCase):
             modules=[self.module_3],
         )
 
-        create_purchase(
+        self.purchase = create_purchase(
             lesson=self.lesson_6,
             student=self.profile,
             price=self.lesson_6.price,
+        )
+        self.schedule = create_schedule(
+            lecturer=self.lecturer_profile_1,
+            start_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                - timedelta(minutes=30 * 101)
+            ),
+            end_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                - timedelta(minutes=30 * 100)
+            ),
+        )
+        create_reservation(
+            student=self.profile,
+            lesson=self.lesson_6,
+            schedule=self.schedule,
+            purchase=self.purchase,
         )
         create_purchase(
             lesson=self.lesson_6,
@@ -327,12 +344,14 @@ class CourseOrderTest(APITestCase):
             "duration",
             "rating",
             "students_count",
+            "progress",
         ]
 
     def test_ordering(self):
         for field in self.fields:
-            # no login
-            self.assertFalse(auth.get_user(self.client).is_authenticated)
+            # login
+            login(self, self.data["email"], self.data["password"])
+            self.assertTrue(auth.get_user(self.client).is_authenticated)
             # get data
             response = self.client.get(f"{self.endpoint}?sort_by={field}")
             self.assertEqual(response.status_code, status.HTTP_200_OK)

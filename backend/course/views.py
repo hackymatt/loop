@@ -16,6 +16,7 @@ from course.models import (
     Course,
 )
 from random import sample
+from django.db.models import Value, CharField
 
 
 class CourseViewSet(ModelViewSet):
@@ -44,15 +45,28 @@ class CourseViewSet(ModelViewSet):
 
     def get_queryset(self):
         if self.action == "list":
+            queryset = self.queryset
             user = self.request.user
+
+            if user.is_authenticated:
+                # Annotate with the user's email if logged in
+                queryset = queryset.annotate(
+                    user_email=Value(user.email, output_field=CharField())
+                )
+            else:
+                # Annotate with None or an empty string if the user is not logged in
+                queryset = queryset.annotate(
+                    user_email=Value("", output_field=CharField())
+                )
+
             if user.is_superuser:
-                return self.queryset.distinct()
+                return queryset.distinct()
 
             active = self.request.query_params.get("active", None)
             if not active:
-                return self.queryset.filter(active=True).all().distinct()
+                return queryset.filter(active=True).all().distinct()
 
-            return self.queryset.distinct()
+            return queryset.distinct()
 
         return self.queryset.distinct()
 

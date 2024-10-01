@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useCallback } from "react";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -26,6 +26,7 @@ import { useQueryParams } from "src/hooks/use-query-params";
 import { useCourses, useCoursesPagesCount } from "src/api/courses/courses";
 
 import Iconify from "src/components/iconify";
+import { useUserContext } from "src/components/user";
 import { SplashScreen } from "src/components/loading-screen";
 
 import NotFoundView from "src/sections/error/not-found-view";
@@ -37,17 +38,21 @@ import Newsletter from "../newsletter/newsletter";
 
 // ----------------------------------------------------------------------
 
-const SORT_OPTIONS = [
+const MAIN_SORT_OPTIONS = [
   { value: "-students_count", label: "Popularność: największa" },
   { value: "-rating", label: "Ocena: najlepsza" },
   { value: "price", label: "Cena: od najniższej" },
   { value: "-price", label: "Cena: od najwyższej" },
 ];
 
+const USER_SORT_OPTIONS = [{ value: "-progress", label: "Postęp: największy" }];
+
 export default function CoursesView() {
   const openSorting = usePopover();
   const mobileOpen = useBoolean();
   const pathname = usePathname();
+
+  const { isLoggedIn } = useUserContext();
 
   const { setQueryParam, getQueryParams } = useQueryParams();
 
@@ -56,9 +61,12 @@ export default function CoursesView() {
   const { data: pagesCount, isLoading: isLoadingCoursesPagesCount } = useCoursesPagesCount(query);
   const { data: courses, isLoading: isLoadingCourses } = useCourses(query);
 
-  const handleChange = (name: string, value?: string | number) => {
-    setQueryParam(name, value);
-  };
+  const handleChange = useCallback(
+    (name: string, value?: string | number) => {
+      setQueryParam(name, value);
+    },
+    [setQueryParam],
+  );
 
   const isLoading = isLoadingCourses || isLoadingCoursesPagesCount;
 
@@ -68,6 +76,20 @@ export default function CoursesView() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      if (query.sort_by === "-progress") {
+        handleChange("sort_by", "-students_count");
+      }
+    }
+  }, [handleChange, isLoggedIn, query.sort_by]);
+
+  const sortOptions = useMemo(
+    () => (isLoggedIn ? [...USER_SORT_OPTIONS, ...MAIN_SORT_OPTIONS] : MAIN_SORT_OPTIONS),
+    [isLoggedIn],
+  );
+  const defaultSort = useMemo(() => (isLoggedIn ? "-progress" : "-students_count"), [isLoggedIn]);
 
   if (isLoading) {
     return <SplashScreen />;
@@ -99,7 +121,7 @@ export default function CoursesView() {
             >
               <Iconify
                 icon={
-                  (query.sort_by ?? "-students_count").slice(0, 1) === "-"
+                  (query.sort_by ?? defaultSort).slice(0, 1) === "-"
                     ? "carbon:sort-descending"
                     : "carbon:sort-ascending"
                 }
@@ -136,8 +158,8 @@ export default function CoursesView() {
                 sx={{ mb: 5, display: { xs: "none", md: "flex" } }}
               >
                 <Sorting
-                  value={query.sort_by ?? "-students_count"}
-                  options={SORT_OPTIONS}
+                  value={query.sort_by ?? defaultSort}
+                  options={sortOptions}
                   onChange={(event: SelectChangeEvent) =>
                     handleChange("sort_by", event.target.value)
                   }
@@ -165,11 +187,11 @@ export default function CoursesView() {
               }}
             >
               <List>
-                {SORT_OPTIONS.map((option) => (
+                {sortOptions.map((option) => (
                   <ListItem key={option.value} disablePadding>
                     <ListItemButton
                       key={option.value}
-                      selected={(query.sort_by ?? "-students_count") === option.value}
+                      selected={(query.sort_by ?? defaultSort) === option.value}
                       onClick={() => {
                         openSorting.onClose();
                         handleChange("sort_by", option.value);
