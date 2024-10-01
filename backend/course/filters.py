@@ -53,7 +53,9 @@ def get_rating(queryset):
         .annotate(avg_rating=Avg("rating"))
         .values("avg_rating")
     )
-    courses = queryset.annotate(rating=Subquery(avg_rating))
+    courses = queryset.annotate(
+        rating=Coalesce(Subquery(avg_rating), Value(0), output_field=FloatField())
+    )
 
     return courses
 

@@ -348,7 +348,11 @@ function LandingNewTeacher() {
             <Box component="span" sx={{ color: "primary.main", textDecoration: "underline" }}>
               nas
             </Box>{" "}
-            i inspiruj innych!
+            i inspiruj{" "}
+            <Box component="span" sx={{ color: "text.disabled" }}>
+              innych
+            </Box>
+            !
           </Typography>
 
           <Typography sx={{ color: "text.secondary", mt: 3, mb: 5 }}>

@@ -20,7 +20,7 @@ type ILecturer = {
   lessons_count: number;
   rating: number | null;
   rating_count: number;
-  user_title: string | null;
+  title: string | null;
 };
 
 type ITechnology = {
@@ -160,7 +160,7 @@ export const courseQuery = (id: string) => {
             lessons_count,
             rating: lecturerRating,
             rating_count: lecturerRatingCount,
-            user_title,
+            title: lecturerTitle,
           }: ILecturer) => ({
             id: lecturerId,
             name: full_name,
@@ -169,7 +169,7 @@ export const courseQuery = (id: string) => {
             totalLessons: lessons_count,
             ratingNumber: lecturerRating,
             totalReviews: lecturerRatingCount,
-            role: user_title,
+            role: lecturerTitle,
           }),
         ),
         skills: skills.map((skill: ISkill) => skill.name),
