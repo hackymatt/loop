@@ -14,6 +14,7 @@ import { RouterLink } from "src/routes/components";
 import { useRouter } from "src/routes/hooks/use-router";
 
 import { fCurrency } from "src/utils/format-number";
+import { trackEvent } from "src/utils/google-analytics";
 
 import { useCreateCart } from "src/api/carts/carts";
 import { useWishlists } from "src/api/wishlists/wishlists";
@@ -57,6 +58,12 @@ export default function WishlistView() {
       ]);
       await Promise.allSettled(cartItems);
       enqueueSnackbar("Ulubione zostały dodane do koszyka", { variant: "success" });
+      trackEvent(
+        "add_to_cart",
+        "wishlist_to_cart",
+        "Wishlist items added to cart",
+        wishlistItems?.map((wishlistItem: ICartProp) => wishlistItem.lesson.title).join(","),
+      );
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd podczas dodawania do koszyka", { variant: "error" });
     }

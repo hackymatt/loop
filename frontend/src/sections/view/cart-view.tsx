@@ -13,6 +13,8 @@ import { paths } from "src/routes/paths";
 import { useRouter } from "src/routes/hooks";
 import { RouterLink } from "src/routes/components";
 
+import { trackEvent } from "src/utils/google-analytics";
+
 import { useCarts } from "src/api/carts/carts";
 import { useDeleteCart } from "src/api/carts/cart";
 import { useCreatePurchase } from "src/api/purchase/purchase";
@@ -54,6 +56,14 @@ export default function CartView() {
       });
       await Promise.allSettled(cartItems.map((cItem: ICartProp) => deleteCart({ id: cItem.id })));
       push(paths.order.completed);
+      trackEvent(
+        "purchase_completed",
+        "purchase",
+        "Purchase completed",
+        [cartItems?.map((cartItem: ICartProp) => cartItem.lesson.title).join(","), coupon].join(
+          ";",
+        ),
+      );
     } catch (err) {
       setError((err as AxiosError).response?.data as IPurchaseError);
       enqueueSnackbar("Wystąpił błąd podczas zakupu", { variant: "error" });

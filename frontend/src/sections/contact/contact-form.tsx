@@ -12,6 +12,8 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { useResponsive } from "src/hooks/use-responsive";
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
+import { trackEvent } from "src/utils/google-analytics";
+
 import { useContact } from "src/api/contact/contact";
 import { generalAcceptance } from "src/consts/acceptances";
 
@@ -64,6 +66,7 @@ export default function ContactForm() {
       await contact(data);
       enqueueSnackbar("Wysłano wiadomość", { variant: "success" });
       reset();
+      trackEvent("contact_message", "contact", "Send contact message", "");
     } catch (error) {
       handleFormError(error);
     }

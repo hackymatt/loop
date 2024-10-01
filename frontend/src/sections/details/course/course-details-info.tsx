@@ -11,6 +11,7 @@ import { paths } from "src/routes/paths";
 import { useRouter } from "src/routes/hooks";
 
 import { fCurrency } from "src/utils/format-number";
+import { trackEvent } from "src/utils/google-analytics";
 
 import { useCreateCart } from "src/api/carts/carts";
 import { useCreateWishlist } from "src/api/wishlists/wishlists";
@@ -49,12 +50,14 @@ export default function CourseDetailsInfo({ course }: Props) {
       push(paths.login);
       return;
     }
+
     try {
       const wishlistItems = allLessons.map((lesson: ICourseLessonProp) =>
         createWishlistItem({ lesson: lesson.id }),
       );
       await Promise.allSettled(wishlistItems);
       enqueueSnackbar("Kurs został dodany do ulubionych", { variant: "success" });
+      trackEvent("add_to_wishlist", "course", "Course added to wishlist", course.slug);
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd podczas dodawania do ulubionych", { variant: "error" });
     }
@@ -71,6 +74,7 @@ export default function CourseDetailsInfo({ course }: Props) {
       );
       await Promise.allSettled(cartItems);
       enqueueSnackbar("Kurs został dodany do koszyka", { variant: "success" });
+      trackEvent("add_to_cart", "course", "Course added to cart", course.slug);
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd podczas dodawania do koszyka", { variant: "error" });
     }

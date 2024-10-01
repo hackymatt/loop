@@ -13,6 +13,7 @@ import { Checkbox, FormHelperText, FormControlLabel } from "@mui/material";
 import { useBoolean } from "src/hooks/use-boolean";
 
 import { fCurrency } from "src/utils/format-number";
+import { trackEvent } from "src/utils/google-analytics";
 
 import { generalAcceptance } from "src/consts/acceptances";
 import { validateCoupon } from "src/api/coupons/coupon-validation";
@@ -60,6 +61,7 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
       setDiscountedValue(
         data.is_percentage ? total * (1 - data.discount / 100) : total - (data.discount ?? 0),
       );
+      trackEvent("apply_coupon", "coupon", "Coupon applied", coupon);
     }
   };
 

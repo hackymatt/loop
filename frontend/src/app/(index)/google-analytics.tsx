@@ -5,11 +5,7 @@ import { useEffect } from "react";
 
 import { usePathname, useSearchParams } from "src/routes/hooks";
 
-const pageview = (measurementId: string, url: string) => {
-  window.gtag("config", measurementId, {
-    page_path: url,
-  });
-};
+import { pageView } from "src/utils/google-analytics";
 
 export default function GoogleAnalytics({ measurementId }: { measurementId: string }) {
   const pathname = usePathname();
@@ -18,7 +14,7 @@ export default function GoogleAnalytics({ measurementId }: { measurementId: stri
   useEffect(() => {
     const url = `${pathname}${searchParams}`;
 
-    pageview(measurementId, url);
+    pageView(measurementId, url);
   }, [measurementId, pathname, searchParams]);
 
   return (

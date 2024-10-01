@@ -5,6 +5,7 @@ import { LoadingButton } from "@mui/lab";
 import Typography from "@mui/material/Typography";
 
 import { fCurrency } from "src/utils/format-number";
+import { trackEvent } from "src/utils/google-analytics";
 
 import { useDeleteCart } from "src/api/carts/cart";
 import { useCreateCart } from "src/api/carts/carts";
@@ -35,6 +36,7 @@ export default function CartItem({ cartItem, error, wishlist }: Props) {
     try {
       await deleteWishlist({ id: cartItem.id });
       enqueueSnackbar("Lekcja została usunięta z ulubionych", { variant: "success" });
+      trackEvent("wishlist_to_trash", "wishlist", "Wishlist item removed", cartItem.lesson.title);
     } catch (err) {
       enqueueSnackbar("Wystąpił błąd podczas usuwania z ulubionych", { variant: "error" });
     }
@@ -44,6 +46,7 @@ export default function CartItem({ cartItem, error, wishlist }: Props) {
     try {
       await deleteCart({ id: cartItem.id });
       enqueueSnackbar("Lekcja została usunięta z koszyka", { variant: "success" });
+      trackEvent("cart_to_trash", "cart", "Cart item removed", cartItem.lesson.title);
     } catch (err) {
       enqueueSnackbar("Wystąpił błąd podczas usuwania z koszyka", { variant: "error" });
     }
@@ -56,6 +59,12 @@ export default function CartItem({ cartItem, error, wishlist }: Props) {
         deleteWishlist({ id: cartItem.id }),
       ]);
       enqueueSnackbar("Lekcja została dodana do koszyka", { variant: "success" });
+      trackEvent(
+        "wishlist_to_cart",
+        "wishlist",
+        "Wishlist item added to cart",
+        cartItem.lesson.title,
+      );
     } catch (err) {
       enqueueSnackbar("Wystąpił błąd podczas dodawania do koszyka", { variant: "error" });
     }
