@@ -11,6 +11,8 @@ import { LoadingButton, LoadingButtonProps } from "@mui/lab";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
+import { trackEvent } from "src/utils/google-analytics";
+
 import { textGradient } from "src/theme/css";
 import { newsletterAcceptance } from "src/consts/acceptances";
 import { useRegisterNewsletter } from "src/api/newsletter/register";
@@ -149,6 +151,7 @@ export function NewsletterEmail({
       }
       onSuccess?.();
       reset();
+      trackEvent("enroll_to_newsletter", "newsletter", "Enrolled to newsletter", data.email);
     } catch (error) {
       onFailure?.();
       handleFormError(error);

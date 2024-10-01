@@ -47,14 +47,7 @@ export default function RegisterView() {
 
   const queryParams = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const {
-    registerUser,
-    loginGoogleUser,
-    loginFacebookUser,
-    loginGithubUser,
-    isRegistered,
-    isLoggedIn,
-  } = useUserContext();
+  const { registerUser, loginGoogleUser, loginFacebookUser, loginGithubUser } = useUserContext();
 
   const RegisterSchema = Yup.object().shape({
     first_name: Yup.string().required("Imię jest wymagane"),
@@ -107,6 +100,7 @@ export default function RegisterView() {
     clearErrors();
     try {
       await registerUser(data);
+      push(paths.verify);
       enqueueSnackbar("Zarejestrowano pomyślnie", { variant: "success" });
     } catch (error) {
       handleFormError(error);
@@ -118,19 +112,21 @@ export default function RegisterView() {
     try {
       const { code } = queryParams;
       await loginGoogleUser({ code });
+      push(paths.account.personal);
       enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
     } catch (error) {
       if ((error as AxiosError).response?.status !== 403) {
         handleFormError(error);
       }
     }
-  }, [clearErrors, enqueueSnackbar, handleFormError, loginGoogleUser, queryParams]);
+  }, [clearErrors, enqueueSnackbar, handleFormError, loginGoogleUser, push, queryParams]);
 
   const onFacebookSubmit = useCallback(async () => {
     clearErrors();
     try {
       const { code } = queryParams;
       await loginFacebookUser({ code });
+      push(paths.account.personal);
       enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
     } catch (error) {
       if ((error as AxiosError).response?.status !== 403) {
@@ -139,13 +135,14 @@ export default function RegisterView() {
         enqueueSnackbar("Wystąpił błąd podczas logowania", { variant: "error" });
       }
     }
-  }, [clearErrors, enqueueSnackbar, handleFormError, loginFacebookUser, queryParams]);
+  }, [clearErrors, enqueueSnackbar, handleFormError, loginFacebookUser, push, queryParams]);
 
   const onGithubSubmit = useCallback(async () => {
     clearErrors();
     try {
       const { code } = queryParams;
       await loginGithubUser({ code });
+      push(paths.account.personal);
       enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
     } catch (error) {
       if ((error as AxiosError).response?.status !== 403) {
@@ -154,19 +151,7 @@ export default function RegisterView() {
         enqueueSnackbar("Wystąpił błąd podczas logowania", { variant: "error" });
       }
     }
-  }, [clearErrors, enqueueSnackbar, handleFormError, loginGithubUser, queryParams]);
-
-  useEffect(() => {
-    if (isRegistered) {
-      push(paths.verify);
-    }
-  }, [isRegistered, push]);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      push(paths.account.personal);
-    }
-  }, [isLoggedIn, push]);
+  }, [clearErrors, enqueueSnackbar, handleFormError, loginGithubUser, push, queryParams]);
 
   const effectRan = useRef(false);
   useEffect(() => {

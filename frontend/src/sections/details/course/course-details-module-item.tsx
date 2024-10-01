@@ -10,6 +10,7 @@ import { useRouter } from "src/routes/hooks/use-router";
 
 import { fCurrency } from "src/utils/format-number";
 import { romanize } from "src/utils/romanize-number";
+import { trackEvent } from "src/utils/google-analytics";
 
 import { useCreateCart } from "src/api/carts/carts";
 import { useCreateWishlist } from "src/api/wishlists/wishlists";
@@ -59,6 +60,7 @@ export default function CourseDetailsModuleItem({
       );
       await Promise.allSettled(wishlistItems);
       enqueueSnackbar("Moduł został dodany do ulubionych", { variant: "success" });
+      trackEvent("add_to_wishlist", "module", "Module added to wishlist", module.title);
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd podczas dodawania do ulubionych", { variant: "error" });
     }
@@ -75,6 +77,7 @@ export default function CourseDetailsModuleItem({
       );
       await Promise.allSettled(cartItems);
       enqueueSnackbar("Moduł został dodany do koszyka", { variant: "success" });
+      trackEvent("add_to_cart", "module", "Module added to cart", module.title);
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd podczas dodawania do koszyka", { variant: "error" });
     }

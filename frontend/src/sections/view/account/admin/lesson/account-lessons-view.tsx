@@ -67,7 +67,7 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, { label: "Wszystkie", value: -1 }];
 // ----------------------------------------------------------------------
 
 export default function AccountLessonsView() {
-  const router = useRouter();
+  const { push } = useRouter();
 
   const newLessonFormOpen = useBoolean();
   const editLessonFormOpen = useBoolean();
@@ -130,11 +130,11 @@ export default function AccountLessonsView() {
 
   const handlePriceHistoryView = useCallback(
     (lesson: ICourseLessonProp) => {
-      router.push(
+      push(
         `${paths.account.admin.lessons.priceHistory}/?lesson_name=${lesson.title}&sort_by=-created_at`,
       );
     },
-    [router],
+    [push],
   );
 
   const handleEditLesson = useCallback(

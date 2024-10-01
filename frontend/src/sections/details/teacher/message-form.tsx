@@ -11,6 +11,8 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
+import { trackEvent } from "src/utils/google-analytics";
+
 import { useCreateMessage } from "src/api/message/messages";
 
 import FormProvider from "src/components/hook-form";
@@ -61,6 +63,7 @@ export default function MessageForm({ teacher, onClose, ...other }: Props) {
       reset();
       onClose();
       enqueueSnackbar("Wiadomość została wysłana", { variant: "success" });
+      trackEvent("sent_message", "teacher", "Sent message to teacher", teacher.name);
     } catch (error) {
       handleFormError(error);
     }

@@ -1,7 +1,6 @@
 "use client";
 
 import * as Yup from "yup";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -33,7 +32,7 @@ export default function ForgotPasswordView() {
     email: Yup.string().required("Adres e-mail jest wymagany").email("Podaj poprawny adres e-mail"),
   });
 
-  const { resetUserPassword, isPasswordReset } = useUserContext();
+  const { resetUserPassword } = useUserContext();
 
   const defaultValues = {
     email: "",
@@ -57,18 +56,13 @@ export default function ForgotPasswordView() {
     clearErrors();
     try {
       await resetUserPassword(data);
+      push(paths.login);
       enqueueSnackbar("Wysłano tymczasowe hasło", { variant: "success" });
       reset();
     } catch (error) {
       handleFormError(error);
     }
   });
-
-  useEffect(() => {
-    if (isPasswordReset) {
-      push(paths.login);
-    }
-  }, [isPasswordReset, push]);
 
   return (
     <Stack sx={{ textAlign: "center" }}>

@@ -58,7 +58,7 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, { label: "Wszystkie", value: -1 }];
 // ----------------------------------------------------------------------
 
 export default function AccountUsersView() {
-  const router = useRouter();
+  const { push } = useRouter();
   const editFormOpen = useBoolean();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
@@ -127,11 +127,11 @@ export default function AccountUsersView() {
 
   const handleFinanceHistoryView = useCallback(
     (user: IUserDetailsProps) => {
-      router.push(
+      push(
         `${paths.account.admin.users.financeHistory}/?lecturer_id=${user.id}&sort_by=-created_at`,
       );
     },
-    [router],
+    [push],
   );
 
   return (

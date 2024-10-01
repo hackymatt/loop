@@ -316,7 +316,83 @@ export const privacyPolicy = [
     ),
   },
   {
-    header: "§4 Prawa i obowiązki",
+    header: "§4 Polityka „Cookies”",
+    content: (
+      <Typography sx={{ textAlign: "justify" }}>
+        <Typography>
+          1. Zbieramy w sposób automatyczny informacje zawarte w plikach cookies w celu gromadzenia
+          danych Użytkownika. Plik Cookies to mały fragment tekstu, który jest wysyłany do
+          przeglądarki Użytkownika i który przeglądarka wysyła z powrotem przy następnych wejściach
+          na witrynę. Używane są głównie do utrzymywania sesji np. poprzez wygenerowanie i odesłanie
+          tymczasowego identyfikatora po logowaniu. Wykorzystujemy pliki Cookies „sesyjne”
+          przechowywane na urządzeniu końcowym Użytkownika do czasu jego wylogowania, wyłączenia
+          strony internetowej lub wyłączenia przeglądarki internetowej oraz pliki Cookies „stałe”
+          przechowywane na urządzeniu końcowym Użytkownika przez czas określony w parametrach plików
+          Cookies lub do czasu ich usunięcia przez Użytkownika.
+        </Typography>
+        <Typography>
+          2. Pliki Cookies dostosowują i optymalizują stronę i jej ofertę dla potrzeb Użytkowników
+          poprzez takie działania jak tworzenie statystyk odsłon oraz zapewnienie bezpieczeństwa.
+          Pliki Cookies niezbędne są również do utrzymania sesji po opuszczeniu strony internetowej.
+        </Typography>
+        <Typography>
+          3. Administrator przetwarza dane zawarte w plikach Cookies za każdym razem gdy strona jest
+          odwiedzana przez odwiedzających w następujących celach:
+          <Typography sx={{ ml: 3 }}>a) optymalizacji korzystania ze strony,</Typography>
+          <Typography sx={{ ml: 3 }}>
+            b) identyfikacji Usługobiorców jako w danej chwili zalogowanych,
+          </Typography>
+          <Typography sx={{ ml: 3 }}>
+            c) przystosowania, grafiki, opcji wyboru oraz wszelkiej innej zawartości strony do
+            indywidualnych preferencji Usługobiorcy,
+          </Typography>
+          <Typography sx={{ ml: 3 }}>
+            d) zapamiętywania uzupełnianych w sposób automatyczny i manualny, zamieszczanych danych
+            z Formularzy Zamówienia lub podanych przez odwiedzającego danych logowania,
+          </Typography>
+          <Typography sx={{ ml: 3 }}>
+            e) gromadzenia i analizowania anonimowych statystyk przedstawiających sposób korzystania
+            ze strony w panelu administracyjnym oraz google analytics,
+          </Typography>
+          <Typography sx={{ ml: 3 }}>
+            f) tworzenia list remarketingowych na podstawie informacji o preferencjach, zachowaniu,
+            sposobie korzystania zainteresowaniach ze Strony oraz zbierania danych demograficznych,
+            a następnie udostępnianie tych list w AdWords oraz Facebook Ads,
+          </Typography>
+          <Typography sx={{ ml: 3 }}>
+            g) tworzenia segmentów danych na podstawie informacji demograficznych, zainteresowań,
+            upodobań w wyborze oglądanych produktów/usług,
+          </Typography>
+          <Typography sx={{ ml: 3 }}>
+            h) wykorzystywania danych demograficznych i danych o zainteresowaniach w raportach
+            Analytics.
+          </Typography>
+        </Typography>
+        <Typography>
+          4. Użytkownik w każdej chwili za pomocą swojej przeglądarki internetowej może całkowicie
+          zablokować i skasować gromadzenie plików Cookies.
+        </Typography>
+        <Typography>
+          5. Zablokowanie przez Użytkownika możliwości gromadzenia plików Cookies na jego urządzeniu
+          może utrudnić lub uniemożliwić korzystanie z niektórych funkcjonalności strony do czego
+          Użytkownik jest w pełni uprawniony ale musi w takiej sytuacji mieć świadomość z ograniczeń
+          funkcjonalności.
+        </Typography>
+        <Typography>
+          6. Użytkownik, który nie chce wykorzystywania plików „cookies” w opisanym powyżej celu w
+          każdej chwili może usunąć je ręcznie. Do zapoznania się ze szczegółową instrukcją
+          postępowania należy odwiedzić stronę internetową producenta używanej przeglądarki
+          internetowej z której aktualnie korzysta Użytkownik.
+        </Typography>
+        <Typography>
+          7. Więcej informacji na temat Cookies dostępnych jest w menu pomocy każdej przeglądarki
+          internetowej.
+        </Typography>
+      </Typography>
+    ),
+  },
+  {
+    header: "§5 Prawa i obowiązki",
     content: (
       <Typography sx={{ textAlign: "justify" }}>
         <Typography>
@@ -400,7 +476,7 @@ export const privacyPolicy = [
     ),
   },
   {
-    header: "§5 Podstawowe zasady bezpieczeństwa",
+    header: "§6 Podstawowe zasady bezpieczeństwa",
     content: (
       <Typography sx={{ textAlign: "justify" }}>
         <Typography>
