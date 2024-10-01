@@ -1,11 +1,14 @@
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 
+import { Link } from "@mui/material";
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
+
+import { paths } from "src/routes/paths";
 
 import { useBoolean } from "src/hooks/use-boolean";
 
@@ -47,11 +50,12 @@ export default function CookiesBanner({ onConfirm, ...other }: Props) {
             Ta strona korzysta z plików cookies, które pomagają jej funkcjonować i śledzić sposób
             interakcji z nią, dzięki czemu możemy zapewnić lepszą i spersonalizowaną obsługę.
             Będziemy używać wszystkich plików cookies tylko wtedy, gdy wyrazisz na to zgodę,
-            klikając Akceptuj wszystkie lub Zaznacz co akceptujesz. Jeśli klikniesz Odrzuć wszystkie
-            użyjemy tylko plików cookies niezbędnych do działania naszej strony. Możesz zarządzać
-            indywidualnymi preferencjami dotyczącymi plików cookie klikając w przycisk Zaznacz co
-            akceptujesz. Poznaj szczegółowe informacje o cookies (po kliknięciu powinna się pojawić
-            lista wszystkich plików cookies)
+            klikając Akceptuj wszystkie. Możesz zarządzać indywidualnymi preferencjami dotyczącymi
+            plików cookie klikając w przycisk Więcej opcji. Więcej informacji znajdziesz w naszej{" "}
+            <Link target="_blank" href={paths.privacyPolicy} sx={{ color: "text.secondary" }}>
+              polityce prywatności
+            </Link>
+            .
           </DialogContent>
 
           <DialogActions sx={{ display: "flex", flexDirection: "column", gap: 2 }}>

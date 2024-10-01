@@ -296,7 +296,7 @@ function LandingSuggestions() {
             Nie znalazłeś kursu? Zróbmy to{" "}
             <Box component="span" sx={{ color: "primary.main", textDecoration: "underline" }}>
               razem
-            </Box>{" "}
+            </Box>
             !
           </Typography>
 

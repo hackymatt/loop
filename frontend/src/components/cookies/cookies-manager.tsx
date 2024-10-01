@@ -5,6 +5,7 @@ import { useMemo, useCallback } from "react";
 import { useBoolean } from "src/hooks/use-boolean";
 import { useLocalStorage } from "src/hooks/use-local-storage";
 
+import { ENV } from "src/config-global";
 import { cookies } from "src/consts/cookies";
 
 import CookiesBanner from "./cookies-banner";
@@ -29,6 +30,9 @@ export default function CookiesManager() {
     (selectedCookies: { [cookie: string]: boolean }) => {
       update("consent", true);
       Object.keys(selectedCookies).forEach((cookie) => update(cookie, selectedCookies[cookie]));
+      window.gtag("consent", "update", {
+        analytics_storage: selectedCookies.analytics && ENV === "PROD" ? "granted" : "denied",
+      });
       cookieFormOpen.onFalse();
     },
     [cookieFormOpen, update],
