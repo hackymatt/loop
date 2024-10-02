@@ -13,8 +13,6 @@ import { SettingsProvider } from "src/components/settings";
 import { UserProvider } from "src/components/user";
 import { ToastProvider } from "src/components/toast";
 import CookiesManager from "src/components/cookies/cookies-manager";
-import { GOOGLE_ANALYTICS_ID } from "src/config-global";
-import { Suspense } from "react";
 import { ReactQueryProvider } from "./(index)/react-query-provider";
 import GoogleAnalytics from "./(index)/google-analytics";
 
@@ -39,9 +37,6 @@ type Props = {
 export default function RootLayout({ children }: Props) {
   return (
     <html lang="en" className={primaryFont.className}>
-      <Suspense>
-        <GoogleAnalytics measurementId={GOOGLE_ANALYTICS_ID} />
-      </Suspense>
       <body>
         <ReactQueryProvider>
           <UserProvider>
@@ -58,6 +53,7 @@ export default function RootLayout({ children }: Props) {
                     <MotionLazy>
                       <ProgressBar />
                       <CookiesManager />
+                      <GoogleAnalytics />
                       {children}
                     </MotionLazy>
                   </ToastProvider>
