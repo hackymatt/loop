@@ -15,13 +15,12 @@ type ILevel = "P" | "Ś" | "Z" | "E";
 type ILecturer = {
   full_name: string;
   id: string;
-  email: string;
   image: string | null;
   gender: IGender | null;
   lessons_count: number;
   rating: number | null;
   rating_count: number;
-  user_title: string | null;
+  title: string | null;
 };
 
 type ITechnology = {
@@ -45,6 +44,17 @@ type ILesson = {
   price: number;
   previous_price?: number | null;
   lowest_30_days_price?: number | null;
+  progress: number | null;
+};
+
+type IModule = {
+  id: string;
+  title: string;
+  price: number;
+  previous_price?: number | null;
+  lowest_30_days_price?: number | null;
+  lessons: ILesson[];
+  progress: number | null;
 };
 
 type ICourse = {
@@ -53,9 +63,8 @@ type ICourse = {
   price: number;
   previous_price: number | null;
   lowest_30_days_price: number | null;
-  is_bestseller: boolean;
   duration: number;
-  lessons: ILesson[];
+  modules: IModule[];
   technologies: ITechnology[];
   skills: ISkill[];
   topics: ITopic[];
@@ -68,6 +77,7 @@ type ICourse = {
   title: string;
   description: string;
   active: boolean;
+  progress: number | null;
 };
 
 type IEditCourse = Omit<
@@ -76,17 +86,17 @@ type IEditCourse = Omit<
   | "price"
   | "previous_price"
   | "lowest_30_days_price"
-  | "is_bestseller"
   | "duration"
   | "technologies"
   | "lecturers"
   | "students_count"
   | "rating"
   | "rating_count"
-  | "lessons"
+  | "modules"
   | "skills"
   | "topics"
-> & { lessons: string[]; skills: string[]; topics: string[] };
+  | "progress"
+> & { modules: string[]; skills: string[]; topics: string[] };
 
 type IEditCourseReturn = IEditCourse;
 
@@ -121,8 +131,9 @@ export const courseQuery = (id: string) => {
         lecturers,
         skills,
         topics,
-        lessons,
+        modules,
         active,
+        progress,
       } = data;
 
       modifiedResults = {
@@ -149,7 +160,7 @@ export const courseQuery = (id: string) => {
             lessons_count,
             rating: lecturerRating,
             rating_count: lecturerRatingCount,
-            user_title,
+            title: lecturerTitle,
           }: ILecturer) => ({
             id: lecturerId,
             name: full_name,
@@ -158,27 +169,48 @@ export const courseQuery = (id: string) => {
             totalLessons: lessons_count,
             ratingNumber: lecturerRating,
             totalReviews: lecturerRatingCount,
-            role: user_title,
+            role: lecturerTitle,
           }),
         ),
         skills: skills.map((skill: ISkill) => skill.name),
         learnList: topics.map((topic: ITopic) => topic.name),
-        lessons: lessons.map(
+        modules: modules.map(
           ({
-            id: lessonId,
-            title: titleId,
-            lowest_30_days_price: lessonLowest30DaysPrice,
-            previous_price: lessonPreviousPrice,
-            price: lessonPrice,
-          }: ILesson) => ({
-            id: lessonId,
-            title: titleId,
-            lowest30DaysPrice: lessonLowest30DaysPrice,
-            priceSale: lessonPreviousPrice,
-            price: lessonPrice,
+            id: moduleId,
+            title: moduleTitle,
+            lowest_30_days_price: moduleLowest30DaysPrice,
+            previous_price: modulePreviousPrice,
+            price: modulePrice,
+            lessons,
+            progress: moduleProgress,
+          }: IModule) => ({
+            id: moduleId,
+            title: moduleTitle,
+            lowest30DaysPrice: moduleLowest30DaysPrice,
+            priceSale: modulePreviousPrice,
+            price: modulePrice,
+            progress: moduleProgress !== null ? moduleProgress * 100 : undefined,
+            lessons: lessons.map(
+              ({
+                id: lessonId,
+                title: lessonTitle,
+                lowest_30_days_price: lessonLowest30DaysPrice,
+                previous_price: lessonPreviousPrice,
+                price: lessonPrice,
+                progress: lessonProgress,
+              }: ILesson) => ({
+                id: lessonId,
+                title: lessonTitle,
+                lowest30DaysPrice: lessonLowest30DaysPrice,
+                priceSale: lessonPreviousPrice,
+                price: lessonPrice,
+                progress: lessonProgress !== null ? lessonProgress * 100 : undefined,
+              }),
+            ),
           }),
         ),
         active,
+        progress: progress !== null ? progress * 100 : undefined,
       };
     } catch (error) {
       if (error.response && (error.response.status === 400 || error.response.status === 404)) {

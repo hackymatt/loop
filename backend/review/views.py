@@ -12,7 +12,7 @@ from review.models import Review
 from random import sample
 from django.db.models import Count
 from django.contrib.auth.models import User
-from django.conf import settings
+from config_global import DUMMY_STUDENT_EMAIL
 
 
 class ReviewViewSet(ModelViewSet):
@@ -58,7 +58,7 @@ class BestReviewViewSet(ModelViewSet):
     serializer_class = BestReviewSerializer
 
     def get_queryset(self):
-        dummy_user = User.objects.get(email=settings.DUMMY_STUDENT_EMAIL)
+        dummy_user = User.objects.get(email=DUMMY_STUDENT_EMAIL)
 
         queryset = self.queryset.exclude(student__profile__user=dummy_user)
         ids = queryset.values_list("id", flat=True)

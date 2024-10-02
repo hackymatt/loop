@@ -1,12 +1,14 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 
 import Popover from "@mui/material/Popover";
 import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
+import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
-import { Stack, Avatar, Divider, Typography } from "@mui/material";
-import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
+import { Divider, Typography } from "@mui/material";
+
+import { usePopover } from "src/hooks/use-popover";
 
 import { fDate, fDateTime } from "src/utils/format-time";
 
@@ -24,45 +26,23 @@ type Props = {
   onDelete: (purchase: IPurchaseItemProp) => void;
 };
 
-export default function AccountLessonsTableRow({ row, onAdd, onEdit, onDelete }: Props) {
-  const [open, setOpen] = useState<HTMLButtonElement | null>(null);
-
-  const handleOpen = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-    setOpen(event.currentTarget);
-  }, []);
-
-  const handleClose = useCallback(() => {
-    setOpen(null);
-  }, []);
+export default function AccountReviewsTableRow({ row, onAdd, onEdit, onDelete }: Props) {
+  const openOptions = usePopover();
 
   const handleAdd = useCallback(() => {
-    handleClose();
+    openOptions.onClose();
     onAdd(row);
-  }, [handleClose, onAdd, row]);
+  }, [openOptions, onAdd, row]);
 
   const handleEdit = useCallback(() => {
-    handleClose();
+    openOptions.onClose();
     onEdit(row);
-  }, [handleClose, onEdit, row]);
+  }, [openOptions, onEdit, row]);
 
   const handleDelete = useCallback(() => {
-    handleClose();
+    openOptions.onClose();
     onDelete(row);
-  }, [handleClose, onDelete, row]);
-
-  const inputStyles = {
-    pl: 1,
-    [`&.${inputBaseClasses.focused}`]: {
-      bgcolor: "action.selected",
-    },
-  };
-
-  const genderAvatarUrl =
-    row?.teacher.gender === "Kobieta"
-      ? "/assets/images/avatar/avatar_female.jpg"
-      : "/assets/images/avatar/avatar_male.jpg";
-
-  const avatarUrl = row?.teacher.avatarUrl || genderAvatarUrl;
+  }, [openOptions, onDelete, row]);
 
   const isCompleted = useMemo(
     () => row.reviewStatus === ReviewStatus.ukończone,
@@ -74,11 +54,11 @@ export default function AccountLessonsTableRow({ row, onAdd, onEdit, onDelete }:
   return (
     <>
       <TableRow hover>
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.lessonTitle} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.lessonTitle} sx={{ width: 1 }} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
+        <TableCell>
           <Label
             sx={{ textTransform: "uppercase" }}
             color={(isCompleted && "success") || (isPending && "warning") || "default"}
@@ -87,15 +67,12 @@ export default function AccountLessonsTableRow({ row, onAdd, onEdit, onDelete }:
           </Label>
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={fDateTime(row.lessonSlot[0])} />
+        <TableCell>
+          <InputBase value={fDateTime(row.lessonSlot[0])} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell>
-          <Stack spacing={0.5} direction="row" alignItems="center">
-            {row.teacher.name && <Avatar src={avatarUrl} sx={{ width: 36, height: 36 }} />}
-            <Typography variant="body2">{row.teacher.name}</Typography>
-          </Stack>
+          <InputBase value={row.teacher.name} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell>
@@ -103,16 +80,16 @@ export default function AccountLessonsTableRow({ row, onAdd, onEdit, onDelete }:
         </TableCell>
 
         <TableCell align="right" padding="none">
-          <IconButton onClick={handleOpen}>
+          <IconButton onClick={openOptions.onOpen}>
             <Iconify icon="carbon:overflow-menu-vertical" />
           </IconButton>
         </TableCell>
       </TableRow>
 
       <Popover
-        open={Boolean(open)}
-        anchorEl={open}
-        onClose={handleClose}
+        open={openOptions.open}
+        anchorEl={openOptions.anchorEl}
+        onClose={openOptions.onClose}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         slotProps={{

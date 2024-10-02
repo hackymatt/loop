@@ -1,24 +1,21 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 
-import { Stack } from "@mui/system";
 import Popover from "@mui/material/Popover";
 import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
+import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
-import { Link, Avatar, Typography } from "@mui/material";
-import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
+import { Link, Divider, Typography } from "@mui/material";
 
-import { paths } from "src/routes/paths";
+import { usePopover } from "src/hooks/use-popover";
 
 import { fDate, fDateTime } from "src/utils/format-time";
-
-import { useUserDetails } from "src/api/auth/details";
 
 import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 
-import { LessonStatus, IPurchaseItemProp } from "src/types/purchase";
+import { LessonStatus, IRecordingProp, IPurchaseItemProp } from "src/types/purchase";
 
 // ----------------------------------------------------------------------
 
@@ -30,50 +27,26 @@ type Props = {
   row: IPurchaseItemProp;
   onAdd: (purchase: IPurchaseItemProp) => void;
   onDelete: (purchase: IPurchaseItemProp) => void;
+  onSendMessage: (purchase: IPurchaseItemProp) => void;
 };
 
-export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) {
-  const { data: userDetails } = useUserDetails();
-
-  const certificateUrl = useMemo(
-    () => `${paths.certificate}/${userDetails?.id}-${row.reservationId}`,
-    [row.reservationId, userDetails.id],
-  );
-
-  const [open, setOpen] = useState<HTMLButtonElement | null>(null);
-
-  const handleOpen = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-    setOpen(event.currentTarget);
-  }, []);
-
-  const handleClose = useCallback(() => {
-    setOpen(null);
-  }, []);
+export default function AccountLessonsTableRow({ row, onAdd, onDelete, onSendMessage }: Props) {
+  const openOptions = usePopover();
 
   const handleAdd = useCallback(() => {
-    handleClose();
+    openOptions.onClose();
     onAdd(row);
-  }, [handleClose, onAdd, row]);
+  }, [openOptions, onAdd, row]);
 
   const handleDelete = useCallback(() => {
-    handleClose();
+    openOptions.onClose();
     onDelete(row);
-  }, [handleClose, onDelete, row]);
+  }, [openOptions, onDelete, row]);
 
-  const inputStyles = {
-    pl: 1,
-    [`&.${inputBaseClasses.focused}`]: {
-      bgcolor: "action.selected",
-    },
-    width: 1,
-  };
-
-  const genderAvatarUrl =
-    row?.teacher.gender === "Kobieta"
-      ? "/assets/images/avatar/avatar_female.jpg"
-      : "/assets/images/avatar/avatar_male.jpg";
-
-  const avatarUrl = row?.teacher.avatarUrl || genderAvatarUrl;
+  const handleSendMessage = useCallback(() => {
+    openOptions.onClose();
+    onSendMessage(row);
+  }, [openOptions, onSendMessage, row]);
 
   const isCompleted = useMemo(
     () => row.lessonStatus === LessonStatus.zakończona,
@@ -99,14 +72,17 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
     [row.lessonSlot],
   );
 
+  const hasRecordings = useMemo(() => row.recordings.length > 0, [row.recordings.length]);
+  const moreThanOneRecording = useMemo(() => row.recordings.length > 1, [row.recordings.length]);
+
   return (
     <>
       <TableRow hover>
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.lessonTitle} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.lessonTitle} sx={{ width: 1 }} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
+        <TableCell>
           <Label
             sx={{ textTransform: "uppercase" }}
             color={
@@ -121,15 +97,12 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
           </Label>
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
+        <TableCell>
           <InputBase value={fDateTime(row.lessonSlot[0])} />
         </TableCell>
 
         <TableCell>
-          <Stack spacing={0.5} direction="row" alignItems="center">
-            {row.teacher.name && <Avatar src={avatarUrl} sx={{ width: 36, height: 36 }} />}
-            <Typography variant="body2">{row.teacher.name}</Typography>
-          </Stack>
+          <InputBase value={row.teacher.name} />
         </TableCell>
 
         <TableCell>
@@ -137,16 +110,16 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
         </TableCell>
 
         <TableCell align="right" padding="none">
-          <IconButton onClick={handleOpen}>
+          <IconButton onClick={openOptions.onOpen}>
             <Iconify icon="carbon:overflow-menu-vertical" />
           </IconButton>
         </TableCell>
       </TableRow>
 
       <Popover
-        open={Boolean(open)}
-        anchorEl={open}
-        onClose={handleClose}
+        open={openOptions.open}
+        anchorEl={openOptions.anchorEl}
+        onClose={openOptions.onClose}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         slotProps={{
@@ -160,6 +133,22 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
             <Iconify icon="carbon:add" sx={{ mr: 0.5 }} />
             <Typography variant="body2">Dodaj rezerwację</Typography>
           </MenuItem>
+        )}
+
+        {!isNew && (
+          <>
+            <MenuItem onClick={handleSendMessage} sx={{ color: "success.main" }}>
+              <Iconify icon="carbon:email" sx={{ mr: 0.5 }} />
+              <Typography variant="body2">Napisz do instruktora</Typography>
+            </MenuItem>
+            <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
+            <Link href={row.lessonResource} target="_blank" underline="none" color="inherit">
+              <MenuItem>
+                <Iconify icon="carbon:logo-github" sx={{ mr: 0.5 }} />
+                <Typography variant="body2">Materiały</Typography>
+              </MenuItem>
+            </Link>
+          </>
         )}
 
         {isPlanned && (
@@ -179,12 +168,25 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete }: Props) 
         )}
 
         {isCompleted && (
-          <Link href={certificateUrl} target="_blank" underline="none" color="inherit">
-            <MenuItem sx={{ color: "success.main" }}>
-              <Iconify icon="carbon:certificate" sx={{ mr: 0.5 }} />
-              <Typography variant="body2">Zobacz certyfikat ukończenia</Typography>
-            </MenuItem>
-          </Link>
+          <>
+            {hasRecordings && <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />}
+            {row.recordings.map((recording: IRecordingProp, index: number) => (
+              <Link
+                key={recording.name}
+                href={recording.url}
+                target="_blank"
+                underline="none"
+                color="inherit"
+              >
+                <MenuItem>
+                  <Iconify icon="carbon:download" sx={{ mr: 0.5 }} />
+                  <Typography variant="body2">
+                    Pobierz nagranie{moreThanOneRecording ? ` #${index + 1}` : ""}
+                  </Typography>
+                </MenuItem>
+              </Link>
+            ))}
+          </>
         )}
       </Popover>
     </>

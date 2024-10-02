@@ -1,11 +1,12 @@
 "use client";
 
 import * as Yup from "yup";
-import { useMemo, useEffect } from "react";
+import { useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 
 import Box from "@mui/material/Box";
+import { alpha } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -23,6 +24,8 @@ import FormProvider, {
   RHFTextField,
   RHFAutocompleteCountry,
 } from "src/components/hook-form";
+
+import AccountImage from "src/sections/account/account-image";
 
 import { IGender } from "src/types/testimonial";
 
@@ -56,8 +59,6 @@ export default function AccountPersonalView() {
     image: Yup.string().nullable(),
   };
 
-  const date18YearsAgo = useMemo(() => new Date().setFullYear(new Date().getFullYear() - 18), []);
-
   const AccountPersonalSchema = Yup.object().shape(userSchemaObject);
 
   const defaultValues = {
@@ -69,7 +70,7 @@ export default function AccountPersonalView() {
     zip_code: userDetails?.zip_code ?? "",
     city: userDetails?.city ?? "",
     country: userDetails?.country ?? "",
-    dob: userDetails?.dob ? new Date(userDetails?.dob) : date18YearsAgo,
+    dob: userDetails?.dob ? new Date(userDetails?.dob) : undefined,
     gender: userDetails?.gender ? userDetails.gender : "Mężczyzna",
   };
 
@@ -97,11 +98,11 @@ export default function AccountPersonalView() {
         zip_code: userDetails?.zip_code ?? "",
         city: userDetails?.city ?? "",
         country: userDetails?.country ?? "",
-        dob: userDetails?.dob ? new Date(userDetails?.dob) : date18YearsAgo,
+        dob: userDetails?.dob ? new Date(userDetails?.dob) : undefined,
         gender: userDetails?.gender !== null ? userDetails.gender : "Mężczyzna",
       });
     }
-  }, [date18YearsAgo, reset, userDetails]);
+  }, [reset, userDetails]);
 
   const onSubmit = handleSubmit(async (data) => {
     delete data.image;
@@ -127,6 +128,18 @@ export default function AccountPersonalView() {
       <Typography variant="h5" sx={{ mb: 3 }}>
         Dane osobowe
       </Typography>
+
+      <Box
+        sx={{
+          p: 3,
+          mt: 3,
+          borderRadius: 2,
+          display: { xs: "flex", md: "none" },
+          border: (theme) => `solid 1px ${alpha(theme.palette.grey[500], 0.24)}`,
+        }}
+      >
+        <AccountImage />
+      </Box>
 
       <Box
         rowGap={2.5}

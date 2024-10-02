@@ -18,6 +18,7 @@ from .factory import (
     create_teaching,
     create_schedule,
     create_meeting,
+    create_module,
 )
 from .helpers import (
     login,
@@ -26,6 +27,7 @@ from .helpers import (
     get_review,
     is_review_found,
     mock_send_message,
+    notifications_number,
 )
 from django.contrib import auth
 import json
@@ -127,6 +129,13 @@ class ReviewTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4]
+        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -136,7 +145,7 @@ class ReviewTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2, self.lesson_3, self.lesson_4],
+            modules=[self.module_1, self.module_2],
         )
 
         create_purchase(
@@ -245,6 +254,7 @@ class ReviewTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(reviews_number(), 5)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_review_authenticated_not_purchased(self):
         # login
@@ -252,7 +262,7 @@ class ReviewTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = {
-            "lesson": self.course.lessons.all()[3].id,
+            "lesson": self.lesson_4.id,
             "lecturer": self.lecturer_profile.id,
             "rating": 3,
             "review": "Good lesson.",
@@ -260,6 +270,7 @@ class ReviewTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(reviews_number(), 5)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_review_authenticated_already_created(self):
         # login
@@ -275,6 +286,7 @@ class ReviewTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(reviews_number(), 5)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_review_authenticated_incorrect_rating(self):
         # login
@@ -290,6 +302,7 @@ class ReviewTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(reviews_number(), 5)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_review_authenticated(self):
         # login
@@ -305,6 +318,7 @@ class ReviewTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(reviews_number(), 6)
+        self.assertEqual(notifications_number(), 1)
 
     def test_update_review_unauthenticated(self):
         # no login
@@ -470,6 +484,10 @@ class BestReviewTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2, self.lesson_3]
+        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -479,7 +497,7 @@ class BestReviewTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2, self.lesson_3],
+            modules=[self.module_1],
         )
 
         self.review_1 = create_review(
@@ -637,6 +655,13 @@ class ReviewStatsTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4]
+        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -646,7 +671,7 @@ class ReviewStatsTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2, self.lesson_3, self.lesson_4],
+            modules=[self.module_1, self.module_2],
         )
 
         create_purchase(
@@ -853,6 +878,10 @@ class ReviewConfirmationTest(TestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -862,7 +891,7 @@ class ReviewConfirmationTest(TestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         create_purchase(
@@ -877,14 +906,15 @@ class ReviewConfirmationTest(TestCase):
             price=self.lesson_2.price,
         )
 
-        for lesson in self.course_1.lessons.all():
-            create_teaching(
-                lecturer=self.lecturer_profile,
-                lesson=lesson,
-            )
+        for module in self.course_1.modules.all():
+            for lesson in module.lessons.all():
+                create_teaching(
+                    lecturer=self.lecturer_profile,
+                    lesson=lesson,
+                )
 
         self.schedules = []
-        for i in range(-48, 10):
+        for i in range(-72, 10):
             self.schedules.append(
                 create_schedule(
                     lecturer=self.lecturer_profile,
@@ -956,3 +986,4 @@ class ReviewConfirmationTest(TestCase):
         self.assertEqual(reviews_number(), 1)
         remind_review()
         self.assertEqual(_send_message_mock.call_count, 1)
+        self.assertEqual(notifications_number(), 1)

@@ -1,14 +1,16 @@
-import { useMemo, useState, useCallback } from "react";
+import { useMemo, useCallback } from "react";
 
 import Popover from "@mui/material/Popover";
 import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
+import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import { Link, Divider, Typography } from "@mui/material";
-import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
 
 import { paths } from "src/routes/paths";
+
+import { usePopover } from "src/hooks/use-popover";
 
 import { fCurrency } from "src/utils/format-number";
 
@@ -26,33 +28,17 @@ type Props = {
 };
 
 export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props) {
-  const [open, setOpen] = useState<HTMLButtonElement | null>(null);
-
-  const handleOpen = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-    setOpen(event.currentTarget);
-  }, []);
-
-  const handleClose = useCallback(() => {
-    setOpen(null);
-  }, []);
+  const openOptions = usePopover();
 
   const handleEdit = useCallback(() => {
-    handleClose();
+    openOptions.onClose();
     onEdit(row);
-  }, [handleClose, onEdit, row]);
+  }, [openOptions, onEdit, row]);
 
   const handleDelete = useCallback(() => {
-    handleClose();
+    openOptions.onClose();
     onDelete(row);
-  }, [handleClose, onDelete, row]);
-
-  const inputStyles = {
-    pl: 1,
-    [`&.${inputBaseClasses.focused}`]: {
-      bgcolor: "action.selected",
-    },
-    width: 1,
-  };
+  }, [openOptions, onDelete, row]);
 
   const isActive = useMemo(() => row.active, [row.active]);
 
@@ -61,15 +47,15 @@ export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props)
   return (
     <>
       <TableRow hover>
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.slug} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.slug} sx={{ width: 1 }} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.totalHours * 60} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={`${row.totalHours * 60} min`} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
+        <TableCell>
           <Label
             sx={{ textTransform: "uppercase" }}
             color={(isActive && "success") || (isInactive && "error") || "default"}
@@ -78,25 +64,25 @@ export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props)
           </Label>
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={fCurrency(row.price ?? 0)} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={fCurrency(row.price ?? 0)} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.level} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.level} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell align="right" padding="none">
-          <IconButton onClick={handleOpen}>
+          <IconButton onClick={openOptions.onOpen}>
             <Iconify icon="carbon:overflow-menu-vertical" />
           </IconButton>
         </TableCell>
       </TableRow>
 
       <Popover
-        open={Boolean(open)}
-        anchorEl={open}
-        onClose={handleClose}
+        open={openOptions.open}
+        anchorEl={openOptions.anchorEl}
+        onClose={openOptions.onClose}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         slotProps={{

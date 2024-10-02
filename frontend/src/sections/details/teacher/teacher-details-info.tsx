@@ -10,6 +10,7 @@ import { paths } from "src/routes/paths";
 import { useRouter } from "src/routes/hooks";
 
 import { fCurrency } from "src/utils/format-number";
+import { trackEvent } from "src/utils/google-analytics";
 
 import { useCreateCart } from "src/api/carts/carts";
 import { useCreateWishlist } from "src/api/wishlists/wishlists";
@@ -48,6 +49,7 @@ export default function TeacherDetailsInfo({ teacher }: Props) {
         );
         await Promise.allSettled(wishlistItems);
         enqueueSnackbar("Pakiet lekcji został dodany do ulubionych", { variant: "success" });
+        trackEvent("add_to_wishlist", "teacher", "Teacher added to wishlist", teacher.name);
       } catch (error) {
         enqueueSnackbar("Wystąpił błąd podczas dodawania do ulubionych", { variant: "error" });
       }
@@ -66,6 +68,7 @@ export default function TeacherDetailsInfo({ teacher }: Props) {
         );
         await Promise.allSettled(cartItems);
         enqueueSnackbar("Pakiet lekcji został dodany do koszyka", { variant: "success" });
+        trackEvent("add_to_cart", "teacher", "Teacher added to cart", teacher.name);
       } catch (error) {
         enqueueSnackbar("Wystąpił błąd podczas dodawania do koszyka", { variant: "error" });
       }
@@ -91,11 +94,14 @@ export default function TeacherDetailsInfo({ teacher }: Props) {
             )}
             {fCurrency(teacher.lessonsPrice ?? 0)}
           </Stack>
-          {!!teacher.lessonsPreviousPrice && teacher.lessonsLowest30DaysPrice && (
-            <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "left" }}>
-              Najniższa cena z 30 dni przed: {fCurrency(teacher.lessonsLowest30DaysPrice)}
-            </Typography>
-          )}
+          {teacher.lessonsPreviousPrice !== undefined &&
+            teacher.lessonsPreviousPrice !== null &&
+            teacher.lessonsLowest30DaysPrice !== undefined &&
+            teacher.lessonsLowest30DaysPrice !== null && (
+              <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "left" }}>
+                Najniższa cena z 30 dni przed: {fCurrency(teacher.lessonsLowest30DaysPrice)}
+              </Typography>
+            )}
         </Stack>
 
         <Stack spacing={2}>
@@ -117,7 +123,7 @@ export default function TeacherDetailsInfo({ teacher }: Props) {
           </Stack>
 
           <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
-            <Iconify icon="carbon:devices" sx={{ mr: 1 }} />
+            <Iconify icon="carbon:devices" sx={{ mr: 1, width: "30px" }} />
             Dostęp na komputerach, tabletach i urządzeniach mobilnych
           </Stack>
 

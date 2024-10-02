@@ -1,13 +1,19 @@
 import requests
-
 from typing import Dict, Any
-from django.conf import settings
 from rest_framework.serializers import ValidationError
 from django.core.files.base import ContentFile
-
 from django.contrib.auth.models import User
 from profile.models import Profile, StudentProfile, AdminProfile, LecturerProfile
 from newsletter.models import Newsletter
+from notification.utils import notify
+from config_global import (
+    GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET,
+    FACEBOOK_CLIENT_ID,
+    FACEBOOK_CLIENT_SECRET,
+    GITHUB_CLIENT_ID,
+    GITHUB_CLIENT_SECRET,
+)
 
 GOOGLE_ACCESS_TOKEN_OBTAIN_URL = "https://oauth2.googleapis.com/token"
 GOOGLE_USER_INFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
@@ -27,8 +33,8 @@ def google_get_access_token_request(data):
 def google_get_access_token(*, code: str, redirect_uri: str) -> str:
     data = {
         "code": code,
-        "client_id": settings.GOOGLE_CLIENT_ID,
-        "client_secret": settings.GOOGLE_CLIENT_SECRET,
+        "client_id": GOOGLE_CLIENT_ID,
+        "client_secret": GOOGLE_CLIENT_SECRET,
         "redirect_uri": redirect_uri,
         "grant_type": "authorization_code",
     }
@@ -70,8 +76,8 @@ def facebook_get_access_token_request(params):
 def facebook_get_access_token(*, code: str, redirect_uri: str) -> str:
     params = {
         "code": code,
-        "client_id": settings.FACEBOOK_CLIENT_ID,
-        "client_secret": settings.FACEBOOK_CLIENT_SECRET,
+        "client_id": FACEBOOK_CLIENT_ID,
+        "client_secret": FACEBOOK_CLIENT_SECRET,
         "redirect_uri": redirect_uri,
     }
     response = facebook_get_access_token_request(params=params)
@@ -116,8 +122,8 @@ def github_get_access_token_request(data):
 def github_get_access_token(*, code: str, redirect_uri: str) -> str:
     data = {
         "code": code,
-        "client_id": settings.GITHUB_CLIENT_ID,
-        "client_secret": settings.GITHUB_CLIENT_SECRET,
+        "client_id": GITHUB_CLIENT_ID,
+        "client_secret": GITHUB_CLIENT_SECRET,
         "redirect_uri": redirect_uri,
     }
     response = github_get_access_token_request(data=data)
@@ -186,18 +192,30 @@ def get_image_content(url: str, provider: str) -> str:
 
 
 def create_user(username, email, first_name, last_name, dob, gender, image, join_type):
-    user, _ = User.objects.get_or_create(email=email)
-    user.username = username
-    user.first_name = first_name
-    user.last_name = last_name
-    user.is_active = True
-    user.save()
+    user, created = User.objects.get_or_create(email=email)
+    if created:
+        user.username = username
+        user.first_name = first_name
+        user.last_name = last_name
+        user.is_active = True
+        user.save()
 
-    profile, _ = Profile.objects.get_or_create(user=user)
-    profile.dob = dob
-    profile.gender = gender
-    profile.join_type = join_type
-    profile.save()
+    profile, created = Profile.objects.get_or_create(user=user)
+    if created:
+        profile.dob = dob
+        profile.gender = gender
+        profile.join_type = join_type
+        profile.save()
+
+    if created:
+        notify(
+            profile=profile,
+            title="Witamy w loop",
+            subtitle="",
+            description="Proszę uzupełnij swoje dane osobowe.",
+            path="/account/personal",
+            icon="mdi:user-details",
+        )
 
     user_type = profile.user_type
     if user_type[0] == "A":
@@ -207,7 +225,7 @@ def create_user(username, email, first_name, last_name, dob, gender, image, join
     else:
         StudentProfile.objects.get_or_create(profile=profile)
 
-    if image:
+    if created and image:
         profile.image.save(f"{profile.uuid}.jpg", image)
 
     newsletter, created = Newsletter.objects.get_or_create(email=email)

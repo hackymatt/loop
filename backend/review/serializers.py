@@ -2,7 +2,6 @@ from rest_framework.serializers import (
     ModelSerializer,
     CharField,
     IntegerField,
-    EmailField,
     ImageField,
     SerializerMethodField,
     ValidationError,
@@ -10,11 +9,11 @@ from rest_framework.serializers import (
 from review.models import Review
 from profile.models import Profile, LecturerProfile, StudentProfile
 from purchase.models import Purchase
+from notification.utils import notify
 
 
 class StudentSerializer(ModelSerializer):
     first_name = CharField(source="profile.user.first_name")
-    email = EmailField(source="profile.user.email")
     gender = CharField(source="profile.get_gender_display")
     image = ImageField(source="profile.image")
 
@@ -22,7 +21,6 @@ class StudentSerializer(ModelSerializer):
         model = StudentProfile
         fields = (
             "first_name",
-            "email",
             "gender",
             "image",
         )
@@ -30,7 +28,6 @@ class StudentSerializer(ModelSerializer):
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
-    email = EmailField(source="profile.user.email")
     gender = CharField(source="profile.get_gender_display")
     image = ImageField(source="profile.image")
 
@@ -38,7 +35,6 @@ class LecturerSerializer(ModelSerializer):
         model = LecturerProfile
         fields = (
             "full_name",
-            "email",
             "gender",
             "image",
         )
@@ -129,6 +125,17 @@ class ReviewSerializer(ModelSerializer):
     def create(self, validated_data):
         user = self.context["request"].user
         profile = Profile.objects.get(user=user)
-        return Review.objects.create(
+        review = Review.objects.create(
             **validated_data, student=StudentProfile.objects.get(profile=profile)
         )
+
+        notify(
+            profile=review.lecturer.profile,
+            title="Otrzymano nową recenzję",
+            subtitle=review.lesson.title,
+            description=f"Otrzymano nową recenzję. Ocena {review.rating}, komentarz: {review.review}.",
+            path=f"/account/teacher/reviews/?sort_by=-created_at&page_size=10&lesson_id={review.lesson.id}",
+            icon="mdi:star-rate",
+        )
+
+        return review

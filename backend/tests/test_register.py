@@ -13,6 +13,7 @@ from .helpers import (
     is_data_match,
     mock_send_message,
     newsletters_number,
+    notifications_number,
 )
 from utils.google.gmail import GmailApi
 
@@ -144,6 +145,7 @@ class RegisterTest(TestCase):
         self.assertEqual(_send_message_mock.call_count, 1)
 
         self.assertEqual(newsletters_number(), 1)
+        self.assertEqual(notifications_number(), 1)
 
     @patch.object(GmailApi, "_send_message")
     def test_register_success_with_newsletter(self, _send_message_mock):
@@ -175,3 +177,4 @@ class RegisterTest(TestCase):
         self.assertNotEqual(profile.verification_code_created_at, None)
         self.assertEqual(_send_message_mock.call_count, 1)
         self.assertEqual(newsletters_number(), 1)
+        self.assertEqual(notifications_number(), 1)

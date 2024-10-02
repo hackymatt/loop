@@ -2,6 +2,7 @@ from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from lesson.models import Lesson
 from technology.models import Technology
 from course.models import Course
+from module.models import Module
 
 
 class TechnologySerializer(ModelSerializer):
@@ -24,8 +25,11 @@ class BestTechnologySerializer(ModelSerializer):
         lessons = Lesson.technologies.through.objects.filter(
             technology_id=technology
         ).values("lesson_id")
+        modules = Module.lessons.through.objects.filter(lesson_id__in=lessons).values(
+            "module_id"
+        )
         courses = (
-            Course.lessons.through.objects.filter(lesson_id__in=lessons)
+            Course.modules.through.objects.filter(module_id__in=modules)
             .values("course_id")
             .distinct()
         )

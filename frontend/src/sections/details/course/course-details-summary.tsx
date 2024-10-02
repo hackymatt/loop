@@ -5,10 +5,11 @@ import { alpha } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 
 import Iconify from "src/components/iconify";
+import { CircularProgressWithLabel } from "src/components/progress-label/circle-progress";
 
 import { ICourseProps } from "src/types/course";
 
-import CourseDetailsLessonList from "./course-details-lesson-list";
+import CourseDetailsModuleList from "./course-details-module-list";
 
 // ----------------------------------------------------------------------
 
@@ -19,7 +20,14 @@ type Props = {
 export default function CourseDetailsSummary({ course }: Props) {
   return (
     <Stack spacing={5}>
-      {course.lessons && <CourseDetailsLessonList lessons={course.lessons ?? []} />}
+      <Stack direction="row" spacing={1} alignItems="center">
+        {course.progress !== undefined ? (
+          <CircularProgressWithLabel value={course.progress ?? 0} size={40} />
+        ) : null}
+        <Typography variant="h4">Program szkolenia</Typography>
+      </Stack>
+
+      {course.modules && <CourseDetailsModuleList modules={course.modules ?? []} />}
 
       <Stack spacing={3}>
         <Typography variant="h4">Czego się nauczysz</Typography>

@@ -5,7 +5,23 @@ from rest_framework.serializers import (
     CharField,
 )
 from coupon.models import Coupon, CouponUser
-from profile.models import Profile, StudentProfile
+from profile.models import StudentProfile
+from notification.utils import notify
+from typing import List
+
+
+def notify_users(users: List[StudentProfile], coupon: Coupon):
+    if coupon.active:
+        discount_type = "%" if coupon.is_percentage else " zł"
+        for user in users:
+            notify(
+                profile=user.profile,
+                title=f"Otrzymujesz nowy kupon zniżkowy na -{coupon.discount}{discount_type}",
+                subtitle=coupon.code,
+                description=f"Wykorzystaj powyższy kupon do {coupon.expiration_date.strftime('%d-%m-%Y')}.",
+                path="",
+                icon="mdi:coupon",
+            )
 
 
 class CouponListSerializer(ModelSerializer):
@@ -65,6 +81,11 @@ class CouponSerializer(ModelSerializer):
         coupon = self.add_users(coupon=coupon, users=users)
         coupon.save()
 
+        notify_users(users=users, coupon=coupon)
+
+        if coupon.all_users:
+            notify_users(users=StudentProfile.objects.all(), coupon=coupon)
+
         return coupon
 
     def update(self, instance, validated_data):
@@ -76,6 +97,11 @@ class CouponSerializer(ModelSerializer):
         instance.users.clear()
         instance = self.add_users(coupon=instance, users=users)
         instance.save()
+
+        notify_users(users=users, coupon=instance)
+
+        if instance.all_users:
+            notify_users(users=StudentProfile.objects.all(), coupon=instance)
 
         return instance
 

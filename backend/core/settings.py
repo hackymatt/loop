@@ -51,6 +51,7 @@ SECURE_HSTS_PRELOAD = True
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOST", "localhost").split(",")
 ALLOWED_HOSTS.append(gethostbyname(gethostname()))
+ALLOWED_HOSTS.append("backend")
 
 # Application definition
 
@@ -73,6 +74,7 @@ INSTALLED_APPS = [
     "lesson",
     "skill",
     "topic",
+    "module",
     "course",
     "review",
     "purchase",
@@ -84,6 +86,9 @@ INSTALLED_APPS = [
     "reservation",
     "finance",
     "coupon",
+    "certificate",
+    "notification",
+    "message",
 ]
 
 MIDDLEWARE = [
@@ -113,7 +118,7 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle",
     ],
-    "DEFAULT_THROTTLE_RATES": {"anon": "500/hour", "user": "1000/hour"},
+    "DEFAULT_THROTTLE_RATES": {"anon": "750/hour", "user": "1500/hour"},
 }
 
 if not DEBUG:
@@ -188,7 +193,11 @@ CRONJOBS = (
     [
         (DBBACKUP_FREQ[ENV], "core.cron.create_backup"),
         ("*/30 * * * *", "core.cron.confirm_lessons"),
-        ("*/30 * * * *", "core.cron.remind_lessons_review"),
+        ("0 * * * *", "core.cron.get_recordings"),
+        ("0 0 * * *", "core.cron.remind_lessons_review"),
+        ("0 0 * * *", "core.cron.create_certificates"),
+        ("0 0 * * *", "core.cron.cleanse_notifications"),
+        ("0 0 * * *", "core.cron.cleanse_messages"),
     ]
     if not LOCAL
     else []
@@ -266,7 +275,8 @@ else:
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CONTACT_EMAIL = os.getenv("CONTACT_EMAIL", "")
-EMAIL_FROM = os.getenv("EMAIL_FROM", "")
+NOREPLY_EMAIL = os.getenv("NOREPLY_EMAIL", "")
+MEETINGS_EMAIL = os.getenv("MEETINGS_EMAIL", "")
 GOOGLE_CREDENTIALS = json.loads(
     base64.urlsafe_b64decode(os.getenv("GOOGLE_CREDENTIALS", "e30=")).decode()
 )
@@ -291,6 +301,12 @@ GITHUB_CLIENT_ID = os.environ.get("GITHUB_CLIENT_ID", "")
 GITHUB_CLIENT_SECRET = os.environ.get("GITHUB_CLIENT_SECRET", "")
 
 GITHUB_REPO = os.environ.get("GITHUB_REPO", "")
+
+MIN_PASSWORD_LENGTH = int(os.environ.get("MIN_PASSWORD_LENGTH", "8"))
+LESSON_DURATION_MULTIPLIER = int(os.environ.get("LESSON_DURATION_MULTIPLIER", "30"))
+CANCELLATION_TIME = int(os.environ.get("CANCELLATION_TIME", "24"))
+REMINDER_TIME = int(os.environ.get("REMINDER_TIME", "24"))
+MIN_STUDENTS_THRESHOLD = int(os.environ.get("MIN_STUDENTS_THRESHOLD", "2"))
 
 PAYMENT_SERVER = os.environ.get("PAYMENT_SERVER", "https://sandbox.przelewy24.pl")
 PAYMENT_MERCHANT_ID = int(os.environ.get("PAYMENT_MERCHANT_ID", "-1"))

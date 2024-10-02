@@ -24,11 +24,17 @@ from reservation.models import Reservation
 from purchase.serializers import LessonStatus, ReviewStatus
 from datetime import datetime
 from schedule.models import Schedule
-from const import CANCELLATION_TIME
+from config_global import CANCELLATION_TIME
 
 
 def get_lesson_lecturer(queryset):
-    lecturer = LecturerProfile.objects.filter(pk=OuterRef("lecturer")).values("id")
+    lecturer = (
+        LecturerProfile.objects.exclude(
+            Q(title__isnull=True) | Q(description__isnull=True)
+        )
+        .filter(pk=OuterRef("lecturer"))
+        .values("id")
+    )
 
     schedule = (
         Schedule.objects.filter(pk=OuterRef("schedule"))
@@ -56,24 +62,32 @@ def get_lesson_lecturer(queryset):
 
 
 def get_lesson_status(queryset):
-    schedule = (
+    start_schedule = (
         Schedule.objects.filter(pk=OuterRef("schedule"))
         .annotate(diff=datetime.now() - F("start_time"))
         .values("diff")
     )
+    end_schedule = (
+        Schedule.objects.filter(pk=OuterRef("schedule"))
+        .annotate(diff=datetime.now() - F("end_time"))
+        .values("diff")
+    )
 
-    reservation = Reservation.objects.filter(purchase__pk=OuterRef("pk")).annotate(
-        diff=Extract(Subquery(schedule), "epoch")
+    reservation = (
+        Reservation.objects.filter(purchase__pk=OuterRef("pk"))
+        .annotate(start_diff=Extract(Subquery(start_schedule), "epoch"))
+        .annotate(end_diff=Extract(Subquery(end_schedule), "epoch"))
     )
 
     purchase = (
         queryset.annotate(reservation_exists=Subquery(Exists(reservation)))
-        .annotate(diff=Subquery(reservation.values("diff")))
+        .annotate(start_diff=Subquery(reservation.values("start_diff")))
+        .annotate(end_diff=Subquery(reservation.values("end_diff")))
         .annotate(
             lesson_status=Case(
-                When(diff__gte=0, then=Value(LessonStatus.COMPLETED)),
+                When(end_diff__gte=0, then=Value(LessonStatus.COMPLETED)),
                 When(
-                    diff__gte=-CANCELLATION_TIME * 60 * 60,
+                    start_diff__gte=-CANCELLATION_TIME * 60 * 60,
                     then=Value(LessonStatus.CONFIRMED),
                 ),
                 When(reservation_exists=1, then=Value(LessonStatus.PLANNED)),

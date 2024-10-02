@@ -1,13 +1,10 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 
 import { useBoolean } from "src/hooks/use-boolean";
 import { useResponsive } from "src/hooks/use-responsive";
-
-import Iconify from "src/components/iconify";
 
 import Nav from "./nav";
 
@@ -31,22 +28,9 @@ export default function AccountLayout({ children }: Props) {
       ) : (
         <Box
           sx={{
-            py: 2,
-            mb: 5,
-            borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+            mb: 3,
           }}
-        >
-          <Container>
-            <Button
-              size="small"
-              color="inherit"
-              startIcon={<Iconify icon="carbon:menu" />}
-              onClick={menuOpen.onTrue}
-            >
-              Konto
-            </Button>
-          </Container>
-        </Box>
+        />
       )}
 
       <Container>

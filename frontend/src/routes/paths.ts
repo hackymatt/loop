@@ -31,11 +31,15 @@ export const paths = {
     root: "/account",
     personal: "/account/personal",
     manage: "/account/manage",
+    messages: "/account/messages",
     admin: {
       courses: {
         list: "/account/admin/courses/list",
         skills: "/account/admin/courses/skills",
         topics: "/account/admin/courses/topics",
+      },
+      modules: {
+        list: "/account/admin/modules/list",
       },
       lessons: {
         list: "/account/admin/lessons/list",
@@ -68,9 +72,13 @@ export const paths = {
     },
     lessons: "/account/lessons",
     reviews: "/account/reviews",
+    certificates: "/account/certificates",
   },
   login: "/login",
   register: "/register",
   forgotPassword: "/forgot-password",
   verify: "/verify",
+  tests: {
+    predisposition: "/tests/predisposition",
+  },
 };

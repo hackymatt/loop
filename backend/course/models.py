@@ -8,7 +8,7 @@ from django.db.models import (
     FileField,
     Index,
 )
-from lesson.models import Lesson
+from module.models import Module
 from skill.models import Skill
 from topic.models import Topic
 
@@ -33,7 +33,7 @@ class Course(BaseModel):
     active = BooleanField(default=False)
     image = ImageField(upload_to=course_directory_path)
     video = FileField(upload_to=course_directory_path, null=True, blank=True)
-    lessons = ManyToManyField(Lesson, related_name="course_lessons")
+    modules = ManyToManyField(Module, related_name="course_modules")
 
     class Meta:
         db_table = "course"

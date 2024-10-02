@@ -1,7 +1,5 @@
 import { useState, useCallback } from "react";
 
-import Typography from "@mui/material/Typography";
-
 import { useLesson } from "src/api/lessons/lesson";
 
 import { ICourseLessonProp } from "src/types/course";
@@ -30,13 +28,10 @@ export default function CourseDetailsLessonList({ lessons }: Props) {
 
   return (
     <div>
-      <Typography variant="h4" sx={{ mb: 3 }}>
-        Lekcje
-      </Typography>
-
-      {lessons.map((lesson) => (
+      {lessons.map((lesson, index) => (
         <CourseDetailsLessonItem
           key={lesson.id}
+          index={index + 1}
           lesson={lesson}
           details={details}
           expanded={expanded === lesson.id}

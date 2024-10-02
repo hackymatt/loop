@@ -44,11 +44,11 @@ const TABS = [
 ];
 
 const TABLE_HEAD = [
-  { id: "lesson_title", label: "Nazwa lekcji", minWidth: 250 },
+  { id: "lesson_title", label: "Nazwa lekcji", minWidth: 230 },
   { id: "lesson_status", label: "Status" },
-  { id: "reservation_date", label: "Termin" },
-  { id: "lecturer_id", label: "Instruktor" },
-  { id: "created_at", label: "Data zakupu" },
+  { id: "reservation_date", label: "Termin", minWidth: 150 },
+  { id: "lecturer_id", label: "Instruktor", minWidth: 100 },
+  { id: "created_at", label: "Data zakupu", minWidth: 150 },
   { id: "" },
 ];
 
@@ -177,12 +177,6 @@ export default function AccountReviewsView() {
       </Tabs>
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 5, mb: 3 }}>
-        <FilterSearch
-          value={filters?.course_title ?? ""}
-          onChangeSearch={(value) => handleChange("course_title", value)}
-          placeholder="Nazwa kursu..."
-        />
-
         <FilterSearch
           value={filters?.lesson_title ?? ""}
           onChangeSearch={(value) => handleChange("lesson_title", value)}

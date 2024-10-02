@@ -9,7 +9,6 @@ import { useRef, useMemo, useEffect, useCallback } from "react";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -23,6 +22,9 @@ import { useBoolean } from "src/hooks/use-boolean";
 import { useQueryParams } from "src/hooks/use-query-params";
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 import { useGoogleAuth, useGithubAuth, useFacebookAuth } from "src/hooks/use-social-auth";
+
+import { MIN_PASSWORD_LENGTH } from "src/config-global";
+import { dataAcceptance, generalAcceptance, newsletterAcceptance } from "src/consts/acceptances";
 
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
@@ -45,14 +47,7 @@ export default function RegisterView() {
 
   const queryParams = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const {
-    registerUser,
-    loginGoogleUser,
-    loginFacebookUser,
-    loginGithubUser,
-    isRegistered,
-    isLoggedIn,
-  } = useUserContext();
+  const { registerUser, loginGoogleUser, loginFacebookUser, loginGithubUser } = useUserContext();
 
   const RegisterSchema = Yup.object().shape({
     first_name: Yup.string().required("Imię jest wymagane"),
@@ -60,7 +55,7 @@ export default function RegisterView() {
     email: Yup.string().required("Adres e-mail jest wymagany").email("Podaj poprawny adres e-mail"),
     password: Yup.string()
       .required("Hasło jest wymagane")
-      .min(8, "Hasło musi mieć minimum 8 znaków")
+      .min(MIN_PASSWORD_LENGTH, `Hasło musi mieć minimum ${MIN_PASSWORD_LENGTH} znaków`)
       .matches(/^(?=.*[A-Z])/, "Hasło musi składać się z minimum jednej dużej litery.")
       .matches(/^(?=.*[a-z])/, "Hasło musi składać się z minimum jednej małej litery.")
       .matches(/^(?=.*[0-9])/, "Hasło musi składać się z minimum jednej cyfry")
@@ -69,6 +64,9 @@ export default function RegisterView() {
       .required("Hasło jest wymagane")
       .oneOf([Yup.ref("password")], "Hasła nie są takie same"),
     acceptance: Yup.boolean()
+      .required("To pole jest wymagane")
+      .oneOf([true], "To pole jest wymagane"),
+    dataAcceptance: Yup.boolean()
       .required("To pole jest wymagane")
       .oneOf([true], "To pole jest wymagane"),
     newsletter: Yup.boolean().required("To pole jest wymagane"),
@@ -81,6 +79,7 @@ export default function RegisterView() {
     password: "",
     password2: "",
     acceptance: false,
+    dataAcceptance: false,
     newsletter: false,
   };
 
@@ -101,6 +100,7 @@ export default function RegisterView() {
     clearErrors();
     try {
       await registerUser(data);
+      push(paths.verify);
       enqueueSnackbar("Zarejestrowano pomyślnie", { variant: "success" });
     } catch (error) {
       handleFormError(error);
@@ -112,19 +112,21 @@ export default function RegisterView() {
     try {
       const { code } = queryParams;
       await loginGoogleUser({ code });
+      push(paths.account.personal);
       enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
     } catch (error) {
       if ((error as AxiosError).response?.status !== 403) {
         handleFormError(error);
       }
     }
-  }, [clearErrors, enqueueSnackbar, handleFormError, loginGoogleUser, queryParams]);
+  }, [clearErrors, enqueueSnackbar, handleFormError, loginGoogleUser, push, queryParams]);
 
   const onFacebookSubmit = useCallback(async () => {
     clearErrors();
     try {
       const { code } = queryParams;
       await loginFacebookUser({ code });
+      push(paths.account.personal);
       enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
     } catch (error) {
       if ((error as AxiosError).response?.status !== 403) {
@@ -133,13 +135,14 @@ export default function RegisterView() {
         enqueueSnackbar("Wystąpił błąd podczas logowania", { variant: "error" });
       }
     }
-  }, [clearErrors, enqueueSnackbar, handleFormError, loginFacebookUser, queryParams]);
+  }, [clearErrors, enqueueSnackbar, handleFormError, loginFacebookUser, push, queryParams]);
 
   const onGithubSubmit = useCallback(async () => {
     clearErrors();
     try {
       const { code } = queryParams;
       await loginGithubUser({ code });
+      push(paths.account.personal);
       enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
     } catch (error) {
       if ((error as AxiosError).response?.status !== 403) {
@@ -148,19 +151,7 @@ export default function RegisterView() {
         enqueueSnackbar("Wystąpił błąd podczas logowania", { variant: "error" });
       }
     }
-  }, [clearErrors, enqueueSnackbar, handleFormError, loginGithubUser, queryParams]);
-
-  useEffect(() => {
-    if (isRegistered) {
-      push(paths.verify);
-    }
-  }, [isRegistered, push]);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      push(paths.account.personal);
-    }
-  }, [isLoggedIn, push]);
+  }, [clearErrors, enqueueSnackbar, handleFormError, loginGithubUser, push, queryParams]);
 
   const effectRan = useRef(false);
   useEffect(() => {
@@ -201,39 +192,18 @@ export default function RegisterView() {
   );
 
   const renderSocials = (
-    <Stack direction="row" spacing={2}>
-      <Button
-        component={RouterLink}
-        href={googleAuthUrl}
-        fullWidth
-        size="large"
-        color="inherit"
-        variant="outlined"
-      >
-        <Iconify icon="logos:google-icon" width={24} />
-      </Button>
+    <Stack direction="row" justifyContent="center" spacing={5}>
+      <IconButton href={googleAuthUrl}>
+        <Iconify icon="logos:google-icon" width={20} />
+      </IconButton>
 
-      <Button
-        component={RouterLink}
-        href={facebookAuthUrl}
-        fullWidth
-        size="large"
-        color="inherit"
-        variant="outlined"
-      >
+      <IconButton href={facebookAuthUrl}>
         <Iconify icon="carbon:logo-facebook" width={24} sx={{ color: "#1877F2" }} />
-      </Button>
+      </IconButton>
 
-      <Button
-        component={RouterLink}
-        href={githubAuthUrl}
-        color="inherit"
-        fullWidth
-        variant="outlined"
-        size="large"
-      >
+      <IconButton href={githubAuthUrl}>
         <Iconify icon="carbon:logo-github" width={24} sx={{ color: "text.primary" }} />
-      </Button>
+      </IconButton>
     </Stack>
   );
 
@@ -277,42 +247,9 @@ export default function RegisterView() {
         />
 
         <Stack spacing={0.5}>
-          <RHFCheckbox
-            name="acceptance"
-            label={
-              <Typography variant="caption" align="left" sx={{ color: "text.secondary" }}>
-                Akceptuję{" "}
-                <Link
-                  target="_blank"
-                  rel="noopener"
-                  href={paths.termsAndConditions}
-                  color="text.primary"
-                  underline="always"
-                >
-                  regulamin
-                </Link>{" "}
-                i{" "}
-                <Link
-                  target="_blank"
-                  rel="noopener"
-                  href={paths.privacyPolicy}
-                  color="text.primary"
-                  underline="always"
-                >
-                  politykę prywatności.
-                </Link>
-              </Typography>
-            }
-          />
-
-          <RHFCheckbox
-            name="newsletter"
-            label={
-              <Typography variant="caption" align="left" sx={{ color: "text.secondary" }}>
-                Chcę otrzymywać newsletter, informacje o promocjach i produktach dostępnych w loop.
-              </Typography>
-            }
-          />
+          <RHFCheckbox name="acceptance" label={generalAcceptance} />
+          <RHFCheckbox name="dataAcceptance" label={dataAcceptance} />
+          <RHFCheckbox name="newsletter" label={newsletterAcceptance} />
         </Stack>
 
         <LoadingButton

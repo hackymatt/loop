@@ -1,14 +1,15 @@
 from utils.google.service import build_service
 import uuid
+from config_global import MEETINGS_EMAIL
 
 
 class CalendarApi:
-    def __init__(self, on_behalf_of):
+    def __init__(self):
         scopes = ["https://www.googleapis.com/auth/calendar.events"]
         self.service = build_service(
             service_name="calendar",
             service_version="v3",
-            on_behalf_of=on_behalf_of,
+            on_behalf_of=MEETINGS_EMAIL,
             scopes=scopes,
         )
 
@@ -40,8 +41,7 @@ class CalendarApi:
             "attendees": [
                 {
                     "email": lecturer["email"],
-                    "displayName": f"{lecturer_full_name} (Trener)",
-                    "organizer": True,
+                    "displayName": f"{lecturer_full_name} (Instruktor)",
                     "responseStatus": "accepted",
                 },
                 *attendees,

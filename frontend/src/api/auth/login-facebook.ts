@@ -18,12 +18,18 @@ export type ILoginFacebookReturn = {
   user_type?: string;
 };
 
-export const useLoginFacebook = () =>
-  useMutation<ILoginFacebookReturn, AxiosError, ILoginFacebook>(async (variables) => {
-    const result = await Api.post(endpoint, variables, {
-      headers: {
-        "X-CSRFToken": getCsrfToken(),
-      },
-    });
-    return result.data;
-  });
+export const useLoginFacebook = (onResult: () => void) =>
+  useMutation<ILoginFacebookReturn, AxiosError, ILoginFacebook>(
+    async (variables) => {
+      const result = await Api.post(endpoint, variables, {
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      });
+      return result.data;
+    },
+    {
+      onSuccess: onResult,
+      onError: onResult,
+    },
+  );

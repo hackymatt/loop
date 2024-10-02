@@ -9,10 +9,12 @@ import { LocalizationProvider } from "src/locales";
 
 import ProgressBar from "src/components/progress-bar";
 import { MotionLazy } from "src/components/animate/motion-lazy";
-import { SettingsDrawer, SettingsProvider } from "src/components/settings";
+import { SettingsProvider } from "src/components/settings";
 import { UserProvider } from "src/components/user";
 import { ToastProvider } from "src/components/toast";
+import CookiesManager from "src/components/cookies/cookies-manager";
 import { ReactQueryProvider } from "./(index)/react-query-provider";
+import GoogleAnalytics from "./(index)/google-analytics";
 
 // ----------------------------------------------------------------------
 
@@ -24,11 +26,6 @@ export const viewport = {
 };
 
 export const metadata = {
-  title: "loop",
-  description:
-    "Platforma firmy loop oferującej kursy programowania online dla przyszłych i obecnych programistów",
-  keywords:
-    "loop,szkoła,szkoła programowania,kursy,programowanie,it,tanio,profesjonalnie,online,zdalne",
   manifest: "/manifest.json",
   icons: [{ rel: "icon", url: "/favicon/favicon.ico" }],
 };
@@ -55,7 +52,8 @@ export default function RootLayout({ children }: Props) {
                   <ToastProvider>
                     <MotionLazy>
                       <ProgressBar />
-                      <SettingsDrawer />
+                      <CookiesManager />
+                      <GoogleAnalytics />
                       {children}
                     </MotionLazy>
                   </ToastProvider>

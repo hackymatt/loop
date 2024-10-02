@@ -9,7 +9,7 @@ import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/users" as const;
 
-type IEditUser = Omit<IUserDetailsProps, "id" | "image">;
+type IEditUser = Omit<IUserDetailsProps, "id" | "image" | "active">;
 
 type IEditUserReturn = IEditUser;
 

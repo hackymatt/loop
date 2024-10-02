@@ -52,7 +52,7 @@ function HeroIllustration({ sx, ...other }: BoxProps) {
           visibleByDefault
           disabledEffect
           alt="teacher"
-          src="/assets/images/course/course_teacher_hero.png"
+          src="/assets/images/general/teacher-hero.webp"
           sx={{ width: 546, height: 650 }}
         />
       </Box>
@@ -142,7 +142,7 @@ function HeroIllustration({ sx, ...other }: BoxProps) {
       <Box
         {...varUp}
         component={m.div}
-        sx={{ zIndex: 8, top: 210, right: 0, position: "absolute" }}
+        sx={{ zIndex: 8, top: 210, right: 10, position: "absolute" }}
       >
         <Image
           visibleByDefault

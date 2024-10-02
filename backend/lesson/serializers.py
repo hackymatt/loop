@@ -1,7 +1,6 @@
 from rest_framework.serializers import (
     ModelSerializer,
     SerializerMethodField,
-    EmailField,
     CharField,
     ValidationError,
 )
@@ -16,15 +15,32 @@ from review.models import Review
 from purchase.models import Purchase
 from teaching.models import Teaching
 from django.db.models.functions import Concat
-from django.db.models import Avg, Value
-from django.conf import settings
-from const import MIN_LESSON_DURATION_MINS
+from django.db.models import Avg, Value, Q
+from config_global import LESSON_DURATION_MULTIPLIER
+from notification.utils import notify
+import urllib.parse
+from config_global import GITHUB_REPO
+
+
+def notify_lecturer(lesson):
+    for lecturer in LecturerProfile.objects.all():
+        notify(
+            profile=lecturer.profile,
+            title="Nowa lekcja w ofercie",
+            subtitle=lesson.title,
+            description="Właśnie dodaliśmy nową lekcję. Zacznij ją prowadzić.",
+            path=f"/account/teacher/teaching/?sort_by=title&page_size=10&title={urllib.parse.quote_plus(lesson.title)}",
+            icon="mdi:teach",
+        )
 
 
 def get_lecturers(self, lessons):
     lecturer_ids = Teaching.objects.filter(lesson__in=lessons).values("lecturer")
     lecturers = (
-        LecturerProfile.objects.filter(id__in=lecturer_ids)
+        LecturerProfile.objects.exclude(
+            Q(title__isnull=True) | Q(description__isnull=True)
+        )
+        .filter(id__in=lecturer_ids)
         .annotate(
             full_name=Concat(
                 "profile__user__first_name", Value(" "), "profile__user__last_name"
@@ -64,7 +80,6 @@ def get_lesson_technologies(lesson):
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
-    email = EmailField(source="profile.user.email")
     gender = CharField(source="profile.get_gender_display")
     image = Base64ImageField(source="profile.image", required=True)
 
@@ -72,7 +87,6 @@ class LecturerSerializer(ModelSerializer):
         model = LecturerProfile
         fields = (
             "id",
-            "email",
             "full_name",
             "gender",
             "image",
@@ -132,18 +146,17 @@ class LessonSerializer(ModelSerializer):
         )
 
     def validate_duration(self, duration):
-        if duration % MIN_LESSON_DURATION_MINS != 0:
+        if duration % LESSON_DURATION_MULTIPLIER != 0:
             raise ValidationError(
-                f"Czas lekcji musi być wielokrotnością {MIN_LESSON_DURATION_MINS} minut."
+                f"Czas lekcji musi być wielokrotnością {LESSON_DURATION_MULTIPLIER} minut."
             )
 
         return duration
 
     def validate_github_url(self, github_url):
-        github_repo = settings.GITHUB_REPO
-        if not github_url.startswith(github_repo):
+        if not github_url.startswith(GITHUB_REPO):
             raise ValidationError(
-                f"Github url musi być rozpoczynać się na {github_repo} minut."
+                f"Github url musi być rozpoczynać się na {GITHUB_REPO} minut."
             )
 
         return github_url
@@ -160,6 +173,9 @@ class LessonSerializer(ModelSerializer):
         lesson = Lesson.objects.create(**validated_data)
         lesson = self.add_technology(lesson=lesson, technologies=technologies)
         lesson.save()
+
+        if lesson.active:
+            notify_lecturer(lesson=lesson)
 
         return lesson
 
@@ -178,6 +194,9 @@ class LessonSerializer(ModelSerializer):
         instance.technologies.clear()
         instance = self.add_technology(lesson=instance, technologies=technologies)
         instance.save()
+
+        if instance.active:
+            notify_lecturer(lesson=instance)
 
         return instance
 

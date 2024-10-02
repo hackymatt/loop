@@ -29,10 +29,12 @@ import { useRouter } from "src/routes/hooks/use-router";
 import { useBoolean } from "src/hooks/use-boolean";
 
 import { getTimezone } from "src/utils/get-timezone";
+import { trackEvent } from "src/utils/google-analytics";
 import { fCurrency, fShortenNumber } from "src/utils/format-number";
 
 import { useCreateCart } from "src/api/carts/carts";
 import { useCreateWishlist } from "src/api/wishlists/wishlists";
+import { useLessonDates } from "src/api/lesson-dates/lesson-dates";
 import { useLessonLecturers } from "src/api/lesson-lecturers/lesson-lecturers";
 import { useLessonSchedules } from "src/api/lesson-schedules/lesson-schedules";
 
@@ -55,12 +57,17 @@ interface Props extends DialogProps {
 }
 
 type LessonItemProps = {
-  lesson: Pick<ICourseLessonProp, "id" | "title" | "price" | "priceSale" | "lowest30DaysPrice">;
+  lesson: Pick<
+    ICourseLessonProp,
+    "id" | "title" | "price" | "priceSale" | "lowest30DaysPrice" | "progress"
+  >;
   details: ICourseLessonProp;
   expanded: boolean;
   onExpanded: (event: React.SyntheticEvent, isExpanded: boolean) => void;
   loading: boolean;
 };
+
+type SlotProps = { time: string; studentsRequired: number };
 
 const DEFAULT_USER = { id: "", avatarUrl: "", name: "Wszyscy" } as const;
 
@@ -90,8 +97,10 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
   );
 
   const today = useMemo(() => format(new Date(), "yyyy-MM-dd"), []);
+  const currentYearMonth = useMemo(() => format(new Date(), "yyyy-MM"), []);
   const [user, setUser] = useState<ITeamMemberProps>(DEFAULT_USER);
   const [date, setDate] = useState<string>(today);
+  const [yearMonth, setYearMonth] = useState<string>(currentYearMonth);
 
   const queryParams = useMemo(
     () => ({
@@ -105,9 +114,22 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
     [date, lesson?.duration, lesson?.id, user.id],
   );
 
+  const dateQueryParams = useMemo(
+    () => ({
+      lecturer_id: queryParams.lecturer_id,
+      lesson_id: queryParams.lesson_id,
+      duration: queryParams.duration,
+      year_month: yearMonth,
+      page_size: -1,
+    }),
+    [queryParams.duration, queryParams.lecturer_id, queryParams.lesson_id, yearMonth],
+  );
+
   const { data: lessonSchedules, isLoading: isLoadingTimeSlots } = useLessonSchedules(
     date === today ? { ...queryParams, reserved: "True" } : queryParams,
   );
+
+  const { data: lessonDates, isLoading: isLoadingDates } = useLessonDates(dateQueryParams);
 
   const slots = useMemo(() => {
     const allSlots = lessonSchedules?.map((lessonSchedule: IScheduleProp) => {
@@ -118,7 +140,16 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
       };
     });
 
-    return Array.from(new Set(allSlots)).sort();
+    const filteredSlots = Object.values(
+      allSlots?.reduce((acc: { [key: string]: SlotProps }, slot) => {
+        if (!acc[slot.time] || slot.studentsRequired < acc[slot.time].studentsRequired) {
+          acc[slot.time] = slot;
+        }
+        return acc;
+      }, {}) ?? {},
+    );
+
+    return Array.from(new Set(filteredSlots)).sort();
   }, [lessonSchedules]);
 
   const [slot, setSlot] = useState<string>(slots?.[0]?.time);
@@ -143,8 +174,12 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
           availableTimeSlots={slots ?? []}
           currentSlot={slot}
           onSlotChange={(event, selectedSlot) => setSlot(selectedSlot)}
+          availableDates={lessonDates ?? []}
+          onMonthChange={(month) => {
+            setYearMonth(month);
+          }}
           isLoadingUsers={isLoadingUsers}
-          isLoadingTimeSlots={isLoadingTimeSlots}
+          isLoadingTimeSlots={isLoadingTimeSlots || isLoadingDates}
         />
       </DialogContent>
 
@@ -188,6 +223,12 @@ export default function TeacherDetailsLessonItem({
     try {
       await createWishlistItem({ lesson: lesson.id });
       enqueueSnackbar("Lekcja została dodana do ulubionych", { variant: "success" });
+      trackEvent(
+        "add_to_wishlist",
+        "teacher_lesson",
+        "Teacher lesson added to wishlist",
+        lesson.title,
+      );
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd podczas dodawania do ulubionych", { variant: "error" });
     }
@@ -201,6 +242,7 @@ export default function TeacherDetailsLessonItem({
     try {
       await createCartItem({ lesson: lesson.id });
       enqueueSnackbar("Lekcja została dodana do koszyka", { variant: "success" });
+      trackEvent("add_to_cart", "teacher_lesson", "Teacher lesson added to cart", lesson.title);
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd podczas dodawania do koszyka", { variant: "error" });
     }
@@ -242,7 +284,7 @@ export default function TeacherDetailsLessonItem({
 
           <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Typography variant="h6" sx={{ textAlign: "right" }}>
-              {lesson?.priceSale && (
+              {lesson?.priceSale !== undefined && (
                 <Box
                   component="span"
                   sx={{
@@ -254,12 +296,15 @@ export default function TeacherDetailsLessonItem({
                   {fCurrency(lesson.priceSale)}
                 </Box>
               )}
-              {lesson?.price ? fCurrency(lesson.price) : null}
-              {lesson?.priceSale && lesson?.lowest30DaysPrice && (
-                <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "center" }}>
-                  Najniższa cena z 30 dni przed: {fCurrency(lesson.lowest30DaysPrice)}
-                </Typography>
-              )}
+              {lesson?.price !== undefined ? fCurrency(lesson.price) : null}
+              {lesson?.priceSale !== undefined &&
+                lesson?.priceSale !== null &&
+                lesson?.lowest30DaysPrice !== undefined &&
+                lesson?.lowest30DaysPrice !== null && (
+                  <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "center" }}>
+                    Najniższa cena z 30 dni przed: {fCurrency(lesson.lowest30DaysPrice)}
+                  </Typography>
+                )}
             </Typography>
           </Stack>
 
@@ -341,10 +386,10 @@ export default function TeacherDetailsLessonItem({
                     </Box>
 
                     {details?.totalReviews && (
-                      <Link variant="body2" sx={{ color: "text.secondary" }}>
+                      <Typography variant="body2" sx={{ color: "text.secondary" }}>
                         ({fShortenNumber(details.totalReviews)}{" "}
                         {polishPlurals("recenzja", "recenzje", "recenzji", details.totalReviews)})
-                      </Link>
+                      </Typography>
                     )}
                   </Stack>
                 )}

@@ -1,7 +1,6 @@
 from rest_framework.serializers import (
     ModelSerializer,
     CharField,
-    EmailField,
     SerializerMethodField,
 )
 from drf_extra_fields.fields import Base64ImageField
@@ -156,6 +155,7 @@ class LecturerSerializer(ModelSerializer):
             "lessons_count",
             "lessons_duration",
             "students_count",
+            "linkedin_url",
         )
 
     def get_full_name(self, lecturer):
@@ -201,7 +201,6 @@ class LessonShortSerializer(ModelSerializer):
 class LecturerGetSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
     gender = CharField(source="profile.get_gender_display")
-    email = EmailField(source="profile.user.email")
     rating = SerializerMethodField("get_lecturer_rating")
     rating_count = SerializerMethodField("get_lecturer_rating_count")
     lessons = SerializerMethodField("get_lecturer_lessons")
@@ -222,7 +221,6 @@ class LecturerGetSerializer(ModelSerializer):
             "id",
             "full_name",
             "gender",
-            "email",
             "title",
             "description",
             "linkedin_url",
@@ -278,6 +276,7 @@ class BestLecturerSerializer(ModelSerializer):
             "gender",
             "title",
             "image",
+            "linkedin_url",
         )
 
     def get_full_name(self, lecturer):

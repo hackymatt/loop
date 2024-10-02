@@ -8,6 +8,7 @@ from .factory import (
     create_admin_profile,
     create_student_profile,
     create_newsletter,
+    create_coupon,
 )
 from .helpers import (
     login,
@@ -18,6 +19,8 @@ from .helpers import (
 )
 from django.contrib import auth
 import json
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
 from utils.google.gmail import GmailApi
 
 
@@ -87,7 +90,7 @@ class NewsletterEntriesTest(APITestCase):
         self.assertEqual(count, 20)
 
     def test_get_newsletter_entry_unauthenticated(self):
-        # login
+        # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(f"{self.endpoint}/{self.active_newsletters[0].id}")
@@ -119,7 +122,30 @@ class NewsletterSubscribeTest(TestCase):
         self.client = APIClient()
 
     @patch.object(GmailApi, "_send_message")
-    def test_subscribe_to_newsletter_without_history(self, _send_message_mock):
+    def test_subscribe_to_newsletter_without_history_with_coupon(
+        self, _send_message_mock
+    ):
+        mock_send_message(mock=_send_message_mock)
+        # post data
+        data = {"email": "test@example.com"}
+        create_coupon(
+            code="programista20",
+            discount=10,
+            is_percentage=False,
+            all_users=True,
+            is_infinite=True,
+            active=True,
+            expiration_date=make_aware(datetime.now() + timedelta(days=11)),
+        )
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(newsletters_number(), 1)
+        self.assertEqual(_send_message_mock.call_count, 1)
+
+    @patch.object(GmailApi, "_send_message")
+    def test_subscribe_to_newsletter_without_history_without_coupon(
+        self, _send_message_mock
+    ):
         mock_send_message(mock=_send_message_mock)
         # post data
         data = {"email": "test@example.com"}
@@ -129,7 +155,7 @@ class NewsletterSubscribeTest(TestCase):
         self.assertEqual(_send_message_mock.call_count, 1)
 
     @patch.object(GmailApi, "_send_message")
-    def test_subscribe_to_newsletter_with_history(self, _send_message_mock):
+    def test_subscribe_to_newsletter_with_history_inactive(self, _send_message_mock):
         mock_send_message(mock=_send_message_mock)
         data = {"email": "test@example.com"}
         create_newsletter(email=data["email"], active=False)
@@ -138,6 +164,17 @@ class NewsletterSubscribeTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(newsletters_number(), 1)
         self.assertEqual(_send_message_mock.call_count, 1)
+
+    @patch.object(GmailApi, "_send_message")
+    def test_subscribe_to_newsletter_with_history_active(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
+        data = {"email": "test@example.com"}
+        create_newsletter(email=data["email"], active=True)
+        # post data
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(newsletters_number(), 1)
+        self.assertEqual(_send_message_mock.call_count, 0)
 
 
 class NewsletterUnsubscribeTest(APITestCase):

@@ -62,53 +62,59 @@ function TeacherItem({ teacher }: TeacherItemProps) {
   const avatarUrl = teacher?.avatarUrl || genderAvatarUrl;
 
   return (
-    <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
-      <Stack direction="row" spacing={3} flexWrap="wrap">
-        <Avatar src={avatarUrl} sx={{ width: 72, height: 72 }} />
+    <Link
+      component={RouterLink}
+      href={`${paths.teacher}/${teacher.id}`}
+      color="inherit"
+      underline="none"
+    >
+      <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
+        <Stack direction="row" spacing={3} flexWrap="wrap">
+          <Avatar src={avatarUrl} sx={{ width: 72, height: 72 }} />
 
-        <Stack spacing={1} flexGrow={1}>
-          <Stack spacing={0.5}>
-            <Link component={RouterLink} href={`${paths.teacher}/${teacher.id}`} color="inherit">
+          <Stack spacing={1} flexGrow={1}>
+            <Stack spacing={0.5}>
               <Typography variant="h6">{teacher.name}</Typography>
-            </Link>
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              {teacher.role}
-            </Typography>
+
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                {teacher.role}
+              </Typography>
+            </Stack>
+
+            {teacher.totalLessons && (
+              <Stack
+                direction="row"
+                alignItems="center"
+                sx={{ typography: "body2", color: "text.disabled" }}
+              >
+                <Iconify icon="carbon:notebook" sx={{ mr: 1 }} />
+                <Box component="strong" sx={{ mr: 0.25 }}>
+                  {teacher.totalLessons}
+                </Box>
+                {polishPlurals("lekcja", "lekcje", "lekcji", teacher.totalLessons)}
+              </Stack>
+            )}
+
+            {teacher.ratingNumber && (
+              <Stack spacing={0.5} direction="row" alignItems="center">
+                <Iconify icon="carbon:star-filled" sx={{ color: "warning.main" }} />
+                <Box sx={{ typography: "h6" }}>
+                  {Number.isInteger(teacher.ratingNumber)
+                    ? `${teacher.ratingNumber}.0`
+                    : teacher.ratingNumber}
+                </Box>
+
+                {teacher.totalReviews && (
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    ({fShortenNumber(teacher.totalReviews)}{" "}
+                    {polishPlurals("recenzja", "recenzje", "recenzji", teacher.totalReviews)})
+                  </Typography>
+                )}
+              </Stack>
+            )}
           </Stack>
-
-          {teacher.ratingNumber && (
-            <Stack spacing={0.5} direction="row" alignItems="center">
-              <Iconify icon="carbon:star-filled" sx={{ color: "warning.main" }} />
-              <Box sx={{ typography: "h6" }}>
-                {Number.isInteger(teacher.ratingNumber)
-                  ? `${teacher.ratingNumber}.0`
-                  : teacher.ratingNumber}
-              </Box>
-
-              {teacher.totalReviews && (
-                <Link variant="body2" sx={{ color: "text.secondary" }}>
-                  ({fShortenNumber(teacher.totalReviews)}{" "}
-                  {polishPlurals("recenzja", "recenzje", "recenzji", teacher.totalReviews)})
-                </Link>
-              )}
-            </Stack>
-          )}
-
-          {teacher.totalLessons && (
-            <Stack
-              direction="row"
-              alignItems="center"
-              sx={{ typography: "body2", color: "text.disabled" }}
-            >
-              <Iconify icon="carbon:notebook" sx={{ mr: 1 }} />
-              <Box component="strong" sx={{ mr: 0.25 }}>
-                {teacher.totalLessons}
-              </Box>
-              {polishPlurals("lekcja", "lekcje", "lekcji", teacher.totalLessons)}
-            </Stack>
-          )}
         </Stack>
-      </Stack>
-    </Paper>
+      </Paper>
+    </Link>
   );
 }

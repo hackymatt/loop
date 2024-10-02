@@ -8,9 +8,7 @@ from profile.login.serializers import (
 )
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
-from django.conf import settings
 from profile.models import Profile
-
 from profile.login.utils import (
     google_get_access_token,
     google_get_user_info,
@@ -22,6 +20,7 @@ from profile.login.utils import (
     create_user,
     get_image_content,
 )
+from config_global import FRONTEND_URL
 
 
 class EmailLoginViewSet(ModelViewSet):
@@ -78,7 +77,7 @@ class GoogleLoginViewSet(ModelViewSet):
                 data={"root": "Błąd uwierzytelniania"},
             )
 
-        redirect_uri = f"{settings.BASE_FRONTEND_URL}/login/?type=google"
+        redirect_uri = f"{FRONTEND_URL}/login/?type=google"
         access_token = google_get_access_token(code=code, redirect_uri=redirect_uri)
 
         user_data = google_get_user_info(access_token=access_token)
@@ -129,7 +128,7 @@ class FacebookLoginViewSet(ModelViewSet):
                 data={"root": "Błąd uwierzytelniania"},
             )
 
-        redirect_uri = f"{settings.BASE_FRONTEND_URL}/login/?type=facebook"
+        redirect_uri = f"{FRONTEND_URL}/login/?type=facebook"
         access_token = facebook_get_access_token(code=code, redirect_uri=redirect_uri)
 
         user_data = facebook_get_user_info(access_token=access_token)
@@ -194,7 +193,7 @@ class GithubLoginViewSet(ModelViewSet):
                 data={"root": "Błąd uwierzytelniania"},
             )
 
-        redirect_uri = f"{settings.BASE_FRONTEND_URL}/login/?type=github"
+        redirect_uri = f"{FRONTEND_URL}/login/?type=github"
         access_token = github_get_access_token(code=code, redirect_uri=redirect_uri)
 
         user_emails = github_get_user_email(access_token=access_token)

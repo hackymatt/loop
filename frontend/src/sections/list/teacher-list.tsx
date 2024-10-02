@@ -33,7 +33,6 @@ export default function TeacherList({ teachers, loading, pagesCount, page, onPag
         <Pagination
           count={pagesCount ?? 0}
           page={page}
-          color="primary"
           sx={{
             my: 10,
             [`& .${paginationClasses.ul}`]: {

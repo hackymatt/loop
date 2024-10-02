@@ -3,26 +3,25 @@ from django.db.models import (
     ForeignKey,
     TextField,
     DecimalField,
-    CASCADE,
     PROTECT,
     SET,
     Index,
 )
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.conf import settings
 from django.contrib.auth import get_user_model
-from course.models import Lesson
+from lesson.models import Lesson
 from profile.models import Profile, StudentProfile, LecturerProfile
+from config_global import DUMMY_STUDENT_EMAIL, DUMMY_LECTURER_EMAIL
 
 
 def get_dummy_student_profile():
-    user = get_user_model().objects.get(email=settings.DUMMY_STUDENT_EMAIL)
+    user = get_user_model().objects.get(email=DUMMY_STUDENT_EMAIL)
     profile = Profile.objects.get(user=user)
     return StudentProfile.objects.get(profile=profile)
 
 
 def get_dummy_lecturer_profile():
-    user = get_user_model().objects.get(email=settings.DUMMY_LECTURER_EMAIL)
+    user = get_user_model().objects.get(email=DUMMY_LECTURER_EMAIL)
     profile = Profile.objects.get(user=user)
     return LecturerProfile.objects.get(profile=profile)
 

@@ -23,6 +23,8 @@ from .helpers import (
     filter_dict,
     get_technology,
     lessons_number,
+    notifications_number,
+    get_lecturer,
 )
 from django.contrib import auth
 import json
@@ -316,6 +318,16 @@ class LessonTest(APITestCase):
             technologies=[self.technology_2.id],
         )
 
+        self.new_lesson_2 = create_lesson_obj(
+            title="Javascript course",
+            description="lesson_description",
+            price="89.99",
+            duration=90,
+            github_url="https://github.com/loopedupl/lesson",
+            technologies=[self.technology_2.id],
+            active=False,
+        )
+
         self.amend_lesson = create_lesson_obj(
             title=self.lesson_1.title,
             description="lesson_description",
@@ -323,6 +335,16 @@ class LessonTest(APITestCase):
             duration=60,
             github_url="https://github.com/loopedupl/lesson",
             technologies=[self.technology_1.id],
+        )
+
+        self.amend_lesson_2 = create_lesson_obj(
+            title=self.lesson_1.title,
+            description="lesson_description",
+            price="19.99",
+            duration=60,
+            github_url="https://github.com/loopedupl/lesson",
+            technologies=[self.technology_1.id],
+            active=False,
         )
 
     def test_get_lessons_no_admin(self):
@@ -382,11 +404,11 @@ class LessonTest(APITestCase):
                 user_data = filter_dict(lecturer_data, self.user_columns)
                 profile_data = filter_dict(lecturer_data, self.profile_columns)
                 self.assertTrue(
-                    is_data_match(get_user(lecturer_data["email"]), user_data)
+                    is_data_match(get_lecturer(lecturer_data["id"]), user_data)
                 )
                 self.assertTrue(
                     is_data_match(
-                        get_profile(get_user(lecturer_data["email"])), profile_data
+                        get_lecturer(lecturer_data["id"]).profile, profile_data
                     )
                 )
 
@@ -417,11 +439,9 @@ class LessonTest(APITestCase):
         for lecturer_data in lecturers_data:
             user_data = filter_dict(lecturer_data, self.user_columns)
             profile_data = filter_dict(lecturer_data, self.profile_columns)
-            self.assertTrue(is_data_match(get_user(lecturer_data["email"]), user_data))
+            self.assertTrue(is_data_match(get_lecturer(lecturer_data["id"]), user_data))
             self.assertTrue(
-                is_data_match(
-                    get_profile(get_user(lecturer_data["email"])), profile_data
-                )
+                is_data_match(get_lecturer(lecturer_data["id"]).profile, profile_data)
             )
 
     def test_get_lesson_authorized(self):
@@ -452,11 +472,9 @@ class LessonTest(APITestCase):
         for lecturer_data in lecturers_data:
             user_data = filter_dict(lecturer_data, self.user_columns)
             profile_data = filter_dict(lecturer_data, self.profile_columns)
-            self.assertTrue(is_data_match(get_user(lecturer_data["email"]), user_data))
+            self.assertTrue(is_data_match(get_lecturer(lecturer_data["id"]), user_data))
             self.assertTrue(
-                is_data_match(
-                    get_profile(get_user(lecturer_data["email"])), profile_data
-                )
+                is_data_match(get_lecturer(lecturer_data["id"]).profile, profile_data)
             )
 
     def test_create_lesson_unauthenticated(self):
@@ -467,6 +485,7 @@ class LessonTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(lessons_number(), 6)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_lesson_not_admin(self):
         # login
@@ -477,6 +496,7 @@ class LessonTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(lessons_number(), 6)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_lesson_incorrect_duration(self):
         # login
@@ -488,6 +508,7 @@ class LessonTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(lessons_number(), 6)
+        self.assertEqual(notifications_number(), 0)
 
     def test_create_lesson_incorrect_github_url(self):
         # login
@@ -499,8 +520,9 @@ class LessonTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(lessons_number(), 6)
+        self.assertEqual(notifications_number(), 0)
 
-    def test_create_lesson_authorized(self):
+    def test_create_lesson_authorized_1(self):
         #  login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -515,6 +537,24 @@ class LessonTest(APITestCase):
         technologies_ids = data.pop("technologies")
         self.assertTrue(is_data_match(get_lesson(data["id"]), data))
         self.assertTrue(technologies_ids, get_lesson(data["id"]).technologies)
+        self.assertEqual(notifications_number(), 3)
+
+    def test_create_lesson_authorized_2(self):
+        #  login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = self.new_lesson_2
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(lessons_number(), 7)
+
+        data = json.loads(response.content)
+
+        technologies_ids = data.pop("technologies")
+        self.assertTrue(is_data_match(get_lesson(data["id"]), data))
+        self.assertTrue(technologies_ids, get_lesson(data["id"]).technologies)
+        self.assertEqual(notifications_number(), 0)
 
     def test_update_lesson_unauthenticated(self):
         # no login
@@ -524,6 +564,7 @@ class LessonTest(APITestCase):
         response = self.client.put(f"{self.endpoint}/{self.lesson_1.id}", data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(lessons_number(), 6)
+        self.assertEqual(notifications_number(), 0)
 
     def test_update_lesson_not_admin(self):
         # login
@@ -534,6 +575,7 @@ class LessonTest(APITestCase):
         response = self.client.put(f"{self.endpoint}/{self.lesson_1.id}", data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(lessons_number(), 6)
+        self.assertEqual(notifications_number(), 0)
 
     def test_update_lesson_authorized_price_change(self):
         # login
@@ -544,6 +586,7 @@ class LessonTest(APITestCase):
         response = self.client.put(f"{self.endpoint}/{self.lesson_1.id}", data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(lessons_number(), 6)
+        self.assertEqual(notifications_number(), 3)
 
         data = json.loads(response.content)
 
@@ -556,12 +599,13 @@ class LessonTest(APITestCase):
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
-        data = self.amend_lesson
+        data = self.amend_lesson_2
         data["price"] = self.lesson_1.price
 
         response = self.client.put(f"{self.endpoint}/{self.lesson_1.id}", data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(lessons_number(), 6)
+        self.assertEqual(notifications_number(), 0)
 
         data = json.loads(response.content)
 

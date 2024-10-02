@@ -16,7 +16,7 @@ class GmailApi:
     def _create_message(self, email_from, email_to, email_subject, email_body):
         message = MIMEText(email_body, "html")
         message["to"] = email_to
-        message["from"] = email_from
+        message["from"] = f"loop.edu.pl <{email_from}>"
         message["subject"] = email_subject
         return {"raw": base64.urlsafe_b64encode(message.as_bytes()).decode()}
 

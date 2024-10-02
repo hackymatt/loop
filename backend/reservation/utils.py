@@ -1,12 +1,21 @@
 from reservation.models import Reservation
-from schedule.models import Schedule, Meeting
-from schedule.utils import MeetingManager
+from schedule.models import Schedule, Meeting, Recording
+from schedule.utils import MeetingManager, get_min_students_required
 from django.db.models import F
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from pytz import timezone, utc
 from mailer.mailer import Mailer
-from const import CANCELLATION_TIME, MINIMUM_STUDENTS_REQUIRED
+from config_global import CANCELLATION_TIME
+from notification.utils import notify
+import urllib.parse
+from utils.google.drive import DriveApi
+import re
+
+
+def get_meeting_title(schedule):
+    meeting_id = "{:07d}".format(schedule.id)
+    return f"{schedule.lesson.title} #{meeting_id}#"
 
 
 def confirm_reservations():
@@ -22,15 +31,15 @@ def confirm_reservations():
     for schedule in schedules:
         reservations = Reservation.objects.filter(schedule=schedule)
 
-        is_lesson_success = reservations.count() >= MINIMUM_STUDENTS_REQUIRED
+        is_lesson_success = reservations.count() >= get_min_students_required(
+            lecturer=schedule.lecturer, lesson=schedule.lesson
+        )
 
         if is_lesson_success:
             # create meeting
-            meeting_manager = MeetingManager(
-                lecturer_email=schedule.lecturer.profile.user.email
-            )
+            meeting_manager = MeetingManager()
             event = meeting_manager.create(
-                title=schedule.lesson.title,
+                title=get_meeting_title(schedule=schedule),
                 description=schedule.lesson.description,
                 start_time=schedule.start_time,
                 end_time=schedule.end_time,
@@ -42,13 +51,17 @@ def confirm_reservations():
             )
             schedule.meeting = meeting
 
+        start_time = (
+            schedule.start_time.replace(tzinfo=utc)
+            .astimezone(timezone("Europe/Warsaw"))
+            .strftime("%d-%m-%Y %H:%M")
+        )
+        lecturer_full_name = f"{schedule.lecturer.profile.user.first_name} {schedule.lecturer.profile.user.last_name}"
         data = {
             **{
                 "lesson_title": schedule.lesson.title,
-                "lecturer_full_name": f"{schedule.lecturer.profile.user.first_name} {schedule.lecturer.profile.user.last_name}",
-                "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
-                .astimezone(timezone("Europe/Warsaw"))
-                .strftime("%d-%m-%Y %H:%M"),
+                "lecturer_full_name": lecturer_full_name,
+                "lesson_start_time": start_time,
             }
         }
 
@@ -65,12 +78,28 @@ def confirm_reservations():
                     subject="Potwierdzenie realizacji szkolenia",
                     data=data,
                 )
+                notify(
+                    profile=reservation.student.profile,
+                    title="Potwierdzenie realizacji szkolenia",
+                    subtitle=schedule.lesson.title,
+                    description=f"Udało się! Potwierdzamy realizację lekcji, która odbędzie się {start_time} (PL) i będzie prowadzona przez {lecturer_full_name}.",
+                    path=f"/account/lessons?sort_by=-created_at&page_size=10&lesson_title={urllib.parse.quote_plus(schedule.lesson.title)}",
+                    icon="mdi:school",
+                )
             else:
                 mailer.send(
                     email_template="lesson_failure.html",
                     to=[reservation.student.profile.user.email],
                     subject="Brak realizacji szkolenia",
                     data=data,
+                )
+                notify(
+                    profile=reservation.student.profile,
+                    title="Brak realizacji szkolenia",
+                    subtitle=schedule.lesson.title,
+                    description=f"Niestety, nie udało się zrealizować lekcję, która planowo odbyłaby się {start_time} (PL) i byłaby prowadzona przez {lecturer_full_name} z powodu niewystarczającej ilości zapisów.",
+                    path=f"/account/lessons?sort_by=-created_at&page_size=10&lesson_title={urllib.parse.quote_plus(schedule.lesson.title)}",
+                    icon="mdi:school",
                 )
 
         if is_lesson_success:
@@ -80,6 +109,14 @@ def confirm_reservations():
                 subject="Potwierdzenie realizacji szkolenia",
                 data=data,
             )
+            notify(
+                profile=schedule.lecturer.profile,
+                title="Potwierdzenie realizacji szkolenia",
+                subtitle=schedule.lesson.title,
+                description=f"Udało się! Potwierdzamy realizację lekcji, która odbędzie się {start_time} (PL).",
+                path=f"/account/teacher/calendar?time_from={schedule.start_time.strftime('%Y-%m-%d')}&view=day",
+                icon="mdi:school",
+            )
         else:
             mailer.send(
                 email_template="lesson_failure.html",
@@ -87,7 +124,46 @@ def confirm_reservations():
                 subject="Brak realizacji szkolenia",
                 data=data,
             )
+            notify(
+                profile=schedule.lecturer.profile,
+                title="Brak realizacji szkolenia",
+                subtitle=schedule.lesson.title,
+                description=f"Niestety, nie udało się zrealizować lekcję, która planowo odbyłaby się {start_time} (PL) z powodu niewystarczającej ilości zapisów.",
+                path=f"/account/teacher/calendar?time_from={schedule.start_time.strftime('%Y-%m-%d')}&view=day",
+                icon="mdi:school",
+            )
             schedule.lesson = None
             reservations.delete()
 
         schedule.save()
+
+
+def pull_recordings():
+    one_hour_ago = (datetime.now(utc) - timedelta(hours=1)).isoformat()
+
+    drive_api = DriveApi()
+    recordings = drive_api.get_recordings(
+        query=f"modifiedTime >= '{one_hour_ago}' and mimeType='video/mp4'"
+    )
+
+    for recording in recordings:
+        file_id = recording["id"]
+        file_name = recording["name"]
+        file_url = recording["webContentLink"]
+
+        match = re.search(r"#(\d+)#", file_name)
+        if match:
+            drive_api.set_permissions(
+                file_id=file_id, permissions={"type": "anyone", "role": "reader"}
+            )
+
+            schedule_id = match.group(1)
+            schedule = Schedule.objects.get(pk=schedule_id)
+            Recording.objects.get_or_create(
+                schedule=schedule,
+                file_id=file_id,
+                file_name=file_name,
+                file_url=file_url,
+            )
+        else:
+            print(f"Schedule Id not found with file name {file_name}")

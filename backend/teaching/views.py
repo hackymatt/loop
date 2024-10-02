@@ -9,6 +9,7 @@ from teaching.serializers import (
 from teaching.filters import ManageTeachingFilter, get_teaching, TeachingFilter
 from lesson.models import Lesson
 from teaching.models import Teaching
+from django.db.models import Q
 
 
 class ManageTeachingViewSet(ModelViewSet):
@@ -42,7 +43,9 @@ class ManageTeachingViewSet(ModelViewSet):
 
 class TeachingViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Teaching.objects.all()
+    queryset = Teaching.objects.exclude(
+        Q(lecturer__title__isnull=True) | Q(lecturer__description__isnull=True)
+    )
     serializer_class = TeachingSerializer
     filterset_class = TeachingFilter
     permission_classes = [AllowAny]

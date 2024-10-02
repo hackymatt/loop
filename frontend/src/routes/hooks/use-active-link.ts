@@ -1,11 +1,17 @@
 import { usePathname } from "next/navigation";
 
+import { paths } from "../paths";
+
 // ----------------------------------------------------------------------
 
 type ReturnType = boolean;
 
 export function useActiveLink(path: string, deep = true): ReturnType {
   const pathname = usePathname();
+
+  if (!pathname.includes(paths.account.root)) {
+    return false;
+  }
 
   const checkPath = path.startsWith("#");
 

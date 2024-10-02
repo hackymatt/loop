@@ -2,7 +2,6 @@ from rest_framework.serializers import (
     ModelSerializer,
     SerializerMethodField,
     CharField,
-    EmailField,
     IntegerField,
 )
 from drf_extra_fields.fields import Base64ImageField, Base64FileField
@@ -10,13 +9,29 @@ from course.models import Course
 from lesson.models import Lesson, Technology, LessonPriceHistory
 from topic.models import Topic
 from skill.models import Skill
-from profile.models import Profile, LecturerProfile
+from module.models import Module
+from profile.models import Profile, LecturerProfile, StudentProfile
 from review.models import Review
+from reservation.models import Reservation
 from purchase.models import Purchase
 from teaching.models import Teaching
 from django.db.models.functions import Concat
-from django.db.models import Sum, Avg, Min, Value
-from datetime import timedelta
+from django.db.models import Sum, Avg, Min, Value, Q
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
+from notification.utils import notify
+
+
+def notify_students(course):
+    for student in StudentProfile.objects.all():
+        notify(
+            profile=student.profile,
+            title="Nowy kurs w ofercie",
+            subtitle=course.title,
+            description="Właśnie dodaliśmy nowy kurs. Sprawdź go już teraz.",
+            path=f"/course/{course.id}",
+            icon="mdi:account-student",
+        )
 
 
 class VideoBase64File(Base64FileField):
@@ -26,9 +41,26 @@ class VideoBase64File(Base64FileField):
         return "mp4"
 
 
+def get_course_modules(course):
+    course_modules = (
+        Course.modules.through.objects.filter(course=course).all().order_by("id")
+    )
+    return [
+        Module.objects.get(id=course_module.module_id)
+        for course_module in course_modules
+    ]
+
+
 def get_course_lessons(course):
+    course_modules = (
+        Course.modules.through.objects.filter(course=course)
+        .values("module_id")
+        .order_by("id")
+    )
     course_lessons = (
-        Course.lessons.through.objects.filter(course=course).all().order_by("id")
+        Module.lessons.through.objects.filter(module__in=course_modules)
+        .all()
+        .order_by("id")
     )
     return [
         Lesson.objects.get(id=course_lesson.lesson_id)
@@ -54,8 +86,12 @@ def get_course_topics(course):
     ]
 
 
-def get_price(course):
-    return course.lessons.aggregate(Sum("price"))["price__sum"]
+def get_price(course_modules):
+    lessons_ids = Module.lessons.through.objects.filter(
+        module__in=course_modules
+    ).values("lesson_id")
+    lessons = Lesson.objects.filter(id__in=lessons_ids).all()
+    return lessons.aggregate(Sum("price"))["price__sum"]
 
 
 def get_previous_prices(instance):
@@ -83,10 +119,10 @@ def get_previous_price(instance):
     return previous_price
 
 
-def get_previous_price_course(instance):
-    lessons_ids = Course.lessons.through.objects.filter(course=instance).values(
-        "lesson_id"
-    )
+def get_previous_price_course(course_modules):
+    lessons_ids = Module.lessons.through.objects.filter(
+        module__in=course_modules
+    ).values("lesson_id")
     lessons = Lesson.objects.filter(id__in=lessons_ids).all()
     prices = []
     for lesson in lessons:
@@ -98,7 +134,7 @@ def get_previous_price_course(instance):
         prices.append(prev)
 
     previous_price = sum(prices)
-    current_price = get_price(course=instance)
+    current_price = get_price(course_modules=course_modules)
 
     if previous_price <= current_price:
         return None
@@ -133,10 +169,10 @@ def get_lowest_30_days_price(instance):
     return prices_in_last_30_days.aggregate(Min("price"))["price__min"]
 
 
-def get_lowest_30_days_price_course(instance):
-    lessons_ids = Course.lessons.through.objects.filter(course=instance).values(
-        "lesson_id"
-    )
+def get_lowest_30_days_price_course(course_modules):
+    lessons_ids = Module.lessons.through.objects.filter(
+        module__in=course_modules
+    ).values("lesson_id")
     lessons = Lesson.objects.filter(id__in=lessons_ids).all()
     prices = []
     for lesson in lessons:
@@ -149,7 +185,7 @@ def get_lowest_30_days_price_course(instance):
 
     lowest_30_days_price = sum(prices)
 
-    if not get_previous_price_course(instance=instance):
+    if not get_previous_price_course(course_modules=course_modules):
         return None
 
     return lowest_30_days_price
@@ -158,7 +194,10 @@ def get_lowest_30_days_price_course(instance):
 def get_lecturers(self, lessons):
     lecturer_ids = Teaching.objects.filter(lesson__in=lessons).values("lecturer")
     lecturers = (
-        LecturerProfile.objects.filter(id__in=lecturer_ids)
+        LecturerProfile.objects.exclude(
+            Q(title__isnull=True) | Q(description__isnull=True)
+        )
+        .filter(id__in=lecturer_ids)
         .annotate(
             full_name=Concat(
                 "profile__user__first_name", Value(" "), "profile__user__last_name"
@@ -187,7 +226,10 @@ def get_technologies(lessons):
 def get_lecturers_details(self, lessons):
     lecturer_ids = Teaching.objects.filter(lesson__in=lessons).values("lecturer")
     lecturers = (
-        LecturerProfile.objects.filter(id__in=lecturer_ids)
+        LecturerProfile.objects.exclude(
+            Q(title__isnull=True) | Q(description__isnull=True)
+        )
+        .filter(id__in=lecturer_ids)
         .annotate(
             full_name=Concat(
                 "profile__user__first_name", Value(" "), "profile__user__last_name"
@@ -215,29 +257,39 @@ def get_students_count(lessons):
 
 
 def get_duration(course):
-    return course.lessons.aggregate(Sum("duration"))["duration__sum"]
+    course_modules = (
+        Course.modules.through.objects.filter(course=course)
+        .values("module_id")
+        .order_by("id")
+    )
+    lessons_ids = Module.lessons.through.objects.filter(
+        module__in=course_modules
+    ).values("lesson_id")
+    lessons = Lesson.objects.filter(id__in=lessons_ids).all()
+    return lessons.aggregate(Sum("duration"))["duration__sum"]
 
 
 def get_lecturer_rating(lecturer):
     return Review.objects.filter(lecturer=lecturer)
 
 
-def get_is_bestseller(instance):
-    courses = Course.objects.all()
+def get_progress(lessons, user):
+    if not user.is_authenticated:
+        return None
 
-    students = {}
-    for course in courses:
-        lessons_ids = Course.lessons.through.objects.filter(course=course).values(
-            "lesson_id"
-        )
-        lessons = Lesson.objects.filter(id__in=lessons_ids).all()
-        students[course.id] = get_students_count(lessons=lessons)
+    student_profiles = StudentProfile.objects.filter(profile__user=user)
+    if not student_profiles.exists():
+        return None
 
-    students = dict(sorted(students.items(), key=lambda item: item[1], reverse=True))
+    student_profile = student_profiles.first()
 
-    bestseller_id = list(students.keys())[0]
-
-    return instance.id == bestseller_id
+    student_profile = StudentProfile.objects.get(profile__user=user)
+    student_lessons = Reservation.objects.filter(
+        student=student_profile,
+        lesson__in=lessons,
+        schedule__end_time__lte=make_aware(datetime.now()),
+    )
+    return student_lessons.count() / len(lessons)
 
 
 class TechnologySerializer(ModelSerializer):
@@ -269,7 +321,6 @@ class TopicSerializer(ModelSerializer):
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
-    email = EmailField(source="profile.user.email")
     gender = CharField(source="profile.get_gender_display")
     image = Base64ImageField(source="profile.image", required=True)
 
@@ -277,7 +328,6 @@ class LecturerSerializer(ModelSerializer):
         model = Profile
         fields = (
             "id",
-            "email",
             "full_name",
             "gender",
             "image",
@@ -289,7 +339,6 @@ class LecturerSerializer(ModelSerializer):
 
 class LecturerDetailsSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
-    email = EmailField(source="profile.user.email")
     gender = CharField(source="profile.get_gender_display")
     image = Base64ImageField(source="profile.image", required=True)
     rating = SerializerMethodField("get_user_rating")
@@ -300,7 +349,6 @@ class LecturerDetailsSerializer(ModelSerializer):
         model = LecturerProfile
         fields = (
             "id",
-            "email",
             "full_name",
             "gender",
             "title",
@@ -334,12 +382,19 @@ class LessonShortSerializer(ModelSerializer):
     id = IntegerField()
     previous_price = SerializerMethodField("get_lesson_previous_price")
     lowest_30_days_price = SerializerMethodField("get_lesson_lowest_30_days_price")
+    progress = SerializerMethodField("get_lesson_progress")
 
     def get_lesson_previous_price(self, lesson):
         return get_previous_price(instance=lesson)
 
     def get_lesson_lowest_30_days_price(self, lesson):
         return get_lowest_30_days_price(instance=lesson)
+
+    def get_lesson_progress(self, lesson):
+        request = self.context.get("request")
+        user = request.user
+
+        return get_progress(lessons=[lesson], user=user)
 
     class Meta:
         model = Lesson
@@ -349,6 +404,43 @@ class LessonShortSerializer(ModelSerializer):
             "price",
             "previous_price",
             "lowest_30_days_price",
+            "progress",
+        )
+
+
+class ModuleSerializer(ModelSerializer):
+    id = IntegerField()
+    price = SerializerMethodField("get_module_price")
+    previous_price = SerializerMethodField("get_module_previous_price")
+    lowest_30_days_price = SerializerMethodField("get_module_lowest_30_days_price")
+    lessons = LessonShortSerializer(many=True)
+    progress = SerializerMethodField("get_module_progress")
+
+    def get_module_price(self, module):
+        return get_price(course_modules=[module])
+
+    def get_module_previous_price(self, module):
+        return get_previous_price_course(course_modules=[module])
+
+    def get_module_lowest_30_days_price(self, module):
+        return get_lowest_30_days_price_course(course_modules=[module])
+
+    def get_module_progress(self, module):
+        request = self.context.get("request")
+        user = request.user
+
+        return get_progress(lessons=module.lessons.all(), user=user)
+
+    class Meta:
+        model = Module
+        fields = (
+            "id",
+            "title",
+            "price",
+            "previous_price",
+            "lowest_30_days_price",
+            "lessons",
+            "progress",
         )
 
 
@@ -356,27 +448,39 @@ class CourseListSerializer(ModelSerializer):
     price = SerializerMethodField("get_course_price")
     previous_price = SerializerMethodField("get_course_previous_price")
     lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
-    is_bestseller = SerializerMethodField("get_course_is_bestseller")
     duration = SerializerMethodField("get_course_duration")
     technologies = SerializerMethodField("get_course_technologies")
     lecturers = SerializerMethodField("get_course_lecturers")
     students_count = SerializerMethodField("get_course_students_count")
     rating = SerializerMethodField("get_course_rating")
     rating_count = SerializerMethodField("get_course_rating_count")
+    progress = SerializerMethodField("get_course_progress")
     image = Base64ImageField(required=True)
     level = CharField(source="get_level_display")
 
     def get_course_price(self, course):
-        return get_price(course=course)
+        course_modules = (
+            Course.modules.through.objects.filter(course=course)
+            .values("module_id")
+            .order_by("id")
+        )
+        return get_price(course_modules=course_modules)
 
     def get_course_previous_price(self, course):
-        return get_previous_price_course(instance=course)
+        course_modules = (
+            Course.modules.through.objects.filter(course=course)
+            .values("module_id")
+            .order_by("id")
+        )
+        return get_previous_price_course(course_modules=course_modules)
 
     def get_course_lowest_30_days_price(self, course):
-        return get_lowest_30_days_price_course(instance=course)
-
-    def get_course_is_bestseller(self, course):
-        return get_is_bestseller(instance=course)
+        course_modules = (
+            Course.modules.through.objects.filter(course=course)
+            .values("module_id")
+            .order_by("id")
+        )
+        return get_lowest_30_days_price_course(course_modules=course_modules)
 
     def get_course_technologies(self, course):
         lessons = get_course_lessons(course=course)
@@ -401,10 +505,17 @@ class CourseListSerializer(ModelSerializer):
         lessons = get_course_lessons(course=course)
         return get_students_count(lessons=lessons)
 
+    def get_course_progress(self, course):
+        request = self.context.get("request")
+        user = request.user
+
+        lessons = get_course_lessons(course=course)
+        return get_progress(lessons=lessons, user=user)
+
     class Meta:
         model = Course
         exclude = (
-            "lessons",
+            "modules",
             "skills",
             "topics",
             "video",
@@ -418,9 +529,8 @@ class CourseGetSerializer(ModelSerializer):
     price = SerializerMethodField("get_course_price")
     previous_price = SerializerMethodField("get_course_previous_price")
     lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
-    is_bestseller = SerializerMethodField("get_course_is_bestseller")
     duration = SerializerMethodField("get_course_duration")
-    lessons = SerializerMethodField("get_lessons")
+    modules = SerializerMethodField("get_modules")
     technologies = SerializerMethodField("get_course_technologies")
     skills = SerializerMethodField("get_skills")
     topics = SerializerMethodField("get_topics")
@@ -428,27 +538,44 @@ class CourseGetSerializer(ModelSerializer):
     students_count = SerializerMethodField("get_course_students_count")
     rating = SerializerMethodField("get_course_rating")
     rating_count = SerializerMethodField("get_course_rating_count")
+    progress = SerializerMethodField("get_course_progress")
     image = Base64ImageField(required=True)
     video = VideoBase64File(required=False)
 
     def get_course_price(self, course):
-        return get_price(course=course)
+        course_modules = (
+            Course.modules.through.objects.filter(course=course)
+            .values("module_id")
+            .order_by("id")
+        )
+        return get_price(course_modules=course_modules)
 
     def get_course_previous_price(self, course):
-        return get_previous_price_course(instance=course)
+        course_modules = (
+            Course.modules.through.objects.filter(course=course)
+            .values("module_id")
+            .order_by("id")
+        )
+        return get_previous_price_course(course_modules=course_modules)
 
     def get_course_lowest_30_days_price(self, course):
-        return get_lowest_30_days_price_course(instance=course)
-
-    def get_course_is_bestseller(self, course):
-        return get_is_bestseller(instance=course)
+        course_modules = (
+            Course.modules.through.objects.filter(course=course)
+            .values("module_id")
+            .order_by("id")
+        )
+        return get_lowest_30_days_price_course(course_modules=course_modules)
 
     def get_course_technologies(self, course):
         lessons = get_course_lessons(course=course)
         return get_technologies(lessons=lessons)
 
-    def get_lessons(self, course):
-        return LessonShortSerializer(get_course_lessons(course=course), many=True).data
+    def get_modules(self, course):
+        return ModuleSerializer(
+            get_course_modules(course=course),
+            many=True,
+            context={"request": self.context.get("request")},
+        ).data
 
     def get_skills(self, course):
         return SkillSerializer(get_course_skills(course=course), many=True).data
@@ -475,6 +602,13 @@ class CourseGetSerializer(ModelSerializer):
         lessons = get_course_lessons(course=course)
         return get_students_count(lessons=lessons)
 
+    def get_course_progress(self, course):
+        request = self.context.get("request")
+        user = request.user
+        lessons = get_course_lessons(course=course)
+
+        return get_progress(lessons=lessons, user=user)
+
     class Meta:
         model = Course
         exclude = (
@@ -491,9 +625,9 @@ class CourseSerializer(ModelSerializer):
         model = Course
         fields = "__all__"
 
-    def add_lessons(self, course, lessons):
-        for lesson in lessons:
-            course.lessons.add(lesson)
+    def add_modules(self, course, modules):
+        for module in modules:
+            course.modules.add(module)
 
         return course
 
@@ -510,20 +644,23 @@ class CourseSerializer(ModelSerializer):
         return course
 
     def create(self, validated_data):
-        lessons = validated_data.pop("lessons")
+        modules = validated_data.pop("modules")
         skills = validated_data.pop("skills")
         topics = validated_data.pop("topics")
 
         course = Course.objects.create(**validated_data)
-        course = self.add_lessons(course=course, lessons=lessons)
+        course = self.add_modules(course=course, modules=modules)
         course = self.add_skills(course=course, skills=skills)
         course = self.add_topics(course=course, topics=topics)
         course.save()
 
+        if course.active:
+            notify_students(course=course)
+
         return course
 
     def update(self, instance, validated_data):
-        lessons = validated_data.pop("lessons")
+        modules = validated_data.pop("modules")
         skills = validated_data.pop("skills")
         topics = validated_data.pop("topics")
 
@@ -535,14 +672,17 @@ class CourseSerializer(ModelSerializer):
         instance.image = validated_data.get("image", instance.image)
         instance.video = validated_data.get("video", instance.video)
 
-        instance.lessons.clear()
-        instance = self.add_lessons(course=instance, lessons=lessons)
+        instance.modules.clear()
+        instance = self.add_modules(course=instance, modules=modules)
         instance.skills.clear()
         instance = self.add_skills(course=instance, skills=skills)
         instance.topics.clear()
         instance = self.add_topics(course=instance, topics=topics)
 
         instance.save()
+
+        if instance.active:
+            notify_students(course=instance)
 
         return instance
 
@@ -551,7 +691,6 @@ class BestCourseSerializer(ModelSerializer):
     price = SerializerMethodField("get_course_price")
     previous_price = SerializerMethodField("get_course_previous_price")
     lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
-    is_bestseller = SerializerMethodField("get_course_is_bestseller")
     technologies = SerializerMethodField("get_course_technologies")
     duration = SerializerMethodField("get_course_duration")
     lecturers = SerializerMethodField("get_course_lecturers")
@@ -562,16 +701,28 @@ class BestCourseSerializer(ModelSerializer):
     level = CharField(source="get_level_display")
 
     def get_course_price(self, course):
-        return get_price(course=course)
+        course_modules = (
+            Course.modules.through.objects.filter(course=course)
+            .values("module_id")
+            .order_by("id")
+        )
+        return get_price(course_modules=course_modules)
 
     def get_course_previous_price(self, course):
-        return get_previous_price_course(instance=course)
+        course_modules = (
+            Course.modules.through.objects.filter(course=course)
+            .values("module_id")
+            .order_by("id")
+        )
+        return get_previous_price_course(course_modules=course_modules)
 
     def get_course_lowest_30_days_price(self, course):
-        return get_lowest_30_days_price_course(instance=course)
-
-    def get_course_is_bestseller(self, course):
-        return get_is_bestseller(instance=course)
+        course_modules = (
+            Course.modules.through.objects.filter(course=course)
+            .values("module_id")
+            .order_by("id")
+        )
+        return get_lowest_30_days_price_course(course_modules=course_modules)
 
     def get_course_technologies(self, course):
         lessons = get_course_lessons(course=course)

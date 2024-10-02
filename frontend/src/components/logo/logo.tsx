@@ -34,7 +34,7 @@ function Logo({ single = false, sx }: LogoProps) {
         alignItems="center"
         justifyContent="center"
         sx={{
-          width: single ? 64 : 75,
+          width: single ? 64 : 80,
           lineHeight: 0,
           cursor: "pointer",
           display: "inline-flex",
@@ -42,7 +42,7 @@ function Logo({ single = false, sx }: LogoProps) {
       >
         <Box
           sx={{
-            width: single ? 64 : 75,
+            width: single ? 64 : 80,
             lineHeight: 0,
             cursor: "pointer",
             display: "inline-flex",

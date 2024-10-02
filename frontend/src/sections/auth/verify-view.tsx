@@ -1,7 +1,6 @@
 "use client";
 
 import * as Yup from "yup";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -28,7 +27,7 @@ export default function VerifyView() {
 
   const { push } = useRouter();
 
-  const { email, verifyUser, resendVerificationCode, isUnverified, isLoading } = useUserContext();
+  const { email, verifyUser, resendVerificationCode, isLoading } = useUserContext();
 
   const VerifySchema = Yup.object().shape({
     code: Yup.string()
@@ -59,6 +58,7 @@ export default function VerifyView() {
     clearErrors();
     try {
       await verifyUser({ email, code: data.code });
+      push(paths.login);
       enqueueSnackbar("Weryfikacja poprawna", { variant: "success" });
     } catch (error) {
       handleFormError(error);
@@ -75,12 +75,6 @@ export default function VerifyView() {
       handleFormError(error);
     }
   };
-
-  useEffect(() => {
-    if (!isUnverified) {
-      push(paths.login);
-    }
-  }, [isUnverified, push]);
 
   if (!email) {
     return <NotFoundView />;

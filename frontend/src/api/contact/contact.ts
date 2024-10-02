@@ -11,10 +11,10 @@ type ICreateContact = {
   subject: string;
   message: string;
 };
-type ICreateContactrReturn = ICreateContact;
+type ICreateContactReturn = ICreateContact;
 
 export const useContact = () =>
-  useMutation<ICreateContactrReturn, AxiosError, ICreateContact>(async (variables) => {
+  useMutation<ICreateContactReturn, AxiosError, ICreateContact>(async (variables) => {
     const result = await Api.post(endpoint, variables);
     return result.data;
   });

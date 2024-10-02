@@ -1,7 +1,7 @@
 "use client";
 
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useMemo, useState, useEffect } from "react";
 
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
@@ -20,6 +20,7 @@ import { RouterLink } from "src/routes/components";
 import { useResponsive } from "src/hooks/use-responsive";
 
 import { useUserDetails } from "src/api/auth/details";
+import { adminNavigation, studentNavigation, teacherNavigation } from "src/consts/navigations";
 
 import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
@@ -29,203 +30,6 @@ import { useToastContext } from "src/components/toast";
 import AccountImage from "src/sections/account/account-image";
 
 import { UserType } from "src/types/user";
-import { ReviewStatus } from "src/types/purchase";
-
-// ----------------------------------------------------------------------
-
-const userNavigations = [
-  {
-    title: "Dane osobowe",
-    path: paths.account.personal,
-    icon: <Iconify icon="carbon:user" />,
-    children: [],
-  },
-  {
-    title: "Zarządzaj kontem",
-    path: paths.account.manage,
-    icon: <Iconify icon="carbon:password" />,
-    children: [],
-  },
-];
-
-const studentNavigations = [
-  ...userNavigations,
-  ...[
-    {
-      title: "Lekcje",
-      path: `${paths.account.lessons}/?sort_by=-created_at&page_size=10`,
-      icon: <Iconify icon="carbon:book" />,
-      children: [],
-    },
-    {
-      title: "Recenzje",
-      path: `${paths.account.reviews}/?review_status_exclude=${ReviewStatus.brak}&page_size=10`,
-      icon: <Iconify icon="carbon:review" />,
-      children: [],
-    },
-  ],
-];
-
-const teacherNavigations = [
-  ...userNavigations,
-  ...[
-    {
-      title: "Profil instruktora",
-      path: paths.account.teacher.profile,
-      icon: <Iconify icon="carbon:user-profile" />,
-      children: [],
-    },
-    {
-      title: "Dane finansowe",
-      path: paths.account.teacher.finance,
-      icon: <Iconify icon="carbon:finance" />,
-      children: [],
-    },
-    {
-      title: "Terminarz",
-      path: paths.account.teacher.calendar,
-      icon: <Iconify icon="carbon:calendar" />,
-      children: [],
-    },
-    {
-      title: "Nauczanie",
-      path: `${paths.account.teacher.teaching}/?sort_by=title&page_size=10`,
-      icon: <Iconify icon="carbon:education" />,
-      children: [],
-    },
-    {
-      title: "Recenzje",
-      path: `${paths.account.teacher.reviews}/?sort_by=-created_at&page_size=10`,
-      icon: <Iconify icon="carbon:review" />,
-      children: [],
-    },
-    {
-      title: "Zarobki",
-      path: `${paths.account.teacher.earnings}/?page_size=12`,
-      icon: <Iconify icon="carbon:currency-dollar" />,
-      children: [],
-    },
-  ],
-];
-
-const adminNavigations = [
-  ...userNavigations,
-  ...[
-    {
-      title: "Kursy",
-      path: paths.account.admin.courses.list,
-      icon: <Iconify icon="carbon:book" />,
-      children: [
-        {
-          title: "Spis kursów",
-          path: `${paths.account.admin.courses.list}/?sort_by=title&page_size=10`,
-          icon: <Iconify icon="carbon:list" />,
-          children: [],
-        },
-        {
-          title: "Umiejętności",
-          path: `${paths.account.admin.courses.skills}/?sort_by=name&page_size=10`,
-          icon: <Iconify icon="carbon:policy" />,
-          children: [],
-        },
-        {
-          title: "Tematy",
-          path: `${paths.account.admin.courses.topics}/?sort_by=name&page_size=10`,
-          icon: <Iconify icon="carbon:query" />,
-          children: [],
-        },
-      ],
-    },
-    {
-      title: "Lekcje",
-      path: paths.account.admin.lessons.list,
-      icon: <Iconify icon="carbon:notebook" />,
-      children: [
-        {
-          title: "Spis lekcji",
-          path: `${paths.account.admin.lessons.list}/?sort_by=title&page_size=10`,
-          icon: <Iconify icon="carbon:list" />,
-          children: [],
-        },
-        {
-          title: "Historia cen",
-          path: `${paths.account.admin.lessons.priceHistory}/?sort_by=-created_at&page_size=10`,
-          icon: <Iconify icon="carbon:chart-line" />,
-          children: [],
-        },
-        {
-          title: "Technologie",
-          path: `${paths.account.admin.lessons.technologies}/?sort_by=name&page_size=10`,
-          icon: <Iconify icon="carbon:code" />,
-          children: [],
-        },
-      ],
-    },
-    {
-      title: "Użytkownicy",
-      path: paths.account.admin.users.list,
-      icon: <Iconify icon="carbon:user-multiple" />,
-      children: [
-        {
-          title: "Spis użytkowników",
-          path: `${paths.account.admin.users.list}/?sort_by=email&page_size=10`,
-          icon: <Iconify icon="carbon:list" />,
-          children: [],
-        },
-        {
-          title: "Historia danych finansowych",
-          path: `${paths.account.admin.users.financeHistory}/?sort_by=-created_at&page_size=10`,
-          icon: <Iconify icon="carbon:finance" />,
-          children: [],
-        },
-      ],
-    },
-    {
-      title: "Kupony",
-      path: paths.account.admin.users.list,
-      icon: <Iconify icon="carbon:cut-out" />,
-      children: [
-        {
-          title: "Spis kuponów",
-          path: `${paths.account.admin.coupons.list}/?sort_by=-expiration_date&page_size=10`,
-          icon: <Iconify icon="carbon:list" />,
-          children: [],
-        },
-        {
-          title: "Wykorzystanie kuponów",
-          path: `${paths.account.admin.coupons.usage}/?sort_by=-created_at&page_size=10`,
-          icon: <Iconify icon="carbon:user-activity" />,
-          children: [],
-        },
-      ],
-    },
-    {
-      title: "Zarobki",
-      path: `${paths.account.admin.earnings.company}/?page_size=12`,
-      icon: <Iconify icon="carbon:currency-dollar" />,
-      children: [
-        {
-          title: "Zarobki firmy",
-          path: `${paths.account.admin.earnings.company}/?total=True&page_size=12`,
-          icon: <Iconify icon="carbon:building" />,
-          children: [],
-        },
-        {
-          title: "Zarobki instruktorów",
-          path: `${paths.account.admin.earnings.teachers}/?total=False&page_size=12`,
-          icon: <Iconify icon="carbon:education" />,
-          children: [],
-        },
-      ],
-    },
-    {
-      title: "Newsletter",
-      path: `${paths.account.admin.newsletter}/?sort_by=-created_at&page_size=10`,
-      icon: <Iconify icon="carbon:email-new" />,
-      children: [],
-    },
-  ],
-];
 
 // ----------------------------------------------------------------------
 
@@ -241,21 +45,16 @@ export default function Nav({ open, onClose }: Props) {
 
   const mdUp = useResponsive("up", "md");
 
-  const { logoutUser, isLoggedIn } = useUserContext();
+  const { logoutUser, userType } = useUserContext();
 
   const { data: userDetails } = useUserDetails();
-
-  const userType = useMemo(
-    () => (userDetails?.user_type ? userDetails.user_type : UserType.Student),
-    [userDetails],
-  );
 
   const navigations = useMemo(
     () =>
       ({
-        [UserType.Admin]: adminNavigations,
-        [UserType.Wykładowca]: teacherNavigations,
-        [UserType.Student]: studentNavigations,
+        [UserType.Admin]: adminNavigation,
+        [UserType.Wykładowca]: teacherNavigation,
+        [UserType.Student]: studentNavigation,
       })[userType],
     [userType],
   );
@@ -263,17 +62,12 @@ export default function Nav({ open, onClose }: Props) {
   const handleLogout = async () => {
     try {
       await logoutUser({});
+      push(paths.login);
       enqueueSnackbar("Wylogowano pomyślnie", { variant: "success" });
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd", { variant: "error" });
     }
   };
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      push(paths.login);
-    }
-  }, [isLoggedIn, push]);
 
   const renderContent = (
     <Stack
@@ -305,7 +99,7 @@ export default function Nav({ open, onClose }: Props) {
       <Divider sx={{ borderStyle: "dashed" }} />
 
       <Stack sx={{ my: 1, px: 2 }}>
-        {navigations.map((navigation) => (
+        {navigations?.map((navigation) => (
           <NavItem
             key={navigation.title}
             title={navigation.title}
@@ -372,7 +166,7 @@ type NavItemProps = {
   isChild?: boolean;
 };
 
-function NavItem({ title, path, icon, children, isChild }: NavItemProps) {
+export function NavItem({ title, path, icon, children, isChild }: NavItemProps) {
   const active = useActiveLink(path);
 
   const [open, setOpen] = useState(false);

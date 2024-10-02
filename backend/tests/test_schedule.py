@@ -19,6 +19,7 @@ from .factory import (
     create_teaching,
     create_reservation,
     create_meeting,
+    create_module,
 )
 from .helpers import (
     login,
@@ -26,6 +27,7 @@ from .helpers import (
     is_schedule_found,
     mock_send_message,
     mock_delete_event,
+    notifications_number,
 )
 from django.contrib import auth
 import json
@@ -129,6 +131,10 @@ class ScheduleTest(TestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -138,18 +144,19 @@ class ScheduleTest(TestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
-        for lesson in self.course_1.lessons.all():
-            create_teaching(
-                lecturer=self.lecturer_profile_1,
-                lesson=lesson,
-            )
-            create_teaching(
-                lecturer=self.lecturer_profile_2,
-                lesson=lesson,
-            )
+        for module in self.course_1.modules.all():
+            for lesson in module.lessons.all():
+                create_teaching(
+                    lecturer=self.lecturer_profile_1,
+                    lesson=lesson,
+                )
+                create_teaching(
+                    lecturer=self.lecturer_profile_2,
+                    lesson=lesson,
+                )
 
         # course 2
         self.lesson_3 = create_lesson(
@@ -176,6 +183,10 @@ class ScheduleTest(TestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -185,18 +196,19 @@ class ScheduleTest(TestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
-        for lesson in self.course_2.lessons.all():
-            create_teaching(
-                lecturer=self.lecturer_profile_1,
-                lesson=lesson,
-            )
-            create_teaching(
-                lecturer=self.lecturer_profile_2,
-                lesson=lesson,
-            )
+        for module in self.course_2.modules.all():
+            for lesson in module.lessons.all():
+                create_teaching(
+                    lecturer=self.lecturer_profile_1,
+                    lesson=lesson,
+                )
+                create_teaching(
+                    lecturer=self.lecturer_profile_2,
+                    lesson=lesson,
+                )
 
         # course 3
         self.lesson_6 = create_lesson(
@@ -207,6 +219,8 @@ class ScheduleTest(TestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -216,18 +230,19 @@ class ScheduleTest(TestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
-        for lesson in self.course_3.lessons.all():
-            create_teaching(
-                lecturer=self.lecturer_profile_1,
-                lesson=lesson,
-            )
-            create_teaching(
-                lecturer=self.lecturer_profile_2,
-                lesson=lesson,
-            )
+        for module in self.course_3.modules.all():
+            for lesson in module.lessons.all():
+                create_teaching(
+                    lecturer=self.lecturer_profile_1,
+                    lesson=lesson,
+                )
+                create_teaching(
+                    lecturer=self.lecturer_profile_2,
+                    lesson=lesson,
+                )
 
         self.schedules = []
 
@@ -343,6 +358,21 @@ class ScheduleTest(TestCase):
         count = data["records_count"]
         self.assertEqual(count, 12)
 
+    def test_get_schedules_authenticated_2(self):
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        self.schedules[0].meeting = create_meeting(
+            event_id="test_event_id", url="https://example.com"
+        )
+        self.schedules[0].save()
+        response = self.client.get(self.endpoint)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 12)
+
     def test_get_schedule_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -410,21 +440,60 @@ class ScheduleTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     @patch.object(GmailApi, "_send_message")
+    def test_delete_schedule_authenticated_completed(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        self.delete_schedule.start_time = datetime.now().replace(
+            minute=0, second=0, microsecond=0
+        ) - timedelta(hours=1)
+        self.delete_schedule.end_time = datetime.now().replace(
+            minute=30, second=0, microsecond=0
+        ) - timedelta(hours=1)
+        self.delete_schedule.save()
+        response = self.client.delete(f"{self.endpoint}/{self.delete_schedule.id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    @patch.object(GmailApi, "_send_message")
     def test_delete_schedule_authenticated_no_lesson(self, _send_message_mock):
         mock_send_message(mock=_send_message_mock)
         # login
         login(self, self.lecturer_data["email"], self.lecturer_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        response = self.client.delete(f"{self.endpoint}/{self.schedules[1].id}")
+        self.delete_schedule.lesson = None
+        self.delete_schedule.save()
+        response = self.client.delete(f"{self.endpoint}/{self.delete_schedule.id}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(is_schedule_found(self.schedules[1].id))
+        self.assertFalse(is_schedule_found(self.delete_schedule.id))
         self.assertEqual(schedule_number(), 21)
         self.assertEqual(_send_message_mock.call_count, 0)
+        self.assertEqual(notifications_number(), 0)
 
     @patch.object(GmailApi, "_send_message")
     @patch.object(CalendarApi, "delete")
-    def test_delete_schedule_authenticated_lesson(
+    def test_delete_schedule_authenticated_lesson_no_meeting(
+        self, delete_mock, _send_message_mock
+    ):
+        mock_delete_event(mock=delete_mock)
+        mock_send_message(mock=_send_message_mock)
+        # login
+        login(self, self.lecturer_data["email"], self.lecturer_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.delete(f"{self.endpoint}/{self.delete_schedule.id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(is_schedule_found(self.delete_schedule.id))
+        self.assertEqual(schedule_number(), 21)
+        self.assertEqual(_send_message_mock.call_count, 2)
+        self.assertEqual(delete_mock.call_count, 0)
+        self.assertEqual(notifications_number(), 2)
+
+    @patch.object(GmailApi, "_send_message")
+    @patch.object(CalendarApi, "delete")
+    def test_delete_schedule_authenticated_lesson_meeting(
         self, delete_mock, _send_message_mock
     ):
         mock_delete_event(mock=delete_mock)
@@ -442,3 +511,4 @@ class ScheduleTest(TestCase):
         self.assertEqual(schedule_number(), 21)
         self.assertEqual(_send_message_mock.call_count, 2)
         self.assertEqual(delete_mock.call_count, 1)
+        self.assertEqual(notifications_number(), 2)

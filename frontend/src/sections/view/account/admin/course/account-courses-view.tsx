@@ -62,11 +62,11 @@ const TABS = [
 ];
 
 const TABLE_HEAD = [
-  { id: "title", label: "Nazwa kursu", minWidth: 200 },
-  { id: "duration", label: "Czas", width: 100 },
-  { id: "active", label: "Status", width: 100 },
-  { id: "price", label: "Cena", width: 50 },
-  { id: "level", label: "Poziom", width: 100 },
+  { id: "title", label: "Nazwa kursu", minWidth: 300 },
+  { id: "duration", label: "Czas" },
+  { id: "active", label: "Status" },
+  { id: "price", label: "Cena" },
+  { id: "level", label: "Poziom", minWidth: 150 },
   { id: "", width: 25 },
 ];
 

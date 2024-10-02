@@ -14,6 +14,7 @@ from django.utils.timezone import make_aware
 from profile.validators import validate_password_match, validate_password_strength
 from profile.verify.utils import VerificationCode
 from mailer.mailer import Mailer
+from notification.utils import notify
 
 
 class ProfileRegisterSerializer(ModelSerializer):
@@ -94,6 +95,15 @@ class ProfileRegisterSerializer(ModelSerializer):
             to=[user.email],
             subject="Zweryfikuj swoje konto",
             data=data,
+        )
+
+        notify(
+            profile=profile,
+            title="Witamy w loop",
+            subtitle="",
+            description="Proszę uzupełnij swoje dane osobowe.",
+            path="/account/personal",
+            icon="mdi:user-details",
         )
 
         newsletter, _ = Newsletter.objects.get_or_create(email=email)

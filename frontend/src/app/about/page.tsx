@@ -1,12 +1,27 @@
+import { ViewUtil } from "src/utils/page-utils";
 import { createMetadata } from "src/utils/create-metadata";
-import { ComingSoonViewUtil } from "src/utils/coming-soon-utils";
 
 import AboutView from "src/sections/view/about-view";
 
 // ----------------------------------------------------------------------
 
-export const metadata = createMetadata("O nas");
+export const metadata = createMetadata(
+  "O nas",
+  "Poznaj loop — szkołę programowania online. Nasi doświadczeni instruktorzy prowadzą kursy Python, JavaScript, C++ i innych technologii. Zdobądź certyfikat już dziś!",
+  [
+    "o nas",
+    "szkoła programowania",
+    "instruktorzy programowania",
+    "nauczyciele programowania",
+    "kursy online",
+    "nauka programowania",
+    "loop szkoła programowania",
+    "opinie o kursach",
+    "certyfikaty programowania",
+    "mentorzy programowania",
+  ],
+);
 
 export default function AboutPage() {
-  return <ComingSoonViewUtil defaultView={<AboutView />} />;
+  return <ViewUtil defaultView={<AboutView />} />;
 }

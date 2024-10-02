@@ -5,46 +5,58 @@ import { useState, useEffect, useCallback } from "react";
 import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
 
 import { useBoolean } from "src/hooks/use-boolean";
+import { useResponsive } from "src/hooks/use-responsive";
 
-import { lessonFAQ, accountFAQ, paymentFAQ, reservationFAQ } from "src/consts/faq";
+import { lessonFAQ, accountFAQ, paymentFAQ, reservationFAQ, certificateFAQ } from "src/consts/faq";
 
-import Iconify from "src/components/iconify";
-
-import SupportNav from "../support/support-nav";
+import SupportHero from "../support/support-hero";
 import SupportContent from "../support/support-content";
+import SupportNav, { MoreHelp } from "../support/support-nav";
 
 // ----------------------------------------------------------------------
 
 const TOPICS = [
   {
+    title: "Wszystko",
+    icon: "/assets/icons/faq/ic_questions.svg",
+    content: [...accountFAQ, ...lessonFAQ, ...reservationFAQ, ...certificateFAQ, ...paymentFAQ],
+  },
+  {
     title: "Konto",
     icon: "/assets/icons/faq/ic_account.svg",
-    content: <SupportContent contents={accountFAQ} />,
+    content: accountFAQ,
   },
   {
     title: "Lekcje",
     icon: "/assets/icons/faq/ic_lesson.svg",
-    content: <SupportContent contents={lessonFAQ} />,
+    content: lessonFAQ,
   },
   {
     title: "Rezerwacje",
     icon: "/assets/icons/faq/ic_booking.svg",
-    content: <SupportContent contents={reservationFAQ} />,
+    content: reservationFAQ,
+  },
+  {
+    title: "Certyfikat",
+    icon: "/assets/icons/faq/ic_certificate.svg",
+    content: certificateFAQ,
   },
   {
     title: "Płatność",
     icon: "/assets/icons/faq/ic_payment.svg",
-    content: <SupportContent contents={paymentFAQ} />,
+    content: paymentFAQ,
   },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function SupportView() {
-  const [topic, setTopic] = useState("Konto");
+  const mdUp = useResponsive("up", "md");
+
+  const [topic, setTopic] = useState("Wszystko");
+  const [searchText, setSearchText] = useState<string>("");
 
   const mobileOpen = useBoolean();
 
@@ -59,38 +71,47 @@ export default function SupportView() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topic]);
 
+  const findMatches = (
+    options: {
+      question: string;
+      answer: string;
+    }[],
+  ) =>
+    options.filter(
+      (option) =>
+        option.question.toLowerCase().includes(searchText) ||
+        option.answer.toLowerCase().includes(searchText),
+    );
+
   return (
     <>
-      <Stack
-        alignItems="flex-end"
-        sx={{
-          py: 1.5,
-          px: 2.5,
-          display: { md: "none" },
-          borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
-        }}
-      >
-        <IconButton onClick={mobileOpen.onTrue}>
-          <Iconify icon="carbon:menu" />
-        </IconButton>
-      </Stack>
+      <SupportHero onSearch={setSearchText} />
 
       <Container>
-        <Typography variant="h3" sx={{ py: { xs: 3, md: 10 } }}>
-          Często zadawane pytania
+        <Typography variant="h3" sx={{ py: { xs: 3, md: 8 } }}>
+          Pomoc
         </Typography>
 
-        <Stack direction="row" sx={{ pb: { xs: 10, md: 15 } }}>
+        <Stack direction={mdUp ? "row" : "column"} sx={{ pb: { xs: 5, md: 15 } }}>
           <SupportNav
-            data={TOPICS}
+            data={TOPICS.map((t) => ({ ...t, content: findMatches(t.content) }))}
             topic={topic}
             open={mobileOpen.value}
             onChangeTopic={handleChangeTopic}
             onClose={mobileOpen.onFalse}
           />
 
-          {TOPICS.map((item) => item.title === topic && <div key={item.title}>{item.content}</div>)}
+          {TOPICS.map(
+            (item) =>
+              item.title === topic && (
+                <div key={item.title}>
+                  <SupportContent contents={findMatches(item.content)} />
+                </div>
+              ),
+          )}
         </Stack>
+
+        {!mdUp && <MoreHelp />}
       </Container>
     </>
   );

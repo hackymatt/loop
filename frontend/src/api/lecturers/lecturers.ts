@@ -23,6 +23,7 @@ type ILecturer = {
   lessons_count: number;
   lessons_duration: number;
   students_count: number;
+  linkedin_url: string;
 };
 
 export const lecturersQuery = (query?: IQueryParams) => {
@@ -54,6 +55,7 @@ export const lecturersQuery = (query?: IQueryParams) => {
         lessons_count,
         lessons_duration,
         students_count,
+        linkedin_url,
       }: ILecturer) => ({
         id,
         name: full_name,
@@ -66,6 +68,7 @@ export const lecturersQuery = (query?: IQueryParams) => {
         totalLessons: lessons_count,
         totalHours: lessons_duration / 60,
         totalStudents: students_count,
+        linkedinUrl: linkedin_url,
       }),
     );
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };

@@ -1,12 +1,14 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 
 import Popover from "@mui/material/Popover";
 import MenuItem from "@mui/material/MenuItem";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
+import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
 import { Divider, Typography } from "@mui/material";
-import InputBase, { inputBaseClasses } from "@mui/material/InputBase";
+
+import { usePopover } from "src/hooks/use-popover";
 
 import { fDate } from "src/utils/format-time";
 
@@ -23,56 +25,40 @@ type Props = {
 };
 
 export default function AccountTechnologiesTableRow({ row, onEdit, onDelete }: Props) {
-  const [open, setOpen] = useState<HTMLButtonElement | null>(null);
-
-  const handleOpen = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
-    setOpen(event.currentTarget);
-  }, []);
-
-  const handleClose = useCallback(() => {
-    setOpen(null);
-  }, []);
+  const openOptions = usePopover();
 
   const handleEdit = useCallback(() => {
-    handleClose();
+    openOptions.onClose();
     onEdit(row);
-  }, [handleClose, onEdit, row]);
+  }, [openOptions, onEdit, row]);
 
   const handleDelete = useCallback(() => {
-    handleClose();
+    openOptions.onClose();
     onDelete(row);
-  }, [handleClose, onDelete, row]);
-
-  const inputStyles = {
-    pl: 1,
-    [`&.${inputBaseClasses.focused}`]: {
-      bgcolor: "action.selected",
-    },
-    width: 1,
-  };
+  }, [openOptions, onDelete, row]);
 
   return (
     <>
       <TableRow hover>
-        <TableCell sx={{ px: 1 }}>
-          <InputBase value={row.name} sx={inputStyles} />
+        <TableCell>
+          <InputBase value={row.name} />
         </TableCell>
 
-        <TableCell sx={{ px: 1 }}>
+        <TableCell>
           <InputBase value={fDate(row.createdAt)} />
         </TableCell>
 
         <TableCell align="right" padding="none">
-          <IconButton onClick={handleOpen}>
+          <IconButton onClick={openOptions.onOpen}>
             <Iconify icon="carbon:overflow-menu-vertical" />
           </IconButton>
         </TableCell>
       </TableRow>
 
       <Popover
-        open={Boolean(open)}
-        anchorEl={open}
-        onClose={handleClose}
+        open={openOptions.open}
+        anchorEl={openOptions.anchorEl}
+        onClose={openOptions.onClose}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         slotProps={{

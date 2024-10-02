@@ -1,20 +1,21 @@
 from rest_framework.serializers import (
     ModelSerializer,
+    Serializer,
     SerializerMethodField,
-    EmailField,
     CharField,
     ImageField,
+    URLField,
     ValidationError,
 )
 from purchase.models import Purchase, Payment
 from lesson.models import Lesson, Technology
 from profile.models import Profile, LecturerProfile, StudentProfile
 from reservation.models import Reservation
-from schedule.models import Schedule
+from schedule.models import Schedule, Recording
 from review.models import Review
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
-from const import CANCELLATION_TIME
+from config_global import CANCELLATION_TIME
 
 
 def get_review(purchase):
@@ -51,7 +52,6 @@ class LessonSerializer(ModelSerializer):
     class Meta:
         model = Lesson
         exclude = (
-            "github_url",
             "active",
             "technologies",
             "description",
@@ -63,7 +63,6 @@ class LessonSerializer(ModelSerializer):
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
-    email = EmailField(source="profile.user.email")
     gender = CharField(source="profile.get_gender_display")
     image = ImageField(source="profile.image")
 
@@ -72,7 +71,6 @@ class LecturerSerializer(ModelSerializer):
         fields = (
             "id",
             "full_name",
-            "email",
             "gender",
             "image",
         )
@@ -118,6 +116,15 @@ class ReservationSerializer(ModelSerializer):
         )
 
 
+class RecordingSerializer(ModelSerializer):
+    class Meta:
+        model = Recording
+        fields = (
+            "file_name",
+            "file_url",
+        )
+
+
 class PurchaseGetSerializer(ModelSerializer):
     lesson = LessonSerializer()
     lesson_status = SerializerMethodField("get_lesson_status")
@@ -125,6 +132,7 @@ class PurchaseGetSerializer(ModelSerializer):
     review_status = SerializerMethodField("get_review_status")
     review = SerializerMethodField("get_review_details")
     meeting_url = SerializerMethodField("get_meeting_url")
+    recordings = SerializerMethodField("get_recordings_url")
 
     class Meta:
         model = Purchase
@@ -147,14 +155,25 @@ class PurchaseGetSerializer(ModelSerializer):
         else:
             return None
 
+    def get_recordings_url(self, purchase):
+        reservation = get_reservation(purchase=purchase)
+
+        if reservation.exists():
+            schedule = reservation.first().schedule
+            recordings = Recording.objects.filter(schedule=schedule)
+            return RecordingSerializer(recordings, many=True).data
+        else:
+            return []
+
     def get_lesson_status(self, purchase):
         reservation = get_reservation(purchase=purchase)
 
         if reservation.exists():
-            schedule_time = reservation.first().schedule.start_time
-            if make_aware(datetime.now()) >= schedule_time:
+            start_time = reservation.first().schedule.start_time
+            end_time = reservation.first().schedule.end_time
+            if make_aware(datetime.now()) >= end_time:
                 return LessonStatus.COMPLETED
-            elif (schedule_time - make_aware(datetime.now())) < timedelta(
+            elif (start_time - make_aware(datetime.now())) < timedelta(
                 hours=CANCELLATION_TIME
             ):
                 return LessonStatus.CONFIRMED

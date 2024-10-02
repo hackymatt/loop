@@ -19,10 +19,13 @@ export type ILessonStatus = keyof typeof LessonStatus;
 
 export type IReviewStatus = keyof typeof ReviewStatus;
 
+export type IRecordingProp = { name: string; url: string };
+
 export type IPurchaseItemProp = {
   id: string;
   lessonId: string;
   lessonTitle: string;
+  lessonResource: string;
   lessonDuration: number;
   lessonStatus: ILessonStatus;
   lessonSlot: string[];
@@ -33,6 +36,7 @@ export type IPurchaseItemProp = {
   ratingNumber: number;
   review: string;
   meetingUrl: string;
+  recordings: IRecordingProp[];
   createdAt: Date;
 };
 

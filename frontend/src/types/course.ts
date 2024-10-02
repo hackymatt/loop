@@ -43,13 +43,29 @@ export type ICourseLessonProp = {
   teachers?: ICourseTeacherProp[];
   githubUrl: string;
   active?: boolean;
+  progress?: number;
 };
+
+export type ICourseModuleProp = {
+  id: string;
+  title: string;
+  price?: number;
+  priceSale?: number;
+  lowest30DaysPrice?: number;
+  lessons?: ICourseLessonProp[];
+  lessonsCount?: number;
+  progress?: number;
+};
+
+export type IScheduleStudentProp = { id: string; name: string; gender: IGender; image: string };
 
 export type IScheduleProp = {
   id: string;
   startTime: string;
   endTime: string;
   lesson: Pick<ICourseLessonProp, "id" | "title">;
+  meetingUrl?: string;
+  students: IScheduleStudentProp[];
   studentsRequired: number;
 };
 
@@ -88,7 +104,6 @@ export type ICourseProps = {
   level: ILevel;
   createdAt?: Date;
   coverUrl: string;
-  bestSeller: boolean;
   video?: string;
   category: string[];
   skills: string[];
@@ -104,7 +119,8 @@ export type ICourseProps = {
   totalReviews: number;
   totalStudents: number;
   shareLinks?: ISocialLinks;
-  lessons: ICourseLessonProp[];
+  modules: ICourseModuleProp[];
   teachers: ICourseTeacherProp[];
   active: boolean;
+  progress?: number;
 };

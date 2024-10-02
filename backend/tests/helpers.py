@@ -2,13 +2,17 @@ from django.contrib.auth.models import User
 from profile.models import Profile, AdminProfile, LecturerProfile, StudentProfile
 from course.models import Course
 from coupon.models import Coupon
+from certificate.models import Certificate
 from lesson.models import Lesson
 from technology.models import Technology
 from topic.models import Topic
 from skill.models import Skill
 from review.models import Review
+from module.models import Module
 from newsletter.models import Newsletter
-from schedule.models import Schedule
+from notification.models import Notification
+from message.models import Message
+from schedule.models import Schedule, Recording
 from reservation.models import Reservation
 from teaching.models import Teaching
 from cart.models import Cart
@@ -64,6 +68,10 @@ def get_lecturer_profile(profile: Profile):
     return LecturerProfile.objects.get(profile=profile)
 
 
+def get_lecturer(id: int):
+    return LecturerProfile.objects.get(pk=id)
+
+
 def get_student_profile(profile: Profile):
     return StudentProfile.objects.get(profile=profile)
 
@@ -111,8 +119,9 @@ def is_course_found(id: int):
     return Course.objects.filter(id=id).exists()
 
 
-def get_course_lessons(id: int):
-    return Course.lessons.through.objects.filter(course_id=id)
+def get_course_modules(id: int):
+    modules = Course.modules.through.objects.filter(course_id=id).values("module_id")
+    return Module.lessons.through.objects.filter(module_id__in=modules)
 
 
 def get_course_skills(id: int):
@@ -127,8 +136,16 @@ def lessons_number():
     return Lesson.objects.count()
 
 
+def modules_number():
+    return Module.objects.count()
+
+
 def get_lesson(id: int):
     return Lesson.objects.get(pk=id)
+
+
+def get_module(id: int):
+    return Module.objects.get(pk=id)
 
 
 def technologies_number():
@@ -219,6 +236,22 @@ def get_coupon(id: int):
     return Coupon.objects.get(pk=id)
 
 
+def certificates_number():
+    return Certificate.objects.count()
+
+
+def notifications_number():
+    return Notification.objects.count()
+
+
+def recordings_number():
+    return Recording.objects.count()
+
+
+def messages_number():
+    return Message.objects.count()
+
+
 def mock_send_message(mock):
     mock.return_value = {}
 
@@ -232,4 +265,30 @@ def mock_update_event(mock):
 
 
 def mock_delete_event(mock):
+    mock.return_value = {}
+
+
+def mock_get_recordings(mock, schedule_ids):
+    data = [
+        {
+            "id": 1,
+            "name": f"Dummy name",
+            "webContentLink": f"https://example.com/1",
+        }
+    ]
+    for schedule_id in schedule_ids:
+        meeting_id = "{:07d}".format(schedule_id)
+        id = str(uuid.uuid4())
+        data.append(
+            {
+                "id": id,
+                "name": f"Dummy name #{meeting_id}#",
+                "webContentLink": f"https://example.com/{id}",
+            }
+        )
+
+    mock.return_value = data
+
+
+def mock_set_permissions(mock):
     mock.return_value = {}

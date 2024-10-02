@@ -11,9 +11,10 @@ const endpoint = "/best-lecturers" as const;
 type ILecturer = {
   id: string;
   full_name: string;
-  user_title: string | null;
+  title: string | null;
   image: string | null;
   gender: IGender;
+  linkedin_url: string;
 };
 
 export const bestLecturersQuery = () => {
@@ -23,12 +24,13 @@ export const bestLecturersQuery = () => {
     const { data } = await Api.get(url);
     const { results, records_count } = data;
     const modifiedResults = results.map(
-      ({ id, full_name, user_title, image, gender }: ILecturer) => ({
+      ({ id, full_name, title, image, gender, linkedin_url }: ILecturer) => ({
         id,
         name: full_name,
-        role: user_title,
-        photo: image,
+        role: title,
+        avatarUrl: image,
         gender,
+        linkedinUrl: linkedin_url,
       }),
     );
     return { results: modifiedResults, count: records_count };

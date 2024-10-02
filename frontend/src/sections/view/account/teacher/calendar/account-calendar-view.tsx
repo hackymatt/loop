@@ -14,11 +14,12 @@ import { getTimezone } from "src/utils/get-timezone";
 import { useDeleteSchedule } from "src/api/schedules/schedule";
 import { useSchedules, useCreateSchedule } from "src/api/schedules/schedules";
 
+import { useToastContext } from "src/components/toast";
 import Calendar from "src/components/calendar/calendar";
 
 import { IScheduleProp } from "src/types/course";
 
-import LessonCancelForm from "./lesson-cancel-form";
+import DetailsForm from "./details-form";
 // ----------------------------------------------------------------------
 
 const AVAILABLE_STATUS = "Dostępny" as const;
@@ -27,6 +28,8 @@ const SLOT_SIZE = 30 as number;
 
 // ----------------------------------------------------------------------
 export default function AccountScheduleView() {
+  const { enqueueSnackbar } = useToastContext();
+
   const getViewName = useCallback((dateInfo: DatesSetArg): string | undefined => {
     switch (dateInfo.view.type) {
       case "dayGridMonth":
@@ -71,7 +74,7 @@ export default function AccountScheduleView() {
     return formatInTimeZone(datePoint, getTimezone(), "HH:mm:ss");
   }, []);
 
-  const confirmCancellationFormOpen = useBoolean();
+  const detailsFormOpen = useBoolean();
 
   const [scrollTime, setScrollTime] = useState<string>();
   const [eventDetails, setEventDetails] = useState<EventClickArg>();
@@ -95,14 +98,34 @@ export default function AccountScheduleView() {
 
   const events = useMemo(
     () =>
-      schedules?.map((schedule: IScheduleProp) => ({
-        id: schedule.id,
-        groupId: "1",
-        title: schedule.lesson?.title ?? AVAILABLE_STATUS,
-        start: schedule.startTime,
-        end: schedule.endTime,
-        color: schedule.lesson?.title ? stc(schedule.lesson.title) : "",
-      })),
+      schedules?.map((schedule: IScheduleProp) => {
+        const isConfirmed = !!schedule?.meetingUrl;
+        const base = {
+          id: schedule.id,
+          groupId: "1",
+          title: schedule.lesson?.title ?? AVAILABLE_STATUS,
+          start: schedule.startTime,
+          end: schedule.endTime,
+          color: schedule.lesson?.title ? stc(schedule.lesson.title) : "",
+          url: "",
+        };
+        const isReserved = base.title !== AVAILABLE_STATUS;
+        const reserved = isReserved
+          ? {
+              ...base,
+              extendedProps: {
+                ready: schedule.studentsRequired === 0,
+                students: schedule?.students ?? [],
+              },
+            }
+          : base;
+        return isConfirmed
+          ? {
+              ...reserved,
+              url: schedule?.meetingUrl,
+            }
+          : reserved;
+      }),
     [schedules],
   );
 
@@ -138,36 +161,40 @@ export default function AccountScheduleView() {
 
   const handleAddTimeSlot = useCallback(
     async (selectionInfo: DateSelectArg) => {
-      await addTimeSlot({ start_time: selectionInfo.startStr, end_time: selectionInfo.endStr });
-      setScrollTime(getTime(selectionInfo.start));
+      try {
+        await addTimeSlot({ start_time: selectionInfo.startStr, end_time: selectionInfo.endStr });
+        setScrollTime(getTime(selectionInfo.start));
+      } catch {
+        enqueueSnackbar("Wystąpił błąd podczas dodawania terminu", { variant: "error" });
+      }
     },
-    [addTimeSlot, getTime],
+    [addTimeSlot, enqueueSnackbar, getTime],
   );
 
   const handleDeleteTimeSlot = useCallback(
     async (eventInfo: EventClickArg) => {
-      await deleteTimeSlot({ id: eventInfo.event.id });
-      setScrollTime(getTime(new Date(eventInfo.event.start!)));
+      try {
+        await deleteTimeSlot({ id: eventInfo.event.id });
+        setScrollTime(getTime(new Date(eventInfo.event.start!)));
+      } catch {
+        enqueueSnackbar("Wystąpił błąd podczas usuwania terminu", { variant: "error" });
+      }
     },
-    [deleteTimeSlot, getTime],
+    [deleteTimeSlot, enqueueSnackbar, getTime],
   );
 
   const handleEventClick = useCallback(
     async (eventInfo: EventClickArg) => {
+      eventInfo.jsEvent.preventDefault();
       setEventDetails(eventInfo);
       if (eventInfo.event.title === AVAILABLE_STATUS) {
         handleDeleteTimeSlot(eventInfo);
       } else {
-        confirmCancellationFormOpen.onToggle();
+        detailsFormOpen.onToggle();
       }
     },
-    [confirmCancellationFormOpen, handleDeleteTimeSlot],
+    [handleDeleteTimeSlot, detailsFormOpen],
   );
-
-  const handleLessonCancel = useCallback(async () => {
-    await handleDeleteTimeSlot(eventDetails!);
-    confirmCancellationFormOpen.onFalse();
-  }, [confirmCancellationFormOpen, eventDetails, handleDeleteTimeSlot]);
 
   return (
     <>
@@ -192,12 +219,15 @@ export default function AccountScheduleView() {
         slotMaxTime="22:00:00"
       />
 
-      <LessonCancelForm
-        loading={isSubmitting}
-        open={confirmCancellationFormOpen.value}
-        onConfirm={handleLessonCancel}
-        onClose={confirmCancellationFormOpen.onFalse}
-      />
+      {eventDetails && (
+        <DetailsForm
+          eventDetails={eventDetails!}
+          isLoading={isSubmitting}
+          open={detailsFormOpen.value}
+          onConfirm={handleDeleteTimeSlot}
+          onClose={detailsFormOpen.onFalse}
+        />
+      )}
     </>
   );
 }

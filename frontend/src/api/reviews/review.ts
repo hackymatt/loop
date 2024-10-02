@@ -11,7 +11,6 @@ const endpoint = "/reviews" as const;
 
 type IProfile = {
   full_name: string;
-  email: string;
   gender: IGender | null;
   image: string | null;
 };

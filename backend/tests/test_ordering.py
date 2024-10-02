@@ -22,13 +22,17 @@ from .factory import (
     create_coupon_user,
     create_newsletter,
     create_meeting,
+    create_module,
+    create_certificate,
+    create_notification,
+    create_message,
 )
 from .helpers import login
 from django.contrib import auth
 import json
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
-from const import CANCELLATION_TIME
+from config_global import CANCELLATION_TIME
 import uuid
 
 
@@ -115,6 +119,10 @@ class CourseOrderTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -124,36 +132,36 @@ class CourseOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         create_purchase(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile,
-            price=self.course_1.lessons.all()[0].price,
+            price=self.lesson_1.price,
         )
         create_purchase(
-            lesson=self.course_1.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile,
-            price=self.course_1.lessons.all()[1].price,
+            price=self.lesson_2.price,
         )
 
         self.review_course_1_1 = create_review(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_1_2 = create_review(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_course_1_3 = create_review(
-            lesson=self.course_1.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=3,
@@ -185,6 +193,10 @@ class CourseOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -194,65 +206,65 @@ class CourseOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
         create_purchase(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile,
-            price=self.course_2.lessons.all()[0].price,
+            price=self.lesson_3.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile,
-            price=self.course_2.lessons.all()[1].price,
+            price=self.lesson_4.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile_2,
-            price=self.course_2.lessons.all()[0].price,
+            price=self.lesson_3.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile_2,
-            price=self.course_2.lessons.all()[1].price,
+            price=self.lesson_4.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[2],
+            lesson=self.lesson_5,
             student=self.profile_2,
-            price=self.course_2.lessons.all()[2].price,
+            price=self.lesson_5.price,
         )
 
         self.review_course_2_1 = create_review(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_2_2 = create_review(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_course_2_3 = create_review(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=2,
             review="So so lesson.",
         )
         self.review_course_2_4 = create_review(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=1,
             review="So so lesson.",
         )
         self.review_course_2_5 = create_review(
-            lesson=self.course_2.lessons.all()[2],
+            lesson=self.lesson_5,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=4,
@@ -268,6 +280,8 @@ class CourseOrderTest(APITestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -277,29 +291,46 @@ class CourseOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
-        create_purchase(
-            lesson=self.course_3.lessons.all()[0],
+        self.purchase = create_purchase(
+            lesson=self.lesson_6,
             student=self.profile,
-            price=self.course_3.lessons.all()[0].price,
+            price=self.lesson_6.price,
+        )
+        self.schedule = create_schedule(
+            lecturer=self.lecturer_profile_1,
+            start_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                - timedelta(minutes=30 * 101)
+            ),
+            end_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                - timedelta(minutes=30 * 100)
+            ),
+        )
+        create_reservation(
+            student=self.profile,
+            lesson=self.lesson_6,
+            schedule=self.schedule,
+            purchase=self.purchase,
         )
         create_purchase(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile_2,
-            price=self.course_3.lessons.all()[0].price,
+            price=self.lesson_6.price,
         )
 
         self.review_course_3_1 = create_review(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_3_2 = create_review(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=2,
@@ -313,12 +344,14 @@ class CourseOrderTest(APITestCase):
             "duration",
             "rating",
             "students_count",
+            "progress",
         ]
 
     def test_ordering(self):
         for field in self.fields:
-            # no login
-            self.assertFalse(auth.get_user(self.client).is_authenticated)
+            # login
+            login(self, self.data["email"], self.data["password"])
+            self.assertTrue(auth.get_user(self.client).is_authenticated)
             # get data
             response = self.client.get(f"{self.endpoint}?sort_by={field}")
             self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -432,6 +465,10 @@ class ReviewOrderTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -441,25 +478,25 @@ class ReviewOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         self.review_course_1_1 = create_review(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_1_2 = create_review(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_course_1_3 = create_review(
-            lesson=self.course_1.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=3,
@@ -491,6 +528,10 @@ class ReviewOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -500,39 +541,39 @@ class ReviewOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
         self.review_course_2_1 = create_review(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_2_2 = create_review(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_course_2_3 = create_review(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=2,
             review="So so lesson.",
         )
         self.review_course_2_4 = create_review(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=1,
             review="So so lesson.",
         )
         self.review_course_2_5 = create_review(
-            lesson=self.course_2.lessons.all()[2],
+            lesson=self.lesson_5,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=4,
@@ -548,6 +589,8 @@ class ReviewOrderTest(APITestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -557,18 +600,18 @@ class ReviewOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
         self.review_course_3_1 = create_review(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_3_2 = create_review(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=2,
@@ -698,6 +741,10 @@ class ScheduleOrderTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -707,7 +754,7 @@ class ScheduleOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         # course 2
@@ -735,6 +782,10 @@ class ScheduleOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -744,7 +795,7 @@ class ScheduleOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
         # course 3
@@ -756,6 +807,8 @@ class ScheduleOrderTest(APITestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -765,7 +818,7 @@ class ScheduleOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
         for i in range(10):
@@ -884,6 +937,10 @@ class LessonPriceHistoryOrderTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -893,7 +950,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         create_lesson_price_history(self.lesson_1, 15)
@@ -919,6 +976,11 @@ class LessonPriceHistoryOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4]
+        )
+
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
@@ -928,15 +990,15 @@ class LessonPriceHistoryOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4],
+            modules=[self.module_2],
         )
 
-        create_lesson_price_history(self.course_2.lessons.all()[0], 15)
-        create_lesson_price_history(self.course_2.lessons.all()[0], 25)
-        create_lesson_price_history(self.course_2.lessons.all()[0], 5)
-        create_lesson_price_history(self.course_2.lessons.all()[1], 1)
-        create_lesson_price_history(self.course_2.lessons.all()[1], 5)
-        create_lesson_price_history(self.course_2.lessons.all()[1], 3)
+        create_lesson_price_history(self.lesson_3, 15)
+        create_lesson_price_history(self.lesson_3, 25)
+        create_lesson_price_history(self.lesson_3, 5)
+        create_lesson_price_history(self.lesson_4, 1)
+        create_lesson_price_history(self.lesson_4, 5)
+        create_lesson_price_history(self.lesson_4, 3)
 
         self.lesson_5 = create_lesson(
             title="VBA lesson 1",
@@ -954,6 +1016,11 @@ class LessonPriceHistoryOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_3],
         )
+
+        self.module_3 = create_module(
+            title="Module 3", lessons=[self.lesson_5, self.lesson_6]
+        )
+
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
@@ -963,12 +1030,12 @@ class LessonPriceHistoryOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_5, self.lesson_6],
+            modules=[self.module_3],
         )
 
-        create_lesson_price_history(self.course_3.lessons.all()[0], 15)
-        create_lesson_price_history(self.course_3.lessons.all()[0], 25)
-        create_lesson_price_history(self.course_3.lessons.all()[0], 5)
+        create_lesson_price_history(self.lesson_6, 15)
+        create_lesson_price_history(self.lesson_6, 25)
+        create_lesson_price_history(self.lesson_6, 5)
         create_lesson_price_history(self.lesson_6, 1)
         create_lesson_price_history(self.lesson_6, 5)
         create_lesson_price_history(self.lesson_6, 3)
@@ -1357,6 +1424,10 @@ class LecturerOrderTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -1366,36 +1437,36 @@ class LecturerOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         create_purchase(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile,
-            price=self.course_1.lessons.all()[0].price,
+            price=self.lesson_1.price,
         )
         create_purchase(
-            lesson=self.course_1.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile,
-            price=self.course_1.lessons.all()[1].price,
+            price=self.lesson_2.price,
         )
 
         self.review_course_1_1 = create_review(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_1_2 = create_review(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_course_1_3 = create_review(
-            lesson=self.course_1.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=3,
@@ -1427,6 +1498,10 @@ class LecturerOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -1436,65 +1511,65 @@ class LecturerOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
         create_purchase(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile,
-            price=self.course_2.lessons.all()[0].price,
+            price=self.lesson_3.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile,
-            price=self.course_2.lessons.all()[1].price,
+            price=self.lesson_4.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile_2,
-            price=self.course_2.lessons.all()[0].price,
+            price=self.lesson_3.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile_2,
-            price=self.course_2.lessons.all()[1].price,
+            price=self.lesson_4.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[2],
+            lesson=self.lesson_5,
             student=self.profile_2,
-            price=self.course_2.lessons.all()[2].price,
+            price=self.lesson_5.price,
         )
 
         self.review_course_2_1 = create_review(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_2_2 = create_review(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile,
             lecturer=self.lecturer_profile_1,
             rating=4,
             review="Good lesson.",
         )
         self.review_course_2_3 = create_review(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=2,
             review="So so lesson.",
         )
         self.review_course_2_4 = create_review(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=1,
             review="So so lesson.",
         )
         self.review_course_2_5 = create_review(
-            lesson=self.course_2.lessons.all()[2],
+            lesson=self.lesson_5,
             student=self.profile_2,
             lecturer=self.lecturer_profile_1,
             rating=4,
@@ -1510,6 +1585,8 @@ class LecturerOrderTest(APITestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -1519,29 +1596,29 @@ class LecturerOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
         create_purchase(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile,
-            price=self.course_3.lessons.all()[0].price,
+            price=self.lesson_6.price,
         )
         create_purchase(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile_2,
-            price=self.course_3.lessons.all()[0].price,
+            price=self.lesson_6.price,
         )
 
         self.review_course_3_1 = create_review(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile,
             lecturer=self.lecturer_profile_2,
             rating=5,
             review="Great lesson.",
         )
         self.review_course_3_2 = create_review(
-            lesson=self.course_3.lessons.all()[0],
+            lesson=self.lesson_6,
             student=self.profile_2,
             lecturer=self.lecturer_profile_2,
             rating=2,
@@ -1654,6 +1731,10 @@ class PurchaseOrderTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -1663,26 +1744,27 @@ class PurchaseOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         create_purchase(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile,
-            price=self.course_1.lessons.all()[0].price,
+            price=self.lesson_1.price,
         )
 
         create_purchase(
-            lesson=self.course_1.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile,
-            price=self.course_1.lessons.all()[1].price,
+            price=self.lesson_2.price,
         )
 
-        for lesson in self.course_1.lessons.all():
-            create_teaching(
-                lecturer=self.lecturer_profile,
-                lesson=lesson,
-            )
+        for module in self.course_1.modules.all():
+            for lesson in module.lessons.all():
+                create_teaching(
+                    lecturer=self.lecturer_profile,
+                    lesson=lesson,
+                )
 
         self.schedules = []
         for i in range(-100, 10):
@@ -1708,24 +1790,24 @@ class PurchaseOrderTest(APITestCase):
 
             self.schedules.append(schedule)
         self.purchase_1 = create_purchase(
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             student=self.profile,
-            price=self.course_1.lessons.all()[0].price,
+            price=self.lesson_1.price,
         )
         create_reservation(
             student=self.profile,
-            lesson=self.course_1.lessons.all()[0],
+            lesson=self.lesson_1,
             schedule=self.schedules[len(self.schedules) - 3],
             purchase=self.purchase_1,
         )
         self.purchase_2 = create_purchase(
-            lesson=self.course_1.lessons.all()[1],
+            lesson=self.lesson_2,
             student=self.profile,
-            price=self.course_1.lessons.all()[1].price,
+            price=self.lesson_2.price,
         )
         create_reservation(
             student=self.profile,
-            lesson=self.course_1.lessons.all()[1],
+            lesson=self.lesson_2,
             schedule=self.schedules[0],
             purchase=self.purchase_2,
         )
@@ -1755,6 +1837,10 @@ class PurchaseOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -1764,22 +1850,22 @@ class PurchaseOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
         create_purchase(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile,
-            price=self.course_2.lessons.all()[0].price,
+            price=self.lesson_3.price,
         )
         create_purchase(
-            lesson=self.course_2.lessons.all()[1],
+            lesson=self.lesson_4,
             student=self.profile,
-            price=self.course_2.lessons.all()[1].price,
+            price=self.lesson_4.price,
         )
 
         create_review(
-            lesson=self.course_2.lessons.all()[0],
+            lesson=self.lesson_3,
             student=self.profile,
             lecturer=self.lecturer_profile,
             rating=5,
@@ -1795,6 +1881,8 @@ class PurchaseOrderTest(APITestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -1804,7 +1892,7 @@ class PurchaseOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
         self.fields = [
@@ -2274,6 +2362,10 @@ class TeachingOrderTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -2283,17 +2375,18 @@ class TeachingOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         self.teaching = []
-        for lesson in self.course_1.lessons.all():
-            self.teaching.append(
-                create_teaching(
-                    lecturer=self.profile,
-                    lesson=lesson,
+        for module in self.course_1.modules.all():
+            for lesson in module.lessons.all():
+                self.teaching.append(
+                    create_teaching(
+                        lecturer=self.profile,
+                        lesson=lesson,
+                    )
                 )
-            )
 
         # course 2
         self.lesson_3 = create_lesson(
@@ -2320,6 +2413,10 @@ class TeachingOrderTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -2329,7 +2426,7 @@ class TeachingOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
         self.teaching.append(
@@ -2348,6 +2445,8 @@ class TeachingOrderTest(APITestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -2357,7 +2456,7 @@ class TeachingOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
         self.teaching.append(
@@ -3114,6 +3213,878 @@ class NewsletterEntriesOrderTest(APITestCase):
             elif "user_email" in field:
                 field1, field2 = field.split("_")
                 field_values = [course[field1][field2] for course in results]
+            else:
+                field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values,
+                    sorted(field_values, key=lambda d: d["name"], reverse=True),
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values, reverse=True))
+
+
+class ModuleOrderTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/modules"
+        self.admin_data = {
+            "email": "admin_test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.admin_data["email"],
+            password=self.admin_data["password"],
+            is_active=True,
+            is_staff=True,
+        )
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
+        self.user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="test2@example.com",
+            password="Test12345",
+            is_active=True,
+        )
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
+        self.lecturer_user_1 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_1@example.com",
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.lecturer_user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_2@example.com",
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+        )
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+        )
+
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
+
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="9.99",
+            technologies=[self.technology_1],
+        )
+
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_1],
+        )
+
+        self.module_1 = create_module(title="Module 1", lessons=[self.lesson_1])
+
+        self.lesson_3 = create_lesson(
+            title="JS lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="9.99",
+            technologies=[self.technology_2],
+        )
+
+        self.lesson_4 = create_lesson(
+            title="JS lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_2],
+        )
+
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4]
+        )
+
+        self.lesson_5 = create_lesson(
+            title="VBA lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="9.99",
+            technologies=[self.technology_3],
+        )
+
+        self.lesson_6 = create_lesson(
+            title="VBA lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_3],
+        )
+
+        self.module_3 = create_module(
+            title="Module 3", lessons=[self.lesson_5, self.lesson_6, self.lesson_2]
+        )
+
+        self.fields = ["title", "lessons_count"]
+
+    def test_ordering(self):
+        for field in self.fields:
+            login(self, self.admin_data["email"], self.admin_data["password"])
+            self.assertTrue(auth.get_user(self.client).is_authenticated)
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by={field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 3)
+            if "_id" in field:
+                field1, field2 = field.split("_")
+                parent_objects = [
+                    course[field1] for course in results if course[field1] is not None
+                ]
+                field_values = [
+                    parent_object[field2] for parent_object in parent_objects
+                ]
+            elif "coupon_code" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            elif "user_email" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            elif "lessons_count" in field:
+                field_values = [len(course["lessons"]) for course in results]
+            else:
+                field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values, sorted(field_values, key=lambda d: d["name"])
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values))
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by=-{field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 3)
+            if "_id" in field:
+                field1, field2 = field.split("_")
+                parent_objects = [
+                    course[field1] for course in results if course[field1] is not None
+                ]
+                field_values = [
+                    parent_object[field2] for parent_object in parent_objects
+                ]
+            elif "coupon_code" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            elif "user_email" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            elif "lessons_count" in field:
+                field_values = [len(course["lessons"]) for course in results]
+            else:
+                field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values,
+                    sorted(field_values, key=lambda d: d["name"], reverse=True),
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values, reverse=True))
+
+
+class CertificateOrderTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/certificates"
+        self.data = {
+            "email": "user@example.com",
+            "password": "TestPassword123",
+        }
+        self.user_1 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="user2@example.com",
+            password="TestPassword123",
+            is_active=True,
+        )
+        self.user_3 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="user3@example.com",
+            password="TestPassword123",
+            is_active=True,
+        )
+        self.profile_1 = create_student_profile(
+            profile=create_profile(user=self.user_1)
+        )
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
+        self.profile_3 = create_student_profile(
+            profile=create_profile(user=self.user_3)
+        )
+
+        self.lecturer_data = {
+            "email": "lecturer_1@example.com",
+            "password": "TestPassword123",
+        }
+        self.lecturer_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.lecturer_data["email"],
+            password=self.lecturer_data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
+
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
+
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="9.99",
+            technologies=[self.technology_1],
+        )
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_1],
+        )
+        self.lesson_3 = create_lesson(
+            title="Python lesson 3",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_1],
+        )
+        self.lesson_4 = create_lesson(
+            title="Python lesson 4",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_1],
+        )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4]
+        )
+
+        self.course = create_course(
+            title="course_title",
+            description="course_description",
+            level="Podstawowy",
+            skills=[self.skill_1, self.skill_2],
+            topics=[
+                self.topic_1,
+                self.topic_2,
+            ],
+            modules=[self.module_1, self.module_2],
+        )
+
+        for module in self.course.modules.all():
+            for lesson in module.lessons.all():
+                create_teaching(
+                    lecturer=self.lecturer_profile,
+                    lesson=lesson,
+                )
+
+        self.schedules = []
+        for i in range(10):
+            self.schedules.append(
+                create_schedule(
+                    lecturer=self.lecturer_profile,
+                    start_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * i)
+                    ),
+                    end_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * (i + 1))
+                    ),
+                )
+            )
+
+        self.schedules.append(
+            create_schedule(
+                lecturer=self.lecturer_profile,
+                start_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * 100)
+                ),
+                end_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * (100 + 1))
+                ),
+            )
+        )
+
+        self.schedules.append(
+            create_schedule(
+                lecturer=self.lecturer_profile,
+                start_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * 102)
+                ),
+                end_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * (102 + 1))
+                ),
+            )
+        )
+
+        self.schedules.append(
+            create_schedule(
+                lecturer=self.lecturer_profile,
+                start_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * 103)
+                ),
+                end_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * (103 + 1))
+                ),
+            )
+        )
+        self.long_timeslot = create_schedule(
+            lecturer=self.lecturer_profile,
+            start_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 50)
+            ),
+            end_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 53)
+            ),
+            lesson=self.lesson_1,
+        )
+        self.long_timeslot_2 = create_schedule(
+            lecturer=self.lecturer_profile,
+            start_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 30)
+            ),
+            end_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 33)
+            ),
+            lesson=self.lesson_1,
+        )
+
+        self.long_timeslot_3 = create_schedule(
+            lecturer=self.lecturer_profile,
+            start_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 400)
+            ),
+            end_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 403)
+            ),
+            lesson=self.lesson_4,
+        )
+
+        self.purchase_1 = create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile_1,
+            price=self.lesson_1.price,
+        )
+        self.reservation_1 = create_reservation(
+            student=self.profile_1,
+            lesson=self.lesson_1,
+            schedule=self.schedules[0],
+            purchase=self.purchase_1,
+        )
+        self.schedules[0].lesson = self.lesson_1
+        self.schedules[0].save()
+        self.purchase_2 = create_purchase(
+            lesson=self.lesson_2,
+            student=self.profile_2,
+            price=self.lesson_2.price,
+        )
+        self.reservation_2 = create_reservation(
+            student=self.profile_2,
+            lesson=self.lesson_2,
+            schedule=self.schedules[2],
+            purchase=self.purchase_2,
+        )
+        self.schedules[2].lesson = self.lesson_2
+        self.schedules[2].save()
+        self.purchase_3 = create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile_2,
+            price=self.lesson_1.price,
+        )
+        self.reservation_3 = create_reservation(
+            student=self.profile_2,
+            lesson=self.lesson_1,
+            schedule=self.schedules[0],
+            purchase=self.purchase_3,
+        )
+        self.purchase_4 = create_purchase(
+            lesson=self.lesson_2,
+            student=self.profile_1,
+            price=self.lesson_2.price,
+        )
+        self.reservation_4 = create_reservation(
+            student=self.profile_1,
+            lesson=self.lesson_2,
+            schedule=self.schedules[6],
+            purchase=self.purchase_4,
+        )
+        self.schedules[6].lesson = self.lesson_2
+        self.schedules[6].save()
+        self.purchase_5 = create_purchase(
+            lesson=self.lesson_2,
+            student=self.profile_2,
+            price=self.lesson_2.price,
+        )
+        self.reservation_5 = create_reservation(
+            student=self.profile_2,
+            lesson=self.lesson_2,
+            schedule=self.long_timeslot_2,
+            purchase=self.purchase_5,
+        )
+        self.long_timeslot_2.lesson = self.lesson_1
+        self.long_timeslot_2.save()
+        self.purchase_6 = create_purchase(
+            lesson=self.lesson_4,
+            student=self.profile_1,
+            price=self.lesson_4.price,
+        )
+        self.reservation_6 = create_reservation(
+            student=self.profile_1,
+            lesson=self.lesson_4,
+            schedule=self.long_timeslot_3,
+            purchase=self.purchase_6,
+        )
+        self.long_timeslot_3.lesson = self.lesson_4
+        self.long_timeslot_3.save()
+
+        self.certificate = create_certificate(
+            entity_type="L",
+            entity=self.lesson_1,
+            student=self.profile_1,
+        )
+        self.certificate_2 = create_certificate(
+            entity_type="M",
+            entity=self.module_1,
+            student=self.profile_1,
+        )
+
+        self.fields = ["title", "type", "completed_at"]
+
+    def test_ordering(self):
+        for field in self.fields:
+            login(self, self.data["email"], self.data["password"])
+            self.assertTrue(auth.get_user(self.client).is_authenticated)
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by={field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 2)
+            if "_id" in field:
+                field1, field2 = field.split("_")
+                parent_objects = [
+                    course[field1] for course in results if course[field1] is not None
+                ]
+                field_values = [
+                    parent_object[field2] for parent_object in parent_objects
+                ]
+            elif "coupon_code" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            elif "user_email" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            elif "lessons_count" in field:
+                field_values = [len(course["lessons"]) for course in results]
+            else:
+                field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values, sorted(field_values, key=lambda d: d["name"])
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values))
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by=-{field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 2)
+            if "_id" in field:
+                field1, field2 = field.split("_")
+                parent_objects = [
+                    course[field1] for course in results if course[field1] is not None
+                ]
+                field_values = [
+                    parent_object[field2] for parent_object in parent_objects
+                ]
+            elif "coupon_code" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            elif "user_email" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            elif "lessons_count" in field:
+                field_values = [len(course["lessons"]) for course in results]
+            else:
+                field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values,
+                    sorted(field_values, key=lambda d: d["name"], reverse=True),
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values, reverse=True))
+
+
+class NotificationOrderTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/notifications"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
+
+        self.lecturer_data = {
+            "email": "lecturer_1@example.com",
+            "password": "TestPassword123",
+        }
+        self.lecturer_user = create_user(
+            first_name="l1_first_name",
+            last_name="l1_last_name",
+            email=self.lecturer_data["email"],
+            password=self.lecturer_data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
+
+        self.student_notifications = []
+        for i in range(50):
+            self.student_notifications.append(
+                create_notification(
+                    profile=self.profile.profile,
+                    title=f"title_{i}",
+                    subtitle=f"subtitle{i}",
+                    description=f"description{i}",
+                    status="NEW",
+                    path=f"path{i}",
+                    icon=f"icon{i}",
+                )
+            )
+
+        self.lecturer_notifications = []
+        for i in range(100):
+            self.lecturer_notifications.append(
+                create_notification(
+                    profile=self.lecturer_profile.profile,
+                    title=f"title_{i}",
+                    subtitle=f"subtitle{i}",
+                    description=f"description{i}",
+                    status="NEW",
+                    path=f"path{i}",
+                    icon=f"icon{i}",
+                )
+            )
+
+        self.fields = ["created_at"]
+
+    def test_ordering(self):
+        for field in self.fields:
+            login(self, self.data["email"], self.data["password"])
+            self.assertTrue(auth.get_user(self.client).is_authenticated)
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by={field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 50)
+            if "_id" in field:
+                field1, field2 = field.split("_")
+                parent_objects = [
+                    course[field1] for course in results if course[field1] is not None
+                ]
+                field_values = [
+                    parent_object[field2] for parent_object in parent_objects
+                ]
+            elif "coupon_code" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            elif "user_email" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            elif "lessons_count" in field:
+                field_values = [len(course["lessons"]) for course in results]
+            else:
+                field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values, sorted(field_values, key=lambda d: d["name"])
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values))
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by=-{field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 50)
+            if "_id" in field:
+                field1, field2 = field.split("_")
+                parent_objects = [
+                    course[field1] for course in results if course[field1] is not None
+                ]
+                field_values = [
+                    parent_object[field2] for parent_object in parent_objects
+                ]
+            elif "coupon_code" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            elif "user_email" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            elif "lessons_count" in field:
+                field_values = [len(course["lessons"]) for course in results]
+            else:
+                field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values,
+                    sorted(field_values, key=lambda d: d["name"], reverse=True),
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values, reverse=True))
+
+
+class MessageOrderTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/messages"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
+
+        self.lecturer_data = {
+            "email": "lecturer_1@example.com",
+            "password": "TestPassword123",
+        }
+        self.lecturer_user = create_user(
+            first_name="l1_first_name",
+            last_name="l1_last_name",
+            email=self.lecturer_data["email"],
+            password=self.lecturer_data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
+
+        self.student_messages = []
+        for i in range(50):
+            self.student_messages.append(
+                create_message(
+                    sender=self.lecturer_profile.profile,
+                    recipient=self.profile.profile,
+                    subject=f"subject{i}",
+                    body=f"body{i}",
+                    status="NEW",
+                )
+            )
+
+        self.lecturer_messages = []
+        for i in range(100):
+            self.lecturer_messages.append(
+                create_message(
+                    sender=self.profile.profile,
+                    recipient=self.lecturer_profile.profile,
+                    subject=f"subject{i}",
+                    body=f"body{i}",
+                    status="NEW",
+                )
+            )
+
+        self.fields = ["sender", "recipient", "subject", "status", "created_at"]
+
+    def test_ordering(self):
+        for field in self.fields:
+            login(self, self.data["email"], self.data["password"])
+            self.assertTrue(auth.get_user(self.client).is_authenticated)
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by={field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 150)
+            if "_id" in field:
+                field1, field2 = field.split("_")
+                parent_objects = [
+                    course[field1] for course in results if course[field1] is not None
+                ]
+                field_values = [
+                    parent_object[field2] for parent_object in parent_objects
+                ]
+            elif "coupon_code" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            elif "user_email" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            elif "lessons_count" in field:
+                field_values = [len(course["lessons"]) for course in results]
+            elif "sender" in field or "recipient" in field:
+                field_values = [course[field]["full_name"] for course in results]
+            else:
+                field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values, sorted(field_values, key=lambda d: d["name"])
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values))
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by=-{field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 150)
+            if "_id" in field:
+                field1, field2 = field.split("_")
+                parent_objects = [
+                    course[field1] for course in results if course[field1] is not None
+                ]
+                field_values = [
+                    parent_object[field2] for parent_object in parent_objects
+                ]
+            elif "coupon_code" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            elif "user_email" in field:
+                field1, field2 = field.split("_")
+                field_values = [course[field1][field2] for course in results]
+            elif "lessons_count" in field:
+                field_values = [len(course["lessons"]) for course in results]
+            elif "sender" in field or "recipient" in field:
+                field_values = [course[field]["full_name"] for course in results]
             else:
                 field_values = [course[field] for course in results]
             if isinstance(field_values[0], dict):

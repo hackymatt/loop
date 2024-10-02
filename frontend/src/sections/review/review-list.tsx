@@ -58,7 +58,6 @@ export default function ReviewList({
         <Pagination
           count={pagesCount ?? 0}
           page={page}
-          color="primary"
           sx={{
             mt: 5,
             mb: 10,

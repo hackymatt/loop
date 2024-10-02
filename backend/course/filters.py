@@ -9,19 +9,42 @@ from course.models import (
     Course,
 )
 from lesson.models import Lesson, Technology
+from module.models import Module
 from review.models import Review
 from purchase.models import Purchase
 from teaching.models import Teaching
 from profile.models import LecturerProfile
-from django.db.models import OuterRef, Subquery, Value, Avg, Sum, Count, TextField
+from reservation.models import Reservation
+from django.db.models import (
+    OuterRef,
+    Subquery,
+    Value,
+    Avg,
+    Sum,
+    Count,
+    TextField,
+    Case,
+    When,
+    FloatField,
+    F,
+)
 from django.contrib.postgres.aggregates import StringAgg
-from django.db.models.functions import Cast
+from django.db.models.functions import Cast, Coalesce
+from datetime import datetime
+from django.utils.timezone import make_aware
 
 
 def get_rating(queryset):
-    lessons = Course.lessons.through.objects.filter(
-        course=OuterRef(OuterRef("pk"))
-    ).values("lesson_id")
+    course_modules = (
+        Course.modules.through.objects.filter(course=OuterRef(OuterRef(OuterRef("pk"))))
+        .values("module_id")
+        .order_by("id")
+    )
+    lessons = (
+        Module.lessons.through.objects.filter(module__in=Subquery(course_modules))
+        .values("lesson_id")
+        .order_by("id")
+    )
     avg_rating = (
         Review.objects.filter(lesson__in=Subquery(lessons))
         .annotate(dummy_group_by=Value(1))
@@ -30,15 +53,24 @@ def get_rating(queryset):
         .annotate(avg_rating=Avg("rating"))
         .values("avg_rating")
     )
-    courses = queryset.annotate(rating=Subquery(avg_rating))
+    courses = queryset.annotate(
+        rating=Coalesce(Subquery(avg_rating), Value(0), output_field=FloatField())
+    )
 
     return courses
 
 
 def get_duration(queryset):
-    lessons = Course.lessons.through.objects.filter(
-        course=OuterRef(OuterRef("pk"))
-    ).values("lesson_id")
+    course_modules = (
+        Course.modules.through.objects.filter(course=OuterRef(OuterRef(OuterRef("pk"))))
+        .values("module_id")
+        .order_by("id")
+    )
+    lessons = (
+        Module.lessons.through.objects.filter(module__in=Subquery(course_modules))
+        .values("lesson_id")
+        .order_by("id")
+    )
 
     total_duration = (
         Lesson.objects.filter(id__in=Subquery(lessons))
@@ -54,9 +86,16 @@ def get_duration(queryset):
 
 
 def get_price(queryset):
-    lessons = Course.lessons.through.objects.filter(
-        course=OuterRef(OuterRef("pk"))
-    ).values("lesson_id")
+    course_modules = (
+        Course.modules.through.objects.filter(course=OuterRef(OuterRef(OuterRef("pk"))))
+        .values("module_id")
+        .order_by("id")
+    )
+    lessons = (
+        Module.lessons.through.objects.filter(module__in=Subquery(course_modules))
+        .values("lesson_id")
+        .order_by("id")
+    )
 
     total_price = (
         Lesson.objects.filter(id__in=Subquery(lessons))
@@ -72,9 +111,17 @@ def get_price(queryset):
 
 
 def get_students_count(queryset):
-    lessons = Course.lessons.through.objects.filter(
-        course=OuterRef(OuterRef("pk"))
-    ).values("lesson_id")
+    course_modules = (
+        Course.modules.through.objects.filter(course=OuterRef(OuterRef(OuterRef("pk"))))
+        .values("module_id")
+        .order_by("id")
+    )
+    lessons = (
+        Module.lessons.through.objects.filter(module__in=Subquery(course_modules))
+        .values("lesson_id")
+        .order_by("id")
+    )
+
     total_student_count = (
         Purchase.objects.filter(lesson__in=Subquery(lessons))
         .annotate(dummy_group_by=Value(1))
@@ -83,15 +130,77 @@ def get_students_count(queryset):
         .annotate(total_student_count=Count("student"))
         .values("total_student_count")
     )
-    courses = queryset.annotate(students_count=Subquery(total_student_count))
+    courses = queryset.annotate(
+        students_count=Coalesce(Subquery(total_student_count), Value(0))
+    )
+
+    return courses
+
+
+def get_progress(queryset):
+    course_modules = (
+        Course.modules.through.objects.filter(course=OuterRef(OuterRef(OuterRef("pk"))))
+        .values("module_id")
+        .order_by("id")
+    )
+    lessons = (
+        Module.lessons.through.objects.filter(module__in=Subquery(course_modules))
+        .values("lesson_id")
+        .order_by("id")
+    )
+
+    total_completed_count = (
+        Reservation.objects.filter(
+            student__profile__user__email=OuterRef("user_email"),
+            lesson__in=Subquery(lessons),
+            schedule__end_time__lte=make_aware(datetime.now()),
+        )
+        .annotate(dummy_group_by=Value(1))
+        .values("dummy_group_by")
+        .order_by("dummy_group_by")
+        .annotate(total_completed_count=Count("lesson"))
+        .values("total_completed_count")
+    )
+
+    total_lessons_count = (
+        Lesson.objects.filter(id__in=Subquery(lessons))
+        .annotate(dummy_group_by=Value(1))
+        .values("dummy_group_by")
+        .order_by("dummy_group_by")
+        .annotate(total_lessons_count=Count("pk"))
+        .values("total_lessons_count")
+    )
+
+    courses = queryset.annotate(
+        completed_lessons_count=Subquery(total_completed_count),
+        all_lessons_count=Subquery(total_lessons_count),
+    ).annotate(
+        progress=Case(
+            When(all_lessons_count__isnull=True, then=Value(0.0)),
+            When(all_lessons_count=0, then=Value(0.0)),
+            When(completed_lessons_count__isnull=True, then=Value(0.0)),
+            default=F("completed_lessons_count") * 1.0 / F("all_lessons_count"),
+            output_field=FloatField(),
+        )
+    )
 
     return courses
 
 
 def get_lecturers(queryset):
-    lessons = Course.lessons.through.objects.filter(
-        course=OuterRef(OuterRef(OuterRef("pk")))
-    ).values("lesson_id")
+    course_modules = (
+        Course.modules.through.objects.filter(
+            course=OuterRef(OuterRef(OuterRef(OuterRef("pk"))))
+        )
+        .values("module_id")
+        .order_by("id")
+    )
+    lessons = (
+        Module.lessons.through.objects.filter(module__in=Subquery(course_modules))
+        .values("lesson_id")
+        .order_by("id")
+    )
+
     lecturers = (
         Teaching.objects.filter(lesson__in=Subquery(lessons))
         .annotate(dummy_group_by=Value(1))
@@ -117,9 +226,18 @@ def get_lecturers(queryset):
 
 
 def get_technologies(queryset):
-    lessons = Course.lessons.through.objects.filter(
-        course=OuterRef(OuterRef(OuterRef("pk")))
-    ).values("lesson_id")
+    course_modules = (
+        Course.modules.through.objects.filter(
+            course=OuterRef(OuterRef(OuterRef(OuterRef("pk"))))
+        )
+        .values("module_id")
+        .order_by("id")
+    )
+    lessons = (
+        Module.lessons.through.objects.filter(module__in=Subquery(course_modules))
+        .values("lesson_id")
+        .order_by("id")
+    )
 
     technologies = (
         Lesson.technologies.through.objects.filter(lesson_id__in=Subquery(lessons))
@@ -127,7 +245,7 @@ def get_technologies(queryset):
         .distinct()
     )
 
-    technologies = (
+    all_technologies = (
         Technology.objects.filter(id__in=Subquery(technologies))
         .values("name")
         .annotate(dummy_group_by=Value(1))
@@ -137,7 +255,7 @@ def get_technologies(queryset):
         .values("names")
     )
 
-    courses = queryset.annotate(all_technologies=Subquery(technologies))
+    courses = queryset.annotate(all_technologies=Subquery(all_technologies))
 
     return courses
 
@@ -160,6 +278,8 @@ class OrderFilter(OrderingFilter):
                 queryset = get_rating(queryset).order_by(value)
             elif value in ["students_count", "-students_count"]:
                 queryset = get_students_count(queryset).order_by(value)
+            elif value in ["progress", "-progress"]:
+                queryset = get_progress(queryset).order_by(value)
             else:
                 queryset = queryset.order_by(value)
 
@@ -217,6 +337,8 @@ class CourseFilter(FilterSet):
             ("-rating", "Rating DESC"),
             ("students_count", "Students Count ASC"),
             ("-students_count", "Students Count DESC"),
+            ("progress", "Progress ASC"),
+            ("-progress", "Progress DESC"),
         ),
         fields={
             "title": "title",
@@ -231,6 +353,8 @@ class CourseFilter(FilterSet):
             "rating": "-rating",
             "students_count": "students_count",
             "students_count": "-students_count",
+            "progress": "progress",
+            "progress": "-progress",
         },
     )
 

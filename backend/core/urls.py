@@ -15,17 +15,20 @@ from profile.personal_data.views import PersonalDataViewSet
 from profile.profile_data.views import ProfileDataViewSet
 from profile.lecturers.views import LecturerViewSet, BestLecturerViewSet
 from profile.earnings.views import EarningViewSet
-from profile.certificate.views import CertificateViewSet
 from django.urls import path, include
 from django.contrib import admin
 from course.views import (
     CourseViewSet,
     BestCourseViewSet,
 )
+from notification.views import NotificationViewSet
+from message.views import MessageViewSet
+from certificate.views import CertificateViewSet, CertificateInfoViewSet
 from lesson.views import (
     LessonViewSet,
     LessonPriceHistoryViewSet,
 )
+from module.views import ModuleViewSet
 from technology.views import TechnologyViewSet, BestTechnologyViewSet
 from topic.views import TopicViewSet
 from skill.views import SkillViewSet
@@ -35,7 +38,11 @@ from newsletter.views import (
     NewsletterSubscribeViewSet,
     NewsletterUnsubscribeViewSet,
 )
-from schedule.views import ManageScheduleViewSet, ScheduleViewSet
+from schedule.views import (
+    ManageScheduleViewSet,
+    ScheduleViewSet,
+    ScheduleAvailableDateViewSet,
+)
 from stats.views import StatsViewSet
 from wishlist.views import WishlistViewSet
 from cart.views import CartViewSet
@@ -63,8 +70,10 @@ router.register(
 router.register(
     r"verify-code", ProfileVerificationCodeViewSet, basename="user_verification_code"
 )
+router.register(r"certificates", CertificateViewSet, basename="certificates")
 router.register(r"courses", CourseViewSet, basename="courses")
 router.register(r"best-courses", BestCourseViewSet, basename="best_courses")
+router.register(r"modules", ModuleViewSet, basename="modules")
 router.register(r"lessons", LessonViewSet, basename="lessons")
 router.register(
     r"lesson-price-history", LessonPriceHistoryViewSet, basename="lesson_price_history"
@@ -82,6 +91,9 @@ router.register(r"reviews-stats", ReviewStatsViewSet, basename="reviews-stats")
 router.register(r"best-reviews", BestReviewViewSet, basename="best_reviews")
 router.register(r"schedules", ManageScheduleViewSet, basename="schedules")
 router.register(r"lesson-schedules", ScheduleViewSet, basename="lesson_schedules")
+router.register(
+    r"lesson-dates", ScheduleAvailableDateViewSet, basename="lesson_schedules_dates"
+)
 router.register(r"newsletter", NewsletterEntriesViewSet, basename="newsletter")
 router.register(r"wishlist", WishlistViewSet, basename="wishlist")
 router.register(r"cart", CartViewSet, basename="cart")
@@ -93,6 +105,9 @@ router.register(r"finance-history", FinanceHistoryViewSet, basename="finance_his
 router.register(r"earnings", EarningViewSet, basename="earnings")
 router.register(r"coupons", CouponViewSet, basename="coupons")
 router.register(r"coupon-usage", CouponUserViewSet, basename="coupon_usage")
+router.register(r"notifications", NotificationViewSet, basename="notifications")
+router.register(r"messages", MessageViewSet, basename="messages")
+
 
 api_urlpatterns = [
     path("", include(router.urls)),
@@ -120,7 +135,7 @@ api_urlpatterns = [
     ),
     path(
         "certificate/<str:id>",
-        CertificateViewSet.get_certificate,
+        CertificateInfoViewSet.get_certificate,
     ),
     path("contact", ContactViewSet.as_view({"post": "contact"})),
     path(
@@ -141,5 +156,5 @@ urlpatterns = [
         "api/",
         include(api_urlpatterns),
     ),
-    path("admin", admin.site.urls),
+    path("admin/", admin.site.urls),
 ]

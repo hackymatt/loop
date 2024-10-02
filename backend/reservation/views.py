@@ -2,30 +2,20 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from reservation.serializers import (
-    ReservationSerializer,
-    ReservationGetSerializer,
-)
+from reservation.serializers import ReservationSerializer
 from reservation.models import Reservation
 from profile.models import Profile
 from schedule.models import Schedule
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
-from pytz import timezone, utc
-from mailer.mailer import Mailer
-from const import CANCELLATION_TIME, MIN_LESSON_DURATION_MINS
+from config_global import CANCELLATION_TIME, LESSON_DURATION_MULTIPLIER
 
 
 class ReservationViewSet(ModelViewSet):
-    http_method_names = ["get", "post", "delete"]
+    http_method_names = ["post", "delete"]
     queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
     permission_classes = [IsAuthenticated]
-
-    def get_serializer_class(self, *args, **kwargs):
-        if self.request.method == "GET":
-            return ReservationGetSerializer
-        return self.serializer_class
 
     def get_queryset(self):
         user = self.request.user
@@ -55,7 +45,7 @@ class ReservationViewSet(ModelViewSet):
 
         if other_reservations.count() == 0:
             duration = (schedule.end_time - schedule.start_time).total_seconds() / 60
-            timeslots_count = int(duration / MIN_LESSON_DURATION_MINS)
+            timeslots_count = int(duration / LESSON_DURATION_MULTIPLIER)
 
             if timeslots_count == 1:
                 schedule.lesson = None
@@ -74,24 +64,5 @@ class ReservationViewSet(ModelViewSet):
                 schedule.delete()
         else:
             deletion = super().destroy(request, *args, **kwargs)
-
-        mailer = Mailer()
-
-        # notify student
-        data = {
-            **{
-                "lesson_title": reservation.lesson.title,
-                "lecturer_full_name": f"{schedule.lecturer.profile.user.first_name} {schedule.lecturer.profile.user.last_name}",
-                "lesson_start_time": schedule.start_time.replace(tzinfo=utc)
-                .astimezone(timezone("Europe/Warsaw"))
-                .strftime("%d-%m-%Y %H:%M"),
-            }
-        }
-        mailer.send(
-            email_template="remove_reservation.html",
-            to=[student.user.email],
-            subject="Potwierdzenie odwołania rezerwacji",
-            data=data,
-        )
 
         return deletion

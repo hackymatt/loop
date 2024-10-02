@@ -1,12 +1,14 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Container from "@mui/material/Container";
-import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 
-import { useResponsive } from "src/hooks/use-responsive";
-
-import Carousel, { useCarousel, CarouselArrows } from "src/components/carousel";
+import {
+  Carousel,
+  useCarousel,
+  CarouselDotButtons,
+  CarouselArrowBasicButtons,
+} from "src/components/carousel";
 
 import { ICourseProps } from "src/types/course";
 
@@ -19,24 +21,10 @@ type Props = {
 };
 
 export default function LandingFeaturedCourses({ courses }: Props) {
-  const theme = useTheme();
-
   const carousel = useCarousel({
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: theme.breakpoints.values.lg,
-        settings: { slidesToShow: 2 },
-      },
-      {
-        breakpoint: theme.breakpoints.values.md,
-        settings: { slidesToShow: 1 },
-      },
-    ],
+    slideSpacing: "32px",
+    slidesToShow: { xs: 1, md: 2, lg: 3 },
   });
-
-  const mdUp = useResponsive("up", "md");
 
   return (
     <Container
@@ -58,7 +46,11 @@ export default function LandingFeaturedCourses({ courses }: Props) {
           </Typography>
         </Stack>
 
-        {mdUp && <CarouselArrows spacing={2} onNext={carousel.onNext} onPrev={carousel.onPrev} />}
+        <CarouselArrowBasicButtons
+          {...carousel.arrows}
+          options={carousel.options}
+          sx={{ gap: 1, display: { xs: "none", md: "inline-flex" } }}
+        />
       </Stack>
 
       <Box
@@ -68,45 +60,35 @@ export default function LandingFeaturedCourses({ courses }: Props) {
           width: { md: "calc(100% + 32px)" },
         }}
       >
-        <CarouselArrows
-          onNext={carousel.onNext}
-          onPrev={carousel.onPrev}
-          leftButtonProps={{
-            sx: {
-              left: -16,
-              opacity: 1,
-              color: "common.white",
-              bgcolor: "primary.main",
-              "&:hover": { bgcolor: "primary.dark" },
-              ...(mdUp && { display: "none" }),
-            },
-          }}
-          rightButtonProps={{
-            sx: {
-              right: -16,
-              opacity: 1,
-              color: "common.white",
-              bgcolor: "primary.main",
-              "&:hover": { bgcolor: "primary.dark" },
-              ...(mdUp && { display: "none" }),
-            },
+        <Carousel
+          carousel={carousel}
+          sx={{
+            px: 0.5,
+            py: { xs: 5, md: 10 },
           }}
         >
-          <Carousel ref={carousel.carouselRef} {...carousel.carouselSettings}>
-            {courses.map((course) => (
-              <Box
-                key={course.id}
-                sx={{
-                  px: 2,
-                  pt: { xs: 8, md: 10 },
-                  pb: { xs: 10, md: 15 },
-                }}
-              >
-                <CourseItem course={course} vertical />
-              </Box>
-            ))}
-          </Carousel>
-        </CarouselArrows>
+          {courses.map((course) => (
+            <Box
+              key={course.id}
+              sx={{
+                px: 2,
+              }}
+            >
+              <CourseItem course={course} vertical />
+            </Box>
+          ))}
+        </Carousel>
+
+        <CarouselDotButtons
+          scrollSnaps={carousel.dots.scrollSnaps}
+          selectedIndex={carousel.dots.selectedIndex}
+          onClickDot={carousel.dots.onClickDot}
+          sx={{
+            color: "primary.main",
+            justifyContent: "center",
+            display: { xs: "flex", md: "none" },
+          }}
+        />
       </Box>
     </Container>
   );

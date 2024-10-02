@@ -27,6 +27,7 @@ import Scrollbar from "src/components/scrollbar";
 import { IQueryParamValue } from "src/types/query-params";
 import { LessonStatus, IPurchaseItemProp } from "src/types/purchase";
 
+import MessageForm from "./message-form";
 import ReservationNewForm from "./reservation-new-form";
 import FilterSearch from "../../../../filters/filter-search";
 import ReservationDeleteForm from "./reservation-delete-form";
@@ -45,11 +46,11 @@ const TABS = [
 ];
 
 const TABLE_HEAD = [
-  { id: "lesson_title", label: "Nazwa lekcji", minWidth: 250 },
+  { id: "lesson_title", label: "Nazwa lekcji", minWidth: 230 },
   { id: "lesson_status", label: "Status" },
-  { id: "reservation_date", label: "Termin" },
-  { id: "lecturer_id", label: "Instruktor" },
-  { id: "created_at", label: "Data zakupu" },
+  { id: "reservation_date", label: "Termin", minWidth: 150 },
+  { id: "lecturer_id", label: "Instruktor", minWidth: 100 },
+  { id: "created_at", label: "Data zakupu", minWidth: 150 },
   { id: "" },
 ];
 
@@ -60,9 +61,11 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, { label: "Wszystkie", value: -1 }];
 export default function AccountLessonsPage() {
   const addReservationFormOpen = useBoolean();
   const deleteReservationFormOpen = useBoolean();
+  const sendMessageFormOpen = useBoolean();
 
   const [addedPurchase, setAddedPurchase] = useState<IPurchaseItemProp>();
   const [deletedPurchase, setDeletedPurchase] = useState<IPurchaseItemProp>();
+  const [messagePurchase, setMessagePurchase] = useState<IPurchaseItemProp>();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
@@ -136,6 +139,14 @@ export default function AccountLessonsPage() {
     [deleteReservationFormOpen],
   );
 
+  const handleSendMessage = useCallback(
+    (purchase: IPurchaseItemProp) => {
+      setMessagePurchase(purchase);
+      sendMessageFormOpen.onToggle();
+    },
+    [sendMessageFormOpen],
+  );
+
   return (
     <>
       <Typography variant="h5" sx={{ mb: 3 }}>
@@ -155,12 +166,6 @@ export default function AccountLessonsPage() {
       </Tabs>
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 5, mb: 3 }}>
-        <FilterSearch
-          value={filters?.course_title ?? ""}
-          onChangeSearch={(value) => handleChange("course_title", value)}
-          placeholder="Nazwa kursu..."
-        />
-
         <FilterSearch
           value={filters?.lesson_title ?? ""}
           onChangeSearch={(value) => handleChange("lesson_title", value)}
@@ -221,6 +226,7 @@ export default function AccountLessonsPage() {
                     row={row}
                     onAdd={handleAddReservation}
                     onDelete={handleDeleteReservation}
+                    onSendMessage={handleSendMessage}
                   />
                 ))}
               </TableBody>
@@ -256,6 +262,14 @@ export default function AccountLessonsPage() {
           purchase={deletedPurchase}
           open={deleteReservationFormOpen.value}
           onClose={deleteReservationFormOpen.onFalse}
+        />
+      )}
+
+      {messagePurchase && (
+        <MessageForm
+          purchase={messagePurchase}
+          open={sendMessageFormOpen.value}
+          onClose={sendMessageFormOpen.onFalse}
         />
       )}
     </>

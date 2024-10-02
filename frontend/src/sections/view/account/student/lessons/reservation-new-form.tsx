@@ -16,6 +16,7 @@ import { useBoolean } from "src/hooks/use-boolean";
 
 import { getTimezone } from "src/utils/get-timezone";
 
+import { useLessonDates } from "src/api/lesson-dates/lesson-dates";
 import { useCreateReservation } from "src/api/reservations/reservations";
 import { useLessonLecturers } from "src/api/lesson-lecturers/lesson-lecturers";
 import { useLessonSchedules } from "src/api/lesson-schedules/lesson-schedules";
@@ -35,6 +36,8 @@ interface Props extends DialogProps {
   purchase: IPurchaseItemProp;
   onClose: VoidFunction;
 }
+
+type SlotProps = { time: string; studentsRequired: number };
 
 const DEFAULT_USER = { id: "", avatarUrl: "", name: "Wszyscy" } as const;
 
@@ -69,9 +72,11 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
   );
 
   const today = useMemo(() => format(new Date(), "yyyy-MM-dd"), []);
+  const currentYearMonth = useMemo(() => format(new Date(), "yyyy-MM"), []);
   const [error, setError] = useState<string | undefined>();
   const [user, setUser] = useState<ITeamMemberProps>(DEFAULT_USER);
   const [date, setDate] = useState<string>(today);
+  const [yearMonth, setYearMonth] = useState<string>(currentYearMonth);
 
   const queryParams = useMemo(
     () => ({
@@ -85,9 +90,22 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
     [date, purchase?.lessonDuration, purchase?.lessonId, user.id],
   );
 
+  const dateQueryParams = useMemo(
+    () => ({
+      lecturer_id: queryParams.lecturer_id,
+      lesson_id: queryParams.lesson_id,
+      duration: queryParams.duration,
+      year_month: yearMonth,
+      page_size: -1,
+    }),
+    [queryParams.duration, queryParams.lecturer_id, queryParams.lesson_id, yearMonth],
+  );
+
   const { data: lessonSchedules, isLoading: isLoadingTimeSlots } = useLessonSchedules(
     date === today ? { ...queryParams, reserved: "True" } : queryParams,
   );
+
+  const { data: lessonDates, isLoading: isLoadingDates } = useLessonDates(dateQueryParams);
 
   const slots = useMemo(() => {
     const allSlots = lessonSchedules?.map((lessonSchedule: IScheduleProp) => {
@@ -98,7 +116,16 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
       };
     });
 
-    return Array.from(new Set(allSlots)).sort();
+    const filteredSlots = Object.values(
+      allSlots?.reduce((acc: { [key: string]: SlotProps }, slot) => {
+        if (!acc[slot.time] || slot.studentsRequired < acc[slot.time].studentsRequired) {
+          acc[slot.time] = slot;
+        }
+        return acc;
+      }, {}) ?? {},
+    );
+
+    return Array.from(new Set(filteredSlots)).sort();
   }, [lessonSchedules]);
 
   const [slot, setSlot] = useState<string>(slots?.[0]?.time);
@@ -114,8 +141,11 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
       const dt = new Date(`${date}T${slot}:00Z`);
       const time = new Date(dt.valueOf() + dt.getTimezoneOffset() * 60 * 1000);
       const startTime = formatInTimeZone(time, "UTC", "yyyy-MM-dd'T'HH:mm:ss'Z'");
-      const schedule = lessonSchedules.find(
+      const schedules = lessonSchedules.filter(
         (lessonSchedule: IScheduleProp) => lessonSchedule.startTime === startTime,
+      );
+      const schedule = schedules.reduce((min: IScheduleProp, lessonSchedule: IScheduleProp) =>
+        lessonSchedule.studentsRequired < min.studentsRequired ? lessonSchedule : min,
       );
       if (schedule) {
         try {
@@ -150,8 +180,12 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
             availableTimeSlots={slots ?? []}
             currentSlot={slot}
             onSlotChange={(event, selectedSlot) => setSlot(selectedSlot)}
+            availableDates={lessonDates ?? []}
+            onMonthChange={(month) => {
+              setYearMonth(month);
+            }}
             isLoadingUsers={isLoadingUsers}
-            isLoadingTimeSlots={isLoadingTimeSlots}
+            isLoadingTimeSlots={isLoadingTimeSlots || isLoadingDates}
             error={error}
           />
         </DialogContent>

@@ -8,6 +8,8 @@ from rest_framework.serializers import (
 from drf_extra_fields.fields import Base64ImageField
 from profile.models import Profile, LecturerProfile, AdminProfile, StudentProfile
 from finance.models import Finance, FinanceHistory
+from notification.utils import notify
+import urllib.parse
 
 
 def get_finance(profile):
@@ -76,6 +78,14 @@ class UserSerializer(ModelSerializer):
                 AdminProfile.objects.get_or_create(profile=instance)
             elif user_type[0] == "W":
                 LecturerProfile.objects.get_or_create(profile=instance)
+                notify(
+                    profile=instance,
+                    title="Gratulacje! Jesteś nauczycielem",
+                    subtitle="",
+                    description="Zostałeś nauczycielem, w celu prowadzenia szkoleń uzupełnij swój profil instruktora.",
+                    path="/account/teacher/profile",
+                    icon="mdi:teach",
+                )
             else:
                 StudentProfile.objects.get_or_create(profile=instance)
 
@@ -102,6 +112,14 @@ class UserSerializer(ModelSerializer):
                     account=finance.account,
                     rate=current_rate,
                     commission=current_commission,
+                )
+                notify(
+                    profile=instance,
+                    title="Stawka została zmieniona",
+                    subtitle="",
+                    description=f"Twoje wynagrodzenie uległo zmianie. Stawka godzinowa: {rate} zł, prowizja: {commission}.",
+                    path="/account/teacher/finance",
+                    icon="mdi:finance",
                 )
 
             finance.rate = rate

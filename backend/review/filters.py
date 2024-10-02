@@ -1,6 +1,7 @@
-from django_filters import FilterSet, OrderingFilter, NumberFilter
+from django_filters import FilterSet, OrderingFilter, NumberFilter, UUIDFilter
 from review.models import Review
 from course.models import Course
+from module.models import Module
 
 
 class OrderFilter(OrderingFilter):
@@ -22,6 +23,9 @@ class ReviewFilter(FilterSet):
     )
     lesson_id = NumberFilter(field_name="lesson__id", lookup_expr="exact")
     lecturer_id = NumberFilter(field_name="lecturer__id", lookup_expr="exact")
+    lecturer_uuid = UUIDFilter(
+        field_name="lecturer__profile__uuid", lookup_expr="exact"
+    )
     student_id = NumberFilter(field_name="student__id", lookup_expr="exact")
     rating = NumberFilter(field_name="rating", lookup_expr="exact")
     rating_from = NumberFilter(field_name="rating", lookup_expr="gte")
@@ -43,6 +47,7 @@ class ReviewFilter(FilterSet):
             "course_id",
             "lesson_id",
             "lecturer_id",
+            "lecturer_uuid",
             "student_id",
             "rating",
             "rating_from",
@@ -53,8 +58,15 @@ class ReviewFilter(FilterSet):
     def filter_course_id(self, queryset, field_name, value):
         lookup_field_name = f"{field_name}__in"
 
-        lessons = Course.lessons.through.objects.filter(course=value).values(
-            "lesson_id"
+        course_modules = (
+            Course.modules.through.objects.filter(course=value)
+            .values("module_id")
+            .order_by("id")
+        )
+        lessons = (
+            Module.lessons.through.objects.filter(module__in=course_modules)
+            .values("lesson_id")
+            .order_by("id")
         )
 
         return queryset.filter(**{lookup_field_name: lessons})

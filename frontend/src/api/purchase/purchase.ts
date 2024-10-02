@@ -16,7 +16,6 @@ const endpoint = "/purchase" as const;
 type ILecturer = {
   id: string;
   full_name: string;
-  email: string;
   gender: IGender | null;
   image: string | null;
 };
@@ -25,6 +24,7 @@ type ILesson = {
   id: string;
   title: string;
   duration: number;
+  github_url: string;
 };
 
 type IReview = {
@@ -45,6 +45,11 @@ type IReservation = {
   schedule: ISchedule;
 };
 
+type IRecording = {
+  file_name: string;
+  file_url: string;
+};
+
 type IPurchase = {
   id: string;
   lesson: ILesson;
@@ -55,6 +60,7 @@ type IPurchase = {
   created_at: string;
   price: number;
   meeting_url?: string;
+  recordings: IRecording[];
 };
 
 type ICreatePurchase = {
@@ -86,13 +92,15 @@ export const purchaseQuery = (query?: IQueryParams) => {
         review_status,
         review,
         meeting_url,
+        recordings,
         created_at,
       }: IPurchase) => {
-        const { id: lessonId, title: lessonTitle, duration } = lesson;
+        const { id: lessonId, title: lessonTitle, duration, github_url } = lesson;
         return {
           id,
           lessonId,
           lessonTitle,
+          lessonResource: github_url,
           lessonDuration: duration,
           lessonStatus: lesson_status,
           lessonSlot: reservation
@@ -103,7 +111,6 @@ export const purchaseQuery = (query?: IQueryParams) => {
             ? {
                 id: reservation?.schedule.lecturer.id,
                 name: reservation?.schedule.lecturer.full_name,
-                email: reservation?.schedule.lecturer.email,
                 avatarUrl: reservation?.schedule.lecturer.image,
                 gender: reservation?.schedule.lecturer.gender,
               }
@@ -113,6 +120,10 @@ export const purchaseQuery = (query?: IQueryParams) => {
           ratingNumber: review?.rating,
           review: review?.review,
           meetingUrl: meeting_url,
+          recordings: recordings.map(({ file_name, file_url }: IRecording) => ({
+            name: file_name,
+            url: file_url,
+          })),
           createdAt: created_at,
         };
       },

@@ -11,6 +11,7 @@ from .factory import (
     create_skill,
     create_topic,
     create_lesson_price_history,
+    create_module,
 )
 from .helpers import (
     login,
@@ -77,6 +78,10 @@ class LessonPriceHistoryTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -86,7 +91,7 @@ class LessonPriceHistoryTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         create_lesson_price_history(self.lesson_1, 15)
@@ -112,6 +117,10 @@ class LessonPriceHistoryTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4]
+        )
+
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
@@ -121,7 +130,7 @@ class LessonPriceHistoryTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4],
+            modules=[self.module_2],
         )
 
         create_lesson_price_history(self.lesson_3, 15)
@@ -147,6 +156,10 @@ class LessonPriceHistoryTest(APITestCase):
             price="2.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(
+            title="Module 3", lessons=[self.lesson_5, self.lesson_6]
+        )
+
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
@@ -156,7 +169,7 @@ class LessonPriceHistoryTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_5, self.lesson_6],
+            modules=[self.module_3],
         )
 
         create_lesson_price_history(self.lesson_5, 15)

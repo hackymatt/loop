@@ -23,6 +23,10 @@ from .factory import (
     create_coupon_user,
     create_newsletter,
     create_meeting,
+    create_module,
+    create_certificate,
+    create_notification,
+    create_message,
 )
 from .helpers import login
 from django.contrib import auth
@@ -30,7 +34,7 @@ import json
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from random import sample
-from const import CANCELLATION_TIME
+from config_global import CANCELLATION_TIME
 import uuid
 
 
@@ -109,6 +113,10 @@ class CourseFilterTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -118,7 +126,7 @@ class CourseFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         create_teaching(
@@ -197,6 +205,10 @@ class CourseFilterTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -206,7 +218,7 @@ class CourseFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
         create_teaching(
@@ -306,6 +318,8 @@ class CourseFilterTest(APITestCase):
             technologies=[self.technology_3],
         )
 
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -315,7 +329,7 @@ class CourseFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
         create_teaching(
@@ -517,6 +531,10 @@ class ReviewFilterTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -526,7 +544,7 @@ class ReviewFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         self.review_course_1_1 = create_review(
@@ -576,6 +594,10 @@ class ReviewFilterTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -585,7 +607,7 @@ class ReviewFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
         self.review_course_2_1 = create_review(
@@ -633,6 +655,8 @@ class ReviewFilterTest(APITestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -642,7 +666,7 @@ class ReviewFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
         self.review_course_3_1 = create_review(
@@ -686,6 +710,18 @@ class ReviewFilterTest(APITestCase):
         # get data
         response = self.client.get(
             f"{self.endpoint}?lecturer_id={self.lecturer_profile_1.id}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 10)
+
+    def test_lecturer_uuid_filter(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(
+            f"{self.endpoint}?lecturer_uuid={self.lecturer_profile_1.profile.uuid}"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
@@ -772,6 +808,8 @@ class ScheduleFilterTest(APITestCase):
         self.lecturer_profile_2 = create_lecturer_profile(
             profile=create_profile(user=self.lecturer_user_2, user_type="W")
         )
+        create_finance(lecturer=self.lecturer_profile_1, rate=150, commission=0)
+        create_finance(lecturer=self.lecturer_profile_2, rate=120, commission=10)
 
         self.technology_1 = create_technology(name="Python")
         self.technology_2 = create_technology(name="JS")
@@ -801,6 +839,10 @@ class ScheduleFilterTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -810,18 +852,19 @@ class ScheduleFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
-        for lesson in self.course_1.lessons.all():
-            create_teaching(
-                lecturer=self.lecturer_profile_1,
-                lesson=lesson,
-            )
-            create_teaching(
-                lecturer=self.lecturer_profile_2,
-                lesson=lesson,
-            )
+        for module in self.course_1.modules.all():
+            for lesson in module.lessons.all():
+                create_teaching(
+                    lecturer=self.lecturer_profile_1,
+                    lesson=lesson,
+                )
+                create_teaching(
+                    lecturer=self.lecturer_profile_2,
+                    lesson=lesson,
+                )
 
         # course 2
         self.lesson_3 = create_lesson(
@@ -848,6 +891,10 @@ class ScheduleFilterTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -857,18 +904,19 @@ class ScheduleFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
-        for lesson in self.course_2.lessons.all():
-            create_teaching(
-                lecturer=self.lecturer_profile_1,
-                lesson=lesson,
-            )
-            create_teaching(
-                lecturer=self.lecturer_profile_2,
-                lesson=lesson,
-            )
+        for module in self.course_2.modules.all():
+            for lesson in module.lessons.all():
+                create_teaching(
+                    lecturer=self.lecturer_profile_1,
+                    lesson=lesson,
+                )
+                create_teaching(
+                    lecturer=self.lecturer_profile_2,
+                    lesson=lesson,
+                )
 
         # course 3
         self.lesson_6 = create_lesson(
@@ -879,6 +927,8 @@ class ScheduleFilterTest(APITestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -888,18 +938,19 @@ class ScheduleFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
-        for lesson in self.course_3.lessons.all():
-            create_teaching(
-                lecturer=self.lecturer_profile_1,
-                lesson=lesson,
-            )
-            create_teaching(
-                lecturer=self.lecturer_profile_2,
-                lesson=lesson,
-            )
+        for module in self.course_3.modules.all():
+            for lesson in module.lessons.all():
+                create_teaching(
+                    lecturer=self.lecturer_profile_1,
+                    lesson=lesson,
+                )
+                create_teaching(
+                    lecturer=self.lecturer_profile_2,
+                    lesson=lesson,
+                )
 
         self.schedules = []
         for i in range(50):
@@ -949,6 +1000,8 @@ class ScheduleFilterTest(APITestCase):
             schedule=self.schedules[0],
             purchase=self.purchase_1,
         )
+        self.schedules[0].lesson = self.lesson_1
+        self.schedules[0].save()
         self.purchase_2 = create_purchase(
             lesson=self.lesson_2,
             student=self.profile,
@@ -960,6 +1013,8 @@ class ScheduleFilterTest(APITestCase):
             schedule=self.schedules[1],
             purchase=self.purchase_2,
         )
+        self.schedules[1].lesson = self.lesson_2
+        self.schedules[1].save()
 
     def test_reserved_filter(self):
         # login
@@ -1044,6 +1099,282 @@ class ScheduleFilterTest(APITestCase):
         self.assertEqual(count, 50)
 
 
+class LessonDatesFilterTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/lesson-dates"
+        self.admin_data = {
+            "email": "admin_test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.admin_data["email"],
+            password=self.admin_data["password"],
+            is_active=True,
+            is_staff=True,
+        )
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
+        self.user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="test2@example.com",
+            password="Test12345",
+            is_active=True,
+        )
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
+        self.lecturer_data = {
+            "email": "lecturer_1@example.com",
+            "password": "TestPassword123",
+        }
+        self.lecturer_user_1 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.lecturer_data["email"],
+            password=self.lecturer_data["password"],
+            is_active=True,
+        )
+        self.lecturer_user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_2@example.com",
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+        )
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+        )
+
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
+
+        # course 1
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="9.99",
+            technologies=[self.technology_1],
+        )
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_1],
+        )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
+        self.course_1 = create_course(
+            title="Python Beginner",
+            description="Learn Python today",
+            level="Podstawowy",
+            skills=[self.skill_1, self.skill_2],
+            topics=[
+                self.topic_1,
+                self.topic_2,
+            ],
+            modules=[self.module_1],
+        )
+
+        for module in self.course_1.modules.all():
+            for lesson in module.lessons.all():
+                create_teaching(
+                    lecturer=self.lecturer_profile_1,
+                    lesson=lesson,
+                )
+                create_teaching(
+                    lecturer=self.lecturer_profile_2,
+                    lesson=lesson,
+                )
+
+        # course 2
+        self.lesson_3 = create_lesson(
+            title="JS lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="9.99",
+            technologies=[self.technology_2],
+        )
+        self.lesson_4 = create_lesson(
+            title="JS lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_2],
+        )
+        self.lesson_5 = create_lesson(
+            title="JS lesson 3",
+            description="bbbb",
+            duration="120",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_2],
+        )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
+        self.course_2 = create_course(
+            title="Javascript course for Advanced",
+            description="Course for programmers",
+            level="Zaawansowany",
+            skills=[self.skill_1, self.skill_2],
+            topics=[
+                self.topic_1,
+                self.topic_2,
+            ],
+            modules=[self.module_2],
+        )
+
+        for module in self.course_2.modules.all():
+            for lesson in module.lessons.all():
+                create_teaching(
+                    lecturer=self.lecturer_profile_1,
+                    lesson=lesson,
+                )
+                create_teaching(
+                    lecturer=self.lecturer_profile_2,
+                    lesson=lesson,
+                )
+
+        # course 3
+        self.lesson_6 = create_lesson(
+            title="VBA lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="9.99",
+            technologies=[self.technology_3],
+        )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
+        self.course_3 = create_course(
+            title="VBA course for Expert",
+            description="Course for programmers",
+            level="Ekspert",
+            skills=[self.skill_1, self.skill_2],
+            topics=[
+                self.topic_1,
+                self.topic_2,
+            ],
+            modules=[self.module_3],
+        )
+
+        for module in self.course_3.modules.all():
+            for lesson in module.lessons.all():
+                create_teaching(
+                    lecturer=self.lecturer_profile_1,
+                    lesson=lesson,
+                )
+                create_teaching(
+                    lecturer=self.lecturer_profile_2,
+                    lesson=lesson,
+                )
+
+        self.schedules = []
+
+        date_48_hours_ago = datetime.now().replace(
+            minute=30, second=0, microsecond=0
+        ) - timedelta(hours=48)
+
+        for i in range(150):
+            self.schedules.append(
+                create_schedule(
+                    lecturer=self.lecturer_profile_1,
+                    start_time=make_aware(date_48_hours_ago + timedelta(hours=30 * i)),
+                    end_time=make_aware(
+                        date_48_hours_ago + timedelta(hours=30 * (i + 1))
+                    ),
+                )
+            )
+            self.schedules.append(
+                create_schedule(
+                    lecturer=self.lecturer_profile_2,
+                    start_time=make_aware(date_48_hours_ago + timedelta(hours=30 * i)),
+                    end_time=make_aware(
+                        date_48_hours_ago + timedelta(hours=30 * (i + 1))
+                    ),
+                )
+            )
+
+    def test_lesson_id_filter(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}?lesson_id={self.lesson_1.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 147)
+
+    def test_lecturer_id_filter(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(
+            f"{self.endpoint}?lecturer_id={self.lecturer_profile_1.id}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 147)
+
+    def test_year_month_filter(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        time = str(self.schedules[len(self.schedules) - 1].start_time)[0:7]
+        response = self.client.get(f"{self.endpoint}?year_month={time}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertNotEqual(count, 0)
+
+    def test_duration_filter(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}?duration=60")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 147)
+
+
 class LessonPriceHistoryFilterTest(APITestCase):
     def setUp(self):
         self.endpoint = "/api/lesson-price-history"
@@ -1090,6 +1421,10 @@ class LessonPriceHistoryFilterTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -1099,7 +1434,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         create_lesson_price_history(self.lesson_1, 15)
@@ -1125,6 +1460,10 @@ class LessonPriceHistoryFilterTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4]
+        )
+
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
@@ -1134,7 +1473,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4],
+            modules=[self.module_2],
         )
 
         create_lesson_price_history(self.lesson_3, 15)
@@ -1160,6 +1499,10 @@ class LessonPriceHistoryFilterTest(APITestCase):
             price="2.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(
+            title="Module 3", lessons=[self.lesson_5, self.lesson_6]
+        )
+
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
@@ -1169,7 +1512,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_5, self.lesson_6],
+            modules=[self.module_3],
         )
 
         create_lesson_price_history(self.lesson_5, 15)
@@ -1284,6 +1627,10 @@ class TechnologyFilterTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -1293,7 +1640,7 @@ class TechnologyFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
     def test_name_filter(self):
@@ -1500,6 +1847,10 @@ class LecturerFilterTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -1509,7 +1860,7 @@ class LecturerFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         create_teaching(
@@ -1576,6 +1927,20 @@ class LecturerFilterTest(APITestCase):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
         response = self.client.get(f"{self.endpoint}?id={self.lecturer_profile_1.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        ids = [record["id"] for record in results]
+        self.assertEqual(ids, [self.lecturer_profile_1.id])
+
+    def test_uuid_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(
+            f"{self.endpoint}?uuid={self.lecturer_profile_1.profile.uuid}"
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
@@ -1660,6 +2025,10 @@ class PurchaseFilterTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2, self.lesson_3]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -1669,7 +2038,7 @@ class PurchaseFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2, self.lesson_3],
+            modules=[self.module_1],
         )
 
         create_purchase(
@@ -1690,11 +2059,12 @@ class PurchaseFilterTest(APITestCase):
             price=self.lesson_2.price,
         )
 
-        for lesson in self.course_1.lessons.all():
-            create_teaching(
-                lecturer=self.lecturer_profile,
-                lesson=lesson,
-            )
+        for module in self.course_1.modules.all():
+            for lesson in module.lessons.all():
+                create_teaching(
+                    lecturer=self.lecturer_profile,
+                    lesson=lesson,
+                )
 
         self.schedules = []
         for i in range(-100, 10):
@@ -1787,6 +2157,11 @@ class PurchaseFilterTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_4, self.lesson_5, self.lesson_6]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -1796,7 +2171,7 @@ class PurchaseFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_4, self.lesson_5, self.lesson_6],
+            modules=[self.module_2],
         )
 
         create_purchase(
@@ -1827,6 +2202,9 @@ class PurchaseFilterTest(APITestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_7])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -1836,7 +2214,7 @@ class PurchaseFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_7],
+            modules=[self.module_3],
         )
 
     def test_lesson_title_filter(self):
@@ -2380,6 +2758,10 @@ class ManageTeachingFilterTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -2389,17 +2771,18 @@ class ManageTeachingFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         self.teaching = []
-        for lesson in self.course_1.lessons.all():
-            self.teaching.append(
-                create_teaching(
-                    lecturer=self.profile,
-                    lesson=lesson,
+        for module in self.course_1.modules.all():
+            for lesson in module.lessons.all():
+                self.teaching.append(
+                    create_teaching(
+                        lecturer=self.profile,
+                        lesson=lesson,
+                    )
                 )
-            )
 
         # course 2
         self.lesson_3 = create_lesson(
@@ -2426,6 +2809,10 @@ class ManageTeachingFilterTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -2435,7 +2822,7 @@ class ManageTeachingFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
         self.teaching.append(
@@ -2454,6 +2841,8 @@ class ManageTeachingFilterTest(APITestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -2463,7 +2852,7 @@ class ManageTeachingFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
         self.teaching.append(
@@ -2648,6 +3037,10 @@ class TeachingFilterTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
@@ -2657,17 +3050,18 @@ class TeachingFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2],
+            modules=[self.module_1],
         )
 
         self.teaching = []
-        for lesson in self.course_1.lessons.all():
-            self.teaching.append(
-                create_teaching(
-                    lecturer=self.profile,
-                    lesson=lesson,
+        for module in self.course_1.modules.all():
+            for lesson in module.lessons.all():
+                self.teaching.append(
+                    create_teaching(
+                        lecturer=self.profile,
+                        lesson=lesson,
+                    )
                 )
-            )
 
         # course 2
         self.lesson_3 = create_lesson(
@@ -2694,6 +3088,10 @@ class TeachingFilterTest(APITestCase):
             price="2.99",
             technologies=[self.technology_2],
         )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4, self.lesson_5]
+        )
+
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
@@ -2703,7 +3101,7 @@ class TeachingFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_3, self.lesson_4, self.lesson_5],
+            modules=[self.module_2],
         )
 
         self.teaching.append(
@@ -2722,6 +3120,8 @@ class TeachingFilterTest(APITestCase):
             price="9.99",
             technologies=[self.technology_3],
         )
+        self.module_3 = create_module(title="Module 3", lessons=[self.lesson_6])
+
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
@@ -2731,7 +3131,7 @@ class TeachingFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_6],
+            modules=[self.module_3],
         )
 
         self.teaching.append(
@@ -2884,7 +3284,7 @@ class UsersFilterTest(APITestCase):
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 8)
-        values = list(set([variable == record[column] for record in results]))
+        values = list(set([True == record[column] for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
 
@@ -3645,6 +4045,13 @@ class EarningsFilterTest(APITestCase):
         self.skill_1 = create_skill(name="coding")
         self.skill_2 = create_skill(name="IDE")
 
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4]
+        )
+
         self.course = create_course(
             title="course_title",
             description="course_description",
@@ -3654,14 +4061,15 @@ class EarningsFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
-            lessons=[self.lesson_1, self.lesson_2, self.lesson_3, self.lesson_4],
+            modules=[self.module_1, self.module_2],
         )
 
-        for lesson in self.course.lessons.all():
-            create_teaching(
-                lecturer=self.lecturer_profile_1,
-                lesson=lesson,
-            )
+        for module in self.course.modules.all():
+            for lesson in module.lessons.all():
+                create_teaching(
+                    lecturer=self.lecturer_profile_1,
+                    lesson=lesson,
+                )
 
         self.schedules = []
         for i in range(28):
@@ -3776,7 +4184,7 @@ class EarningsFilterTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         column = "month"
-        variable = str(self.purchases[0].created_at)[5:7]
+        variable = str(self.reservations[0].schedule.end_time)[5:7]
         if variable[0] == "0":
             variable = variable[1]
         variable = int(variable)
@@ -3913,6 +4321,698 @@ class NewsletterEntriesFilterTest(APITestCase):
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 20)
+        values = list(set([variable in record[column] for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+
+class ModuleFilterTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/modules"
+        self.admin_data = {
+            "email": "admin_test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.admin_data["email"],
+            password=self.admin_data["password"],
+            is_active=True,
+            is_staff=True,
+        )
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
+        self.user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="test2@example.com",
+            password="Test12345",
+            is_active=True,
+        )
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
+        self.lecturer_user_1 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_1@example.com",
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.lecturer_user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="lecturer_2@example.com",
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile_1 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+        )
+        self.lecturer_profile_2 = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+        )
+
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
+
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="9.99",
+            technologies=[self.technology_1],
+        )
+
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_1],
+        )
+
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
+        self.lesson_3 = create_lesson(
+            title="JS lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="9.99",
+            technologies=[self.technology_2],
+        )
+
+        self.lesson_4 = create_lesson(
+            title="JS lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_2],
+        )
+
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4]
+        )
+
+        self.lesson_5 = create_lesson(
+            title="VBA lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="9.99",
+            technologies=[self.technology_3],
+        )
+
+        self.lesson_6 = create_lesson(
+            title="VBA lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_3],
+        )
+
+        self.module_3 = create_module(
+            title="Module 3", lessons=[self.lesson_5, self.lesson_6]
+        )
+
+    def test_title_filter(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "title"
+        variable = str(self.module_1.title)
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        values = list(set([variable == record[column] for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+
+class CertificateFilterTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/certificates"
+        self.data = {
+            "email": "user@example.com",
+            "password": "TestPassword123",
+        }
+        self.user_1 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="user2@example.com",
+            password="TestPassword123",
+            is_active=True,
+        )
+        self.user_3 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="user3@example.com",
+            password="TestPassword123",
+            is_active=True,
+        )
+        self.profile_1 = create_student_profile(
+            profile=create_profile(user=self.user_1)
+        )
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
+        self.profile_3 = create_student_profile(
+            profile=create_profile(user=self.user_3)
+        )
+
+        self.lecturer_data = {
+            "email": "lecturer_1@example.com",
+            "password": "TestPassword123",
+        }
+        self.lecturer_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.lecturer_data["email"],
+            password=self.lecturer_data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
+
+        self.technology_1 = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JS")
+        self.technology_3 = create_technology(name="VBA")
+
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="9.99",
+            technologies=[self.technology_1],
+        )
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_1],
+        )
+        self.lesson_3 = create_lesson(
+            title="Python lesson 3",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_1],
+        )
+        self.lesson_4 = create_lesson(
+            title="Python lesson 4",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_1],
+        )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+        self.module_2 = create_module(
+            title="Module 2", lessons=[self.lesson_3, self.lesson_4]
+        )
+
+        self.course = create_course(
+            title="course_title",
+            description="course_description",
+            level="Podstawowy",
+            skills=[self.skill_1, self.skill_2],
+            topics=[
+                self.topic_1,
+                self.topic_2,
+            ],
+            modules=[self.module_1, self.module_2],
+        )
+
+        for module in self.course.modules.all():
+            for lesson in module.lessons.all():
+                create_teaching(
+                    lecturer=self.lecturer_profile,
+                    lesson=lesson,
+                )
+
+        self.schedules = []
+        for i in range(10):
+            self.schedules.append(
+                create_schedule(
+                    lecturer=self.lecturer_profile,
+                    start_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * i)
+                    ),
+                    end_time=make_aware(
+                        datetime.now().replace(minute=30, second=0, microsecond=0)
+                        + timedelta(minutes=30 * (i + 1))
+                    ),
+                )
+            )
+
+        self.schedules.append(
+            create_schedule(
+                lecturer=self.lecturer_profile,
+                start_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * 100)
+                ),
+                end_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * (100 + 1))
+                ),
+            )
+        )
+
+        self.schedules.append(
+            create_schedule(
+                lecturer=self.lecturer_profile,
+                start_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * 102)
+                ),
+                end_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * (102 + 1))
+                ),
+            )
+        )
+
+        self.schedules.append(
+            create_schedule(
+                lecturer=self.lecturer_profile,
+                start_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * 103)
+                ),
+                end_time=make_aware(
+                    datetime.now().replace(minute=30, second=0, microsecond=0)
+                    + timedelta(minutes=30 * (103 + 1))
+                ),
+            )
+        )
+        self.long_timeslot = create_schedule(
+            lecturer=self.lecturer_profile,
+            start_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 50)
+            ),
+            end_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 53)
+            ),
+            lesson=self.lesson_1,
+        )
+        self.long_timeslot_2 = create_schedule(
+            lecturer=self.lecturer_profile,
+            start_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 30)
+            ),
+            end_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 33)
+            ),
+            lesson=self.lesson_1,
+        )
+
+        self.long_timeslot_3 = create_schedule(
+            lecturer=self.lecturer_profile,
+            start_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 400)
+            ),
+            end_time=make_aware(
+                datetime.now().replace(minute=30, second=0, microsecond=0)
+                + timedelta(minutes=30 * 403)
+            ),
+            lesson=self.lesson_4,
+        )
+
+        self.purchase_1 = create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile_1,
+            price=self.lesson_1.price,
+        )
+        self.reservation_1 = create_reservation(
+            student=self.profile_1,
+            lesson=self.lesson_1,
+            schedule=self.schedules[0],
+            purchase=self.purchase_1,
+        )
+        self.schedules[0].lesson = self.lesson_1
+        self.schedules[0].save()
+        self.purchase_2 = create_purchase(
+            lesson=self.lesson_2,
+            student=self.profile_2,
+            price=self.lesson_2.price,
+        )
+        self.reservation_2 = create_reservation(
+            student=self.profile_2,
+            lesson=self.lesson_2,
+            schedule=self.schedules[2],
+            purchase=self.purchase_2,
+        )
+        self.schedules[2].lesson = self.lesson_2
+        self.schedules[2].save()
+        self.purchase_3 = create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile_2,
+            price=self.lesson_1.price,
+        )
+        self.reservation_3 = create_reservation(
+            student=self.profile_2,
+            lesson=self.lesson_1,
+            schedule=self.schedules[0],
+            purchase=self.purchase_3,
+        )
+        self.purchase_4 = create_purchase(
+            lesson=self.lesson_2,
+            student=self.profile_1,
+            price=self.lesson_2.price,
+        )
+        self.reservation_4 = create_reservation(
+            student=self.profile_1,
+            lesson=self.lesson_2,
+            schedule=self.schedules[6],
+            purchase=self.purchase_4,
+        )
+        self.schedules[6].lesson = self.lesson_2
+        self.schedules[6].save()
+        self.purchase_5 = create_purchase(
+            lesson=self.lesson_2,
+            student=self.profile_2,
+            price=self.lesson_2.price,
+        )
+        self.reservation_5 = create_reservation(
+            student=self.profile_2,
+            lesson=self.lesson_2,
+            schedule=self.long_timeslot_2,
+            purchase=self.purchase_5,
+        )
+        self.long_timeslot_2.lesson = self.lesson_1
+        self.long_timeslot_2.save()
+        self.purchase_6 = create_purchase(
+            lesson=self.lesson_4,
+            student=self.profile_1,
+            price=self.lesson_4.price,
+        )
+        self.reservation_6 = create_reservation(
+            student=self.profile_1,
+            lesson=self.lesson_4,
+            schedule=self.long_timeslot_3,
+            purchase=self.purchase_6,
+        )
+        self.long_timeslot_3.lesson = self.lesson_4
+        self.long_timeslot_3.save()
+
+        self.certificate = create_certificate(
+            entity_type="L",
+            entity=self.lesson_1,
+            student=self.profile_1,
+        )
+        self.certificate_2 = create_certificate(
+            entity_type="M",
+            entity=self.module_1,
+            student=self.profile_1,
+        )
+
+    def test_title_filter(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "title"
+        variable = str(self.certificate.title)
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        values = list(set([variable == record[column] for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_type_filter(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "type"
+        variable = "L"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        values = list(set([variable == record[column][0] for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_completed_at_filter(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "completed_at"
+        variable = str(self.certificate.created_at - timedelta(days=1))[0:10]
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 2)
+        values = list(set([variable in record[column] for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+
+class NotificationFilterTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/notifications"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
+
+        self.lecturer_data = {
+            "email": "lecturer_1@example.com",
+            "password": "TestPassword123",
+        }
+        self.lecturer_user = create_user(
+            first_name="l1_first_name",
+            last_name="l1_last_name",
+            email=self.lecturer_data["email"],
+            password=self.lecturer_data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
+
+        self.student_notifications = [
+            create_notification(
+                profile=self.profile.profile,
+                title=f"title",
+                subtitle=f"subtitle",
+                description=f"description",
+                status="READ",
+                path=f"path",
+                icon=f"icon",
+            )
+        ]
+        for i in range(50):
+            self.student_notifications.append(
+                create_notification(
+                    profile=self.profile.profile,
+                    title=f"title_{i}",
+                    subtitle=f"subtitle{i}",
+                    description=f"description{i}",
+                    status="NEW",
+                    path=f"path{i}",
+                    icon=f"icon{i}",
+                )
+            )
+
+        self.lecturer_notifications = []
+        for i in range(100):
+            self.lecturer_notifications.append(
+                create_notification(
+                    profile=self.lecturer_profile.profile,
+                    title=f"title_{i}",
+                    subtitle=f"subtitle{i}",
+                    description=f"description{i}",
+                    status="NEW",
+                    path=f"path{i}",
+                    icon=f"icon{i}",
+                )
+            )
+
+    def test_status_filter(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "status"
+        variable = self.student_notifications[0].status
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        values = list(set([variable in record[column] for record in results]))
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+
+class MessageFilterTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/messages"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
+
+        self.lecturer_data = {
+            "email": "lecturer_1@example.com",
+            "password": "TestPassword123",
+        }
+        self.lecturer_user = create_user(
+            first_name="l1_first_name",
+            last_name="l1_last_name",
+            email=self.lecturer_data["email"],
+            password=self.lecturer_data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
+
+        self.student_messages = []
+        for i in range(50):
+            self.student_messages.append(
+                create_message(
+                    sender=self.lecturer_profile.profile,
+                    recipient=self.profile.profile,
+                    subject=f"subject{i}",
+                    body=f"body{i}",
+                    status="NEW",
+                )
+            )
+
+        self.lecturer_messages = []
+        for i in range(100):
+            self.lecturer_messages.append(
+                create_message(
+                    sender=self.profile.profile,
+                    recipient=self.lecturer_profile.profile,
+                    subject=f"subject{i}",
+                    body=f"body{i}",
+                    status="NEW",
+                )
+            )
+
+        self.fields = ["sender", "recipient", "subject", "status", "created_at"]
+
+    def test_type_filter(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "type"
+        variable = "SENT"
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 100)
+        values = list(
+            set(
+                [
+                    str(self.profile.profile.uuid) == record["sender"]["id"]
+                    for record in results
+                ]
+            )
+        )
+        self.assertTrue(len(values) == 1)
+        self.assertTrue(values[0])
+
+    def test_status_filter(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        column = "status"
+        variable = self.student_messages[0].status
+        response = self.client.get(f"{self.endpoint}?{column}={variable}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 150)
         values = list(set([variable in record[column] for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])

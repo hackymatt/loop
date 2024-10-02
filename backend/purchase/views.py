@@ -7,10 +7,11 @@ from django.http import JsonResponse
 from purchase.serializers import PurchaseSerializer, PurchaseGetSerializer
 from purchase.models import Purchase, Payment
 from purchase.filters import PurchaseFilter
+from profile.models import Profile, StudentProfile
 from purchase.utils import Przelewy24
 from profile.models import Profile
 from lesson.models import Lesson
-from coupon.models import Coupon
+from coupon.models import Coupon, CouponUser
 from coupon.validation import validate_coupon
 import json
 
@@ -82,13 +83,16 @@ class PurchaseViewSet(ModelViewSet):
             valid, error_message = validate_coupon(
                 coupon_code=coupon_code,
                 user=profile,
-                total=self.get_total_price(lessons=lessons),
+                total=self.get_total_price(lessons=lessons) * 100,
             )
             if not valid:
                 raise ValidationError({"coupon": error_message})
 
             # use coupon
             coupon_obj = Coupon.objects.get(code=coupon_code)
+            CouponUser.objects.create(
+                user=StudentProfile.objects.get(profile=profile), coupon=coupon_obj
+            )
             coupon_details = {
                 "discount": coupon_obj.discount,
                 "is_percentage": coupon_obj.is_percentage,

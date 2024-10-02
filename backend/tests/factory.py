@@ -8,18 +8,23 @@ from topic.models import Topic
 from finance.models import Finance, FinanceHistory
 from skill.models import Skill
 from review.models import Review
+from module.models import Module
 from purchase.models import Purchase, Payment
 from newsletter.models import Newsletter
+from notification.models import Notification
+from message.models import Message
 from schedule.models import Schedule, Meeting
 from wishlist.models import Wishlist
 from cart.models import Cart
 from teaching.models import Teaching
 from reservation.models import Reservation
+from certificate.models import Certificate
 from datetime import datetime
 from django.utils.timezone import make_aware
 from django.core.files.uploadedfile import SimpleUploadedFile
 import os
 from typing import List, Dict
+from django.db.models import Sum
 
 
 def create_user(
@@ -142,7 +147,7 @@ def create_course(
     level: str,
     skills,
     topics,
-    lessons,
+    modules,
     active: bool = True,
 ):
     course = Course.objects.create(
@@ -152,7 +157,7 @@ def create_course(
         active=active,
     )
 
-    course.lessons.add(*lessons)
+    course.modules.add(*modules)
     course.skills.add(*skills)
     course.topics.add(*topics)
     course.image = create_image()
@@ -166,21 +171,49 @@ def create_course_obj(
     title: str,
     description: str,
     level: str,
-    lessons: List[Dict[str, int]],
+    modules: List[Dict[str, int]],
     skills,
     topics,
     image: str = None,
     video: str = None,
+    active: bool = True,
 ):
     return {
         "title": title,
         "description": description,
         "level": level,
-        "lessons": lessons,
+        "modules": modules,
         "skills": skills,
         "topics": topics,
         "image": image,
         "video": video,
+        "active": active,
+    }
+
+
+def create_module(
+    title: str,
+    lessons,
+):
+    module = Module.objects.create(
+        title=title,
+    )
+
+    module.lessons.add(*lessons)
+    module.save()
+
+    return module
+
+
+def create_module_obj(
+    title: str,
+    lessons,
+    id: int = -1,
+):
+    return {
+        "id": id,
+        "title": title,
+        "lessons": lessons,
     }
 
 
@@ -214,6 +247,7 @@ def create_lesson_obj(
     price: str,
     technologies,
     id: int = -1,
+    active: bool = True,
 ):
     return {
         "id": id,
@@ -223,6 +257,7 @@ def create_lesson_obj(
         "github_url": github_url,
         "price": price,
         "technologies": technologies,
+        "active": active,
     }
 
 
@@ -408,3 +443,69 @@ def create_coupon_user(
 
 def create_meeting(event_id: str, url: str):
     return Meeting.objects.create(event_id=event_id, url=url)
+
+
+def create_certificate(entity_type, entity, student):
+    if entity_type == "L":
+        duration = entity.duration
+    elif entity_type == "M":
+        lessons_ids = entity.lessons.through.objects.filter(module=entity).values(
+            "lesson_id"
+        )
+        lessons = Lesson.objects.filter(id__in=lessons_ids).all()
+        duration = lessons.aggregate(Sum("duration"))["duration__sum"]
+    else:
+        course_modules = (
+            Course.modules.through.objects.filter(course=entity)
+            .values("module_id")
+            .order_by("id")
+        )
+        lessons_ids = Module.lessons.through.objects.filter(
+            module__in=course_modules
+        ).values("lesson_id")
+        lessons = Lesson.objects.filter(id__in=lessons_ids).all()
+        duration = lessons.aggregate(Sum("duration"))["duration__sum"]
+
+    return Certificate.objects.create(
+        type=entity_type,
+        entity_id=entity.id,
+        title=entity.title,
+        duration=duration,
+        student=student,
+    )
+
+
+def create_notification(
+    profile: Profile,
+    title: str,
+    subtitle: str,
+    description: str,
+    status: str,
+    path: str,
+    icon: str,
+):
+    return Notification.objects.create(
+        profile=profile,
+        title=title,
+        subtitle=subtitle,
+        description=description,
+        status=status,
+        path=path,
+        icon=icon,
+    )
+
+
+def create_message(
+    sender: Profile,
+    recipient: Profile,
+    subject: str,
+    body: str,
+    status: str,
+):
+    return Message.objects.create(
+        sender=sender,
+        recipient=recipient,
+        subject=subject,
+        body=body,
+        status=status,
+    )

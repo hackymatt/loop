@@ -1,11 +1,17 @@
 "use client";
 
+import { useMemo } from "react";
+
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
 
+import { paths } from "src/routes/paths";
+
 import { useResponsive } from "src/hooks/use-responsive";
+
+import { createMetadata } from "src/utils/create-metadata";
 
 import { useLecturer } from "src/api/lecturers/lecturer";
 
@@ -27,6 +33,27 @@ export default function TeacherView({ id }: { id: string }) {
 
   const { data: teacher, isLoading: isLoadingTeacher } = useLecturer(id);
 
+  const metadata = useMemo(
+    () =>
+      createMetadata(
+        `Instruktor: ${teacher?.name}`,
+        `Poznaj ${teacher?.name} — doświadczonego instruktora w loop. Sprawdź jego profil, lekcje, które prowadzi, oraz opinie studentów. Rozpocznij naukę programowania pod okiem profesjonalisty!`,
+        [
+          "profil instruktora",
+          "instruktor programowania",
+          "loop instruktor",
+          "nauczyciel programowania",
+          "opinie o instruktorze",
+          "kursy prowadzone przez instruktora",
+          "doświadczenie instruktora",
+          "specjalizacje instruktora",
+          "mentor programistyczny",
+          "szkoła programowania",
+        ],
+      ),
+    [teacher?.name],
+  );
+
   const isLoading = isLoadingTeacher;
 
   if (isLoading) {
@@ -39,6 +66,10 @@ export default function TeacherView({ id }: { id: string }) {
 
   return (
     <>
+      <title>{metadata.title}</title>
+      <meta name="description" content={metadata.description} />
+      <meta name="keywords" content={metadata.keywords} />
+
       <TeacherDetailsHero teacher={teacher} />
 
       <Container
@@ -67,8 +98,8 @@ export default function TeacherView({ id }: { id: string }) {
                 advertisement={{
                   title: "Wejdź do IT",
                   description: "Sprawdź nasze kursy przygotowujące do pracy programisty",
-                  imageUrl: "/assets/images/course/course_8.jpg",
-                  path: "/assets/images/course/course_8.jpg",
+                  imageUrl: "/assets/images/general/course-8.webp",
+                  path: paths.courses,
                 }}
               />
             </Stack>

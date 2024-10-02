@@ -2,11 +2,15 @@ from typing import List
 from utils.google.calendar import CalendarApi
 from profile.models import LecturerProfile, StudentProfile
 from datetime import datetime
+from lesson.models import Lesson
+from finance.models import Finance
+from config_global import MIN_STUDENTS_THRESHOLD
+import math
 
 
 class MeetingManager:
-    def __init__(self, lecturer_email):
-        self.calendar_api = CalendarApi(on_behalf_of=lecturer_email)
+    def __init__(self):
+        self.calendar_api = CalendarApi()
 
     def _create_lecturer(self, lecturer: LecturerProfile):
         return {
@@ -63,3 +67,14 @@ class MeetingManager:
 
     def delete(self, event_id: str):
         return self.calendar_api.delete(event_id=event_id)
+
+
+def get_min_students_required(lecturer: LecturerProfile, lesson: Lesson):
+    price = float(lesson.price)
+    duration_hours = lesson.duration / 60
+    finance = Finance.objects.get(lecturer=lecturer)
+    rate = float(finance.rate)
+    commission = finance.commission / 100
+    cost = rate * duration_hours + commission * price
+    goal = cost * MIN_STUDENTS_THRESHOLD
+    return math.ceil(goal / price)

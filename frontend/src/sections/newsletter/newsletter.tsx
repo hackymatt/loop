@@ -1,21 +1,22 @@
 import * as Yup from "yup";
+import { m } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import Box from "@mui/material/Box";
-import { Link, Stack } from "@mui/material";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
+import { Stack, InputAdornment } from "@mui/material";
 import { LoadingButton, LoadingButtonProps } from "@mui/lab";
-
-import { paths } from "src/routes/paths";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
+import { trackEvent } from "src/utils/google-analytics";
+
+import { textGradient } from "src/theme/css";
+import { newsletterAcceptance } from "src/consts/acceptances";
 import { useRegisterNewsletter } from "src/api/newsletter/register";
 
-import Image from "src/components/image";
 import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFCheckbox, RHFTextField } from "src/components/hook-form";
 
@@ -24,47 +25,76 @@ import FormProvider, { RHFCheckbox, RHFTextField } from "src/components/hook-for
 export default function Newsletter() {
   return (
     <Box
+      component="section"
       sx={{
-        py: { xs: 10, md: 15 },
         overflow: "hidden",
+        position: "relative",
         bgcolor: "primary.lighter",
+        py: { xs: 10, md: 15 },
       }}
     >
+      <Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          my: "auto",
+          width: 760,
+          height: 760,
+          opacity: 0.14,
+          position: "absolute",
+          transform: "translateX(-50%)",
+        }}
+      >
+        <Box
+          component={m.img}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 60, ease: "linear", repeat: Infinity }}
+          alt="Texture"
+          loading="lazy"
+          src="/assets/background/texture-3.webp"
+        />
+      </Box>
+
       <Container>
-        <Grid
-          container
-          spacing={{ xs: 5, md: 3 }}
-          alignItems={{ md: "center" }}
-          justifyContent={{ md: "space-between" }}
-          direction={{ xs: "column-reverse", md: "row" }}
+        <Box
+          sx={{
+            mx: "auto",
+            maxWidth: 480,
+            textAlign: "center",
+          }}
         >
-          <Grid xs={12} md={5} sx={{ textAlign: "center", color: "grey.800" }}>
-            <Typography variant="h3">
-              Bądź na bieżąco z naszą aktualną ofertą i promocjami
+          <Box gap={2} display="flex" alignItems="center" justifyContent="center">
+            <Box component="span" sx={{ textAlign: "right", typography: "h5" }}>
+              Zarejestruj się już teraz i otrzymaj <br /> zniżkę na swój pierwszy zakup
+            </Box>
+            <Typography
+              variant="h1"
+              sx={(theme) => ({
+                ...textGradient(
+                  `90deg, ${theme.palette.primary.main} 20%, ${theme.palette.secondary.main} 100%`,
+                ),
+              })}
+            >
+              20%
             </Typography>
+          </Box>
 
-            <Typography sx={{ mt: 2.5, mb: 5 }}>
-              Zapisz się do newslettera{" "}
-              <Typography
-                variant="overline"
-                color="primary"
-                sx={{ fontSize: 17, textTransform: "none" }}
-              >
-                loop
-              </Typography>
-            </Typography>
+          <Typography sx={{ mt: 2.5 }}>Zapisz się do newslettera</Typography>
+          <Typography
+            variant="h3"
+            sx={(theme) => ({
+              ...textGradient(
+                `90deg, ${theme.palette.primary.main} 20%, ${theme.palette.secondary.main} 100%`,
+              ),
+              mb: 5,
+            })}
+          >
+            Be in the loop
+          </Typography>
 
-            <NewsletterEmail buttonLabel="Zapisz" sx={{ mt: 0.3 }} />
-          </Grid>
-
-          <Grid xs={12} md={5}>
-            <Image
-              alt="newsletter"
-              src="/assets/illustrations/illustration_newsletter.svg"
-              sx={{ maxWidth: 366, mx: "auto" }}
-            />
-          </Grid>
-        </Grid>
+          <NewsletterEmail buttonLabel="Zapisz" />
+        </Box>
       </Container>
     </Box>
   );
@@ -72,18 +102,23 @@ export default function Newsletter() {
 
 interface Props extends LoadingButtonProps {
   buttonLabel: string;
+  showSnackbar?: boolean;
+  onSuccess?: VoidFunction;
+  onFailure?: VoidFunction;
 }
 
-export function NewsletterEmail({ buttonLabel = "Zapisz", sx }: Props) {
+export function NewsletterEmail({
+  buttonLabel = "Zapisz",
+  showSnackbar = true,
+  onSuccess,
+  onFailure,
+}: Props) {
   const { enqueueSnackbar } = useToastContext();
 
   const { mutateAsync: register } = useRegisterNewsletter();
 
   const NewsletterSchema = Yup.object().shape({
     email: Yup.string().required("Adres e-mail jest wymagany").email("Podaj poprawny adres e-mail"),
-    acceptance: Yup.boolean()
-      .required("To pole jest wymagane")
-      .oneOf([true], "To pole jest wymagane"),
     newsletter: Yup.boolean()
       .required("To pole jest wymagane")
       .oneOf([true], "To pole jest wymagane"),
@@ -91,7 +126,6 @@ export function NewsletterEmail({ buttonLabel = "Zapisz", sx }: Props) {
 
   const defaultValues = {
     email: "",
-    acceptance: false,
     newsletter: false,
   };
 
@@ -112,68 +146,44 @@ export function NewsletterEmail({ buttonLabel = "Zapisz", sx }: Props) {
   const onSubmit = handleSubmit(async (data) => {
     clearErrors();
     try {
-      await register(data);
-      enqueueSnackbar("Zapisano do newslettera", { variant: "success" });
+      await register({ email: data.email });
+      if (showSnackbar) {
+        enqueueSnackbar("Zapisano do newslettera", { variant: "success" });
+      }
+      onSuccess?.();
       reset();
+      trackEvent("enroll_to_newsletter", "newsletter", "Enrolled to newsletter", data.email);
     } catch (error) {
+      onFailure?.();
       handleFormError(error);
     }
   });
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
-      <Stack spacing={2.5} direction="row" alignItems="center">
-        <RHFTextField name="email" label="Wpisz swój adres e-mail" />
-
-        <LoadingButton
-          color="primary"
-          size="large"
-          variant="contained"
-          type="submit"
-          loading={isSubmitting}
-          sx={sx}
-        >
-          {buttonLabel}
-        </LoadingButton>
-      </Stack>
+      <RHFTextField
+        name="email"
+        label="Wpisz swój adres e-mail"
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <LoadingButton
+                color="primary"
+                size="large"
+                variant="contained"
+                type="submit"
+                loading={isSubmitting}
+              >
+                {buttonLabel}
+              </LoadingButton>
+            </InputAdornment>
+          ),
+          sx: { pr: 0.5 },
+        }}
+      />
 
       <Stack spacing={0.5} alignItems="flex-start">
-        <RHFCheckbox
-          name="acceptance"
-          label={
-            <Typography variant="caption" align="left" sx={{ color: "text.secondary" }}>
-              Akceptuję{" "}
-              <Link
-                target="_blank"
-                rel="noopener"
-                href={paths.termsAndConditions}
-                color="text.primary"
-                underline="always"
-              >
-                regulamin
-              </Link>{" "}
-              i{" "}
-              <Link
-                target="_blank"
-                rel="noopener"
-                href={paths.privacyPolicy}
-                color="text.primary"
-                underline="always"
-              >
-                politykę prywatności.
-              </Link>
-            </Typography>
-          }
-        />
-
-        <RHFCheckbox
-          name="newsletter"
-          label={
-            <Typography variant="caption" align="left" sx={{ color: "text.secondary" }}>
-              Chcę otrzymywać newsletter, informacje o promocjach i produktach dostępnych w loop.
-            </Typography>
-          }
-        />
+        <RHFCheckbox name="newsletter" label={newsletterAcceptance} />
       </Stack>
     </FormProvider>
   );
