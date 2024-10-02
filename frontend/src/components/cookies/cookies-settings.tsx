@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useMemo, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -16,7 +16,7 @@ import {
   accordionSummaryClasses,
 } from "@mui/material";
 
-import { cookies } from "src/consts/cookies";
+import { useCookies } from "src/hooks/use-cookies";
 
 import FormProvider from "src/components/hook-form";
 
@@ -32,15 +32,7 @@ interface Props extends DialogProps {
 
 export default function CookiesSettings({ onConfirm, ...other }: Props) {
   const methods = useForm();
-
-  const defaultCookies = useMemo(
-    () =>
-      cookies.reduce((acc: { [cookie: string]: boolean }, cookie) => {
-        acc[cookie.type] = true;
-        return acc;
-      }, {}),
-    [],
-  );
+  const { cookies, defaultCookies } = useCookies();
 
   const [settings, setSettings] = useState<{ [cookie: string]: boolean }>(defaultCookies);
   const [expanded, setExpanded] = useState<string | false>(false);

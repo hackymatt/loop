@@ -1,29 +1,17 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
+import { useCallback } from "react";
 
 import { useBoolean } from "src/hooks/use-boolean";
+import { useCookies } from "src/hooks/use-cookies";
 import { useLocalStorage } from "src/hooks/use-local-storage";
-
-import { updateConsent } from "src/utils/google-analytics";
-
-import { ENV } from "src/config-global";
-import { cookies } from "src/consts/cookies";
 
 import CookiesBanner from "./cookies-banner";
 
 // ----------------------------------------------------------------------
 
 export default function CookiesManager() {
-  const defaultCookies = useMemo(
-    () =>
-      cookies.reduce((acc: { [cookie: string]: boolean }, cookie) => {
-        acc[cookie.type] = cookie.disabled;
-        return acc;
-      }, {}),
-    [],
-  );
-
+  const { defaultCookies } = useCookies();
   const { state, update } = useLocalStorage("cookies", { ...defaultCookies, consent: false });
 
   const cookieFormOpen = useBoolean();
@@ -32,9 +20,6 @@ export default function CookiesManager() {
     (selectedCookies: { [cookie: string]: boolean }) => {
       update("consent", true);
       Object.keys(selectedCookies).forEach((cookie) => update(cookie, selectedCookies[cookie]));
-      updateConsent({
-        analytics_storage: selectedCookies.analytics && ENV === "PROD" ? "granted" : "denied",
-      });
       cookieFormOpen.onFalse();
     },
     [cookieFormOpen, update],

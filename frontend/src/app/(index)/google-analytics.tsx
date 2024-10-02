@@ -5,17 +5,31 @@ import { useEffect } from "react";
 
 import { usePathname, useSearchParams } from "src/routes/hooks";
 
-import { pageView } from "src/utils/google-analytics";
+import { useCookies } from "src/hooks/use-cookies";
+import { useLocalStorage } from "src/hooks/use-local-storage";
+
+import { pageView, updateConsent } from "src/utils/google-analytics";
+
+import { ENV } from "src/config-global";
 
 export default function GoogleAnalytics({ measurementId }: { measurementId: string }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const { defaultCookies } = useCookies();
+  const { state } = useLocalStorage("cookies", { ...defaultCookies, consent: false });
 
   useEffect(() => {
     const url = `${pathname}${searchParams}`;
 
     pageView(measurementId, url);
   }, [measurementId, pathname, searchParams]);
+
+  useEffect(() => {
+    updateConsent({
+      analytics_storage: state.analytics && ENV === "PROD" ? "granted" : "denied",
+    });
+  }, [state.analytics]);
 
   return (
     <>
