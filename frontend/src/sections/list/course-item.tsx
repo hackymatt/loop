@@ -62,6 +62,7 @@ export default function CourseItem({ course, vertical }: Props) {
             boxShadow: (theme) => theme.customShadows.z24,
           },
           ...(vertical && {
+            minHeight: 600,
             flexDirection: "column",
           }),
         }}
@@ -75,7 +76,8 @@ export default function CourseItem({ course, vertical }: Props) {
               width: { xs: 1, md: 240 },
               height: { xs: 240, md: 1 },
               ...(vertical && {
-                width: { sm: 1 },
+                height: { md: 240 },
+                width: { md: 1 },
               }),
             }}
           />
@@ -95,7 +97,7 @@ export default function CourseItem({ course, vertical }: Props) {
           </Stack>
         ) : null}
 
-        <Stack spacing={3} sx={{ p: 3 }}>
+        <Stack spacing={3} minHeight={340} justifyContent="space-between" sx={{ p: 3 }}>
           <Stack
             spacing={{
               xs: 3,
@@ -214,10 +216,14 @@ export default function CourseItem({ course, vertical }: Props) {
               </Typography>
 
               {teachers?.length > 1 && (
-                <Link underline="always" color="text.secondary" variant="body2">
+                <Typography
+                  color="text.secondary"
+                  variant="body2"
+                  sx={{ textDecoration: "underline" }}
+                >
                   + {teachers.length - 1}{" "}
                   {polishPlurals("nauczyciel", "nauczycieli", "nauczycieli", teachers.length - 1)}
-                </Link>
+                </Typography>
               )}
             </Stack>
           )}

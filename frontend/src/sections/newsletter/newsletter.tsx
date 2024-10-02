@@ -68,28 +68,29 @@ export default function Newsletter() {
             <Box component="span" sx={{ textAlign: "right", typography: "h5" }}>
               Zarejestruj się już teraz i otrzymaj <br /> zniżkę na swój pierwszy zakup
             </Box>
-            <Box
-              component="span"
+            <Typography
+              variant="h1"
               sx={(theme) => ({
                 ...textGradient(
                   `90deg, ${theme.palette.primary.main} 20%, ${theme.palette.secondary.main} 100%`,
                 ),
-                typography: "h1",
               })}
             >
               20%
-            </Box>
+            </Typography>
           </Box>
 
-          <Typography sx={{ mt: 2.5, mb: 5 }}>
-            Zapisz się do newslettera{" "}
-            <Typography
-              variant="overline"
-              color="primary"
-              sx={{ fontSize: 17, textTransform: "none" }}
-            >
-              loop
-            </Typography>
+          <Typography sx={{ mt: 2.5 }}>Zapisz się do newslettera</Typography>
+          <Typography
+            variant="h3"
+            sx={(theme) => ({
+              ...textGradient(
+                `90deg, ${theme.palette.primary.main} 20%, ${theme.palette.secondary.main} 100%`,
+              ),
+              mb: 5,
+            })}
+          >
+            Be in the loop
           </Typography>
 
           <NewsletterEmail buttonLabel="Zapisz" />

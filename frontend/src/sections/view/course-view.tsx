@@ -14,6 +14,7 @@ import { useResponsive } from "src/hooks/use-responsive";
 import { createMetadata } from "src/utils/create-metadata";
 
 import { useCourse } from "src/api/courses/course";
+import { useCourses } from "src/api/courses/courses";
 import { useBestCourses } from "src/api/courses/best-courses";
 
 import { SplashScreen } from "src/components/loading-screen";
@@ -37,10 +38,21 @@ export default function CourseView({ id }: { id: string }) {
   const mdUp = useResponsive("up", "md");
 
   const { data: course, isLoading: isLoadingCourse } = useCourse(id);
-  const { data: bestCourses, isLoading: isLoadingBestCourse } = useBestCourses();
+  const { data: bestCourses, isLoading: isLoadingBestCourses } = useBestCourses();
 
-  const similarCourses = bestCourses?.filter(
-    (bestCourse: ICourseProps) => bestCourse.id !== course?.id,
+  const technologies = useMemo(() => course?.category.join(","), [course?.category]);
+  const query = { page_size: -1 };
+
+  const { data: courses, isLoading: isLoadingCourses } = useCourses(
+    technologies ? { ...query, technology_in: technologies } : query,
+  );
+
+  const similarCourses = useMemo(
+    () =>
+      [...(courses ?? []), ...(bestCourses ?? [])]
+        .slice(0, 3)
+        ?.filter((c: ICourseProps) => c.id !== course?.id),
+    [bestCourses, course?.id, courses],
   );
 
   const allLessons = useMemo(
@@ -82,7 +94,7 @@ export default function CourseView({ id }: { id: string }) {
     [course?.slug, technologyKeywords],
   );
 
-  const isLoading = isLoadingCourse || isLoadingBestCourse;
+  const isLoading = isLoadingCourse || isLoadingBestCourses || isLoadingCourses;
 
   if (isLoading) {
     return <SplashScreen />;
@@ -150,7 +162,7 @@ export default function CourseView({ id }: { id: string }) {
         teachers={course.teachers ?? []}
       />
 
-      {similarCourses?.length >= 3 && <CourseListSimilar courses={similarCourses} />}
+      {similarCourses?.length === 3 && <CourseListSimilar courses={similarCourses} />}
 
       <Newsletter />
     </>
