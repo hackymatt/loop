@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import { Link } from "@mui/material";
@@ -11,8 +10,7 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 import { paths } from "src/routes/paths";
 
 import { useBoolean } from "src/hooks/use-boolean";
-
-import { cookies } from "src/consts/cookies";
+import { useCookies } from "src/hooks/use-cookies";
 
 import FormProvider from "src/components/hook-form";
 
@@ -28,17 +26,8 @@ interface Props extends DialogProps {
 
 export default function CookiesBanner({ onConfirm, ...other }: Props) {
   const methods = useForm();
-
   const cookieSettingsFormOpen = useBoolean();
-
-  const defaultCookies = useMemo(
-    () =>
-      cookies.reduce((acc: { [cookie: string]: boolean }, cookie) => {
-        acc[cookie.type] = true;
-        return acc;
-      }, {}),
-    [],
-  );
+  const { defaultCookies } = useCookies();
 
   return (
     <>
@@ -46,7 +35,7 @@ export default function CookiesBanner({ onConfirm, ...other }: Props) {
         <FormProvider methods={methods}>
           <DialogTitle sx={{ typography: "h6", pb: 3 }}>Informacja o plikach cookies</DialogTitle>
 
-          <DialogContent sx={{ py: 0, typography: "body2" }}>
+          <DialogContent sx={{ py: 0, typography: "body2", textAlign: "justify" }}>
             Ta strona korzysta z plików cookies, które pomagają jej funkcjonować i śledzić sposób
             interakcji z nią, dzięki czemu możemy zapewnić lepszą i spersonalizowaną obsługę.
             Będziemy używać wszystkich plików cookies tylko wtedy, gdy wyrazisz na to zgodę,
