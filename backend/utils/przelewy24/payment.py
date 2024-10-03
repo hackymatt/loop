@@ -17,7 +17,7 @@ import hashlib
 
 
 class Przelewy24Api:
-    def __init__(self) -> None:
+    def __init__(self, payment) -> None:
         self.register_url = f"{PAYMENT_SERVER}/api/v1/transaction/register"
         self.verify_url = f"{PAYMENT_SERVER}/api/v1/transaction/verify"
 
@@ -27,42 +27,44 @@ class Przelewy24Api:
             "Content-Type": "application/json",
         }
 
+        self.payment = payment
+
     def _create_sign(self, data):
         json_data = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
         return hashlib.sha384(json_data.encode("utf-8")).hexdigest()
 
-    def _create_register_sign(self, payment: Payment):
+    def _create_register_sign(self):
         data = {
-            "sessionId": str(payment.session_id),
+            "sessionId": str(self.payment.session_id),
             "merchantId": int(PAYMENT_MERCHANT_ID),
-            "amount": int(payment.amount),
+            "amount": int(self.payment.amount),
             "currency": "PLN",
             "crc": PAYMENT_CRC,
         }
         return self._create_sign(data=data)
 
-    def _create_verify_sign(self, payment: Payment):
+    def _create_verify_sign(self):
         data = {
-            "sessionId": str(payment.session_id),
-            "orderId": payment.order_id,
-            "amount": payment.amount,
+            "sessionId": str(self.payment.session_id),
+            "orderId": int(self.payment.order_id),
+            "amount": int(self.payment.amount),
             "currency": "PLN",
             "crc": PAYMENT_CRC,
         }
         return self._create_sign(data=data)
 
-    def register(self, client: Profile, payment: Payment, purchases: List[Purchase]):
-        raise ValueError("hererere")
+    def register(self, client: Profile, purchases: List[Purchase]):
+        # raise ValueError("hererere")
         data = {
             "merchantId": PAYMENT_MERCHANT_ID,
             "posId": PAYMENT_STORE_ID,
-            "sessionId": str(payment.session_id),
-            "amount": payment.amount,
+            "sessionId": str(self.payment.session_id),
+            "amount": int(self.payment.amount),
             "currency": "PLN",
             "description": [purchase.lesson.title for purchase in purchases].join(", "),
             "email": client.user.email,
             "client": f"{client.user.first_name} {client.user.last_name}",
-            "urlReturn": f"{FRONTEND_URL}/order-status/?session_id={str(payment.session_id)}",
+            "urlReturn": f"{FRONTEND_URL}/order-status/?session_id={str(self.payment.session_id)}",
             "urlStatus": f"{FRONTEND_URL}/api/payment-verify",
             "country": "PL",
             "language": "pl",
@@ -70,7 +72,7 @@ class Przelewy24Api:
             "channel": (1 + 2 + 4 + 8192),
             "waitForResult": False,
             "regulationAccept": True,
-            "sign": self._create_register_sign(payment=payment),
+            "sign": self._create_register_sign(),
         }
 
         request = requests.post(
@@ -94,21 +96,14 @@ class Przelewy24Api:
 
         return {"status_code": status_code, "data": data}
 
-    def verify(self, session_id: str, order_id: str, amount: str) -> bool:
-        payments = Payment.objects.filter(session_id=session_id, amount=amount)
-        if not payments.exists():
-            return False
-
-        payment = payments.first()
-        payment.order_id = order_id
-
+    def verify(self) -> bool:
         data = {
             "merchantId": PAYMENT_MERCHANT_ID,
             "posId": PAYMENT_STORE_ID,
-            "sessionId": session_id,
-            "amount": amount,
+            "sessionId": str(self.payment.session_id),
+            "amount": int(self.payment.amount),
             "currency": "PLN",
-            "orderId": order_id,
+            "orderId": int(self.payment.order_id),
             "sign": self._create_verify_sign(),
         }
 
@@ -118,14 +113,6 @@ class Przelewy24Api:
             return False
 
         response_data = response.json()
-        response_status = response_data["status"]
+        status = response_data["status"]
 
-        if response_status == "success":
-            status = "S"
-        else:
-            status = "F"
-
-        payment.status = status
-        payment.save()
-
-        return status == "S"
+        return status == "success"

@@ -18,6 +18,8 @@ from coupon.models import Coupon, CouponUser
 from coupon.validation import validate_coupon
 from utils.przelewy24.payment import Przelewy24Api
 from django.views.decorators.csrf import csrf_exempt
+import json
+from uuid import UUID
 
 
 class PurchaseViewSet(ModelViewSet):
@@ -127,10 +129,8 @@ class PurchaseViewSet(ModelViewSet):
         instances = serializer.create(serializer.initial_data)
 
         # register payment
-        przelewy24 = Przelewy24Api()
-        register_result = przelewy24.register(
-            client=profile, payment=payment, purchases=instances
-        )
+        przelewy24 = Przelewy24Api(payment=payment)
+        register_result = przelewy24.register(client=profile, purchases=instances)
 
         return JsonResponse(
             status=register_result["status_code"],
@@ -143,14 +143,28 @@ class PaymentVerifyViewSet(ModelViewSet):
 
     @csrf_exempt
     def verify_payment(request):
-        data = request.POST
+        data = json.loads(request.body)
+
         session_id = data.get("sessionId")
         order_id = data.get("orderId")
-        amount = int(data.get("amount"))
-        przelewy24 = Przelewy24Api()
+        amount = data.get("amount")
+
+        payments = Payment.objects.filter(session_id=session_id, amount=amount)
+
+        if not payments.exists():
+            return JsonResponse(
+                {"status": "failure"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        payment = payments.first()
+        payment.order_id = order_id
+        przelewy24 = Przelewy24Api(payment=payment)
         verification_success = przelewy24.verify(
             session_id=session_id, order_id=order_id, amount=amount
         )
+
+        payment.status = "S" if verification_success else "F"
+        payment.save()
 
         if verification_success:
             return JsonResponse({"status": "success"}, status=status.HTTP_200_OK)

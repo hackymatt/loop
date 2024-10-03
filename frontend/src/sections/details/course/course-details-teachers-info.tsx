@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { polishPlurals } from "polish-plurals";
 
 import Box from "@mui/material/Box";
@@ -10,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
+import { encodeUrl } from "src/utils/url-utils";
 import { fShortenNumber } from "src/utils/format-number";
 
 import Iconify from "src/components/iconify";
@@ -61,10 +63,15 @@ function TeacherItem({ teacher }: TeacherItemProps) {
 
   const avatarUrl = teacher?.avatarUrl || genderAvatarUrl;
 
+  const path = useMemo(
+    () => `${teacher.name.toLowerCase()}-${teacher.id}`,
+    [teacher.id, teacher.name],
+  );
+
   return (
     <Link
       component={RouterLink}
-      href={`${paths.teacher}/${teacher.id}`}
+      href={`${paths.teacher}/${encodeUrl(path)}`}
       color="inherit"
       underline="none"
     >

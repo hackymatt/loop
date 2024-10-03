@@ -22,7 +22,7 @@ from .factory import (
     create_module,
     create_payment,
 )
-from .helpers import login, mock_register_payment
+from .helpers import login, mock_register_payment, mock_verify_payment
 import json
 from django.contrib import auth
 from datetime import datetime, timedelta
@@ -430,6 +430,56 @@ class PurchaseTest(TestCase):
                 },
             ],
             "coupon": "",
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class PaymentVerifyTest(TestCase):
+    def setUp(self):
+        self.endpoint = "/api/payment-verify"
+        self.client = APIClient()
+
+        self.payment = create_payment(amount=10000, status="P")
+
+    @patch.object(Przelewy24Api, "verify")
+    def test_verify_no_matching_record(self, verify_mock):
+        mock_verify_payment(mock=verify_mock, result=True)
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "sessionId": str(self.payment.session_id),
+            "orderId": 12345,
+            "amount": int(self.payment.amount) * 2,
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    @patch.object(Przelewy24Api, "verify")
+    def test_verify_failure(self, verify_mock):
+        mock_verify_payment(mock=verify_mock, result=False)
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "sessionId": str(self.payment.session_id),
+            "orderId": 12345,
+            "amount": int(self.payment.amount),
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    @patch.object(Przelewy24Api, "verify")
+    def test_verify_success(self, verify_mock):
+        mock_verify_payment(mock=verify_mock, result=True)
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "sessionId": str(self.payment.session_id),
+            "orderId": 12345,
+            "amount": int(self.payment.amount),
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

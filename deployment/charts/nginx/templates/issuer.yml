@@ -8,7 +8,7 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: matios94@gmail.com
+    email: admin@loop.edu.pl
     privateKeySecretRef:
       name: letsencrypt-production
     solvers:

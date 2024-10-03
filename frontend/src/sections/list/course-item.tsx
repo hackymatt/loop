@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { polishPlurals } from "polish-plurals";
 
 import Box from "@mui/material/Box";
@@ -11,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
+import { encodeUrl } from "src/utils/url-utils";
 import { fCurrency, fShortenNumber } from "src/utils/format-number";
 
 import Image from "src/components/image";
@@ -53,8 +55,15 @@ export default function CourseItem({ course, vertical }: Props) {
 
   const avatarUrl = teachers?.[0]?.avatarUrl || genderAvatarUrl;
 
+  const path = useMemo(() => `${slug.toLowerCase()}-${id}`, [id, slug]);
+
   return (
-    <Link component={RouterLink} href={`${paths.course}/${id}`} color="inherit" underline="none">
+    <Link
+      component={RouterLink}
+      href={`${paths.course}/${encodeUrl(path)}`}
+      color="inherit"
+      underline="none"
+    >
       <Card
         sx={{
           display: { sm: "flex" },

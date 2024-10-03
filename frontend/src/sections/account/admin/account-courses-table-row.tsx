@@ -12,6 +12,7 @@ import { paths } from "src/routes/paths";
 
 import { usePopover } from "src/hooks/use-popover";
 
+import { encodeUrl } from "src/utils/url-utils";
 import { fCurrency } from "src/utils/format-number";
 
 import Label from "src/components/label";
@@ -43,6 +44,8 @@ export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props)
   const isActive = useMemo(() => row.active, [row.active]);
 
   const isInactive = useMemo(() => !row.active, [row.active]);
+
+  const path = useMemo(() => `${row.slug.toLowerCase()}-${row.id}`, [row.id, row.slug]);
 
   return (
     <>
@@ -91,7 +94,7 @@ export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props)
           },
         }}
       >
-        <Link href={`${paths.course}/${row.id}`} target="_blank" rel="noopener">
+        <Link href={`${paths.course}/${encodeUrl(path)}`} target="_blank" rel="noopener">
           <MenuItem sx={{ mr: 1, width: "100%", color: "success.main" }}>
             <Iconify icon="carbon:view" sx={{ mr: 0.5 }} />
             <Typography variant="body2">Podgląd</Typography>

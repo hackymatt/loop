@@ -11,6 +11,7 @@ import { paths } from "src/routes/paths";
 
 import { useResponsive } from "src/hooks/use-responsive";
 
+import { decodeUrl } from "src/utils/url-utils";
 import { createMetadata } from "src/utils/create-metadata";
 
 import { useCourse } from "src/api/courses/course";
@@ -37,7 +38,10 @@ import CourseDetailsTeachersInfo from "../details/course/course-details-teachers
 export default function CourseView({ id }: { id: string }) {
   const mdUp = useResponsive("up", "md");
 
-  const { data: course, isLoading: isLoadingCourse } = useCourse(id);
+  const decodedId = decodeUrl(id);
+  const recordId = decodedId.slice(decodedId.lastIndexOf("-") + 1);
+
+  const { data: course, isLoading: isLoadingCourse } = useCourse(recordId);
   const { data: bestCourses, isLoading: isLoadingBestCourses } = useBestCourses();
 
   const technologies = useMemo(() => course?.category.join(","), [course?.category]);
@@ -154,7 +158,7 @@ export default function CourseView({ id }: { id: string }) {
       {mdUp && <Divider />}
 
       <Review
-        courseId={id}
+        courseId={course.id}
         teacherId=""
         ratingNumber={course.ratingNumber}
         reviewNumber={course.totalReviews}
