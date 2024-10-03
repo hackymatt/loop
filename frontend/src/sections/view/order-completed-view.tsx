@@ -1,6 +1,7 @@
 "use client";
 
 import { m } from "framer-motion";
+import { useEffect } from "react";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -11,12 +12,46 @@ import Typography from "@mui/material/Typography";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
+import { trackEvent } from "src/utils/google-analytics";
+
+import { useCarts } from "src/api/carts/carts";
+import { useDeleteCart } from "src/api/carts/cart";
+
 import Iconify from "src/components/iconify";
+import { useToastContext } from "src/components/toast";
 import { varBounce, MotionContainer } from "src/components/animate";
+
+import { ICartProp } from "src/types/cart";
 
 // ----------------------------------------------------------------------
 
 export default function OrderCompletedView() {
+  const { enqueueSnackbar } = useToastContext();
+
+  const { data: cartItems } = useCarts({ page_size: -1 });
+  const { mutateAsync: deleteCart } = useDeleteCart();
+
+  useEffect(() => {
+    if (cartItems) {
+      try {
+        const clearCart = async () => {
+          await Promise.allSettled(
+            cartItems.map((cItem: ICartProp) => deleteCart({ id: cItem.id })),
+          );
+        };
+        clearCart();
+        trackEvent(
+          "purchase_completed",
+          "purchase",
+          "Purchase completed",
+          cartItems?.map((cartItem: ICartProp) => cartItem.lesson.title).join(","),
+        );
+      } catch {
+        enqueueSnackbar("Wystąpił błąd podczas czyszczenia koszyka", { variant: "error" });
+      }
+    }
+  }, [cartItems, deleteCart, enqueueSnackbar]);
+
   return (
     <Container
       component={MotionContainer}
@@ -36,13 +71,13 @@ export default function OrderCompletedView() {
 
       <Button
         component={RouterLink}
-        href={paths.courses}
+        href={paths.account.lessons}
         size="large"
         color="inherit"
         variant="contained"
         startIcon={<Iconify icon="carbon:chevron-left" />}
       >
-        Kontynuuj przeglądanie kursów
+        Sprawdź swoje lekcje
       </Button>
     </Container>
   );

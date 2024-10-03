@@ -19,6 +19,7 @@ from .factory import (
     create_schedule,
     create_meeting,
     create_module,
+    create_payment,
 )
 from .helpers import (
     login,
@@ -152,16 +153,19 @@ class ReviewTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile_1,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_purchase(
             lesson=self.lesson_2,
             student=self.profile_1,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         create_purchase(
             lesson=self.lesson_3,
             student=self.profile_1,
             price=self.lesson_3.price,
+            payment=create_payment(amount=self.lesson_3.price),
         )
 
         self.review_1 = create_review(
@@ -678,16 +682,19 @@ class ReviewStatsTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile_1,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_purchase(
             lesson=self.lesson_2,
             student=self.profile_1,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         create_purchase(
             lesson=self.lesson_3,
             student=self.profile_1,
             price=self.lesson_3.price,
+            payment=create_payment(amount=self.lesson_3.price),
         )
 
         self.review_1 = create_review(
@@ -898,12 +905,14 @@ class ReviewConfirmationTest(TestCase):
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
 
         create_purchase(
             lesson=self.lesson_2,
             student=self.profile,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
 
         for module in self.course_1.modules.all():
@@ -928,6 +937,7 @@ class ReviewConfirmationTest(TestCase):
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_reservation(
             student=self.profile,
@@ -955,6 +965,7 @@ class ReviewConfirmationTest(TestCase):
             lesson=self.lesson_2,
             student=self.profile,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         create_reservation(
             student=self.profile,

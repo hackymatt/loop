@@ -1,3 +1,5 @@
+import { PAYMENT_SERVER } from "src/config-global";
+
 // ----------------------------------------------------------------------
 
 export const paths = {
@@ -79,6 +81,6 @@ export const paths = {
   payment: {
     privacyPolicy: "https://www.przelewy24.pl/obowiazek-informacyjny-platnik",
     termsAndConditions: "https://www.przelewy24.pl/regulamin",
-    url: "https://secure.przelewy24.pl/trnRequest",
+    url: `${PAYMENT_SERVER}/trnRequest`,
   },
 };

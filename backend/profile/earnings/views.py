@@ -88,7 +88,7 @@ class EarningViewSet(ModelViewSet):
         )
 
         price = (
-            Purchase.objects.filter(id__in=Subquery(purchases))
+            Purchase.objects.filter(id__in=Subquery(purchases), payment__status="S")
             .annotate(dummy_group_by=Value(1))
             .values("dummy_group_by")
             .order_by("dummy_group_by")

@@ -297,16 +297,21 @@ def create_review(
     )
 
 
+def create_payment(amount: int, status: str = "S"):
+    return Payment.objects.create(amount=float(amount) * 100, status=status)
+
+
 def create_purchase(
     lesson: Lesson,
     student: Profile,
     price: float,
+    payment: Payment,
 ):
     return Purchase.objects.create(
         lesson=lesson,
         student=student,
         price=price,
-        payment=Payment.objects.create(amount=1000),
+        payment=payment,
     )
 
 

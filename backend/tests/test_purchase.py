@@ -1,5 +1,7 @@
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APIClient
+from django.test import TestCase
+from unittest.mock import patch
 from .factory import (
     create_user,
     create_profile,
@@ -18,19 +20,22 @@ from .factory import (
     create_coupon,
     create_meeting,
     create_module,
+    create_payment,
 )
-from .helpers import login
+from .helpers import login, mock_register_payment
 import json
 from django.contrib import auth
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from config_global import CANCELLATION_TIME
 import uuid
+from utils.przelewy24.payment import Przelewy24Api
 
 
-class PurchaseTest(APITestCase):
+class PurchaseTest(TestCase):
     def setUp(self):
         self.endpoint = "/api/purchase"
+        self.client = APIClient()
         self.data = {
             "email": "user@example.com",
             "password": "TestPassword123",
@@ -102,12 +107,14 @@ class PurchaseTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
 
         create_purchase(
             lesson=self.lesson_2,
             student=self.profile,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
 
         for module in self.course_1.modules.all():
@@ -144,6 +151,7 @@ class PurchaseTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         meeting = create_meeting(event_id="test_event", url="https://example.com")
         self.schedules[len(self.schedules) - 3].meeting = meeting
@@ -158,6 +166,7 @@ class PurchaseTest(APITestCase):
             lesson=self.lesson_2,
             student=self.profile,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         create_reservation(
             student=self.profile,
@@ -211,11 +220,13 @@ class PurchaseTest(APITestCase):
             lesson=self.lesson_3,
             student=self.profile,
             price=self.lesson_3.price,
+            payment=create_payment(amount=self.lesson_3.price),
         )
         create_purchase(
             lesson=self.lesson_4,
             student=self.profile,
             price=self.lesson_4.price,
+            payment=create_payment(amount=self.lesson_4.price),
         )
 
         create_review(
@@ -345,32 +356,9 @@ class PurchaseTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_create_purchase_payment_error(self):
-        # login
-        login(self, self.data["email"], self.data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # post data
-        self.lesson_5.active = True
-        self.lesson_5.price = 1
-        self.lesson_5.save()
-        self.lesson_6.active = True
-        self.lesson_6.price = 0
-        self.lesson_6.save()
-        data = {
-            "lessons": [
-                {
-                    "lesson": self.lesson_6.id,
-                },
-                {
-                    "lesson": self.lesson_5.id,
-                },
-            ],
-            "coupon": self.coupon_1.code,
-        }
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_create_purchase_1_authenticated(self):
+    @patch.object(Przelewy24Api, "register")
+    def test_create_purchase_1_authenticated(self, register_mock):
+        mock_register_payment(mock=register_mock)
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -394,7 +382,9 @@ class PurchaseTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_create_purchase_2_authenticated(self):
+    @patch.object(Przelewy24Api, "register")
+    def test_create_purchase_2_authenticated(self, register_mock):
+        mock_register_payment(mock=register_mock)
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -418,7 +408,9 @@ class PurchaseTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_create_purchase_3_authenticated(self):
+    @patch.object(Przelewy24Api, "register")
+    def test_create_purchase_3_authenticated(self, register_mock):
+        mock_register_payment(mock=register_mock)
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)

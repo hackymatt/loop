@@ -69,9 +69,8 @@ type ICreatePurchase = {
 };
 
 type ICreatePurchaseReturn = {
-  data: {
-    token: "string";
-  };
+  token?: string;
+  error?: string;
   responseCode: 0;
 };
 

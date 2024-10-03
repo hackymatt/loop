@@ -18,6 +18,7 @@ from .factory import (
     create_reservation,
     create_module,
     create_certificate,
+    create_payment,
 )
 from .helpers import login, mock_send_message, certificates_number, notifications_number
 from django.contrib import auth
@@ -250,6 +251,7 @@ class CertificateTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile_1,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         self.reservation_1 = create_reservation(
             student=self.profile_1,
@@ -263,6 +265,7 @@ class CertificateTest(APITestCase):
             lesson=self.lesson_2,
             student=self.profile_2,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         self.reservation_2 = create_reservation(
             student=self.profile_2,
@@ -276,6 +279,7 @@ class CertificateTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile_2,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         self.reservation_3 = create_reservation(
             student=self.profile_2,
@@ -287,6 +291,7 @@ class CertificateTest(APITestCase):
             lesson=self.lesson_2,
             student=self.profile_1,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         self.reservation_4 = create_reservation(
             student=self.profile_1,
@@ -300,6 +305,7 @@ class CertificateTest(APITestCase):
             lesson=self.lesson_2,
             student=self.profile_2,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         self.reservation_5 = create_reservation(
             student=self.profile_2,
@@ -313,6 +319,7 @@ class CertificateTest(APITestCase):
             lesson=self.lesson_4,
             student=self.profile_1,
             price=self.lesson_4.price,
+            payment=create_payment(amount=self.lesson_4.price),
         )
         self.reservation_6 = create_reservation(
             student=self.profile_1,
@@ -587,6 +594,7 @@ class CertificateInfoTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile_1,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         self.reservation_1 = create_reservation(
             student=self.profile_1,
@@ -600,6 +608,7 @@ class CertificateInfoTest(APITestCase):
             lesson=self.lesson_2,
             student=self.profile_2,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         self.reservation_2 = create_reservation(
             student=self.profile_2,
@@ -613,6 +622,7 @@ class CertificateInfoTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile_2,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         self.reservation_3 = create_reservation(
             student=self.profile_2,
@@ -624,6 +634,7 @@ class CertificateInfoTest(APITestCase):
             lesson=self.lesson_2,
             student=self.profile_1,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         self.reservation_4 = create_reservation(
             student=self.profile_1,
@@ -637,6 +648,7 @@ class CertificateInfoTest(APITestCase):
             lesson=self.lesson_2,
             student=self.profile_2,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         self.reservation_5 = create_reservation(
             student=self.profile_2,
@@ -650,6 +662,7 @@ class CertificateInfoTest(APITestCase):
             lesson=self.lesson_4,
             student=self.profile_1,
             price=self.lesson_4.price,
+            payment=create_payment(amount=self.lesson_4.price),
         )
         self.reservation_6 = create_reservation(
             student=self.profile_1,
@@ -899,7 +912,10 @@ class CertificateGenerateTest(TestCase):
 
         # profile 1 only lesson
         self.purchase_1 = create_purchase(
-            lesson=self.lesson_1, student=self.profile_1, price=self.lesson_1.price
+            lesson=self.lesson_1,
+            student=self.profile_1,
+            price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         self.schedule_1 = create_schedule(
             lecturer=self.lecturer_profile,
@@ -922,7 +938,10 @@ class CertificateGenerateTest(TestCase):
 
         # profile 2 lesson & module
         self.purchase_2 = create_purchase(
-            lesson=self.lesson_2, student=self.profile_2, price=self.lesson_2.price
+            lesson=self.lesson_2,
+            student=self.profile_2,
+            price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         self.schedule_2 = create_schedule(
             lecturer=self.lecturer_profile,
@@ -945,7 +964,10 @@ class CertificateGenerateTest(TestCase):
 
         # profile 3 lesson & module & course
         self.purchase_3 = create_purchase(
-            lesson=self.lesson_2, student=self.profile_3, price=self.lesson_2.price
+            lesson=self.lesson_2,
+            student=self.profile_3,
+            price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         self.schedule_3 = create_schedule(
             lecturer=self.lecturer_profile,
@@ -966,7 +988,10 @@ class CertificateGenerateTest(TestCase):
             purchase=self.purchase_2,
         )
         self.purchase_4 = create_purchase(
-            lesson=self.lesson_1, student=self.profile_3, price=self.lesson_1.price
+            lesson=self.lesson_1,
+            student=self.profile_3,
+            price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         self.schedule_4 = create_schedule(
             lecturer=self.lecturer_profile,

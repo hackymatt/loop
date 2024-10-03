@@ -242,3 +242,14 @@ class PurchaseSerializer(ModelSerializer):
             objs.append(obj)
 
         return objs
+
+
+class PaymentSerializer(ModelSerializer):
+    status = CharField(source="get_status_display")
+
+    class Meta:
+        model = Payment
+        exclude = (
+            "created_at",
+            "modified_at",
+        )

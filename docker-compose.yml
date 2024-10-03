@@ -68,6 +68,7 @@ services:
       - NEXT_PUBLIC_FACEBOOK_CLIENT_ID=${FACEBOOK_CLIENT_ID}
       - NEXT_PUBLIC_GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
       - NEXT_PUBLIC_GITHUB_REPO=${GITHUB_REPO}
+      - NEXT_PUBLIC_PAYMENT_SERVER=${PAYMENT_SERVER}
     volumes:
       - ./frontend:/usr/src/app/frontend
       - /usr/src/app/frontend/node_modules

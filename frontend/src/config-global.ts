@@ -16,3 +16,5 @@ export const GOOGLE_ANALYTICS_ID = env.GOOGLE_ANALYTICS_ID ?? "";
 export const MIN_PASSWORD_LENGTH = Number(env.MIN_PASSWORD_LENGTH) ?? 8;
 export const LESSON_DURATION_MULTIPLIER = Number(env.LESSON_DURATION_MULTIPLIER) ?? 30;
 export const CANCELLATION_TIME = Number(env.CANCELLATION_TIME) ?? 24;
+
+export const PAYMENT_SERVER = env.PAYMENT_SERVER ?? "https://sandbox.przelewy24.pl";

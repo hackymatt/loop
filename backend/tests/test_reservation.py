@@ -19,6 +19,7 @@ from .factory import (
     create_meeting,
     create_module,
     create_finance,
+    create_payment,
 )
 from .helpers import (
     login,
@@ -297,6 +298,7 @@ class ReservationTest(TestCase):
             lesson=self.lesson_1,
             student=self.profile_1,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         self.reservation_1 = create_reservation(
             student=self.profile_1,
@@ -310,6 +312,7 @@ class ReservationTest(TestCase):
             lesson=self.lesson_2,
             student=self.profile_2,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         self.reservation_2 = create_reservation(
             student=self.profile_2,
@@ -323,6 +326,7 @@ class ReservationTest(TestCase):
             lesson=self.lesson_1,
             student=self.profile_2,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         self.reservation_3 = create_reservation(
             student=self.profile_2,
@@ -334,6 +338,7 @@ class ReservationTest(TestCase):
             lesson=self.lesson_2,
             student=self.profile_1,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         self.reservation_4 = create_reservation(
             student=self.profile_1,
@@ -347,6 +352,7 @@ class ReservationTest(TestCase):
             lesson=self.lesson_2,
             student=self.profile_2,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         self.reservation_5 = create_reservation(
             student=self.profile_2,
@@ -360,6 +366,7 @@ class ReservationTest(TestCase):
             lesson=self.lesson_4,
             student=self.profile_1,
             price=self.lesson_4.price,
+            payment=create_payment(amount=self.lesson_4.price),
         )
         self.reservation_6 = create_reservation(
             student=self.profile_1,
@@ -736,12 +743,14 @@ class ReservationConfirmationTest(TestCase):
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
 
         create_purchase(
             lesson=self.lesson_2,
             student=self.profile,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
 
         for module in self.course_1.modules.all():
@@ -770,6 +779,7 @@ class ReservationConfirmationTest(TestCase):
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_reservation(
             student=self.profile,
@@ -795,6 +805,7 @@ class ReservationConfirmationTest(TestCase):
             lesson=self.lesson_2,
             student=self.profile,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         create_reservation(
             student=self.profile,

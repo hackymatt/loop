@@ -20,6 +20,7 @@ from .factory import (
     create_reservation,
     create_meeting,
     create_module,
+    create_payment,
 )
 from .helpers import (
     login,
@@ -313,6 +314,7 @@ class ScheduleTest(TestCase):
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_reservation(
             student=self.profile,
@@ -324,6 +326,7 @@ class ScheduleTest(TestCase):
             lesson=self.lesson_1,
             student=self.profile_2,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_reservation(
             student=self.profile_2,

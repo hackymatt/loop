@@ -123,7 +123,7 @@ def get_students_count(queryset):
     )
 
     total_student_count = (
-        Purchase.objects.filter(lesson__in=Subquery(lessons))
+        Purchase.objects.filter(lesson__in=Subquery(lessons), payment__status="S")
         .annotate(dummy_group_by=Value(1))
         .values("dummy_group_by")
         .order_by("dummy_group_by")

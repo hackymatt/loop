@@ -16,7 +16,6 @@ import { RouterLink } from "src/routes/components";
 import { trackEvent } from "src/utils/google-analytics";
 
 import { useCarts } from "src/api/carts/carts";
-import { useDeleteCart } from "src/api/carts/cart";
 import { useCreatePurchase } from "src/api/purchase/purchase";
 
 import Iconify from "src/components/iconify";
@@ -45,7 +44,6 @@ export default function CartView() {
 
   const total = prices?.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
 
-  const { mutateAsync: deleteCart, isLoading: isDeletingCart } = useDeleteCart();
   const { mutateAsync: createPurchase, isLoading: isSubmitting } = useCreatePurchase();
 
   const handlePurchase = async (coupon: string) => {
@@ -54,22 +52,25 @@ export default function CartView() {
         lessons: cartItems.map((cItem: ICartProp) => ({ lesson: cItem.lesson.id })),
         coupon,
       });
-      console.log(paymentRegistration);
-      const { token } = paymentRegistration.data;
 
-      const paymentUrl = `${paths.payment.url}/${token}`;
-      push(paymentUrl);
+      const { token } = paymentRegistration;
 
-      await Promise.allSettled(cartItems.map((cItem: ICartProp) => deleteCart({ id: cItem.id })));
-      push(paths.order.completed);
+      if (!token) {
+        enqueueSnackbar("Wystąpił błąd podczas zakupu", { variant: "error" });
+        return;
+      }
+
       trackEvent(
-        "purchase_completed",
+        "purchase_started",
         "purchase",
-        "Purchase completed",
+        "Purchase started",
         [cartItems?.map((cartItem: ICartProp) => cartItem.lesson.title).join(","), coupon].join(
           ";",
         ),
       );
+
+      const paymentUrl = `${paths.payment.url}/${token}`;
+      push(paymentUrl);
     } catch (err) {
       setError((err as AxiosError).response?.data as IPurchaseError);
       enqueueSnackbar("Wystąpił błąd podczas zakupu", { variant: "error" });
@@ -105,7 +106,7 @@ export default function CartView() {
               <CartSummary
                 total={total}
                 onPurchase={handlePurchase}
-                isLoading={isDeletingCart || isSubmitting}
+                isLoading={isSubmitting}
                 error={error?.coupon}
               />
             </Grid>

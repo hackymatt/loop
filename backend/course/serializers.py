@@ -253,7 +253,7 @@ def get_rating_count(lessons):
 
 
 def get_students_count(lessons):
-    return Purchase.objects.filter(lesson__in=lessons).count()
+    return Purchase.objects.filter(lesson__in=lessons, payment__status="S").count()
 
 
 def get_duration(course):

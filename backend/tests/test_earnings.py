@@ -18,6 +18,7 @@ from .factory import (
     create_finance,
     create_finance_history,
     create_module,
+    create_payment,
 )
 from .helpers import login
 from django.contrib import auth
@@ -237,8 +238,12 @@ class EarningsTest(APITestCase):
             lesson = sample(lessons, 1)[0]
             student = sample(students, 1)[0]
             schedule = sample(schedules, 1)[0]
+            price = sample(prices, 1)[0]
             purchase = create_purchase(
-                lesson=lesson, student=student, price=sample(prices, 1)[0]
+                lesson=lesson,
+                student=student,
+                price=price,
+                payment=create_payment(amount=price),
             )
             self.purchases.append(purchase)
             reservation = create_reservation(
