@@ -23,6 +23,7 @@ from django.db.models.functions import Cast, Extract
 from reservation.models import Reservation
 from purchase.serializers import LessonStatus, ReviewStatus
 from datetime import datetime
+from django.utils.timezone import make_aware
 from schedule.models import Schedule
 from config_global import CANCELLATION_TIME
 
@@ -64,12 +65,12 @@ def get_lesson_lecturer(queryset):
 def get_lesson_status(queryset):
     start_schedule = (
         Schedule.objects.filter(pk=OuterRef("schedule"))
-        .annotate(diff=datetime.now() - F("start_time"))
+        .annotate(diff=make_aware(datetime.now()) - F("start_time"))
         .values("diff")
     )
     end_schedule = (
         Schedule.objects.filter(pk=OuterRef("schedule"))
-        .annotate(diff=datetime.now() - F("end_time"))
+        .annotate(diff=make_aware(datetime.now()) - F("end_time"))
         .values("diff")
     )
 

@@ -1,13 +1,14 @@
 from notification.models import Notification
 from datetime import datetime, timedelta
-
-NOTIFICATION_EXPIRY_DAYS = 31
+from django.utils.timezone import make_aware
+from config_global import NOTIFICATION_EXPIRY_DAYS
 
 
 def remove_old_notifications():
-    notifications = Notification.objects.filter(
-        created_at__lt=datetime.now() - timedelta(days=NOTIFICATION_EXPIRY_DAYS)
-    ).exclude(status="NEW")
+    date = make_aware(datetime.now() - timedelta(days=NOTIFICATION_EXPIRY_DAYS))
+    notifications = Notification.objects.filter(created_at__lt=date).exclude(
+        status="NEW"
+    )
     notifications.delete()
 
 

@@ -449,12 +449,14 @@ class ScheduleTest(TestCase):
         login(self, self.lecturer_data["email"], self.lecturer_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        self.delete_schedule.start_time = datetime.now().replace(
-            minute=0, second=0, microsecond=0
-        ) - timedelta(hours=1)
-        self.delete_schedule.end_time = datetime.now().replace(
-            minute=30, second=0, microsecond=0
-        ) - timedelta(hours=1)
+        self.delete_schedule.start_time = make_aware(
+            datetime.now().replace(minute=0, second=0, microsecond=0)
+            - timedelta(hours=1)
+        )
+        self.delete_schedule.end_time = make_aware(
+            datetime.now().replace(minute=30, second=0, microsecond=0)
+            - timedelta(hours=1)
+        )
         self.delete_schedule.save()
         response = self.client.delete(f"{self.endpoint}/{self.delete_schedule.id}")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
