@@ -310,6 +310,6 @@ MIN_STUDENTS_THRESHOLD = int(os.environ.get("MIN_STUDENTS_THRESHOLD", "2"))
 
 PAYMENT_SERVER = os.environ.get("PAYMENT_SERVER", "https://sandbox.przelewy24.pl")
 PAYMENT_MERCHANT_ID = int(os.environ.get("PAYMENT_MERCHANT_ID", "-1"))
-PAYMENT_STORE_ID = os.environ.get("PAYMENT_STORE_ID", "-1")
+PAYMENT_STORE_ID = int(os.environ.get("PAYMENT_STORE_ID", "-1"))
 PAYMENT_CRC = os.environ.get("PAYMENT_CRC", "")
 PAYMENT_API_KEY = os.environ.get("PAYMENT_API_KEY", "")

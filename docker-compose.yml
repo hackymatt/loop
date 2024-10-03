@@ -45,6 +45,8 @@ services:
       - PAYMENT_SERVER=${PAYMENT_SERVER}
       - PAYMENT_MERCHANT_ID=${PAYMENT_MERCHANT_ID}
       - PAYMENT_STORE_ID=${PAYMENT_STORE_ID}
+      - PAYMENT_CRC=${PAYMENT_CRC}
+      - PAYMENT_API_KEY=${PAYMENT_API_KEY}
     depends_on:
       - db
       - redis

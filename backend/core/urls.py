@@ -46,7 +46,7 @@ from schedule.views import (
 from stats.views import StatsViewSet
 from wishlist.views import WishlistViewSet
 from cart.views import CartViewSet
-from purchase.views import PurchaseViewSet, PurchaseValidateViewSet
+from purchase.views import PurchaseViewSet
 from teaching.views import ManageTeachingViewSet, TeachingViewSet
 from reservation.views import ReservationViewSet
 from contact.views import ContactViewSet
@@ -145,10 +145,6 @@ api_urlpatterns = [
     path("login-google", GoogleLoginViewSet.as_view({"post": "post"})),
     path("login-facebook", FacebookLoginViewSet.as_view({"post": "post"})),
     path("login-github", GithubLoginViewSet.as_view({"post": "post"})),
-    path(
-        "purchase-validate/<str:id>",
-        PurchaseValidateViewSet.validate,
-    ),
 ]
 
 urlpatterns = [

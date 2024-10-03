@@ -24,10 +24,15 @@ def get_dummy_student_profile():
 
 
 class Payment(BaseModel):
+    STATUS_CHOICES = (
+        ("P", "Pending"),
+        ("S", "Success"),
+        ("F", "Failure"),
+    )
     session_id = UUIDField(default=uuid.uuid4)
-    order_id = BigIntegerField(null=True)
+    order_id = BigIntegerField(null=True, default=None)
     amount = IntegerField()
-    status = CharField(null=True, default=None)
+    status = CharField(choices=STATUS_CHOICES, default="P")
 
     class Meta:
         db_table = "payment"

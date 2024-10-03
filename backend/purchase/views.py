@@ -1,24 +1,20 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.serializers import ValidationError
-from rest_framework.response import Response
-from rest_framework import status
 from django.http import JsonResponse
 from purchase.serializers import PurchaseSerializer, PurchaseGetSerializer
 from purchase.models import Purchase, Payment
 from purchase.filters import PurchaseFilter
 from profile.models import Profile, StudentProfile
-from purchase.utils import Przelewy24
 from profile.models import Profile
 from lesson.models import Lesson
 from coupon.models import Coupon, CouponUser
 from coupon.validation import validate_coupon
-import json
 
 
 class PurchaseViewSet(ModelViewSet):
     http_method_names = ["get", "post"]
-    queryset = Purchase.objects.all().filter(payment__status="success")
+    queryset = Purchase.objects.filter(payment__status="S").all()
     serializer_class = PurchaseGetSerializer
     filterset_class = PurchaseFilter
     permission_classes = [IsAuthenticated]
@@ -130,31 +126,4 @@ class PurchaseViewSet(ModelViewSet):
         return JsonResponse(
             status=register.status_code,
             data=register.json(),
-        )
-
-
-class PurchaseValidateViewSet(ModelViewSet):
-    http_method_names = ["get"]
-
-    def validate(request, id):
-        payment = Payment.objects.filter(session_id=id)
-
-        if not payment.exists():
-            return JsonResponse(
-                status=status.HTTP_400_BAD_REQUEST,
-                data={},
-            )
-
-        payment = payment.first()
-
-        przelewy24 = Przelewy24(payment=payment)
-        verification = przelewy24.verify()
-
-        if verification.ok:
-            payment.status = json.loads(verification)["data"]["status"]
-            payment.save()
-
-        return JsonResponse(
-            status=verification.status_code,
-            data=verification.json(),
         )
