@@ -9,7 +9,7 @@ from finance.models import Finance, FinanceHistory
 from skill.models import Skill
 from review.models import Review
 from module.models import Module
-from purchase.models import Purchase
+from purchase.models import Purchase, Payment
 from newsletter.models import Newsletter
 from notification.models import Notification
 from message.models import Message
@@ -306,6 +306,7 @@ def create_purchase(
         lesson=lesson,
         student=student,
         price=price,
+        payment=Payment.objects.create(amount=1000),
     )
 
 

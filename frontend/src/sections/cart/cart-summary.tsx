@@ -36,6 +36,8 @@ type IDiscount = {
 export default function CartSummary({ total, onPurchase, isLoading, error }: Props) {
   const acceptance = useBoolean(false);
   const acceptanceError = useBoolean(false);
+  const paymentAcceptance = useBoolean(false);
+  const paymentAcceptanceError = useBoolean(false);
 
   const [couponError, setCouponError] = useState<string>(error ?? "");
   const [coupon, setCoupon] = useState<string>();
@@ -73,15 +75,28 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
 
   const handleClick = () => {
     acceptanceError.onFalse();
+    paymentAcceptanceError.onFalse();
+
+    if (!acceptance.value && !paymentAcceptance.value) {
+      acceptanceError.onTrue();
+      paymentAcceptanceError.onTrue();
+      return;
+    }
 
     if (!acceptance.value) {
       acceptanceError.onTrue();
       return;
     }
 
+    if (!paymentAcceptance.value) {
+      paymentAcceptanceError.onTrue();
+      return;
+    }
+
     onPurchase(selectedCoupon ?? "");
 
     acceptanceError.onFalse();
+    paymentAcceptanceError.onFalse();
   };
 
   return (

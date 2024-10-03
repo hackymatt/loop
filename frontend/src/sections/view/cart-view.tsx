@@ -50,10 +50,16 @@ export default function CartView() {
 
   const handlePurchase = async (coupon: string) => {
     try {
-      await createPurchase({
+      const paymentRegistration = await createPurchase({
         lessons: cartItems.map((cItem: ICartProp) => ({ lesson: cItem.lesson.id })),
         coupon,
       });
+      console.log(paymentRegistration);
+      const { token } = paymentRegistration.data;
+
+      const paymentUrl = `${paths.payment.url}/${token}`;
+      push(paymentUrl);
+
       await Promise.allSettled(cartItems.map((cItem: ICartProp) => deleteCart({ id: cItem.id })));
       push(paths.order.completed);
       trackEvent(

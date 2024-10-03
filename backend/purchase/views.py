@@ -1,12 +1,12 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.serializers import ValidationError
-from rest_framework.response import Response
-from rest_framework import status
+from django.http import JsonResponse
 from purchase.serializers import PurchaseSerializer, PurchaseGetSerializer
-from purchase.models import Purchase
+from purchase.models import Purchase, Payment
 from purchase.filters import PurchaseFilter
 from profile.models import Profile, StudentProfile
+from profile.models import Profile
 from lesson.models import Lesson
 from coupon.models import Coupon, CouponUser
 from coupon.validation import validate_coupon
@@ -14,7 +14,7 @@ from coupon.validation import validate_coupon
 
 class PurchaseViewSet(ModelViewSet):
     http_method_names = ["get", "post"]
-    queryset = Purchase.objects.all()
+    queryset = Purchase.objects.filter(payment__status="S").all()
     serializer_class = PurchaseGetSerializer
     filterset_class = PurchaseFilter
     permission_classes = [IsAuthenticated]
@@ -109,16 +109,21 @@ class PurchaseViewSet(ModelViewSet):
             records = lessons_data
             total = self.get_total_price(lessons=records)
 
-        # make payment
-        is_payment_successful = total > 1
-        if not is_payment_successful:
-            raise ValidationError({"payment": "Płatność odrzucona."})
+        # initialize payment record
+        payment = Payment.objects.create(amount=total * 100)
 
         # create records
-        serializer = PurchaseSerializer(data=records, context={"request": request})
+        serializer = PurchaseSerializer(
+            data=records, context={"request": request, "payment": payment.id}
+        )
         instances = serializer.create(serializer.initial_data)
 
-        return Response(
-            status=status.HTTP_200_OK,
-            data=PurchaseGetSerializer(instances, many=True).data,
+        # register payment
+        przelewy24 = Przelewy24(payment=payment)
+
+        register = przelewy24.register(client=profile, purchases=instances)
+
+        return JsonResponse(
+            status=register.status_code,
+            data=register.json(),
         )

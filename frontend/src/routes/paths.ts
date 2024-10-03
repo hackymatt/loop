@@ -76,4 +76,9 @@ export const paths = {
   tests: {
     predisposition: "/tests/predisposition",
   },
+  payment: {
+    privacyPolicy: "https://www.przelewy24.pl/obowiazek-informacyjny-platnik",
+    termsAndConditions: "https://www.przelewy24.pl/regulamin",
+    url: "https://secure.przelewy24.pl/trnRequest",
+  },
 };

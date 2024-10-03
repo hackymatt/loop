@@ -68,7 +68,12 @@ type ICreatePurchase = {
   coupon: string;
 };
 
-type ICreatePurchaseReturn = IPurchase[];
+type ICreatePurchaseReturn = {
+  data: {
+    token: "string";
+  };
+  responseCode: 0;
+};
 
 export const purchaseQuery = (query?: IQueryParams) => {
   const url = endpoint;

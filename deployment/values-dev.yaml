@@ -7,6 +7,7 @@ backend:
     CSRF_TRUSTED_ORIGINS: "https://dev.loop.edu.pl,https://www.dev.loop.edu.pl"
     ALLOWED_HOST: "dev.loop.edu.pl,www.dev.loop.edu.pl"
     BASE_URL: "https://dev.loop.edu.pl"
+    PAYMENT_SERVER: "https://sandbox.przelewy24.pl"
 
 frontend:
   enabled: true
