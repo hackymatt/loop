@@ -306,7 +306,7 @@ def create_purchase(
         lesson=lesson,
         student=student,
         price=price,
-        payment=Payment.objects.create(amount=1000)
+        payment=Payment.objects.create(amount=1000),
     )
 
 
