@@ -1,24 +1,19 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: nginx-ingress
+  name: nginx-ingress-payment-verify
   namespace: default
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-production
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
     app.kubernetes.io/managed-by: "Helm"
-    {{- if ne .Values.host "loop.edu.pl" }}
-    nginx.ingress.kubernetes.io/auth-type: basic
-    nginx.ingress.kubernetes.io/auth-secret: auth
-    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
-    {{- end}}
 spec:
   ingressClassName: "nginx"
   rules:
     - host: {{ .Values.host }}
       http:
         paths:
-          - path: /
+          - path: /api/payment-verify
             pathType: Prefix
             backend:
               service:
@@ -28,7 +23,7 @@ spec:
     - host: www.{{ .Values.host }}
       http:
         paths:
-          - path: /
+          - path: /api/payment-verify
             pathType: Prefix
             backend:
               service:
