@@ -11,7 +11,8 @@ from lesson.models import (
 from technology.models import Technology
 from course.models import Course
 from module.models import Module
-from django.db.models import OuterRef, Subquery, Value, Count
+from django.db.models import OuterRef, Subquery, Value, Count, FloatField
+from django.db.models.functions import Coalesce
 
 
 def get_courses_count(queryset):
@@ -29,7 +30,11 @@ def get_courses_count(queryset):
         .annotate(total_courses_count=Count("id"))
         .values("total_courses_count")
     )
-    technologies = queryset.annotate(courses_count=Subquery(total_courses_count))
+    technologies = queryset.annotate(
+        courses_count=Coalesce(
+            Subquery(total_courses_count), Value(0), output_field=FloatField()
+        )
+    )
 
     return technologies
 

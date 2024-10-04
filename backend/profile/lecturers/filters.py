@@ -1,8 +1,8 @@
 from django_filters import FilterSet, OrderingFilter, NumberFilter, UUIDFilter
 from review.models import Review
 from profile.models import LecturerProfile
-from django.db.models.functions import Concat
-from django.db.models import OuterRef, Subquery, Avg, Value
+from django.db.models.functions import Concat, Coalesce
+from django.db.models import OuterRef, Subquery, Avg, Value, FloatField
 
 
 def get_rating(queryset):
@@ -14,7 +14,9 @@ def get_rating(queryset):
         .annotate(avg_rating=Avg("rating"))
         .values("avg_rating")
     )
-    lecturers = queryset.annotate(rating=Subquery(avg_rating))
+    lecturers = queryset.annotate(
+        rating=Coalesce(Subquery(avg_rating), Value(0), output_field=FloatField())
+    )
 
     return lecturers
 
