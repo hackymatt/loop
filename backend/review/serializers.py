@@ -111,7 +111,7 @@ class ReviewSerializer(ModelSerializer):
         lecturer = LecturerProfile.objects.get(pk=data["lecturer"])
 
         if not Purchase.objects.filter(
-            student__profile=profile, lesson=lesson
+            student__profile=profile, lesson=lesson, payment__status="S"
         ).exists():
             raise ValidationError({"lesson": "Lekcja nie została zakupiona."})
 

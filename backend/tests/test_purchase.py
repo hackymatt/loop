@@ -1,5 +1,7 @@
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APIClient, APITestCase
+from django.test import TestCase
+from unittest.mock import patch
 from .factory import (
     create_user,
     create_profile,
@@ -18,19 +20,22 @@ from .factory import (
     create_coupon,
     create_meeting,
     create_module,
+    create_payment,
 )
-from .helpers import login
+from .helpers import login, mock_register_payment, mock_verify_payment
 import json
 from django.contrib import auth
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from config_global import CANCELLATION_TIME
 import uuid
+from utils.przelewy24.payment import Przelewy24Api
 
 
-class PurchaseTest(APITestCase):
+class PurchaseTest(TestCase):
     def setUp(self):
         self.endpoint = "/api/purchase"
+        self.client = APIClient()
         self.data = {
             "email": "user@example.com",
             "password": "TestPassword123",
@@ -102,12 +107,14 @@ class PurchaseTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
 
         create_purchase(
             lesson=self.lesson_2,
             student=self.profile,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
 
         for module in self.course_1.modules.all():
@@ -144,6 +151,7 @@ class PurchaseTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         meeting = create_meeting(event_id="test_event", url="https://example.com")
         self.schedules[len(self.schedules) - 3].meeting = meeting
@@ -158,6 +166,7 @@ class PurchaseTest(APITestCase):
             lesson=self.lesson_2,
             student=self.profile,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         create_reservation(
             student=self.profile,
@@ -211,11 +220,13 @@ class PurchaseTest(APITestCase):
             lesson=self.lesson_3,
             student=self.profile,
             price=self.lesson_3.price,
+            payment=create_payment(amount=self.lesson_3.price),
         )
         create_purchase(
             lesson=self.lesson_4,
             student=self.profile,
             price=self.lesson_4.price,
+            payment=create_payment(amount=self.lesson_4.price),
         )
 
         create_review(
@@ -345,32 +356,9 @@ class PurchaseTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_create_purchase_payment_error(self):
-        # login
-        login(self, self.data["email"], self.data["password"])
-        self.assertTrue(auth.get_user(self.client).is_authenticated)
-        # post data
-        self.lesson_5.active = True
-        self.lesson_5.price = 1
-        self.lesson_5.save()
-        self.lesson_6.active = True
-        self.lesson_6.price = 0
-        self.lesson_6.save()
-        data = {
-            "lessons": [
-                {
-                    "lesson": self.lesson_6.id,
-                },
-                {
-                    "lesson": self.lesson_5.id,
-                },
-            ],
-            "coupon": self.coupon_1.code,
-        }
-        response = self.client.post(self.endpoint, data)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_create_purchase_1_authenticated(self):
+    @patch.object(Przelewy24Api, "register")
+    def test_create_purchase_1_authenticated(self, register_mock):
+        mock_register_payment(mock=register_mock)
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -394,7 +382,9 @@ class PurchaseTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_create_purchase_2_authenticated(self):
+    @patch.object(Przelewy24Api, "register")
+    def test_create_purchase_2_authenticated(self, register_mock):
+        mock_register_payment(mock=register_mock)
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -418,7 +408,9 @@ class PurchaseTest(APITestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_create_purchase_3_authenticated(self):
+    @patch.object(Przelewy24Api, "register")
+    def test_create_purchase_3_authenticated(self, register_mock):
+        mock_register_payment(mock=register_mock)
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -441,3 +433,146 @@ class PurchaseTest(APITestCase):
         }
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class PaymentVerifyTest(TestCase):
+    def setUp(self):
+        self.endpoint = "/api/payment-verify"
+        self.client = APIClient()
+
+        self.payment = create_payment(amount=10000, status="P")
+
+    @patch.object(Przelewy24Api, "verify")
+    def test_verify_no_matching_record(self, verify_mock):
+        mock_verify_payment(mock=verify_mock, result=True)
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "sessionId": str(self.payment.session_id),
+            "orderId": 12345,
+            "amount": int(self.payment.amount) * 2,
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    @patch.object(Przelewy24Api, "verify")
+    def test_verify_failure(self, verify_mock):
+        mock_verify_payment(mock=verify_mock, result=False)
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "sessionId": str(self.payment.session_id),
+            "orderId": 12345,
+            "amount": int(self.payment.amount),
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    @patch.object(Przelewy24Api, "verify")
+    def test_verify_success(self, verify_mock):
+        mock_verify_payment(mock=verify_mock, result=True)
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # post data
+        data = {
+            "sessionId": str(self.payment.session_id),
+            "orderId": 12345,
+            "amount": int(self.payment.amount),
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class PaymentStatusTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/payment-status"
+
+        self.data = {
+            "email": "user@example.com",
+            "password": "TestPassword123",
+        }
+        self.user_1 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.user_2 = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="user2@example.com",
+            password="TestPassword123",
+            is_active=True,
+        )
+        self.profile_1 = create_student_profile(
+            profile=create_profile(user=self.user_1)
+        )
+        self.profile_2 = create_student_profile(
+            profile=create_profile(user=self.user_2)
+        )
+
+        self.technology_1 = create_technology(name="Python")
+
+        # course 1
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="9.99",
+            technologies=[self.technology_1],
+        )
+
+        self.purchase_1 = create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile_1,
+            price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
+        )
+        self.purchase_2 = create_purchase(
+            lesson=self.lesson_1,
+            student=self.profile_2,
+            price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
+        )
+
+    def test_get_status_unauthenticated(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(self.endpoint)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_status_incorrect(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(
+            f"{self.endpoint}?session_id={self.purchase_2.payment.session_id}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_get_status_correct(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(
+            f"{self.endpoint}?session_id={self.purchase_1.payment.session_id}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        data["status"] = data["status"][0]
+        self.assertEqual(
+            data,
+            {
+                "amount": self.purchase_1.payment.amount,
+                "order_id": self.purchase_1.payment.order_id,
+                "session_id": str(self.purchase_1.payment.session_id),
+                "status": self.purchase_1.payment.status,
+            },
+        )

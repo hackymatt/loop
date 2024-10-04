@@ -1,11 +1,10 @@
 from message.models import Message
 from datetime import datetime, timedelta
-
-MESSAGE_EXPIRY_DAYS = 31
+from django.utils.timezone import make_aware
+from config_global import MESSAGE_EXPIRY_DAYS
 
 
 def remove_old_messages():
-    messages = Message.objects.filter(
-        created_at__lt=datetime.now() - timedelta(days=MESSAGE_EXPIRY_DAYS)
-    ).exclude(status="NEW")
+    date = make_aware(datetime.now() - timedelta(days=MESSAGE_EXPIRY_DAYS))
+    messages = Message.objects.filter(created_at__lt=date).exclude(status="NEW")
     messages.delete()

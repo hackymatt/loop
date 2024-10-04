@@ -30,5 +30,6 @@ module.exports = {
     MIN_PASSWORD_LENGTH: process.env.NEXT_PUBLIC_MIN_PASSWORD_LENGTH ?? "8",
     LESSON_DURATION_MULTIPLIER: process.env.NEXT_PUBLIC_LESSON_DURATION_MULTIPLIER ?? "30",
     CANCELLATION_TIME: process.env.NEXT_PUBLIC_CANCELLATION_TIME ?? "24",
+    PAYMENT_SERVER: process.env.NEXT_PUBLIC_PAYMENT_SERVER ?? "https://sandbox.przelewy24.pl",
   },
 };

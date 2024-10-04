@@ -18,7 +18,7 @@ from django.db.models.functions import Concat
 from django.db.models import Avg, Value, Q
 from config_global import LESSON_DURATION_MULTIPLIER
 from notification.utils import notify
-import urllib.parse
+from urllib.parse import quote_plus
 from config_global import GITHUB_REPO
 
 
@@ -29,7 +29,7 @@ def notify_lecturer(lesson):
             title="Nowa lekcja w ofercie",
             subtitle=lesson.title,
             description="Właśnie dodaliśmy nową lekcję. Zacznij ją prowadzić.",
-            path=f"/account/teacher/teaching/?sort_by=title&page_size=10&title={urllib.parse.quote_plus(lesson.title)}",
+            path=f"/account/teacher/teaching/?sort_by=title&page_size=10&title={quote_plus(lesson.title)}",
             icon="mdi:teach",
         )
 
@@ -64,7 +64,7 @@ def get_rating_count(lessons):
 
 
 def get_students_count(lessons):
-    return Purchase.objects.filter(lesson__in=lessons).count()
+    return Purchase.objects.filter(lesson__in=lessons, payment__status="S").count()
 
 
 def get_lesson_technologies(lesson):

@@ -13,6 +13,7 @@ from .factory import (
     create_review,
     create_purchase,
     create_module,
+    create_payment,
 )
 import json
 
@@ -126,36 +127,43 @@ class StatsTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile_1,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_purchase(
             lesson=self.lesson_1,
             student=self.profile_2,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_purchase(
             lesson=self.lesson_1,
             student=self.profile_3,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_purchase(
             lesson=self.lesson_2,
             student=self.profile_1,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         create_purchase(
             lesson=self.lesson_2,
             student=self.profile_2,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         create_purchase(
             lesson=self.lesson_2,
             student=self.profile_3,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_purchase(
             lesson=self.lesson_3,
             student=self.profile_1,
             price=self.lesson_3.price,
+            payment=create_payment(amount=self.lesson_3.price),
         )
 
         self.review_1 = create_review(

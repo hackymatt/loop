@@ -10,7 +10,7 @@ from django.utils.timezone import make_aware
 from pytz import timezone, utc
 from mailer.mailer import Mailer
 from notification.utils import notify
-import urllib.parse
+from urllib.parse import quote_plus
 from config_global import DUMMY_STUDENT_EMAIL, DUMMY_LECTURER_EMAIL
 
 
@@ -123,7 +123,7 @@ class ProfileUnregisterViewSet(ModelViewSet):
                         title="Twoja lekcja została odwołana",
                         subtitle=schedule.lesson.title,
                         description=f"Przepraszamy za zmianę planów. Lekcja, która planowo miała się odbyć {start_time} (PL) została odwołana przez prowadzącego {lecturer_full_name}.",
-                        path=f"/account/lessons?sort_by=-created_at&page_size=10&lesson_title={urllib.parse.quote_plus(schedule.lesson.title)}",
+                        path=f"/account/lessons?sort_by=-created_at&page_size=10&lesson_title={quote_plus(schedule.lesson.title)}",
                         icon="mdi:calendar-remove",
                     )
 

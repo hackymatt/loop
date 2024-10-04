@@ -8,7 +8,7 @@ from pytz import timezone, utc
 from mailer.mailer import Mailer
 from config_global import REMINDER_TIME
 from notification.utils import notify
-import urllib.parse
+from urllib.parse import quote_plus
 
 
 def remind_review():
@@ -61,6 +61,6 @@ def remind_review():
                     title="Prośba o ocenę szkolenia",
                     subtitle=schedule.lesson.title,
                     description=f"Proszę daj nam znać jak nam poszło. Dodaj recenzję lekcji, która odbyła się {start_time} (PL) i była prowadzona przez {lecturer_full_name}.",
-                    path=f"/account/reviews?review_status_exclude=brak&page_size=10&lesson_title={urllib.parse.quote_plus(schedule.lesson.title)}",
+                    path=f"/account/reviews?review_status_exclude=brak&page_size=10&lesson_title={quote_plus(schedule.lesson.title)}",
                     icon="mdi:rate-review",
                 )

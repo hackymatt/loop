@@ -10,7 +10,7 @@ from message.models import Message
 from profile.models import Profile, StudentProfile, LecturerProfile, AdminProfile
 from notification.utils import notify
 from mailer.mailer import Mailer
-import urllib.parse
+from urllib.parse import quote_plus
 
 
 class ProfileSerializer(ModelSerializer):
@@ -85,7 +85,7 @@ class MessageSerializer(ModelSerializer):
             title="Otrzymano nową wiadomość",
             subtitle=obj.subject,
             description=obj.body,
-            path=f"/account/messages?sort_by=-created_at&page_size=10&type=INBOX&search={urllib.parse.quote_plus(obj.subject)}",
+            path=f"/account/messages?sort_by=-created_at&page_size=10&type=INBOX&search={quote_plus(obj.subject)}",
             icon="mdi:email",
         )
 

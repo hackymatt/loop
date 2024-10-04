@@ -13,6 +13,7 @@ from .factory import (
     create_lesson,
     create_schedule,
     create_purchase,
+    create_payment,
 )
 from .helpers import (
     users_number,
@@ -123,16 +124,28 @@ class UnregisterTest(TestCase):
         )
 
         self.lesson_1_purchase = create_purchase(
-            lesson=self.lesson_1, student=self.profile, price=self.lesson_1.price
+            lesson=self.lesson_1,
+            student=self.profile,
+            price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         self.lesson_2_purchase = create_purchase(
-            lesson=self.lesson_2, student=self.profile, price=self.lesson_2.price
+            lesson=self.lesson_2,
+            student=self.profile,
+            price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         self.lesson_3_purchase = create_purchase(
-            lesson=self.lesson_3, student=self.profile, price=self.lesson_3.price
+            lesson=self.lesson_3,
+            student=self.profile,
+            price=self.lesson_3.price,
+            payment=create_payment(amount=self.lesson_3.price),
         )
         self.lesson_4_purchase = create_purchase(
-            lesson=self.lesson_4, student=self.profile, price=self.lesson_4.price
+            lesson=self.lesson_4,
+            student=self.profile,
+            price=self.lesson_4.price,
+            payment=create_payment(amount=self.lesson_4.price),
         )
 
         self.past_schedule_1 = create_schedule(

@@ -1,20 +1,30 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.serializers import ValidationError
-from rest_framework.response import Response
 from rest_framework import status
-from purchase.serializers import PurchaseSerializer, PurchaseGetSerializer
-from purchase.models import Purchase
+from rest_framework.response import Response
+from django.http import JsonResponse
+from purchase.serializers import (
+    PurchaseSerializer,
+    PurchaseGetSerializer,
+    PaymentSerializer,
+)
+from purchase.models import Purchase, Payment
 from purchase.filters import PurchaseFilter
 from profile.models import Profile, StudentProfile
+from profile.models import Profile
 from lesson.models import Lesson
 from coupon.models import Coupon, CouponUser
 from coupon.validation import validate_coupon
+from utils.przelewy24.payment import Przelewy24Api
+from django.views.decorators.csrf import csrf_exempt
+import json
+from uuid import UUID
 
 
 class PurchaseViewSet(ModelViewSet):
     http_method_names = ["get", "post"]
-    queryset = Purchase.objects.all()
+    queryset = Purchase.objects.filter(payment__status="S").all()
     serializer_class = PurchaseGetSerializer
     filterset_class = PurchaseFilter
     permission_classes = [IsAuthenticated]
@@ -109,16 +119,81 @@ class PurchaseViewSet(ModelViewSet):
             records = lessons_data
             total = self.get_total_price(lessons=records)
 
-        # make payment
-        is_payment_successful = total > 1
-        if not is_payment_successful:
-            raise ValidationError({"payment": "Płatność odrzucona."})
+        # initialize payment record
+        payment = Payment.objects.create(amount=total * 100)
 
         # create records
-        serializer = PurchaseSerializer(data=records, context={"request": request})
+        serializer = PurchaseSerializer(
+            data=records, context={"request": request, "payment": payment.id}
+        )
         instances = serializer.create(serializer.initial_data)
 
-        return Response(
-            status=status.HTTP_200_OK,
-            data=PurchaseGetSerializer(instances, many=True).data,
+        # register payment
+        przelewy24 = Przelewy24Api(payment=payment)
+        register_result = przelewy24.register(client=profile, purchases=instances)
+
+        return JsonResponse(
+            status=register_result["status_code"],
+            data=register_result["data"],
         )
+
+
+class PaymentVerifyViewSet(ModelViewSet):
+    http_method_names = ["post"]
+
+    @csrf_exempt
+    def verify_payment(request):
+        data = json.loads(request.body)
+
+        session_id = data.get("sessionId")
+        order_id = data.get("orderId")
+        amount = data.get("amount")
+
+        payments = Payment.objects.filter(session_id=session_id, amount=amount)
+
+        if not payments.exists():
+            return JsonResponse(
+                {"status": "failure"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        payment = payments.first()
+        payment.order_id = order_id
+        przelewy24 = Przelewy24Api(payment=payment)
+        verification_success = przelewy24.verify(
+            session_id=session_id, order_id=order_id, amount=amount
+        )
+
+        payment.status = "S" if verification_success else "F"
+        payment.save()
+
+        if verification_success:
+            return JsonResponse({"status": "success"}, status=status.HTTP_200_OK)
+        return JsonResponse({"status": "failure"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PaymentStatusViewSet(ModelViewSet):
+    http_method_names = ["get"]
+    queryset = Purchase.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        user = self.request.user
+        student = Profile.objects.get(user=user)
+        self.queryset = self.queryset.filter(student__profile=student)
+
+        session_id = request.query_params.get("session_id")
+
+        purchases = self.queryset.filter(payment__session_id=session_id)
+        if not purchases.exists():
+            return Response(
+                status=status.HTTP_404_NOT_FOUND,
+                data={"detail": "Nie znaleziono."},
+            )
+
+        purchase = purchases.first()
+        payment = purchase.payment
+
+        serializer = PaymentSerializer(instance=payment)
+        data = serializer.data
+
+        return Response(data)

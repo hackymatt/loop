@@ -13,6 +13,7 @@ from .factory import (
     create_purchase,
     create_teaching,
     create_lesson_price_history,
+    create_payment,
 )
 from .helpers import (
     login,
@@ -141,11 +142,13 @@ class LessonTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_purchase(
             lesson=self.lesson_2,
             student=self.profile,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
 
         self.review_1 = create_review(
@@ -216,11 +219,13 @@ class LessonTest(APITestCase):
             lesson=self.lesson_3,
             student=self.profile,
             price=self.lesson_3.price,
+            payment=create_payment(amount=self.lesson_3.price),
         )
         create_purchase(
             lesson=self.lesson_4,
             student=self.profile,
             price=self.lesson_4.price,
+            payment=create_payment(amount=self.lesson_4.price),
         )
 
         self.review_4 = create_review(
@@ -284,11 +289,13 @@ class LessonTest(APITestCase):
             lesson=self.lesson_5,
             student=self.profile,
             price=self.lesson_5.price,
+            payment=create_payment(amount=self.lesson_5.price),
         )
         create_purchase(
             lesson=self.lesson_6,
             student=self.profile,
             price=self.lesson_6.price,
+            payment=create_payment(amount=self.lesson_6.price),
         )
 
         self.review_6 = create_review(

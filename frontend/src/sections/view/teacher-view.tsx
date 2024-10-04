@@ -11,6 +11,7 @@ import { paths } from "src/routes/paths";
 
 import { useResponsive } from "src/hooks/use-responsive";
 
+import { decodeUrl } from "src/utils/url-utils";
 import { createMetadata } from "src/utils/create-metadata";
 
 import { useLecturer } from "src/api/lecturers/lecturer";
@@ -31,7 +32,10 @@ import TeacherDetailsSummary from "../details/teacher/teacher-details-summary";
 export default function TeacherView({ id }: { id: string }) {
   const mdUp = useResponsive("up", "md");
 
-  const { data: teacher, isLoading: isLoadingTeacher } = useLecturer(id);
+  const decodedId = decodeUrl(id);
+  const recordId = decodedId.slice(decodedId.lastIndexOf("-") + 1);
+
+  const { data: teacher, isLoading: isLoadingTeacher } = useLecturer(recordId);
 
   const metadata = useMemo(
     () =>

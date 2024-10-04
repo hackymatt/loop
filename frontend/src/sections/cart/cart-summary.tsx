@@ -15,8 +15,8 @@ import { useBoolean } from "src/hooks/use-boolean";
 import { fCurrency } from "src/utils/format-number";
 import { trackEvent } from "src/utils/google-analytics";
 
-import { generalAcceptance } from "src/consts/acceptances";
 import { validateCoupon } from "src/api/coupons/coupon-validation";
+import { generalAcceptance, paymentAcceptance } from "src/consts/acceptances";
 
 import Iconify from "src/components/iconify";
 // ----------------------------------------------------------------------
@@ -36,6 +36,8 @@ type IDiscount = {
 export default function CartSummary({ total, onPurchase, isLoading, error }: Props) {
   const acceptance = useBoolean(false);
   const acceptanceError = useBoolean(false);
+  const acceptancePayment = useBoolean(false);
+  const acceptancePaymentError = useBoolean(false);
 
   const [couponError, setCouponError] = useState<string>(error ?? "");
   const [coupon, setCoupon] = useState<string>();
@@ -73,15 +75,28 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
 
   const handleClick = () => {
     acceptanceError.onFalse();
+    acceptancePaymentError.onFalse();
+
+    if (!acceptance.value && !acceptancePaymentError.value) {
+      acceptanceError.onTrue();
+      acceptancePaymentError.onTrue();
+      return;
+    }
 
     if (!acceptance.value) {
       acceptanceError.onTrue();
       return;
     }
 
+    if (!acceptancePayment.value) {
+      acceptancePaymentError.onTrue();
+      return;
+    }
+
     onPurchase(selectedCoupon ?? "");
 
     acceptanceError.onFalse();
+    acceptancePaymentError.onFalse();
   };
 
   return (
@@ -160,6 +175,16 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
         />
         <FormHelperText error={!!acceptanceError.value}>
           {acceptanceError.value ? "To pole jest wymagane." : null}
+        </FormHelperText>
+
+        <FormControlLabel
+          control={
+            <Checkbox checked={acceptancePayment.value} onChange={acceptancePayment.onToggle} />
+          }
+          label={paymentAcceptance}
+        />
+        <FormHelperText error={!!acceptancePaymentError.value}>
+          {acceptancePaymentError.value ? "To pole jest wymagane." : null}
         </FormHelperText>
       </Stack>
 

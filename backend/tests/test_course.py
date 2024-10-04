@@ -21,6 +21,7 @@ from .factory import (
     create_module,
     create_schedule,
     create_reservation,
+    create_payment,
 )
 from .helpers import (
     login,
@@ -177,11 +178,13 @@ class CourseTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_purchase(
             lesson=self.lesson_2,
             student=self.profile,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
 
         self.schedule = create_schedule(
@@ -1129,11 +1132,13 @@ class BestCourseTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_purchase(
             lesson=self.lesson_2,
             student=self.profile,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
 
         self.review_1 = create_review(

@@ -46,7 +46,7 @@ from schedule.views import (
 from stats.views import StatsViewSet
 from wishlist.views import WishlistViewSet
 from cart.views import CartViewSet
-from purchase.views import PurchaseViewSet
+from purchase.views import PurchaseViewSet, PaymentVerifyViewSet, PaymentStatusViewSet
 from teaching.views import ManageTeachingViewSet, TeachingViewSet
 from reservation.views import ReservationViewSet
 from contact.views import ContactViewSet
@@ -136,6 +136,14 @@ api_urlpatterns = [
     path(
         "certificate/<str:id>",
         CertificateInfoViewSet.get_certificate,
+    ),
+    path(
+        "payment-verify",
+        PaymentVerifyViewSet.verify_payment,
+    ),
+    path(
+        "payment-status",
+        PaymentStatusViewSet.as_view({"get": "list"}),
     ),
     path("contact", ContactViewSet.as_view({"post": "contact"})),
     path(

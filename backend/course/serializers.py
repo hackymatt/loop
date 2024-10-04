@@ -20,16 +20,18 @@ from django.db.models import Sum, Avg, Min, Value, Q
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from notification.utils import notify
+from urllib.parse import quote_plus
 
 
 def notify_students(course):
     for student in StudentProfile.objects.all():
+        path = quote_plus(f"{course.title.lower()}-{course.id}")
         notify(
             profile=student.profile,
             title="Nowy kurs w ofercie",
             subtitle=course.title,
             description="Właśnie dodaliśmy nowy kurs. Sprawdź go już teraz.",
-            path=f"/course/{course.id}",
+            path=f"/course/{path}",
             icon="mdi:account-student",
         )
 
@@ -253,7 +255,7 @@ def get_rating_count(lessons):
 
 
 def get_students_count(lessons):
-    return Purchase.objects.filter(lesson__in=lessons).count()
+    return Purchase.objects.filter(lesson__in=lessons, payment__status="S").count()
 
 
 def get_duration(course):

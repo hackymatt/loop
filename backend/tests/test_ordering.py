@@ -26,6 +26,7 @@ from .factory import (
     create_certificate,
     create_notification,
     create_message,
+    create_payment,
 )
 from .helpers import login
 from django.contrib import auth
@@ -139,11 +140,13 @@ class CourseOrderTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_purchase(
             lesson=self.lesson_2,
             student=self.profile,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
 
         self.review_course_1_1 = create_review(
@@ -213,26 +216,31 @@ class CourseOrderTest(APITestCase):
             lesson=self.lesson_3,
             student=self.profile,
             price=self.lesson_3.price,
+            payment=create_payment(amount=self.lesson_3.price),
         )
         create_purchase(
             lesson=self.lesson_4,
             student=self.profile,
             price=self.lesson_4.price,
+            payment=create_payment(amount=self.lesson_4.price),
         )
         create_purchase(
             lesson=self.lesson_3,
             student=self.profile_2,
             price=self.lesson_3.price,
+            payment=create_payment(amount=self.lesson_3.price),
         )
         create_purchase(
             lesson=self.lesson_4,
             student=self.profile_2,
             price=self.lesson_4.price,
+            payment=create_payment(amount=self.lesson_4.price),
         )
         create_purchase(
             lesson=self.lesson_5,
             student=self.profile_2,
             price=self.lesson_5.price,
+            payment=create_payment(amount=self.lesson_5.price),
         )
 
         self.review_course_2_1 = create_review(
@@ -298,6 +306,7 @@ class CourseOrderTest(APITestCase):
             lesson=self.lesson_6,
             student=self.profile,
             price=self.lesson_6.price,
+            payment=create_payment(amount=self.lesson_6.price),
         )
         self.schedule = create_schedule(
             lecturer=self.lecturer_profile_1,
@@ -320,6 +329,7 @@ class CourseOrderTest(APITestCase):
             lesson=self.lesson_6,
             student=self.profile_2,
             price=self.lesson_6.price,
+            payment=create_payment(amount=self.lesson_6.price),
         )
 
         self.review_course_3_1 = create_review(
@@ -1444,11 +1454,13 @@ class LecturerOrderTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_purchase(
             lesson=self.lesson_2,
             student=self.profile,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
 
         self.review_course_1_1 = create_review(
@@ -1518,26 +1530,31 @@ class LecturerOrderTest(APITestCase):
             lesson=self.lesson_3,
             student=self.profile,
             price=self.lesson_3.price,
+            payment=create_payment(amount=self.lesson_3.price),
         )
         create_purchase(
             lesson=self.lesson_4,
             student=self.profile,
             price=self.lesson_4.price,
+            payment=create_payment(amount=self.lesson_4.price),
         )
         create_purchase(
             lesson=self.lesson_3,
             student=self.profile_2,
             price=self.lesson_3.price,
+            payment=create_payment(amount=self.lesson_3.price),
         )
         create_purchase(
             lesson=self.lesson_4,
             student=self.profile_2,
             price=self.lesson_4.price,
+            payment=create_payment(amount=self.lesson_4.price),
         )
         create_purchase(
             lesson=self.lesson_5,
             student=self.profile_2,
             price=self.lesson_5.price,
+            payment=create_payment(amount=self.lesson_5.price),
         )
 
         self.review_course_2_1 = create_review(
@@ -1603,11 +1620,13 @@ class LecturerOrderTest(APITestCase):
             lesson=self.lesson_6,
             student=self.profile,
             price=self.lesson_6.price,
+            payment=create_payment(amount=self.lesson_6.price),
         )
         create_purchase(
             lesson=self.lesson_6,
             student=self.profile_2,
             price=self.lesson_6.price,
+            payment=create_payment(amount=self.lesson_6.price),
         )
 
         self.review_course_3_1 = create_review(
@@ -1751,12 +1770,14 @@ class PurchaseOrderTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
 
         create_purchase(
             lesson=self.lesson_2,
             student=self.profile,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
 
         for module in self.course_1.modules.all():
@@ -1793,6 +1814,7 @@ class PurchaseOrderTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_reservation(
             student=self.profile,
@@ -1804,6 +1826,7 @@ class PurchaseOrderTest(APITestCase):
             lesson=self.lesson_2,
             student=self.profile,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         create_reservation(
             student=self.profile,
@@ -1857,11 +1880,13 @@ class PurchaseOrderTest(APITestCase):
             lesson=self.lesson_3,
             student=self.profile,
             price=self.lesson_3.price,
+            payment=create_payment(amount=self.lesson_3.price),
         )
         create_purchase(
             lesson=self.lesson_4,
             student=self.profile,
             price=self.lesson_4.price,
+            payment=create_payment(amount=self.lesson_4.price),
         )
 
         create_review(
@@ -2106,11 +2131,13 @@ class LessonOrderTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_purchase(
             lesson=self.lesson_2,
             student=self.profile,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
 
         self.review_1 = create_review(
@@ -2181,11 +2208,13 @@ class LessonOrderTest(APITestCase):
             lesson=self.lesson_3,
             student=self.profile,
             price=self.lesson_3.price,
+            payment=create_payment(amount=self.lesson_3.price),
         )
         create_purchase(
             lesson=self.lesson_4,
             student=self.profile,
             price=self.lesson_4.price,
+            payment=create_payment(amount=self.lesson_4.price),
         )
 
         self.review_4 = create_review(
@@ -2249,11 +2278,13 @@ class LessonOrderTest(APITestCase):
             lesson=self.lesson_5,
             student=self.profile,
             price=self.lesson_5.price,
+            payment=create_payment(amount=self.lesson_5.price),
         )
         create_purchase(
             lesson=self.lesson_6,
             student=self.profile,
             price=self.lesson_6.price,
+            payment=create_payment(amount=self.lesson_6.price),
         )
 
         self.review_6 = create_review(
@@ -3658,6 +3689,7 @@ class CertificateOrderTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile_1,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         self.reservation_1 = create_reservation(
             student=self.profile_1,
@@ -3671,6 +3703,7 @@ class CertificateOrderTest(APITestCase):
             lesson=self.lesson_2,
             student=self.profile_2,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         self.reservation_2 = create_reservation(
             student=self.profile_2,
@@ -3684,6 +3717,7 @@ class CertificateOrderTest(APITestCase):
             lesson=self.lesson_1,
             student=self.profile_2,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         self.reservation_3 = create_reservation(
             student=self.profile_2,
@@ -3695,6 +3729,7 @@ class CertificateOrderTest(APITestCase):
             lesson=self.lesson_2,
             student=self.profile_1,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
         self.reservation_4 = create_reservation(
             student=self.profile_1,
@@ -3708,6 +3743,7 @@ class CertificateOrderTest(APITestCase):
             lesson=self.lesson_2,
             student=self.profile_2,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_4.price),
         )
         self.reservation_5 = create_reservation(
             student=self.profile_2,
@@ -3721,6 +3757,7 @@ class CertificateOrderTest(APITestCase):
             lesson=self.lesson_4,
             student=self.profile_1,
             price=self.lesson_4.price,
+            payment=create_payment(amount=self.lesson_4.price),
         )
         self.reservation_6 = create_reservation(
             student=self.profile_1,

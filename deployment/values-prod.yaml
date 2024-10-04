@@ -6,6 +6,7 @@ backend:
     CSRF_TRUSTED_ORIGINS: "https://loop.edu.pl,https://www.loop.edu.pl"
     ALLOWED_HOST: "loop.edu.pl,www.loop.edu.pl"
     BASE_URL: "https://www.loop.edu.pl"
+    PAYMENT_SERVER: "https://secure.przelewy24.pl"
 
 frontend:
   tag: latest.prod

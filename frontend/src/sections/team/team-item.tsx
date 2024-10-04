@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
@@ -7,6 +9,8 @@ import { alpha, styled } from "@mui/material/styles";
 
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
+
+import { encodeUrl } from "src/utils/url-utils";
 
 import { bgGradient } from "src/theme/css";
 
@@ -52,8 +56,15 @@ export default function TeamItem({ member }: Props) {
 
   const photoUrl = avatarUrl || genderAvatarUrl;
 
+  const path = useMemo(() => `${name.toLowerCase()}-${id}`, [id, name]);
+
   return (
-    <Link component={RouterLink} href={`${paths.teacher}/${id}`} color="inherit" underline="none">
+    <Link
+      component={RouterLink}
+      href={`${paths.teacher}/${encodeUrl(path)}`}
+      color="inherit"
+      underline="none"
+    >
       <Card>
         <Stack spacing={0.5} sx={{ textAlign: "center", pt: 3, pb: 1.5 }}>
           <Typography variant="h6">{name}</Typography>

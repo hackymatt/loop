@@ -20,6 +20,7 @@ from .factory import (
     create_reservation,
     create_meeting,
     create_module,
+    create_payment,
 )
 from .helpers import (
     login,
@@ -313,6 +314,7 @@ class ScheduleTest(TestCase):
             lesson=self.lesson_1,
             student=self.profile,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_reservation(
             student=self.profile,
@@ -324,6 +326,7 @@ class ScheduleTest(TestCase):
             lesson=self.lesson_1,
             student=self.profile_2,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_reservation(
             student=self.profile_2,
@@ -446,12 +449,14 @@ class ScheduleTest(TestCase):
         login(self, self.lecturer_data["email"], self.lecturer_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        self.delete_schedule.start_time = datetime.now().replace(
-            minute=0, second=0, microsecond=0
-        ) - timedelta(hours=1)
-        self.delete_schedule.end_time = datetime.now().replace(
-            minute=30, second=0, microsecond=0
-        ) - timedelta(hours=1)
+        self.delete_schedule.start_time = make_aware(
+            datetime.now().replace(minute=0, second=0, microsecond=0)
+            - timedelta(hours=1)
+        )
+        self.delete_schedule.end_time = make_aware(
+            datetime.now().replace(minute=30, second=0, microsecond=0)
+            - timedelta(hours=1)
+        )
         self.delete_schedule.save()
         response = self.client.delete(f"{self.endpoint}/{self.delete_schedule.id}")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

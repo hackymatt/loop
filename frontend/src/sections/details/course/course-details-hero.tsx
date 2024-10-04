@@ -117,7 +117,7 @@ export default function CourseDetailsHero({ course }: Props) {
                   overlay={`linear-gradient(to bottom, ${alpha(
                     theme.palette.common.black,
                     0,
-                  )} 0%, ${theme.palette.common.black} 90%)`}
+                  )} 0%, ${theme.palette.common.black} 100%)`}
                 />
               </Stack>
             </Grid>

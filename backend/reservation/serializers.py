@@ -12,7 +12,7 @@ from pytz import timezone, utc
 from mailer.mailer import Mailer
 from config_global import LESSON_DURATION_MULTIPLIER, CANCELLATION_TIME
 from notification.utils import notify
-import urllib.parse
+from urllib.parse import quote_plus
 
 
 class ReservationSerializer(ModelSerializer):
@@ -152,7 +152,7 @@ class ReservationSerializer(ModelSerializer):
                 title="Potwierdzenie realizacji szkolenia",
                 subtitle=lesson.title,
                 description=f"Udało się! Potwierdzamy realizację lekcji, która odbędzie się {start_time} (PL) i będzie prowadzona przez {lecturer_full_name}.",
-                path=f"/account/lessons?sort_by=-created_at&page_size=10&lesson_title={urllib.parse.quote_plus(schedule.lesson.title)}",
+                path=f"/account/lessons?sort_by=-created_at&page_size=10&lesson_title={quote_plus(schedule.lesson.title)}",
                 icon="mdi:school",
             )
 

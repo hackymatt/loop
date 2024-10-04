@@ -292,3 +292,11 @@ def mock_get_recordings(mock, schedule_ids):
 
 def mock_set_permissions(mock):
     mock.return_value = {}
+
+
+def mock_register_payment(mock):
+    mock.return_value = {"status_code": 200, "data": {"token": "token"}}
+
+
+def mock_verify_payment(mock, result):
+    mock.return_value = result

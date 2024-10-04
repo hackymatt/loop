@@ -17,6 +17,7 @@ from .factory import (
     create_reservation,
     create_schedule,
     create_module,
+    create_payment,
 )
 from .helpers import login
 from django.contrib import auth
@@ -144,11 +145,13 @@ class LecturersTest(APITestCase):
             lesson=self.lesson_1,
             student=self.student_profile_1,
             price=self.lesson_1.price,
+            payment=create_payment(amount=self.lesson_1.price),
         )
         create_purchase(
             lesson=self.lesson_2,
             student=self.student_profile_1,
             price=self.lesson_2.price,
+            payment=create_payment(amount=self.lesson_2.price),
         )
 
         self.review_1 = create_review(

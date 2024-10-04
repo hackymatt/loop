@@ -50,3 +50,29 @@ export const newsletterAcceptance = (
     .
   </Typography>
 );
+
+export const paymentAcceptance = (
+  <Typography variant="caption" align="left" sx={{ color: "text.secondary", textAlign: "justify" }}>
+    Oświadczam, że zapoznałem się z{" "}
+    <Link
+      target="_blank"
+      rel="noopener"
+      href={paths.payment.termsAndConditions}
+      color="text.primary"
+      underline="always"
+    >
+      regulaminem
+    </Link>{" "}
+    i{" "}
+    <Link
+      target="_blank"
+      rel="noopener"
+      href={paths.payment.privacyPolicy}
+      color="text.primary"
+      underline="always"
+    >
+      obowiązkiem informacyjnym
+    </Link>{" "}
+    serwisu Przelewy24.
+  </Typography>
+);

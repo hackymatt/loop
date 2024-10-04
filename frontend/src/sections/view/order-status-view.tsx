@@ -1,6 +1,7 @@
 "use client";
 
 import { m } from "framer-motion";
+import { useRef, useMemo, useState, useEffect } from "react";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -8,12 +9,63 @@ import Container from "@mui/material/Container";
 import { CircularProgress } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
+import { paths } from "src/routes/paths";
+import { useRouter } from "src/routes/hooks";
+
+import { useQueryParams } from "src/hooks/use-query-params";
+
+import { usePaymentStatus } from "src/api/payment/payment";
+
 import { varBounce, MotionContainer } from "src/components/animate";
+
+import { PaymentStatus } from "src/types/payment";
 
 // ----------------------------------------------------------------------
 
 export default function OrderStatusView() {
-  const isLoading = true;
+  const { push } = useRouter();
+  const { getQueryParams } = useQueryParams();
+
+  const queryParams = useMemo(() => getQueryParams(), [getQueryParams]);
+
+  const [sessionId, setSessionId] = useState<string>("");
+
+  const { data: paymentStatusData, isLoading } = usePaymentStatus(
+    { session_id: sessionId },
+    sessionId !== "",
+    1000,
+  );
+
+  const effectRan = useRef(false);
+  useEffect(() => {
+    const { session_id } = queryParams;
+    if (session_id) {
+      if (!effectRan.current) {
+        setSessionId(session_id);
+        effectRan.current = true;
+      }
+    }
+  }, [queryParams]);
+
+  useEffect(() => {
+    if (paymentStatusData) {
+      const { status } = paymentStatusData;
+
+      switch (status) {
+        case PaymentStatus.Success:
+          push(paths.order.completed);
+          break;
+
+        case PaymentStatus.Failure:
+          push(paths.order["not-completed"]);
+          break;
+
+        default:
+          break;
+      }
+    }
+  }, [paymentStatusData, push]);
+
   return (
     <Container
       component={MotionContainer}

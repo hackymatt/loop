@@ -18,7 +18,7 @@ class StatsViewSet(ViewSet):
         lessons_count = Lesson.objects.count()
         technology_count = Technology.objects.count()
         lecturers_count = LecturerProfile.objects.count() - 1
-        purchase_count = Purchase.objects.count()
+        purchase_count = Purchase.objects.filter(payment__status="S").count()
         hours_sum = (
             Lesson.objects.aggregate(Sum("duration"))["duration__sum"] / 60
             if lessons_count > 0
