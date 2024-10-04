@@ -67,7 +67,7 @@ class Przelewy24Api:
             "sessionId": str(self.payment.session_id),
             "amount": int(self.payment.amount),
             "currency": "PLN",
-            "description": [purchase.lesson.title for purchase in purchases].join(", "),
+            "description": ", ".join([purchase.lesson.title for purchase in purchases]),
             "email": client.user.email,
             "client": f"{client.user.first_name} {client.user.last_name}",
             "urlReturn": f"{FRONTEND_URL}/order-status/?session_id={str(self.payment.session_id)}",
