@@ -182,42 +182,44 @@ function LandingMain() {
             </Button>
           </Stack>
 
-          <Divider sx={{ borderStyle: "dashed", mt: 2, mb: 6 }} />
-
-          <Stack
-            direction="row"
-            spacing={{ xs: 3, sm: 10 }}
-            justifyContent={{ xs: "center", md: "unset" }}
-          >
-            {showStats &&
-              statsSummary.map((item) => (
-                <Stack key={item.label} spacing={0.5} sx={{ position: "relative" }}>
-                  <Box
-                    sx={{
-                      top: 8,
-                      left: -4,
-                      width: 24,
-                      height: 24,
-                      opacity: 0.24,
-                      borderRadius: "50%",
-                      position: "absolute",
-                      bgcolor: `${item.color}.main`,
-                    }}
-                  />
-                  <Typography variant="h3">
-                    <CountUp
-                      start={item.value / 2}
-                      end={item.value}
-                      formattingFn={(newValue: number) => fShortenNumber(newValue)}
+          {showStats && (
+            <>
+              <Divider sx={{ borderStyle: "dashed", mt: 2, mb: 6 }} />
+              <Stack
+                direction="row"
+                spacing={{ xs: 3, sm: 10 }}
+                justifyContent={{ xs: "center", md: "unset" }}
+              >
+                {statsSummary.map((item) => (
+                  <Stack key={item.label} spacing={0.5} sx={{ position: "relative" }}>
+                    <Box
+                      sx={{
+                        top: 8,
+                        left: -4,
+                        width: 24,
+                        height: 24,
+                        opacity: 0.24,
+                        borderRadius: "50%",
+                        position: "absolute",
+                        bgcolor: `${item.color}.main`,
+                      }}
                     />
-                    +
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    {item.label}
-                  </Typography>
-                </Stack>
-              ))}
-          </Stack>
+                    <Typography variant="h3">
+                      <CountUp
+                        start={item.value / 2}
+                        end={item.value}
+                        formattingFn={(newValue: number) => fShortenNumber(newValue)}
+                      />
+                      +
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                      {item.label}
+                    </Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            </>
+          )}
         </Stack>
       </Grid>
 
