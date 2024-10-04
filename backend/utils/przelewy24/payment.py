@@ -128,6 +128,6 @@ class Przelewy24Api:
 
         response_data = request.json()
         print(response_data)
-        status = response_data["status"]
+        status = response_data["data"]["status"]
 
         return status == "success"
