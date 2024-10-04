@@ -144,6 +144,7 @@ class PaymentVerifyViewSet(ModelViewSet):
     @csrf_exempt
     def verify_payment(request):
         data = json.loads(request.body)
+        print(data)
 
         session_id = data.get("sessionId")
         order_id = data.get("orderId")
@@ -159,9 +160,7 @@ class PaymentVerifyViewSet(ModelViewSet):
         payment = payments.first()
         payment.order_id = order_id
         przelewy24 = Przelewy24Api(payment=payment)
-        verification_success = przelewy24.verify(
-            session_id=session_id, order_id=order_id, amount=amount
-        )
+        verification_success = przelewy24.verify()
 
         payment.status = "S" if verification_success else "F"
         payment.save()

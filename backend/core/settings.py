@@ -252,12 +252,6 @@ LOGGING = {
             "level": "DEBUG" if DEBUG else "INFO",
             "propagate": True,
         },
-        # Custom loggers for your applications can go here
-        "your_app_name": {
-            "handlers": ["console", "file"],
-            "level": "DEBUG" if DEBUG else "INFO",
-            "propagate": False,
-        },
     },
 }
 
