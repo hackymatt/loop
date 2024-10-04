@@ -18,6 +18,15 @@ spec:
     - host: {{ .Values.host }}
       http:
         paths:
+          - path: /api/payment-verify
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx
+                port:
+                  number: 80
+            pathAnnotations:
+              nginx.ingress.kubernetes.io/auth-type: "none"
           - path: /
             pathType: Prefix
             backend:
