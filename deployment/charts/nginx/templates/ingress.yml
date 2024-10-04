@@ -7,15 +7,6 @@ metadata:
     cert-manager.io/cluster-issuer: letsencrypt-production
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
     app.kubernetes.io/managed-by: "Helm"
-    {{- if ne .Values.host "loop.edu.pl" }}
-    nginx.ingress.kubernetes.io/auth-type: basic
-    nginx.ingress.kubernetes.io/auth-secret: auth
-    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      if ($request_uri ~* "^/api/payment-verify") {
-        set $auth_header "";
-      }
-    {{- end}}
 spec:
   ingressClassName: "nginx"
   rules:
