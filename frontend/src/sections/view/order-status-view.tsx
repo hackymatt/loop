@@ -30,7 +30,7 @@ export default function OrderStatusView() {
 
   const [sessionId, setSessionId] = useState<string>("");
 
-  const { data: paymentStatusData, isLoading } = usePaymentStatus(
+  const { data: paymentStatusData } = usePaymentStatus(
     { session_id: sessionId },
     sessionId !== "",
     1000,
@@ -76,11 +76,9 @@ export default function OrderStatusView() {
       }}
     >
       <m.div variants={varBounce().in}>
-        {isLoading && (
-          <Box sx={{ fontSize: 128 }}>
-            <CircularProgress size={50} />
-          </Box>
-        )}
+        <Box sx={{ fontSize: 128 }}>
+          <CircularProgress size={50} />
+        </Box>
       </m.div>
 
       <Stack spacing={1} sx={{ my: 5 }}>
