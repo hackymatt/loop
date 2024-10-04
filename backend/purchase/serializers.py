@@ -250,6 +250,7 @@ class PaymentSerializer(ModelSerializer):
     class Meta:
         model = Payment
         exclude = (
+            "id",
             "created_at",
             "modified_at",
         )

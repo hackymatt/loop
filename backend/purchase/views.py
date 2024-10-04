@@ -177,7 +177,12 @@ class PaymentStatusViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
+        user = self.request.user
+        student = Profile.objects.get(user=user)
+        self.queryset = self.queryset.filter(student__profile=student)
+
         session_id = request.query_params.get("session_id")
+
         purchases = self.queryset.filter(payment__session_id=session_id)
         if not purchases.exists():
             return Response(
@@ -192,8 +197,3 @@ class PaymentStatusViewSet(ModelViewSet):
         data = serializer.data
 
         return Response(data)
-
-    def get_queryset(self):
-        user = self.request.user
-        student = Profile.objects.get(user=user)
-        return self.queryset.filter(student__profile=student)

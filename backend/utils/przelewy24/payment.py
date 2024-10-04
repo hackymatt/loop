@@ -54,7 +54,6 @@ class Przelewy24Api:
         return self._create_sign(data=data)
 
     def register(self, client: Profile, purchases: List[Purchase]):
-        # raise ValueError("hererere")
         data = {
             "merchantId": PAYMENT_MERCHANT_ID,
             "posId": PAYMENT_STORE_ID,
