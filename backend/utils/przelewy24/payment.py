@@ -68,7 +68,7 @@ class Przelewy24Api:
             "country": "PL",
             "language": "pl",
             "timeLimit": 5,
-            "channel": (1 + 2 + 4 + 256 + 4096 + 8192),
+            "channel": 1 + 2 + 256 + 4096 + 8192,
             "waitForResult": True,
             "regulationAccept": True,
             "sign": self._create_register_sign(),
