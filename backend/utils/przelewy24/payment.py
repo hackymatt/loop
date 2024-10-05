@@ -105,17 +105,13 @@ class Przelewy24Api:
             "orderId": int(self.payment.order_id),
             "sign": self._create_verify_sign(),
         }
-        print(data)
 
         request = requests.put(self.verify_url, json=data, headers=self.headers)
-        print(request.status_code)
-        print(request.content)
 
         if not request.ok:
             return False
 
         response_data = request.json()
-        print(response_data)
         status = response_data["data"]["status"]
 
         return status == "success"
