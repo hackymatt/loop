@@ -20,6 +20,8 @@ from utils.przelewy24.payment import Przelewy24Api
 from django.views.decorators.csrf import csrf_exempt
 import json
 from uuid import UUID
+from mailer.mailer import Mailer
+from notification.utils import notify
 
 
 class PurchaseViewSet(ModelViewSet):
@@ -192,12 +194,52 @@ class PaymentStatusViewSet(ModelViewSet):
         payment = purchase.payment
 
         if payment.status == "P":
-            przelewy24 = Przelewy24Api(payment=payment)
-            verification_success = przelewy24.verify()
-            payment.status = "S" if verification_success else "F"
+            payment.status = "F"
             payment.save()
 
         serializer = PaymentSerializer(instance=payment)
         data = serializer.data
+
+        title = (
+            "Twój zakup jest zakończony!"
+            if data["status"][0] == "S"
+            else "Twój zakup nie powiódł się."
+        )
+        description = (
+            "Przejdź do swojego konta i zarezerwuj termin."
+            if data["status"][0] == "S"
+            else "Przejdź do koszyka i ponów płatność."
+        )
+        path = (
+            "/account/lessons?sort_by=-created_at&page_size=10"
+            if data["status"][0] == "S"
+            else "/cart"
+        )
+
+        notify(
+            profile=purchase.student.profile,
+            title=title,
+            subtitle=f"Ilość lekcji: {purchases.count()}",
+            description=description,
+            path=path,
+            icon="mdi:shopping",
+        )
+
+        mailer = Mailer()
+        mail_data = {
+            **{
+                "title": title,
+                "description": description,
+                "lessons": [purchase.lesson.title for purchase in purchases],
+                "amount": payment.amount / 100,
+                "status": "Otrzymana" if data["status"][0] == "S" else "Odrzucona",
+            }
+        }
+        mailer.send(
+            email_template="purchase_confirmation.html",
+            to=[purchase.student.profile.user.email],
+            subject="Podsumowanie zakupu",
+            data=mail_data,
+        )
 
         return Response(data)

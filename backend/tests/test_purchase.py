@@ -1,5 +1,5 @@
 from rest_framework import status
-from rest_framework.test import APIClient, APITestCase
+from rest_framework.test import APIClient
 from django.test import TestCase
 from unittest.mock import patch
 from .factory import (
@@ -22,7 +22,13 @@ from .factory import (
     create_module,
     create_payment,
 )
-from .helpers import login, mock_register_payment, mock_verify_payment
+from .helpers import (
+    login,
+    mock_register_payment,
+    mock_verify_payment,
+    mock_send_message,
+    notifications_number,
+)
 import json
 from django.contrib import auth
 from datetime import datetime, timedelta
@@ -30,6 +36,7 @@ from django.utils.timezone import make_aware
 from config_global import CANCELLATION_TIME
 import uuid
 from utils.przelewy24.payment import Przelewy24Api
+from utils.google.gmail import GmailApi
 
 
 class PurchaseTest(TestCase):
@@ -485,9 +492,10 @@ class PaymentVerifyTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
-class PaymentStatusTest(APITestCase):
+class PaymentStatusTest(TestCase):
     def setUp(self):
         self.endpoint = "/api/payment-status"
+        self.client = APIClient()
 
         self.data = {
             "email": "user@example.com",
@@ -546,7 +554,9 @@ class PaymentStatusTest(APITestCase):
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_get_status_incorrect(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_get_status_incorrect(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -555,8 +565,12 @@ class PaymentStatusTest(APITestCase):
             f"{self.endpoint}?session_id={self.purchase_2.payment.session_id}"
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(notifications_number(), 0)
+        self.assertEqual(_send_message_mock.call_count, 0)
 
-    def test_get_status_correct(self):
+    @patch.object(GmailApi, "_send_message")
+    def test_get_status_correct_success(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -576,3 +590,32 @@ class PaymentStatusTest(APITestCase):
                 "status": self.purchase_1.payment.status,
             },
         )
+        self.assertEqual(notifications_number(), 1)
+        self.assertEqual(_send_message_mock.call_count, 1)
+
+    @patch.object(GmailApi, "_send_message")
+    def test_get_status_correct_failure(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        self.purchase_1.payment.status = "P"
+        self.purchase_1.payment.save()
+        response = self.client.get(
+            f"{self.endpoint}?session_id={self.purchase_1.payment.session_id}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        data["status"] = data["status"][0]
+        self.assertEqual(
+            data,
+            {
+                "amount": self.purchase_1.payment.amount,
+                "order_id": self.purchase_1.payment.order_id,
+                "session_id": str(self.purchase_1.payment.session_id),
+                "status": "F",
+            },
+        )
+        self.assertEqual(notifications_number(), 1)
+        self.assertEqual(_send_message_mock.call_count, 1)
