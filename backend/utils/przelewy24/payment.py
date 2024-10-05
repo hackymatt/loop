@@ -29,15 +29,8 @@ class Przelewy24Api:
 
         self.payment = payment
 
-        print(PAYMENT_SERVER)
-        print(PAYMENT_API_KEY)
-        print(PAYMENT_CRC)
-        print(PAYMENT_MERCHANT_ID)
-        print(PAYMENT_STORE_ID)
-
     def _create_sign(self, data):
         json_data = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
-        print(json_data)
         return hashlib.sha384(json_data.encode("utf-8")).hexdigest()
 
     def _create_register_sign(self):
@@ -80,18 +73,14 @@ class Przelewy24Api:
             "regulationAccept": True,
             "sign": self._create_register_sign(),
         }
-        print(data)
 
         request = requests.post(
             url=self.register_url,
             json=data,
             headers=self.headers,
         )
-        print(request.status_code)
-        print(request.content)
 
         response = request.json()
-        print(response)
         response_code = response["responseCode"]
 
         if response_code == 0:
@@ -104,7 +93,6 @@ class Przelewy24Api:
             status_code = status.HTTP_401_UNAUTHORIZED
             data = {"error": response["error"]}
 
-        print({"status_code": status_code, "data": data})
         return {"status_code": status_code, "data": data}
 
     def verify(self) -> bool:
@@ -128,6 +116,6 @@ class Przelewy24Api:
 
         response_data = request.json()
         print(response_data)
-        status = response_data["status"]
+        status = response_data["data"]["status"]
 
         return status == "success"

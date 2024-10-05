@@ -143,6 +143,7 @@ class PaymentVerifyViewSet(ModelViewSet):
 
     @csrf_exempt
     def verify_payment(request):
+        print(request)
         data = json.loads(request.body)
         print(data)
 
