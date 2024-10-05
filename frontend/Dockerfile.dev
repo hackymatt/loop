@@ -1,41 +1,60 @@
-# Stage 1: Build the Next.js application
-FROM node:18-alpine AS builder
+FROM node:18-alpine as BUILD_IMAGE
 
-WORKDIR /app
+WORKDIR /usr/src/app/frontend
 
-# Copy package.json and install dependencies
-COPY package*.json ./
-RUN npm install --frozen-lockfile
+COPY package.json package-lock.json ./
 
-# Copy the rest of the application code
+# install dependencies
+RUN npm install
+
 COPY . .
 
-# Build the Next.js application
+ARG ENV=DEV
+ENV NEXT_PUBLIC_ENV=$ENV
+
+ARG API_URL=https://dev.loop.edu.pl/api
+ENV NEXT_PUBLIC_API_URL=$API_URL
+
+ARG BASE_URL=https://dev.loop.edu.pl
+ENV NEXT_PUBLIC_BASE_URL=$BASE_URL
+
+ARG GOOGLE_CLIENT_ID=570842553290-me2nmn43nr89bgglao8o3iak7i0k0reb.apps.googleusercontent.com
+ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
+
+ARG FACEBOOK_CLIENT_ID=1576703186506729
+ENV NEXT_PUBLIC_FACEBOOK_CLIENT_ID=$FACEBOOK_CLIENT_ID
+
+ARG GITHUB_CLIENT_ID=Ov23liYO60eg7EeIoiqu
+ENV NEXT_PUBLIC_GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID
+
+ARG GITHUB_REPO=https://github.com/loopedupl/
+ENV NEXT_PUBLIC_GITHUB_REPO=$GITHUB_REPO
+
+ARG MIN_PASSWORD_LENGTH=8
+ENV NEXT_PUBLIC_MIN_PASSWORD_LENGTH=$MIN_PASSWORD_LENGTH
+
+ARG LESSON_DURATION_MULTIPLIER=30
+ENV NEXT_PUBLIC_LESSON_DURATION_MULTIPLIER=$LESSON_DURATION_MULTIPLIER
+
+ARG CANCELLATION_TIME=24
+ENV NEXT_PUBLIC_CANCELLATION_TIME=$CANCELLATION_TIME
+
+# build
 RUN npm run build
 
-# Stage 2: Serve the Next.js application using a lightweight image
+# remove dev dependencies
+RUN npm prune --omit=dev
+
 FROM node:18-alpine
 
-WORKDIR /app
+WORKDIR /usr/src/app/frontend
 
-# Install production dependencies
-COPY package*.json ./
-RUN npm install --production
+# copy from build image
+COPY --from=BUILD_IMAGE /usr/src/app/frontend/package.json ./package.json
+COPY --from=BUILD_IMAGE /usr/src/app/frontend/node_modules ./node_modules
+COPY --from=BUILD_IMAGE /usr/src/app/frontend/next.config.js next.config.js
+COPY --from=BUILD_IMAGE /usr/src/app/frontend/.next ./.next
+COPY --from=BUILD_IMAGE /usr/src/app/frontend/public ./public
 
-# Copy the build output from the builder stage
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.js ./
-
-# Copy mounted config and secret files to the container (runtime)
-COPY /app/config /app/config
-COPY /app/secret /app/secret
-
-# Load env variables from the mounted files at runtime
-RUN export $(cat /app/config/* /app/secret/* | xargs)
-
-# Expose port
 EXPOSE 3000
-
-# Start the Next.js application
 CMD ["npm", "start"]
