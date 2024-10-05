@@ -25,8 +25,8 @@ spec:
             - containerPort: 80
           {{- if ne .Values.host "loop.edu.pl" }}
           volumeMounts:
-            - mountPath: /etc/nginx/.htpasswd
-              name: basic-auth
+            - name: basic-auth
+              mountPath: /etc/nginx/.htpasswd
               readOnly: true
               subPath: auth
           {{- end}}

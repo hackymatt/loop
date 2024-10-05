@@ -71,11 +71,11 @@ export default function OrderCompletedView() {
 
       <Button
         component={RouterLink}
-        href={paths.account.lessons}
+        href={`${paths.account.lessons}/?sort_by=-created_at&page_size=10`}
         size="large"
         color="inherit"
         variant="contained"
-        startIcon={<Iconify icon="carbon:chevron-left" />}
+        endIcon={<Iconify icon="carbon:chevron-right" />}
       >
         Sprawdź swoje lekcje
       </Button>
