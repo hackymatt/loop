@@ -136,7 +136,7 @@ export const useCouponFields = (control: Control<any>) => {
         label="Minimalna wartość"
         type="number"
         InputProps={{
-          inputProps: { min: 1, step: "0.01" },
+          inputProps: { min: 0, step: "0.01" },
           endAdornment: <InputAdornment position="end">zł</InputAdornment>,
         }}
       />

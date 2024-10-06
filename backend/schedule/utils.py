@@ -5,7 +5,7 @@ from datetime import datetime
 from lesson.models import Lesson
 from finance.models import Finance
 from config_global import MIN_STUDENTS_THRESHOLD
-import math
+from math import ceil
 
 
 class MeetingManager:
@@ -77,4 +77,4 @@ def get_min_students_required(lecturer: LecturerProfile, lesson: Lesson):
     commission = finance.commission / 100
     cost = rate * duration_hours + commission * price
     goal = cost * MIN_STUDENTS_THRESHOLD
-    return math.ceil(goal / price)
+    return ceil(goal / price)

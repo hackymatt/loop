@@ -441,6 +441,37 @@ class PurchaseTest(TestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    @patch.object(GmailApi, "_send_message")
+    def test_create_purchase_4_authenticated(self, _send_message_mock):
+        mock_send_message(mock=_send_message_mock)
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        self.lesson_5.active = True
+        self.lesson_5.save()
+        self.lesson_6.active = True
+        self.lesson_6.save()
+
+        self.coupon_1.discount = 1000
+        self.coupon_1.save()
+
+        data = {
+            "lessons": [
+                {
+                    "lesson": self.lesson_6.id,
+                },
+                {
+                    "lesson": self.lesson_5.id,
+                },
+            ],
+            "coupon": self.coupon_1.code,
+        }
+        response = self.client.post(self.endpoint, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(notifications_number(), 1)
+        self.assertEqual(_send_message_mock.call_count, 1)
+
 
 class PaymentVerifyTest(TestCase):
     def setUp(self):

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import Box from "@mui/material/Box";
 import { LoadingButton } from "@mui/lab";
@@ -46,6 +46,12 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
   const [discount, setDiscount] = useState<IDiscount>();
   const [discountedValue, setDiscountedValue] = useState<number>(total);
 
+  const paymentRequired = useMemo(() => discountedValue > 0, [discountedValue]);
+  const buttonLabel = useMemo(
+    () => (paymentRequired ? "Zamawiam i płacę" : "Zamawiam"),
+    [paymentRequired],
+  );
+
   const handleApplyCoupon = async () => {
     setCouponError("");
     if (coupon) {
@@ -61,7 +67,12 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
       setCoupon("");
       setDiscount(data);
       setDiscountedValue(
-        data.is_percentage ? total * (1 - data.discount / 100) : total - (data.discount ?? 0),
+        Math.max(
+          data.is_percentage
+            ? Math.floor(total * (1 - data.discount / 100) * 100) / 100
+            : total - (data.discount ?? 0),
+          0,
+        ),
       );
       trackEvent("apply_coupon", "coupon", "Coupon applied", coupon);
     }
@@ -77,9 +88,11 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
     acceptanceError.onFalse();
     acceptancePaymentError.onFalse();
 
-    if (!acceptance.value && !acceptancePaymentError.value) {
+    if (!acceptance.value && !acceptancePayment.value && paymentRequired) {
       acceptanceError.onTrue();
-      acceptancePaymentError.onTrue();
+      if (paymentRequired) {
+        acceptancePaymentError.onTrue();
+      }
       return;
     }
 
@@ -88,7 +101,7 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
       return;
     }
 
-    if (!acceptancePayment.value) {
+    if (!acceptancePayment.value && paymentRequired) {
       acceptancePaymentError.onTrue();
       return;
     }
@@ -125,7 +138,7 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
         )}
       </Stack>
 
-      {total > 0 && (
+      {paymentRequired && (
         <TextField
           value={coupon ?? ""}
           onChange={(event) => setCoupon(event.target.value)}
@@ -177,15 +190,19 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
           {acceptanceError.value ? "To pole jest wymagane." : null}
         </FormHelperText>
 
-        <FormControlLabel
-          control={
-            <Checkbox checked={acceptancePayment.value} onChange={acceptancePayment.onToggle} />
-          }
-          label={paymentAcceptance}
-        />
-        <FormHelperText error={!!acceptancePaymentError.value}>
-          {acceptancePaymentError.value ? "To pole jest wymagane." : null}
-        </FormHelperText>
+        {paymentRequired && (
+          <>
+            <FormControlLabel
+              control={
+                <Checkbox checked={acceptancePayment.value} onChange={acceptancePayment.onToggle} />
+              }
+              label={paymentAcceptance}
+            />
+            <FormHelperText error={!!acceptancePaymentError.value}>
+              {acceptancePaymentError.value ? "To pole jest wymagane." : null}
+            </FormHelperText>
+          </>
+        )}
       </Stack>
 
       <LoadingButton
@@ -195,7 +212,7 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
         onClick={handleClick}
         loading={isLoading}
       >
-        Zamawiam i płacę
+        {buttonLabel}
       </LoadingButton>
     </Stack>
   );

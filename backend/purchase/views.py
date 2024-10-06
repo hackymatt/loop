@@ -22,6 +22,54 @@ import json
 from uuid import UUID
 from mailer.mailer import Mailer
 from notification.utils import notify
+from math import floor
+
+
+def confirm_purchase(status, purchases, payment):
+    title = (
+        "Twój zakup jest zakończony!"
+        if status == "S"
+        else "Twój zakup nie powiódł się."
+    )
+    description = (
+        "Przejdź do swojego konta i zarezerwuj termin."
+        if status == "S"
+        else "Przejdź do koszyka i ponów płatność."
+    )
+    path = (
+        "/account/lessons?sort_by=-created_at&page_size=10"
+        if status == "S"
+        else "/cart"
+    )
+    amount = payment.amount / 100
+
+    purchase = purchases[0]
+
+    notify(
+        profile=purchase.student.profile,
+        title=title,
+        subtitle=f"Ilość lekcji: {purchases.count()}",
+        description=description,
+        path=path,
+        icon="mdi:shopping",
+    )
+
+    mailer = Mailer()
+    mail_data = {
+        **{
+            "title": title,
+            "description": description,
+            "lessons": [purchase.lesson.title for purchase in purchases],
+            "amount": f"{amount:.2f}",
+            "status": "Otrzymana" if status == "S" else "Odrzucona",
+        }
+    }
+    mailer.send(
+        email_template="purchase_confirmation.html",
+        to=[purchase.student.profile.user.email],
+        subject="Podsumowanie zakupu",
+        data=mail_data,
+    )
 
 
 class PurchaseViewSet(ModelViewSet):
@@ -45,13 +93,19 @@ class PurchaseViewSet(ModelViewSet):
         return lessons
 
     def get_total_price(self, lessons):
-        return sum([float(lesson["price"]) for lesson in lessons])
+        return max(sum([float(lesson["price"]) for lesson in lessons]), 0)
 
     def get_discounted_total(self, total_price, coupon_details):
         if coupon_details["is_percentage"]:
-            return float(total_price) * (1 - coupon_details["discount"] / 100)
+            return (
+                floor(
+                    max(float(total_price) * (1 - coupon_details["discount"] / 100), 0)
+                    * 100
+                )
+                / 100
+            )
 
-        return total_price - coupon_details["discount"]
+        return floor(max(total_price - coupon_details["discount"], 0) * 100) / 100
 
     def get_discount_percentage(self, lessons, coupon_details):
         if coupon_details["is_percentage"]:
@@ -62,12 +116,15 @@ class PurchaseViewSet(ModelViewSet):
         return (1 - discounted_total_price / total_price) * 100
 
     def discount_lesson_price(self, lessons, discount_percentage):
-        for lesson_data in lessons:
-            original_price = lesson_data["price"]
+        new_lessons = []
+        for lesson in lessons:
+            new_lesson = lesson.copy()
+            original_price = lesson["price"]
             new_price = float(original_price) * (1 - discount_percentage / 100)
-            lesson_data["price"] = round(new_price, 2)
+            new_lesson["price"] = floor(max(new_price, 0) * 100) / 100
+            new_lessons.append(new_lesson)
 
-        return lessons
+        return new_lessons
 
     def create(self, request, *args, **kwargs):
         user = request.user
@@ -114,7 +171,7 @@ class PurchaseViewSet(ModelViewSet):
                 lessons=lessons_data, discount_percentage=discount_percentage
             )
             total = self.get_discounted_total(
-                total_price=self.get_total_price(lessons=records),
+                total_price=self.get_total_price(lessons=lessons_data),
                 coupon_details=coupon_details,
             )
         else:
@@ -130,13 +187,23 @@ class PurchaseViewSet(ModelViewSet):
         )
         instances = serializer.create(serializer.initial_data)
 
-        # register payment
-        przelewy24 = Przelewy24Api(payment=payment)
-        register_result = przelewy24.register(client=profile, purchases=instances)
+        if total == 0:
+            payment.status = "S"
+            payment.save()
+            status_code = status.HTTP_200_OK
+            data = {"token": ""}
+            purchases = Purchase.objects.filter(payment=payment)
+            confirm_purchase(status="S", purchases=purchases, payment=payment)
+        else:
+            # register payment
+            przelewy24 = Przelewy24Api(payment=payment)
+            register_result = przelewy24.register(client=profile, purchases=instances)
+            status_code = register_result["status_code"]
+            data = register_result["data"]
 
         return JsonResponse(
-            status=register_result["status_code"],
-            data=register_result["data"],
+            status=status_code,
+            data=data,
         )
 
 
@@ -200,46 +267,6 @@ class PaymentStatusViewSet(ModelViewSet):
         serializer = PaymentSerializer(instance=payment)
         data = serializer.data
 
-        title = (
-            "Twój zakup jest zakończony!"
-            if data["status"][0] == "S"
-            else "Twój zakup nie powiódł się."
-        )
-        description = (
-            "Przejdź do swojego konta i zarezerwuj termin."
-            if data["status"][0] == "S"
-            else "Przejdź do koszyka i ponów płatność."
-        )
-        path = (
-            "/account/lessons?sort_by=-created_at&page_size=10"
-            if data["status"][0] == "S"
-            else "/cart"
-        )
-
-        notify(
-            profile=purchase.student.profile,
-            title=title,
-            subtitle=f"Ilość lekcji: {purchases.count()}",
-            description=description,
-            path=path,
-            icon="mdi:shopping",
-        )
-
-        mailer = Mailer()
-        mail_data = {
-            **{
-                "title": title,
-                "description": description,
-                "lessons": [purchase.lesson.title for purchase in purchases],
-                "amount": payment.amount / 100,
-                "status": "Otrzymana" if data["status"][0] == "S" else "Odrzucona",
-            }
-        }
-        mailer.send(
-            email_template="purchase_confirmation.html",
-            to=[purchase.student.profile.user.email],
-            subject="Podsumowanie zakupu",
-            data=mail_data,
-        )
+        confirm_purchase(status=data["status"], purchases=purchases, payment=payment)
 
         return Response(data)
