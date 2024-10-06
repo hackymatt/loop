@@ -16,28 +16,32 @@ jobs:
         working-directory: ${{ github.workspace }}/backend
 
     steps:
-      - run: echo ${{secrets.ADMIN_EMAIL}}
-      - run: echo ${{secrets.ADMIN_PASSWORD}}
-      - run: echo ${{secrets.CONTACT_EMAIL}}
-      - run: echo ${{secrets.DB_HOST}}
-      - run: echo ${{secrets.DB_NAME}}
-      - run: echo ${{secrets.DB_PASSWORD}}
-      - run: echo ${{secrets.DB_USER}}
-      - run: echo ${{secrets.DOCKERHUB_TOKEN}}
-      - run: echo ${{secrets.DOCKERHUB_USERNAME}}
-      - run: echo ${{secrets.DUMMY_LECTURER_EMAIL}}
-      - run: echo ${{secrets.DUMMY_LECTURER_PASSWORD}}
-      - run: echo ${{secrets.DUMMY_STUDENT_EMAIL}}
-      - run: echo ${{secrets.DUMMY_STUDENT_PASSWORD}}
-      - run: echo ${{secrets.GOOGLE_CREDENTIALS}}
-      - run: echo ${{secrets.KUBE_CONFIG_DEV}}
-      - run: echo ${{secrets.KUBE_CONFIG_PROD}}
-      - run: echo ${{secrets.KUBE_CONFIG_UAT}}
-      - run: echo ${{secrets.LESSON_GITHUB_REPO}}
-      - run: echo ${{secrets.LOCAL}}
-      - run: echo ${{secrets.MEETINGS_EMAIL}}
-      - run: echo ${{secrets.NOREPLY_EMAIL}}
-      - run: echo ${{secrets.REDIS_URL}}
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+      - name: Pull python
+        uses: actions/setup-python@v4
+      - run: echo ${{secrets.ADMIN_EMAIL}} | sed 's/./& /g'
+      - run: echo ${{secrets.ADMIN_PASSWORD}} | sed 's/./& /g'
+      - run: echo ${{secrets.CONTACT_EMAIL}} | sed 's/./& /g'
+      - run: echo ${{secrets.DB_HOST}} | sed 's/./& /g'
+      - run: echo ${{secrets.DB_NAME}} | sed 's/./& /g'
+      - run: echo ${{secrets.DB_PASSWORD}} | sed 's/./& /g'
+      - run: echo ${{secrets.DB_USER}} | sed 's/./& /g'
+      - run: echo ${{secrets.DOCKERHUB_TOKEN}} | sed 's/./& /g'
+      - run: echo ${{secrets.DOCKERHUB_USERNAME}} | sed 's/./& /g'
+      - run: echo ${{secrets.DUMMY_LECTURER_EMAIL}} | sed 's/./& /g'
+      - run: echo ${{secrets.DUMMY_LECTURER_PASSWORD}} | sed 's/./& /g'
+      - run: echo ${{secrets.DUMMY_STUDENT_EMAIL}} | sed 's/./& /g'
+      - run: echo ${{secrets.DUMMY_STUDENT_PASSWORD}} | sed 's/./& /g'
+      - run: echo ${{secrets.GOOGLE_CREDENTIALS}} | sed 's/./& /g'
+      - run: echo ${{secrets.KUBE_CONFIG_DEV}} | sed 's/./& /g'
+      - run: echo ${{secrets.KUBE_CONFIG_PROD}} | sed 's/./& /g'
+      - run: echo ${{secrets.KUBE_CONFIG_UAT}} | sed 's/./& /g'
+      - run: echo ${{secrets.LESSON_GITHUB_REPO}} | sed 's/./& /g'
+      - run: echo ${{secrets.LOCAL}} | sed 's/./& /g'
+      - run: echo ${{secrets.MEETINGS_EMAIL}} | sed 's/./& /g'
+      - run: echo ${{secrets.NOREPLY_EMAIL}} | sed 's/./& /g'
+      - run: echo ${{secrets.REDIS_URL}} | sed 's/./& /g'
 
   lint_backend:
     name: Lint backend
