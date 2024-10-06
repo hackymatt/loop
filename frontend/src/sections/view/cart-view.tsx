@@ -55,7 +55,7 @@ export default function CartView() {
 
       const { token } = paymentRegistration;
 
-      if (!token) {
+      if (token === undefined) {
         enqueueSnackbar("Wystąpił błąd podczas zakupu", { variant: "error" });
         return;
       }
@@ -69,8 +69,12 @@ export default function CartView() {
         ),
       );
 
-      const paymentUrl = `${paths.payment.url}/${token}`;
-      push(paymentUrl);
+      if (token === "") {
+        push(paths.order.completed);
+      } else {
+        const paymentUrl = `${paths.payment.url}/${token}`;
+        push(paymentUrl);
+      }
     } catch (err) {
       setError((err as AxiosError).response?.data as IPurchaseError);
       enqueueSnackbar("Wystąpił błąd podczas zakupu", { variant: "error" });
