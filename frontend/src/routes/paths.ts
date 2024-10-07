@@ -9,6 +9,8 @@ export const paths = {
   course: `/course`,
   teachers: "/teachers",
   teacher: "/teacher",
+  posts: "/posts",
+  post: "/post",
   about: "/about",
   contact: "/contact",
   newsletter: "/newsletter-unsubscribe",

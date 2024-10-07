@@ -1,21 +1,20 @@
-import { Theme, SxProps } from "@mui/material/styles";
+import type { BoxProps } from '@mui/material/Box';
 
-import StyledMarkdown from "./styles";
+import { StyledRoot } from './styles';
 
 // ----------------------------------------------------------------------
 
-type Props = {
-  firstLetter?: boolean;
+export type MarkdownProps = BoxProps & {
   content: string;
-  sx?: SxProps<Theme>;
+  firstLetter?: boolean;
 };
 
-export default function Markdown({ content, firstLetter = false, sx }: Props) {
+export function Markdown({ content, firstLetter = false, ...other }: MarkdownProps) {
   return (
-    <StyledMarkdown
+    <StyledRoot
       firstLetter={firstLetter}
       dangerouslySetInnerHTML={{ __html: content }}
-      sx={sx}
+      {...other}
     />
   );
 }
