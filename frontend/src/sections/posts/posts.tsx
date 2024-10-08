@@ -68,67 +68,73 @@ type PostItemProps = PaperProps & {
 
 export function PostItem({ post, sx, ...other }: PostItemProps) {
   return (
-    <Paper
-      variant="outlined"
-      sx={{
-        borderRadius: 2,
-        overflow: "hidden",
-        bgcolor: "transparent",
-        ...sx,
-      }}
-      {...other}
-    >
-      <Image src={post.coverUrl} alt={post.title} ratio="1/1" />
+    <Link component={RouterLink} href={paths.post} color="inherit" underline="none">
+      <Paper
+        variant="outlined"
+        sx={{
+          borderRadius: 2,
+          overflow: "hidden",
+          bgcolor: "transparent",
+          ...sx,
+        }}
+        {...other}
+      >
+        <Image src={post.coverUrl} alt={post.title} ratio="1/1" />
 
-      <Box display="flex" gap={3} sx={{ p: 3 }}>
-        <Box sx={{ textAlign: "center" }}>
-          <Typography variant="subtitle2" component="span">
-            {fDate(post.createdAt, "MMM")}
-          </Typography>
-          <Divider sx={{ mt: 1, mb: 0.5 }} />
-          <Typography variant="h3" component="span">
-            {fDate(post.createdAt, "dd")}
-          </Typography>
-        </Box>
+        <Box display="flex" gap={3} sx={{ p: 3 }}>
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="subtitle2" component="span">
+              {fDate(post.createdAt, "MMM")}
+            </Typography>
+            <Divider sx={{ mt: 1, mb: 0.5 }} />
+            <Typography variant="h3" component="span">
+              {fDate(post.createdAt, "dd")}
+            </Typography>
+          </Box>
 
-        <Box gap={1} display="flex" flexDirection="column" flex="1 1 auto">
-          <Link component={RouterLink} href={paths.post} color="inherit">
+          <Box gap={1} display="flex" flexDirection="column" flex="1 1 auto">
             <TextMaxLine variant="h6" line={2}>
               {post.title}
             </TextMaxLine>
-          </Link>
 
-          <TextMaxLine variant="body2" line={2}>
-            {post.description}
-          </TextMaxLine>
+            <TextMaxLine variant="body2" line={2}>
+              {post.description}
+            </TextMaxLine>
 
-          <Box gap={1.5} display="flex" alignItems="center" sx={{ pt: 1.5 }}>
-            <AvatarGroup total={post.authors.length} max={1}>
-              {post.authors.map((author: IAuthorProps) => (
-                <Avatar src={author.avatarUrl} />
-              ))}
-            </AvatarGroup>
-            <Box gap={0.5} display="flex" flexDirection="column">
-              <Box component="span" sx={{ typography: "body2" }}>
-                {post.authors[0].name}
-                {post.authors.length > 1 && (
-                  <Typography
-                    color="text.secondary"
-                    variant="body2"
-                    sx={{ textDecoration: "underline" }}
-                  >
-                    + {post.authors.length - 1}{" "}
-                    {polishPlurals("autor", "autorów", "autorów", post.authors.length - 1)}
-                  </Typography>
-                )}
+            <Box gap={1.5} display="flex" alignItems="center" sx={{ pt: 1.5 }}>
+              <AvatarGroup total={post.authors.length} max={1}>
+                {post.authors.map((author: IAuthorProps) => {
+                  const genderAvatarUrl =
+                    author?.gender === "Kobieta"
+                      ? "/assets/images/avatar/avatar_female.jpg"
+                      : "/assets/images/avatar/avatar_male.jpg";
+
+                  const avatarUrl = author?.avatarUrl || genderAvatarUrl;
+                  return <Avatar key={author.id} src={avatarUrl} />;
+                })}
+              </AvatarGroup>
+              <Box gap={0.5} display="flex" flexDirection="column">
+                <Box component="span" sx={{ typography: "body2" }}>
+                  {post.authors[0].name}
+                  {post.authors.length > 1 && (
+                    <Typography
+                      color="text.secondary"
+                      variant="body2"
+                      sx={{ textDecoration: "underline" }}
+                    >
+                      + {post.authors.length - 1}{" "}
+                      {polishPlurals("autor", "autorów", "autorów", post.authors.length - 1)}
+                    </Typography>
+                  )}
+                </Box>
+                <Typography variant="caption" sx={{ color: "text.disabled" }}>
+                  {post.duration}
+                </Typography>
               </Box>
-              <Typography variant="caption" sx={{ color: "text.disabled" }}>
-                {post.duration}
-              </Typography>
             </Box>
           </Box>
         </Box>
-      </Box>
-    </Paper>
+      </Paper>
+    </Link>
   );
 }

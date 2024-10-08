@@ -29,63 +29,74 @@ type Props = BoxProps & {
 
 export function FeaturedPost({ post, sx, ...other }: Props) {
   return (
-    <Box
-      component="section"
-      sx={{
-        py: 10,
-        bgcolor: "background.neutral",
-        ...sx,
-      }}
-      {...other}
-    >
-      <Container>
-        <Box display="flex" flexDirection={{ xs: "column", md: "row" }}>
-          <Image
-            src={post.coverUrl}
-            alt={post.title}
-            sx={{ flexGrow: 1, height: 560, borderRadius: 2 }}
-          />
+    <Link component={RouterLink} href={paths.post} color="inherit" variant="h3" underline="none">
+      <Box
+        component="section"
+        sx={{
+          py: 10,
+          bgcolor: "background.neutral",
+          ...sx,
+        }}
+        {...other}
+      >
+        <Container>
+          <Box display="flex" flexDirection={{ xs: "column", md: "row" }}>
+            <Image
+              src={post.coverUrl}
+              alt={post.title}
+              sx={{ flexGrow: 1, height: 560, borderRadius: 2 }}
+            />
 
-          <Stack
-            spacing={1}
-            sx={{
-              mx: "auto",
-              pl: { md: 8 },
-              py: { xs: 3, md: 5 },
-              maxWidth: { md: 408 },
-            }}
-          >
-            <PostTime createdAt={fDate(post.createdAt)} duration={post.duration} />
+            <Stack
+              spacing={1}
+              sx={{
+                mx: "auto",
+                pl: { md: 8 },
+                py: { xs: 3, md: 5 },
+                maxWidth: { md: 408 },
+              }}
+            >
+              <PostTime createdAt={fDate(post.createdAt)} duration={post.duration} />
 
-            <Link component={RouterLink} href={paths.post} color="inherit" variant="h3">
               {post.title}
-            </Link>
 
-            <Typography sx={{ color: "text.secondary", flexGrow: 1 }}>
-              {post.description}
-            </Typography>
+              <Typography sx={{ color: "text.secondary", flexGrow: 1 }}>
+                {post.description}
+              </Typography>
 
-            <Box gap={1.5} display="flex" alignItems="center" sx={{ pt: 1.5, typography: "body2" }}>
-              <AvatarGroup total={post.authors.length} max={1}>
-                {post.authors.map((author: IAuthorProps) => (
-                  <Avatar src={author.avatarUrl} />
-                ))}
-              </AvatarGroup>
-              {post.authors[0].name}
-              {post.authors.length > 1 && (
-                <Typography
-                  color="text.secondary"
-                  variant="body2"
-                  sx={{ textDecoration: "underline" }}
-                >
-                  + {post.authors.length - 1}{" "}
-                  {polishPlurals("autor", "autorów", "autorów", post.authors.length - 1)}
-                </Typography>
-              )}
-            </Box>
-          </Stack>
-        </Box>
-      </Container>
-    </Box>
+              <Box
+                gap={1.5}
+                display="flex"
+                alignItems="center"
+                sx={{ pt: 1.5, typography: "body2" }}
+              >
+                <AvatarGroup total={post.authors.length} max={1}>
+                  {post.authors.map((author: IAuthorProps) => {
+                    const genderAvatarUrl =
+                      author?.gender === "Kobieta"
+                        ? "/assets/images/avatar/avatar_female.jpg"
+                        : "/assets/images/avatar/avatar_male.jpg";
+
+                    const avatarUrl = author?.avatarUrl || genderAvatarUrl;
+                    return <Avatar key={author.id} src={avatarUrl} />;
+                  })}
+                </AvatarGroup>
+                {post.authors[0].name}
+                {post.authors.length > 1 && (
+                  <Typography
+                    color="text.secondary"
+                    variant="body2"
+                    sx={{ textDecoration: "underline" }}
+                  >
+                    + {post.authors.length - 1}{" "}
+                    {polishPlurals("autor", "autorów", "autorów", post.authors.length - 1)}
+                  </Typography>
+                )}
+              </Box>
+            </Stack>
+          </Box>
+        </Container>
+      </Box>
+    </Link>
   );
 }

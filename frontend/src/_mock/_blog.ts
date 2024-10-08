@@ -1,3 +1,4 @@
+import { IGender } from "src/types/testimonial";
 import { _mock } from "./_mock";
 import { _tags } from "./assets";
 
@@ -48,6 +49,7 @@ const base = (index: number) => ({
       name: _mock.fullName(index),
       role: _mock.role(index),
       avatarUrl: _mock.image.avatar(index),
+      gender: "Kobieta" as IGender,
       linkedinUrl: _mock.image.avatar(index),
       quotes: "Member since Mar 15, 2021",
       about:
@@ -58,6 +60,7 @@ const base = (index: number) => ({
       name: _mock.fullName(index),
       role: _mock.role(index),
       avatarUrl: _mock.image.avatar(index),
+      gender: "Kobieta" as IGender,
       linkedinUrl: _mock.image.avatar(index),
       quotes: "Member since Mar 15, 2021",
       about:
@@ -68,6 +71,7 @@ const base = (index: number) => ({
       name: _mock.fullName(index),
       role: _mock.role(index),
       avatarUrl: _mock.image.avatar(index),
+      gender: "Kobieta" as IGender,
       linkedinUrl: _mock.image.avatar(index),
       quotes: "Member since Mar 15, 2021",
       about:
@@ -78,6 +82,7 @@ const base = (index: number) => ({
       name: _mock.fullName(index),
       role: _mock.role(index),
       avatarUrl: _mock.image.avatar(index),
+      gender: "Kobieta" as IGender,
       linkedinUrl: _mock.image.avatar(index),
       quotes: "Member since Mar 15, 2021",
       about:
@@ -88,6 +93,7 @@ const base = (index: number) => ({
       name: _mock.fullName(index),
       role: _mock.role(index),
       avatarUrl: _mock.image.avatar(index),
+      gender: "Kobieta" as IGender,
       linkedinUrl: _mock.image.avatar(index),
       quotes: "Member since Mar 15, 2021",
       about:
@@ -98,6 +104,7 @@ const base = (index: number) => ({
       name: _mock.fullName(index),
       role: _mock.role(index),
       avatarUrl: _mock.image.avatar(index),
+      gender: "Kobieta" as IGender,
       linkedinUrl: _mock.image.avatar(index),
       quotes: "Member since Mar 15, 2021",
       about:

@@ -1,20 +1,43 @@
-import type { BoxProps } from '@mui/material/Box';
-
-import { StyledRoot } from './styles';
+import React from "react";
+import ReactMarkdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 // ----------------------------------------------------------------------
 
-export type MarkdownProps = BoxProps & {
+export type MarkdownProps = {
   content: string;
-  firstLetter?: boolean;
 };
 
-export function Markdown({ content, firstLetter = false, ...other }: MarkdownProps) {
+interface CodeProps {
+  node?: any;
+  inline?: any;
+  className?: any;
+  children?: any;
+}
+
+export function Markdown({ content }: MarkdownProps) {
   return (
-    <StyledRoot
-      firstLetter={firstLetter}
-      dangerouslySetInnerHTML={{ __html: content }}
-      {...other}
+    <ReactMarkdown
+      children={content}
+      components={{
+        code({ node, inline, className, children, ...props }: CodeProps) {
+          const match = /language-(\w+)/.exec(className || "");
+          return !inline && match ? (
+            <SyntaxHighlighter
+              children={String(children).replace(/\n$/, "")}
+              style={vscDarkPlus}
+              language={match[1]}
+              PreTag="div"
+              {...props}
+            />
+          ) : (
+            <code className={className} {...props}>
+              {children}
+            </code>
+          );
+        },
+      }}
     />
   );
 }
