@@ -26,7 +26,7 @@ export function PostSearchMobile({ sx, value, onChange }: PostSearchMobileProps)
       <TextField
         fullWidth
         hiddenLabel
-        placeholder="Search..."
+        placeholder="Szukaj..."
         value={value}
         onChange={(event) => onChange?.(event.target.value)}
         InputProps={{

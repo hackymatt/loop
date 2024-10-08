@@ -1,15 +1,15 @@
 "use client";
 
-import Fab from "@mui/material/Fab";
+import { polishPlurals } from "polish-plurals";
+
 import Box from "@mui/material/Box";
 import { alpha } from "@mui/system";
 import Stack from "@mui/material/Stack";
-import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Unstable_Grid2";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
+import { Avatar, IconButton, AvatarGroup } from "@mui/material";
 
 import { paths } from "src/routes/paths";
 
@@ -21,8 +21,10 @@ import Iconify from "src/components/iconify";
 import { Markdown } from "src/components/markdown";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
-import { PostAuthor } from "../posts/post-author";
+import { IAuthorProps } from "src/types/author";
+
 import Newsletter from "../newsletter/newsletter";
+import { PostAuthors } from "../posts/post-author";
 import { LatestPosts } from "../posts/latest-posts";
 import { PrevNextButton } from "../posts/post-prev-and-next";
 
@@ -45,17 +47,37 @@ export function PostView() {
         borderBottom: `solid 1px ${theme.palette.divider}`,
       })}
     >
-      <Avatar src={post.author.avatarUrl} sx={{ width: 48, height: 48 }} />
+      <AvatarGroup total={post.authors.length} max={1}>
+        {post.authors.map((author: IAuthorProps) => (
+          <Avatar src={author.avatarUrl} />
+        ))}
+      </AvatarGroup>
 
-      <Stack spacing={0.5} flexGrow={1}>
-        <Typography variant="subtitle2">{post.author.name}</Typography>
+      <Stack spacing={0.5} flexGrow={1} typography="subtitle2">
+        <Stack direction="row" spacing={0.5}>
+          {post.authors[0].name}
+          {post.authors.length > 1 && (
+            <Typography
+              color="text.secondary"
+              variant="subtitle2"
+              sx={{ textDecoration: "underline" }}
+            >
+              + {post.authors.length - 1}{" "}
+              {polishPlurals("autor", "autorów", "autorów", post.authors.length - 1)}
+            </Typography>
+          )}
+        </Stack>
         <Typography variant="caption" sx={{ color: "text.secondary" }}>
           {fDate(post.createdAt)}
         </Typography>
       </Stack>
 
       <Box display="flex" alignItems="center">
-        <IconButton>
+        <IconButton
+          onClick={() =>
+            navigator.share({ url: "xxxxx", title: post.title, text: post.description })
+          }
+        >
           <Iconify icon="solar:share-outline" />
         </IconButton>
       </Box>
@@ -69,7 +91,7 @@ export function PostView() {
       <Container>
         <CustomBreadcrumbs
           links={[
-            { name: "Home", href: "/" },
+            { name: "Strona główna", href: "/" },
             { name: "Blog", href: paths.posts },
             { name: post.title },
           ]}
@@ -88,13 +110,9 @@ export function PostView() {
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
             aspectRatio: { xs: "16/9", md: "21/9" },
-            backgroundImage: `linear-gradient(to bottom, ${alpha(theme.palette.common.black, 0)} 0%, ${theme.palette.common.black} 75%), url(${post.heroUrl})`,
+            backgroundImage: `linear-gradient(to bottom, ${alpha(theme.palette.common.black, 0)} 0%, ${theme.palette.common.black} 75%), url(${post.coverUrl})`,
           })}
-        >
-          <Fab color="primary" sx={{ zIndex: 9, position: "absolute" }}>
-            <Iconify width={22} icon="solar:play-outline" />
-          </Fab>
-        </Box>
+        />
 
         <Grid container disableEqualOverflow spacing={3} justifyContent={{ md: "center" }}>
           <Grid xs={12} md={8}>
@@ -122,7 +140,7 @@ export function PostView() {
 
             <Divider sx={{ mt: 10 }} />
 
-            <PostAuthor author={post.author} />
+            <PostAuthors authors={post.authors} />
 
             <Divider />
 

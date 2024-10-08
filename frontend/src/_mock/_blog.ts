@@ -36,21 +36,74 @@ const content = (name: string) => `
 const base = (index: number) => ({
   id: _mock.id(index),
   category: "Marketing",
-  duration: "8 min read",
+  duration: "8 min",
   title: _mock.postTitle(index),
   favorited: _mock.boolean(index),
   description: _mock.description(index),
   tags: _tags.slice(index + 1, index + 2),
   createdAt: "2024-08-12T16:00:00.000Z",
-  author: {
-    id: index.toString(),
-    name: _mock.fullName(index),
-    title: _mock.role(index),
-    avatarUrl: _mock.image.avatar(index),
-    quotes: "Member since Mar 15, 2021",
-    about:
-      "Integer tincidunt. Nullam dictum felis eu pede mollis pretium. Maecenas ullamcorper, dui et placerat feugiat, eros pede varius nisi, condimentum viverra felis nunc et lorem.",
-  },
+  authors: [
+    {
+      id: index.toString(),
+      name: _mock.fullName(index),
+      role: _mock.role(index),
+      avatarUrl: _mock.image.avatar(index),
+      linkedinUrl: _mock.image.avatar(index),
+      quotes: "Member since Mar 15, 2021",
+      about:
+        "Integer tincidunt. Nullam dictum felis eu pede mollis pretium. Maecenas ullamcorper, dui et placerat feugiat, eros pede varius nisi, condimentum viverra felis nunc et lorem.",
+    },
+    {
+      id: index.toString(),
+      name: _mock.fullName(index),
+      role: _mock.role(index),
+      avatarUrl: _mock.image.avatar(index),
+      linkedinUrl: _mock.image.avatar(index),
+      quotes: "Member since Mar 15, 2021",
+      about:
+        "Integer tincidunt. Nullam dictum felis eu pede mollis pretium. Maecenas ullamcorper, dui et placerat feugiat, eros pede varius nisi, condimentum viverra felis nunc et lorem.",
+    },
+    {
+      id: index.toString(),
+      name: _mock.fullName(index),
+      role: _mock.role(index),
+      avatarUrl: _mock.image.avatar(index),
+      linkedinUrl: _mock.image.avatar(index),
+      quotes: "Member since Mar 15, 2021",
+      about:
+        "Integer tincidunt. Nullam dictum felis eu pede mollis pretium. Maecenas ullamcorper, dui et placerat feugiat, eros pede varius nisi, condimentum viverra felis nunc et lorem.",
+    },
+    {
+      id: index.toString(),
+      name: _mock.fullName(index),
+      role: _mock.role(index),
+      avatarUrl: _mock.image.avatar(index),
+      linkedinUrl: _mock.image.avatar(index),
+      quotes: "Member since Mar 15, 2021",
+      about:
+        "Integer tincidunt. Nullam dictum felis eu pede mollis pretium. Maecenas ullamcorper, dui et placerat feugiat, eros pede varius nisi, condimentum viverra felis nunc et lorem.",
+    },
+    {
+      id: index.toString(),
+      name: _mock.fullName(index),
+      role: _mock.role(index),
+      avatarUrl: _mock.image.avatar(index),
+      linkedinUrl: _mock.image.avatar(index),
+      quotes: "Member since Mar 15, 2021",
+      about:
+        "Integer tincidunt. Nullam dictum felis eu pede mollis pretium. Maecenas ullamcorper, dui et placerat feugiat, eros pede varius nisi, condimentum viverra felis nunc et lorem.",
+    },
+    {
+      id: index.toString(),
+      name: _mock.fullName(index),
+      role: _mock.role(index),
+      avatarUrl: _mock.image.avatar(index),
+      linkedinUrl: _mock.image.avatar(index),
+      quotes: "Member since Mar 15, 2021",
+      about:
+        "Integer tincidunt. Nullam dictum felis eu pede mollis pretium. Maecenas ullamcorper, dui et placerat feugiat, eros pede varius nisi, condimentum viverra felis nunc et lorem.",
+    },
+  ],
 });
 
 // ----------------------------------------------------------------------
@@ -80,5 +133,5 @@ export const _coursePosts = [...Array(12)].map((_, index) => ({
   ...base(index),
   content: content("course"),
   coverUrl: _mock.image.course(index),
-  heroUrl: `/assets/images/course/course-large-1.webp`,
+  heroUrl: _mock.image.course(index),
 }));

@@ -35,7 +35,7 @@ export function LatestPosts({ posts, sx, ...other }: Props) {
       <Container>
         <Box display="flex" alignItems="center" sx={{ mb: { xs: 5, md: 10 } }}>
           <Typography component="h6" variant="h3" sx={{ flexGrow: 1 }}>
-            Latest posts
+            Ostatnie wpisy
           </Typography>
 
           <Button
@@ -44,7 +44,7 @@ export function LatestPosts({ posts, sx, ...other }: Props) {
             color="inherit"
             endIcon={<Iconify icon="solar:alt-arrow-right-outline" />}
           >
-            View all
+            Zobacz wszystkie
           </Button>
         </Box>
 

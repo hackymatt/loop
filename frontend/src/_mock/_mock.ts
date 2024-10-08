@@ -64,10 +64,10 @@ export const _mock = {
   // Media
   image: {
     cover: (index: number) => `/assets/images/cover/cover-${index + 1}.webp`,
-    course: (index: number) => `/assets/images/course/course-${index + 1}.webp`,
-    avatar: (index: number) => `/assets/images/avatar/avatar-${index + 1}.webp`,
+    course: (index: number) => `/assets/images/cover/cover_${index + 1}.jpg`,
+    avatar: (index: number) => `/assets/images/avatar/avatar_male.jpg`,
     travel: (index: number) => `/assets/images/travel/travel-${index + 1}.webp`,
-    career: (index: number) => `/assets/images/career/career-${index + 1}.webp`,
+    career: (index: number) => `/assets/images/cover/cover_${index + 1}.jpg`,
     company: (index: number) => `/assets/images/company/company-${index + 1}.webp`,
     product: (index: number) => `/assets/images/z-product/product-${index + 1}.webp`,
     portrait: (index: number) => `/assets/images/portrait/portrait-${index + 1}.webp`,

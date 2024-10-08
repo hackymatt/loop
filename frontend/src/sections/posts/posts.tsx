@@ -1,8 +1,11 @@
+import { polishPlurals } from "polish-plurals";
+
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
+import { AvatarGroup } from "@mui/material";
 import type { BoxProps } from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import type { PaperProps } from "@mui/material/Paper";
@@ -16,6 +19,7 @@ import { fDate } from "src/utils/format-time";
 import Image from "src/components/image";
 import TextMaxLine from "src/components/text-max-line/text-max-line";
 
+import { IAuthorProps } from "src/types/author";
 import type { IPostProps } from "src/types/blog";
 
 // ----------------------------------------------------------------------
@@ -99,10 +103,24 @@ export function PostItem({ post, sx, ...other }: PostItemProps) {
           </TextMaxLine>
 
           <Box gap={1.5} display="flex" alignItems="center" sx={{ pt: 1.5 }}>
-            <Avatar src={post.author.avatarUrl} />
+            <AvatarGroup total={post.authors.length} max={1}>
+              {post.authors.map((author: IAuthorProps) => (
+                <Avatar src={author.avatarUrl} />
+              ))}
+            </AvatarGroup>
             <Box gap={0.5} display="flex" flexDirection="column">
               <Box component="span" sx={{ typography: "body2" }}>
-                {post.author.name}
+                {post.authors[0].name}
+                {post.authors.length > 1 && (
+                  <Typography
+                    color="text.secondary"
+                    variant="body2"
+                    sx={{ textDecoration: "underline" }}
+                  >
+                    + {post.authors.length - 1}{" "}
+                    {polishPlurals("autor", "autorów", "autorów", post.authors.length - 1)}
+                  </Typography>
+                )}
               </Box>
               <Typography variant="caption" sx={{ color: "text.disabled" }}>
                 {post.duration}

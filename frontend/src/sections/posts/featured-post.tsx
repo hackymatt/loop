@@ -1,7 +1,10 @@
+import { polishPlurals } from "polish-plurals";
+
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
+import { AvatarGroup } from "@mui/material";
 import Container from "@mui/material/Container";
 import type { BoxProps } from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -13,6 +16,7 @@ import { fDate } from "src/utils/format-time";
 
 import Image from "src/components/image";
 
+import { IAuthorProps } from "src/types/author";
 import type { IPostProps } from "src/types/blog";
 
 import { PostTime } from "./post-time";
@@ -62,8 +66,22 @@ export function FeaturedPost({ post, sx, ...other }: Props) {
             </Typography>
 
             <Box gap={1.5} display="flex" alignItems="center" sx={{ pt: 1.5, typography: "body2" }}>
-              <Avatar src={post.author.avatarUrl} />
-              {post.author.name}
+              <AvatarGroup total={post.authors.length} max={1}>
+                {post.authors.map((author: IAuthorProps) => (
+                  <Avatar src={author.avatarUrl} />
+                ))}
+              </AvatarGroup>
+              {post.authors[0].name}
+              {post.authors.length > 1 && (
+                <Typography
+                  color="text.secondary"
+                  variant="body2"
+                  sx={{ textDecoration: "underline" }}
+                >
+                  + {post.authors.length - 1}{" "}
+                  {polishPlurals("autor", "autorów", "autorów", post.authors.length - 1)}
+                </Typography>
+              )}
             </Box>
           </Stack>
         </Box>

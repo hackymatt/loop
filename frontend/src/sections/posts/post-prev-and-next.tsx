@@ -48,7 +48,7 @@ export function PrevNextButton({ coverUrl, title, isNext, href, sx, ...other }: 
 
       <div>
         <Typography variant="overline" sx={{ mb: 0.5, display: "block", color: "text.disabled" }}>
-          {isNext ? "Next" : "Prev"}
+          {isNext ? "Następny" : "Poprzedni"}
         </Typography>
 
         <Typography variant="subtitle1">{title}</Typography>

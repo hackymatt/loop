@@ -61,7 +61,7 @@ export function PostSidebar({
           variant="body2"
           sx={{ mb: 1, mt: 0.5, display: "block", color: "text.secondary" }}
         >
-          {author.title}
+          {author.role}
         </Typography>
       </div>
     </Box>
@@ -105,7 +105,7 @@ export function PostSidebar({
       <TextField
         fullWidth
         hiddenLabel
-        placeholder="Search..."
+        placeholder="Szukaj..."
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

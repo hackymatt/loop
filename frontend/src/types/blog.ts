@@ -14,8 +14,7 @@ export type IPostProps = {
   content: string;
   category: string;
   duration: string;
-  heroUrl: string;
   coverUrl: string;
-  author: IAuthorProps;
+  authors: IAuthorProps[];
   createdAt: string;
 };

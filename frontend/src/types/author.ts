@@ -1,8 +1,7 @@
 export type IAuthorProps = {
   id: string;
   name: string;
-  title: string;
+  role: string;
   avatarUrl: string;
-  ratingNumber?: number;
-  totalReviews?: number;
+  linkedinUrl: string;
 };
