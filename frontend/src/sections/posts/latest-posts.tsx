@@ -22,7 +22,7 @@ type Props = BoxProps & {
   posts: IPostProps[];
 };
 
-export function LatestPosts({ posts, sx, ...other }: Props) {
+export function PopularPosts({ posts, sx, ...other }: Props) {
   return (
     <Box
       component="section"
@@ -35,7 +35,7 @@ export function LatestPosts({ posts, sx, ...other }: Props) {
       <Container>
         <Box display="flex" alignItems="center" sx={{ mb: { xs: 5, md: 10 } }}>
           <Typography component="h6" variant="h3" sx={{ flexGrow: 1 }}>
-            Ostatnie wpisy
+            Najczęściej czytane
           </Typography>
 
           <Button

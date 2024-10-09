@@ -8,9 +8,10 @@ type PostTimeProps = BoxProps & {
   duration?: string;
   sx?: SxProps<Theme>;
   createdAt: string | null;
+  category: string;
 };
 
-export function PostTime({ createdAt, duration, sx, ...other }: PostTimeProps) {
+export function PostTime({ createdAt, duration, category, sx, ...other }: PostTimeProps) {
   return (
     <Box
       flexWrap="wrap"
@@ -37,6 +38,21 @@ export function PostTime({ createdAt, duration, sx, ...other }: PostTimeProps) {
           {duration}
         </>
       )}
+
+      <>
+        <Box
+          component="span"
+          sx={{
+            mx: 1,
+            width: 4,
+            height: 4,
+            borderRadius: "50%",
+            backgroundColor: "currentColor",
+          }}
+        />
+
+        {category}
+      </>
     </Box>
   );
 }

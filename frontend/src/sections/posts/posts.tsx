@@ -26,9 +26,12 @@ import type { IPostProps } from "src/types/blog";
 
 type Props = BoxProps & {
   posts: IPostProps[];
+  pagesCount?: number;
+  page: number;
+  onPageChange: (selectedPage: number) => void;
 };
 
-export function Posts({ posts, sx, ...other }: Props) {
+export function Posts({ posts, pagesCount, page, onPageChange, sx, ...other }: Props) {
   return (
     <>
       <Box
@@ -47,15 +50,19 @@ export function Posts({ posts, sx, ...other }: Props) {
         ))}
       </Box>
 
-      <Pagination
-        count={10}
-        sx={{
-          py: 10,
-          [`& .${paginationClasses.ul}`]: {
-            justifyContent: "center",
-          },
-        }}
-      />
+      {posts?.length > 0 && (
+        <Pagination
+          count={pagesCount ?? 0}
+          page={page}
+          sx={{
+            my: 10,
+            [`& .${paginationClasses.ul}`]: {
+              justifyContent: "center",
+            },
+          }}
+          onChange={(event, selectedPage: number) => onPageChange(selectedPage)}
+        />
+      )}
     </>
   );
 }

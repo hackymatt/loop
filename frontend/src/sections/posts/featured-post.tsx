@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { polishPlurals } from "polish-plurals";
 
 import Box from "@mui/material/Box";
@@ -13,6 +14,7 @@ import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
 import { fDate } from "src/utils/format-time";
+import { encodeUrl } from "src/utils/url-utils";
 
 import Image from "src/components/image";
 
@@ -28,8 +30,15 @@ type Props = BoxProps & {
 };
 
 export function FeaturedPost({ post, sx, ...other }: Props) {
+  const path = useMemo(() => `${post.title.toLowerCase()}-${post.id}`, [post.id, post.title]);
   return (
-    <Link component={RouterLink} href={paths.post} color="inherit" variant="h3" underline="none">
+    <Link
+      component={RouterLink}
+      href={`${paths.post}/${encodeUrl(path)}`}
+      color="inherit"
+      variant="h3"
+      underline="none"
+    >
       <Box
         component="section"
         sx={{
@@ -56,7 +65,11 @@ export function FeaturedPost({ post, sx, ...other }: Props) {
                 maxWidth: { md: 408 },
               }}
             >
-              <PostTime createdAt={fDate(post.createdAt)} duration={post.duration} />
+              <PostTime
+                createdAt={fDate(post.createdAt, "d MMMM yyyy")}
+                duration={post.duration}
+                category={post.category}
+              />
 
               {post.title}
 

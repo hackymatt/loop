@@ -11,7 +11,7 @@ export type IPostProps = {
   id: string;
   title: string;
   description: string;
-  content: string;
+  content?: string;
   category: string;
   duration: string;
   coverUrl: string;

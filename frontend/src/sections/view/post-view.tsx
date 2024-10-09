@@ -14,9 +14,11 @@ import { Avatar, IconButton, AvatarGroup } from "@mui/material";
 import { paths } from "src/routes/paths";
 
 import { fDate } from "src/utils/format-time";
+import { decodeUrl } from "src/utils/url-utils";
 import { createMetadata } from "src/utils/create-metadata";
 
 import { _coursePosts } from "src/_mock";
+import { usePost } from "src/api/posts/post";
 
 import Iconify from "src/components/iconify";
 import { Markdown } from "src/components/markdown";
@@ -26,17 +28,22 @@ import { IAuthorProps } from "src/types/author";
 
 import Newsletter from "../newsletter/newsletter";
 import { PostAuthors } from "../posts/post-author";
-import { LatestPosts } from "../posts/latest-posts";
+import { PopularPosts } from "../posts/latest-posts";
 import { PrevNextButton } from "../posts/post-prev-and-next";
+import { SplashScreen } from "src/components/loading-screen";
 
 // ----------------------------------------------------------------------
 
-const post = _coursePosts[0];
 const prevPost = _coursePosts[1];
 const nextPost = _coursePosts[2];
 const latestPosts = _coursePosts.slice(3, 6);
 
-export function PostView() {
+export function PostView({ id }: { id: string }) {
+  const decodedId = decodeUrl(id);
+  const recordId = decodedId.slice(decodedId.lastIndexOf("-") + 1);
+
+  const { data: post, isLoading: isLoadingPost } = usePost(recordId);
+
   const renderToolbar = (
     <Box
       gap={1.5}
@@ -48,8 +55,8 @@ export function PostView() {
         borderBottom: `solid 1px ${theme.palette.divider}`,
       })}
     >
-      <AvatarGroup total={post.authors.length} max={1}>
-        {post.authors.map((author: IAuthorProps) => {
+      <AvatarGroup total={post?.authors.length ?? 0} max={1}>
+        {post?.authors.map((author: IAuthorProps) => {
           const genderAvatarUrl =
             author?.gender === "Kobieta"
               ? "/assets/images/avatar/avatar_female.jpg"
@@ -62,27 +69,27 @@ export function PostView() {
 
       <Stack spacing={0.5} flexGrow={1} typography="subtitle2">
         <Stack direction="row" spacing={0.5}>
-          {post.authors[0].name}
-          {post.authors.length > 1 && (
+          {post?.authors[0].name}
+          {post?.authors.length > 1 && (
             <Typography
               color="text.secondary"
               variant="subtitle2"
               sx={{ textDecoration: "underline" }}
             >
-              + {post.authors.length - 1}{" "}
-              {polishPlurals("autor", "autorów", "autorów", post.authors.length - 1)}
+              + {post?.authors.length - 1}{" "}
+              {polishPlurals("autor", "autorów", "autorów", post?.authors.length - 1)}
             </Typography>
           )}
         </Stack>
         <Typography variant="caption" sx={{ color: "text.secondary" }}>
-          {fDate(post.createdAt)}
+          {fDate(post?.createdAt, "d MMMM yyyy")}
         </Typography>
       </Stack>
 
       <Box display="flex" alignItems="center">
         <IconButton
           onClick={() =>
-            navigator.share({ url: "xxxxx", title: post.title, text: post.description })
+            navigator.share({ url: "xxxxx", title: post?.title, text: post?.description })
           }
         >
           <Iconify icon="solar:share-outline" />
@@ -209,11 +216,11 @@ A component by [Espen Hovlandsdal](https://espen.codes/)
   const metadata = useMemo(
     () =>
       createMetadata(
-        `Artykuł: ${post.title}`,
-        `Przeczytaj nasz artykuł o ${post.title}. Dowiedz się, jak ${post.description.toLowerCase()}. Odkryj praktyczne porady i najlepsze praktyki, które pomogą Ci w rozwoju umiejętności programistycznych.`,
+        `Artykuł: ${post?.title}`,
+        `Przeczytaj nasz artykuł o ${post?.title}. Dowiedz się, jak ${post?.description.toLowerCase()}. Odkryj praktyczne porady i najlepsze praktyki, które pomogą Ci w rozwoju umiejętności programistycznych.`,
         [
-          post.title,
-          post.description,
+          post?.title,
+          post?.description,
           "programowanie",
           "nauka programowania",
           "najlepsze praktyki",
@@ -222,8 +229,12 @@ A component by [Espen Hovlandsdal](https://espen.codes/)
           "loop",
         ],
       ),
-    [],
+    [post?.description, post?.title],
   );
+
+  if (isLoadingPost) {
+    return <SplashScreen />;
+  }
 
   return (
     <>
@@ -237,7 +248,7 @@ A component by [Espen Hovlandsdal](https://espen.codes/)
           links={[
             { name: "Strona główna", href: "/" },
             { name: "Blog", href: paths.posts },
-            { name: post.title },
+            { name: post?.title },
           ]}
           sx={{ my: { xs: 3, md: 5 } }}
         />
@@ -254,7 +265,7 @@ A component by [Espen Hovlandsdal](https://espen.codes/)
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
             aspectRatio: { xs: "16/9", md: "21/9" },
-            backgroundImage: `url(${post.coverUrl})`,
+            backgroundImage: `url(${post?.coverUrl})`,
           })}
         />
 
@@ -268,14 +279,14 @@ A component by [Espen Hovlandsdal](https://espen.codes/)
               }}
             >
               <Typography variant="body2" sx={{ color: "text.disabled" }}>
-                {post.duration}
+                {post?.duration}
               </Typography>
 
               <Typography variant="h2" component="h1">
-                {post.title}
+                {post?.title}
               </Typography>
 
-              <Typography variant="h5">{post.description}</Typography>
+              <Typography variant="h5">{post?.description}</Typography>
             </Stack>
 
             {renderToolbar}
@@ -284,7 +295,7 @@ A component by [Espen Hovlandsdal](https://espen.codes/)
 
             <Divider sx={{ mt: 10 }} />
 
-            <PostAuthors authors={post.authors} />
+            <PostAuthors authors={post?.authors} />
 
             <Divider />
 
@@ -308,7 +319,7 @@ A component by [Espen Hovlandsdal](https://espen.codes/)
 
       <Divider />
 
-      <LatestPosts posts={latestPosts} />
+      <PopularPosts posts={popularPosts} />
 
       <Newsletter />
     </>

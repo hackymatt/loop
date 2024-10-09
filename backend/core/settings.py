@@ -89,6 +89,7 @@ INSTALLED_APPS = [
     "certificate",
     "notification",
     "message",
+    "post",
 ]
 
 MIDDLEWARE = [

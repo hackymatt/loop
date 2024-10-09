@@ -1,11 +1,21 @@
 "use client";
 
+import { useMemo, useCallback } from "react";
+
 import Grid from "@mui/material/Unstable_Grid2";
 import Container from "@mui/material/Container";
 
 import { paths } from "src/routes/paths";
 
-import { _coursePosts } from "src/_mock";
+import { useResponsive } from "src/hooks/use-responsive";
+import { useQueryParams } from "src/hooks/use-query-params";
+
+import { usePosts, usePostsPagesCount } from "src/api/posts/posts";
+
+import { SplashScreen } from "src/components/loading-screen";
+
+import { IPostProps } from "src/types/blog";
+import { IQueryParamValue } from "src/types/query-params";
 
 import { Posts } from "../posts/posts";
 import Advertisement from "../advertisement";
@@ -16,25 +26,76 @@ import { PostSearchMobile } from "../posts/post-search-mobile";
 
 // ----------------------------------------------------------------------
 
-const posts = _coursePosts.slice(0, 8);
-const featuredPost = _coursePosts[3];
-const recentPosts = _coursePosts.slice(-4);
-
 export function PostsView() {
+  const mdUp = useResponsive("up", "md");
+
+  const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
+  const query = useMemo(() => getQueryParams(), [getQueryParams]);
+
+  const { data: pagesCount, isLoading: isLoadingPagesCount } = usePostsPagesCount({
+    ...query,
+    sort_by: "-created_at",
+  });
+  const { data: recentPosts, isLoading: isLoadingFeaturedPost } = usePosts({
+    ...query,
+    sort_by: "-created_at",
+  });
+  const { data: popularPosts, isLoading: isLoadingRecentPost } = usePosts({
+    page_size: 4,
+    sort_by: "-visits",
+  });
+
+  const featuredPost = useMemo(() => recentPosts?.[0], [recentPosts]);
+  const posts = useMemo(
+    () => recentPosts?.filter((post: IPostProps) => post.id !== featuredPost?.id),
+    [featuredPost?.id, recentPosts],
+  );
+
+  const isLoading = isLoadingPagesCount || isLoadingFeaturedPost || isLoadingRecentPost;
+
+  const handleChange = useCallback(
+    (name: string, value: IQueryParamValue) => {
+      if (value) {
+        setQueryParam(name, value);
+      } else {
+        removeQueryParam(name);
+      }
+    },
+    [removeQueryParam, setQueryParam],
+  );
+
+  if (isLoading) {
+    return <SplashScreen />;
+  }
+
   return (
     <>
-      <PostSearchMobile />
+      {!mdUp && (
+        <PostSearchMobile
+          value={query?.search ?? ""}
+          onChange={(value) => handleChange("search", value)}
+        />
+      )}
 
-      <FeaturedPost post={featuredPost} />
+      {featuredPost && <FeaturedPost post={featuredPost} />}
 
       <Container sx={{ pt: 10 }}>
         <Grid disableEqualOverflow container spacing={{ md: 8 }}>
           <Grid xs={12} md={8}>
-            <Posts posts={posts} />
+            <Posts
+              posts={posts}
+              pagesCount={pagesCount}
+              page={parseInt(query.page ?? "1", 10) ?? 1}
+              onPageChange={(selectedPage: number) => handleChange("page", selectedPage)}
+            />
           </Grid>
 
           <Grid xs={12} md={4}>
             <PostSidebar
+              value={query?.category ?? ""}
+              onChange={(value) => handleChange("category", value)}
+              searchValue={query?.search ?? ""}
+              onChangeSearch={(value) => handleChange("search", value)}
               categories={[
                 { label: "Marketing", path: "" },
                 { label: "Community", path: "" },
@@ -42,7 +103,7 @@ export function PostsView() {
                 { label: "Business", path: "" },
                 { label: "Management", path: "" },
               ]}
-              recentPosts={recentPosts}
+              popularPosts={popularPosts}
               slots={{
                 bottomNode: (
                   <Advertisement

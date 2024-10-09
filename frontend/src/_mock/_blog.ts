@@ -50,9 +50,8 @@ const base = (index: number) => ({
       role: _mock.role(index),
       avatarUrl: _mock.image.avatar(index),
       gender: "Kobieta" as IGender,
-      linkedinUrl: _mock.image.avatar(index),
-      quotes: "Member since Mar 15, 2021",
-      about:
+      dateJoined: "2024-02-15T15:00:00Z",
+      description:
         "Integer tincidunt. Nullam dictum felis eu pede mollis pretium. Maecenas ullamcorper, dui et placerat feugiat, eros pede varius nisi, condimentum viverra felis nunc et lorem.",
     },
     {
@@ -61,9 +60,8 @@ const base = (index: number) => ({
       role: _mock.role(index),
       avatarUrl: _mock.image.avatar(index),
       gender: "Kobieta" as IGender,
-      linkedinUrl: _mock.image.avatar(index),
-      quotes: "Member since Mar 15, 2021",
-      about:
+      dateJoined: "2024-02-15T15:00:00Z",
+      description:
         "Integer tincidunt. Nullam dictum felis eu pede mollis pretium. Maecenas ullamcorper, dui et placerat feugiat, eros pede varius nisi, condimentum viverra felis nunc et lorem.",
     },
     {
@@ -72,9 +70,8 @@ const base = (index: number) => ({
       role: _mock.role(index),
       avatarUrl: _mock.image.avatar(index),
       gender: "Kobieta" as IGender,
-      linkedinUrl: _mock.image.avatar(index),
-      quotes: "Member since Mar 15, 2021",
-      about:
+      dateJoined: "2024-02-15T15:00:00Z",
+      description:
         "Integer tincidunt. Nullam dictum felis eu pede mollis pretium. Maecenas ullamcorper, dui et placerat feugiat, eros pede varius nisi, condimentum viverra felis nunc et lorem.",
     },
     {
@@ -83,9 +80,8 @@ const base = (index: number) => ({
       role: _mock.role(index),
       avatarUrl: _mock.image.avatar(index),
       gender: "Kobieta" as IGender,
-      linkedinUrl: _mock.image.avatar(index),
-      quotes: "Member since Mar 15, 2021",
-      about:
+      dateJoined: "2024-02-15T15:00:00Z",
+      description:
         "Integer tincidunt. Nullam dictum felis eu pede mollis pretium. Maecenas ullamcorper, dui et placerat feugiat, eros pede varius nisi, condimentum viverra felis nunc et lorem.",
     },
     {
@@ -94,9 +90,8 @@ const base = (index: number) => ({
       role: _mock.role(index),
       avatarUrl: _mock.image.avatar(index),
       gender: "Kobieta" as IGender,
-      linkedinUrl: _mock.image.avatar(index),
-      quotes: "Member since Mar 15, 2021",
-      about:
+      dateJoined: "2024-02-15T15:00:00Z",
+      description:
         "Integer tincidunt. Nullam dictum felis eu pede mollis pretium. Maecenas ullamcorper, dui et placerat feugiat, eros pede varius nisi, condimentum viverra felis nunc et lorem.",
     },
     {
@@ -105,9 +100,8 @@ const base = (index: number) => ({
       role: _mock.role(index),
       avatarUrl: _mock.image.avatar(index),
       gender: "Kobieta" as IGender,
-      linkedinUrl: _mock.image.avatar(index),
-      quotes: "Member since Mar 15, 2021",
-      about:
+      dateJoined: "2024-02-15T15:00:00Z",
+      description:
         "Integer tincidunt. Nullam dictum felis eu pede mollis pretium. Maecenas ullamcorper, dui et placerat feugiat, eros pede varius nisi, condimentum viverra felis nunc et lorem.",
     },
   ],

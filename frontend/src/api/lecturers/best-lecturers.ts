@@ -30,7 +30,6 @@ export const bestLecturersQuery = () => {
         role: title,
         avatarUrl: image,
         gender,
-        linkedinUrl: linkedin_url,
       }),
     );
     return { results: modifiedResults, count: records_count };

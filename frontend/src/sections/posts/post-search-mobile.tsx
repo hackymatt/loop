@@ -1,16 +1,16 @@
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
 import type { Theme, SxProps } from "@mui/material/styles";
 
-import Iconify from "src/components/iconify";
+import { IQueryParamValue } from "src/types/query-params";
+
+import FilterSearch from "../filters/filter-search";
 
 // ----------------------------------------------------------------------
 
 type PostSearchMobileProps = {
   sx?: SxProps<Theme>;
-  value?: string;
-  onChange?: (newValue: string) => void;
+  value: string;
+  onChange: (search: IQueryParamValue) => void;
 };
 
 export function PostSearchMobile({ sx, value, onChange }: PostSearchMobileProps) {
@@ -23,20 +23,7 @@ export function PostSearchMobile({ sx, value, onChange }: PostSearchMobileProps)
         ...sx,
       }}
     >
-      <TextField
-        fullWidth
-        hiddenLabel
-        placeholder="Szukaj..."
-        value={value}
-        onChange={(event) => onChange?.(event.target.value)}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Iconify width={24} icon="carbon:search" sx={{ color: "text.disabled" }} />
-            </InputAdornment>
-          ),
-        }}
-      />
+      <FilterSearch value={value} onChangeSearch={onChange} size="medium" />
     </Box>
   );
 }
