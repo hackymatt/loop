@@ -17,32 +17,38 @@ import { fDate } from "src/utils/format-time";
 import { decodeUrl } from "src/utils/url-utils";
 import { createMetadata } from "src/utils/create-metadata";
 
-import { _coursePosts } from "src/_mock";
 import { usePost } from "src/api/posts/post";
+import { usePosts } from "src/api/posts/posts";
 
 import Iconify from "src/components/iconify";
 import { Markdown } from "src/components/markdown";
+import { SplashScreen } from "src/components/loading-screen";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
 import { IAuthorProps } from "src/types/author";
 
 import Newsletter from "../newsletter/newsletter";
 import { PostAuthors } from "../posts/post-author";
-import { PopularPosts } from "../posts/latest-posts";
+import { PopularPosts } from "../posts/popular-posts";
 import { PrevNextButton } from "../posts/post-prev-and-next";
-import { SplashScreen } from "src/components/loading-screen";
 
 // ----------------------------------------------------------------------
-
-const prevPost = _coursePosts[1];
-const nextPost = _coursePosts[2];
-const latestPosts = _coursePosts.slice(3, 6);
 
 export function PostView({ id }: { id: string }) {
   const decodedId = decodeUrl(id);
   const recordId = decodedId.slice(decodedId.lastIndexOf("-") + 1);
 
   const { data: post, isLoading: isLoadingPost } = usePost(recordId);
+
+  const { data: popularPosts, isLoading: isLoadingPopularPosts } = usePosts({
+    page_size: 3,
+    sort_by: "-visits",
+  });
+
+  const prevPost = useMemo(() => post?.previousPost, [post?.previousPost]);
+  const nextPost = useMemo(() => post?.nextPost, [post?.nextPost]);
+
+  const isLoading = isLoadingPost || isLoadingPopularPosts;
 
   const renderToolbar = (
     <Box
@@ -70,14 +76,14 @@ export function PostView({ id }: { id: string }) {
       <Stack spacing={0.5} flexGrow={1} typography="subtitle2">
         <Stack direction="row" spacing={0.5}>
           {post?.authors[0].name}
-          {post?.authors.length > 1 && (
+          {(post?.authors?.length ?? 0) > 1 && (
             <Typography
               color="text.secondary"
               variant="subtitle2"
               sx={{ textDecoration: "underline" }}
             >
-              + {post?.authors.length - 1}{" "}
-              {polishPlurals("autor", "autorów", "autorów", post?.authors.length - 1)}
+              + {(post?.authors?.length ?? 0) - 1}{" "}
+              {polishPlurals("autor", "autorów", "autorów", (post?.authors?.length ?? 0) - 1)}
             </Typography>
           )}
         </Stack>
@@ -98,121 +104,6 @@ export function PostView({ id }: { id: string }) {
     </Box>
   );
 
-  const markdown = `
-# A demo of \`react-markdown\`
-
-\`react-markdown\` is a markdown component for React.
-
-👉 Changes are re-rendered as you type.
-
-👈 Try writing some markdown on the left.
-
-## Overview
-
-* Follows [CommonMark](https://commonmark.org)
-* Optionally follows [GitHub Flavored Markdown](https://github.github.com/gfm/)
-* Renders actual React elements instead of using \`dangerouslySetInnerHTML\`
-* Lets you define your own components (to render \`MyHeading\` instead of 'h1')
-* Has a lot of plugins
-
-## Contents
-
-Here is an example of a plugin in action ([\`remark-toc\`](https://github.com/remarkjs/remark-toc)).
-**This section is replaced by an actual table of contents**.
-
-## Syntax highlighting
-
-Here is an example of a plugin to highlight code: [\`rehype-highlight\`](https://github.com/rehypejs/rehype-highlight).
-
-\`\`\`js
-import React from 'react'
-import ReactDOM from 'react-dom'
-import Markdown from 'react-markdown'
-import rehypeHighlight from 'rehype-highlight'
-
-const markdown = \`
-# Your markdown here
-\`
-
-ReactDOM.render(
-  <Markdown rehypePlugins={[rehypeHighlight]}>{markdown}</Markdown>,
-  document.querySelector('#content')
-)
-\`\`\`
-
-Pretty neat, eh?
-
-## GitHub flavored markdown (GFM)
-
-For GFM, you can *also* use a plugin: [\`remark-gfm\`](https://github.com/remarkjs/react-markdown#use).
-It adds support for GitHub-specific extensions to the language:
-tables, strikethrough, tasklists, and literal URLs.
-
-These features **do not work by default**.
-👆 Use the toggle above to add the plugin.
-
-| Feature    | Support              |
-| ---------: | :------------------- |
-| CommonMark | 100%                 |
-| GFM        | 100% w/ \`remark-gfm\` |
-
-~~strikethrough~~
-
-* [ ] task list
-* [x] checked item
-
-https://example.com
-
-## HTML in markdown
-
-⚠️ HTML in markdown is quite unsafe, but if you want to support it, you can use [\`rehype-raw\`](https://github.com/rehypejs/rehype-raw).
-You should probably combine it with [\`rehype-sanitize\`](https://github.com/rehypejs/rehype-sanitize).
-
-<blockquote>
-  👆 Use the toggle above to add the plugin.
-</blockquote>
-
-## Components
-
-You can pass components to change things:
-
-\`\`\`js
-import React from 'react'
-import ReactDOM from 'react-dom'
-import Markdown from 'react-markdown'
-import MyFancyRule from './components/my-fancy-rule.js'
-
-const markdown = \`
-# Your markdown here
-\`
-
-ReactDOM.render(
-  <Markdown
-    components={{
-      // Use h2s instead of h1s
-      h1: 'h2',
-      // Use a component instead of hrs
-      hr(props) {
-        const {node, ...rest} = props
-        return <MyFancyRule {...rest} />
-      }
-    }}
-  >
-    {markdown}
-  </Markdown>,
-  document.querySelector('#content')
-)
-\`\`\`
-
-## More info?
-
-Much more info is available in the [readme on GitHub](https://github.com/remarkjs/react-markdown)!
-
-***
-
-A component by [Espen Hovlandsdal](https://espen.codes/)
-`;
-
   const metadata = useMemo(
     () =>
       createMetadata(
@@ -232,7 +123,7 @@ A component by [Espen Hovlandsdal](https://espen.codes/)
     [post?.description, post?.title],
   );
 
-  if (isLoadingPost) {
+  if (isLoading) {
     return <SplashScreen />;
   }
 
@@ -241,7 +132,6 @@ A component by [Espen Hovlandsdal](https://espen.codes/)
       <title>{metadata.title}</title>
       <meta name="description" content={metadata.description} />
       <meta name="keywords" content={metadata.keywords} />
-      <Divider />
 
       <Container>
         <CustomBreadcrumbs
@@ -257,7 +147,7 @@ A component by [Espen Hovlandsdal](https://espen.codes/)
           display="flex"
           alignItems="center"
           justifyContent="center"
-          sx={(theme) => ({
+          sx={{
             borderRadius: 2,
             overflow: "hidden",
             position: "relative",
@@ -266,7 +156,7 @@ A component by [Espen Hovlandsdal](https://espen.codes/)
             backgroundRepeat: "no-repeat",
             aspectRatio: { xs: "16/9", md: "21/9" },
             backgroundImage: `url(${post?.coverUrl})`,
-          })}
+          }}
         />
 
         <Grid container disableEqualOverflow spacing={3} justifyContent={{ md: "center" }}>
@@ -278,9 +168,34 @@ A component by [Espen Hovlandsdal](https://espen.codes/)
                 mt: { xs: 5, md: 10 },
               }}
             >
-              <Typography variant="body2" sx={{ color: "text.disabled" }}>
-                {post?.duration}
-              </Typography>
+              <Box
+                flexWrap="wrap"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                sx={{ typography: "caption", color: "text.disabled" }}
+              >
+                <Typography variant="body2" sx={{ color: "text.disabled" }}>
+                  {post?.duration}
+                </Typography>
+
+                <>
+                  <Box
+                    component="span"
+                    sx={{
+                      mx: 1,
+                      width: 4,
+                      height: 4,
+                      borderRadius: "50%",
+                      backgroundColor: "currentColor",
+                    }}
+                  />
+
+                  <Typography variant="body2" sx={{ color: "text.disabled" }}>
+                    {post?.category}
+                  </Typography>
+                </>
+              </Box>
 
               <Typography variant="h2" component="h1">
                 {post?.title}
@@ -291,7 +206,7 @@ A component by [Espen Hovlandsdal](https://espen.codes/)
 
             {renderToolbar}
 
-            <Markdown content={markdown} />
+            <Markdown content={post?.content ?? ""} />
 
             <Divider sx={{ mt: 10 }} />
 
@@ -299,27 +214,37 @@ A component by [Espen Hovlandsdal](https://espen.codes/)
 
             <Divider />
 
-            <Box
-              gap={5}
-              display="grid"
-              gridTemplateColumns={{ xs: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
-              sx={{ py: 10 }}
-            >
-              <PrevNextButton title={prevPost?.title} coverUrl={prevPost?.coverUrl} href="#" />
-              <PrevNextButton
-                isNext
-                title={nextPost?.title}
-                coverUrl={nextPost?.coverUrl}
-                href="#"
-              />
-            </Box>
+            {(prevPost || nextPost) && (
+              <Box
+                gap={5}
+                display="grid"
+                gridTemplateColumns={{ xs: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
+                sx={{ py: 10 }}
+              >
+                {prevPost && (
+                  <PrevNextButton
+                    title={prevPost.title}
+                    coverUrl={prevPost.coverUrl}
+                    href={`${prevPost.title.toLowerCase()}-${prevPost.id}`}
+                  />
+                )}
+                {nextPost && (
+                  <PrevNextButton
+                    isNext
+                    title={nextPost.title}
+                    coverUrl={nextPost.coverUrl}
+                    href={`${nextPost.title.toLowerCase()}-${nextPost.id}`}
+                  />
+                )}
+              </Box>
+            )}
           </Grid>
         </Grid>
       </Container>
 
       <Divider />
 
-      <PopularPosts posts={popularPosts} />
+      {popularPosts?.length === 3 && <PopularPosts posts={popularPosts} />}
 
       <Newsletter />
     </>

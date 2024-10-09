@@ -3,8 +3,15 @@ import type { IAuthorProps } from "./author";
 // ----------------------------------------------------------------------
 
 export type IPostCategoryProps = {
-  label: string;
-  path: string;
+  id: string;
+  name: string;
+  createdAt: string;
+};
+
+export type IPostNavigationProps = {
+  id: string;
+  title: string;
+  coverUrl: string;
 };
 
 export type IPostProps = {
@@ -17,4 +24,6 @@ export type IPostProps = {
   coverUrl: string;
   authors: IAuthorProps[];
   createdAt: string;
+  previousPost?: IPostNavigationProps;
+  nextPost?: IPostNavigationProps;
 };

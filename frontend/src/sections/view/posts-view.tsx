@@ -11,6 +11,7 @@ import { useResponsive } from "src/hooks/use-responsive";
 import { useQueryParams } from "src/hooks/use-query-params";
 
 import { usePosts, usePostsPagesCount } from "src/api/posts/posts";
+import { usePostCategories } from "src/api/post-categories/post-categories";
 
 import { SplashScreen } from "src/components/loading-screen";
 
@@ -40,9 +41,14 @@ export function PostsView() {
     ...query,
     sort_by: "-created_at",
   });
-  const { data: popularPosts, isLoading: isLoadingRecentPost } = usePosts({
+  const { data: popularPosts, isLoading: isLoadingPopularPosts } = usePosts({
     page_size: 4,
     sort_by: "-visits",
+  });
+  const { data: categories, isLoading: isLoadingCategories } = usePostCategories({
+    page_size: -1,
+    posts_count_from: 1,
+    sort_by: "name",
   });
 
   const featuredPost = useMemo(() => recentPosts?.[0], [recentPosts]);
@@ -51,7 +57,8 @@ export function PostsView() {
     [featuredPost?.id, recentPosts],
   );
 
-  const isLoading = isLoadingPagesCount || isLoadingFeaturedPost || isLoadingRecentPost;
+  const isLoading =
+    isLoadingPagesCount || isLoadingFeaturedPost || isLoadingPopularPosts || isLoadingCategories;
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -96,13 +103,7 @@ export function PostsView() {
               onChange={(value) => handleChange("category", value)}
               searchValue={query?.search ?? ""}
               onChangeSearch={(value) => handleChange("search", value)}
-              categories={[
-                { label: "Marketing", path: "" },
-                { label: "Community", path: "" },
-                { label: "Tutorials", path: "" },
-                { label: "Business", path: "" },
-                { label: "Management", path: "" },
-              ]}
+              categories={categories ?? []}
               popularPosts={popularPosts}
               slots={{
                 bottomNode: (

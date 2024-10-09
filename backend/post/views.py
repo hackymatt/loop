@@ -6,9 +6,10 @@ from post.serializers import (
     PostListSerializer,
     PostGetSerializer,
     PostSerializer,
+    PostCategorySerializer,
 )
-from post.filters import PostFilter
-from post.models import Post
+from post.filters import PostFilter, PostCategoryFilter
+from post.models import Post, PostCategory
 
 
 class PostViewSet(ModelViewSet):
@@ -87,3 +88,22 @@ class PostViewSet(ModelViewSet):
             )
 
         return super().destroy(request, *args, **kwargs)
+
+
+class PostCategoryViewSet(ModelViewSet):
+    http_method_names = ["get", "post", "put", "delete"]
+    queryset = PostCategory.objects.all()
+    serializer_class = PostCategorySerializer
+    permission_classes = [AllowAny]
+    filterset_class = PostCategoryFilter
+
+    def get_permissions(self):
+        if (
+            self.action == "create"
+            or self.action == "update"
+            or self.action == "destroy"
+        ):
+            permission_classes = [IsAuthenticated, IsAdminUser]
+        else:
+            permission_classes = self.permission_classes
+        return [permission() for permission in permission_classes]

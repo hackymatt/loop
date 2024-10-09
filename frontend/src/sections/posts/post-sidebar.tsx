@@ -80,32 +80,30 @@ export function PostSidebar({
       <Stack spacing={2} alignItems="flex-start">
         {categories.map((category) => (
           <FormControlLabel
-            key={category.label}
-            value={category.label}
+            key={category.id}
+            value={category.name}
             control={
               <Checkbox
-                checked={value === category.label}
-                onClick={() =>
-                  category.label !== value ? onChange(category.label) : onChange(null)
-                }
+                checked={value === category.name}
+                onClick={() => (category.name !== value ? onChange(category.name) : onChange(null))}
                 sx={{ display: "none" }}
               />
             }
             label={
-              <Box key={category.label} gap={2} display="flex" alignItems="center">
+              <Box key={category.name} gap={2} display="flex" alignItems="center">
                 <Box
                   component="span"
                   sx={{ width: 6, height: 6, borderRadius: "50%", bgcolor: "primary.main" }}
                 />
 
-                {category.label}
+                {category.name}
               </Box>
             }
             sx={{
               m: 0,
               fontWeight: "fontWeightSemiBold",
               "&:hover": { color: "primary.main" },
-              ...(value === category.label && {
+              ...(value === category.name && {
                 color: "primary.main",
               }),
             }}

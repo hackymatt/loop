@@ -2,13 +2,12 @@ from django_filters import (
     FilterSet,
     OrderingFilter,
     CharFilter,
-    BaseInFilter,
+    NumberFilter,
+    DateFilter,
 )
-from post.models import Post
-
-
-class CharInFilter(BaseInFilter, CharFilter):
-    pass
+from post.models import Post, PostCategory
+from django.db.models import OuterRef, Subquery, Value, Count, FloatField
+from django.db.models.functions import Coalesce
 
 
 class OrderFilter(OrderingFilter):
@@ -17,7 +16,10 @@ class OrderFilter(OrderingFilter):
             return super().filter(queryset, values)
 
         for value in values:
-            queryset = queryset.order_by(value)
+            if value in ["posts_count", "-posts_count"]:
+                queryset = get_posts_count(queryset).order_by(value)
+            else:
+                queryset = queryset.order_by(value)
 
         return queryset
 
@@ -45,3 +47,61 @@ class PostFilter(FilterSet):
             "category",
             "sort_by",
         )
+
+
+def get_posts_count(queryset):
+    total_posts_count = (
+        Post.objects.filter(post_category_id=OuterRef("pk"))
+        .annotate(dummy_group_by=Value(1))
+        .values("dummy_group_by")
+        .order_by("dummy_group_by")
+        .annotate(total_posts_count=Count("id"))
+        .values("total_posts_count")
+    )
+    post_categories = queryset.annotate(
+        courses_count=Coalesce(
+            Subquery(total_posts_count), Value(0), output_field=FloatField()
+        )
+    )
+
+    return post_categories
+
+
+class PostCategoryFilter(FilterSet):
+    name = CharFilter(field_name="name", lookup_expr="icontains")
+    posts_count = NumberFilter(
+        label="Liczba artykułów większa lub równa",
+        field_name="posts_count",
+        method="filter_posts_count_from",
+    )
+    created_at = DateFilter(field_name="created_at", lookup_expr="contains")
+    sort_by = OrderFilter(
+        choices=(
+            ("name", "Name ASC"),
+            ("-name", "Name DESC"),
+            ("created_at", "Created At ASC"),
+            ("-created_at", "Created At DESC"),
+            ("posts_count", "Posts Count ASC"),
+            ("-posts_count", "Posts Count DESC"),
+        ),
+        fields={
+            "name": "name",
+            "-name": "-name",
+            "created_at": "created_at",
+            "-created_at": "-created_at",
+            "posts_count": "posts_count",
+            "-posts_count": "-posts_count",
+        },
+    )
+
+    class Meta:
+        model = PostCategory
+        fields = (
+            "name",
+            "created_at",
+            "sort_by",
+        )
+
+    def filter_posts_count_from(self, queryset, field_name, value):
+        lookup_field_name = f"{field_name}__gte"
+        return get_posts_count(queryset).filter(**{lookup_field_name: value})

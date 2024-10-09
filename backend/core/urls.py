@@ -32,7 +32,7 @@ from module.views import ModuleViewSet
 from technology.views import TechnologyViewSet, BestTechnologyViewSet
 from topic.views import TopicViewSet
 from skill.views import SkillViewSet
-from post.views import PostViewSet
+from post.views import PostViewSet, PostCategoryViewSet
 from review.views import ReviewViewSet, ReviewStatsViewSet, BestReviewViewSet
 from newsletter.views import (
     NewsletterEntriesViewSet,
@@ -109,6 +109,7 @@ router.register(r"coupon-usage", CouponUserViewSet, basename="coupon_usage")
 router.register(r"notifications", NotificationViewSet, basename="notifications")
 router.register(r"messages", MessageViewSet, basename="messages")
 router.register(r"posts", PostViewSet, basename="posts")
+router.register(r"post-categories", PostCategoryViewSet, basename="post_categories")
 
 
 api_urlpatterns = [

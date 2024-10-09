@@ -25,6 +25,12 @@ type ILecturer = {
   gender: IGender | null;
 };
 
+type IPostNavigation = {
+  id: string;
+  title: string;
+  image: string;
+};
+
 type IPost = {
   id: string;
   title: string;
@@ -36,6 +42,8 @@ type IPost = {
   active: boolean;
   image: string;
   created_at: string;
+  previous_post: IPostNavigation;
+  next_post: IPostNavigation;
 };
 
 type IEditPost = Omit<IPost, "id" | "authors" | "duration"> & {
@@ -71,6 +79,8 @@ export const postQuery = (id: string) => {
         active,
         image,
         created_at,
+        previous_post,
+        next_post,
       } = data;
 
       modifiedResults = {
@@ -102,6 +112,8 @@ export const postQuery = (id: string) => {
         ),
         active,
         createdAt: created_at,
+        previousPost: previous_post,
+        nextPost: next_post,
       };
     } catch (error) {
       if (error.response && (error.response.status === 400 || error.response.status === 404)) {

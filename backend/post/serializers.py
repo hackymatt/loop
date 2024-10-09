@@ -24,21 +24,35 @@ def notify_students(post):
             icon="mdi:blog",
         )
 
+
 def get_lecturer_full_name(lecturer):
     return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
+
 
 def get_post_duration(post):
     words = post.content.split()
     return ceil(len(words) / 250)
 
-class CategorySerializer(ModelSerializer):
 
+def get_post_navigation(post, filter):
+    lookup_field_name = f"created_at__{filter}"
+    current_post_created_at = post.created_at
+    posts = Post.objects.filter(
+        **{lookup_field_name: current_post_created_at, "active": True}
+    )
+    if posts.exists():
+        return PostNavigationSerializer(instance=posts.first()).data
+    return None
+
+
+class CategorySerializer(ModelSerializer):
     class Meta:
         model = PostCategory
         fields = (
             "id",
             "name",
         )
+
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField("get_full_name")
@@ -80,6 +94,17 @@ class LecturerDetailsSerializer(ModelSerializer):
         return get_lecturer_full_name(lecturer=lecturer)
 
 
+class PostNavigationSerializer(ModelSerializer):
+    image = Base64ImageField(required=True)
+    class Meta:
+        model = Post
+        fields = (
+            "id",
+            "title",
+            "image",
+        )
+
+
 class PostListSerializer(ModelSerializer):
     category = CategorySerializer()
     authors = LecturerSerializer(many=True)
@@ -103,6 +128,8 @@ class PostGetSerializer(ModelSerializer):
     authors = LecturerDetailsSerializer(many=True)
     image = Base64ImageField(required=True)
     duration = SerializerMethodField("get_duration")
+    previous_post = SerializerMethodField("get_previous_post")
+    next_post = SerializerMethodField("get_next_post")
 
     class Meta:
         model = Post
@@ -113,6 +140,12 @@ class PostGetSerializer(ModelSerializer):
 
     def get_duration(self, post):
         return get_post_duration(post=post)
+
+    def get_previous_post(self, post):
+        return get_post_navigation(post=post, filter="lt")
+
+    def get_next_post(self, post):
+        return get_post_navigation(post=post, filter="gt")
 
 
 class PostSerializer(ModelSerializer):
@@ -159,3 +192,9 @@ class PostSerializer(ModelSerializer):
             notify_students(post=instance)
 
         return instance
+
+
+class PostCategorySerializer(ModelSerializer):
+    class Meta:
+        model = PostCategory
+        exclude = ("modified_at",)
