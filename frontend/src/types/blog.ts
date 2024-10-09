@@ -26,4 +26,5 @@ export type IPostProps = {
   createdAt: string;
   previousPost?: IPostNavigationProps;
   nextPost?: IPostNavigationProps;
+  active: boolean;
 };

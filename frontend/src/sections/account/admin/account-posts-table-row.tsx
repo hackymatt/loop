@@ -6,29 +6,24 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import InputBase from "@mui/material/InputBase";
 import IconButton from "@mui/material/IconButton";
-import { Link, Divider, Typography } from "@mui/material";
-
-import { paths } from "src/routes/paths";
+import { Divider, Typography } from "@mui/material";
 
 import { usePopover } from "src/hooks/use-popover";
-
-import { encodeUrl } from "src/utils/url-utils";
-import { fCurrency } from "src/utils/format-number";
 
 import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 
-import { ICourseProps } from "src/types/course";
+import { IPostProps } from "src/types/blog";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: ICourseProps;
-  onEdit: (course: ICourseProps) => void;
-  onDelete: (course: ICourseProps) => void;
+  row: IPostProps;
+  onEdit: (post: IPostProps) => void;
+  onDelete: (post: IPostProps) => void;
 };
 
-export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props) {
+export default function AccountPostsTableRow({ row, onEdit, onDelete }: Props) {
   const openOptions = usePopover();
 
   const handleEdit = useCallback(() => {
@@ -45,17 +40,15 @@ export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props)
 
   const isInactive = useMemo(() => !row.active, [row.active]);
 
-  const path = useMemo(() => `${row.slug.toLowerCase()}-${row.id}`, [row.id, row.slug]);
-
   return (
     <>
       <TableRow hover>
         <TableCell>
-          <InputBase value={row.slug} sx={{ width: 1 }} />
+          <InputBase value={row.title} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell>
-          <InputBase value={`${row.totalHours * 60} min`} />
+          <InputBase value={row.duration} />
         </TableCell>
 
         <TableCell>
@@ -65,14 +58,6 @@ export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props)
           >
             {row.active ? "Aktywny" : "Nieaktywny"}
           </Label>
-        </TableCell>
-
-        <TableCell>
-          <InputBase value={fCurrency(row.price ?? 0)} />
-        </TableCell>
-
-        <TableCell>
-          <InputBase value={row.level} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell align="right" padding="none">
@@ -94,18 +79,9 @@ export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props)
           },
         }}
       >
-        <Link href={`${paths.course}/${encodeUrl(path)}`} target="_blank" rel="noopener">
-          <MenuItem sx={{ mr: 1, width: "100%", color: "success.main" }}>
-            <Iconify icon="carbon:view" sx={{ mr: 0.5 }} />
-            <Typography variant="body2">Podgląd</Typography>
-          </MenuItem>
-        </Link>
-
-        <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
-
         <MenuItem onClick={handleEdit} sx={{ mr: 1, width: "100%" }}>
           <Iconify icon="carbon:edit" sx={{ mr: 0.5 }} />
-          <Typography variant="body2">Edytuj kurs</Typography>
+          <Typography variant="body2">Edytuj artykuł</Typography>
         </MenuItem>
 
         {!isActive && (
@@ -117,7 +93,7 @@ export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props)
               disabled={row.active}
             >
               <Iconify icon="carbon:trash-can" sx={{ mr: 0.5 }} />
-              <Typography variant="body2">Usuń kurs</Typography>
+              <Typography variant="body2">Usuń artykuł</Typography>
             </MenuItem>
           </>
         )}
