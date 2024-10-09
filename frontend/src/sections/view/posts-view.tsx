@@ -47,7 +47,7 @@ export function PostsView() {
   });
   const { data: categories, isLoading: isLoadingCategories } = usePostCategories({
     page_size: -1,
-    posts_count_from: 1,
+    posts_count: 1,
     sort_by: "name",
   });
 

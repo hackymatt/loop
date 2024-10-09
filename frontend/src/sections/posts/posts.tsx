@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { polishPlurals } from "polish-plurals";
 
 import Box from "@mui/material/Box";
@@ -15,6 +16,7 @@ import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
 import { fDate } from "src/utils/format-time";
+import { encodeUrl } from "src/utils/url-utils";
 
 import Image from "src/components/image";
 import TextMaxLine from "src/components/text-max-line/text-max-line";
@@ -74,8 +76,14 @@ type PostItemProps = PaperProps & {
 };
 
 export function PostItem({ post, sx, ...other }: PostItemProps) {
+  const path = useMemo(() => `${post.title.toLowerCase()}-${post.id}`, [post.id, post.title]);
   return (
-    <Link component={RouterLink} href={paths.post} color="inherit" underline="none">
+    <Link
+      component={RouterLink}
+      href={`${paths.post}/${encodeUrl(path)}`}
+      color="inherit"
+      underline="none"
+    >
       <Paper
         variant="outlined"
         sx={{
@@ -134,9 +142,34 @@ export function PostItem({ post, sx, ...other }: PostItemProps) {
                     </Typography>
                   )}
                 </Box>
-                <Typography variant="caption" sx={{ color: "text.disabled" }}>
-                  {post.duration}
-                </Typography>
+                <Box
+                  flexWrap="wrap"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="flex-start"
+                  sx={{ typography: "caption", color: "text.disabled" }}
+                >
+                  <Typography variant="caption" sx={{ color: "text.disabled" }}>
+                    {post.duration}
+                  </Typography>
+
+                  <>
+                    <Box
+                      component="span"
+                      sx={{
+                        mx: 1,
+                        width: 4,
+                        height: 4,
+                        borderRadius: "50%",
+                        backgroundColor: "currentColor",
+                      }}
+                    />
+
+                    <Typography variant="caption" sx={{ color: "text.disabled" }}>
+                      {post?.category}
+                    </Typography>
+                  </>
+                </Box>
               </Box>
             </Box>
           </Box>

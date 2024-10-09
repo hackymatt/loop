@@ -51,7 +51,7 @@ class PostFilter(FilterSet):
 
 def get_posts_count(queryset):
     total_posts_count = (
-        Post.objects.filter(post_category_id=OuterRef("pk"))
+        Post.objects.filter(category__id=OuterRef("pk"))
         .annotate(dummy_group_by=Value(1))
         .values("dummy_group_by")
         .order_by("dummy_group_by")
@@ -59,7 +59,7 @@ def get_posts_count(queryset):
         .values("total_posts_count")
     )
     post_categories = queryset.annotate(
-        courses_count=Coalesce(
+        posts_count=Coalesce(
             Subquery(total_posts_count), Value(0), output_field=FloatField()
         )
     )

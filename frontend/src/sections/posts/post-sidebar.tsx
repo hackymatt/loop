@@ -6,6 +6,8 @@ import Typography from "@mui/material/Typography";
 import type { Theme, SxProps } from "@mui/material/styles";
 import { Checkbox, FormControlLabel } from "@mui/material";
 
+import { useResponsive } from "src/hooks/use-responsive";
+
 import { IAuthorProps } from "src/types/author";
 import { IQueryParamValue } from "src/types/query-params";
 import { IPostProps, IPostCategoryProps } from "src/types/blog";
@@ -48,6 +50,8 @@ export function PostSidebar({
   popularPosts,
   ...other
 }: PostSidebarProps) {
+  const mdUp = useResponsive("up", "md");
+
   const renderAuthor = author && (
     <Box
       sx={{
@@ -129,7 +133,7 @@ export function PostSidebar({
 
       {renderAuthor}
 
-      <FilterSearch value={searchValue} onChangeSearch={onChangeSearch} size="medium" />
+      {mdUp && <FilterSearch value={searchValue} onChangeSearch={onChangeSearch} size="medium" />}
 
       <Box
         gap={5}
