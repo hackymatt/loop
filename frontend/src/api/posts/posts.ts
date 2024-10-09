@@ -37,7 +37,7 @@ type IPost = {
   created_at: string;
 };
 
-type ICreatePost = Omit<IPost, "id" | "authors" | "duration"> & {
+type ICreatePost = Omit<IPost, "id" | "authors" | "category" | "duration" | "created_at"> & {
   content: string;
   category: string;
   active: boolean;

@@ -29,6 +29,7 @@ import { IQueryParamValue } from "src/types/query-params";
 
 import PostNewForm from "./post-new-form";
 import PostEditForm from "./post-edit-form";
+import PostDeleteForm from "./post-delete-form";
 import FilterSearch from "../../../../filters/filter-search";
 import AccountTableHead from "../../../../account/account-table-head";
 
@@ -232,6 +233,13 @@ export default function AccountPostsView() {
           post={editedPost}
           open={editPostFormOpen.value}
           onClose={editPostFormOpen.onFalse}
+        />
+      )}
+      {deletedPost && (
+        <PostDeleteForm
+          post={deletedPost}
+          open={deletePostFormOpen.value}
+          onClose={deletePostFormOpen.onFalse}
         />
       )}
     </>

@@ -46,7 +46,10 @@ type IPost = {
   next_post: IPostNavigation;
 };
 
-type IEditPost = Omit<IPost, "id" | "authors" | "duration"> & {
+type IEditPost = Omit<
+  IPost,
+  "id" | "authors" | "category" | "duration" | "created_at" | "previous_post" | "next_post"
+> & {
   content: string;
   category: string;
   active: boolean;

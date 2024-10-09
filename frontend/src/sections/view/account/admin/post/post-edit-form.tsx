@@ -13,14 +13,16 @@ import { Step, Stepper, StepLabel, StepContent } from "@mui/material";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { GITHUB_REPO } from "src/config-global";
 import { usePost, useEditPost } from "src/api/posts/post";
-import { useTechnologies } from "src/api/technologies/technologies";
+import { useLecturers } from "src/api/lecturers/lecturers";
+import { usePostCategories } from "src/api/post-categories/post-categories";
 
 import FormProvider from "src/components/hook-form";
 import { isStepFailed } from "src/components/stepper/step";
 
-import { ICoursePostProp, ICourseByCategoryProps } from "src/types/course";
+import { IAuthorProps } from "src/types/author";
+import { ITeamMemberProps } from "src/types/team";
+import { IPostProps, IPostCategoryProps } from "src/types/blog";
 
 import { usePostFields } from "./post-fields";
 import { steps, schema, defaultValues } from "./post";
@@ -28,15 +30,20 @@ import { steps, schema, defaultValues } from "./post";
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  post: ICoursePostProp;
+  post: IPostProps;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
 export default function PostEditForm({ post, onClose, ...other }: Props) {
-  const { data: availableTechnologies } = useTechnologies({
+  const { data: availableCategories } = usePostCategories({
     sort_by: "name",
+    page_size: -1,
+  });
+  const { data: availableLecturers } = useLecturers({
+    sort_by: "full_name",
+    page_size: -1,
   });
 
   const { data: postData } = usePost(post.id);
@@ -54,18 +61,17 @@ export default function PostEditForm({ post, onClose, ...other }: Props) {
   } = methods;
 
   useEffect(() => {
-    if (postData && availableTechnologies) {
+    if (postData && availableCategories && availableLecturers) {
       reset({
         ...postData,
-        github_url: postData.githubUrl.replace(GITHUB_REPO, ""),
-        technologies: postData.category.map((category: string) =>
-          availableTechnologies.find(
-            (technology: ICourseByCategoryProps) => technology.name === category,
-          ),
+        category: [availableCategories.find((c: IPostCategoryProps) => c.name === post.category)],
+        authors: postData.authors.map((author: IAuthorProps) =>
+          availableLecturers.find((lecturer: ITeamMemberProps) => lecturer.id === author.id),
         ),
+        image: postData.coverUrl ?? "",
       });
     }
-  }, [availableTechnologies, postData, reset]);
+  }, [availableCategories, availableLecturers, post.category, postData, reset]);
 
   const handleFormError = useFormErrorHandler(methods);
 
@@ -73,8 +79,8 @@ export default function PostEditForm({ post, onClose, ...other }: Props) {
     try {
       await editPost({
         ...data,
-        technologies: data.technologies.map((technology: ICourseByCategoryProps) => technology.id),
-        github_url: `${GITHUB_REPO}${data.github_url}`,
+        authors: data.authors.map((author: IAuthorProps) => author.id),
+        category: data.category.map((c: IPostCategoryProps) => c.id)[0],
       });
       reset();
       onClose();
@@ -93,7 +99,7 @@ export default function PostEditForm({ post, onClose, ...other }: Props) {
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj lekcję</DialogTitle>
+          <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj artykuł</DialogTitle>
           {fields.active}
         </Stack>
 

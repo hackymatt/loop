@@ -1,15 +1,23 @@
-import { Typography, InputAdornment } from "@mui/material";
+import { useLecturers } from "src/api/lecturers/lecturers";
+import { usePostCategories } from "src/api/post-categories/post-categories";
 
-import { GITHUB_REPO } from "src/config-global";
-import { useTechnologies } from "src/api/technologies/technologies";
+import {
+  RHFSwitch,
+  RHFTextField,
+  RHFImageUpload,
+  RHFAutocompleteDnd,
+} from "src/components/hook-form";
 
-import { RHFSwitch, RHFTextField, RHFAutocompleteDnd } from "src/components/hook-form";
+import { ITeamMemberProps } from "src/types/team";
+import { IPostCategoryProps } from "src/types/blog";
 
-import { ICourseByCategoryProps } from "src/types/course";
-
-export const useLessonFields = () => {
-  const { data: availableTechnologies, isLoading: isLoadingTechnologies } = useTechnologies({
+export const usePostFields = () => {
+  const { data: availableCategories, isLoading: isLoadingCategories } = usePostCategories({
     sort_by: "name",
+    page_size: -1,
+  });
+  const { data: availableLecturers, isLoading: isLoadingLecturers } = useLecturers({
+    sort_by: "full_name",
     page_size: -1,
   });
 
@@ -18,58 +26,31 @@ export const useLessonFields = () => {
     description: (
       <RHFTextField key="description" name="description" label="Opis" multiline rows={5} />
     ),
-    price: (
-      <RHFTextField
-        key="price"
-        name="price"
-        label="Cena"
-        type="number"
-        InputProps={{
-          inputProps: { min: 0, step: ".01" },
-          endAdornment: <InputAdornment position="end">zł</InputAdornment>,
-        }}
-      />
-    ),
-    duration: (
-      <RHFTextField
-        key="duration"
-        name="duration"
-        label="Czas trwania"
-        type="number"
-        InputProps={{
-          inputProps: { min: 30 },
-          endAdornment: <InputAdornment position="end">min</InputAdornment>,
-        }}
-      />
-    ),
-    github_url: (
-      <RHFTextField
-        key="github_url"
-        name="github_url"
-        label="Repozytorium"
-        type="url"
-        InputLabelProps={{ shrink: true }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Typography variant="body2">{GITHUB_REPO}</Typography>
-            </InputAdornment>
-          ),
-        }}
-      />
-    ),
-    technologies: (
+    category: (
       <RHFAutocompleteDnd
-        key="technologies"
-        name="technologies"
-        label="Technologie"
+        key="category"
+        name="category"
+        label="Kategoria"
         multiple
-        options={availableTechnologies}
-        getOptionLabel={(option) => (option as ICourseByCategoryProps).name}
-        loading={isLoadingTechnologies}
+        options={availableCategories}
+        getOptionLabel={(option) => (option as IPostCategoryProps).name}
+        loading={isLoadingCategories}
         isOptionEqualToValue={(a, b) => a.name === b.name}
       />
     ),
+    authors: (
+      <RHFAutocompleteDnd
+        key="authors"
+        name="authors"
+        label="Autorzy"
+        multiple
+        options={availableLecturers}
+        getOptionLabel={(option) => (option as ITeamMemberProps).name}
+        loading={isLoadingLecturers}
+        isOptionEqualToValue={(a, b) => a.name === b.name}
+      />
+    ),
+    image: <RHFImageUpload key="image" name="image" label="" />,
     active: <RHFSwitch name="active" label="Status" />,
   };
   return { fields };

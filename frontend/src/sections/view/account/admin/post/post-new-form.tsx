@@ -13,16 +13,16 @@ import { Step, Stepper, StepLabel, StepContent } from "@mui/material";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { GITHUB_REPO } from "src/config-global";
-import { useCreateLesson } from "src/api/lessons/lessons";
+import { useCreatePost } from "src/api/posts/posts";
 
 import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
 import { isStepFailed } from "src/components/stepper/step";
 
-import { ICourseByCategoryProps } from "src/types/course";
+import { IAuthorProps } from "src/types/author";
+import { IPostCategoryProps } from "src/types/blog";
 
-import { useLessonFields } from "./post-fields";
+import { usePostFields } from "./post-fields";
 import { steps, schema, defaultValues } from "./post";
 
 // ----------------------------------------------------------------------
@@ -33,10 +33,10 @@ interface Props extends DialogProps {
 
 // ----------------------------------------------------------------------
 
-export default function LessonNewForm({ onClose, ...other }: Props) {
+export default function PostNewForm({ onClose, ...other }: Props) {
   const { enqueueSnackbar } = useToastContext();
 
-  const { mutateAsync: createLesson } = useCreateLesson();
+  const { mutateAsync: createPost } = useCreatePost();
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -53,10 +53,10 @@ export default function LessonNewForm({ onClose, ...other }: Props) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await createLesson({
+      await createPost({
         ...data,
-        technologies: data.technologies.map((technology: ICourseByCategoryProps) => technology.id),
-        github_url: `${GITHUB_REPO}${data.github_url}`,
+        authors: data.authors.map((author: IAuthorProps) => author.id),
+        category: data.category.map((c: IPostCategoryProps) => c.id)[0],
       });
       reset();
       onClose();
@@ -68,7 +68,7 @@ export default function LessonNewForm({ onClose, ...other }: Props) {
 
   const [activeStep, setActiveStep] = useState(0);
 
-  const { fields } = useLessonFields();
+  const { fields } = usePostFields();
 
   const stepContent = steps[activeStep].fields.map((field: string) => fields[field]);
 
@@ -76,7 +76,7 @@ export default function LessonNewForm({ onClose, ...other }: Props) {
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nową lekcję</DialogTitle>
+          <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nowy artykuł</DialogTitle>
           {fields.active}
         </Stack>
 
