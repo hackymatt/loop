@@ -1,7 +1,6 @@
 import React from "react";
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
-import rehypeHighlight from "rehype-highlight";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
@@ -13,9 +12,9 @@ export type MarkdownProps = {
 
 interface CodeProps {
   node?: any;
-  inline?: any;
-  className?: any;
-  children?: any;
+  inline?: boolean;
+  className?: string;
+  children?: React.ReactNode;
 }
 
 export function Markdown({ content }: MarkdownProps) {
@@ -36,16 +35,12 @@ export function Markdown({ content }: MarkdownProps) {
           const language = match ? match[1] : "plaintext";
 
           return !inline ? (
-            <SyntaxHighlighter
-              children={String(children).replace(/\n$/, "")}
-              style={vscDarkPlus}
-              language={language}
-              PreTag="div"
-              {...props}
-            />
+            <SyntaxHighlighter style={vscDarkPlus} language={language} PreTag="div" {...props}>
+              {String(children).replace(/\n$/, "")}
+            </SyntaxHighlighter>
           ) : (
             <code className={className} {...props}>
-              <span>{children}</span>
+              {children} {/* Correctly display children here */}
             </code>
           );
         },
@@ -103,7 +98,6 @@ export function Markdown({ content }: MarkdownProps) {
           );
         },
       }}
-      rehypePlugins={[rehypeHighlight]}
       remarkPlugins={[remarkGfm]}
       remarkRehypeOptions={{ passThrough: ["link"] }}
     />

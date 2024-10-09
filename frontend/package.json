@@ -73,7 +73,6 @@
     "react-player": "^2.13.0",
     "react-slick": "^0.29.0",
     "react-syntax-highlighter": "^15.5.0",
-    "rehype-highlight": "^7.0.0",
     "remark-gfm": "^4.0.0",
     "remark-toc": "^9.0.0",
     "simplebar-react": "^3.2.4",

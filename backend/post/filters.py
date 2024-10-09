@@ -16,10 +16,7 @@ class OrderFilter(OrderingFilter):
             return super().filter(queryset, values)
 
         for value in values:
-            if value in ["posts_count", "-posts_count"]:
-                queryset = get_posts_count(queryset).order_by(value)
-            else:
-                queryset = queryset.order_by(value)
+            queryset = queryset.order_by(value)
 
         return queryset
 
@@ -28,12 +25,20 @@ class PostFilter(FilterSet):
     category = CharFilter(field_name="category__name", lookup_expr="icontains")
     sort_by = OrderFilter(
         choices=(
+            ("title", "Title ASC"),
+            ("-title", "Title DESC"),
+            ("active", "Active ASC"),
+            ("-active", "Active DESC"),
             ("visits", "Visits ASC"),
             ("-visits", "Visits DESC"),
             ("created_at", "Created At ASC"),
             ("-created_at", "Created At DESC"),
         ),
         fields={
+            "title": "title",
+            "-title": "-title",
+            "active": "active",
+            "-active": "-active",
             "visits": "visits",
             "-visits": "-visits",
             "created_at": "created_at",
@@ -45,6 +50,7 @@ class PostFilter(FilterSet):
         model = Post
         fields = (
             "category",
+            "active",
             "sort_by",
         )
 
@@ -69,7 +75,7 @@ def get_posts_count(queryset):
 
 class PostCategoryFilter(FilterSet):
     name = CharFilter(field_name="name", lookup_expr="icontains")
-    posts_count = NumberFilter(
+    posts_count_from = NumberFilter(
         label="Liczba artykułów większa lub równa",
         field_name="posts_count",
         method="filter_posts_count_from",

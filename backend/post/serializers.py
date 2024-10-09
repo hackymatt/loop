@@ -12,19 +12,6 @@ from urllib.parse import quote_plus
 from math import ceil
 
 
-def notify_students(post):
-    for student in StudentProfile.objects.all():
-        path = quote_plus(f"{post.title.lower()}-{post.id}")
-        notify(
-            profile=student.profile,
-            title="Dodano nowy artykuł",
-            subtitle=post.title,
-            description="Właśnie dodaliśmy nowy artykuł. Sprawdź go już teraz.",
-            path=f"/posts/{path}",
-            icon="mdi:blog",
-        )
-
-
 def get_lecturer_full_name(lecturer):
     return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
 
@@ -96,6 +83,7 @@ class LecturerDetailsSerializer(ModelSerializer):
 
 class PostNavigationSerializer(ModelSerializer):
     image = Base64ImageField(required=True)
+
     class Meta:
         model = Post
         fields = (
@@ -165,11 +153,8 @@ class PostSerializer(ModelSerializer):
         authors = validated_data.pop("authors")
 
         post = Post.objects.create(**validated_data)
-        post = self.add_authors(post=post, modules=authors)
+        post = self.add_authors(post=post, authors=authors)
         post.save()
-
-        if post.active:
-            notify_students(post=post)
 
         return post
 
@@ -187,9 +172,6 @@ class PostSerializer(ModelSerializer):
         instance = self.add_authors(post=instance, authors=authors)
 
         instance.save()
-
-        if instance.active:
-            notify_students(post=instance)
 
         return instance
 
