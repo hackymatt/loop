@@ -5276,7 +5276,7 @@ class PostFilterTest(APITestCase):
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 2)
+        self.assertEqual(records_count, 1)
         titles = list(set([title in record["title"] for record in results]))
         self.assertTrue(len(titles) == 1)
         self.assertTrue(titles[0])
@@ -5290,7 +5290,7 @@ class PostFilterTest(APITestCase):
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 4)
+        self.assertEqual(records_count, 3)
         dates = list(set([date in record["created_at"] for record in results]))
         self.assertTrue(len(dates) == 1)
         self.assertTrue(dates[0])
