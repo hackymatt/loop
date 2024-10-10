@@ -48,8 +48,6 @@ import { UserType } from "src/types/user";
 import { ITeamMemberProps } from "src/types/team";
 import { IScheduleProp, ICourseLessonProp } from "src/types/course";
 
-import Repository from "../../repository/repository";
-
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
@@ -425,12 +423,6 @@ export default function CourseDetailsLessonItem({
                       )}
                     </Link>
                   )}
-                </Stack>
-              )}
-
-              {details?.githubUrl && (
-                <Stack direction="row" flexWrap="wrap">
-                  <Repository githubUrl={details.githubUrl} />
                 </Stack>
               )}
 

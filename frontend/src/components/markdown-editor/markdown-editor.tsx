@@ -1,0 +1,20 @@
+"use client";
+
+import { forwardRef } from "react";
+import "@mdxeditor/editor/style.css";
+import { MDXEditor, MDXEditorMethods } from "@mdxeditor/editor";
+
+import { plugins } from "./pluggins";
+
+interface EditorProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export const MarkdownEditor = forwardRef<MDXEditorMethods | null, EditorProps>(
+  ({ value, onChange, ...otherProps }, ref) => (
+    <MDXEditor onChange={onChange} ref={ref} markdown={value} plugins={plugins} {...otherProps} />
+  ),
+);
+
+MarkdownEditor.displayName = "MarkdownEditor";

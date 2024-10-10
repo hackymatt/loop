@@ -27,6 +27,8 @@ from .factory import (
     create_notification,
     create_message,
     create_payment,
+    create_post_category,
+    create_post,
 )
 from .helpers import login
 from django.contrib import auth
@@ -4124,6 +4126,243 @@ class MessageOrderTest(APITestCase):
                 field_values = [course[field]["full_name"] for course in results]
             else:
                 field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values,
+                    sorted(field_values, key=lambda d: d["name"], reverse=True),
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values, reverse=True))
+
+
+class PostCategoryOrderTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/post-categories"
+        self.admin_data = {
+            "email": "admin_test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.admin_data["email"],
+            password=self.admin_data["password"],
+            is_active=True,
+            is_staff=True,
+        )
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
+
+        self.lecturer_data = {
+            "email": "lecturer_1@example.com",
+            "password": "TestPassword123",
+        }
+        self.lecturer_user = create_user(
+            first_name="l1_first_name",
+            last_name="l1_last_name",
+            email=self.lecturer_data["email"],
+            password=self.lecturer_data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
+
+        create_post_category(name="Technology")
+        self.category = create_post_category(name="AI")
+        create_post_category(name="Work")
+        self.category_2 = create_post_category(name="Coding")
+        create_post_category(name="Testing")
+
+        create_post(
+            title="abc",
+            description="aaaa",
+            content="bbbbbbbb",
+            category=self.category,
+            authors=[self.lecturer_profile],
+        )
+        create_post(
+            title="abcd",
+            description="aaaaa",
+            content="bbbbbbbbb",
+            category=self.category_2,
+            authors=[self.lecturer_profile],
+        )
+
+        self.fields = ["name", "created_at"]
+
+    def test_ordering(self):
+        for field in self.fields:
+            self.assertFalse(auth.get_user(self.client).is_authenticated)
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by={field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 5)
+            field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values, sorted(field_values, key=lambda d: d["name"])
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values))
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by=-{field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 5)
+            field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values,
+                    sorted(field_values, key=lambda d: d["name"], reverse=True),
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values, reverse=True))
+
+
+class PostOrderTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/posts"
+        self.admin_data = {
+            "email": "admin_test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.admin_user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.admin_data["email"],
+            password=self.admin_data["password"],
+            is_active=True,
+            is_staff=True,
+        )
+        self.admin_profile = create_admin_profile(
+            profile=create_profile(user=self.admin_user, user_type="A")
+        )
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.profile = create_student_profile(profile=create_profile(user=self.user))
+
+        self.lecturer_data = {
+            "email": "lecturer_1@example.com",
+            "password": "TestPassword123",
+        }
+        self.lecturer_user = create_user(
+            first_name="l1_first_name",
+            last_name="l1_last_name",
+            email=self.lecturer_data["email"],
+            password=self.lecturer_data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
+
+        create_post_category(name="Technology")
+        self.category = create_post_category(name="AI")
+        create_post_category(name="Work")
+        self.category_2 = create_post_category(name="Coding")
+        create_post_category(name="Testing")
+
+        self.post = create_post(
+            title="abc",
+            description="aaaa",
+            content="bbbbbbbb",
+            category=self.category,
+            authors=[self.lecturer_profile],
+        )
+        create_post(
+            title="abcd",
+            description="aaaaa",
+            content="bbbbbbbbb",
+            category=self.category_2,
+            authors=[self.lecturer_profile],
+        )
+        create_post(
+            title="abc2",
+            description="aaaa2",
+            content="bbbbbbbb2",
+            category=self.category,
+            authors=[self.lecturer_profile],
+        )
+        self.post_2 = create_post(
+            title="abcd2",
+            description="aaaaa2",
+            content="bbbbbbbbb2",
+            category=self.category_2,
+            authors=[self.lecturer_profile],
+            active=False,
+        )
+
+        self.fields = ["created_at", "title", "active"]
+
+    def test_ordering(self):
+        for field in self.fields:
+            self.assertFalse(auth.get_user(self.client).is_authenticated)
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by={field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 3)
+            field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values, sorted(field_values, key=lambda d: d["name"])
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values))
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by=-{field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 3)
+            field_values = [course[field] for course in results]
             if isinstance(field_values[0], dict):
                 self.assertEqual(
                     field_values,

@@ -37,6 +37,7 @@ interface Props extends DialogProps {
 export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
   const { data: availableTechnologies } = useTechnologies({
     sort_by: "name",
+    page_size: -1,
   });
 
   const { data: lessonData } = useLesson(lesson.id);

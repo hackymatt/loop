@@ -152,6 +152,25 @@ export const adminNavigation = [
       ],
     },
     {
+      title: "Blog",
+      path: paths.account.admin.posts.list,
+      icon: <Iconify icon="carbon:blog" />,
+      children: [
+        {
+          title: "Spis artykułów",
+          path: `${paths.account.admin.posts.list}/?sort_by=title&page_size=10`,
+          icon: <Iconify icon="carbon:list" />,
+          children: [],
+        },
+        {
+          title: "Kategorie",
+          path: `${paths.account.admin.posts.categories}/?sort_by=name&page_size=10`,
+          icon: <Iconify icon="carbon:category" />,
+          children: [],
+        },
+      ],
+    },
+    {
       title: "Użytkownicy",
       path: paths.account.admin.users.list,
       icon: <Iconify icon="carbon:user-multiple" />,

@@ -108,16 +108,19 @@ export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props)
           <Typography variant="body2">Edytuj kurs</Typography>
         </MenuItem>
 
-        <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
-
-        <MenuItem
-          onClick={handleDelete}
-          sx={{ mr: 1, color: "error.main", width: "fit-content" }}
-          disabled={row.active}
-        >
-          <Iconify icon="carbon:trash-can" sx={{ mr: 0.5 }} />
-          <Typography variant="body2">Usuń kurs</Typography>
-        </MenuItem>
+        {!isActive && (
+          <>
+            <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
+            <MenuItem
+              onClick={handleDelete}
+              sx={{ mr: 1, color: "error.main", width: "fit-content" }}
+              disabled={row.active}
+            >
+              <Iconify icon="carbon:trash-can" sx={{ mr: 0.5 }} />
+              <Typography variant="body2">Usuń kurs</Typography>
+            </MenuItem>
+          </>
+        )}
       </Popover>
     </>
   );

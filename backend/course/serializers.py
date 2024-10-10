@@ -10,7 +10,7 @@ from lesson.models import Lesson, Technology, LessonPriceHistory
 from topic.models import Topic
 from skill.models import Skill
 from module.models import Module
-from profile.models import Profile, LecturerProfile, StudentProfile
+from profile.models import LecturerProfile, StudentProfile
 from review.models import Review
 from reservation.models import Reservation
 from purchase.models import Purchase
@@ -327,7 +327,7 @@ class LecturerSerializer(ModelSerializer):
     image = Base64ImageField(source="profile.image", required=True)
 
     class Meta:
-        model = Profile
+        model = LecturerProfile
         fields = (
             "id",
             "full_name",

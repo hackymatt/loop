@@ -40,6 +40,7 @@ class NewsletterSubscribeViewSet(ModelViewSet):
                 **{
                     "unsubscribe_url": f"{FRONTEND_URL}/newsletter-unsubscribe/"
                     + str(instance.uuid),
+                    "discount": None,
                 }
             }
             if created:
@@ -59,7 +60,7 @@ class NewsletterSubscribeViewSet(ModelViewSet):
                             datetime.now() + timedelta(weeks=52 * 99)
                         ),
                     )
-                data = {**data, **{"discount": coupon.code}}
+                data["discount"] = coupon.code
             mailer.send(
                 email_template="subscribe.html",
                 to=[instance.email],

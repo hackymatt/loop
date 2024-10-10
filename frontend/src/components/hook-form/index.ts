@@ -12,5 +12,6 @@ export { default as RHFRadioGroup } from "./rhf-radio-group";
 export { default as RHFImageUpload } from "./rhf-image-upload";
 export { default as RHFVideoUpload } from "./rhf-video-upload";
 export { default as RHFAutocomplete } from "./rhf-autocomplete";
+export { default as RHFMarkdownField } from "./rhf-markdown-field";
 export { default as RHFAutocompleteDnd } from "./rhf-autocomplete-dnd";
 export { default as RHFAutocompleteCountry } from "./rhf-autocomplete-country";

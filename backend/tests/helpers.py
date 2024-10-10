@@ -17,6 +17,7 @@ from reservation.models import Reservation
 from teaching.models import Teaching
 from cart.models import Cart
 from wishlist.models import Wishlist
+from post.models import Post, PostCategory
 import uuid
 
 
@@ -250,6 +251,22 @@ def recordings_number():
 
 def messages_number():
     return Message.objects.count()
+
+
+def post_categories_number():
+    return PostCategory.objects.count()
+
+
+def get_post_category(id: int):
+    return PostCategory.objects.get(id=id)
+
+
+def posts_number():
+    return Post.objects.count()
+
+
+def get_post(id: int):
+    return Post.objects.get(id=id)
 
 
 def mock_send_message(mock):

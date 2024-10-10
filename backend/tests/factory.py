@@ -15,6 +15,7 @@ from notification.models import Notification
 from message.models import Message
 from schedule.models import Schedule, Meeting
 from wishlist.models import Wishlist
+from post.models import Post, PostCategory
 from cart.models import Cart
 from teaching.models import Teaching
 from reservation.models import Reservation
@@ -514,3 +515,54 @@ def create_message(
         body=body,
         status=status,
     )
+
+
+def create_post_category(name: str):
+    return PostCategory.objects.create(name=name)
+
+
+def create_post_category_obj(name: str):
+    return {"name": name}
+
+
+def create_post(
+    title: str,
+    description: str,
+    content: str,
+    category: PostCategory,
+    authors,
+    active: bool = True,
+):
+    post = Post.objects.create(
+        title=title,
+        description=description,
+        content=content,
+        category=category,
+        active=active,
+    )
+
+    post.authors.add(*authors)
+    post.image = create_image()
+    post.save()
+
+    return post
+
+
+def create_post_obj(
+    title: str,
+    description: str,
+    content: str,
+    category: str,
+    authors,
+    image: str = None,
+    active: bool = True,
+):
+    return {
+        "title": title,
+        "description": description,
+        "content": content,
+        "category": category,
+        "authors": authors,
+        "image": image,
+        "active": active,
+    }

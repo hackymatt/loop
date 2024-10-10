@@ -9,6 +9,8 @@ export const paths = {
   course: `/course`,
   teachers: "/teachers",
   teacher: "/teacher",
+  posts: "/posts",
+  post: "/post",
   about: "/about",
   contact: "/contact",
   newsletter: "/newsletter-unsubscribe",
@@ -42,8 +44,10 @@ export const paths = {
         list: "/account/admin/lessons/list",
         priceHistory: "/account/admin/lessons/price-history",
         technologies: "/account/admin/lessons/technologies",
-        purchases: "/account/admin/lessons/purchases",
-        reviews: "/account/admin/lessons/reviews",
+      },
+      posts: {
+        list: "/account/admin/posts/list",
+        categories: "/account/admin/posts/categories",
       },
       users: {
         list: "/account/admin/users/list",

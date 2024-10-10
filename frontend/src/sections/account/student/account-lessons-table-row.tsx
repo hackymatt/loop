@@ -128,6 +128,12 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete, onSendMes
           },
         }}
       >
+        <Link href={row.lessonResource} target="_blank" underline="none" color="inherit">
+          <MenuItem>
+            <Iconify icon="carbon:logo-github" sx={{ mr: 0.5 }} />
+            <Typography variant="body2">Przygotuj się</Typography>
+          </MenuItem>
+        </Link>
         {isNew && (
           <MenuItem onClick={handleAdd} sx={{ mr: 1, color: "success.main" }}>
             <Iconify icon="carbon:add" sx={{ mr: 0.5 }} />
@@ -136,19 +142,10 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete, onSendMes
         )}
 
         {!isNew && (
-          <>
-            <MenuItem onClick={handleSendMessage} sx={{ color: "success.main" }}>
-              <Iconify icon="carbon:email" sx={{ mr: 0.5 }} />
-              <Typography variant="body2">Napisz do instruktora</Typography>
-            </MenuItem>
-            <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
-            <Link href={row.lessonResource} target="_blank" underline="none" color="inherit">
-              <MenuItem>
-                <Iconify icon="carbon:logo-github" sx={{ mr: 0.5 }} />
-                <Typography variant="body2">Materiały</Typography>
-              </MenuItem>
-            </Link>
-          </>
+          <MenuItem onClick={handleSendMessage} sx={{ color: "success.main" }}>
+            <Iconify icon="carbon:email" sx={{ mr: 0.5 }} />
+            <Typography variant="body2">Napisz do instruktora</Typography>
+          </MenuItem>
         )}
 
         {isPlanned && (

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { TextField, InputAdornment } from "@mui/material";
+import { TextField, InputAdornment, TextFieldProps } from "@mui/material";
 
 import { useDebounce } from "src/hooks/use-debounce";
 
@@ -8,13 +8,18 @@ import Iconify from "src/components/iconify";
 
 import { IQueryParamValue } from "src/types/query-params";
 
-type Props = {
+type Props = TextFieldProps & {
   value: IQueryParamValue;
   onChangeSearch: (search: IQueryParamValue) => void;
   placeholder?: string;
 };
 
-export default function FilterSearch({ value, onChangeSearch, placeholder }: Props) {
+export default function FilterSearch({
+  value,
+  onChangeSearch,
+  placeholder,
+  size = "small",
+}: Props) {
   const [internalValue, setInternalValue] = useState<IQueryParamValue>(value);
   const debouncedValue = useDebounce<IQueryParamValue>(internalValue);
 
@@ -32,7 +37,7 @@ export default function FilterSearch({ value, onChangeSearch, placeholder }: Pro
     <TextField
       fullWidth
       hiddenLabel
-      size="small"
+      size={size}
       placeholder={placeholder ?? "Szukaj..."}
       InputProps={{
         startAdornment: (

@@ -1,0 +1,32 @@
+import * as Yup from "yup";
+
+export const defaultValues = {
+  active: false,
+  title: "",
+  description: "",
+  content: "# Hello world",
+  category: [],
+  authors: [],
+  image: "",
+};
+
+export const steps = [
+  {
+    label: "Uzupełnij podstawowe informacje",
+    fields: ["title", "description"],
+  },
+  { label: "Uzupełnij treść", fields: ["content"] },
+  { label: "Wybierz kategorię", fields: ["category"] },
+  { label: "Wybierz autorów", fields: ["authors"] },
+  { label: "Wybierz zdjęcie", fields: ["image"] },
+];
+
+export const schema = Yup.object().shape({
+  active: Yup.boolean().required("Status jest wymagany"),
+  title: Yup.string().required("Nazwa jest wymagana"),
+  description: Yup.string().required("Opis jest wymagany"),
+  content: Yup.string().required("Treść jest wymagana"),
+  category: Yup.array().required("Kategoria jest wymagana").max(1, "Wymagana jedna kategoria"),
+  authors: Yup.array().required("Autorzy są wymagani").min(1, "Wymagany przynajmniej jeden autor"),
+  image: Yup.string().required("Zdjęcie jest wymagane"),
+});
