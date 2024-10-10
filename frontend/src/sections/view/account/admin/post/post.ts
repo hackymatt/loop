@@ -4,7 +4,7 @@ export const defaultValues = {
   active: false,
   title: "",
   description: "",
-  content: "# Hello world",
+  content: "",
   category: [],
   authors: [],
   image: "",
