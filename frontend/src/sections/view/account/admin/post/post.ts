@@ -4,7 +4,7 @@ export const defaultValues = {
   active: false,
   title: "",
   description: "",
-  content: "",
+  content: "# Hello world",
   category: [],
   authors: [],
   image: "",
@@ -15,10 +15,10 @@ export const steps = [
     label: "Uzupełnij podstawowe informacje",
     fields: ["title", "description"],
   },
+  { label: "Uzupełnij treść", fields: ["content"] },
   { label: "Wybierz kategorię", fields: ["category"] },
   { label: "Wybierz autorów", fields: ["authors"] },
   { label: "Wybierz zdjęcie", fields: ["image"] },
-  { label: "Uzupełnij treść", fields: ["description"] },
 ];
 
 export const schema = Yup.object().shape({

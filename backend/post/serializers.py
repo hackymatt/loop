@@ -21,14 +21,16 @@ def get_post_duration(post):
     return ceil(len(words) / 250)
 
 
-def get_post_navigation(post, filter):
+def get_post_navigation(self, post, filter):
     lookup_field_name = f"created_at__{filter}"
     current_post_created_at = post.created_at
     posts = Post.objects.filter(
         **{lookup_field_name: current_post_created_at, "active": True}
     )
     if posts.exists():
-        return PostNavigationSerializer(instance=posts.first()).data
+        return PostNavigationSerializer(
+            instance=posts.first(), context={"request": self.context.get("request")}
+        ).data
     return None
 
 
@@ -130,10 +132,10 @@ class PostGetSerializer(ModelSerializer):
         return get_post_duration(post=post)
 
     def get_previous_post(self, post):
-        return get_post_navigation(post=post, filter="lt")
+        return get_post_navigation(self=self, post=post, filter="lt")
 
     def get_next_post(self, post):
-        return get_post_navigation(post=post, filter="gt")
+        return get_post_navigation(self=self, post=post, filter="gt")
 
 
 class PostSerializer(ModelSerializer):

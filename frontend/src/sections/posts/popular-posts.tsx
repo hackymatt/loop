@@ -9,6 +9,8 @@ import Typography from "@mui/material/Typography";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
+import { useResponsive } from "src/hooks/use-responsive";
+
 import Iconify from "src/components/iconify";
 
 import type { IPostProps } from "src/types/blog";
@@ -23,6 +25,7 @@ type Props = BoxProps & {
 };
 
 export function PopularPosts({ posts, sx, ...other }: Props) {
+  const mdUp = useResponsive("up", "md");
   return (
     <Box
       component="section"
@@ -58,8 +61,8 @@ export function PopularPosts({ posts, sx, ...other }: Props) {
         >
           {posts.map((post) => (
             <Fragment key={post.id}>
-              <PostItem post={post} sx={{ display: { xs: "none", md: "block" } }} />
-              <PostItemMobile post={post} sx={{ display: { xs: "flex", md: "none" } }} />
+              {mdUp && <PostItem post={post} sx={{ display: { xs: "none", md: "block" } }} />}
+              {!mdUp && <PostItemMobile post={post} sx={{ display: { xs: "flex", md: "none" } }} />}
             </Fragment>
           ))}
         </Box>

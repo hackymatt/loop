@@ -13,6 +13,8 @@ import { Step, Stepper, StepLabel, StepContent } from "@mui/material";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
+import { urlToBlob } from "src/utils/blob-to-base64";
+
 import { usePost, useEditPost } from "src/api/posts/post";
 import { useLecturers } from "src/api/lecturers/lecturers";
 import { usePostCategories } from "src/api/post-categories/post-categories";
@@ -81,6 +83,7 @@ export default function PostEditForm({ post, onClose, ...other }: Props) {
         ...data,
         authors: data.authors.map((author: IAuthorProps) => author.id),
         category: data.category.map((c: IPostCategoryProps) => c.id)[0],
+        image: (await urlToBlob(data.image)) as string,
       });
       reset();
       onClose();
@@ -96,7 +99,7 @@ export default function PostEditForm({ post, onClose, ...other }: Props) {
   const stepContent = steps[activeStep].fields.map((field: string) => fields[field]);
 
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
+    <Dialog fullWidth maxWidth="lg" onClose={onClose} sx={{ zIndex: 1 }} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj artykuł</DialogTitle>

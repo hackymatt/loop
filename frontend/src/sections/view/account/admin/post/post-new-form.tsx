@@ -73,7 +73,7 @@ export default function PostNewForm({ onClose, ...other }: Props) {
   const stepContent = steps[activeStep].fields.map((field: string) => fields[field]);
 
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
+    <Dialog fullWidth maxWidth="lg" onClose={onClose} {...other} sx={{ zIndex: 1 }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nowy artykuł</DialogTitle>

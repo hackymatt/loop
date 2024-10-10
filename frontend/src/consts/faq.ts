@@ -83,7 +83,12 @@ export const lessonFAQ = [
       "Aby dołączyć do spotkania, kliknij link Google Meet dostępny w szczegółach zarezerwowanej lekcji w zakładce 'Lekcje'.",
   },
   {
-    question: "Gdzie znajdę materiały do lekcji?",
+    question: "Czy muszę się przygotować do szkolenia?",
+    answer:
+      "Do każdego szkolenia jest dołączony link, gdzie znajdziesz wszystkie informacje dotyczące przygotowań. W zależności od kursu, może być konieczne zainstalowanie oprogramowania, np. Pythona, klonowanie odpowiedniego branch'a z repozytorium, lub nie będzie potrzebne żadne przygotowanie. Link jest dostępny w szczegółach każdej lekcji, którą zakupiłeś. Kliknij przycisk 'Przygotuj się'.",
+  },
+  {
+    question: "Gdzie znajdują się materiały do lekcji?",
     answer:
       "Materiały do lekcji są dostępne na platformie GitHub a link jest dostępny w szczegółach każdej lekcji, którą zakupiłeś.",
   },

@@ -5,6 +5,7 @@ import {
   RHFSwitch,
   RHFTextField,
   RHFImageUpload,
+  RHFMarkdownField,
   RHFAutocompleteDnd,
 } from "src/components/hook-form";
 
@@ -26,6 +27,7 @@ export const usePostFields = () => {
     description: (
       <RHFTextField key="description" name="description" label="Opis" multiline rows={5} />
     ),
+    content: <RHFMarkdownField key="content" name="content" />,
     category: (
       <RHFAutocompleteDnd
         key="category"

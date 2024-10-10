@@ -115,8 +115,14 @@ export const postQuery = (id: string) => {
         ),
         active,
         createdAt: created_at,
-        previousPost: previous_post,
-        nextPost: next_post,
+        previousPost:
+          previous_post === null
+            ? previous_post
+            : { id: previous_post.id, title: previous_post.title, coverUrl: previous_post.image },
+        nextPost:
+          next_post === null
+            ? next_post
+            : { id: next_post.id, title: next_post.title, coverUrl: next_post.image },
       };
     } catch (error) {
       if (error.response && (error.response.status === 400 || error.response.status === 404)) {
