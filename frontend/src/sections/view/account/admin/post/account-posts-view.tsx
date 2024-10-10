@@ -12,9 +12,12 @@ import Typography from "@mui/material/Typography";
 import TableContainer from "@mui/material/TableContainer";
 import { tableCellClasses } from "@mui/material/TableCell";
 import TablePagination from "@mui/material/TablePagination";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import { useBoolean } from "src/hooks/use-boolean";
 import { useQueryParams } from "src/hooks/use-query-params";
+
+import { fDate } from "src/utils/format-time";
 
 import { usePosts, usePostsPagesCount } from "src/api/posts/posts";
 
@@ -32,7 +35,6 @@ import PostEditForm from "./post-edit-form";
 import PostDeleteForm from "./post-delete-form";
 import FilterSearch from "../../../../filters/filter-search";
 import AccountTableHead from "../../../../account/account-table-head";
-
 // ----------------------------------------------------------------------
 
 const TABS = [
@@ -43,8 +45,8 @@ const TABS = [
 
 const TABLE_HEAD = [
   { id: "title", label: "Nazwa artykułu", minWidth: 200 },
-  { id: "duration", label: "Czas", width: 100 },
   { id: "active", label: "Status", width: 100 },
+  { id: "created_at", label: "Data utworzenia", width: 200 },
   { id: "", width: 25 },
 ];
 
@@ -168,6 +170,17 @@ export default function AccountPostsView() {
           value={filters?.title ?? ""}
           onChangeSearch={(value) => handleChange("title", value)}
           placeholder="Nazwa artykułu..."
+        />
+
+        <DatePicker
+          value={filters?.created_at ? new Date(filters.created_at) : null}
+          onChange={(value: Date | null) =>
+            handleChange("created_at", value ? fDate(value, "yyyy-MM-dd") : "")
+          }
+          sx={{ width: 1, minWidth: 180 }}
+          slotProps={{
+            textField: { size: "small", hiddenLabel: true, placeholder: "Data utworzenia" },
+          }}
         />
       </Stack>
 

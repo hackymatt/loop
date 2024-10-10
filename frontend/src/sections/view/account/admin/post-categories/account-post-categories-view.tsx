@@ -145,7 +145,7 @@ export default function AccountPostCategoriesView() {
         <FilterSearch
           value={filters?.name ?? ""}
           onChangeSearch={(value) => handleChange("name", value)}
-          placeholder="Nazwa technologii..."
+          placeholder="Nazwa kategorii..."
         />
 
         <DatePicker

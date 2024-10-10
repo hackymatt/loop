@@ -10,6 +10,8 @@ import { Divider, Typography } from "@mui/material";
 
 import { usePopover } from "src/hooks/use-popover";
 
+import { fDate } from "src/utils/format-time";
+
 import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 
@@ -48,16 +50,16 @@ export default function AccountPostsTableRow({ row, onEdit, onDelete }: Props) {
         </TableCell>
 
         <TableCell>
-          <InputBase value={row.duration} />
-        </TableCell>
-
-        <TableCell>
           <Label
             sx={{ textTransform: "uppercase" }}
             color={(isActive && "success") || (isInactive && "error") || "default"}
           >
             {row.active ? "Aktywny" : "Nieaktywny"}
           </Label>
+        </TableCell>
+
+        <TableCell>
+          <InputBase value={fDate(row.createdAt)} />
         </TableCell>
 
         <TableCell align="right" padding="none">

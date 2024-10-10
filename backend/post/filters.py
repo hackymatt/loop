@@ -22,7 +22,9 @@ class OrderFilter(OrderingFilter):
 
 
 class PostFilter(FilterSet):
+    title = CharFilter(field_name="title", lookup_expr="icontains")
     category = CharFilter(field_name="category__name", lookup_expr="icontains")
+    created_at = DateFilter(field_name="created_at", lookup_expr="contains")
     sort_by = OrderFilter(
         choices=(
             ("title", "Title ASC"),
@@ -49,7 +51,9 @@ class PostFilter(FilterSet):
     class Meta:
         model = Post
         fields = (
+            "title",
             "category",
+            "created_at",
             "active",
             "sort_by",
         )

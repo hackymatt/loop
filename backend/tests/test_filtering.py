@@ -5266,3 +5266,31 @@ class PostFilterTest(APITestCase):
         data = json.loads(response.content)
         count = data["records_count"]
         self.assertEqual(count, 1)
+
+    def test_title_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        title = "abcd"
+        response = self.client.get(f"{self.endpoint}?title={title}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 2)
+        titles = list(set([title in record["title"] for record in results]))
+        self.assertTrue(len(titles) == 1)
+        self.assertTrue(titles[0])
+
+    def test_created_at_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        date = str(self.post.created_at)[0:10]
+        response = self.client.get(f"{self.endpoint}?created_at={date}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 4)
+        dates = list(set([date in record["created_at"] for record in results]))
+        self.assertTrue(len(dates) == 1)
+        self.assertTrue(dates[0])
