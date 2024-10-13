@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import { useState, useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useState, useEffect, useCallback } from "react";
 
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -109,6 +109,11 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
 
   const handleFormError = useFormErrorHandler(methods);
 
+  const onCloseWithReset = useCallback(() => {
+    onClose();
+    setActiveStep(0);
+  }, [onClose]);
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       await editCourse({
@@ -121,7 +126,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
         video: data.video ? ((await urlToBlob(data.video)) as string) : "",
       });
       reset();
-      onClose();
+      onCloseWithReset();
     } catch (error) {
       handleFormError(error);
     }
@@ -134,7 +139,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
   const stepContent = steps[activeStep].fields.map((field: string) => fields[field]);
 
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
+    <Dialog fullWidth maxWidth="sm" onClose={onCloseWithReset} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj kurs</DialogTitle>
@@ -167,7 +172,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
         <DialogActions>
           {activeStep === 0 && (
             <>
-              <Button variant="outlined" onClick={onClose} color="inherit">
+              <Button variant="outlined" onClick={onCloseWithReset} color="inherit">
                 Anuluj
               </Button>
               <Button

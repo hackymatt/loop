@@ -63,7 +63,7 @@ export default function CourseDetailsSummary({ course }: Props) {
 
         <Stack direction="row" flexWrap="wrap" spacing={1}>
           {course.skills?.map((skill) => (
-            <Chip key={skill} label={skill} size="small" variant="soft" onClick={() => {}} />
+            <Chip key={skill} label={skill} size="small" variant="soft" clickable={false} />
           ))}
         </Stack>
       </Stack>

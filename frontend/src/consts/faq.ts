@@ -95,7 +95,7 @@ export const lessonFAQ = [
   {
     question: "Czy mogę uzyskać dostęp do nagrania z lekcji?",
     answer:
-      "Tak, jeśli lekcja była nagrywana, przycisk do pobrania nagrania będzie dostępny w zakładce 'Lekcje' po zakończeniu spotkania.",
+      "Tak, jeśli lekcja była nagrywana, przycisk do pobrania nagrania będzie dostępny w zakładce 'Lekcje' po zakończeniu spotkania. Nagranie będzie dostępne nawet w przypadku Twojej nieobecności na szkoleniu.",
   },
   {
     question: "Co zrobić, jeśli nie mogę dołączyć do spotkania na Google Meet?",

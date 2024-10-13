@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useState, useCallback } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import Stack from "@mui/material/Stack";
@@ -60,6 +60,11 @@ export default function CourseNewForm({ onClose, ...other }: Props) {
 
   const handleFormError = useFormErrorHandler(methods);
 
+  const onCloseWithReset = useCallback(() => {
+    onClose();
+    setActiveStep(0);
+  }, [onClose]);
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       if (availableTechnologies) {
@@ -72,7 +77,7 @@ export default function CourseNewForm({ onClose, ...other }: Props) {
         });
       }
       reset();
-      onClose();
+      onCloseWithReset();
       enqueueSnackbar("Kurs został dodany", { variant: "success" });
     } catch (error) {
       handleFormError(error);
@@ -86,7 +91,7 @@ export default function CourseNewForm({ onClose, ...other }: Props) {
   const stepContent = steps[activeStep].fields.map((field: string) => fields[field]);
 
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
+    <Dialog fullWidth maxWidth="sm" onClose={onCloseWithReset} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nowy kurs</DialogTitle>
@@ -119,7 +124,7 @@ export default function CourseNewForm({ onClose, ...other }: Props) {
         <DialogActions>
           {activeStep === 0 && (
             <>
-              <Button variant="outlined" onClick={onClose} color="inherit">
+              <Button variant="outlined" onClick={onCloseWithReset} color="inherit">
                 Anuluj
               </Button>
               <Button
