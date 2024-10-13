@@ -204,8 +204,8 @@ export default function AccountCoursesTopicsView() {
           page={page}
           component="div"
           labelRowsPerPage="Wierszy na stronę"
-          labelDisplayedRows={({ from, to, count }) => `Strona ${from} z ${count}`}
-          count={pagesCount ?? 0}
+          labelDisplayedRows={() => `Strona ${page + 1} z ${pagesCount ?? 0}`}
+          count={recordsCount ?? 0}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}

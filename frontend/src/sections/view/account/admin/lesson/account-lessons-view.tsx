@@ -62,7 +62,7 @@ const TABLE_HEAD = [
   { id: "", width: 25 },
 ];
 
-const ROWS_PER_PAGE_OPTIONS = [1, 5, 10, 25, { label: "Wszystkie", value: -1 }];
+const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, { label: "Wszystkie", value: -1 }];
 
 // ----------------------------------------------------------------------
 
@@ -246,7 +246,7 @@ export default function AccountLessonsView() {
           page={page}
           component="div"
           labelRowsPerPage="Wierszy na stronę"
-          labelDisplayedRows={() => `Strona ${page + 1} z ${pagesCount}`}
+          labelDisplayedRows={() => `Strona ${page + 1} z ${pagesCount ?? 0}`}
           count={recordsCount ?? 0}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
