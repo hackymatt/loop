@@ -185,7 +185,7 @@ export default function AdminFinanceHistoryView() {
           page={page}
           component="div"
           labelRowsPerPage="Wierszy na stronę"
-          labelDisplayedRows={() => `Strona ${page + 1} z ${pagesCount ?? 0}`}
+          labelDisplayedRows={() => `Strona ${page + 1} z ${pagesCount ?? 1}`}
           count={recordsCount ?? 0}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
