@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useState, useCallback } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import Stack from "@mui/material/Stack";
@@ -51,6 +51,11 @@ export default function PostNewForm({ onClose, ...other }: Props) {
 
   const handleFormError = useFormErrorHandler(methods);
 
+  const onCloseWithReset = useCallback(() => {
+    onClose();
+    setActiveStep(0);
+  }, [onClose]);
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       await createPost({
@@ -59,7 +64,7 @@ export default function PostNewForm({ onClose, ...other }: Props) {
         category: data.category.map((c: IPostCategoryProps) => c.id)[0],
       });
       reset();
-      onClose();
+      onCloseWithReset();
       enqueueSnackbar("Lekcja została dodana", { variant: "success" });
     } catch (error) {
       handleFormError(error);
@@ -73,7 +78,7 @@ export default function PostNewForm({ onClose, ...other }: Props) {
   const stepContent = steps[activeStep].fields.map((field: string) => fields[field]);
 
   return (
-    <Dialog fullWidth maxWidth="lg" onClose={onClose} {...other} sx={{ zIndex: 1 }}>
+    <Dialog fullWidth maxWidth="lg" onClose={onCloseWithReset} {...other} sx={{ zIndex: 1 }}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nowy artykuł</DialogTitle>
@@ -106,7 +111,7 @@ export default function PostNewForm({ onClose, ...other }: Props) {
         <DialogActions>
           {activeStep === 0 && (
             <>
-              <Button variant="outlined" onClick={onClose} color="inherit">
+              <Button variant="outlined" onClick={onCloseWithReset} color="inherit">
                 Anuluj
               </Button>
               <Button

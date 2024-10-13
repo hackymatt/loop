@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import { useState, useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useState, useEffect, useCallback } from "react";
 
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -56,6 +56,11 @@ export default function TeachingViewForm({ teaching, onClose, ...other }: Props)
     }
   }, [availableTechnologies, lessonData, reset]);
 
+  const onCloseWithReset = useCallback(() => {
+    onClose();
+    setActiveStep(0);
+  }, [onClose]);
+
   const [activeStep, setActiveStep] = useState(0);
 
   const { fields } = useTeachingFields();
@@ -63,7 +68,7 @@ export default function TeachingViewForm({ teaching, onClose, ...other }: Props)
   const stepContent = steps[activeStep].fields.map((field: string) => fields[field]);
 
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
+    <Dialog fullWidth maxWidth="sm" onClose={onCloseWithReset} {...other}>
       <FormProvider methods={methods}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <DialogTitle sx={{ typography: "h3", pb: 3 }}>Szczegóły lekcji</DialogTitle>
@@ -88,7 +93,7 @@ export default function TeachingViewForm({ teaching, onClose, ...other }: Props)
         <DialogActions>
           {activeStep === 0 && (
             <>
-              <Button variant="outlined" onClick={onClose} color="inherit">
+              <Button variant="outlined" onClick={onCloseWithReset} color="inherit">
                 Anuluj
               </Button>
               <Button
@@ -127,7 +132,7 @@ export default function TeachingViewForm({ teaching, onClose, ...other }: Props)
               >
                 Wstecz
               </Button>
-              <Button variant="outlined" onClick={onClose} color="success">
+              <Button variant="outlined" onClick={onCloseWithReset} color="success">
                 Zamknij
               </Button>
             </>

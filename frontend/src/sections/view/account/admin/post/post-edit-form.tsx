@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import { useState, useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useState, useEffect, useCallback } from "react";
 
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -77,6 +77,11 @@ export default function PostEditForm({ post, onClose, ...other }: Props) {
 
   const handleFormError = useFormErrorHandler(methods);
 
+  const onCloseWithReset = useCallback(() => {
+    onClose();
+    setActiveStep(0);
+  }, [onClose]);
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       await editPost({
@@ -86,7 +91,7 @@ export default function PostEditForm({ post, onClose, ...other }: Props) {
         image: (await urlToBlob(data.image)) as string,
       });
       reset();
-      onClose();
+      onCloseWithReset();
     } catch (error) {
       handleFormError(error);
     }
@@ -99,7 +104,7 @@ export default function PostEditForm({ post, onClose, ...other }: Props) {
   const stepContent = steps[activeStep].fields.map((field: string) => fields[field]);
 
   return (
-    <Dialog fullWidth maxWidth="lg" onClose={onClose} sx={{ zIndex: 1 }} {...other}>
+    <Dialog fullWidth maxWidth="lg" onClose={onCloseWithReset} sx={{ zIndex: 1 }} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj artykuł</DialogTitle>
@@ -132,7 +137,7 @@ export default function PostEditForm({ post, onClose, ...other }: Props) {
         <DialogActions>
           {activeStep === 0 && (
             <>
-              <Button variant="outlined" onClick={onClose} color="inherit">
+              <Button variant="outlined" onClick={onCloseWithReset} color="inherit">
                 Anuluj
               </Button>
               <Button

@@ -148,17 +148,16 @@ export default function CourseDetailsInfo({ course }: Props) {
           </Stack>
         </Stack>
 
-        <Stack spacing={0.5}>
+        <Stack direction="row" spacing={0.5}>
           <LoadingButton
             size="large"
             color="error"
             variant="contained"
-            startIcon={<Iconify icon="carbon:favorite-filled" />}
             loading={isAddingToFavorites}
             onClick={handleAddToFavorites}
             disabled={userType !== UserType.Student}
           >
-            Dodaj do ulubionych
+            <Iconify icon="carbon:favorite" />
           </LoadingButton>
           <LoadingButton
             size="large"
@@ -168,6 +167,7 @@ export default function CourseDetailsInfo({ course }: Props) {
             loading={isAddingToCart}
             onClick={handleAddToCart}
             disabled={userType !== UserType.Student}
+            sx={{ width: 1 }}
           >
             Dodaj do koszyka
           </LoadingButton>
