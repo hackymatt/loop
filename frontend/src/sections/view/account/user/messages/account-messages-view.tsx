@@ -74,7 +74,7 @@ export default function AccountMessagesView() {
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
   const { data: pagesCount } = useMessagesPagesCount(filters);
-  const { data: messages } = useMessages(filters);
+  const { data: messages, count: recordsCount } = useMessages(filters);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
@@ -224,8 +224,8 @@ export default function AccountMessagesView() {
           page={page}
           component="div"
           labelRowsPerPage="Wierszy na stronę"
-          labelDisplayedRows={({ from, to, count }) => `Strona ${from} z ${count}`}
-          count={pagesCount ?? 0}
+          labelDisplayedRows={() => `Strona ${page + 1} z ${pagesCount ?? 0}`}
+          count={recordsCount ?? 0}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}

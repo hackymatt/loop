@@ -72,7 +72,7 @@ export default function AccountLessonsPage() {
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
   const { data: pagesCount } = usePurchasePageCount(filters);
-  const { data: lessons } = usePurchase(filters);
+  const { data: lessons, count: recordsCount } = usePurchase(filters);
 
   const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: -1 });
 
@@ -240,8 +240,8 @@ export default function AccountLessonsPage() {
           page={page}
           component="div"
           labelRowsPerPage="Wierszy na stronę"
-          labelDisplayedRows={({ from, to, count }) => `Strona ${from} z ${count}`}
-          count={pagesCount ?? 0}
+          labelDisplayedRows={() => `Strona ${page + 1} z ${pagesCount ?? 0}`}
+          count={recordsCount ?? 0}
           rowsPerPage={rowsPerPage}
           onPageChange={handleChangePage}
           rowsPerPageOptions={ROWS_PER_PAGE_OPTIONS}
