@@ -148,7 +148,7 @@ export default function CourseDetailsInfo({ course }: Props) {
           </Stack>
         </Stack>
 
-        <Stack direction="row" spacing={0.5} >
+        <Stack direction="row" spacing={0.5}>
           <LoadingButton
             size="large"
             color="error"
@@ -167,7 +167,7 @@ export default function CourseDetailsInfo({ course }: Props) {
             loading={isAddingToCart}
             onClick={handleAddToCart}
             disabled={userType !== UserType.Student}
-            sx={{width:1}}
+            sx={{ width: 1 }}
           >
             Dodaj do koszyka
           </LoadingButton>
