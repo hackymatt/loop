@@ -2,21 +2,23 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 
-DEFAULT_CURRENT_PAGE = 1
-DEFAULT_PAGE_SIZE = 10
-
-
 class CustomPagination(PageNumberPagination):
-    current_page = DEFAULT_CURRENT_PAGE
-    page_size = DEFAULT_PAGE_SIZE
+    current_page = 1
+    page_size = 10
     page_size_query_param = "page_size"
 
-    def get_paginated_response(self, data):
-        page_size = int(
-            self.request.GET.get(self.page_size_query_param, self.page_size)
-        )
+    def get_page_size(self, request):
+        page_size = int(request.GET.get(self.page_size_query_param, self.page_size))
         if page_size == -1:
-            page_size = self.page.paginator.count
+            return self.queryset.count()
+
+        return page_size
+
+    def paginate_queryset(self, queryset, request, view=None):
+        self.queryset = queryset
+        return super().paginate_queryset(queryset, request, view)
+
+    def get_paginated_response(self, data):
         return Response(
             {
                 "links": {
@@ -26,7 +28,7 @@ class CustomPagination(PageNumberPagination):
                 "records_count": self.page.paginator.count,
                 "pages_count": self.page.paginator.num_pages,
                 "page": int(self.request.GET.get("page", self.current_page)),
-                "page_size": page_size,
+                "page_size": self.get_page_size(self.request),
                 "results": data,
             }
         )
