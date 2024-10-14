@@ -19,7 +19,6 @@ import { useSkills } from "src/api/skills/skills";
 import { useTopics } from "src/api/topics/topics";
 import { useModules } from "src/api/modules/modules";
 import { useCourse, useEditCourse } from "src/api/courses/course";
-import { useTechnologies } from "src/api/technologies/technologies";
 
 import FormProvider from "src/components/hook-form";
 import { isStepFailed } from "src/components/stepper/step";
