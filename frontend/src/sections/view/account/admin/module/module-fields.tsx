@@ -18,7 +18,7 @@ export const useModuleFields = () => {
         label="Lekcje"
         multiple
         options={availableLessons ?? []}
-        getOptionLabel={(option) => (option as ICourseLessonProp).title}
+        getOptionLabel={(option) => (option as ICourseLessonProp)?.title ?? ""}
         isOptionEqualToValue={(a, b) => a.id === b.id}
         loading={isLoadingLessons}
       />
