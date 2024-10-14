@@ -54,7 +54,7 @@ export const useCourseFields = () => {
         name="modules"
         label="Moduły"
         multiple
-        options={availableModules}
+        options={availableModules ?? []}
         getOptionLabel={(option) => (option as ICourseModuleProp).title}
         isOptionEqualToValue={(a, b) => a.id === b.id}
         loading={isLoadingModules}
@@ -66,7 +66,7 @@ export const useCourseFields = () => {
         name="skills"
         label="Umiejętności"
         multiple
-        options={availableSkills}
+        options={availableSkills ?? []}
         getOptionLabel={(option) => (option as ICourseBySkillProps).name}
         isOptionEqualToValue={(a, b) => a.id === b.id}
         loading={isLoadingSkills}
@@ -78,7 +78,7 @@ export const useCourseFields = () => {
         name="topics"
         label="Tematy"
         multiple
-        options={availableTopics}
+        options={availableTopics ?? []}
         getOptionLabel={(option) => (option as ICourseByTopicProps).name}
         isOptionEqualToValue={(a, b) => a.id === b.id}
         loading={isLoadingTopics}

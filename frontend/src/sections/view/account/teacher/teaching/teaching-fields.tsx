@@ -51,7 +51,7 @@ export const useTeachingFields = () => {
         name="technologies"
         label="Technologie"
         multiple
-        options={availableTechnologies}
+        options={availableTechnologies ?? []}
         getOptionLabel={(option) => (option as ICourseByCategoryProps).name}
         loading={isLoadingTechnologies}
         isOptionEqualToValue={(a, b) => a.name === b.name}

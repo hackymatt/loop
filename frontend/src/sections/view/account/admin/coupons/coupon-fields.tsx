@@ -80,7 +80,7 @@ export const useCouponFields = (control: Control<any>) => {
         name="users"
         label="Wybrani użytkownicy"
         multiple
-        options={availableUsers}
+        options={availableUsers ?? []}
         getOptionLabel={(option) => (option as IUserDetailsProps).email}
         isOptionEqualToValue={(a, b) => a.email === b.email}
         loading={isLoadingUsers}
