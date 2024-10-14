@@ -33,7 +33,7 @@ export default function FilterTeachers({ value, options, onChangeTeacher }: Prop
       disableCloseOnSelect
       size="small"
       options={options ?? []}
-      getOptionLabel={(option: ITeamMemberProps) => option.name}
+      getOptionLabel={(option: ITeamMemberProps) => option?.name ?? ""}
       value={currentValue as ITeamMemberProps[]}
       noOptionsText="Brak opcji"
       onChange={(event, selectedValue) => {

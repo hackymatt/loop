@@ -35,7 +35,7 @@ export const usePostFields = () => {
         label="Kategoria"
         multiple
         options={availableCategories ?? []}
-        getOptionLabel={(option) => (option as IPostCategoryProps).name}
+        getOptionLabel={(option) => (option as IPostCategoryProps)?.name ?? ""}
         loading={isLoadingCategories}
         isOptionEqualToValue={(a, b) => a.name === b.name}
       />
@@ -47,7 +47,7 @@ export const usePostFields = () => {
         label="Autorzy"
         multiple
         options={availableLecturers ?? []}
-        getOptionLabel={(option) => (option as ITeamMemberProps).name}
+        getOptionLabel={(option) => (option as ITeamMemberProps)?.name ?? ""}
         loading={isLoadingLecturers}
         isOptionEqualToValue={(a, b) => a.name === b.name}
       />

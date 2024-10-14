@@ -28,7 +28,7 @@ export default function FilterLesson({ value, options, onChange }: Props) {
       fullWidth
       size="small"
       options={modifiedOptions}
-      getOptionLabel={(option) => option.label}
+      getOptionLabel={(option) => option?.label ?? ""}
       value={currentValue}
       noOptionsText="Brak opcji"
       onChange={(event, selectedValue) => onChange(selectedValue?.value)}

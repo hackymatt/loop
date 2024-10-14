@@ -18,7 +18,7 @@ export default function FilterStatus({ value, options, onChange }: Props) {
     <Autocomplete
       sx={{ width: 1 }}
       options={options}
-      getOptionLabel={(option) => option.label}
+      getOptionLabel={(option) => option?.label ?? ""}
       value={currentValue}
       noOptionsText="Brak opcji"
       size="small"

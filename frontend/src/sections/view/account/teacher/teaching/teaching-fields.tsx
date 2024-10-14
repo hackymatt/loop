@@ -52,7 +52,7 @@ export const useTeachingFields = () => {
         label="Technologie"
         multiple
         options={availableTechnologies ?? []}
-        getOptionLabel={(option) => (option as ICourseByCategoryProps).name}
+        getOptionLabel={(option) => (option as ICourseByCategoryProps)?.name ?? ""}
         loading={isLoadingTechnologies}
         isOptionEqualToValue={(a, b) => a.name === b.name}
         disabled
