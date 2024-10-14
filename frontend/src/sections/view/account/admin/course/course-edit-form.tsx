@@ -46,12 +46,15 @@ interface Props extends DialogProps {
 export default function CourseEditForm({ course, onClose, ...other }: Props) {
   const { data: availableModules } = useModules({
     sort_by: "title",
+    page_size: -1,
   });
   const { data: availableSkills } = useSkills({
     sort_by: "name",
+    page_size: -1,
   });
   const { data: availableTopics } = useTopics({
     sort_by: "name",
+    page_size: -1,
   });
 
   const { data: courseData } = useCourse(course.id);

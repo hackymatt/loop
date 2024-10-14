@@ -36,6 +36,7 @@ interface Props extends DialogProps {
 export default function ModuleEditForm({ module, onClose, ...other }: Props) {
   const { data: availableLessons } = useLessons({
     sort_by: "title",
+    page_size: -1,
   });
 
   const { data: moduleData } = useModule(module.id);
