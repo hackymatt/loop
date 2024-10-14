@@ -19,7 +19,6 @@ import { useSkills } from "src/api/skills/skills";
 import { useTopics } from "src/api/topics/topics";
 import { useModules } from "src/api/modules/modules";
 import { useCourse, useEditCourse } from "src/api/courses/course";
-import { useTechnologies } from "src/api/technologies/technologies";
 
 import FormProvider from "src/components/hook-form";
 import { isStepFailed } from "src/components/stepper/step";
@@ -54,9 +53,6 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
   const { data: availableTopics } = useTopics({
     sort_by: "name",
   });
-  const { data: availableTechnologies } = useTechnologies({
-    sort_by: "name",
-  });
 
   const { data: courseData } = useCourse(course.id);
   const { mutateAsync: editCourse } = useEditCourse(course.id);
@@ -73,7 +69,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
   } = methods;
 
   useEffect(() => {
-    if (courseData) {
+    if (courseData && availableSkills && availableTopics && availableModules) {
       reset({
         ...courseData,
         title: courseData.slug,
@@ -98,14 +94,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
         video: courseData.video ?? "",
       });
     }
-  }, [
-    availableModules,
-    availableSkills,
-    availableTechnologies,
-    availableTopics,
-    courseData,
-    reset,
-  ]);
+  }, [availableModules, availableSkills, availableTopics, courseData, reset]);
 
   const handleFormError = useFormErrorHandler(methods);
 
