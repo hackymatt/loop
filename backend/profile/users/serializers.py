@@ -117,7 +117,7 @@ class UserSerializer(ModelSerializer):
                     profile=instance,
                     title="Stawka została zmieniona",
                     subtitle="",
-                    description=f"Twoje wynagrodzenie uległo zmianie. Stawka godzinowa: {rate} zł, prowizja: {commission}.",
+                    description=f"Twoje wynagrodzenie uległo zmianie. Stawka godzinowa: {rate} zł, prowizja: {commission}%.",
                     path="/account/teacher/finance",
                     icon="mdi:finance",
                 )
