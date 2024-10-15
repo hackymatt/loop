@@ -2,8 +2,6 @@ from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from lesson.models import Lesson, Technology
 from cart.models import Cart
 from profile.models import LecturerProfile, StudentProfile
-from django.db.models import Value
-from django.db.models.functions import Concat
 
 
 class LecturerSerializer(ModelSerializer):
@@ -13,7 +11,7 @@ class LecturerSerializer(ModelSerializer):
         model = LecturerProfile
         fields = ("full_name",)
 
-    def get_full_name(self, lecturer):
+    def get_full_name(self, lecturer: LecturerProfile):
         return lecturer.full_name
 
 
@@ -31,20 +29,12 @@ class LessonSerializer(ModelSerializer):
         model = Lesson
         fields = ("id", "title", "duration", "price", "technologies", "lecturers")
 
-    def get_lecturers(self, lesson):
-        lecturers = (
-            LecturerProfile.objects.filter(
-                teaching_lecturer__lesson=lesson,
-                title__isnull=False,
-                description__isnull=False,
-            )
-            .annotate(
-                full_name=Concat(
-                    "profile__user__first_name", Value(" "), "profile__user__last_name"
-                )
-            )
-            .order_by("full_name")
-        )
+    def get_lecturers(self, lesson: Lesson):
+        lecturers = LecturerProfile.objects.filter(
+            teaching_lecturer__lesson=lesson,
+            profile_ready=True,
+        ).order_by("full_name")
+
         return LecturerSerializer(
             lecturers, many=True, context={"request": self.context.get("request")}
         ).data
