@@ -34,7 +34,7 @@ class LessonSerializer(ModelSerializer):
     def get_lecturers(self, lesson):
         lecturers = (
             LecturerProfile.objects.filter(
-                teaching_lecturer__lesson=lesson,  # Use the correct related name here
+                teaching_lecturer__lesson=lesson,
                 title__isnull=False,
                 description__isnull=False,
             )
