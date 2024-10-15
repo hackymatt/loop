@@ -53,17 +53,20 @@ def get_course_modules(course):
     ]
 
 
+def get_modules_lessons(modules):
+    return (
+        Module.lessons.through.objects.filter(module__in=modules).all().order_by("id")
+    )
+
+
 def get_course_lessons(course):
     course_modules = (
         Course.modules.through.objects.filter(course=course)
         .values("module_id")
         .order_by("id")
     )
-    course_lessons = (
-        Module.lessons.through.objects.filter(module__in=course_modules)
-        .all()
-        .order_by("id")
-    )
+    course_lessons = get_modules_lessons(modules=course_modules)
+
     return [
         Lesson.objects.get(id=course_lesson.lesson_id)
         for course_lesson in course_lessons
@@ -89,9 +92,7 @@ def get_course_topics(course):
 
 
 def get_price(course_modules):
-    lessons_ids = Module.lessons.through.objects.filter(
-        module__in=course_modules
-    ).values("lesson_id")
+    lessons_ids = get_modules_lessons(modules=course_modules).values("lesson_id")
     lessons = Lesson.objects.filter(id__in=lessons_ids).all()
     return lessons.aggregate(Sum("price"))["price__sum"]
 
@@ -122,9 +123,7 @@ def get_previous_price(instance):
 
 
 def get_previous_price_course(course_modules):
-    lessons_ids = Module.lessons.through.objects.filter(
-        module__in=course_modules
-    ).values("lesson_id")
+    lessons_ids = get_modules_lessons(modules=course_modules).values("lesson_id")
     lessons = Lesson.objects.filter(id__in=lessons_ids).all()
     prices = []
     for lesson in lessons:
@@ -172,9 +171,7 @@ def get_lowest_30_days_price(instance):
 
 
 def get_lowest_30_days_price_course(course_modules):
-    lessons_ids = Module.lessons.through.objects.filter(
-        module__in=course_modules
-    ).values("lesson_id")
+    lessons_ids = get_modules_lessons(modules=course_modules).values("lesson_id")
     lessons = Lesson.objects.filter(id__in=lessons_ids).all()
     prices = []
     for lesson in lessons:
@@ -264,9 +261,7 @@ def get_duration(course):
         .values("module_id")
         .order_by("id")
     )
-    lessons_ids = Module.lessons.through.objects.filter(
-        module__in=course_modules
-    ).values("lesson_id")
+    lessons_ids = get_modules_lessons(modules=course_modules).values("lesson_id")
     lessons = Lesson.objects.filter(id__in=lessons_ids).all()
     return lessons.aggregate(Sum("duration"))["duration__sum"]
 
@@ -415,7 +410,7 @@ class ModuleSerializer(ModelSerializer):
     price = SerializerMethodField("get_module_price")
     previous_price = SerializerMethodField("get_module_previous_price")
     lowest_30_days_price = SerializerMethodField("get_module_lowest_30_days_price")
-    lessons = LessonShortSerializer(many=True)
+    lessons = SerializerMethodField("get_module_lessons")
     progress = SerializerMethodField("get_module_progress")
 
     def get_module_price(self, module):
@@ -426,6 +421,16 @@ class ModuleSerializer(ModelSerializer):
 
     def get_module_lowest_30_days_price(self, module):
         return get_lowest_30_days_price_course(course_modules=[module])
+
+    def get_module_lessons(self, module):
+        module_lessons = get_modules_lessons(modules=[module])
+        lessons = [
+            Lesson.objects.get(id=module_lesson.lesson_id)
+            for module_lesson in module_lessons
+        ]
+        return LessonShortSerializer(
+            lessons, many=True, context={"request": self.context.get("request")}
+        ).data
 
     def get_module_progress(self, module):
         request = self.context.get("request")
