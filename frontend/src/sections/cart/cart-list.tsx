@@ -17,7 +17,7 @@ type Props = {
 
 export default function CartList({ cartItems, error, wishlist = false }: Props) {
   return (
-    <Scrollbar>
+    <Scrollbar sx={{ maxHeight: { md: 600 } }}>
       <Stack
         direction="row"
         alignItems="center"
