@@ -9,37 +9,40 @@ from review.serializers import (
 )
 from review.filters import ReviewFilter
 from review.models import Review
-from random import sample
-from django.db.models import Count
+from profile.models import LecturerProfile
+from django.db.models import Count, Prefetch
 from django.contrib.auth.models import User
 from config_global import DUMMY_STUDENT_EMAIL
 
 
 class ReviewViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
+    queryset = Review.objects.all().prefetch_related(
+        Prefetch("lecturer", queryset=LecturerProfile.objects.all())
+    )
     filterset_class = ReviewFilter
     permission_classes = [AllowAny]
 
     def get_serializer_class(self, *args, **kwargs):
         if self.request.method == "GET":
             return ReviewGetSerializer
-        return self.serializer_class
+        return ReviewSerializer
 
     def get_permissions(self):
-        if self.action == "create":
-            permission_classes = [IsAuthenticated]
-        elif self.action == "update" or self.action == "destroy":
-            permission_classes = [IsAuthenticated, IsUserReview]
-        else:
-            permission_classes = self.permission_classes
-        return [permission() for permission in permission_classes]
+        permission_map = {
+            "create": [IsAuthenticated],
+            "update": [IsAuthenticated, IsUserReview],
+            "destroy": [IsAuthenticated, IsUserReview],
+        }
+        return [
+            permission()
+            for permission in permission_map.get(self.action, self.permission_classes)
+        ]
 
 
 class ReviewStatsViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Review.objects.all()
+    queryset = Review.objects.all().order_by("id")
     serializer_class = ReviewStatsSerializer
     filterset_class = ReviewFilter
     permission_classes = [AllowAny]
@@ -54,13 +57,18 @@ class ReviewStatsViewSet(ModelViewSet):
 
 class BestReviewViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Review.objects.filter(rating=5, review__isnull=False).all()
+    queryset = (
+        Review.objects.filter(rating=5, review__isnull=False).all().order_by("id")
+    )
     serializer_class = BestReviewSerializer
 
     def get_queryset(self):
         dummy_user = User.objects.get(email=DUMMY_STUDENT_EMAIL)
 
         queryset = self.queryset.exclude(student__profile__user=dummy_user)
-        ids = queryset.values_list("id", flat=True)
-        random_ids = sample(list(ids), min(len(ids), 10))
-        return self.queryset.filter(id__in=random_ids)
+        review_count = queryset.count()
+
+        if review_count > 10:
+            random_ids = queryset.order_by("?").values_list("id", flat=True)[:10]
+            return queryset.filter(id__in=random_ids)
+        return queryset
