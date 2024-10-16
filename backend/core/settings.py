@@ -14,7 +14,9 @@ import os
 import base64
 import json
 from socket import gethostbyname, gethostname
+import logging.config
 from dotenv import load_dotenv
+
 
 load_dotenv()
 
@@ -241,8 +243,17 @@ LOGGING = {
             "formatter": "verbose",
         },
         "file": {
-            "class": "logging.FileHandler",
+            "class": "logging.handlers.RotatingFileHandler",
             "filename": os.path.join(BASE_DIR, "django.log"),
+            "maxBytes": 1024 * 1024 * 5,  # 5 MB
+            "backupCount": 5,  # Keep the last 5 log files
+            "formatter": "verbose",
+        },
+        "error_file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(BASE_DIR, "django_errors.log"),
+            "maxBytes": 1024 * 1024 * 5,  # 5 MB
+            "backupCount": 5,  # Keep the last 5 error log files
             "formatter": "verbose",
         },
     },
@@ -252,8 +263,19 @@ LOGGING = {
             "level": "DEBUG" if DEBUG else "INFO",
             "propagate": True,
         },
+        "core": {
+            "handlers": ["console", "file"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
+        "django.request": {
+            "handlers": ["error_file"],
+            "level": "ERROR",
+            "propagate": False,
+        },
     },
 }
+logging.config.dictConfig(LOGGING)
 
 
 # Internationalization

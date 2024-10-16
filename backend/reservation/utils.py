@@ -11,6 +11,7 @@ from notification.utils import notify
 from urllib.parse import quote_plus
 from utils.google.drive import DriveApi
 import re
+from utils.logger.logger import logger
 
 
 def get_meeting_title(schedule):
@@ -166,4 +167,4 @@ def pull_recordings():
                 file_url=file_url,
             )
         else:
-            print(f"Schedule Id not found with file name {file_name}")
+            logger.error(f"Schedule Id not found with file name {file_name}")

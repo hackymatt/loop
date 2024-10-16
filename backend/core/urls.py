@@ -50,7 +50,7 @@ from cart.views import CartViewSet
 from purchase.views import PurchaseViewSet, PaymentVerifyViewSet, PaymentStatusViewSet
 from teaching.views import ManageTeachingViewSet, TeachingViewSet
 from reservation.views import ReservationViewSet
-from contact.views import ContactViewSet
+from contact.views import ContactAPIView
 from finance.views import FinanceDetailsViewSet, FinanceHistoryViewSet
 from coupon.views import CouponViewSet, CouponUserViewSet, CouponValidationViewSet
 from .routers import Router
@@ -148,7 +148,7 @@ api_urlpatterns = [
         "payment-status",
         PaymentStatusViewSet.as_view({"get": "list"}),
     ),
-    path("contact", ContactViewSet.as_view({"post": "contact"})),
+    path("contact", ContactAPIView.as_view()),
     path(
         "coupon-validate/<str:coupon_code>/<str:total>",
         CouponValidationViewSet.validate,
