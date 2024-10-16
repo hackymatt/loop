@@ -481,6 +481,14 @@ class BestReviewTest(APITestCase):
             price="2.99",
             technologies=[self.technology_1],
         )
+        self.lesson_4 = create_lesson(
+            title="Python lesson 4",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_1],
+        )
 
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
@@ -544,6 +552,38 @@ class BestReviewTest(APITestCase):
             lecturer=self.lecturer_profile,
             rating=5,
         )
+        self.review_7 = create_review(
+            lesson=self.lesson_3,
+            student=self.profile_1,
+            lecturer=self.lecturer_profile,
+            rating=3,
+        )
+        self.review_8 = create_review(
+            lesson=self.lesson_3,
+            student=self.profile_2,
+            lecturer=self.lecturer_profile,
+            rating=2,
+            review="Terrible.",
+        )
+        self.review_9 = create_review(
+            lesson=self.lesson_3,
+            student=self.profile_3,
+            lecturer=self.lecturer_profile,
+            rating=5,
+        )
+        self.review_10 = create_review(
+            lesson=self.lesson_4,
+            student=self.profile_1,
+            lecturer=self.lecturer_profile,
+            rating=3,
+        )
+        self.review_11 = create_review(
+            lesson=self.lesson_4,
+            student=self.profile_2,
+            lecturer=self.lecturer_profile,
+            rating=2,
+            review="Terrible.",
+        )
 
     def test_get_best_reviews_unauthenticated(self):
         # no login
@@ -560,6 +600,7 @@ class BestReviewTest(APITestCase):
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
+        self.review_11.delete()
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
