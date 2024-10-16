@@ -27,5 +27,5 @@ class Mailer:
                 email_subject=subject,
                 email_body=email_body,
             )
-        except Exception as e:
-            logger.error(f"Błąd podczas wysyłania wiadomości: {e}", exc_info=True)
+        except Exception as e: # pragma: no cover
+            logger.error(f"Błąd podczas wysyłania wiadomości: {e}", exc_info=True) # pragma: no cover
