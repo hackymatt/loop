@@ -88,9 +88,7 @@ class LessonSerializer(ModelSerializer):
     def create(self, validated_data):
         technologies = validated_data.pop("technologies", [])
         lesson = Lesson.objects.create(**validated_data)
-
-        if technologies:
-            lesson.technologies.set(technologies)
+        lesson.technologies.set(technologies)
 
         if lesson.active:
             notify_lecturer(lesson)
@@ -108,12 +106,8 @@ class LessonSerializer(ModelSerializer):
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
 
-        instance.save()
         instance.technologies.set(technologies)
-
-        if technologies:
-            instance.technologies.clear()
-            instance.technologies.set(technologies)
+        instance.save()
 
         if instance.active:
             notify_lecturer(instance)

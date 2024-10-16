@@ -38,18 +38,16 @@ class ModuleSerializer(ModelSerializer):
         lessons = validated_data.pop("lessons", [])
 
         module = Module.objects.create(**validated_data)
-        if lessons:
-            module.lessons.set(lessons)
+        module.lessons.set(lessons)
         module.save()
 
         return module
 
     def update(self, instance: Module, validated_data):
-        lessons = validated_data.pop("lessons", None)
+        lessons = validated_data.pop("lessons", [])
         Module.objects.filter(pk=instance.pk).update(**validated_data)
 
-        if lessons is not None:
-            instance.lessons.clear()
-            instance.lessons.set(lessons)
+        instance.lessons.clear()
+        instance.lessons.set(lessons)
 
         return instance
