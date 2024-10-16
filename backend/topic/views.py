@@ -6,19 +6,16 @@ from topic.models import Topic
 
 
 class TopicViewSet(ModelViewSet):
-    http_method_names = ["get", "post", "put", "delete"]
+    """ViewSet for managing topics."""
+
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
     permission_classes = [AllowAny]
     filterset_class = TopicFilter
+    http_method_names = ["get", "post", "put", "delete"]
 
     def get_permissions(self):
-        if (
-            self.action == "create"
-            or self.action == "update"
-            or self.action == "destroy"
-        ):
-            permission_classes = [IsAuthenticated, IsAdminUser]
-        else:
-            permission_classes = self.permission_classes
-        return [permission() for permission in permission_classes]
+        """Return the list of permissions that the user must satisfy to access this view."""
+        if self.action in ["create", "update", "destroy"]:
+            return [permission() for permission in [IsAuthenticated, IsAdminUser]]
+        return super().get_permissions()  # Default permission for read actions
