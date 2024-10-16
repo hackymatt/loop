@@ -7,6 +7,11 @@ from .factory import (
     create_student_profile,
     create_technology,
     create_technology_obj,
+    create_lesson,
+    create_course,
+    create_skill,
+    create_topic,
+    create_module,
 )
 from .helpers import (
     login,
@@ -163,3 +168,252 @@ class TechnologyTest(APITestCase):
         response = self.client.delete(f"{self.endpoint}/{self.technology.id}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(technologies_number(), 4)
+
+
+class TechnologyFilterTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/technologies"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.technology = create_technology(name="Python")
+        self.technology_2 = create_technology(name="JavaScript")
+        create_technology(name="C++")
+        create_technology(name="C#")
+        create_technology(name="VBA")
+
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="9.99",
+            technologies=[self.technology],
+        )
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_2],
+        )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
+        self.skill_1 = create_skill(name="coding")
+        self.skill_2 = create_skill(name="IDE")
+
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
+        self.course = create_course(
+            title="course_title",
+            description="course_description",
+            level="Podstawowy",
+            skills=[self.skill_1, self.skill_2],
+            topics=[
+                self.topic_1,
+                self.topic_2,
+            ],
+            modules=[self.module_1],
+        )
+
+    def test_name_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}?name=Python")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        prices = [record["name"] for record in results]
+        self.assertEqual(prices, ["Python"])
+
+    def test_courses_count_from_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}?courses_count_from=1")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        self.assertEqual(records_count, 2)
+
+    def test_created_at_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        date = str(self.technology.created_at)[0:10]
+        response = self.client.get(f"{self.endpoint}?created_at={date}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 5)
+        dates = list(set([date in record["created_at"] for record in results]))
+        self.assertTrue(len(dates) == 1)
+        self.assertTrue(dates[0])
+
+
+class TechnologyOrderTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/technologies"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        create_technology(name="Python")
+        create_technology(name="JavaScript")
+        create_technology(name="C++")
+        create_technology(name="C#")
+        create_technology(name="VBA")
+
+        self.fields = ["name", "created_at"]
+
+    def is_float(self, element: any) -> bool:
+        if element is None:
+            return False
+        try:
+            float(element)
+            return True
+        except ValueError:
+            return False
+
+    def test_ordering(self):
+        for field in self.fields:
+            self.assertFalse(auth.get_user(self.client).is_authenticated)
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by={field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 5)
+            field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values, sorted(field_values, key=lambda d: d["name"])
+                )
+            else:
+                field_values = [
+                    field_value
+                    if not self.is_float(field_value)
+                    else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values))
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by=-{field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 5)
+            field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values,
+                    sorted(field_values, key=lambda d: d["name"], reverse=True),
+                )
+            else:
+                field_values = [
+                    field_value
+                    if not self.is_float(field_value)
+                    else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values, reverse=True))
+
+
+class BestTechnologyOrderTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/best-technologies"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        create_technology(name="Python")
+        create_technology(name="JavaScript")
+        create_technology(name="C++")
+        create_technology(name="C#")
+        create_technology(name="VBA")
+
+        self.fields = ["name", "courses_count"]
+
+    def is_float(self, element: any) -> bool:
+        if element is None:
+            return False
+        try:
+            float(element)
+            return True
+        except ValueError:
+            return False
+
+    def test_ordering(self):
+        for field in self.fields:
+            self.assertFalse(auth.get_user(self.client).is_authenticated)
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by={field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 5)
+            field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values, sorted(field_values, key=lambda d: d["name"])
+                )
+            else:
+                field_values = [
+                    field_value
+                    if not self.is_float(field_value)
+                    else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values))
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by=-{field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 5)
+            field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values,
+                    sorted(field_values, key=lambda d: d["name"], reverse=True),
+                )
+            else:
+                field_values = [
+                    field_value
+                    if not self.is_float(field_value)
+                    else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values, reverse=True))

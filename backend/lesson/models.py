@@ -14,7 +14,6 @@ from django.db.models import (
     Index,
     Count,
     Avg,
-    Q,
     Subquery,
     Value,
     Prefetch,
@@ -75,6 +74,7 @@ class LessonQuerySet(QuerySet):
 
     def _add_technologies(self):
         """Prefetch technologies associated with lessons."""
+        Technology = apps.get_model("technology", "Technology")
         return self.prefetch_related(
             Prefetch(
                 "technologies",
