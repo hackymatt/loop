@@ -2,7 +2,7 @@ from django.template.loader import render_to_string
 from typing import List
 from utils.google.gmail import GmailApi
 from config_global import FRONTEND_URL, NOREPLY_EMAIL
-from utils.logger import logger
+from utils.logger.logger import logger
 
 
 class Mailer:

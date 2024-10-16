@@ -11,7 +11,7 @@ from notification.utils import notify
 from urllib.parse import quote_plus
 from utils.google.drive import DriveApi
 import re
-from utils.logger import logger
+from utils.logger.logger import logger
 
 
 def get_meeting_title(schedule):
