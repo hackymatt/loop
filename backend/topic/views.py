@@ -4,6 +4,7 @@ from topic.serializers import TopicSerializer
 from topic.filters import TopicFilter
 from topic.models import Topic
 
+
 class TopicViewSet(ModelViewSet):
     """ViewSet for managing topics."""
 
