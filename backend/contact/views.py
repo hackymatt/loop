@@ -1,16 +1,16 @@
-from rest_framework.viewsets import ViewSet
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from mailer.mailer import Mailer
-from django.views.decorators.csrf import csrf_exempt
 from config_global import CONTACT_EMAIL
 
 
-class ContactViewSet(ViewSet):
-    http_method_names = ["post"]
+class ContactAPIView(APIView):
+    """API View for handling contact form submissions."""
 
-    @csrf_exempt
-    def contact(self, request):
+    def post(self, request):
+        """Handles incoming contact form submissions."""
         contact_data = request.data
 
         full_name = contact_data["full_name"]
@@ -18,20 +18,25 @@ class ContactViewSet(ViewSet):
         subject = contact_data["subject"]
         message = contact_data["message"]
 
+        # Send email using the Mailer
         mailer = Mailer()
         data = {
-            **{
-                "full_name": full_name,
-                "email": email,
-                "subject": subject,
-                "message": message,
-            }
+            "full_name": full_name,
+            "email": email,
+            "subject": subject,
+            "message": message,
         }
-        mailer.send(
-            email_template="contact.html",
-            to=[CONTACT_EMAIL],
-            subject="Nowa wiadomość ze strony",
-            data=data,
-        )
+
+        try:
+            mailer.send(
+                email_template="contact.html",
+                to=[CONTACT_EMAIL],
+                subject="Nowa wiadomość ze strony",
+                data=data,
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
         return Response(status=status.HTTP_200_OK, data=contact_data)
