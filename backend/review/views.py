@@ -17,8 +17,10 @@ from config_global import DUMMY_STUDENT_EMAIL
 
 class ReviewViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Review.objects.all().prefetch_related(
-        Prefetch("lecturer", queryset=LecturerProfile.objects.all())
+    queryset = (
+        Review.objects.all()
+        .prefetch_related(Prefetch("lecturer", queryset=LecturerProfile.objects.all()))
+        .order_by("id")
     )
     filterset_class = ReviewFilter
     permission_classes = [AllowAny]
