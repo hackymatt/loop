@@ -12,7 +12,7 @@ import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
 import { encodeUrl } from "src/utils/url-utils";
-import { fShortenNumber } from "src/utils/format-number";
+import { fNumber, fShortenNumber } from "src/utils/format-number";
 
 import Iconify from "src/components/iconify";
 
@@ -108,7 +108,7 @@ function TeacherItem({ teacher }: TeacherItemProps) {
                 <Box sx={{ typography: "h6" }}>
                   {Number.isInteger(teacher.ratingNumber)
                     ? `${teacher.ratingNumber}.0`
-                    : teacher.ratingNumber}
+                    : fNumber(teacher.ratingNumber, 1)}
                 </Box>
 
                 {teacher.totalReviews && (

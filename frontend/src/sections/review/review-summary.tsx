@@ -6,7 +6,7 @@ import Rating from "@mui/material/Rating";
 import RadioGroup from "@mui/material/RadioGroup";
 import Typography from "@mui/material/Typography";
 
-import { fShortenNumber } from "src/utils/format-number";
+import { fNumber, fShortenNumber } from "src/utils/format-number";
 
 import { IReviewStatistic } from "src/types/review";
 
@@ -45,7 +45,7 @@ export default function ReviewSummary({
       <Stack spacing={3}>
         <Stack spacing={3} direction="row" alignItems="center">
           <Typography variant="h1">
-            {Number.isInteger(ratingNumber) ? `${ratingNumber}.0` : ratingNumber}
+            {Number.isInteger(ratingNumber) ? `${ratingNumber}.0` : fNumber(ratingNumber, 1)}
           </Typography>
 
           <Stack spacing={0.5}>

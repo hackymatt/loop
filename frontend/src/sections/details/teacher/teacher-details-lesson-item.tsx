@@ -30,7 +30,7 @@ import { useBoolean } from "src/hooks/use-boolean";
 
 import { getTimezone } from "src/utils/get-timezone";
 import { trackEvent } from "src/utils/google-analytics";
-import { fCurrency, fShortenNumber } from "src/utils/format-number";
+import { fNumber, fCurrency, fShortenNumber } from "src/utils/format-number";
 
 import { useCreateCart } from "src/api/carts/carts";
 import { useCreateWishlist } from "src/api/wishlists/wishlists";
@@ -374,13 +374,13 @@ export default function TeacherDetailsLessonItem({
                   </Stack>
                 )}
 
-                {details?.totalReviews && (
+                {details?.ratingNumber && details?.totalReviews && (
                   <Stack spacing={0.5} direction="row" alignItems="center">
                     <Iconify icon="carbon:star-filled" sx={{ color: "warning.main" }} />
                     <Box sx={{ typography: "h6" }}>
                       {Number.isInteger(details.ratingNumber)
                         ? `${details.ratingNumber}.0`
-                        : details.ratingNumber}
+                        : fNumber(details.ratingNumber, 1)}
                     </Box>
 
                     {details?.totalReviews && (

@@ -14,7 +14,7 @@ function getLocaleCode() {
 
 // ----------------------------------------------------------------------
 
-export function fNumber(inputValue: InputValue) {
+export function fNumber(inputValue: InputValue, maximumFractionDigits = 2) {
   const { code } = getLocaleCode();
 
   if (!inputValue) return "";
@@ -23,7 +23,7 @@ export function fNumber(inputValue: InputValue) {
 
   const fm = new Intl.NumberFormat(code, {
     minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
+    maximumFractionDigits,
   }).format(number);
 
   return fm;

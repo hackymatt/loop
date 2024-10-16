@@ -12,7 +12,7 @@ import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
 import { encodeUrl } from "src/utils/url-utils";
-import { fShortenNumber } from "src/utils/format-number";
+import { fNumber, fShortenNumber } from "src/utils/format-number";
 
 import Image from "src/components/image";
 import Iconify from "src/components/iconify";
@@ -131,7 +131,9 @@ export default function TeacherItem({ teacher, vertical }: Props) {
                   <>
                     <Iconify icon="carbon:star-filled" sx={{ color: "warning.main" }} />
                     <Box sx={{ typography: "h6" }}>
-                      {Number.isInteger(ratingNumber) ? `${ratingNumber}.0` : ratingNumber}
+                      {Number.isInteger(ratingNumber)
+                        ? `${ratingNumber}.0`
+                        : fNumber(ratingNumber, 1)}
                     </Box>
                   </>
                 )}
