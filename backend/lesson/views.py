@@ -18,7 +18,7 @@ from lesson.models import (
 
 class LessonViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put"]
-    queryset = Lesson.objects.all()
+    queryset = Lesson.objects.all().order_by("id")
     serializer_class = LessonSerializer
     permission_classes = [AllowAny]
     filterset_class = LessonFilter
@@ -43,7 +43,7 @@ class LessonViewSet(ModelViewSet):
 
 class LessonPriceHistoryViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = LessonPriceHistory.objects.all()
+    queryset = LessonPriceHistory.objects.all().order_by("id")
     serializer_class = LessonPriceHistorySerializer
     filterset_class = LessonPriceHistoryFilter
     permission_classes = [IsAuthenticated, IsAdminUser]

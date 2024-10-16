@@ -14,7 +14,7 @@ from post.models import Post, PostCategory
 
 class PostViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Post.objects.all()
+    queryset = Post.objects.all().order_by("id")
     serializer_class = PostSerializer
     filterset_class = PostFilter
     search_fields = [
@@ -92,7 +92,7 @@ class PostViewSet(ModelViewSet):
 
 class PostCategoryViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = PostCategory.objects.all()
+    queryset = PostCategory.objects.all().order_by("id")
     serializer_class = PostCategorySerializer
     permission_classes = [AllowAny]
     filterset_class = PostCategoryFilter

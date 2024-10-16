@@ -6,7 +6,7 @@ from technology.models import Technology
 
 
 class TechnologyViewSet(ModelViewSet):
-    queryset = Technology.objects.all()
+    queryset = Technology.objects.all().order_by("id")
     serializer_class = TechnologySerializer
     permission_classes = [AllowAny]
     filterset_class = TechnologyFilter
@@ -21,7 +21,7 @@ class TechnologyViewSet(ModelViewSet):
 
 
 class BestTechnologyViewSet(ModelViewSet):
-    queryset = Technology.objects.all()
+    queryset = Technology.objects.all().order_by("id")
     serializer_class = BestTechnologySerializer
     filterset_class = TechnologyFilter
     http_method_names = ["get"]

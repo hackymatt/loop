@@ -17,7 +17,7 @@ from config_global import DUMMY_STUDENT_EMAIL
 
 class ReviewViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Review.objects.all()
+    queryset = Review.objects.all().order_by("id")
     serializer_class = ReviewSerializer
     filterset_class = ReviewFilter
     permission_classes = [AllowAny]
@@ -39,7 +39,7 @@ class ReviewViewSet(ModelViewSet):
 
 class ReviewStatsViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Review.objects.all()
+    queryset = Review.objects.all().order_by("id")
     serializer_class = ReviewStatsSerializer
     filterset_class = ReviewFilter
     permission_classes = [AllowAny]
@@ -54,7 +54,9 @@ class ReviewStatsViewSet(ModelViewSet):
 
 class BestReviewViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Review.objects.filter(rating=5, review__isnull=False).all()
+    queryset = (
+        Review.objects.filter(rating=5, review__isnull=False).all().order_by("id")
+    )
     serializer_class = BestReviewSerializer
 
     def get_queryset(self):

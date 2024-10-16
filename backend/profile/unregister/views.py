@@ -16,7 +16,7 @@ from config_global import DUMMY_STUDENT_EMAIL, DUMMY_LECTURER_EMAIL
 
 class ProfileUnregisterViewSet(ModelViewSet):
     http_method_names = ["delete"]
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by("id")
     permission_classes = [IsAuthenticated, ~IsAdminUser]
 
     def destroy(self, request, *args, **kwargs):
