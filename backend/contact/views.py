@@ -27,16 +27,11 @@ class ContactAPIView(APIView):
             "message": message,
         }
 
-        try:
-            mailer.send(
-                email_template="contact.html",
-                to=[CONTACT_EMAIL],
-                subject="Nowa wiadomość ze strony",
-                data=data,
-            )
-        except Exception as e:
-            return Response(
-                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+        mailer.send(
+            email_template="contact.html",
+            to=[CONTACT_EMAIL],
+            subject="Nowa wiadomość ze strony",
+            data=data,
+        )
 
         return Response(status=status.HTTP_200_OK, data=contact_data)

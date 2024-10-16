@@ -2,6 +2,7 @@ from django.template.loader import render_to_string
 from typing import List
 from utils.google.gmail import GmailApi
 from config_global import FRONTEND_URL, NOREPLY_EMAIL
+from utils.logger import logger
 
 
 class Mailer:
@@ -19,9 +20,12 @@ class Mailer:
                 },
             },
         )
-        return self.gmail_api.send(
-            NOREPLY_EMAIL,
-            email_to=", ".join(to),
-            email_subject=subject,
-            email_body=email_body,
-        )
+        try:
+            self.gmail_api.send(
+                NOREPLY_EMAIL,
+                email_to=", ".join(to),
+                email_subject=subject,
+                email_body=email_body,
+            )
+        except Exception as e:
+            logger.error(f"Błąd podczas wysyłania wiadomości: {e}", exc_info=True)

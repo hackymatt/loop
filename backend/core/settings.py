@@ -15,6 +15,7 @@ import base64
 import json
 from socket import gethostbyname, gethostname
 from dotenv import load_dotenv
+import logging.config
 
 load_dotenv()
 
@@ -254,6 +255,7 @@ LOGGING = {
         },
     },
 }
+logging.config.dictConfig(LOGGING)
 
 
 # Internationalization
