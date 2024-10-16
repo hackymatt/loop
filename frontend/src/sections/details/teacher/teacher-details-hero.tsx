@@ -12,7 +12,7 @@ import { paths } from "src/routes/paths";
 
 import { useBoolean } from "src/hooks/use-boolean";
 
-import { fShortenNumber } from "src/utils/format-number";
+import { fNumber, fShortenNumber } from "src/utils/format-number";
 
 import Image from "src/components/image";
 import Iconify from "src/components/iconify";
@@ -172,11 +172,13 @@ export default function TeacherDetailsHero({ teacher }: Props) {
                 alignItems="center"
                 divider={<Divider orientation="vertical" sx={{ height: 20 }} />}
               >
-                {totalReviews && (
+                {ratingNumber && totalReviews && (
                   <Stack spacing={0.5} direction="row" alignItems="center">
                     <Iconify icon="carbon:star-filled" sx={{ color: "warning.main" }} />
                     <Box sx={{ typography: "h6" }}>
-                      {Number.isInteger(ratingNumber) ? `${ratingNumber}.0` : ratingNumber}
+                      {Number.isInteger(ratingNumber)
+                        ? `${ratingNumber}.0`
+                        : fNumber(ratingNumber, 1)}
                     </Box>
 
                     {totalReviews && (

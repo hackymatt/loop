@@ -122,7 +122,10 @@ class StudentProfile(BaseModel):
 
 
 class LecturerProfileQuerySet(QuerySet):
+    """Custom QuerySet for LecturerProfile model to add additional fields."""
+
     def _add_full_name(self):
+        """Annotate the full name of the lecturer."""
         return self.annotate(
             full_name=Concat(
                 "profile__user__first_name", Value(" "), "profile__user__last_name"
@@ -130,6 +133,7 @@ class LecturerProfileQuerySet(QuerySet):
         )
 
     def _add_profile_ready(self):
+        """Annotate whether the lecturer's profile is complete."""
         return self.annotate(
             profile_ready=Case(
                 When(title__isnull=False, description__isnull=False, then=Value(True)),
@@ -139,15 +143,21 @@ class LecturerProfileQuerySet(QuerySet):
         )
 
     def add_columns(self):
+        """Aggregate all additional columns."""
         return self._add_full_name()._add_profile_ready()
 
 
 class LecturerProfileManager(Manager):
+    """Custom Manager for LecturerProfile model."""
+
     def get_queryset(self):
+        """Get the customized queryset with additional annotations."""
         return LecturerProfileQuerySet(self.model, using=self._db).add_columns()
 
 
 class LecturerProfile(BaseModel):
+    """Model representing a lecturer's profile."""
+
     profile = OneToOneField(Profile, on_delete=CASCADE)
     title = CharField(null=True, blank=True)
     description = TextField(null=True, blank=True)

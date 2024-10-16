@@ -3,23 +3,16 @@ from rest_framework.serializers import (
     SerializerMethodField,
     CharField,
     ValidationError,
+    IntegerField,
+    FloatField,
 )
 from drf_extra_fields.fields import Base64ImageField
-from lesson.models import (
-    Lesson,
-    LessonPriceHistory,
-)
+from lesson.models import Lesson, LessonPriceHistory
 from technology.models import Technology
 from profile.models import LecturerProfile
-from review.models import Review
-from purchase.models import Purchase
-from teaching.models import Teaching
-from django.db.models.functions import Concat
-from django.db.models import Avg, Value, Q
-from config_global import LESSON_DURATION_MULTIPLIER
+from config_global import LESSON_DURATION_MULTIPLIER, GITHUB_REPO
 from notification.utils import notify
 from urllib.parse import quote_plus
-from config_global import GITHUB_REPO
 
 
 def notify_lecturer(lesson):
@@ -34,169 +27,94 @@ def notify_lecturer(lesson):
         )
 
 
-def get_lecturers(self, lessons):
-    lecturer_ids = Teaching.objects.filter(lesson__in=lessons).values("lecturer")
-    lecturers = (
-        LecturerProfile.objects.exclude(
-            Q(title__isnull=True) | Q(description__isnull=True)
-        )
-        .filter(id__in=lecturer_ids)
-        .annotate(
-            full_name=Concat(
-                "profile__user__first_name", Value(" "), "profile__user__last_name"
-            )
-        )
-        .order_by("full_name")
-    )
-    return LecturerSerializer(
-        lecturers, many=True, context={"request": self.context.get("request")}
-    ).data
-
-
-def get_rating(lessons):
-    return Review.objects.filter(lesson__in=lessons).aggregate(Avg("rating"))[
-        "rating__avg"
-    ]
-
-
-def get_rating_count(lessons):
-    return Review.objects.filter(lesson__in=lessons).count()
-
-
-def get_students_count(lessons):
-    return Purchase.objects.filter(lesson__in=lessons, payment__status="S").count()
-
-
-def get_lesson_technologies(lesson):
-    lesson_technologies = (
-        Lesson.technologies.through.objects.filter(lesson=lesson).all().order_by("id")
-    )
-
-    return [
-        Technology.objects.get(id=lesson_technology.technology_id)
-        for lesson_technology in lesson_technologies
-    ]
-
-
 class LecturerSerializer(ModelSerializer):
-    full_name = SerializerMethodField("get_full_name")
+    full_name = SerializerMethodField()
     gender = CharField(source="profile.get_gender_display")
     image = Base64ImageField(source="profile.image", required=True)
 
     class Meta:
         model = LecturerProfile
-        fields = (
-            "id",
-            "full_name",
-            "gender",
-            "image",
-        )
+        fields = ("id", "full_name", "gender", "image")
 
-    def get_full_name(self, lecturer):
-        return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
+    def get_full_name(self, lecturer: LecturerProfile):
+        return lecturer.full_name
 
 
 class TechnologySerializer(ModelSerializer):
     class Meta:
         model = Technology
-        exclude = (
-            "modified_at",
-            "created_at",
-        )
+        exclude = ("modified_at", "created_at")
 
 
 class LessonGetSerializer(ModelSerializer):
-    lecturers = SerializerMethodField("get_lesson_lecturers")
-    students_count = SerializerMethodField("get_lesson_students_count")
-    rating = SerializerMethodField("get_lesson_rating")
-    rating_count = SerializerMethodField("get_lesson_rating_count")
-    technologies = SerializerMethodField("get_technologies")
-
-    def get_lesson_lecturers(self, lesson):
-        return get_lecturers(self, lessons=[lesson])
-
-    def get_lesson_rating(self, lesson):
-        return get_rating(lessons=[lesson])
-
-    def get_lesson_rating_count(self, lesson):
-        return get_rating_count(lessons=[lesson])
-
-    def get_lesson_students_count(self, lesson):
-        return get_students_count(lessons=[lesson])
-
-    def get_technologies(self, lesson):
-        return TechnologySerializer(
-            get_lesson_technologies(lesson=lesson), many=True
-        ).data
+    lecturers = SerializerMethodField()
+    students_count = IntegerField()
+    rating = FloatField()
+    rating_count = IntegerField()
+    technologies = TechnologySerializer(many=True, source="ordered_technologies")
 
     class Meta:
         model = Lesson
-        exclude = (
-            "created_at",
-            "modified_at",
+        exclude = ("created_at", "modified_at")
+
+    def get_lecturers(self, lesson):
+        lecturers = (
+            LecturerProfile.objects.all()
+            .filter(profile_ready=True, id__in=lesson.lecturers_ids)
+            .order_by("full_name")
         )
+        return LecturerSerializer(
+            lecturers, many=True, context={"request": self.context.get("request")}
+        ).data
 
 
 class LessonSerializer(ModelSerializer):
     class Meta:
         model = Lesson
-        exclude = (
-            "created_at",
-            "modified_at",
-        )
+        exclude = ("created_at", "modified_at")
 
     def validate_duration(self, duration):
         if duration % LESSON_DURATION_MULTIPLIER != 0:
             raise ValidationError(
                 f"Czas lekcji musi być wielokrotnością {LESSON_DURATION_MULTIPLIER} minut."
             )
-
         return duration
 
     def validate_github_url(self, github_url):
         if not github_url.startswith(GITHUB_REPO):
-            raise ValidationError(
-                f"Github url musi być rozpoczynać się na {GITHUB_REPO} minut."
-            )
-
+            raise ValidationError(f"Github URL musi zaczynać się od {GITHUB_REPO}.")
         return github_url
 
-    def add_technology(self, lesson, technologies):
-        for technology in technologies:
-            lesson.technologies.add(technology)
-
+    def add_technologies(self, lesson, technologies):
+        lesson.technologies.set(technologies)
         return lesson
 
     def create(self, validated_data):
         technologies = validated_data.pop("technologies")
-
         lesson = Lesson.objects.create(**validated_data)
-        lesson = self.add_technology(lesson=lesson, technologies=technologies)
-        lesson.save()
+        self.add_technologies(lesson, technologies)
 
         if lesson.active:
-            notify_lecturer(lesson=lesson)
+            notify_lecturer(lesson)
 
         return lesson
 
     def update(self, instance, validated_data):
-        technologies = validated_data.pop("technologies")
-
+        technologies = validated_data.pop("technologies", [])
         current_price = instance.price
-        new_price = validated_data.get("price", instance.price)
+        new_price = validated_data.get("price", current_price)
 
         if current_price != new_price:
             LessonPriceHistory.objects.create(lesson=instance, price=current_price)
 
-        Lesson.objects.filter(pk=instance.pk).update(**validated_data)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
 
-        instance = Lesson.objects.get(pk=instance.pk)
-        instance.technologies.clear()
-        instance = self.add_technology(lesson=instance, technologies=technologies)
         instance.save()
+        instance.technologies.set(technologies)
 
         if instance.active:
-            notify_lecturer(lesson=instance)
+            notify_lecturer(instance)
 
         return instance
 
