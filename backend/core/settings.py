@@ -14,8 +14,9 @@ import os
 import base64
 import json
 from socket import gethostbyname, gethostname
-from dotenv import load_dotenv
 import logging.config
+from dotenv import load_dotenv
+
 
 load_dotenv()
 
