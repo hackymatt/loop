@@ -6,7 +6,7 @@ from cart.models import Cart
 
 class CartViewSet(ModelViewSet):
     http_method_names = ["get", "post", "delete"]
-    queryset = Cart.objects.all().select_related("student")
+    queryset = Cart.objects.all().select_related("student").order_by("id")
     serializer_class = CartGetSerializer
     permission_classes = [IsAuthenticated]
 

@@ -1,7 +1,5 @@
 from django_filters import FilterSet, OrderingFilter, NumberFilter, UUIDFilter
 from review.models import Review
-from course.models import Course
-from module.models import Module
 
 
 class OrderFilter(OrderingFilter):
@@ -18,7 +16,7 @@ class OrderFilter(OrderingFilter):
 class ReviewFilter(FilterSet):
     course_id = NumberFilter(
         label="Course Id",
-        field_name="lesson",
+        field_name="course_ids",
         method="filter_course_id",
     )
     lesson_id = NumberFilter(field_name="lesson__id", lookup_expr="exact")
@@ -56,17 +54,5 @@ class ReviewFilter(FilterSet):
         )
 
     def filter_course_id(self, queryset, field_name, value):
-        lookup_field_name = f"{field_name}__in"
-
-        course_modules = (
-            Course.modules.through.objects.filter(course=value)
-            .values("module_id")
-            .order_by("id")
-        )
-        lessons = (
-            Module.lessons.through.objects.filter(module__in=course_modules)
-            .values("lesson_id")
-            .order_by("id")
-        )
-
-        return queryset.filter(**{lookup_field_name: lessons})
+        lookup_field_name = f"{field_name}__contains"
+        return queryset.filter(**{lookup_field_name: [value]})

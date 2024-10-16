@@ -10,7 +10,7 @@ from profile.models import Profile
 
 class FinanceDetailsViewSet(ModelViewSet):
     http_method_names = ["get", "put"]
-    queryset = Finance.objects.all()
+    queryset = Finance.objects.all().order_by("id")
     serializer_class = FinanceSerializer
     permission_classes = [IsAuthenticated, IsLecturer]
 
@@ -31,7 +31,7 @@ class FinanceDetailsViewSet(ModelViewSet):
 
 class FinanceHistoryViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = FinanceHistory.objects.all()
+    queryset = FinanceHistory.objects.all().order_by("id")
     serializer_class = FinanceHistorySerializer
     filterset_class = FinanceHistoryFilter
     permission_classes = [IsAuthenticated, IsAdminUser]
