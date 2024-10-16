@@ -14,4 +14,4 @@ class CartViewSet(ModelViewSet):
         return self.queryset.filter(student__profile__user=self.request.user)
 
     def get_serializer_class(self):
-        return CartSerializer if self.action == "create" else CartGetSerializer
+        return CartSerializer if self.action == "create" else self.serializer_class
