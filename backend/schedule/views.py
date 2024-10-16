@@ -27,7 +27,7 @@ from urllib.parse import quote_plus
 
 class ManageScheduleViewSet(ModelViewSet):
     http_method_names = ["get", "post", "delete"]
-    queryset = Schedule.objects.all()
+    queryset = Schedule.objects.all().order_by("id")
     serializer_class = ManageScheduleSerializer
     filterset_class = ScheduleFilter
     permission_classes = [IsAuthenticated, IsLecturer]

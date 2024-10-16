@@ -16,8 +16,10 @@ from config_global import DUMMY_LECTURER_EMAIL
 
 class LecturerViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = LecturerProfile.objects.all().exclude(
-        Q(title__isnull=True) | Q(description__isnull=True)
+    queryset = (
+        LecturerProfile.objects.all()
+        .exclude(Q(title__isnull=True) | Q(description__isnull=True))
+        .order_by("id")
     )
     serializer_class = LecturerSerializer
     filterset_class = LecturerFilter
@@ -56,9 +58,13 @@ class LecturerViewSet(ModelViewSet):
 
 class BestLecturerViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = LecturerProfile.objects.exclude(
-        Q(title__isnull=True) | Q(description__isnull=True)
-    ).all()
+    queryset = (
+        LecturerProfile.objects.exclude(
+            Q(title__isnull=True) | Q(description__isnull=True)
+        )
+        .all()
+        .order_by("id")
+    )
     serializer_class = BestLecturerSerializer
 
     def get_rating(self, queryset):

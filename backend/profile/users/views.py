@@ -7,7 +7,7 @@ from profile.users.filters import UserFilter
 
 class UserViewSet(ModelViewSet):
     http_method_names = ["get", "put"]
-    queryset = Profile.objects.all()
+    queryset = Profile.objects.all().order_by("id")
     serializer_class = UserSerializer
     filterset_class = UserFilter
     permission_classes = [IsAuthenticated, IsAdminUser]

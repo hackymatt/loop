@@ -5,5 +5,5 @@ from django.contrib.auth.models import User
 
 class ProfileRegisterViewSet(ModelViewSet):
     http_method_names = ["post"]
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by("id")
     serializer_class = ProfileRegisterSerializer

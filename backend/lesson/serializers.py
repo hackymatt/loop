@@ -85,21 +85,19 @@ class LessonSerializer(ModelSerializer):
             raise ValidationError(f"Github URL musi zaczynać się od {GITHUB_REPO}.")
         return github_url
 
-    def add_technologies(self, lesson, technologies):
-        lesson.technologies.set(technologies)
-        return lesson
-
     def create(self, validated_data):
-        technologies = validated_data.pop("technologies")
+        technologies = validated_data.pop("technologies", [])
         lesson = Lesson.objects.create(**validated_data)
-        self.add_technologies(lesson, technologies)
+
+        if technologies:
+            lesson.technologies.set(technologies)
 
         if lesson.active:
             notify_lecturer(lesson)
 
         return lesson
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Lesson, validated_data):
         technologies = validated_data.pop("technologies", [])
         current_price = instance.price
         new_price = validated_data.get("price", current_price)
@@ -112,6 +110,10 @@ class LessonSerializer(ModelSerializer):
 
         instance.save()
         instance.technologies.set(technologies)
+
+        if technologies:
+            instance.technologies.clear()
+            instance.technologies.set(technologies)
 
         if instance.active:
             notify_lecturer(instance)
