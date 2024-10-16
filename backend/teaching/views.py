@@ -14,7 +14,7 @@ from django.db.models import Q
 
 class ManageTeachingViewSet(ModelViewSet):
     http_method_names = ["get", "post", "delete"]
-    queryset = Lesson.objects.all()
+    queryset = Lesson.objects.all().order_by("id")
     serializer_class = ManageTeachingGetSerializer
     filterset_class = ManageTeachingFilter
     permission_classes = [IsAuthenticated, IsLecturer]
@@ -45,7 +45,7 @@ class TeachingViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = Teaching.objects.exclude(
         Q(lecturer__title__isnull=True) | Q(lecturer__description__isnull=True)
-    )
+    ).order_by("id")
     serializer_class = TeachingSerializer
     filterset_class = TeachingFilter
     permission_classes = [AllowAny]

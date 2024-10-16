@@ -7,7 +7,7 @@ from profile.models import Profile
 
 class WishlistViewSet(ModelViewSet):
     http_method_names = ["get", "post", "delete"]
-    queryset = Wishlist.objects.all().select_related("student")
+    queryset = Wishlist.objects.all().select_related("student").order_by("id")
     serializer_class = WishlistGetSerializer
     permission_classes = [IsAuthenticated]
 
