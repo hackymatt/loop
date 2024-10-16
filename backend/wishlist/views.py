@@ -7,17 +7,12 @@ from profile.models import Profile
 
 class WishlistViewSet(ModelViewSet):
     http_method_names = ["get", "post", "delete"]
-    queryset = Wishlist.objects.all()
+    queryset = Wishlist.objects.all().select_related("student")
     serializer_class = WishlistGetSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
-        student = Profile.objects.get(user=user)
-        return self.queryset.filter(student__profile=student)
+        return self.queryset.filter(student__profile__user=self.request.user)
 
     def get_serializer_class(self):
-        if self.action == "create":
-            return WishlistSerializer
-        else:
-            return self.serializer_class
+        return WishlistSerializer if self.action == "create" else self.serializer_class
