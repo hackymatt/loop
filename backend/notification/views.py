@@ -8,7 +8,7 @@ from profile.models import Profile
 
 class NotificationViewSet(ModelViewSet):
     http_method_names = ["get", "put"]
-    queryset = Notification.objects.all().order_by("id")
+    queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
     permission_classes = [IsAuthenticated]
     filterset_class = NotificationFilter

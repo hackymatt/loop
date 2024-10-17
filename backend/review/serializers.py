@@ -27,7 +27,7 @@ class StudentSerializer(ModelSerializer):
 
 
 class LecturerSerializer(ModelSerializer):
-    full_name = SerializerMethodField()
+    full_name = SerializerMethodField("get_full_name")
     gender = CharField(source="profile.get_gender_display")
     image = ImageField(source="profile.image")
 
@@ -39,8 +39,8 @@ class LecturerSerializer(ModelSerializer):
             "image",
         )
 
-    def get_full_name(self, lecturer: LecturerProfile):
-        return lecturer.full_name
+    def get_full_name(self, lecturer):
+        return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
 
 
 class BestReviewSerializer(ModelSerializer):
@@ -96,26 +96,25 @@ class ReviewSerializer(ModelSerializer):
             raise ValidationError(
                 {"rating": "Ocena musi być całkowita lub połowiczna."}
             )
+
         return rating
 
     def validate_lesson(self, lesson):
-        user = self.context["request"].user
-        profile = Profile.objects.get(user=user)
+        request_type = self.context["request"].method
 
-        if self.context["request"].method == "PUT":
+        if request_type == "PUT":
             return lesson
 
-        lecturer = LecturerProfile.objects.get(
-            pk=self.context["request"].data["lecturer"]
-        )
+        user = self.context["request"].user
+        data = self.context["request"].data
+        profile = Profile.objects.get(user=user)
+        lecturer = LecturerProfile.objects.get(pk=data["lecturer"])
 
-        # Check if lesson is purchased
         if not Purchase.objects.filter(
             student__profile=profile, lesson=lesson, payment__status="S"
         ).exists():
             raise ValidationError({"lesson": "Lekcja nie została zakupiona."})
 
-        # Check if review already exists
         if Review.objects.filter(
             student__profile=profile, lesson=lesson, lecturer=lecturer
         ).exists():
@@ -126,19 +125,17 @@ class ReviewSerializer(ModelSerializer):
     def create(self, validated_data):
         user = self.context["request"].user
         profile = Profile.objects.get(user=user)
-        student_profile = StudentProfile.objects.get(profile=profile)
-        review = Review.objects.create(**validated_data, student=student_profile)
+        review = Review.objects.create(
+            **validated_data, student=StudentProfile.objects.get(profile=profile)
+        )
 
-        self._send_notification(review)
-
-        return review
-
-    def _send_notification(self, review):
         notify(
             profile=review.lecturer.profile,
             title="Otrzymano nową recenzję",
             subtitle=review.lesson.title,
-            description=f"Otrzymano nową recenzję. Ocena {review.rating}.",
+            description=f"Otrzymano nową recenzję. Ocena {review.rating}, komentarz: {review.review}.",
             path=f"/account/teacher/reviews/?sort_by=-created_at&page_size=10&lesson_id={review.lesson.id}",
             icon="mdi:star-rate",
         )
+
+        return review

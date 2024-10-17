@@ -9,37 +9,32 @@ from review.serializers import (
 )
 from review.filters import ReviewFilter
 from review.models import Review
-from profile.models import LecturerProfile
-from django.db.models import Count, Prefetch
+from random import sample
+from django.db.models import Count
 from django.contrib.auth.models import User
 from config_global import DUMMY_STUDENT_EMAIL
 
 
 class ReviewViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = (
-        Review.objects.all()
-        .prefetch_related(Prefetch("lecturer", queryset=LecturerProfile.objects.all()))
-        .order_by("id")
-    )
+    queryset = Review.objects.all().order_by("id")
+    serializer_class = ReviewSerializer
     filterset_class = ReviewFilter
     permission_classes = [AllowAny]
 
     def get_serializer_class(self, *args, **kwargs):
         if self.request.method == "GET":
             return ReviewGetSerializer
-        return ReviewSerializer
+        return self.serializer_class
 
     def get_permissions(self):
-        permission_map = {
-            "create": [IsAuthenticated],
-            "update": [IsAuthenticated, IsUserReview],
-            "destroy": [IsAuthenticated, IsUserReview],
-        }
-        return [
-            permission()
-            for permission in permission_map.get(self.action, self.permission_classes)
-        ]
+        if self.action == "create":
+            permission_classes = [IsAuthenticated]
+        elif self.action == "update" or self.action == "destroy":
+            permission_classes = [IsAuthenticated, IsUserReview]
+        else:
+            permission_classes = self.permission_classes
+        return [permission() for permission in permission_classes]
 
 
 class ReviewStatsViewSet(ModelViewSet):
@@ -66,6 +61,8 @@ class BestReviewViewSet(ModelViewSet):
 
     def get_queryset(self):
         dummy_user = User.objects.get(email=DUMMY_STUDENT_EMAIL)
+
         queryset = self.queryset.exclude(student__profile__user=dummy_user)
-        random_ids = queryset.order_by("?").values_list("id", flat=True)[:10]
-        return queryset.filter(id__in=random_ids)
+        ids = queryset.values_list("id", flat=True)
+        random_ids = sample(list(ids), min(len(ids), 10))
+        return self.queryset.filter(id__in=random_ids)
