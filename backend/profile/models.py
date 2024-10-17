@@ -10,8 +10,15 @@ from django.db.models import (
     TextField,
     CASCADE,
     Index,
+    Manager,
+    QuerySet,
+    Value,
+    Case,
+    When,
+    BooleanField,
 )
 from django.contrib.auth.models import User
+from django.db.models.functions import Concat
 import uuid
 
 
@@ -114,11 +121,42 @@ class StudentProfile(BaseModel):
         ]
 
 
+class LecturerProfileQuerySet(QuerySet):
+    def add_full_name(self):
+        return self.annotate(
+            full_name=Concat(
+                "profile__user__first_name", Value(" "), "profile__user__last_name"
+            )
+        )
+
+    def add_profile_ready(self):
+        return self.annotate(
+            profile_ready=Case(
+                When(title__isnull=False, description__isnull=False, then=Value(True)),
+                default=Value(False),
+                output_field=BooleanField(),
+            )
+        )
+
+
+class LecturerProfileManager(Manager):
+    def get_queryset(self):
+        return LecturerProfileQuerySet(self.model, using=self._db)
+
+    def add_full_name(self):
+        return self.get_queryset().add_full_name()
+
+    def add_profile_ready(self):
+        return self.get_queryset().add_profile_ready()
+
+
 class LecturerProfile(BaseModel):
     profile = OneToOneField(Profile, on_delete=CASCADE)
     title = CharField(null=True, blank=True)
     description = TextField(null=True, blank=True)
     linkedin_url = URLField(null=True, blank=True)
+
+    objects = LecturerProfileManager()
 
     class Meta:
         db_table = "lecturer_profile"
