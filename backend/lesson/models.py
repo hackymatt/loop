@@ -38,7 +38,6 @@ class LessonQuerySet(QuerySet):
             Purchase.objects.filter(lesson=OuterRef("pk"), payment__status="S")
             .values("lesson_id")
             .annotate(total_students=Count("student"))
-            .order_by("lesson_id")
             .values("total_students")[:1]  # Limit to 1 for optimization
         )
         return self.annotate(
@@ -48,12 +47,10 @@ class LessonQuerySet(QuerySet):
     def _add_rating(self):
         """Annotate the average rating for each lesson."""
         Review = apps.get_model("review", "Review")
-
         avg_rating_subquery = (
             Review.objects.filter(lesson=OuterRef("pk"))
             .values("lesson_id")
             .annotate(avg_rating=Avg("rating"))
-            .order_by("lesson_id")
             .values("avg_rating")[:1]  # Limit to 1 for optimization
         )
         return self.annotate(
@@ -69,7 +66,6 @@ class LessonQuerySet(QuerySet):
             Review.objects.filter(lesson=OuterRef("pk"))
             .values("lesson_id")
             .annotate(total_ratings=Count("id"))
-            .order_by("lesson_id")
             .values("total_ratings")[:1]  # Limit to 1 for optimization
         )
         return self.annotate(

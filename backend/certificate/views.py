@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 class CertificateViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Certificate.objects.all().order_by("id")
+    queryset = Certificate.objects.all()
     serializer_class = CertificateSerializer
     filterset_class = CertificateFilter
     permission_classes = [IsAuthenticated, IsStudent]

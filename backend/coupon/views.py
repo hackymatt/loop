@@ -16,7 +16,7 @@ from profile.models import Profile
 
 class CouponViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Coupon.objects.all().order_by("id")
+    queryset = Coupon.objects.all()
     serializer_class = CouponSerializer
     filterset_class = CouponFilter
     permission_classes = [IsAuthenticated, IsAdminUser]
@@ -32,7 +32,7 @@ class CouponViewSet(ModelViewSet):
 
 class CouponUserViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = CouponUser.objects.all().order_by("id")
+    queryset = CouponUser.objects.all()
     serializer_class = CouponUserSerializer
     filterset_class = CouponUserFilter
     permission_classes = [IsAuthenticated, IsAdminUser]
