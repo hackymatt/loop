@@ -4,6 +4,13 @@ from django_filters import (
     CharFilter,
 )
 from module.models import Module
+from django.db.models import Count
+
+
+def get_lessons_count(queryset):
+    modules = queryset.annotate(lessons_count=Count("lessons"))
+
+    return modules
 
 
 class OrderFilter(OrderingFilter):
@@ -12,7 +19,10 @@ class OrderFilter(OrderingFilter):
             return super().filter(queryset, values)
 
         for value in values:
-            queryset = queryset.order_by(value)
+            if value in ["lessons_count", "-lessons_count"]:
+                queryset = get_lessons_count(queryset).order_by(value)
+            else:
+                queryset = queryset.order_by(value)
 
         return queryset
 

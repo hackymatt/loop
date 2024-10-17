@@ -9,7 +9,7 @@ from profile.models import Profile
 
 class PersonalDataViewSet(ModelViewSet):
     http_method_names = ["get", "put"]
-    queryset = Profile.objects.all().order_by("id")
+    queryset = Profile.objects.all()
     serializer_class = ProfileDetailsSerializer
     permission_classes = [IsAuthenticated]
 

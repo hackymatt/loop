@@ -13,7 +13,7 @@ from config_global import CANCELLATION_TIME, LESSON_DURATION_MULTIPLIER
 
 class ReservationViewSet(ModelViewSet):
     http_method_names = ["post", "delete"]
-    queryset = Reservation.objects.all().order_by("id")
+    queryset = Reservation.objects.all()
     serializer_class = ReservationSerializer
     permission_classes = [IsAuthenticated]
 

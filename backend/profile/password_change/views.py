@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 
 class ProfilePasswordChangeViewSet(ModelViewSet):
     http_method_names = ["post"]
-    queryset = User.objects.all().order_by("id")
+    queryset = User.objects.all()
     serializer_class = ProfilePasswordChangeSerializer
     permission_classes = [IsAuthenticated]
 

@@ -12,7 +12,7 @@ from mailer.mailer import Mailer
 
 class ProfilePasswordResetViewSet(ModelViewSet):
     http_method_names = ["post"]
-    queryset = User.objects.all().order_by("id")
+    queryset = User.objects.all()
     serializer_class = ProfilePasswordResetSerializer
 
     def create(self, request, *args, **kwargs):

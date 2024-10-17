@@ -21,7 +21,7 @@ from django.db.models import Value, CharField
 
 class CourseViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Course.objects.all().order_by("id")
+    queryset = Course.objects.all()
     serializer_class = CourseSerializer
     filterset_class = CourseFilter
     search_fields = [
@@ -107,7 +107,7 @@ class CourseViewSet(ModelViewSet):
 
 class BestCourseViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Course.objects.all().order_by("id")
+    queryset = Course.objects.all()
     serializer_class = BestCourseSerializer
 
     def get_queryset(self):

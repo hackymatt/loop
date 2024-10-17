@@ -7,12 +7,15 @@ from module.models import Module
 
 class ModuleViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Module.objects.all().order_by("id")
+    queryset = Module.objects.all()
     serializer_class = ModuleSerializer
     permission_classes = [IsAdminUser]
     filterset_class = ModuleFilter
 
     def get_serializer_class(self):
-        if self.action in ["list", "retrieve"]:
+        if self.action == "list":
             return ModuleGetSerializer
-        return self.serializer_class
+        elif self.action == "retrieve":
+            return ModuleGetSerializer
+        else:
+            return self.serializer_class

@@ -74,7 +74,7 @@ def confirm_purchase(status, purchases, payment):
 
 class PurchaseViewSet(ModelViewSet):
     http_method_names = ["get", "post"]
-    queryset = Purchase.objects.filter(payment__status="S").all().order_by("id")
+    queryset = Purchase.objects.filter(payment__status="S").all()
     serializer_class = PurchaseGetSerializer
     filterset_class = PurchaseFilter
     permission_classes = [IsAuthenticated]
@@ -240,7 +240,7 @@ class PaymentVerifyViewSet(ModelViewSet):
 
 class PaymentStatusViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Purchase.objects.all().order_by("id")
+    queryset = Purchase.objects.all()
     permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):

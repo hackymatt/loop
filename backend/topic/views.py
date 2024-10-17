@@ -8,7 +8,7 @@ from topic.models import Topic
 class TopicViewSet(ModelViewSet):
     """ViewSet for managing topics."""
 
-    queryset = Topic.objects.all().order_by("id")
+    queryset = Topic.objects.all()
     serializer_class = TopicSerializer
     permission_classes = [AllowAny]
     filterset_class = TopicFilter

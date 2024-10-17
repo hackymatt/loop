@@ -8,7 +8,7 @@ from profile.models import Profile, LecturerProfile
 
 class ProfileDataViewSet(ModelViewSet):
     http_method_names = ["get", "put"]
-    queryset = LecturerProfile.objects.all().order_by("id")
+    queryset = LecturerProfile.objects.all()
     serializer_class = LecturerProfileDataSerializer
     permission_classes = [IsAuthenticated, IsLecturer]
 
