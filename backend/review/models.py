@@ -27,7 +27,11 @@ def get_dummy_lecturer_profile():
 
 
 class Review(BaseModel):
-    lesson = ForeignKey(Lesson, on_delete=PROTECT)
+    lesson = ForeignKey(
+        Lesson,
+        on_delete=PROTECT,
+        related_name="review_lesson",
+    )
     student = ForeignKey(
         StudentProfile,
         on_delete=SET(get_dummy_student_profile),

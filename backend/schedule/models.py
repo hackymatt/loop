@@ -81,7 +81,9 @@ class Schedule(BaseModel):
 
 
 class Recording(BaseModel):
-    schedule = ForeignKey(Schedule, on_delete=CASCADE)
+    schedule = ForeignKey(
+        Schedule, on_delete=CASCADE, related_name="recording_schedule"
+    )
     file_id = CharField()
     file_name = CharField()
     file_url = URLField()

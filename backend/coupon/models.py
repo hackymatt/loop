@@ -42,8 +42,10 @@ class Coupon(BaseModel):
 
 
 class CouponUser(BaseModel):
-    user = ForeignKey(StudentProfile, on_delete=CASCADE)
-    coupon = ForeignKey(Coupon, on_delete=CASCADE)
+    user = ForeignKey(
+        StudentProfile, on_delete=CASCADE, related_name="coupon_user_student"
+    )
+    coupon = ForeignKey(Coupon, on_delete=CASCADE, related_name="coupon_user_coupon")
 
     class Meta:
         db_table = "coupon_user"

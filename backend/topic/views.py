@@ -13,11 +13,7 @@ class TopicViewSet(ModelViewSet):
     filterset_class = TopicFilter
 
     def get_permissions(self):
-        if (
-            self.action == "create"
-            or self.action == "update"
-            or self.action == "destroy"
-        ):
+        if self.action in ["create", "update", "destroy"]:
             permission_classes = [IsAuthenticated, IsAdminUser]
         else:
             permission_classes = self.permission_classes

@@ -13,7 +13,7 @@ class Wishlist(BaseModel):
     student = ForeignKey(
         StudentProfile, on_delete=CASCADE, related_name="wishlist_student"
     )
-    lesson = ForeignKey(Lesson, on_delete=CASCADE)
+    lesson = ForeignKey(Lesson, on_delete=CASCADE, related_name="wishlist_lesson")
 
     class Meta:
         db_table = "wishlist"

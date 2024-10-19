@@ -29,7 +29,7 @@ class TechnologySerializer(ModelSerializer):
 
 
 class LessonSerializer(ModelSerializer):
-    technologies = SerializerMethodField()
+    technologies = TechnologySerializer(many=True)
     lecturers = SerializerMethodField()
 
     class Meta:
@@ -54,11 +54,6 @@ class LessonSerializer(ModelSerializer):
         return LecturerSerializer(
             lecturers, many=True, context={"request": self.context.get("request")}
         ).data
-
-    def get_technologies(self, lesson: Lesson):
-        technologies_ids = lesson.technologies_ids
-        technologies = Technology.objects.filter(id__in=technologies_ids)
-        return TechnologySerializer(technologies, many=True).data
 
 
 class CartGetSerializer(ModelSerializer):

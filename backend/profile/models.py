@@ -16,6 +16,8 @@ from django.db.models import (
     Case,
     When,
     BooleanField,
+    Count,
+    Avg,
 )
 from django.contrib.auth.models import User
 from django.db.models.functions import Concat
@@ -138,6 +140,15 @@ class LecturerProfileQuerySet(QuerySet):
             )
         )
 
+    def add_rating_count(self):
+        return self.annotate(rating_count=Count("review_lecturer", distinct=True))
+
+    def add_rating(self):
+        return self.annotate(rating=Avg("review_lecturer__rating", distinct=True))
+
+    def add_lessons_count(self):
+        return self.annotate(lessons_count=Count("teaching_lecturer", distinct=True))
+
 
 class LecturerProfileManager(Manager):
     def get_queryset(self):
@@ -148,6 +159,15 @@ class LecturerProfileManager(Manager):
 
     def add_profile_ready(self):
         return self.get_queryset().add_profile_ready()
+
+    def add_rating_count(self):
+        return self.get_queryset().add_rating_count()
+
+    def add_rating(self):
+        return self.get_queryset().add_rating()
+
+    def add_lessons_count(self):
+        return self.get_queryset().add_lessons_count()
 
 
 class LecturerProfile(BaseModel):

@@ -8,20 +8,26 @@ from course.serializers import (
     CourseSerializer,
     BestCourseSerializer,
 )
-from course.filters import (
-    CourseFilter,
-    get_rating,
-)
-from course.models import (
-    Course,
-)
+from course.filters import CourseFilter
+from course.models import Course
 from random import sample
 from django.db.models import Value, CharField
 
-
 class CourseViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Course.objects.all()
+    queryset = (
+        Course.objects
+        .add_price()
+        .add_duration()
+        .add_lessons()
+        .add_students_count()
+        .add_rating_count()
+        .add_rating()
+        .add_technologies()
+        .add_lecturers()
+        .all()
+        .order_by("id")
+    )
     serializer_class = CourseSerializer
     filterset_class = CourseFilter
     search_fields = [
@@ -33,28 +39,21 @@ class CourseViewSet(ModelViewSet):
     permission_classes = [AllowAny]
 
     def get_permissions(self):
-        if (
-            self.action == "create"
-            or self.action == "update"
-            or self.action == "destroy"
-        ):
+        if self.action in ["create", "update", "destroy"]:
             permission_classes = [IsAuthenticated, IsAdminUser]
         else:
             permission_classes = self.permission_classes
         return [permission() for permission in permission_classes]
 
     def get_queryset(self):
+        user = self.request.user
+        queryset = self.queryset.add_progress(user=user).all()
         if self.action == "list":
-            queryset = self.queryset
-            user = self.request.user
-
             if user.is_authenticated:
-                # Annotate with the user's email if logged in
                 queryset = queryset.annotate(
                     user_email=Value(user.email, output_field=CharField())
                 )
             else:
-                # Annotate with None or an empty string if the user is not logged in
                 queryset = queryset.annotate(
                     user_email=Value("", output_field=CharField())
                 )
@@ -68,15 +67,14 @@ class CourseViewSet(ModelViewSet):
 
             return queryset.distinct()
 
-        return self.queryset.distinct()
+        return queryset.distinct()
 
     def get_serializer_class(self):
         if self.action == "list":
             return CourseListSerializer
         elif self.action == "retrieve":
             return CourseGetSerializer
-        else:
-            return self.serializer_class
+        return self.serializer_class
 
     def retrieve(self, request, *args, **kwargs):
         course = super().get_object()
@@ -107,12 +105,22 @@ class CourseViewSet(ModelViewSet):
 
 class BestCourseViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Course.objects.all()
+    queryset = (
+        Course.objects.add_price()
+        .add_duration()
+        .add_lessons()
+        .add_students_count()
+        .add_rating_count()
+        .add_rating()
+        .add_technologies()
+        .add_lecturers()
+        .all()
+        .order_by("id")
+    )
     serializer_class = BestCourseSerializer
 
     def get_queryset(self):
-        queryset = self.queryset
-        queryset = get_rating(queryset=queryset).filter(rating__gte=4)
+        queryset = self.queryset.filter(rating__gte=4)
 
         ids = queryset.values_list("id", flat=True)
         random_ids = sample(list(ids), min(len(ids), 10))

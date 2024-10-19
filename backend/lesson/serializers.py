@@ -4,6 +4,7 @@ from rest_framework.serializers import (
     CharField,
     ValidationError,
 )
+from django.db.models import Case, When, IntegerField
 from drf_extra_fields.fields import Base64ImageField
 from lesson.models import (
     Lesson,
@@ -11,18 +12,13 @@ from lesson.models import (
 )
 from technology.models import Technology
 from profile.models import LecturerProfile
-from review.models import Review
-from purchase.models import Purchase
-from teaching.models import Teaching
-from django.db.models.functions import Concat
-from django.db.models import Avg, Value, Q
 from config_global import LESSON_DURATION_MULTIPLIER
 from notification.utils import notify
 from urllib.parse import quote_plus
 from config_global import GITHUB_REPO
 
 
-def notify_lecturer(lesson):
+def notify_lecturer(lesson: Lesson):
     for lecturer in LecturerProfile.objects.all():
         notify(
             profile=lecturer.profile,
@@ -32,50 +28,6 @@ def notify_lecturer(lesson):
             path=f"/account/teacher/teaching/?sort_by=title&page_size=10&title={quote_plus(lesson.title)}",
             icon="mdi:teach",
         )
-
-
-def get_lecturers(self, lessons):
-    lecturer_ids = Teaching.objects.filter(lesson__in=lessons).values("lecturer")
-    lecturers = (
-        LecturerProfile.objects.exclude(
-            Q(title__isnull=True) | Q(description__isnull=True)
-        )
-        .filter(id__in=lecturer_ids)
-        .annotate(
-            full_name=Concat(
-                "profile__user__first_name", Value(" "), "profile__user__last_name"
-            )
-        )
-        .order_by("full_name")
-    )
-    return LecturerSerializer(
-        lecturers, many=True, context={"request": self.context.get("request")}
-    ).data
-
-
-def get_rating(lessons):
-    return Review.objects.filter(lesson__in=lessons).aggregate(Avg("rating"))[
-        "rating__avg"
-    ]
-
-
-def get_rating_count(lessons):
-    return Review.objects.filter(lesson__in=lessons).count()
-
-
-def get_students_count(lessons):
-    return Purchase.objects.filter(lesson__in=lessons, payment__status="S").count()
-
-
-def get_lesson_technologies(lesson):
-    lesson_technologies = (
-        Lesson.technologies.through.objects.filter(lesson=lesson).all().order_by("id")
-    )
-
-    return [
-        Technology.objects.get(id=lesson_technology.technology_id)
-        for lesson_technology in lesson_technologies
-    ]
 
 
 class LecturerSerializer(ModelSerializer):
@@ -92,8 +44,8 @@ class LecturerSerializer(ModelSerializer):
             "image",
         )
 
-    def get_full_name(self, lecturer):
-        return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
+    def get_full_name(self, lecturer: LecturerProfile):
+        return lecturer.full_name
 
 
 class TechnologySerializer(ModelSerializer):
@@ -106,28 +58,47 @@ class TechnologySerializer(ModelSerializer):
 
 
 class LessonGetSerializer(ModelSerializer):
-    lecturers = SerializerMethodField("get_lesson_lecturers")
-    students_count = SerializerMethodField("get_lesson_students_count")
-    rating = SerializerMethodField("get_lesson_rating")
-    rating_count = SerializerMethodField("get_lesson_rating_count")
-    technologies = SerializerMethodField("get_technologies")
+    lecturers = SerializerMethodField()
+    students_count = SerializerMethodField()
+    rating = SerializerMethodField()
+    rating_count = SerializerMethodField()
+    technologies = SerializerMethodField()
 
-    def get_lesson_lecturers(self, lesson):
-        return get_lecturers(self, lessons=[lesson])
+    def get_technologies(self, lesson: Lesson):
+        technology_ids = list(
+            lesson.technologies.through.objects.order_by("id").values_list(
+                "technology_id", flat=True
+            )
+        )
+        preserved_order = Case(
+            *[When(pk=pk, then=pos) for pos, pk in enumerate(technology_ids)],
+            output_field=IntegerField(),
+        )
+        technologies = Technology.objects.filter(id__in=technology_ids).order_by(
+            preserved_order
+        )
+        return TechnologySerializer(technologies, many=True).data
 
-    def get_lesson_rating(self, lesson):
-        return get_rating(lessons=[lesson])
-
-    def get_lesson_rating_count(self, lesson):
-        return get_rating_count(lessons=[lesson])
-
-    def get_lesson_students_count(self, lesson):
-        return get_students_count(lessons=[lesson])
-
-    def get_technologies(self, lesson):
-        return TechnologySerializer(
-            get_lesson_technologies(lesson=lesson), many=True
+    def get_lecturers(self, lesson: Lesson):
+        lecturer_ids = lesson.lecturers_ids
+        lecturers = (
+            LecturerProfile.objects.add_full_name()
+            .add_profile_ready()
+            .filter(id__in=lecturer_ids, profile_ready=True)
+            .order_by("full_name")
+        )
+        return LecturerSerializer(
+            lecturers, many=True, context={"request": self.context.get("request")}
         ).data
+
+    def get_rating(self, lesson: Lesson):
+        return lesson.rating
+
+    def get_rating_count(self, lesson: Lesson):
+        return lesson.rating_count
+
+    def get_students_count(self, lesson: Lesson):
+        return lesson.students_count
 
     class Meta:
         model = Lesson

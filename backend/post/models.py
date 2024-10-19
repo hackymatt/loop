@@ -37,7 +37,7 @@ class Post(BaseModel):
     title = CharField()
     description = TextField()
     content = TextField()
-    category = ForeignKey(PostCategory, on_delete=PROTECT)
+    category = ForeignKey(PostCategory, on_delete=PROTECT, related_name="post_category")
     authors = ManyToManyField(LecturerProfile, related_name="post_authors")
     image = ImageField(upload_to=post_directory_path)
     visits = IntegerField(default=0)

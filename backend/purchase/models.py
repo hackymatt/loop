@@ -57,14 +57,18 @@ class Payment(BaseModel):
 
 
 class Purchase(BaseModel):
-    lesson = ForeignKey(Lesson, on_delete=PROTECT)
+    lesson = ForeignKey(
+        Lesson,
+        on_delete=PROTECT,
+        related_name="purchase_lesson",
+    )
     student = ForeignKey(
         StudentProfile,
         on_delete=SET(get_dummy_student_profile),
-        related_name="lesson_purchase_student",
+        related_name="purchase_student",
     )
     price = DecimalField(max_digits=7, decimal_places=2, null=True)
-    payment = ForeignKey(Payment, on_delete=PROTECT)
+    payment = ForeignKey(Payment, on_delete=PROTECT, related_name="purchase_payment")
 
     class Meta:
         db_table = "purchase"
