@@ -5,94 +5,7 @@ from django_filters import (
     BaseInFilter,
     NumberFilter,
 )
-from course.models import (
-    Course,
-)
-from lesson.models import Lesson, Technology
-from module.models import Module
-from teaching.models import Teaching
-from profile.models import LecturerProfile
-from django.db.models import (
-    OuterRef,
-    Subquery,
-    Value,
-    TextField,
-)
-from django.contrib.postgres.aggregates import StringAgg
-from django.db.models.functions import Cast
-
-
-def get_lecturers(queryset):
-    course_modules = (
-        Course.modules.through.objects.filter(
-            course=OuterRef(OuterRef(OuterRef(OuterRef("pk"))))
-        )
-        .values("module_id")
-        .order_by("id")
-    )
-    lessons = (
-        Module.lessons.through.objects.filter(module__in=Subquery(course_modules))
-        .values("lesson_id")
-        .order_by("id")
-    )
-
-    lecturers = (
-        Teaching.objects.filter(lesson__in=Subquery(lessons))
-        .annotate(dummy_group_by=Value(1))
-        .values("dummy_group_by")
-        .order_by("dummy_group_by")
-        .values("lecturer")
-        .distinct()
-    )
-
-    profiles = (
-        LecturerProfile.objects.filter(id__in=Subquery(lecturers))
-        .values("id")
-        .annotate(dummy_group_by=Value(1))
-        .values("dummy_group_by")
-        .order_by("dummy_group_by")
-        .annotate(ids=StringAgg(Cast("id", TextField()), delimiter=","))
-        .values("ids")
-    )
-
-    courses = queryset.annotate(all_lecturers=Subquery(profiles))
-
-    return courses
-
-
-def get_technologies(queryset):
-    course_modules = (
-        Course.modules.through.objects.filter(
-            course=OuterRef(OuterRef(OuterRef(OuterRef("pk"))))
-        )
-        .values("module_id")
-        .order_by("id")
-    )
-    lessons = (
-        Module.lessons.through.objects.filter(module__in=Subquery(course_modules))
-        .values("lesson_id")
-        .order_by("id")
-    )
-
-    technologies = (
-        Lesson.technologies.through.objects.filter(lesson_id__in=Subquery(lessons))
-        .values("technology_id")
-        .distinct()
-    )
-
-    all_technologies = (
-        Technology.objects.filter(id__in=Subquery(technologies))
-        .values("name")
-        .annotate(dummy_group_by=Value(1))
-        .values("dummy_group_by")
-        .order_by("dummy_group_by")
-        .annotate(names=StringAgg("name", delimiter=","))
-        .values("names")
-    )
-
-    courses = queryset.annotate(all_technologies=Subquery(all_technologies))
-
-    return courses
+from course.models import Course
 
 
 class CharInFilter(BaseInFilter, CharFilter):
@@ -113,13 +26,13 @@ class OrderFilter(OrderingFilter):
 class CourseFilter(FilterSet):
     lecturer_in = CharFilter(
         label="Lecturer in",
-        field_name="all_lecturers",
-        method="filter_lecturer_in",
+        field_name="lecturers_ids",
+        method="filter_in",
     )
     technology_in = CharFilter(
         label="Technology in",
-        field_name="all_technologies",
-        method="filter_technology_in",
+        field_name="technologies_names",
+        method="filter_in",
     )
     level_in = CharInFilter(field_name="level", lookup_expr="in")
     price_from = NumberFilter(field_name="price", lookup_expr="gte")
@@ -177,34 +90,16 @@ class CourseFilter(FilterSet):
             "sort_by",
         )
 
-    def filter_technology_in(self, queryset, field_name, value):
+    def filter_in(self, queryset, field_name, value):
         lookup_field_name = f"{field_name}__contains"
 
-        queryset = get_technologies(queryset)
+        values = value.split(",")
 
-        names = value.split(",")
-
-        name_first, *name_rest = names
-        return_queryset = queryset.filter(**{lookup_field_name: name_first})
-        for name in name_rest:
+        v_first, *v_rest = values
+        return_queryset = queryset.filter(**{lookup_field_name: [v_first]})
+        for v in v_rest:
             return_queryset = return_queryset | queryset.filter(
-                **{lookup_field_name: name}
-            )
-
-        return return_queryset
-
-    def filter_lecturer_in(self, queryset, field_name, value):
-        lookup_field_name = f"{field_name}__contains"
-
-        queryset = get_lecturers(queryset)
-
-        ids = value.split(",")
-
-        id_first, *id_rest = ids
-        return_queryset = queryset.filter(**{lookup_field_name: id_first})
-        for id in id_rest:
-            return_queryset = return_queryset | queryset.filter(
-                **{lookup_field_name: id}
+                **{lookup_field_name: [v]}
             )
 
         return return_queryset

@@ -68,12 +68,14 @@ class CourseQuerySet(QuerySet):
 
     def add_technologies(self):
         return self.annotate(
-            technologies=ArrayAgg("modules__lessons__technologies__id", distinct=True)
+            technologies_names=ArrayAgg(
+                "modules__lessons__technologies__name", distinct=True
+            )
         )
 
     def add_lecturers(self):
         return self.annotate(
-            lecturers=ArrayAgg(
+            lecturers_ids=ArrayAgg(
                 "modules__lessons__teaching_lesson__lecturer__id", distinct=True
             )
         )

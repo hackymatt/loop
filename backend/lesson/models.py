@@ -20,15 +20,15 @@ from django.db.models import (
     Subquery,
     Case,
     When,
-    F,
+    Exists,
+    Min,
 )
 from technology.models import Technology
 from django.core.validators import MinValueValidator
 from decimal import Decimal
 from django.contrib.postgres.aggregates import ArrayAgg
-from django.db.models.functions import Coalesce
 from profile.models import Profile
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from django.apps import apps
 
@@ -65,6 +65,67 @@ class LessonQuerySet(QuerySet):
 
         return self.annotate(progress=Count(student_lessons, distinct=True))
 
+    def add_previous_price(self):
+        latest_price_subquery = (
+            LessonPriceHistory.objects.filter(lesson=OuterRef("pk"))
+            .order_by("-created_at")
+            .values("price")[:1]
+        )
+        exists_subquery = LessonPriceHistory.objects.filter(lesson=OuterRef("pk"))
+
+        return self.annotate(
+            previous_price=Case(
+                When(
+                    Exists(exists_subquery),
+                    then=Case(
+                        When(
+                            price__gt=Subquery(latest_price_subquery), then=Value(None)
+                        ),
+                        default=Subquery(latest_price_subquery),
+                        output_field=DecimalField(),
+                    ),
+                ),
+                default=None,
+                output_field=DecimalField(),
+            )
+        )
+
+    def add_lowest_30_days_price(self):
+        latest_price_subquery = (
+            LessonPriceHistory.objects.filter(lesson=OuterRef("pk"))
+            .order_by("-created_at")
+            .values("price")[:1]
+        )
+        latest_30_days_price_subquery = (
+            LessonPriceHistory.objects.order_by("-created_at")
+            .filter(
+                lesson=OuterRef("pk"),
+                created_at__gte=make_aware(datetime.now() - timedelta(days=30)),
+            )
+            .values("lesson")
+            .order_by("lesson")
+            .annotate(min_price=Min("price"))
+            .values("min_price")[:1]
+        )
+        exists_subquery = LessonPriceHistory.objects.filter(lesson=OuterRef("pk"))
+
+        return self.annotate(
+            lowest_30_days_price=Case(
+                When(
+                    Exists(exists_subquery),
+                    then=Case(
+                        When(
+                            price__gt=Subquery(latest_price_subquery), then=Value(None)
+                        ),
+                        default=Subquery(latest_30_days_price_subquery),
+                        output_field=DecimalField(),
+                    ),
+                ),
+                default=None,
+                output_field=DecimalField(),
+            )
+        )
+
 
 class LessonManager(Manager):
     def get_queryset(self):
@@ -84,6 +145,12 @@ class LessonManager(Manager):
 
     def add_progress(self, user):
         return self.get_queryset().add_progress(user=user)
+
+    def add_previous_price(self):
+        return self.get_queryset().add_previous_price()
+
+    def add_lowest_30_days_price(self):
+        return self.get_queryset().add_lowest_30_days_price()
 
 
 class Lesson(BaseModel):

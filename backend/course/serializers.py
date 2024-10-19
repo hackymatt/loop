@@ -7,16 +7,21 @@ from rest_framework.serializers import (
 from django.db.models import Case, When, IntegerField
 from drf_extra_fields.fields import Base64ImageField, Base64FileField
 from course.models import Course
-from lesson.models import Lesson, Technology, LessonPriceHistory
+from lesson.models import Lesson, Technology
 from topic.models import Topic
 from skill.models import Skill
 from module.models import Module
 from profile.models import LecturerProfile, StudentProfile
-from review.models import Review
-from django.db.models import Min
-from datetime import timedelta
 from notification.utils import notify
 from urllib.parse import quote_plus
+from math import ceil
+
+
+class VideoBase64File(Base64FileField):
+    ALLOWED_TYPES = ["mp4"]
+
+    def get_file_extension(self, filename, decoded_file):
+        return "mp4"
 
 
 def notify_students(course: Course):
@@ -33,43 +38,17 @@ def notify_students(course: Course):
         )
 
 
-class VideoBase64File(Base64FileField):
-    ALLOWED_TYPES = ["mp4"]
-
-    def get_file_extension(self, filename, decoded_file):
-        return "mp4"
-
-
-def get_previous_prices(lesson: Lesson):
-    previous_prices = (
-        LessonPriceHistory.objects.filter(lesson=lesson).order_by("-created_at").all()
-    )
-
-    return previous_prices
-
-
-def get_previous_price(lesson: Lesson):
-    current_price = lesson.price
-    previous_prices = get_previous_prices(lesson=lesson)
-
-    if previous_prices.count() == 0:
+def format_rating(value):
+    if value is None:
         return None
-
-    last_price_change = previous_prices.first()
-
-    previous_price = last_price_change.price
-
-    if previous_price <= current_price:
-        return None
-
-    return previous_price
+    return ceil(value * 10) / 10
 
 
 def get_previous_price_course(course: Course):
-    lessons = Lesson.objects.filter(id__in=course.lessons).all()
+    lessons = Lesson.objects.filter(id__in=course.lessons).add_previous_price().all()
     prices = []
     for lesson in lessons:
-        prev = get_previous_price(lesson=lesson)
+        prev = lesson.previous_price
         curr = lesson.price
         if prev is None:
             prev = curr
@@ -86,10 +65,12 @@ def get_previous_price_course(course: Course):
 
 
 def get_previous_price_module(module: Module):
-    lessons = Lesson.objects.filter(id__in=module.lessons.all()).all()
+    lessons = (
+        Lesson.objects.filter(id__in=module.lessons.all()).add_previous_price().all()
+    )
     prices = []
     for lesson in lessons:
-        prev = get_previous_price(lesson=lesson)
+        prev = lesson.previous_price
         curr = lesson.price
         if prev is None:
             prev = curr
@@ -105,38 +86,13 @@ def get_previous_price_module(module: Module):
     return previous_price
 
 
-def get_lowest_30_days_price(lesson: Lesson):
-    current_price = lesson.price
-    previous_prices = get_previous_prices(lesson=lesson)
-
-    if previous_prices.count() == 0:
-        return None
-
-    last_price_change = previous_prices.first()
-
-    previous_price = last_price_change.price
-
-    if previous_price <= current_price:
-        return None
-
-    last_price_change_date = last_price_change.created_at
-    last_price_change_date_minus_30_days = last_price_change.created_at - timedelta(
-        days=30
-    )
-
-    prices_in_last_30_days = previous_prices.filter(
-        created_at__lte=last_price_change_date,
-        created_at__gte=last_price_change_date_minus_30_days,
-    )
-
-    return prices_in_last_30_days.aggregate(Min("price"))["price__min"]
-
-
 def get_lowest_30_days_price_course(course: Course):
-    lessons = Lesson.objects.filter(id__in=course.lessons).all()
+    lessons = (
+        Lesson.objects.filter(id__in=course.lessons).add_lowest_30_days_price().all()
+    )
     prices = []
     for lesson in lessons:
-        prev = get_lowest_30_days_price(lesson=lesson)
+        prev = lesson.lowest_30_days_price
         curr = lesson.price
         if prev is None:
             prev = curr
@@ -152,10 +108,14 @@ def get_lowest_30_days_price_course(course: Course):
 
 
 def get_lowest_30_days_price_module(module: Module):
-    lessons = Lesson.objects.filter(id__in=module.lessons.all()).all()
+    lessons = (
+        Lesson.objects.filter(id__in=module.lessons.all())
+        .add_lowest_30_days_price()
+        .all()
+    )
     prices = []
     for lesson in lessons:
-        prev = get_lowest_30_days_price(lesson=lesson)
+        prev = lesson.lowest_30_days_price
         curr = lesson.price
         if prev is None:
             prev = curr
@@ -177,7 +137,7 @@ def get_lecturers(course: Course):
         .add_rating()
         .add_rating_count()
         .add_lessons_count()
-        .filter(id__in=course.lecturers, profile_ready=True)
+        .filter(id__in=course.lecturers_ids, profile_ready=True)
         .order_by("full_name")
     )
 
@@ -190,7 +150,7 @@ def get_lecturers_info(self, course: Course):
 
 
 def get_technologies(course: Course):
-    technologies = Technology.objects.filter(id__in=course.technologies).all()
+    technologies = Technology.objects.filter(name__in=course.technologies_names).all()
     return TechnologySerializer(technologies, many=True).data
 
 
@@ -199,10 +159,6 @@ def get_lecturers_details(self, course: Course):
     return LecturerDetailsSerializer(
         lecturers, many=True, context={"request": self.context.get("request")}
     ).data
-
-
-def get_lecturer_rating(lecturer: LecturerProfile):
-    return Review.objects.filter(lecturer=lecturer)
 
 
 class TechnologySerializer(ModelSerializer):
@@ -275,7 +231,7 @@ class LecturerDetailsSerializer(ModelSerializer):
         return lecturer.full_name
 
     def get_rating(self, lecturer: LecturerProfile):
-        return lecturer.rating
+        return format_rating(lecturer.rating)
 
     def get_rating_count(self, lecturer: LecturerProfile):
         return lecturer.rating_count
@@ -284,19 +240,17 @@ class LecturerDetailsSerializer(ModelSerializer):
         return lecturer.lessons_count
 
 
-class LessonShortSerializer(ModelSerializer):
+class LessonSerializer(ModelSerializer):
     id = IntegerField()
     previous_price = SerializerMethodField()
-    lowest_30_days_price = SerializerMethodField("get_lesson_lowest_30_days_price")
+    lowest_30_days_price = SerializerMethodField()
     progress = SerializerMethodField()
 
-    # TODO
     def get_previous_price(self, lesson: Lesson):
-        return get_previous_price(lesson=lesson)
+        return lesson.previous_price
 
-    # TODO
-    def get_lesson_lowest_30_days_price(self, lesson: Lesson):
-        return get_lowest_30_days_price(lesson=lesson)
+    def get_lowest_30_days_price(self, lesson: Lesson):
+        return lesson.lowest_30_days_price
 
     def get_progress(self, lesson: Lesson):
         return lesson.progress
@@ -317,24 +271,27 @@ class ModuleSerializer(ModelSerializer):
     id = IntegerField()
     price = SerializerMethodField()
     previous_price = SerializerMethodField()
-    lowest_30_days_price = SerializerMethodField("get_module_lowest_30_days_price")
+    lowest_30_days_price = SerializerMethodField()
     lessons = SerializerMethodField()
     progress = SerializerMethodField()
 
     def get_price(self, module: Module):
         return module.price
 
-    # TODO
     def get_previous_price(self, module: Module):
         return get_previous_price_module(module=module)
 
-    # TODO
-    def get_module_lowest_30_days_price(self, module: Module):
+    def get_lowest_30_days_price(self, module: Module):
         return get_lowest_30_days_price_module(module=module)
 
     def get_lessons(self, module: Module):
-        lessons = module.lessons.add_progress(user=self.context["request"].user).add_previous_price().all()
-        return LessonShortSerializer(
+        lessons = (
+            module.lessons.add_progress(user=self.context["request"].user)
+            .add_previous_price()
+            .add_lowest_30_days_price()
+            .all()
+        )
+        return LessonSerializer(
             lessons, many=True, context={"request": self.context.get("request")}
         ).data
 
@@ -357,10 +314,10 @@ class ModuleSerializer(ModelSerializer):
 class CourseListSerializer(ModelSerializer):
     price = SerializerMethodField()
     previous_price = SerializerMethodField()
-    lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
+    lowest_30_days_price = SerializerMethodField()
     duration = SerializerMethodField()
-    technologies = SerializerMethodField("get_course_technologies")
-    lecturers = SerializerMethodField("get_course_lecturers")
+    technologies = SerializerMethodField()
+    lecturers = SerializerMethodField()
     students_count = SerializerMethodField()
     rating = SerializerMethodField()
     rating_count = SerializerMethodField()
@@ -371,25 +328,23 @@ class CourseListSerializer(ModelSerializer):
     def get_price(self, course: Course):
         return course.price
 
-    # TODO
     def get_previous_price(self, course: Course):
         return get_previous_price_course(course=course)
 
-    # TODO
-    def get_course_lowest_30_days_price(self, course: Course):
+    def get_lowest_30_days_price(self, course: Course):
         return get_lowest_30_days_price_course(course=course)
 
-    def get_course_technologies(self, course: Course):
+    def get_technologies(self, course: Course):
         return get_technologies(course=course)
 
     def get_duration(self, course):
         return course.duration
 
-    def get_course_lecturers(self, course: Course):
+    def get_lecturers(self, course: Course):
         return get_lecturers_info(self, course=course)
 
     def get_rating(self, course: Course):
-        return course.rating
+        return format_rating(course.rating)
 
     def get_rating_count(self, course: Course):
         return course.rating_count
@@ -416,13 +371,13 @@ class CourseGetSerializer(ModelSerializer):
     level = CharField(source="get_level_display")
     price = SerializerMethodField()
     previous_price = SerializerMethodField()
-    lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
+    lowest_30_days_price = SerializerMethodField()
     duration = SerializerMethodField()
     modules = SerializerMethodField()
-    technologies = SerializerMethodField("get_course_technologies")
+    technologies = SerializerMethodField()
     skills = SerializerMethodField()
     topics = SerializerMethodField()
-    lecturers = SerializerMethodField("get_course_lecturers")
+    lecturers = SerializerMethodField()
     students_count = SerializerMethodField()
     rating = SerializerMethodField()
     rating_count = SerializerMethodField()
@@ -433,15 +388,13 @@ class CourseGetSerializer(ModelSerializer):
     def get_price(self, course: Course):
         return course.price
 
-    # TODO
     def get_previous_price(self, course: Course):
         return get_previous_price_course(course=course)
 
-    # TODO
-    def get_course_lowest_30_days_price(self, course: Course):
+    def get_lowest_30_days_price(self, course: Course):
         return get_lowest_30_days_price_course(course=course)
 
-    def get_course_technologies(self, course: Course):
+    def get_technologies(self, course: Course):
         return get_technologies(course=course)
 
     def get_modules(self, course: Course):
@@ -455,7 +408,7 @@ class CourseGetSerializer(ModelSerializer):
             output_field=IntegerField(),
         )
         modules = (
-            Module.objects.add_price().add_previous_price()
+            Module.objects.add_price()
             .add_progress(user=self.context["request"].user)
             .filter(id__in=module_ids)
             .order_by(preserved_order)
@@ -496,11 +449,11 @@ class CourseGetSerializer(ModelSerializer):
     def get_duration(self, course: Course):
         return course.duration
 
-    def get_course_lecturers(self, course: Course):
+    def get_lecturers(self, course: Course):
         return get_lecturers_details(self, course=course)
 
     def get_rating(self, course: Course):
-        return course.rating
+        return format_rating(course.rating)
 
     def get_rating_count(self, course: Course):
         return course.rating_count
@@ -592,10 +545,10 @@ class CourseSerializer(ModelSerializer):
 class BestCourseSerializer(ModelSerializer):
     price = SerializerMethodField()
     previous_price = SerializerMethodField()
-    lowest_30_days_price = SerializerMethodField("get_course_lowest_30_days_price")
-    technologies = SerializerMethodField("get_course_technologies")
+    lowest_30_days_price = SerializerMethodField()
+    technologies = SerializerMethodField()
     duration = SerializerMethodField()
-    lecturers = SerializerMethodField("get_course_lecturers")
+    lecturers = SerializerMethodField()
     students_count = SerializerMethodField()
     rating = SerializerMethodField()
     rating_count = SerializerMethodField()
@@ -605,25 +558,23 @@ class BestCourseSerializer(ModelSerializer):
     def get_price(self, course: Course):
         return course.price
 
-    # TODO
     def get_previous_price(self, course: Course):
         return get_previous_price_course(course=course)
 
-    # TODO
-    def get_course_lowest_30_days_price(self, course: Course):
+    def get_lowest_30_days_price(self, course: Course):
         return get_lowest_30_days_price_course(course=course)
 
-    def get_course_technologies(self, course: Course):
+    def get_technologies(self, course: Course):
         return get_technologies(course=course)
 
     def get_duration(self, course):
         return course.duration
 
-    def get_course_lecturers(self, course: Course):
+    def get_lecturers(self, course: Course):
         return get_lecturers_info(self, course=course)
 
     def get_rating(self, course: Course):
-        return course.rating
+        return format_rating(course.rating)
 
     def get_rating_count(self, course: Course):
         return course.rating_count

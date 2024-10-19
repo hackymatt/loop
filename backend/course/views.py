@@ -13,11 +13,11 @@ from course.models import Course
 from random import sample
 from django.db.models import Value, CharField
 
+
 class CourseViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
     queryset = (
-        Course.objects
-        .add_price()
+        Course.objects.add_price()
         .add_duration()
         .add_lessons()
         .add_students_count()
