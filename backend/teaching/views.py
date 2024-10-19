@@ -24,7 +24,7 @@ class ManageTeachingViewSet(ModelViewSet):
         if self.action in ["retrieve", "create", "destroy"]:
             self.filterset_class = None
             return Teaching.objects.all().order_by("id")
-        return self.queryset.add_teaching_id()
+        return self.queryset.add_teaching_id(user=self.request.user)
 
     def get_serializer_class(self):
         if self.action in ["retrieve", "create", "destroy"]:

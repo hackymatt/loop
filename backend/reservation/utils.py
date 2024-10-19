@@ -12,6 +12,7 @@ from notification.utils import notify
 from urllib.parse import quote_plus
 from utils.google.drive import DriveApi
 import re
+from utils.logger.logger import logger
 
 
 def get_meeting_title(schedule: Schedule):
@@ -175,7 +176,9 @@ def pull_recordings():
             )
 
         else:
-            print(f"Schedule ID not found in file name {file_name}")
+            logger.error(
+                f"Schedule ID not found in file name {file_name}", exc_info=True
+            )
 
     if recordings_to_create:
         Recording.objects.bulk_create(recordings_to_create)

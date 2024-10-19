@@ -14,11 +14,7 @@ class OrderFilter(OrderingFilter):
             return super().filter(queryset, values)
 
         for value in values:
-            if value in ["lecturer_id", "-lecturer_id"]:
-                value_modified = value.replace("_", "__")
-                queryset = queryset.order_by(value_modified)
-            else:
-                queryset = queryset.order_by(value)
+            queryset = queryset.order_by(value)
 
         return queryset
 
@@ -45,8 +41,8 @@ class FinanceHistoryFilter(FilterSet):
             ("-created_at", "Created At DESC"),
         ),
         fields={
-            "lecturer_id": "lecturer_id",
-            "-lecturer_id": "-lecturer_id",
+            "lecturer_id": "lecturer__id",
+            "-lecturer_id": "-lecturer__id",
             "account": "account",
             "-account": "-account",
             "rate": "rate",

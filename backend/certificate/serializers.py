@@ -23,7 +23,7 @@ class CertificateSerializer(ModelSerializer):
             "completed_at",
         )
 
-    def get_completed_at(self, certificate):
+    def get_completed_at(self, certificate: Certificate):
         return certificate.created_at.date() - timedelta(days=1)
 
 
@@ -46,12 +46,12 @@ class CertificateInfoSerializer(ModelSerializer):
             "student_full_name",
         )
 
-    def get_reference_number(self, certificate):
+    def get_reference_number(self, certificate: Certificate):
         return "{:05d}".format(certificate.id)
 
-    def get_student_full_name(self, certificate):
+    def get_student_full_name(self, certificate: Certificate):
         user = certificate.student.profile.user
         return f"{user.first_name} {user.last_name}"
 
-    def get_completed_at(self, certificate):
+    def get_completed_at(self, certificate: Certificate):
         return certificate.created_at.date() - timedelta(days=1)

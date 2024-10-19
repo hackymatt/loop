@@ -128,7 +128,6 @@ class LessonQuerySet(QuerySet):
 
     def add_teaching_id(self, user):
         Teaching = apps.get_model("teaching", "Teaching")
-        user = self.request.user
         teaching = Teaching.objects.filter(
             lecturer__profile__user=user, lesson=OuterRef("pk")
         )
@@ -136,7 +135,7 @@ class LessonQuerySet(QuerySet):
         return self.annotate(
             teaching_id=Case(
                 When(
-                    teaching_exists=Exists(teaching),
+                    Exists(teaching),
                     then=Subquery(teaching.values("id")[:1]),
                 ),
                 default=Value(None),

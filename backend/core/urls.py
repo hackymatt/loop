@@ -16,6 +16,7 @@ from profile.profile_data.views import ProfileDataViewSet
 from profile.lecturers.views import LecturerViewSet, BestLecturerViewSet
 from profile.earnings.views import EarningViewSet
 from django.urls import path, include
+from django.conf import settings
 from django.contrib import admin
 from course.views import (
     CourseViewSet,
@@ -23,7 +24,7 @@ from course.views import (
 )
 from notification.views import NotificationViewSet
 from message.views import MessageViewSet
-from certificate.views import CertificateViewSet, CertificateInfoViewSet
+from certificate.views import CertificateViewSet, CertificateInfoAPIView
 from lesson.views import (
     LessonViewSet,
     LessonPriceHistoryViewSet,
@@ -36,8 +37,8 @@ from post.views import PostViewSet, PostCategoryViewSet
 from review.views import ReviewViewSet, ReviewStatsViewSet, BestReviewViewSet
 from newsletter.views import (
     NewsletterEntriesViewSet,
-    NewsletterSubscribeViewSet,
-    NewsletterUnsubscribeViewSet,
+    NewsletterSubscribeAPIView,
+    NewsletterUnsubscribeAPIView,
 )
 from schedule.views import (
     ManageScheduleViewSet,
@@ -50,11 +51,10 @@ from cart.views import CartViewSet
 from purchase.views import PurchaseViewSet, PaymentVerifyViewSet, PaymentStatusViewSet
 from teaching.views import ManageTeachingViewSet, TeachingViewSet
 from reservation.views import ReservationViewSet
-from contact.views import ContactViewSet
+from contact.views import ContactAPIView
 from finance.views import FinanceDetailsViewSet, FinanceHistoryViewSet
 from coupon.views import CouponViewSet, CouponUserViewSet, CouponValidationViewSet
 from .routers import Router
-from django.conf import settings
 
 router = Router(trailing_slash=False)
 
@@ -132,14 +132,14 @@ api_urlpatterns = [
         FinanceDetailsViewSet.as_view({"get": "list", "put": "update"}),
     ),
     path("stats", StatsAPIView.as_view()),
-    path("newsletter-subscribe", NewsletterSubscribeViewSet.subscribe),
+    path("newsletter-subscribe", NewsletterSubscribeAPIView.as_view()),
     path(
         "newsletter-unsubscribe/<str:uuid>",
-        NewsletterUnsubscribeViewSet.unsubscribe,
+        NewsletterUnsubscribeAPIView.as_view(),
     ),
     path(
         "certificate/<str:id>",
-        CertificateInfoViewSet.get_certificate,
+        CertificateInfoAPIView.as_view(),
     ),
     path(
         "payment-verify",
@@ -149,7 +149,7 @@ api_urlpatterns = [
         "payment-status",
         PaymentStatusViewSet.as_view({"get": "list"}),
     ),
-    path("contact", ContactViewSet.as_view({"post": "contact"})),
+    path("contact", ContactAPIView.as_view()),
     path(
         "coupon-validate/<str:coupon_code>/<str:total>",
         CouponValidationViewSet.validate,

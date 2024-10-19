@@ -25,7 +25,7 @@ from notification.utils import notify
 from math import floor
 
 
-def confirm_purchase(status, purchases, payment):
+def confirm_purchase(status, purchases, payment: Payment):
     title = (
         "Twój zakup jest zakończony!"
         if status == "S"
@@ -74,7 +74,7 @@ def confirm_purchase(status, purchases, payment):
 
 class PurchaseViewSet(ModelViewSet):
     http_method_names = ["get", "post"]
-    queryset = Purchase.objects.filter(payment__status="S").all()
+    queryset = Purchase.objects.filter(payment__status="S").all().order_by("id")
     serializer_class = PurchaseGetSerializer
     filterset_class = PurchaseFilter
     permission_classes = [IsAuthenticated]
@@ -212,19 +212,17 @@ class PaymentVerifyViewSet(ModelViewSet):
     @csrf_exempt
     def verify_payment(request):
         data = json.loads(request.body)
-
         session_id = data.get("sessionId")
         order_id = data.get("orderId")
         amount = data.get("amount")
 
-        payments = Payment.objects.filter(session_id=session_id, amount=amount)
+        payment = Payment.objects.filter(session_id=session_id, amount=amount).first()
 
-        if not payments.exists():
+        if not payment:
             return JsonResponse(
                 {"status": "failure"}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        payment = payments.first()
         payment.order_id = order_id
         przelewy24 = Przelewy24Api(payment=payment)
         verification_success = przelewy24.verify()
@@ -234,7 +232,10 @@ class PaymentVerifyViewSet(ModelViewSet):
 
         if verification_success:
             return JsonResponse({"status": "success"}, status=status.HTTP_200_OK)
-        return JsonResponse({"status": "failure"}, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse(
+            {"status": "failure"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class PaymentStatusViewSet(ModelViewSet):

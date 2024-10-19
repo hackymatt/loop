@@ -1,5 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
-from django.http import JsonResponse
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from newsletter.serializers import NewsletterEntrySerializer, NewsletterSerializer
 from newsletter.models import Newsletter
@@ -10,7 +12,7 @@ from mailer.mailer import Mailer
 import json
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
-from config_global import FRONTEND_URL
+from config_global import FRONTEND_URL, DEFAULT_COUPON
 
 
 class NewsletterEntriesViewSet(ModelViewSet):
@@ -21,63 +23,49 @@ class NewsletterEntriesViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
 
-class NewsletterSubscribeViewSet(ModelViewSet):
+class NewsletterSubscribeAPIView(APIView):
     http_method_names = ["post"]
 
-    @csrf_exempt
-    def subscribe(request):
-        send_email = False
-        data = json.loads(request.body)
+    def post(self, request):
+        data = request.data
         instance, created = Newsletter.objects.get_or_create(**data)
+
+        send_email = created or not instance.active
         if not created:
-            send_email = not instance.active
             instance.active = True
             instance.save()
 
-        if send_email or created:
-            mailer = Mailer()
-            data = {
-                **{
-                    "unsubscribe_url": f"{FRONTEND_URL}/newsletter-unsubscribe/"
-                    + str(instance.uuid),
-                    "discount": None,
-                }
-            }
-            if created:
-                coupons = Coupon.objects.filter(code="programista20")
-                if coupons.exists():
-                    coupon = coupons.first()
-                else:
-                    coupon = Coupon.objects.create(
-                        code="programista20",
-                        discount=20,
-                        is_percentage=True,
-                        all_users=True,
-                        is_infinite=True,
-                        uses_per_user=1,
-                        active=True,
-                        expiration_date=make_aware(
-                            datetime.now() + timedelta(weeks=52 * 99)
-                        ),
-                    )
-                data["discount"] = coupon.code
-            mailer.send(
-                email_template="subscribe.html",
-                to=[instance.email],
-                subject="Potwierdzenie rejestracji w newsletterze",
-                data=data,
-            )
+        if send_email:
+            self._send_confirmation_email(instance, created)
 
-        return JsonResponse(NewsletterSerializer(instance).data)
+        return Response(
+            data=NewsletterSerializer(instance).data, status=status.HTTP_200_OK
+        )
+
+    def _send_confirmation_email(self, instance, created):
+        mailer = Mailer()
+        data = {
+            "unsubscribe_url": f"{FRONTEND_URL}/newsletter-unsubscribe/{instance.uuid}",
+            "discount": None,
+        }
+
+        if created:
+            data["discount"] = DEFAULT_COUPON["code"]
+
+        mailer.send(
+            email_template="subscribe.html",
+            to=[instance.email],
+            subject="Potwierdzenie rejestracji w newsletterze",
+            data=data,
+        )
 
 
-class NewsletterUnsubscribeViewSet(ModelViewSet):
+class NewsletterUnsubscribeAPIView(APIView):
     http_method_names = ["put"]
 
-    @csrf_exempt
-    def unsubscribe(request, uuid):
+    def put(self, request, uuid):
         instance = Newsletter.objects.get(uuid=uuid)
         instance.active = False
         instance.save()
 
-        return JsonResponse(NewsletterSerializer(instance).data)
+        return Response(NewsletterSerializer(instance).data, status=status.HTTP_200_OK)
