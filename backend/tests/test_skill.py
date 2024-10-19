@@ -8,10 +8,7 @@ from .factory import (
     create_skill,
     create_skill_obj,
 )
-from .helpers import (
-    login,
-    skills_number,
-)
+from .helpers import login, skills_number, is_float
 from django.contrib import auth
 import json
 
@@ -163,3 +160,114 @@ class SkillTest(APITestCase):
         response = self.client.delete(f"{self.endpoint}/{self.skill.id}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(skills_number(), 4)
+
+
+class SkillFilterTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/skills"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        self.skill = create_skill(name="A")
+        create_skill(name="B")
+        create_skill(name="C")
+        create_skill(name="D")
+        create_skill(name="E")
+
+    def test_name_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}?name=A")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 1)
+        prices = [record["name"] for record in results]
+        self.assertEqual(prices, ["A"])
+
+    def test_created_at_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        date = str(self.skill.created_at)[0:10]
+        response = self.client.get(f"{self.endpoint}?created_at={date}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 5)
+        dates = list(set([date in record["created_at"] for record in results]))
+        self.assertTrue(len(dates) == 1)
+        self.assertTrue(dates[0])
+
+
+class SkillOrderTest(APITestCase):
+    def setUp(self):
+        self.endpoint = "/api/skills"
+        self.data = {
+            "email": "test_email@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email=self.data["email"],
+            password=self.data["password"],
+            is_active=True,
+        )
+        create_skill(name="A")
+        create_skill(name="B")
+        create_skill(name="C")
+        create_skill(name="D")
+        create_skill(name="E")
+
+        self.fields = ["name", "created_at"]
+
+    def test_ordering(self):
+        for field in self.fields:
+            self.assertFalse(auth.get_user(self.client).is_authenticated)
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by={field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 5)
+            field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values, sorted(field_values, key=lambda d: d["name"])
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values))
+            # get data
+            response = self.client.get(f"{self.endpoint}?sort_by=-{field}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = json.loads(response.content)
+            count = data["records_count"]
+            results = data["results"]
+            self.assertEqual(count, 5)
+            field_values = [course[field] for course in results]
+            if isinstance(field_values[0], dict):
+                self.assertEqual(
+                    field_values,
+                    sorted(field_values, key=lambda d: d["name"], reverse=True),
+                )
+            else:
+                field_values = [
+                    field_value if not is_float(field_value) else float(field_value)
+                    for field_value in field_values
+                ]
+                self.assertEqual(field_values, sorted(field_values, reverse=True))

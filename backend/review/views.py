@@ -17,7 +17,7 @@ from config_global import DUMMY_STUDENT_EMAIL
 
 class ReviewViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Review.objects.all()
+    queryset = Review.objects.all().order_by("rating")
     serializer_class = ReviewSerializer
     filterset_class = ReviewFilter
     permission_classes = [AllowAny]
@@ -30,7 +30,7 @@ class ReviewViewSet(ModelViewSet):
     def get_permissions(self):
         if self.action == "create":
             permission_classes = [IsAuthenticated]
-        elif self.action == "update" or self.action == "destroy":
+        elif self.action in ["update", "destroy"]:
             permission_classes = [IsAuthenticated, IsUserReview]
         else:
             permission_classes = self.permission_classes
@@ -39,22 +39,21 @@ class ReviewViewSet(ModelViewSet):
 
 class ReviewStatsViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Review.objects.all()
+    queryset = (
+        Review.objects.values("rating")
+        .annotate(count=Count("rating"))
+        .order_by("rating")
+    )
     serializer_class = ReviewStatsSerializer
     filterset_class = ReviewFilter
     permission_classes = [AllowAny]
 
-    def get_queryset(self):
-        return (
-            self.queryset.values("rating")
-            .annotate(count=Count("rating"))
-            .order_by("rating")
-        )
-
 
 class BestReviewViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Review.objects.filter(rating=5, review__isnull=False).all()
+    queryset = (
+        Review.objects.filter(rating=5, review__isnull=False).all().order_by("rating")
+    )
     serializer_class = BestReviewSerializer
 
     def get_queryset(self):

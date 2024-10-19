@@ -7,7 +7,7 @@ from topic.models import Topic
 
 class TopicViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Topic.objects.all()
+    queryset = Topic.objects.all().order_by("id")
     serializer_class = TopicSerializer
     permission_classes = [AllowAny]
     filterset_class = TopicFilter

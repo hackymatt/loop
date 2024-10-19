@@ -7,7 +7,7 @@ from skill.models import Skill
 
 class SkillViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Skill.objects.all()
+    queryset = Skill.objects.all().order_by("id")
     serializer_class = SkillSerializer
     permission_classes = [AllowAny]
     filterset_class = SkillFilter

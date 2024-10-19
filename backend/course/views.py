@@ -120,7 +120,7 @@ class BestCourseViewSet(ModelViewSet):
     serializer_class = BestCourseSerializer
 
     def get_queryset(self):
-        queryset = self.queryset.filter(rating__gte=4)
+        queryset = self.queryset.filter(rating__gte=4).order_by("id")
 
         ids = queryset.values_list("id", flat=True)
         random_ids = sample(list(ids), min(len(ids), 10))

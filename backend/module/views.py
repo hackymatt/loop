@@ -7,7 +7,12 @@ from module.models import Module
 
 class ModuleViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Module.objects.prefetch_related("lessons").add_lessons_count().all()
+    queryset = (
+        Module.objects.prefetch_related("lessons")
+        .add_lessons_count()
+        .all()
+        .order_by("id")
+    )
     serializer_class = ModuleSerializer
     permission_classes = [IsAdminUser]
     filterset_class = ModuleFilter

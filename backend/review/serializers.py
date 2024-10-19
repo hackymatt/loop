@@ -39,8 +39,8 @@ class LecturerSerializer(ModelSerializer):
             "image",
         )
 
-    def get_full_name(self, lecturer):
-        return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
+    def get_full_name(self, lecturer: LecturerProfile):
+        return lecturer.full_name
 
 
 class BestReviewSerializer(ModelSerializer):
@@ -60,7 +60,7 @@ class BestReviewSerializer(ModelSerializer):
 class ReviewGetSerializer(ModelSerializer):
     lesson_title = CharField(source="lesson.title")
     student = StudentSerializer()
-    lecturer = LecturerSerializer()
+    lecturer = SerializerMethodField()
 
     class Meta:
         model = Review
@@ -73,6 +73,14 @@ class ReviewGetSerializer(ModelSerializer):
             "review",
             "created_at",
         )
+
+    def get_lecturer(self, review: Review):
+        lecturer = (
+            LecturerProfile.objects.filter(id=review.lecturer.id)
+            .add_full_name()
+            .first()
+        )
+        return LecturerSerializer(lecturer).data
 
 
 class ReviewStatsSerializer(ModelSerializer):

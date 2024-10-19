@@ -44,7 +44,7 @@ from schedule.views import (
     ScheduleViewSet,
     ScheduleAvailableDateViewSet,
 )
-from stats.views import StatsViewSet
+from stats.views import StatsAPIView
 from wishlist.views import WishlistViewSet
 from cart.views import CartViewSet
 from purchase.views import PurchaseViewSet, PaymentVerifyViewSet, PaymentStatusViewSet
@@ -131,7 +131,7 @@ api_urlpatterns = [
         "finance-details",
         FinanceDetailsViewSet.as_view({"get": "list", "put": "update"}),
     ),
-    path("stats", StatsViewSet.as_view({"get": "get_stats"})),
+    path("stats", StatsAPIView.as_view()),
     path("newsletter-subscribe", NewsletterSubscribeViewSet.subscribe),
     path(
         "newsletter-unsubscribe/<str:uuid>",
