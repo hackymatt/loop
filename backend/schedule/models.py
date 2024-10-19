@@ -17,9 +17,8 @@ from django.db.models import (
 from django.db.models.functions import ExtractYear, ExtractMonth, Concat, Right
 from profile.models import LecturerProfile
 from lesson.models import Lesson
-from datetime import datetime, timedelta
+from datetime import datetime
 from django.utils.timezone import make_aware
-from config_global import CANCELLATION_TIME
 
 
 class Meeting(BaseModel):
@@ -63,11 +62,7 @@ class ScheduleManager(Manager):
         return ScheduleQuerySet(self.model, using=self._db)
 
     def add_diff(self):
-        return (
-            self.get_queryset()
-            .add_diff()
-            .exclude(lesson__isnull=True, diff__gte=-timedelta(hours=CANCELLATION_TIME))
-        )
+        return self.get_queryset().add_diff()
 
     def add_year_month(self):
         return self.get_queryset().add_year_month()

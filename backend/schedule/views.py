@@ -22,6 +22,7 @@ from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from notification.utils import notify
 from urllib.parse import quote_plus
+from config_global import CANCELLATION_TIME
 
 
 class ManageScheduleViewSet(ModelViewSet):
@@ -114,7 +115,9 @@ class ManageScheduleViewSet(ModelViewSet):
 
 class ScheduleViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Schedule.objects.add_diff()
+    queryset = Schedule.objects.add_diff().exclude(
+        lesson__isnull=True, diff__gte=-timedelta(hours=CANCELLATION_TIME)
+    )
     serializer_class = ScheduleSerializer
     filterset_class = ScheduleFilter
     permission_classes = [AllowAny]
@@ -124,6 +127,7 @@ class ScheduleAvailableDateViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = (
         Schedule.objects.add_diff()
+        .exclude(lesson__isnull=True, diff__gte=-timedelta(hours=CANCELLATION_TIME))
         .add_year_month()
         .annotate(date=TruncDate(F("start_time")))
         .values("date")
