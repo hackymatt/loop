@@ -25,8 +25,7 @@ class FinanceDetailsViewSet(ModelViewSet):
 
     def get_object(self):
         user = self.request.user
-        profile = Profile.objects.get(user=user)
-        return Finance.objects.filter(lecturer__profile=profile).first()
+        return Finance.objects.filter(lecturer__profile__user=user).first()
 
 
 class FinanceHistoryViewSet(ModelViewSet):

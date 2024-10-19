@@ -1,7 +1,8 @@
 from reservation.models import Reservation
 from schedule.models import Schedule, Meeting, Recording
+from profile.models import StudentProfile
 from schedule.utils import MeetingManager, get_min_students_required
-from django.db.models import F
+from django.db.models import F, Prefetch
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from pytz import timezone, utc
@@ -29,7 +30,9 @@ def confirm_reservations():
     )
 
     for schedule in schedules:
-        reservations = Reservation.objects.filter(schedule=schedule)
+        reservations = Reservation.objects.filter(schedule=schedule).prefetch_related(
+            Prefetch("student", queryset=StudentProfile.objects.add_full_name())
+        )
 
         is_lesson_success = reservations.count() >= get_min_students_required(
             lecturer=schedule.lecturer, lesson=schedule.lesson

@@ -15,14 +15,14 @@ class MeetingManager:
     def _create_lecturer(self, lecturer: LecturerProfile):
         return {
             "email": lecturer.profile.user.email,
-            "full_name": f"{lecturer.profile.user.first_name} {lecturer.profile.user.last_name}",
+            "full_name": lecturer.full_name,
         }
 
     def _create_students(self, students: List[StudentProfile]):
         return [
             {
                 "email": student.profile.user.email,
-                "full_name": f"{student.profile.user.first_name} {student.profile.user.last_name}",
+                "full_name": student.full_name,
             }
             for student in students
         ]

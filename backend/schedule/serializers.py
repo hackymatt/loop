@@ -6,13 +6,27 @@ from rest_framework.serializers import (
 )
 from schedule.models import Schedule
 from schedule.utils import get_min_students_required
-from profile.models import Profile, LecturerProfile, StudentProfile
+from profile.models import LecturerProfile, StudentProfile
 from lesson.models import Lesson
 from reservation.models import Reservation
 
 
+def get_students_required(schedule: Schedule, lesson: Lesson = None):
+    if not lesson:
+        return None
+
+    current_reservations = Reservation.objects.filter(schedule=schedule).count()
+    return max(
+        get_min_students_required(
+            lecturer=schedule.lecturer, lesson=lesson if lesson else schedule.lesson
+        )
+        - current_reservations,
+        0,
+    )
+
+
 class StudentSerializer(ModelSerializer):
-    full_name = SerializerMethodField("get_full_name")
+    full_name = SerializerMethodField()
     gender = CharField(source="profile.get_gender_display")
     image = ImageField(source="profile.image")
 
@@ -25,8 +39,8 @@ class StudentSerializer(ModelSerializer):
             "image",
         )
 
-    def get_full_name(self, student):
-        return student.profile.user.first_name + " " + student.profile.user.last_name
+    def get_full_name(self, student: StudentProfile):
+        return student.full_name
 
 
 class LessonSerializer(ModelSerializer):
@@ -42,7 +56,7 @@ class ManageScheduleGetSerializer(ModelSerializer):
     lesson = LessonSerializer()
     meeting_url = SerializerMethodField()
     students = SerializerMethodField()
-    students_required = SerializerMethodField("get_students_required")
+    students_required = SerializerMethodField()
 
     class Meta:
         model = Schedule
@@ -58,21 +72,13 @@ class ManageScheduleGetSerializer(ModelSerializer):
             return schedule.meeting.url
         return None
 
-    def get_students(self, schedule):
+    def get_students(self, schedule: Schedule):
         ids = Reservation.objects.filter(schedule=schedule).values("student")
-        students = StudentProfile.objects.filter(id__in=ids).all()
+        students = StudentProfile.objects.filter(id__in=ids).add_full_name().all()
         return StudentSerializer(students, many=True).data
 
-    def get_students_required(self, schedule):
-        if not schedule.lesson:
-            return None
-        return max(
-            get_min_students_required(
-                lecturer=schedule.lecturer, lesson=schedule.lesson
-            )
-            - Reservation.objects.filter(schedule=schedule).count(),
-            0,
-        )
+    def get_students_required(self, schedule: Schedule):
+        return get_students_required(schedule=schedule)
 
 
 class ManageScheduleSerializer(ModelSerializer):
@@ -85,13 +91,12 @@ class ManageScheduleSerializer(ModelSerializer):
 
     def create(self, validated_data):
         user = self.context["request"].user
-        lecturer = LecturerProfile.objects.get(profile=Profile.objects.get(user=user))
-
+        lecturer = LecturerProfile.objects.get(profile__user=user)
         return Schedule.objects.create(lecturer=lecturer, **validated_data)
 
 
 class ScheduleSerializer(ModelSerializer):
-    students_required = SerializerMethodField("get_students_required")
+    students_required = SerializerMethodField()
 
     class Meta:
         model = Schedule
@@ -102,19 +107,12 @@ class ScheduleSerializer(ModelSerializer):
             "created_at",
         )
 
-    def get_students_required(self, schedule):
-        lesson_id = self.context["request"].query_params.get("lesson_id")
-        lessons = Lesson.objects.filter(pk=lesson_id).all()
-        if not lessons.exists():
+    def get_students_required(self, schedule: Schedule):
+        lesson_id = self.context["request"].query_params.get("lesson_id", None)
+        if not lesson_id:
             return None
-
-        return max(
-            get_min_students_required(
-                lecturer=schedule.lecturer, lesson=lessons.first()
-            )
-            - Reservation.objects.filter(schedule=schedule).count(),
-            0,
-        )
+        lesson = Lesson.objects.get(pk=lesson_id)
+        return get_students_required(schedule=schedule, lesson=lesson)
 
 
 class ScheduleAvailableDateSerializer(ModelSerializer):

@@ -103,8 +103,27 @@ class AdminProfile(BaseModel):
         ]
 
 
+class StudentProfileQuerySet(QuerySet):
+    def add_full_name(self):
+        return self.annotate(
+            full_name=Concat(
+                "profile__user__first_name", Value(" "), "profile__user__last_name"
+            )
+        )
+
+
+class StudentProfileManager(Manager):
+    def get_queryset(self):
+        return StudentProfileQuerySet(self.model, using=self._db)
+
+    def add_full_name(self):
+        return self.get_queryset().add_full_name()
+
+
 class StudentProfile(BaseModel):
     profile = OneToOneField(Profile, on_delete=CASCADE)
+
+    objects = StudentProfileManager()
 
     class Meta:
         db_table = "student_profile"

@@ -19,8 +19,7 @@ class CertificateViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        student = Profile.objects.get(user=user)
-        return self.queryset.filter(student__profile=student)
+        return self.queryset.filter(student__profile__user=user)
 
 
 class CertificateInfoViewSet(ModelViewSet):

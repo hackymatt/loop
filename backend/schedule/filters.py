@@ -9,9 +9,9 @@ from django_filters import (
 )
 from schedule.models import Schedule
 from lesson.models import Lesson
-from django.db.models import OuterRef, Subquery, IntegerField, F, Value, CharField
+from django.db.models import OuterRef, Subquery, IntegerField
 from django.db.models.expressions import RawSQL
-from django.db.models.functions import Cast, ExtractYear, ExtractMonth, Concat, Right
+from django.db.models.functions import Cast
 
 
 def get_free_slots_duration(queryset):
@@ -70,6 +70,30 @@ def get_reserved_slots_duration(queryset):
     return queryset.annotate(duration=Cast(Subquery(total_duration), IntegerField()))
 
 
+def filter_lesson(queryset, field_name, value):
+    lookup_field_name = f"{field_name}__isnull"
+    lesson_records = queryset.filter(**{field_name: value})
+    empty_records = queryset.filter(**{lookup_field_name: True})
+    return lesson_records | empty_records
+
+
+def filter_duration(queryset, field_name, value):
+    lookup_field_name = f"{field_name}__gte"
+    empty_records = queryset.filter(**{"lesson__isnull": True})
+    reserved_records = queryset.filter(**{"lesson__isnull": False})
+
+    empty_records_duration = get_free_slots_duration(empty_records).filter(
+        **{lookup_field_name: value}
+    )
+    reserved_records_duration = get_reserved_slots_duration(reserved_records).filter(
+        **{lookup_field_name: value}
+    )
+
+    records = empty_records_duration | reserved_records_duration
+
+    return records
+
+
 class OrderFilter(OrderingFilter):
     def filter(self, queryset, values):
         if values is None:
@@ -122,30 +146,14 @@ class ScheduleFilter(FilterSet):
         )
 
     def filter_lesson(self, queryset, field_name, value):
-        lookup_field_name = "__".join([field_name, "isnull"])
-        lesson_records = queryset.filter(**{field_name: value})
-        empty_records = queryset.filter(**{lookup_field_name: True})
-        return lesson_records | empty_records
+        return filter_lesson(queryset=queryset, field_name=field_name, value=value)
 
     def filter_reserved(self, queryset, field_name, value):
-        lookup_field_name = "__".join([field_name, "isnull"])
+        lookup_field_name = f"{field_name}__isnull"
         return queryset.exclude(**{lookup_field_name: value})
 
     def filter_duration(self, queryset, field_name, value):
-        lookup_field_name = f"{field_name}__gte"
-        empty_records = queryset.filter(**{"lesson__isnull": True})
-        reserved_records = queryset.filter(**{"lesson__isnull": False})
-
-        empty_records_duration = get_free_slots_duration(empty_records).filter(
-            **{lookup_field_name: value}
-        )
-        reserved_records_duration = get_reserved_slots_duration(
-            reserved_records
-        ).filter(**{lookup_field_name: value})
-
-        records = empty_records_duration | reserved_records_duration
-
-        return records
+        return filter_duration(queryset=queryset, field_name=field_name, value=value)
 
 
 class ScheduleAvailableDateFilter(FilterSet):
@@ -160,11 +168,7 @@ class ScheduleAvailableDateFilter(FilterSet):
         field_name="duration",
         method="filter_duration",
     )
-    year_month = CharFilter(
-        label="Lesson year-month",
-        field_name="year_month",
-        method="filter_year_month",
-    )
+    year_month = CharFilter(field_name="year_month", lookup_expr="exact")
 
     class Meta:
         model = Schedule
@@ -176,35 +180,7 @@ class ScheduleAvailableDateFilter(FilterSet):
         )
 
     def filter_lesson(self, queryset, field_name, value):
-        lookup_field_name = "__".join([field_name, "isnull"])
-        lesson_records = queryset.filter(**{field_name: value})
-        empty_records = queryset.filter(**{lookup_field_name: True})
-        return lesson_records | empty_records
+        return filter_lesson(queryset=queryset, field_name=field_name, value=value)
 
     def filter_duration(self, queryset, field_name, value):
-        lookup_field_name = f"{field_name}__gte"
-        empty_records = queryset.filter(**{"lesson__isnull": True})
-        reserved_records = queryset.filter(**{"lesson__isnull": False})
-
-        empty_records_duration = get_free_slots_duration(empty_records).filter(
-            **{lookup_field_name: value}
-        )
-        reserved_records_duration = get_reserved_slots_duration(
-            reserved_records
-        ).filter(**{lookup_field_name: value})
-
-        records = empty_records_duration | reserved_records_duration
-
-        return records
-
-    def filter_year_month(self, queryset, field_name, value):
-        lookup_field_name = field_name
-        records = queryset.annotate(
-            year_month=Concat(
-                ExtractYear(F("start_time")),
-                Value("-"),
-                Right(Concat(Value("0"), ExtractMonth(F("start_time"))), 2),
-                output_field=CharField(),
-            )
-        )
-        return records.filter(**{lookup_field_name: value})
+        return filter_duration(queryset=queryset, field_name=field_name, value=value)

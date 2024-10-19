@@ -81,8 +81,7 @@ class PurchaseViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        student = Profile.objects.get(user=user)
-        return self.queryset.filter(student__profile=student)
+        return self.queryset.filter(student__profile__user=user)
 
     def get_lessons_price(self, lessons):
         for lesson_data in lessons:
@@ -245,8 +244,7 @@ class PaymentStatusViewSet(ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         user = self.request.user
-        student = Profile.objects.get(user=user)
-        self.queryset = self.queryset.filter(student__profile=student)
+        self.queryset = self.queryset.filter(student__profile__user=user)
 
         session_id = request.query_params.get("session_id")
 

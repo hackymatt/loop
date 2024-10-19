@@ -4,7 +4,6 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from reservation.serializers import ReservationSerializer
 from reservation.models import Reservation
-from profile.models import Profile
 from schedule.models import Schedule
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
@@ -19,12 +18,10 @@ class ReservationViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        student = Profile.objects.get(user=user)
-        return self.queryset.filter(student__profile=student)
+        return self.queryset.filter(student__profile__user=user)
 
     def destroy(self, request, *args, **kwargs):
         user = self.request.user
-        student = Profile.objects.get(user=user)
 
         reservation = super().get_object()
         schedule = reservation.schedule
@@ -39,7 +36,7 @@ class ReservationViewSet(ModelViewSet):
 
         other_reservations = (
             Reservation.objects.filter(schedule=schedule)
-            .exclude(student__profile=student)
+            .exclude(student__profile__user=user)
             .all()
         )
 
