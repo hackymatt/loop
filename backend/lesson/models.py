@@ -126,6 +126,23 @@ class LessonQuerySet(QuerySet):
             )
         )
 
+    def add_teaching_id(self, user):
+        Teaching = apps.get_model("teaching", "Teaching")
+        user = self.request.user
+        teaching = Teaching.objects.filter(
+            lecturer__profile__user=user, lesson=OuterRef("pk")
+        )
+
+        return self.annotate(
+            teaching_id=Case(
+                When(
+                    teaching_exists=Exists(teaching),
+                    then=Subquery(teaching.values("id")[:1]),
+                ),
+                default=Value(None),
+            )
+        )
+
 
 class LessonManager(Manager):
     def get_queryset(self):
@@ -151,6 +168,9 @@ class LessonManager(Manager):
 
     def add_lowest_30_days_price(self):
         return self.get_queryset().add_lowest_30_days_price()
+
+    def add_teaching_id(self, user):
+        return self.get_queryset().add_teaching_id(user=user)
 
 
 class Lesson(BaseModel):

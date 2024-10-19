@@ -6,15 +6,7 @@ from rest_framework.serializers import (
 from drf_extra_fields.fields import Base64ImageField
 from lesson.models import Lesson
 from teaching.models import Teaching
-from profile.models import Profile, LecturerProfile
-
-
-def get_teaching_instance(self, lesson):
-    user = self.context["request"].user
-    lecturer = Profile.objects.get(user=user)
-    teaching = Teaching.objects.filter(lecturer__profile=lecturer, lesson=lesson)
-
-    return teaching
+from profile.models import LecturerProfile
 
 
 class ManageTeachingGetSerializer(ModelSerializer):
@@ -30,15 +22,11 @@ class ManageTeachingGetSerializer(ModelSerializer):
             "created_at",
         )
 
-    def get_teaching(self, lesson):
-        return get_teaching_instance(self=self, lesson=lesson).exists()
+    def get_teaching(self, lesson: Lesson):
+        return bool(lesson.teaching_id)
 
     def get_teaching_id(self, lesson):
-        teaching = get_teaching_instance(self=self, lesson=lesson)
-        if teaching.exists():
-            return teaching.first().id
-
-        return None
+        return lesson.teaching_id
 
 
 class ManageTeachingSerializer(ModelSerializer):
@@ -48,7 +36,7 @@ class ManageTeachingSerializer(ModelSerializer):
 
     def create(self, validated_data):
         user = self.context["request"].user
-        lecturer = LecturerProfile.objects.get(profile=Profile.objects.get(user=user))
+        lecturer = LecturerProfile.objects.get(profile__user=user)
 
         lesson = validated_data.pop("lesson")
 

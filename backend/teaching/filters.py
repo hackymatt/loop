@@ -5,29 +5,7 @@ from django_filters import (
     CharFilter,
 )
 from lesson.models import Lesson
-from profile.models import Profile
 from teaching.models import Teaching
-from django.db.models import OuterRef, Subquery, Exists, Case, When, Value
-
-
-def get_teaching(self, queryset):
-    user = self.request.user
-    lecturer = Profile.objects.get(user=user)
-    teaching = Teaching.objects.filter(
-        lecturer__profile=lecturer, lesson=OuterRef("pk")
-    )
-
-    lessons = queryset.annotate(teaching_exists=Subquery(Exists(teaching))).annotate(
-        is_teaching=Case(
-            When(
-                teaching_exists=1,
-                then=Value("True"),
-            ),
-            default=Value("False"),
-        )
-    )
-
-    return lessons
 
 
 class OrderFilter(OrderingFilter):
@@ -51,7 +29,7 @@ class ManageTeachingFilter(FilterSet):
     active = CharFilter(field_name="active", lookup_expr="exact")
     teaching = CharFilter(
         label="Teaching równe",
-        field_name="is_teaching",
+        field_name="teaching_id",
         method="filter_teaching",
     )
     sort_by = OrderFilter(
@@ -99,8 +77,8 @@ class ManageTeachingFilter(FilterSet):
         )
 
     def filter_teaching(self, queryset, field_name, value):
-        lookup_field_name = field_name
-        return get_teaching(self, queryset).filter(**{lookup_field_name: value})
+        lookup_field_name = f"{field_name}__isnull"
+        return queryset.filter(**{lookup_field_name: not bool(value)})
 
 
 class TeachingFilter(FilterSet):

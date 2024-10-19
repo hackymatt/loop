@@ -1,4 +1,5 @@
 from django_filters import FilterSet, OrderingFilter, NumberFilter, UUIDFilter
+from django.db.models import Subquery
 from review.models import Review
 from course.models import Course
 
@@ -57,4 +58,4 @@ class ReviewFilter(FilterSet):
     def filter_course_id(self, queryset, field_name, value):
         lookup_field_name = f"{field_name}__in"
         lessons = Course.objects.filter(id=value).values("modules__lessons__id")
-        return queryset.filter(**{lookup_field_name: lessons})
+        return queryset.filter(**{lookup_field_name: Subquery(lessons)})

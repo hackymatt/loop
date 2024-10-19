@@ -10,14 +10,23 @@ from review.serializers import (
 from review.filters import ReviewFilter
 from review.models import Review
 from random import sample
-from django.db.models import Count
+from django.db.models import Count, Prefetch
 from django.contrib.auth.models import User
 from config_global import DUMMY_STUDENT_EMAIL
+from profile.models import LecturerProfile
 
 
 class ReviewViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Review.objects.all().order_by("rating")
+    queryset = (
+        Review.objects.prefetch_related("student")
+        .prefetch_related(
+            Prefetch("lecturer", queryset=LecturerProfile.objects.add_full_name())
+        )
+        .prefetch_related("lesson")
+        .all()
+        .order_by("rating")
+    )
     serializer_class = ReviewSerializer
     filterset_class = ReviewFilter
     permission_classes = [AllowAny]
