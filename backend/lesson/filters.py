@@ -11,12 +11,26 @@ from lesson.models import (
 from utils.ordering.ordering import OrderFilter
 
 
+class LessonPriceHistoryOrderFilter(OrderFilter):
+    def filter(self, queryset, values):
+        if values is None:
+            return super().filter(queryset, values)
+
+        for value in values:
+            if "lesson_name" in value:
+                queryset = queryset.order_by(value.replace("_name", "__title"))
+            else:
+                queryset = queryset.order_by(value)
+
+        return queryset
+
+
 class LessonPriceHistoryFilter(FilterSet):
     lesson_name = CharFilter(field_name="lesson__title", lookup_expr="icontains")
     price_from = NumberFilter(field_name="price", lookup_expr="gte")
     price_to = NumberFilter(field_name="price", lookup_expr="lte")
     created_at = DateFilter(field_name="created_at", lookup_expr="contains")
-    sort_by = OrderFilter(
+    sort_by = LessonPriceHistoryOrderFilter(
         choices=(
             ("lesson_name", "Lesson Name ASC"),
             ("-lesson_name", "Lesson Name  DESC"),

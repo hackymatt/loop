@@ -117,7 +117,7 @@ class ScheduleFilter(FilterSet):
         ),
         fields={
             "start_time": "start_time",
-            "start_time": "-start_time",
+            "-start_time": "-start_time",
         },
     )
 

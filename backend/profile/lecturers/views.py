@@ -17,10 +17,8 @@ class LecturerViewSet(ModelViewSet):
         .add_full_name()
         .add_rating()
         .add_rating_count()
-        .add_lessons()
-        .add_lessons_duration()
-        .add_lessons_price()
         .add_lessons_count()
+        .add_lessons_duration()
         .add_students_count()
         .filter(lessons_count__gt=0, profile_ready=True)
         .exclude(profile__user__email=DUMMY_LECTURER_EMAIL)
@@ -40,6 +38,11 @@ class LecturerViewSet(ModelViewSet):
         if self.action == "retrieve":
             return LecturerGetSerializer
         return self.serializer_class
+
+    def get_queryset(self):
+        if self.action == "retrieve":
+            return self.queryset.add_lessons().add_lessons_price()
+        return self.queryset
 
 
 class BestLecturerViewSet(ModelViewSet):

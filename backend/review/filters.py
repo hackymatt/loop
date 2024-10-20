@@ -27,7 +27,7 @@ class ReviewFilter(FilterSet):
         ),
         fields={
             "created_at": "created_at",
-            "created_at": "-created_at",
+            "-created_at": "-created_at",
         },
     )
 

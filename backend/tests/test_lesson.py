@@ -14,6 +14,10 @@ from .factory import (
     create_teaching,
     create_lesson_price_history,
     create_payment,
+    create_topic,
+    create_skill,
+    create_course,
+    create_module,
 )
 from .helpers import (
     login,

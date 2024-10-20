@@ -21,8 +21,6 @@ class PostViewSet(ModelViewSet):
             Prefetch("authors", queryset=LecturerProfile.objects.add_full_name())
         )
         .add_duration()
-        .add_previous_post()
-        .add_next_post()
         .all()
         .order_by("id")
     )
@@ -56,6 +54,8 @@ class PostViewSet(ModelViewSet):
                 return queryset.filter(active=True).all().distinct()
 
             return queryset.distinct()
+        elif self.action == "retrieve":
+            return self.queryset.add_previous_post().add_next_post().distinct()
 
         return self.queryset.distinct()
 

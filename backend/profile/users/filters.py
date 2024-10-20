@@ -9,6 +9,30 @@ from profile.models import Profile
 from utils.ordering.ordering import OrderFilter
 
 
+class UserOrderFilter(OrderFilter):
+    def filter(self, queryset, values):
+        if values is None:
+            return super().filter(queryset, values)
+
+        for value in values:
+            if any(
+                field in value
+                for field in ["first_name", "last_name", "email", "active"]
+            ):
+                desc = value[0] == "-"
+                modified_value = value[1:] if desc else value
+                modified_value = modified_value.replace(
+                    modified_value, f"user__{modified_value}"
+                )
+                modified_value = f"-{modified_value}" if desc else modified_value
+                modified_value = modified_value.replace("active", "is_active")
+                queryset = queryset.order_by(modified_value)
+            else:
+                queryset = queryset.order_by(value)
+
+        return queryset
+
+
 class UserFilter(FilterSet):
     first_name = CharFilter(
         field_name="user__first_name",
@@ -32,7 +56,7 @@ class UserFilter(FilterSet):
     city = CharFilter(field_name="city", lookup_expr="icontains")
     country = CharFilter(field_name="country", lookup_expr="icontains")
 
-    sort_by = OrderFilter(
+    sort_by = UserOrderFilter(
         choices=(
             ("first_name", "First Name ASC"),
             ("-first_name", "First Name DESC"),
@@ -68,8 +92,8 @@ class UserFilter(FilterSet):
             "-last_name": "-user__last_name",
             "email": "user__email",
             "-email": "-user__email",
-            "active": "is_active",
-            "-active": "-is_active",
+            "active": "user__is_active",
+            "-active": "-user__is_active",
             "gender": "gender",
             "-gender": "-gender",
             "user_type": "user_type",

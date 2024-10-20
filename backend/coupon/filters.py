@@ -50,12 +50,28 @@ class CouponFilter(FilterSet):
         )
 
 
+class CouponUserOrderFilter(OrderFilter):
+    def filter(self, queryset, values):
+        if values is None:
+            return super().filter(queryset, values)
+
+        for value in values:
+            if "coupon_code" in value:
+                queryset = queryset.order_by(value.replace("_", "__"))
+            elif "user_email" in value:
+                queryset = queryset.order_by(value.replace("_", "__profile__user__"))
+            else:
+                queryset = queryset.order_by(value)
+
+        return queryset
+
+
 class CouponUserFilter(FilterSet):
     coupon_code = CharFilter(field_name="coupon__code", lookup_expr="icontains")
     user_id = NumberFilter(field_name="user__id", lookup_expr="exact")
     created_at = DateFilter(field_name="created_at", lookup_expr="icontains")
 
-    sort_by = OrderFilter(
+    sort_by = CouponUserOrderFilter(
         choices=(
             ("coupon_code", "Coupon code ASC"),
             ("-coupon_code", "Coupon code DESC"),
@@ -66,11 +82,11 @@ class CouponUserFilter(FilterSet):
         ),
         fields={
             "coupon_code": "coupon__code",
-            "coupon_code": "-coupon__code",
+            "-coupon_code": "-coupon__code",
             "user_email": "user__profile__user__email",
-            "user_email": "-user__profile__user__email",
+            "-user_email": "-user__profile__user__email",
             "created_at": "created_at",
-            "created_at": "-created_at",
+            "-created_at": "-created_at",
         },
     )
 
