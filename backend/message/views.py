@@ -4,12 +4,21 @@ from message.serializers import MessageSerializer, MessageGetSerializer
 from message.models import Message
 from message.filters import MessageFilter
 from profile.models import Profile
-from django.db.models import Q, Value
+from django.db.models import Q, Value, Prefetch
 
 
 class MessageViewSet(ModelViewSet):
     http_method_names = ["get", "put", "post"]
-    queryset = Message.objects.all().order_by("id")
+    queryset = (
+        Message.objects.prefetch_related(
+            Prefetch("sender", queryset=Profile.objects.add_full_name())
+        )
+        .prefetch_related(
+            Prefetch("recipient", queryset=Profile.objects.add_full_name())
+        )
+        .all()
+        .order_by("id")
+    )
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
     filterset_class = MessageFilter
@@ -21,8 +30,10 @@ class MessageViewSet(ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         profile = Profile.objects.get(user=user)
-        return self.queryset.filter(Q(sender=profile) | Q(recipient=profile)).annotate(
-            profile_id=Value(profile.id)
+        return (
+            self.queryset.filter(Q(sender=profile) | Q(recipient=profile))
+            .annotate(profile_id=Value(profile.id))
+            .add_type()
         )
 
     def get_serializer_class(self):

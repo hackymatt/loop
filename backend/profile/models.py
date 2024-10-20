@@ -29,6 +29,21 @@ def user_directory_path(instance, filename):
     return f"profile/{instance.uuid}/{filename}"  # pragma: no cover
 
 
+class ProfileQuerySet(QuerySet):
+    def add_full_name(self):
+        return self.annotate(
+            full_name=Concat("user__first_name", Value(" "), "user__last_name")
+        )
+
+
+class ProfileManager(Manager):
+    def get_queryset(self):
+        return ProfileQuerySet(self.model, using=self._db)
+
+    def add_full_name(self):
+        return self.get_queryset().add_full_name()
+
+
 class Profile(BaseModel):
     GENDER_CHOICES = (
         ("M", "Mężczyzna"),
@@ -60,6 +75,8 @@ class Profile(BaseModel):
     city = CharField(null=True, blank=True)
     country = CharField(null=True, blank=True)
     image = ImageField(upload_to=user_directory_path, null=True, blank=True)
+
+    objects = ProfileManager()
 
     class Meta:
         db_table = "profile"
