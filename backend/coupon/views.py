@@ -12,12 +12,19 @@ from coupon.serializers import (
 from coupon.filters import CouponFilter, CouponUserFilter
 from coupon.models import Coupon, CouponUser
 from coupon.validation import validate_coupon
-from profile.models import Profile
+from profile.models import Profile, StudentProfile
+from django.db.models import Prefetch
 
 
 class CouponViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Coupon.objects.all().order_by("id")
+    queryset = (
+        Coupon.objects.prefetch_related(
+            Prefetch("users", queryset=StudentProfile.objects.add_full_name())
+        )
+        .all()
+        .order_by("id")
+    )
     serializer_class = CouponSerializer
     filterset_class = CouponFilter
     permission_classes = [IsAuthenticated, IsAdminUser]
@@ -32,7 +39,13 @@ class CouponViewSet(ModelViewSet):
 
 class CouponUserViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = CouponUser.objects.all().order_by("id")
+    queryset = (
+        CouponUser.objects.prefetch_related(
+            Prefetch("user", queryset=StudentProfile.objects.add_full_name())
+        )
+        .all()
+        .order_by("id")
+    )
     serializer_class = CouponUserSerializer
     filterset_class = CouponUserFilter
     permission_classes = [IsAuthenticated, IsAdminUser]
