@@ -5,67 +5,23 @@ from rest_framework.serializers import (
 )
 from drf_extra_fields.fields import Base64ImageField
 from profile.models import LecturerProfile
-from review.models import Review
-from teaching.models import Teaching
-from lesson.models import Lesson, LessonPriceHistory
-from reservation.models import Reservation
-from django.db.models import Sum, Avg, Min, Subquery, OuterRef
-from datetime import timedelta
+from lesson.models import Lesson
 
 
-def get_rating(lecturer):
-    return Review.objects.filter(lecturer=lecturer)
+def get_lessons(lecturer: LecturerProfile):
+    ids = lecturer.lessons
+    return (
+        Lesson.objects.filter(id__in=ids)
+        .add_previous_price()
+        .add_lowest_30_days_price()
+    )
 
 
-def get_lessons(lecturer):
-    ids = Teaching.objects.filter(lecturer=lecturer).values("lesson")
-    return Lesson.objects.filter(id__in=ids)
-
-
-def get_duration(lecturer):
+def get_previous_price(lecturer: LecturerProfile):
     lessons = get_lessons(lecturer=lecturer)
-    duration = Lesson.objects.filter(pk=OuterRef("lesson__id")).values("duration")
-    reservations = Reservation.objects.filter(lesson__in=lessons).annotate(
-        duration=Subquery(duration)
-    )
-    return reservations.aggregate(Sum("duration"))["duration__sum"]
-
-
-def get_previous_prices(instance):
-    previous_prices = (
-        LessonPriceHistory.objects.filter(lesson=instance).order_by("-created_at").all()
-    )
-
-    return previous_prices
-
-
-def get_previous_price(instance):
-    current_price = instance.price
-    previous_prices = get_previous_prices(instance)
-
-    if previous_prices.count() == 0:
-        return None
-
-    last_price_change = previous_prices.first()
-
-    previous_price = last_price_change.price
-
-    if previous_price <= current_price:
-        return None
-
-    return previous_price
-
-
-def get_price(instance):
-    lessons = get_lessons(lecturer=instance)
-    return lessons.aggregate(Sum("price"))["price__sum"]
-
-
-def get_previous_price_course(instance):
-    lessons = get_lessons(lecturer=instance)
     prices = []
     for lesson in lessons:
-        prev = get_previous_price(lesson)
+        prev = lesson.previous_price
         curr = lesson.price
         if prev is None:
             prev = curr
@@ -73,7 +29,7 @@ def get_previous_price_course(instance):
         prices.append(prev)
 
     previous_price = sum(prices)
-    current_price = get_price(instance=instance)
+    current_price = lecturer.lessons_price
 
     if previous_price <= current_price:
         return None
@@ -81,38 +37,11 @@ def get_previous_price_course(instance):
     return previous_price
 
 
-def get_lowest_30_days_price(instance):
-    current_price = instance.price
-    previous_prices = get_previous_prices(instance)
-
-    if previous_prices.count() == 0:
-        return None
-
-    last_price_change = previous_prices.first()
-
-    previous_price = last_price_change.price
-
-    if previous_price <= current_price:
-        return None
-
-    last_price_change_date = last_price_change.created_at
-    last_price_change_date_minus_30_days = last_price_change.created_at - timedelta(
-        days=30
-    )
-
-    prices_in_last_30_days = previous_prices.filter(
-        created_at__lte=last_price_change_date,
-        created_at__gte=last_price_change_date_minus_30_days,
-    )
-
-    return prices_in_last_30_days.aggregate(Min("price"))["price__min"]
-
-
-def get_lowest_30_days_price_course(instance):
-    lessons = get_lessons(lecturer=instance)
+def get_lowest_30_days_price(lecturer: LecturerProfile):
+    lessons = get_lessons(lecturer=lecturer)
     prices = []
     for lesson in lessons:
-        prev = get_lowest_30_days_price(lesson)
+        prev = lesson.previous_price
         curr = lesson.price
         if prev is None:
             prev = curr
@@ -121,24 +50,20 @@ def get_lowest_30_days_price_course(instance):
 
     lowest_30_days_price = sum(prices)
 
-    if not get_previous_price_course(instance=instance):
+    if not get_previous_price(lecturer=lecturer):
         return None
 
     return lowest_30_days_price
 
 
-def get_students_count(lecturer):
-    return Reservation.objects.filter(schedule__lecturer=lecturer).count()
-
-
 class LecturerSerializer(ModelSerializer):
-    full_name = SerializerMethodField("get_full_name")
+    full_name = SerializerMethodField()
     gender = CharField(source="profile.get_gender_display")
-    rating = SerializerMethodField("get_lecturer_rating")
-    rating_count = SerializerMethodField("get_lecturer_rating_count")
-    lessons_count = SerializerMethodField("get_lecturer_lessons_count")
-    lessons_duration = SerializerMethodField("get_lecturer_lessons_duration")
-    students_count = SerializerMethodField("get_lecturer_students_count")
+    rating = SerializerMethodField()
+    rating_count = SerializerMethodField()
+    lessons_count = SerializerMethodField()
+    lessons_duration = SerializerMethodField()
+    students_count = SerializerMethodField()
     image = Base64ImageField(source="profile.image")
 
     class Meta:
@@ -158,34 +83,34 @@ class LecturerSerializer(ModelSerializer):
             "linkedin_url",
         )
 
-    def get_full_name(self, lecturer):
-        return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
+    def get_full_name(self, lecturer: LecturerProfile):
+        return lecturer.full_name
 
-    def get_lecturer_rating(self, lecturer):
-        return get_rating(lecturer=lecturer).aggregate(Avg("rating"))["rating__avg"]
+    def get_rating(self, lecturer: LecturerProfile):
+        return lecturer.rating
 
-    def get_lecturer_rating_count(self, lecturer):
-        return get_rating(lecturer=lecturer).count()
+    def get_rating_count(self, lecturer: LecturerProfile):
+        return lecturer.rating_count
 
-    def get_lecturer_lessons_count(self, lecturer):
-        return get_lessons(lecturer=lecturer).count()
+    def get_lessons_count(self, lecturer: LecturerProfile):
+        return lecturer.lessons_count
 
-    def get_lecturer_lessons_duration(self, lecturer):
-        return get_duration(lecturer=lecturer)
+    def get_lessons_duration(self, lecturer: LecturerProfile):
+        return lecturer.lessons_duration
 
-    def get_lecturer_students_count(self, lecturer):
-        return get_students_count(lecturer=lecturer)
+    def get_students_count(self, lecturer: LecturerProfile):
+        return lecturer.students_count
 
 
 class LessonShortSerializer(ModelSerializer):
-    previous_price = SerializerMethodField("get_lesson_previous_price")
-    lowest_30_days_price = SerializerMethodField("get_lesson_lowest_30_days_price")
+    previous_price = SerializerMethodField()
+    lowest_30_days_price = SerializerMethodField()
 
-    def get_lesson_previous_price(self, lesson):
-        return get_previous_price(instance=lesson)
+    def get_previous_price(self, lesson: Lesson):
+        return lesson.previous_price
 
-    def get_lesson_lowest_30_days_price(self, lesson):
-        return get_lowest_30_days_price(instance=lesson)
+    def get_lowest_30_days_price(self, lesson: Lesson):
+        return lesson.lowest_30_days_price
 
     class Meta:
         model = Lesson
@@ -199,21 +124,17 @@ class LessonShortSerializer(ModelSerializer):
 
 
 class LecturerGetSerializer(ModelSerializer):
-    full_name = SerializerMethodField("get_full_name")
+    full_name = SerializerMethodField()
     gender = CharField(source="profile.get_gender_display")
-    rating = SerializerMethodField("get_lecturer_rating")
-    rating_count = SerializerMethodField("get_lecturer_rating_count")
-    lessons = SerializerMethodField("get_lecturer_lessons")
-    lessons_duration = SerializerMethodField("get_lecturer_lessons_duration")
+    rating = SerializerMethodField()
+    rating_count = SerializerMethodField()
+    lessons = SerializerMethodField()
+    lessons_duration = SerializerMethodField()
     image = Base64ImageField(source="profile.image")
-    lessons_price = SerializerMethodField("get_lecturer_lessons_price")
-    lessons_previous_price = SerializerMethodField(
-        "get_lecturer_lessons_previous_price"
-    )
-    lessons_lowest_30_days_price = SerializerMethodField(
-        "get_lecturer_lessons_lowest_30_days_price"
-    )
-    students_count = SerializerMethodField("get_lecturer_students_count")
+    lessons_price = SerializerMethodField()
+    lessons_previous_price = SerializerMethodField()
+    lessons_lowest_30_days_price = SerializerMethodField()
+    students_count = SerializerMethodField()
 
     class Meta:
         model = LecturerProfile
@@ -235,36 +156,36 @@ class LecturerGetSerializer(ModelSerializer):
             "students_count",
         )
 
-    def get_full_name(self, lecturer):
-        return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
+    def get_full_name(self, lecturer: LecturerProfile):
+        return lecturer.full_name
 
-    def get_lecturer_rating(self, lecturer):
-        return get_rating(lecturer=lecturer).aggregate(Avg("rating"))["rating__avg"]
+    def get_rating(self, lecturer: LecturerProfile):
+        return lecturer.rating
 
-    def get_lecturer_rating_count(self, lecturer):
-        return get_rating(lecturer=lecturer).count()
+    def get_rating_count(self, lecturer: LecturerProfile):
+        return lecturer.rating_count
 
-    def get_lecturer_lessons(self, lecturer):
+    def get_lessons(self, lecturer: LecturerProfile):
         return LessonShortSerializer(get_lessons(lecturer=lecturer), many=True).data
 
-    def get_lecturer_lessons_duration(self, lecturer):
-        return get_duration(lecturer=lecturer)
+    def get_lessons_duration(self, lecturer: LecturerProfile):
+        return lecturer.lessons_duration
 
-    def get_lecturer_lessons_price(self, lecturer):
-        return get_price(instance=lecturer)
+    def get_lessons_price(self, lecturer: LecturerProfile):
+        return lecturer.lessons_price
 
-    def get_lecturer_lessons_previous_price(self, lecturer):
-        return get_previous_price_course(instance=lecturer)
+    def get_lessons_previous_price(self, lecturer: LecturerProfile):
+        return get_previous_price(lecturer=lecturer)
 
-    def get_lecturer_lessons_lowest_30_days_price(self, lecturer):
-        return get_lowest_30_days_price_course(instance=lecturer)
+    def get_lessons_lowest_30_days_price(self, lecturer: LecturerProfile):
+        return get_lowest_30_days_price(lecturer=lecturer)
 
-    def get_lecturer_students_count(self, lecturer):
-        return get_students_count(lecturer=lecturer)
+    def get_students_count(self, lecturer: LecturerProfile):
+        return lecturer.students_count
 
 
 class BestLecturerSerializer(ModelSerializer):
-    full_name = SerializerMethodField("get_full_name")
+    full_name = SerializerMethodField()
     gender = CharField(source="profile.get_gender_display")
     image = Base64ImageField(source="profile.image")
 
@@ -279,5 +200,5 @@ class BestLecturerSerializer(ModelSerializer):
             "linkedin_url",
         )
 
-    def get_full_name(self, lecturer):
-        return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
+    def get_full_name(self, lecturer: LecturerProfile):
+        return lecturer.full_name

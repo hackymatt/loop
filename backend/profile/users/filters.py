@@ -6,33 +6,7 @@ from django_filters import (
     BooleanFilter,
 )
 from profile.models import Profile
-
-
-class OrderFilter(OrderingFilter):
-    def filter(self, queryset, values):
-        if values is None:
-            return super().filter(queryset, values)
-
-        for value in values:
-            if value in [
-                "first_name",
-                "-first_name",
-                "last_name",
-                "-last_name",
-                "email",
-                "-email",
-                "active",
-                "-active",
-            ]:
-                desc = value[0] == "-"
-                value_modified = value.replace("-", "").replace("active", "is_active")
-                value_modified = "user__" + value_modified
-                value_modified = f"-{value_modified}" if desc else value_modified
-                queryset = queryset.order_by(value_modified)
-            else:
-                queryset = queryset.order_by(value)
-
-        return queryset
+from utils.ordering.ordering import OrderFilter
 
 
 class UserFilter(FilterSet):
@@ -88,14 +62,14 @@ class UserFilter(FilterSet):
             ("-country", "Country DESC"),
         ),
         fields={
-            "first_name": "first_name",
-            "-first_name": "-first_name",
-            "last_name": "last_name",
-            "-last_name": "-last_name",
-            "email": "email",
-            "-email": "-email",
-            "active": "active",
-            "-active": "-active",
+            "first_name": "user__first_name",
+            "-first_name": "-user__first_name",
+            "last_name": "user__last_name",
+            "-last_name": "-user__last_name",
+            "email": "user__email",
+            "-email": "-user__email",
+            "active": "is_active",
+            "-active": "-is_active",
             "gender": "gender",
             "-gender": "-gender",
             "user_type": "user_type",

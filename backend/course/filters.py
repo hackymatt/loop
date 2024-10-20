@@ -1,26 +1,15 @@
 from django_filters import (
     FilterSet,
-    OrderingFilter,
     CharFilter,
     BaseInFilter,
     NumberFilter,
 )
 from course.models import Course
+from utils.ordering.ordering import OrderFilter
 
 
 class CharInFilter(BaseInFilter, CharFilter):
     pass
-
-
-class OrderFilter(OrderingFilter):
-    def filter(self, queryset, values):
-        if values is None:
-            return super().filter(queryset, values)
-
-        for value in values:
-            queryset = queryset.order_by(value)
-
-        return queryset
 
 
 class CourseFilter(FilterSet):

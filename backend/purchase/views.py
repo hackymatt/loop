@@ -20,7 +20,6 @@ from coupon.validation import validate_coupon
 from utils.przelewy24.payment import Przelewy24Api
 from django.views.decorators.csrf import csrf_exempt
 import json
-from uuid import UUID
 from mailer.mailer import Mailer
 from notification.utils import notify
 from math import floor
@@ -75,7 +74,18 @@ def confirm_purchase(status, purchases, payment: Payment):
 
 class PurchaseViewSet(ModelViewSet):
     http_method_names = ["get", "post"]
-    queryset = Purchase.objects.filter(payment__status="S").all().order_by("id")
+    queryset = (
+        Purchase.objects.filter(payment__status="S")
+        .add_meeting_url()
+        .add_lecturer_id()
+        .add_recordings_ids()
+        .add_reservation_id()
+        .add_review_id()
+        .add_lesson_status()
+        .add_review_status()
+        .all()
+        .order_by("id")
+    )
     serializer_class = PurchaseGetSerializer
     filterset_class = PurchaseFilter
     permission_classes = [IsAuthenticated]

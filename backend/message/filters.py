@@ -1,20 +1,9 @@
 from django_filters import (
     FilterSet,
-    OrderingFilter,
     CharFilter,
 )
 from message.models import Message
-
-
-class OrderFilter(OrderingFilter):
-    def filter(self, queryset, values):
-        if values is None:
-            return super().filter(queryset, values)
-
-        for value in values:
-            queryset = queryset.order_by(value)
-
-        return queryset
+from utils.ordering.ordering import OrderFilter
 
 
 class MessageFilter(FilterSet):

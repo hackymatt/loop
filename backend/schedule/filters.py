@@ -1,6 +1,5 @@
 from django_filters import (
     FilterSet,
-    OrderingFilter,
     NumberFilter,
     DateFilter,
     DateTimeFilter,
@@ -12,6 +11,7 @@ from lesson.models import Lesson
 from django.db.models import OuterRef, Subquery, IntegerField
 from django.db.models.expressions import RawSQL
 from django.db.models.functions import Cast
+from utils.ordering.ordering import OrderFilter
 
 
 def get_free_slots_duration(queryset):
@@ -92,17 +92,6 @@ def filter_duration(queryset, field_name, value):
     records = empty_records_duration | reserved_records_duration
 
     return records
-
-
-class OrderFilter(OrderingFilter):
-    def filter(self, queryset, values):
-        if values is None:
-            return super().filter(queryset, values)
-
-        for value in values:
-            queryset = queryset.order_by(value)
-
-        return queryset
 
 
 class ScheduleFilter(FilterSet):

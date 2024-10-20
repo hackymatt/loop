@@ -1,18 +1,8 @@
-from django_filters import FilterSet, OrderingFilter, NumberFilter, UUIDFilter
+from django_filters import FilterSet, NumberFilter, UUIDFilter
 from django.db.models import Subquery
 from review.models import Review
 from course.models import Course
-
-
-class OrderFilter(OrderingFilter):
-    def filter(self, queryset, values):
-        if values is None:
-            return super().filter(queryset, values)
-
-        for value in values:
-            queryset = queryset.order_by(value)
-
-        return queryset
+from utils.ordering.ordering import OrderFilter
 
 
 class ReviewFilter(FilterSet):

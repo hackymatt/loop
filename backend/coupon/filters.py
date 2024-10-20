@@ -1,30 +1,12 @@
 from django_filters import (
     FilterSet,
-    OrderingFilter,
     CharFilter,
     DateFilter,
     NumberFilter,
     BooleanFilter,
 )
 from coupon.models import Coupon, CouponUser
-
-
-class OrderFilter(OrderingFilter):
-    def filter(self, queryset, values):
-        if values is None:
-            return super().filter(queryset, values)
-
-        for value in values:
-            if value in ["coupon_code", "-coupon_code"]:
-                modified_value = value.replace("_", "__")
-                queryset = queryset.order_by(modified_value)
-            elif value in ["user_email", "-user_email"]:
-                modified_value = value.replace("user_", "user__profile__user__")
-                queryset = queryset.order_by(modified_value)
-            else:
-                queryset = queryset.order_by(value)
-
-        return queryset
+from utils.ordering.ordering import OrderFilter
 
 
 class CouponFilter(FilterSet):
@@ -83,10 +65,10 @@ class CouponUserFilter(FilterSet):
             ("-created_at", "Created At DESC"),
         ),
         fields={
-            "coupon_code": "coupon_code",
-            "coupon_code": "-coupon_code",
-            "user_email": "user_email",
-            "user_email": "-user_email",
+            "coupon_code": "coupon__code",
+            "coupon_code": "-coupon__code",
+            "user_email": "user__profile__user__email",
+            "user_email": "-user__profile__user__email",
             "created_at": "created_at",
             "created_at": "-created_at",
         },

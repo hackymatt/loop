@@ -9,7 +9,6 @@ from drf_extra_fields.fields import Base64ImageField
 from profile.models import Profile, LecturerProfile, AdminProfile, StudentProfile
 from finance.models import Finance, FinanceHistory
 from notification.utils import notify
-import urllib.parse
 
 
 def get_finance(profile):
@@ -38,23 +37,23 @@ class UserSerializer(ModelSerializer):
     gender = CharField(source="get_gender_display", allow_blank=True)
     user_type = CharField(source="get_user_type_display", allow_blank=True)
     image = Base64ImageField(required=False)
-    rate = SerializerMethodField("get_rate")
-    commission = SerializerMethodField("get_commission")
-    account = SerializerMethodField("get_account")
+    rate = SerializerMethodField()
+    commission = SerializerMethodField()
+    account = SerializerMethodField()
 
-    def get_rate(self, profile):
+    def get_rate(self, profile: Profile):
         finance = get_finance(profile=profile)
         if not finance:
             return None
         return finance.rate
 
-    def get_commission(self, profile):
+    def get_commission(self, profile: Profile):
         finance = get_finance(profile=profile)
         if not finance:
             return None
         return finance.commission
 
-    def get_account(self, profile):
+    def get_account(self, profile: Profile):
         finance = get_finance(profile=profile)
         if not finance:
             return None

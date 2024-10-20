@@ -116,7 +116,7 @@ class ScheduleSerializer(ModelSerializer):
 
 
 class ScheduleAvailableDateSerializer(ModelSerializer):
-    date = SerializerMethodField("get_date")
+    date = SerializerMethodField()
 
     class Meta:
         model = Schedule

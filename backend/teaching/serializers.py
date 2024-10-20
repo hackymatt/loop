@@ -10,8 +10,8 @@ from profile.models import LecturerProfile
 
 
 class ManageTeachingGetSerializer(ModelSerializer):
-    teaching = SerializerMethodField("get_teaching")
-    teaching_id = SerializerMethodField("get_teaching_id")
+    teaching = SerializerMethodField()
+    teaching_id = SerializerMethodField()
 
     class Meta:
         model = Lesson

@@ -1,22 +1,11 @@
 from django_filters import (
     FilterSet,
-    OrderingFilter,
     CharFilter,
     DateFilter,
     NumberFilter,
 )
 from finance.models import FinanceHistory
-
-
-class OrderFilter(OrderingFilter):
-    def filter(self, queryset, values):
-        if values is None:
-            return super().filter(queryset, values)
-
-        for value in values:
-            queryset = queryset.order_by(value)
-
-        return queryset
+from utils.ordering.ordering import OrderFilter
 
 
 class FinanceHistoryFilter(FilterSet):

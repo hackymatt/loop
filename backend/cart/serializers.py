@@ -8,7 +8,7 @@ from profile.models import Profile, LecturerProfile, StudentProfile
 
 
 class LecturerSerializer(ModelSerializer):
-    full_name = SerializerMethodField("get_full_name")
+    full_name = SerializerMethodField()
 
     class Meta:
         model = LecturerProfile

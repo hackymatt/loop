@@ -1,6 +1,5 @@
 from django_filters import (
     FilterSet,
-    OrderingFilter,
     NumberFilter,
     CharFilter,
     DateFilter,
@@ -9,21 +8,7 @@ from lesson.models import (
     LessonPriceHistory,
     Lesson,
 )
-
-
-class OrderFilter(OrderingFilter):
-    def filter(self, queryset, values):
-        if values is None:
-            return super().filter(queryset, values)
-
-        for value in values:
-            if value in ["lesson_name", "-lesson_name"]:
-                value_modified = value.replace("_name", "__title")
-                queryset = queryset.order_by(value_modified)
-            else:
-                queryset = queryset.order_by(value)
-
-        return queryset
+from utils.ordering.ordering import OrderFilter
 
 
 class LessonPriceHistoryFilter(FilterSet):
@@ -41,8 +26,8 @@ class LessonPriceHistoryFilter(FilterSet):
             ("-created_at", "Created At DESC"),
         ),
         fields={
-            "lesson_name": "lesson_name",
-            "-lesson_name": "-lesson_name",
+            "lesson_name": "lesson__title",
+            "-lesson_name": "-lesson__title",
             "price": "price",
             "-price": "-price",
             "created_at": "created_at",

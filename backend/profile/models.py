@@ -18,10 +18,17 @@ from django.db.models import (
     BooleanField,
     Count,
     Avg,
+    F,
+    Sum,
+    OuterRef,
+    Subquery,
+    IntegerField,
 )
 from django.contrib.auth.models import User
-from django.db.models.functions import Concat
+from django.db.models.functions import Concat, Coalesce
+from django.contrib.postgres.aggregates import ArrayAgg
 import uuid
+from django.apps import apps
 
 
 def user_directory_path(instance, filename):
@@ -182,8 +189,40 @@ class LecturerProfileQuerySet(QuerySet):
     def add_rating(self):
         return self.annotate(rating=Avg("review_lecturer__rating", distinct=True))
 
+    def add_lessons(self):
+        return self.annotate(
+            lessons=ArrayAgg("teaching_lecturer__lesson__id", distinct=True)
+        )
+
+    def add_lessons_duration(self):
+        return self.annotate(
+            lessons_duration=Sum("teaching_lecturer__lesson__duration", distinct=True)
+        )
+
+    def add_lessons_price(self):
+        return self.annotate(
+            lessons_price=Sum("teaching_lecturer__lesson__price", distinct=True)
+        )
+
     def add_lessons_count(self):
         return self.annotate(lessons_count=Count("teaching_lecturer", distinct=True))
+
+    def add_students_count(self):
+        Reservation = apps.get_model("reservation", "Reservation")
+        students_count_subquery = (
+            Reservation.objects.filter(schedule__lecturer=OuterRef("pk"))
+            .values("lesson")
+            .annotate(count=Count("lesson"))
+            .values("count")[:1]
+        )
+        return self.annotate(
+            students_count=Coalesce(
+                Subquery(students_count_subquery), Value(0), output_field=IntegerField()
+            )
+        )
+
+    def add_account(self):
+        return self.annotate(account=F("finance_lecturer__account"))
 
 
 class LecturerProfileManager(Manager):
@@ -202,8 +241,23 @@ class LecturerProfileManager(Manager):
     def add_rating(self):
         return self.get_queryset().add_rating()
 
+    def add_lessons(self):
+        return self.get_queryset().add_lessons()
+
+    def add_lessons_duration(self):
+        return self.get_queryset().add_lessons_duration()
+
+    def add_lessons_price(self):
+        return self.get_queryset().add_lessons_price()
+
     def add_lessons_count(self):
         return self.get_queryset().add_lessons_count()
+
+    def add_students_count(self):
+        return self.get_queryset().add_students_count()
+
+    def add_account(self):
+        return self.get_queryset().add_account()
 
 
 class LecturerProfile(BaseModel):

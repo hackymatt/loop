@@ -28,8 +28,7 @@ class ProfileUnregisterViewSet(ModelViewSet):
 
         now = make_aware(datetime.now())
         if user_type[0] == "S":
-            dummy_user = User.objects.get(email=DUMMY_STUDENT_EMAIL)
-            dummy_profile = Profile.objects.get(user=dummy_user)
+            dummy_profile = Profile.objects.get(user__email=DUMMY_STUDENT_EMAIL)
             past_reservations = Reservation.objects.filter(
                 student__profile=profile, schedule__start_time__lt=now
             )
@@ -79,8 +78,7 @@ class ProfileUnregisterViewSet(ModelViewSet):
                     schedule_obj.lesson = None
                     schedule_obj.save()
         else:
-            dummy_user = User.objects.get(email=DUMMY_LECTURER_EMAIL)
-            dummy_profile = Profile.objects.get(user=dummy_user)
+            dummy_profile = Profile.objects.get(user__email=DUMMY_LECTURER_EMAIL)
             past_schedules = Schedule.objects.filter(
                 lecturer__profile=profile, start_time__lt=now, lesson__isnull=False
             )
