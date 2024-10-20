@@ -9,7 +9,7 @@ from django.db.models import Q, Value
 
 class MessageViewSet(ModelViewSet):
     http_method_names = ["get", "put", "post"]
-    queryset = Message.objects.all()
+    queryset = Message.objects.all().order_by("id")
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
     filterset_class = MessageFilter

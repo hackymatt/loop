@@ -4,9 +4,9 @@ from profile.unregister.views import ProfileUnregisterViewSet
 from profile.verify.views import ProfileVerificationCodeViewSet, ProfileVerifyViewSet
 from profile.login.views import (
     EmailLoginViewSet,
-    GoogleLoginViewSet,
-    FacebookLoginViewSet,
-    GithubLoginViewSet,
+    GoogleLoginAPIView,
+    FacebookLoginAPIView,
+    GithubLoginAPIView,
 )
 from profile.logout.views import ProfileLogoutViewSet
 from profile.password_change.views import ProfilePasswordChangeViewSet
@@ -50,12 +50,12 @@ from schedule.views import (
 from stats.views import StatsAPIView
 from wishlist.views import WishlistViewSet
 from cart.views import CartViewSet
-from purchase.views import PurchaseViewSet, PaymentVerifyViewSet, PaymentStatusViewSet
+from purchase.views import PurchaseViewSet, PaymentVerifyAPIView, PaymentStatusViewSet
 from teaching.views import ManageTeachingViewSet, TeachingViewSet
 from reservation.views import ReservationViewSet
 from contact.views import ContactAPIView
 from finance.views import FinanceDetailsViewSet, FinanceHistoryViewSet
-from coupon.views import CouponViewSet, CouponUserViewSet, CouponValidationViewSet
+from coupon.views import CouponViewSet, CouponUserViewSet, CouponValidationAPIView
 from .routers import Router
 
 router = Router(trailing_slash=False)
@@ -145,7 +145,7 @@ api_urlpatterns = [
     ),
     path(
         "payment-verify",
-        PaymentVerifyViewSet.verify_payment,
+        PaymentVerifyAPIView.as_view(),
     ),
     path(
         "payment-status",
@@ -154,11 +154,11 @@ api_urlpatterns = [
     path("contact", ContactAPIView.as_view()),
     path(
         "coupon-validate/<str:coupon_code>/<str:total>",
-        CouponValidationViewSet.validate,
+        CouponValidationAPIView.as_view(),
     ),
-    path("login-google", GoogleLoginViewSet.as_view({"post": "post"})),
-    path("login-facebook", FacebookLoginViewSet.as_view({"post": "post"})),
-    path("login-github", GithubLoginViewSet.as_view({"post": "post"})),
+    path("login-google", GoogleLoginAPIView.as_view()),
+    path("login-facebook", FacebookLoginAPIView.as_view()),
+    path("login-github", GithubLoginAPIView.as_view()),
 ]
 
 urlpatterns = [

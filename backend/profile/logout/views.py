@@ -8,7 +8,7 @@ from django.contrib.auth import logout
 
 class ProfileLogoutViewSet(ModelViewSet):
     http_method_names = ["post"]
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by("id")
     serializer_class = ProfileLogoutSerializer
 
     def create(self, request, *args, **kwargs):

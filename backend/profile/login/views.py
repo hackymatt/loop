@@ -1,4 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from profile.login.serializers import (
@@ -59,7 +60,7 @@ class EmailLoginViewSet(ModelViewSet):
         return Response(status=status.HTTP_200_OK, data=data)
 
 
-class GoogleLoginViewSet(ModelViewSet):
+class GoogleLoginAPIView(APIView):
     http_method_names = ["post"]
 
     def post(self, request, *args, **kwargs):
@@ -110,7 +111,7 @@ class GoogleLoginViewSet(ModelViewSet):
         return Response(status=status.HTTP_200_OK, data=data)
 
 
-class FacebookLoginViewSet(ModelViewSet):
+class FacebookLoginAPIView(APIView):
     http_method_names = ["post"]
 
     def post(self, request, *args, **kwargs):
@@ -175,7 +176,7 @@ class FacebookLoginViewSet(ModelViewSet):
         return Response(status=status.HTTP_200_OK, data=data)
 
 
-class GithubLoginViewSet(ModelViewSet):
+class GithubLoginAPIView(APIView):
     http_method_names = ["post"]
 
     def post(self, request, *args, **kwargs):

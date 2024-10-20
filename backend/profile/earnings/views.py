@@ -34,7 +34,7 @@ from pytz import utc
 
 class EarningViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Schedule.objects.filter(lesson__isnull=False).all()
+    queryset = Schedule.objects.filter(lesson__isnull=False).all().order_by("id")
     serializer_class = LecturerEarningSerializer
     permission_classes = [IsAuthenticated, ~IsStudent]
 

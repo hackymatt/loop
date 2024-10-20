@@ -18,7 +18,7 @@ class LecturerViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = LecturerProfile.objects.all().exclude(
         Q(title__isnull=True) | Q(description__isnull=True)
-    )
+    ).order_by("id")
     serializer_class = LecturerSerializer
     filterset_class = LecturerFilter
     search_fields = [
@@ -57,7 +57,7 @@ class BestLecturerViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = LecturerProfile.objects.exclude(
         Q(title__isnull=True) | Q(description__isnull=True)
-    ).all()
+    ).all().order_by("id")
     serializer_class = BestLecturerSerializer
 
     def get_rating(self, queryset):

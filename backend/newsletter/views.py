@@ -17,7 +17,7 @@ from config_global import FRONTEND_URL, DEFAULT_COUPON
 
 class NewsletterEntriesViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Newsletter.objects.all()
+    queryset = Newsletter.objects.all().order_by("id")
     serializer_class = NewsletterEntrySerializer
     filterset_class = NewsletterFilter
     permission_classes = [IsAuthenticated, IsAdminUser]

@@ -1,4 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework import status
 from django.http import JsonResponse
@@ -16,7 +17,7 @@ from profile.models import Profile
 
 class CouponViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Coupon.objects.all()
+    queryset = Coupon.objects.all().order_by("id")
     serializer_class = CouponSerializer
     filterset_class = CouponFilter
     permission_classes = [IsAuthenticated, IsAdminUser]
@@ -31,16 +32,16 @@ class CouponViewSet(ModelViewSet):
 
 class CouponUserViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = CouponUser.objects.all()
+    queryset = CouponUser.objects.all().order_by("id")
     serializer_class = CouponUserSerializer
     filterset_class = CouponUserFilter
     permission_classes = [IsAuthenticated, IsAdminUser]
 
 
-class CouponValidationViewSet(ModelViewSet):
+class CouponValidationAPIView(APIView):
     http_method_names = ["get"]
 
-    def validate(request, coupon_code, total):
+    def get(self, request, coupon_code, total):
         user = request.user
         profile = Profile.objects.get(user=user)
 

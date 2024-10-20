@@ -1,4 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.serializers import ValidationError
 from rest_framework import status
@@ -206,11 +207,11 @@ class PurchaseViewSet(ModelViewSet):
         )
 
 
-class PaymentVerifyViewSet(ModelViewSet):
+class PaymentVerifyAPIView(APIView):
     http_method_names = ["post"]
 
     @csrf_exempt
-    def verify_payment(request):
+    def post(self, request):
         data = json.loads(request.body)
         session_id = data.get("sessionId")
         order_id = data.get("orderId")
@@ -240,7 +241,7 @@ class PaymentVerifyViewSet(ModelViewSet):
 
 class PaymentStatusViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Purchase.objects.all()
+    queryset = Purchase.objects.all().order_by("id")
     permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
