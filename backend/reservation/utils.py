@@ -182,3 +182,5 @@ def pull_recordings():
 
     if recordings_to_create:
         Recording.objects.bulk_create(recordings_to_create)
+    else:
+        logger.error("No recordings to create", exc_info=True)

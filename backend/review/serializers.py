@@ -60,7 +60,7 @@ class BestReviewSerializer(ModelSerializer):
 class ReviewGetSerializer(ModelSerializer):
     lesson_title = CharField(source="lesson.title")
     student = StudentSerializer()
-    lecturer = LecturerProfile()
+    lecturer = LecturerSerializer()
 
     class Meta:
         model = Review

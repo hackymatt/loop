@@ -120,9 +120,9 @@ class PurchaseGetSerializer(ModelSerializer):
         return purchase.meeting_url
 
     def get_recordings(self, purchase: Purchase):
+        if purchase.recordings_ids == []:
+            return None
         recordings = Recording.objects.filter(id__in=purchase.recordings_ids)
-        if recordings.count == 0:
-            return []
         return RecordingSerializer(recordings, many=True).data
 
     def get_lesson_status(self, purchase: Purchase):

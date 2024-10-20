@@ -84,7 +84,7 @@ class MessageSerializer(ModelSerializer):
                 return StudentProfile.objects.get(pk=recipient_id).profile
             elif recipient_type.startswith("W"):
                 return LecturerProfile.objects.get(pk=recipient_id).profile
-            elif recipient_type.startswith("A"):
+            else:
                 return AdminProfile.objects.get(pk=recipient_id).profile
         return Profile.objects.get(uuid=recipient_uuid)
 
