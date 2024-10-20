@@ -88,12 +88,12 @@ class CouponSerializer(ModelSerializer):
 
         return coupon
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Coupon, validated_data):
         users = validated_data.pop("users", instance.users)
 
         Coupon.objects.filter(pk=instance.pk).update(**validated_data)
 
-        instance = Coupon.objects.get(pk=instance.pk)
+        instance.refresh_from_db()
         instance.users.clear()
         instance = self.add_users(coupon=instance, users=users)
         instance.save()

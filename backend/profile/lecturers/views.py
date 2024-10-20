@@ -50,8 +50,7 @@ class LecturerViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.action == "retrieve":
             return LecturerGetSerializer
-        else:
-            return self.serializer_class
+        return self.serializer_class
 
 
 class BestLecturerViewSet(ModelViewSet):

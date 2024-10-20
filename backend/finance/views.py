@@ -5,7 +5,7 @@ from utils.permissions.permissions import IsLecturer
 from finance.serializers import FinanceSerializer, FinanceHistorySerializer
 from finance.models import Finance, FinanceHistory
 from finance.filters import FinanceHistoryFilter
-from profile.models import Profile, LecturerProfile
+from profile.models import LecturerProfile
 from django.db.models import Prefetch
 
 

@@ -26,8 +26,7 @@ class CouponViewSet(ModelViewSet):
             return CouponListSerializer
         elif self.action == "retrieve":
             return CouponGetSerializer
-        else:
-            return self.serializer_class
+        return self.serializer_class
 
 
 class CouponUserViewSet(ModelViewSet):

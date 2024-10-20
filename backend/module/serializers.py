@@ -60,12 +60,12 @@ class ModuleSerializer(ModelSerializer):
 
         return module
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Module, validated_data):
         lessons = validated_data.pop("lessons")
 
         Module.objects.filter(pk=instance.pk).update(**validated_data)
 
-        instance = Module.objects.get(pk=instance.pk)
+        instance.refresh_from_db()
         instance.lessons.clear()
         instance = self.add_lesson(module=instance, lessons=lessons)
         instance.save()

@@ -33,7 +33,7 @@ class ProfileDetailsSerializer(ModelSerializer):
             "user_type",
         )
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Profile, validated_data):
         user = validated_data.pop("user")
         user.pop("email")
         if "get_user_type_display" in validated_data:
@@ -52,6 +52,6 @@ class ProfileDetailsSerializer(ModelSerializer):
         instance.save()
 
         Profile.objects.filter(pk=instance.pk).update(**validated_data)
-        instance = Profile.objects.get(pk=instance.pk)
+        instance.refresh_from_db()
 
         return instance

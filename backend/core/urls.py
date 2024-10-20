@@ -18,6 +18,8 @@ from profile.earnings.views import EarningViewSet
 from django.urls import path, include
 from django.conf import settings
 from django.contrib import admin
+from django.conf.urls.static import static
+import debug_toolbar
 from course.views import (
     CourseViewSet,
     BestCourseViewSet,
@@ -168,9 +170,6 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    import debug_toolbar
-    from django.conf.urls.static import static
-
     urlpatterns += [
         path("__debug__/", include(debug_toolbar.urls)),
     ]

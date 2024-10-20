@@ -514,7 +514,7 @@ class CourseSerializer(ModelSerializer):
 
         return course
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Course, validated_data):
         modules = validated_data.pop("modules")
         skills = validated_data.pop("skills")
         topics = validated_data.pop("topics")

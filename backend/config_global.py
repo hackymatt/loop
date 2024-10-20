@@ -22,6 +22,8 @@ DEFAULT_COUPON = {
     "expiration_date": make_aware(datetime.now() + timedelta(weeks=52 * 99)),
 }
 
+WORDS_PER_MINUTE = 250
+
 DUMMY_LECTURER_EMAIL = settings.DUMMY_LECTURER_EMAIL
 DUMMY_LECTURER_PASSWORD = settings.DUMMY_LECTURER_PASSWORD
 

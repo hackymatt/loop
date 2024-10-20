@@ -69,7 +69,7 @@ class UserSerializer(ModelSerializer):
             "user",
         )
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Profile, validated_data):
         current_user_type = instance.user_type
         user_type = validated_data.get("get_user_type_display")
 
@@ -143,6 +143,6 @@ class UserSerializer(ModelSerializer):
         instance.save()
 
         Profile.objects.filter(pk=instance.pk).update(**validated_data)
-        instance = Profile.objects.get(pk=instance.pk)
+        instance.refresh_from_db()
 
         return instance

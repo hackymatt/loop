@@ -65,8 +65,7 @@ class EarningViewSet(ModelViewSet):
             if self.total():
                 return AdminEarningLecturerSerializer
             return EarningByLecturerSerializer
-        else:
-            return self.serializer_class
+        return self.serializer_class
 
     def get_queryset(self):
         user = self.request.user

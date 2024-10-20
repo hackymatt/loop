@@ -106,10 +106,10 @@ class MessageSerializer(ModelSerializer):
 
         return obj
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Message, validated_data):
         status = validated_data.pop("get_status_display", instance.status)
 
         Message.objects.filter(pk=instance.pk).update(**validated_data, status=status)
-        instance = Message.objects.get(pk=instance.pk)
+        instance.refresh_from_db()
 
         return instance

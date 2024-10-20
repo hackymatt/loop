@@ -36,7 +36,7 @@ class FinanceSerializer(ModelSerializer):
             "lecturer",
         )
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Finance, validated_data):
         validated_data.pop("rate")
         validated_data.pop("commission")
         account = validated_data.pop("account")

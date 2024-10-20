@@ -30,5 +30,4 @@ class MessageViewSet(ModelViewSet):
             return MessageGetSerializer
         elif self.action == "retrieve":
             return MessageGetSerializer
-        else:
-            return self.serializer_class
+        return self.serializer_class

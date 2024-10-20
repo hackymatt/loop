@@ -150,7 +150,7 @@ class LessonSerializer(ModelSerializer):
 
         return lesson
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Lesson, validated_data):
         technologies = validated_data.pop("technologies")
 
         current_price = instance.price
@@ -161,7 +161,7 @@ class LessonSerializer(ModelSerializer):
 
         Lesson.objects.filter(pk=instance.pk).update(**validated_data)
 
-        instance = Lesson.objects.get(pk=instance.pk)
+        instance.refresh_from_db()
         instance.technologies.clear()
         instance = self.add_technology(lesson=instance, technologies=technologies)
         instance.save()
