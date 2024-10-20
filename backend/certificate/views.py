@@ -7,7 +7,8 @@ from django.http import JsonResponse
 from certificate.serializers import CertificateSerializer, CertificateInfoSerializer
 from certificate.models import Certificate
 from certificate.filters import CertificateFilter
-from profile.models import Profile
+from profile.models import Profile, StudentProfile
+from django.db.models import Prefetch
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -20,7 +21,7 @@ class CertificateViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return self.queryset.filter(student__profile__user=user)
+        return self.queryset.filter(student__profile__user=user).add_completed_at()
 
 
 class CertificateInfoAPIView(APIView):
@@ -35,7 +36,14 @@ class CertificateInfoAPIView(APIView):
             authenticated_profile_uuid = profile.uuid
 
         try:
-            certificate = Certificate.objects.get(uuid=id)
+            certificate = (
+                Certificate.objects.prefetch_related(
+                    Prefetch("student", queryset=StudentProfile.objects.add_full_name())
+                )
+                .add_reference_number()
+                .add_completed_at()
+                .get(uuid=id)
+            )
         except Certificate.DoesNotExist:
             return JsonResponse(
                 status=status.HTTP_404_NOT_FOUND,
