@@ -43,9 +43,6 @@ class CourseQuerySet(QuerySet):
     def add_duration(self):
         return self.annotate(duration=Sum("modules__lessons__duration", distinct=True))
 
-    def add_modules(self):
-        return self.annotate(modules=Coalesce(ArrayAgg("modules__id"), Value([])))
-
     def add_lessons(self):
         return self.annotate(
             lessons=Coalesce(ArrayAgg("modules__lessons__id", distinct=True), Value([]))
@@ -106,30 +103,6 @@ class CourseManager(Manager):
 
     def add_price(self):
         return self.get_queryset().add_price()
-
-    def add_duration(self):
-        return self.get_queryset().add_duration()
-
-    def add_lessons(self):
-        return self.get_queryset().add_lessons()
-
-    def add_students_count(self):
-        return self.get_queryset().add_students_count()
-
-    def add_rating_count(self):
-        return self.get_queryset().add_rating_count()
-
-    def add_rating(self):
-        return self.get_queryset().add_rating()
-
-    def add_technologies(self):
-        return self.get_queryset().add_technologies()
-
-    def add_lecturers(self):
-        return self.get_queryset().add_lecturers()
-
-    def add_progress(self, user):
-        return self.get_queryset().add_progress(user=user)
 
 
 class Course(BaseModel):

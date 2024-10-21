@@ -64,9 +64,6 @@ class ScheduleManager(Manager):
     def add_diff(self):
         return self.get_queryset().add_diff()
 
-    def add_year_month(self):
-        return self.get_queryset().add_year_month()
-
 
 class Schedule(BaseModel):
     lecturer = ForeignKey(

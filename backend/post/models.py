@@ -92,15 +92,6 @@ class PostManager(Manager):
     def get_queryset(self):
         return PostQuerySet(self.model, using=self._db)
 
-    def add_duration(self):
-        return self.get_queryset().add_duration()
-
-    def add_previous_post(self):
-        return self.get_queryset().add_previous_post()
-
-    def add_next_post(self):
-        return self.get_queryset().add_next_post()
-
 
 class Post(BaseModel):
     title = CharField()

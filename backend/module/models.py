@@ -54,14 +54,8 @@ class ModuleManager(Manager):
     def get_queryset(self):
         return ModuleQuerySet(self.model, using=self._db)
 
-    def add_lessons_count(self):
-        return self.get_queryset().add_lessons_count()
-
     def add_price(self):
         return self.get_queryset().add_price()
-
-    def add_progress(self, user):
-        return self.get_queryset().add_progress(user=user)
 
 
 class Module(BaseModel):

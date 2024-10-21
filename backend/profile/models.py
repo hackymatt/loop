@@ -235,30 +235,6 @@ class LecturerProfileManager(Manager):
     def add_profile_ready(self):
         return self.get_queryset().add_profile_ready()
 
-    def add_rating_count(self):
-        return self.get_queryset().add_rating_count()
-
-    def add_rating(self):
-        return self.get_queryset().add_rating()
-
-    def add_lessons(self):
-        return self.get_queryset().add_lessons()
-
-    def add_lessons_duration(self):
-        return self.get_queryset().add_lessons_duration()
-
-    def add_lessons_price(self):
-        return self.get_queryset().add_lessons_price()
-
-    def add_lessons_count(self):
-        return self.get_queryset().add_lessons_count()
-
-    def add_students_count(self):
-        return self.get_queryset().add_students_count()
-
-    def add_account(self):
-        return self.get_queryset().add_account()
-
 
 class LecturerProfile(BaseModel):
     profile = OneToOneField(Profile, on_delete=CASCADE)

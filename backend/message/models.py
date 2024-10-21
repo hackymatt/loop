@@ -30,9 +30,6 @@ class MessageManager(Manager):
     def get_queryset(self):
         return MessageQuerySet(self.model, using=self._db)
 
-    def add_type(self):
-        return self.get_queryset().add_type()
-
 
 class Message(BaseModel):
     STATUS_CHOICES = (

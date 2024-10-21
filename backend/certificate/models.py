@@ -45,12 +45,6 @@ class CertificateManager(Manager):
     def get_queryset(self):
         return CertificateQuerySet(self.model, using=self._db)
 
-    def add_reference_number(self):
-        return self.get_queryset().add_reference_number()
-
-    def add_completed_at(self):
-        return self.get_queryset().add_completed_at()
-
 
 class Certificate(BaseModel):
     TYPE_CHOICES = (

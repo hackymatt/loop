@@ -150,26 +150,8 @@ class LessonManager(Manager):
     def add_lecturers(self):
         return self.get_queryset().add_lecturers()
 
-    def add_students_count(self):
-        return self.get_queryset().add_students_count()
-
-    def add_rating(self):
-        return self.get_queryset().add_rating()
-
-    def add_rating_count(self):
-        return self.get_queryset().add_rating_count()
-
     def add_progress(self, user):
         return self.get_queryset().add_progress(user=user)
-
-    def add_previous_price(self):
-        return self.get_queryset().add_previous_price()
-
-    def add_lowest_30_days_price(self):
-        return self.get_queryset().add_lowest_30_days_price()
-
-    def add_teaching_id(self, user):
-        return self.get_queryset().add_teaching_id(user=user)
 
 
 class Lesson(BaseModel):

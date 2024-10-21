@@ -170,27 +170,6 @@ class PurchaseManager(Manager):
     def get_queryset(self):
         return PurchaseQuerySet(self.model, using=self._db)
 
-    def add_meeting_url(self):
-        return self.get_queryset().add_meeting_url()
-
-    def add_lecturer_id(self):
-        return self.get_queryset().add_lecturer_id()
-
-    def add_recordings_ids(self):
-        return self.get_queryset().add_recordings_ids()
-
-    def add_reservation_id(self):
-        return self.get_queryset().add_reservation_id()
-
-    def add_review_id(self):
-        return self.get_queryset().add_review_id()
-
-    def add_lesson_status(self):
-        return self.get_queryset().add_lesson_status()
-
-    def add_review_status(self):
-        return self.get_queryset().add_review_status()
-
 
 class Purchase(BaseModel):
     lesson = ForeignKey(
