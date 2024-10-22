@@ -45,7 +45,7 @@ export default function CourseView({ id }: { id: string }) {
   const { data: bestCourses, isLoading: isLoadingBestCourses } = useBestCourses();
 
   const technologies = useMemo(() => course?.category.join(","), [course?.category]);
-  const query = { page_size: -1 };
+  const query = { page_size: 3 };
 
   const { data: courses, isLoading: isLoadingCourses } = useCourses(
     technologies ? { ...query, technology_in: technologies } : query,
