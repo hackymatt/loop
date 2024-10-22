@@ -4,7 +4,8 @@ from config_global import DEFAULT_COUPON
 
 def add_coupon(apps, schema_editor):
     Coupon = apps.get_model("coupon", "Coupon")
-    Coupon.objects.get_or_create(**DEFAULT_COUPON)
+    if not Coupon.objects.filter(code=DEFAULT_COUPON["code"]).exists():
+        Coupon.objects.create(**DEFAULT_COUPON)
 
 
 class Migration(migrations.Migration):
