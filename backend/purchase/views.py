@@ -165,9 +165,6 @@ class PurchaseViewSet(ModelViewSet):
 
             # use coupon
             coupon_obj = Coupon.objects.get(code=coupon_code)
-            CouponUser.objects.create(
-                user=StudentProfile.objects.get(profile=profile), coupon=coupon_obj
-            )
             coupon_details = {
                 "discount": coupon_obj.discount,
                 "is_percentage": coupon_obj.is_percentage,
@@ -190,6 +187,13 @@ class PurchaseViewSet(ModelViewSet):
 
         # initialize payment record
         payment = Payment.objects.create(amount=total * 100)
+
+        if coupon_code != "":
+            CouponUser.objects.create(
+                user=StudentProfile.objects.get(profile=profile),
+                coupon=coupon_obj,
+                payment=payment,
+            )
 
         # create records
         serializer = PurchaseSerializer(

@@ -43,6 +43,7 @@ class CouponUserViewSet(ModelViewSet):
         CouponUser.objects.prefetch_related(
             Prefetch("user", queryset=StudentProfile.objects.add_full_name())
         )
+        .filter(payment__status="S")
         .all()
         .order_by("id")
     )

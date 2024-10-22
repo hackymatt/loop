@@ -437,14 +437,8 @@ def create_coupon_obj(
     }
 
 
-def create_coupon_user(
-    coupon: Coupon,
-    user: Profile,
-):
-    return CouponUser.objects.create(
-        coupon=coupon,
-        user=user,
-    )
+def create_coupon_user(coupon: Coupon, user: Profile, payment: Payment):
+    return CouponUser.objects.create(coupon=coupon, user=user, payment=payment)
 
 
 def create_meeting(event_id: str, url: str):

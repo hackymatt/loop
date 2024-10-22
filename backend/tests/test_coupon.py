@@ -8,6 +8,7 @@ from .factory import (
     create_coupon,
     create_coupon_obj,
     create_coupon_user,
+    create_payment,
 )
 from .helpers import (
     login,
@@ -479,9 +480,15 @@ class CouponUserTest(APITestCase):
             expiration_date=make_aware(datetime.now() + timedelta(days=5)),
         )
 
-        self.coupon_user_1 = create_coupon_user(self.coupon_1, self.profile)
-        self.coupon_user_2 = create_coupon_user(self.coupon_2, self.profile)
-        self.coupon_user_3 = create_coupon_user(self.coupon_3, self.profile)
+        self.coupon_user_1 = create_coupon_user(
+            self.coupon_1, self.profile, payment=create_payment(amount=1000)
+        )
+        self.coupon_user_2 = create_coupon_user(
+            self.coupon_2, self.profile, payment=create_payment(amount=1000)
+        )
+        self.coupon_user_3 = create_coupon_user(
+            self.coupon_3, self.profile, payment=create_payment(amount=1000)
+        )
 
     def test_get_coupon_usage_unauthenticated(self):
         # no login
@@ -604,7 +611,11 @@ class CouponValidationTest(APITestCase):
             active=True,
             expiration_date=make_aware(datetime.now() + timedelta(days=10)),
         )
-        create_coupon_user(coupon=self.coupon_3, user=self.profile_2)
+        create_coupon_user(
+            coupon=self.coupon_3,
+            user=self.profile_2,
+            payment=create_payment(amount=1000),
+        )
 
         self.coupon_4 = create_coupon(
             code="aaaaaae",
@@ -615,7 +626,9 @@ class CouponValidationTest(APITestCase):
             active=True,
             expiration_date=make_aware(datetime.now() + timedelta(days=10)),
         )
-        create_coupon_user(coupon=self.coupon_4, user=self.profile)
+        create_coupon_user(
+            coupon=self.coupon_4, user=self.profile, payment=create_payment(amount=1000)
+        )
 
         self.coupon_5 = create_coupon(
             code="aaaaaaf",
@@ -965,9 +978,15 @@ class CouponUserFilteringTest(APITestCase):
             expiration_date=make_aware(datetime.now() + timedelta(days=5)),
         )
 
-        self.coupon_user_1 = create_coupon_user(self.coupon_1, self.profile)
-        self.coupon_user_2 = create_coupon_user(self.coupon_2, self.profile)
-        self.coupon_user_3 = create_coupon_user(self.coupon_3, self.profile)
+        self.coupon_user_1 = create_coupon_user(
+            self.coupon_1, self.profile, payment=create_payment(amount=1000)
+        )
+        self.coupon_user_2 = create_coupon_user(
+            self.coupon_2, self.profile, payment=create_payment(amount=1000)
+        )
+        self.coupon_user_3 = create_coupon_user(
+            self.coupon_3, self.profile, payment=create_payment(amount=1000)
+        )
 
     def test_user_id_filter(self):
         login(self, self.admin_data["email"], self.admin_data["password"])
@@ -1246,9 +1265,15 @@ class CouponUserOrderingTest(APITestCase):
             expiration_date=make_aware(datetime.now() + timedelta(days=5)),
         )
 
-        self.coupon_user_1 = create_coupon_user(self.coupon_1, self.profile)
-        self.coupon_user_2 = create_coupon_user(self.coupon_2, self.profile)
-        self.coupon_user_3 = create_coupon_user(self.coupon_3, self.profile)
+        self.coupon_user_1 = create_coupon_user(
+            self.coupon_1, self.profile, payment=create_payment(amount=1000)
+        )
+        self.coupon_user_2 = create_coupon_user(
+            self.coupon_2, self.profile, payment=create_payment(amount=1000)
+        )
+        self.coupon_user_3 = create_coupon_user(
+            self.coupon_3, self.profile, payment=create_payment(amount=1000)
+        )
 
         self.fields = [
             "coupon_code",

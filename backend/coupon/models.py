@@ -16,6 +16,7 @@ from django.core.validators import (
 )
 from decimal import Decimal
 from profile.models import StudentProfile
+from purchase.models import Payment
 
 
 class Coupon(BaseModel):
@@ -46,6 +47,7 @@ class CouponUser(BaseModel):
         StudentProfile, on_delete=CASCADE, related_name="coupon_user_student"
     )
     coupon = ForeignKey(Coupon, on_delete=CASCADE, related_name="coupon_user_coupon")
+    payment = ForeignKey(Payment, on_delete=CASCADE, related_name="coupon_user_payment")
 
     class Meta:
         db_table = "coupon_user"

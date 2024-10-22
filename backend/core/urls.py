@@ -60,59 +60,59 @@ from .routers import Router
 
 router = Router(trailing_slash=False)
 
-router.register(r"users", UserViewSet, basename="users")
-router.register(r"register", ProfileRegisterViewSet, basename="user_register")
-router.register(r"verify", ProfileVerifyViewSet, basename="user_verification")
+router.register(r"best-courses", BestCourseViewSet, basename="best_courses")
+router.register(r"best-lecturers", BestLecturerViewSet, basename="best_lecturers")
+router.register(r"best-reviews", BestReviewViewSet, basename="best_reviews")
+router.register(
+    r"best-technologies", BestTechnologyViewSet, basename="best_technologies"
+)
+router.register(r"cart", CartViewSet, basename="cart")
+router.register(r"certificates", CertificateViewSet, basename="certificates")
+router.register(r"coupons", CouponViewSet, basename="coupons")
+router.register(r"coupon-usage", CouponUserViewSet, basename="coupon_usage")
+router.register(r"courses", CourseViewSet, basename="courses")
+router.register(r"earnings", EarningViewSet, basename="earnings")
+router.register(r"finance-history", FinanceHistoryViewSet, basename="finance_history")
+router.register(r"lessons", LessonViewSet, basename="lessons")
+router.register(
+    r"lesson-dates", ScheduleAvailableDateViewSet, basename="lesson_schedules_dates"
+)
+router.register(r"lesson-lecturers", TeachingViewSet, basename="lesson_lecturers")
+router.register(
+    r"lesson-price-history", LessonPriceHistoryViewSet, basename="lesson_price_history"
+)
+router.register(r"lesson-schedules", ScheduleViewSet, basename="lesson_schedules")
+router.register(r"lecturers", LecturerViewSet, basename="lecturers")
 router.register(r"login", EmailLoginViewSet, basename="user_login")
 router.register(r"logout", ProfileLogoutViewSet, basename="user_logout")
+router.register(r"messages", MessageViewSet, basename="messages")
+router.register(r"modules", ModuleViewSet, basename="modules")
+router.register(r"newsletter", NewsletterEntriesViewSet, basename="newsletter")
+router.register(r"notifications", NotificationViewSet, basename="notifications")
 router.register(
     r"password-change", ProfilePasswordChangeViewSet, basename="user_password_change"
 )
 router.register(
     r"password-reset", ProfilePasswordResetViewSet, basename="user_password_reset"
 )
+router.register(r"posts", PostViewSet, basename="posts")
+router.register(r"post-categories", PostCategoryViewSet, basename="post_categories")
+router.register(r"purchase", PurchaseViewSet, basename="purchase")
+router.register(r"register", ProfileRegisterViewSet, basename="user_register")
+router.register(r"reservation", ReservationViewSet, basename="reservation")
+router.register(r"reviews", ReviewViewSet, basename="reviews")
+router.register(r"reviews-stats", ReviewStatsViewSet, basename="reviews-stats")
+router.register(r"schedules", ManageScheduleViewSet, basename="schedules")
+router.register(r"skills", SkillViewSet, basename="skills")
+router.register(r"teaching", ManageTeachingViewSet, basename="teaching")
+router.register(r"technologies", TechnologyViewSet, basename="technologies")
+router.register(r"topics", TopicViewSet, basename="topics")
+router.register(r"users", UserViewSet, basename="users")
+router.register(r"verify", ProfileVerifyViewSet, basename="user_verification")
 router.register(
     r"verify-code", ProfileVerificationCodeViewSet, basename="user_verification_code"
 )
-router.register(r"certificates", CertificateViewSet, basename="certificates")
-router.register(r"courses", CourseViewSet, basename="courses")
-router.register(r"best-courses", BestCourseViewSet, basename="best_courses")
-router.register(r"modules", ModuleViewSet, basename="modules")
-router.register(r"lessons", LessonViewSet, basename="lessons")
-router.register(
-    r"lesson-price-history", LessonPriceHistoryViewSet, basename="lesson_price_history"
-)
-router.register(r"technologies", TechnologyViewSet, basename="technologies")
-router.register(
-    r"best-technologies", BestTechnologyViewSet, basename="best_technologies"
-)
-router.register(r"topics", TopicViewSet, basename="topics")
-router.register(r"skills", SkillViewSet, basename="skills")
-router.register(r"best-lecturers", BestLecturerViewSet, basename="best_lecturers")
-router.register(r"lecturers", LecturerViewSet, basename="lecturers")
-router.register(r"reviews", ReviewViewSet, basename="reviews")
-router.register(r"reviews-stats", ReviewStatsViewSet, basename="reviews-stats")
-router.register(r"best-reviews", BestReviewViewSet, basename="best_reviews")
-router.register(r"schedules", ManageScheduleViewSet, basename="schedules")
-router.register(r"lesson-schedules", ScheduleViewSet, basename="lesson_schedules")
-router.register(
-    r"lesson-dates", ScheduleAvailableDateViewSet, basename="lesson_schedules_dates"
-)
-router.register(r"newsletter", NewsletterEntriesViewSet, basename="newsletter")
 router.register(r"wishlist", WishlistViewSet, basename="wishlist")
-router.register(r"cart", CartViewSet, basename="cart")
-router.register(r"purchase", PurchaseViewSet, basename="purchase")
-router.register(r"teaching", ManageTeachingViewSet, basename="teaching")
-router.register(r"lesson-lecturers", TeachingViewSet, basename="lesson_lecturers")
-router.register(r"reservation", ReservationViewSet, basename="reservation")
-router.register(r"finance-history", FinanceHistoryViewSet, basename="finance_history")
-router.register(r"earnings", EarningViewSet, basename="earnings")
-router.register(r"coupons", CouponViewSet, basename="coupons")
-router.register(r"coupon-usage", CouponUserViewSet, basename="coupon_usage")
-router.register(r"notifications", NotificationViewSet, basename="notifications")
-router.register(r"messages", MessageViewSet, basename="messages")
-router.register(r"posts", PostViewSet, basename="posts")
-router.register(r"post-categories", PostCategoryViewSet, basename="post_categories")
 
 
 api_urlpatterns = [
