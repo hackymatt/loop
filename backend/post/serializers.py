@@ -6,32 +6,7 @@ from rest_framework.serializers import (
 )
 from drf_extra_fields.fields import Base64ImageField
 from post.models import Post, PostCategory
-from profile.models import LecturerProfile, StudentProfile
-from notification.utils import notify
-from urllib.parse import quote_plus
-from math import ceil
-
-
-def get_lecturer_full_name(lecturer):
-    return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
-
-
-def get_post_duration(post):
-    words = post.content.split()
-    return ceil(len(words) / 250)
-
-
-def get_post_navigation(self, post, filter):
-    lookup_field_name = f"created_at__{filter}"
-    current_post_created_at = post.created_at
-    posts = Post.objects.filter(
-        **{lookup_field_name: current_post_created_at, "active": True}
-    )
-    if posts.exists():
-        return PostNavigationSerializer(
-            instance=posts.first(), context={"request": self.context.get("request")}
-        ).data
-    return None
+from profile.models import LecturerProfile
 
 
 class CategorySerializer(ModelSerializer):
@@ -44,7 +19,7 @@ class CategorySerializer(ModelSerializer):
 
 
 class LecturerSerializer(ModelSerializer):
-    full_name = SerializerMethodField("get_full_name")
+    full_name = SerializerMethodField()
     gender = CharField(source="profile.get_gender_display")
     image = Base64ImageField(source="profile.image", required=True)
 
@@ -57,12 +32,12 @@ class LecturerSerializer(ModelSerializer):
             "image",
         )
 
-    def get_full_name(self, lecturer):
-        return get_lecturer_full_name(lecturer=lecturer)
+    def get_full_name(self, lecturer: LecturerProfile):
+        return lecturer.full_name
 
 
 class LecturerDetailsSerializer(ModelSerializer):
-    full_name = SerializerMethodField("get_full_name")
+    full_name = SerializerMethodField()
     gender = CharField(source="profile.get_gender_display")
     image = Base64ImageField(source="profile.image", required=True)
     date_joined = DateTimeField(source="profile.user.date_joined")
@@ -79,8 +54,8 @@ class LecturerDetailsSerializer(ModelSerializer):
             "image",
         )
 
-    def get_full_name(self, lecturer):
-        return get_lecturer_full_name(lecturer=lecturer)
+    def get_full_name(self, lecturer: LecturerProfile):
+        return lecturer.full_name
 
 
 class PostNavigationSerializer(ModelSerializer):
@@ -99,7 +74,7 @@ class PostListSerializer(ModelSerializer):
     category = CategorySerializer()
     authors = LecturerSerializer(many=True)
     image = Base64ImageField(required=True)
-    duration = SerializerMethodField("get_duration")
+    duration = SerializerMethodField()
 
     class Meta:
         model = Post
@@ -109,17 +84,17 @@ class PostListSerializer(ModelSerializer):
             "modified_at",
         )
 
-    def get_duration(self, post):
-        return get_post_duration(post=post)
+    def get_duration(self, post: Post):
+        return post.duration
 
 
 class PostGetSerializer(ModelSerializer):
     category = CategorySerializer()
     authors = LecturerDetailsSerializer(many=True)
     image = Base64ImageField(required=True)
-    duration = SerializerMethodField("get_duration")
-    previous_post = SerializerMethodField("get_previous_post")
-    next_post = SerializerMethodField("get_next_post")
+    duration = SerializerMethodField()
+    previous_post = SerializerMethodField()
+    next_post = SerializerMethodField()
 
     class Meta:
         model = Post
@@ -128,14 +103,24 @@ class PostGetSerializer(ModelSerializer):
             "modified_at",
         )
 
-    def get_duration(self, post):
-        return get_post_duration(post=post)
+    def get_duration(self, post: Post):
+        return post.duration
 
-    def get_previous_post(self, post):
-        return get_post_navigation(self=self, post=post, filter="lt")
+    def get_previous_post(self, post: Post):
+        if not post.previous_post:
+            return None
+        post = Post.objects.get(id=post.previous_post)
+        return PostNavigationSerializer(
+            post, context={"request": self.context.get("request")}
+        ).data
 
-    def get_next_post(self, post):
-        return get_post_navigation(self=self, post=post, filter="gt")
+    def get_next_post(self, post: Post):
+        if not post.next_post:
+            return None
+        post = Post.objects.get(id=post.next_post)
+        return PostNavigationSerializer(
+            post, context={"request": self.context.get("request")}
+        ).data
 
 
 class PostSerializer(ModelSerializer):
@@ -145,7 +130,7 @@ class PostSerializer(ModelSerializer):
         model = Post
         fields = "__all__"
 
-    def add_authors(self, post, authors):
+    def add_authors(self, post: Post, authors):
         for author in authors:
             post.authors.add(author)
 
@@ -160,7 +145,7 @@ class PostSerializer(ModelSerializer):
 
         return post
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Post, validated_data):
         authors = validated_data.pop("authors")
 
         instance.active = validated_data.get("active", instance.active)

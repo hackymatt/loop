@@ -1,12 +1,12 @@
 import { IGender } from "./testimonial";
 
 export enum UserType {
-  Admin = "Admin",
-  Wykładowca = "Wykładowca",
-  Student = "Student",
+  ADMIN = "Admin",
+  TEACHER = "Wykładowca",
+  STUDENT = "Student",
 }
 
-export type IUserType = keyof typeof UserType;
+export type IUserType = `${UserType}`;
 
 export type IUserDetailsProps = {
   id: string;

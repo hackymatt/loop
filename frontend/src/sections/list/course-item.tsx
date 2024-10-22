@@ -13,6 +13,7 @@ import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
 import { encodeUrl } from "src/utils/url-utils";
+import { getGenderAvatar } from "src/utils/get-gender-avatar";
 import { fCurrency, fShortenNumber } from "src/utils/format-number";
 
 import Image from "src/components/image";
@@ -48,10 +49,7 @@ export default function CourseItem({ course, vertical }: Props) {
     progress,
   } = course;
 
-  const genderAvatarUrl =
-    teachers?.[0]?.gender === "Kobieta"
-      ? "/assets/images/avatar/avatar_female.jpg"
-      : "/assets/images/avatar/avatar_male.jpg";
+  const genderAvatarUrl = getGenderAvatar(teachers?.[0]?.gender);
 
   const avatarUrl = teachers?.[0]?.avatarUrl || genderAvatarUrl;
 

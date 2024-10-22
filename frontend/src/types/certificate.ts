@@ -4,10 +4,12 @@ export enum CertificateType {
   COURSE = "Kurs",
 }
 
+type ICertificateType = `${CertificateType}`;
+
 export type ICertificateProps = {
   id: string;
   referenceNumber?: string;
-  type: CertificateType;
+  type: ICertificateType;
   title: string;
   studentName?: string;
   duration?: string;

@@ -1,4 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.serializers import ValidationError
 from rest_framework import status
@@ -19,13 +20,12 @@ from coupon.validation import validate_coupon
 from utils.przelewy24.payment import Przelewy24Api
 from django.views.decorators.csrf import csrf_exempt
 import json
-from uuid import UUID
 from mailer.mailer import Mailer
 from notification.utils import notify
 from math import floor
 
 
-def confirm_purchase(status, purchases, payment):
+def confirm_purchase(status, purchases, payment: Payment):
     title = (
         "Twój zakup jest zakończony!"
         if status == "S"
@@ -74,15 +74,34 @@ def confirm_purchase(status, purchases, payment):
 
 class PurchaseViewSet(ModelViewSet):
     http_method_names = ["get", "post"]
-    queryset = Purchase.objects.filter(payment__status="S").all()
+    queryset = (
+        Purchase.objects.filter(payment__status="S")
+        .add_meeting_url()
+        .add_recordings_ids()
+        .add_reservation_id()
+        .add_review_id()
+        .add_lesson_status()
+        .add_review_status()
+        .all()
+        .order_by("id")
+    )
     serializer_class = PurchaseGetSerializer
     filterset_class = PurchaseFilter
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
-        student = Profile.objects.get(user=user)
-        return self.queryset.filter(student__profile=student)
+        queryset = self.queryset.filter(student__profile__user=user)
+
+        lecturer_id = self.request.query_params.get("lecturer_id", None)
+        sort_by = self.request.query_params.get("sort_by", None)
+        if lecturer_id:
+            return queryset.add_lecturer_id()
+        if sort_by:
+            if "lecturer_id" in sort_by:
+                return queryset.add_lecturer_id()
+
+        return queryset
 
     def get_lessons_price(self, lessons):
         for lesson_data in lessons:
@@ -155,9 +174,6 @@ class PurchaseViewSet(ModelViewSet):
 
             # use coupon
             coupon_obj = Coupon.objects.get(code=coupon_code)
-            CouponUser.objects.create(
-                user=StudentProfile.objects.get(profile=profile), coupon=coupon_obj
-            )
             coupon_details = {
                 "discount": coupon_obj.discount,
                 "is_percentage": coupon_obj.is_percentage,
@@ -180,6 +196,13 @@ class PurchaseViewSet(ModelViewSet):
 
         # initialize payment record
         payment = Payment.objects.create(amount=total * 100)
+
+        if coupon_code != "":
+            CouponUser.objects.create(
+                user=StudentProfile.objects.get(profile=profile),
+                coupon=coupon_obj,
+                payment=payment,
+            )
 
         # create records
         serializer = PurchaseSerializer(
@@ -207,25 +230,23 @@ class PurchaseViewSet(ModelViewSet):
         )
 
 
-class PaymentVerifyViewSet(ModelViewSet):
+class PaymentVerifyAPIView(APIView):
     http_method_names = ["post"]
 
     @csrf_exempt
-    def verify_payment(request):
+    def post(self, request):
         data = json.loads(request.body)
-
         session_id = data.get("sessionId")
         order_id = data.get("orderId")
         amount = data.get("amount")
 
-        payments = Payment.objects.filter(session_id=session_id, amount=amount)
+        payment = Payment.objects.filter(session_id=session_id, amount=amount).first()
 
-        if not payments.exists():
+        if not payment:
             return JsonResponse(
                 {"status": "failure"}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        payment = payments.first()
         payment.order_id = order_id
         przelewy24 = Przelewy24Api(payment=payment)
         verification_success = przelewy24.verify()
@@ -235,18 +256,20 @@ class PaymentVerifyViewSet(ModelViewSet):
 
         if verification_success:
             return JsonResponse({"status": "success"}, status=status.HTTP_200_OK)
-        return JsonResponse({"status": "failure"}, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse(
+            {"status": "failure"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class PaymentStatusViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Purchase.objects.all()
+    queryset = Purchase.objects.all().order_by("id")
     permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
         user = self.request.user
-        student = Profile.objects.get(user=user)
-        self.queryset = self.queryset.filter(student__profile=student)
+        self.queryset = self.queryset.filter(student__profile__user=user)
 
         session_id = request.query_params.get("session_id")
 

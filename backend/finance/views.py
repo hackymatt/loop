@@ -5,33 +5,36 @@ from utils.permissions.permissions import IsLecturer
 from finance.serializers import FinanceSerializer, FinanceHistorySerializer
 from finance.models import Finance, FinanceHistory
 from finance.filters import FinanceHistoryFilter
-from profile.models import Profile
+from profile.models import LecturerProfile
+from django.db.models import Prefetch
 
 
 class FinanceDetailsViewSet(ModelViewSet):
     http_method_names = ["get", "put"]
-    queryset = Finance.objects.all()
+    queryset = Finance.objects.all().order_by("id")
     serializer_class = FinanceSerializer
     permission_classes = [IsAuthenticated, IsLecturer]
 
     def list(self, request, *args, **kwargs):
         user = request.user
-        profile = Profile.objects.get(user=user)
-        finance = Finance.objects.filter(lecturer__profile=profile).first()
-
+        finance = Finance.objects.filter(lecturer__profile__user=user).first()
         serializer = FinanceSerializer(finance, context={"request": request})
-
         return Response(serializer.data)
 
     def get_object(self):
         user = self.request.user
-        profile = Profile.objects.get(user=user)
-        return Finance.objects.filter(lecturer__profile=profile).first()
+        return Finance.objects.filter(lecturer__profile__user=user).first()
 
 
 class FinanceHistoryViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = FinanceHistory.objects.all()
+    queryset = (
+        FinanceHistory.objects.prefetch_related(
+            Prefetch("lecturer", queryset=LecturerProfile.objects.add_full_name())
+        )
+        .all()
+        .order_by("id")
+    )
     serializer_class = FinanceHistorySerializer
     filterset_class = FinanceHistoryFilter
     permission_classes = [IsAuthenticated, IsAdminUser]

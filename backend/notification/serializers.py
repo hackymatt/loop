@@ -9,12 +9,12 @@ class NotificationSerializer(ModelSerializer):
         model = Notification
         exclude = ("profile",)
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Notification, validated_data):
         status = validated_data.pop("get_status_display", instance.status)
 
         Notification.objects.filter(pk=instance.pk).update(
             **validated_data, status=status
         )
-        instance = Notification.objects.get(pk=instance.pk)
+        instance.refresh_from_db()
 
         return instance

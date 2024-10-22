@@ -6,7 +6,6 @@ from rest_framework.serializers import (
     UUIDField,
 )
 from certificate.models import Certificate
-from datetime import timedelta
 
 
 class CertificateSerializer(ModelSerializer):
@@ -23,8 +22,8 @@ class CertificateSerializer(ModelSerializer):
             "completed_at",
         )
 
-    def get_completed_at(self, certificate):
-        return certificate.created_at.date() - timedelta(days=1)
+    def get_completed_at(self, certificate: Certificate):
+        return certificate.completed_at
 
 
 class CertificateInfoSerializer(ModelSerializer):
@@ -46,12 +45,11 @@ class CertificateInfoSerializer(ModelSerializer):
             "student_full_name",
         )
 
-    def get_reference_number(self, certificate):
-        return "{:05d}".format(certificate.id)
+    def get_reference_number(self, certificate: Certificate):
+        return certificate.reference_number
 
-    def get_student_full_name(self, certificate):
-        user = certificate.student.profile.user
-        return f"{user.first_name} {user.last_name}"
+    def get_student_full_name(self, certificate: Certificate):
+        return certificate.student.full_name
 
-    def get_completed_at(self, certificate):
-        return certificate.created_at.date() - timedelta(days=1)
+    def get_completed_at(self, certificate: Certificate):
+        return certificate.completed_at

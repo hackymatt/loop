@@ -5,20 +5,17 @@ from rest_framework.serializers import (
 from lesson.models import Lesson, Technology
 from cart.models import Cart
 from profile.models import Profile, LecturerProfile, StudentProfile
-from teaching.models import Teaching
-from django.db.models.functions import Concat
-from django.db.models import Value, Q
 
 
 class LecturerSerializer(ModelSerializer):
-    full_name = SerializerMethodField("get_full_name")
+    full_name = SerializerMethodField()
 
     class Meta:
         model = LecturerProfile
         fields = ("full_name",)
 
-    def get_full_name(self, lecturer):
-        return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
+    def get_full_name(self, lecturer: LecturerProfile):
+        return lecturer.full_name
 
 
 class TechnologySerializer(ModelSerializer):
@@ -33,7 +30,7 @@ class TechnologySerializer(ModelSerializer):
 
 class LessonSerializer(ModelSerializer):
     technologies = TechnologySerializer(many=True)
-    lecturers = SerializerMethodField("get_lesson_lecturers")
+    lecturers = SerializerMethodField()
 
     class Meta:
         model = Lesson
@@ -46,18 +43,12 @@ class LessonSerializer(ModelSerializer):
             "lecturers",
         )
 
-    def get_lesson_lecturers(self, lesson):
-        lecturer_ids = Teaching.objects.filter(lesson=lesson).values("lecturer")
+    def get_lecturers(self, lesson: Lesson):
+        lecturer_ids = lesson.lecturers_ids
         lecturers = (
-            LecturerProfile.objects.exclude(
-                Q(title__isnull=True) | Q(description__isnull=True)
-            )
-            .filter(id__in=lecturer_ids)
-            .annotate(
-                full_name=Concat(
-                    "profile__user__first_name", Value(" "), "profile__user__last_name"
-                )
-            )
+            LecturerProfile.objects.add_full_name()
+            .add_profile_ready()
+            .filter(id__in=lecturer_ids, profile_ready=True)
             .order_by("full_name")
         )
         return LecturerSerializer(

@@ -20,6 +20,8 @@ import {
 
 import { useBoolean } from "src/hooks/use-boolean";
 
+import { getGenderAvatar } from "src/utils/get-gender-avatar";
+
 import Iconify from "src/components/iconify";
 
 import { IScheduleStudentProp } from "src/types/course";
@@ -136,10 +138,7 @@ export default function DetailsForm({
             }}
           >
             {students?.map((student: IScheduleStudentProp) => {
-              const genderImageUrl =
-                student.gender === "Kobieta"
-                  ? "/assets/images/avatar/avatar_female.jpg"
-                  : "/assets/images/avatar/avatar_male.jpg";
+              const genderImageUrl = getGenderAvatar(student.gender);
               return (
                 <ListItem
                   key={student.id}

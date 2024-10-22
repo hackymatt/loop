@@ -14,7 +14,9 @@ class Notification(BaseModel):
         ("N", "NEW"),
         ("R", "READ"),
     )
-    profile = ForeignKey(Profile, on_delete=CASCADE)
+    profile = ForeignKey(
+        Profile, on_delete=CASCADE, related_name="notification_profile"
+    )
     title = CharField()
     subtitle = CharField(null=True, blank=True)
     description = TextField()

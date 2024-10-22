@@ -38,9 +38,9 @@ import AccountReviewsTableRow from "../../../../account/student/account-reviews-
 // ----------------------------------------------------------------------
 
 const TABS = [
-  { id: ReviewStatus.brak, label: "Wszystkie recenzje" },
-  { id: ReviewStatus.oczekujące, label: "Oczekujące" },
-  { id: ReviewStatus.ukończone, label: "Ukończone" },
+  { id: ReviewStatus.NONE, label: "Wszystkie recenzje" },
+  { id: ReviewStatus.PENDING, label: "Oczekujące" },
+  { id: ReviewStatus.COMPLETED, label: "Ukończone" },
 ];
 
 const TABLE_HEAD = [
@@ -78,7 +78,7 @@ export default function AccountReviewsView() {
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
   const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "created_at";
   const order = filters?.sort_by && !filters.sort_by.startsWith("-") ? "asc" : "desc";
-  const tab = filters?.review_status ? filters.review_status : ReviewStatus.brak;
+  const tab = filters?.review_status ? filters.review_status : ReviewStatus.NONE;
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -93,7 +93,7 @@ export default function AccountReviewsView() {
 
   const manageTab = useCallback(
     (tabName: string) => {
-      if (tabName === ReviewStatus.brak) {
+      if (tabName === ReviewStatus.NONE) {
         handleChange("review_status", "");
         handleChange("review_status_exclude", tabName);
       } else {
@@ -165,7 +165,7 @@ export default function AccountReviewsView() {
       </Typography>
 
       <Tabs
-        value={TABS.find((t) => t.id === tab)?.id ?? ReviewStatus.brak}
+        value={TABS.find((t) => t.id === tab)?.id ?? ReviewStatus.NONE}
         scrollButtons="auto"
         variant="scrollable"
         allowScrollButtonsMobile

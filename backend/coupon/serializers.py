@@ -38,7 +38,7 @@ class CouponListSerializer(ModelSerializer):
 
 
 class StudentSerializer(ModelSerializer):
-    full_name = SerializerMethodField("get_full_name")
+    full_name = SerializerMethodField()
     email = EmailField(source="profile.user.email")
     gender = CharField(source="profile.get_gender_display")
 
@@ -51,8 +51,8 @@ class StudentSerializer(ModelSerializer):
             "gender",
         )
 
-    def get_full_name(self, student):
-        return student.profile.user.first_name + " " + student.profile.user.last_name
+    def get_full_name(self, student: StudentProfile):
+        return student.full_name
 
 
 class CouponGetSerializer(ModelSerializer):
@@ -88,12 +88,12 @@ class CouponSerializer(ModelSerializer):
 
         return coupon
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Coupon, validated_data):
         users = validated_data.pop("users", instance.users)
 
         Coupon.objects.filter(pk=instance.pk).update(**validated_data)
 
-        instance = Coupon.objects.get(pk=instance.pk)
+        instance.refresh_from_db()
         instance.users.clear()
         instance = self.add_users(coupon=instance, users=users)
         instance.save()

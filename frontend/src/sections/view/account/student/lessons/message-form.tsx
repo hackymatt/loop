@@ -60,7 +60,7 @@ export default function MessageForm({ purchase, onClose, ...other }: Props) {
       await createMessage({
         ...data,
         recipient_id: purchase.teacher.id,
-        recipient_type: UserType.Wykładowca,
+        recipient_type: UserType.TEACHER,
         status: MessageStatus.NEW,
       });
       reset();

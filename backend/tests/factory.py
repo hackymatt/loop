@@ -13,7 +13,7 @@ from purchase.models import Purchase, Payment
 from newsletter.models import Newsletter
 from notification.models import Notification
 from message.models import Message
-from schedule.models import Schedule, Meeting
+from schedule.models import Schedule, Meeting, Recording
 from wishlist.models import Wishlist
 from post.models import Post, PostCategory
 from cart.models import Cart
@@ -437,14 +437,8 @@ def create_coupon_obj(
     }
 
 
-def create_coupon_user(
-    coupon: Coupon,
-    user: Profile,
-):
-    return CouponUser.objects.create(
-        coupon=coupon,
-        user=user,
-    )
+def create_coupon_user(coupon: Coupon, user: Profile, payment: Payment):
+    return CouponUser.objects.create(coupon=coupon, user=user, payment=payment)
 
 
 def create_meeting(event_id: str, url: str):
@@ -566,3 +560,14 @@ def create_post_obj(
         "image": image,
         "active": active,
     }
+
+
+def create_recording(
+    schedule: Schedule,
+    file_id: str = "00001",
+    file_name: str = "file_123",
+    file_url: str = "https://example.com/file.mp4",
+):
+    return Recording.objects.create(
+        schedule=schedule, file_id=file_id, file_name=file_name, file_url=file_url
+    )

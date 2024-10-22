@@ -159,7 +159,7 @@ export default function AccountManageView() {
           size="medium"
           variant="contained"
           onClick={deleteAccountFormOpen.onToggle}
-          disabled={userType === UserType.Admin}
+          disabled={userType === UserType.ADMIN}
         >
           Usuń konto
         </Button>

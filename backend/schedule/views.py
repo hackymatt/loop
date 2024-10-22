@@ -12,22 +12,31 @@ from schedule.serializers import (
 from schedule.filters import ScheduleFilter, ScheduleAvailableDateFilter
 from schedule.models import Schedule
 from schedule.utils import MeetingManager
-from profile.models import Profile
 from reservation.models import Reservation
+from profile.models import LecturerProfile
 from pytz import timezone, utc
 from mailer.mailer import Mailer
-from django.db.models import F
+from django.db.models import F, Prefetch
 from django.db.models.functions import TruncDate
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
-from config_global import CANCELLATION_TIME
 from notification.utils import notify
 from urllib.parse import quote_plus
+from config_global import CANCELLATION_TIME
 
 
 class ManageScheduleViewSet(ModelViewSet):
     http_method_names = ["get", "post", "delete"]
-    queryset = Schedule.objects.all()
+    queryset = (
+        Schedule.objects.prefetch_related(
+            Prefetch("lecturer", queryset=LecturerProfile.objects.add_full_name())
+        )
+        .add_meeting_url()
+        .add_reservations_count()
+        .add_students_ids()
+        .all()
+        .order_by("id")
+    )
     serializer_class = ManageScheduleSerializer
     filterset_class = ScheduleFilter
     permission_classes = [IsAuthenticated, IsLecturer]
@@ -35,8 +44,7 @@ class ManageScheduleViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return ManageScheduleGetSerializer
-        else:
-            return self.serializer_class
+        return self.serializer_class
 
     def get_permissions(self):
         if self.action == "retrieve":
@@ -47,8 +55,7 @@ class ManageScheduleViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        lecturer = Profile.objects.get(user=user)
-        return self.queryset.filter(lecturer__profile=lecturer)
+        return self.queryset.filter(lecturer__profile__user=user)
 
     def destroy(self, request, *args, **kwargs):
         schedule = super().get_object()
@@ -78,7 +85,7 @@ class ManageScheduleViewSet(ModelViewSet):
                 .astimezone(timezone("Europe/Warsaw"))
                 .strftime("%d-%m-%Y %H:%M")
             )
-            lecturer_full_name = f"{schedule.lecturer.profile.user.first_name} {schedule.lecturer.profile.user.last_name}"
+            lecturer_full_name = schedule.lecturer.full_name
             data = {
                 **{
                     "lesson_title": lesson.title,
@@ -111,9 +118,20 @@ class ManageScheduleViewSet(ModelViewSet):
 
 class ScheduleViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Schedule.objects.annotate(
-        diff=make_aware(datetime.now()) - F("start_time")
-    ).exclude(lesson__isnull=True, diff__gte=-timedelta(hours=CANCELLATION_TIME))
+    queryset = (
+        Schedule.objects.add_diff()
+        .exclude(lesson__isnull=True, diff__gte=-timedelta(hours=CANCELLATION_TIME))
+        .prefetch_related(
+            Prefetch(
+                "lecturer",
+                queryset=LecturerProfile.objects.add_full_name()
+                .add_rate()
+                .add_commission(),
+            )
+        )
+        .add_reservations_count()
+        .order_by("id")
+    )
     serializer_class = ScheduleSerializer
     filterset_class = ScheduleFilter
     permission_classes = [AllowAny]
@@ -122,8 +140,9 @@ class ScheduleViewSet(ModelViewSet):
 class ScheduleAvailableDateViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = (
-        Schedule.objects.annotate(diff=make_aware(datetime.now()) - F("start_time"))
+        Schedule.objects.add_diff()
         .exclude(lesson__isnull=True, diff__gte=-timedelta(hours=CANCELLATION_TIME))
+        .add_year_month()
         .annotate(date=TruncDate(F("start_time")))
         .values("date")
         .distinct()

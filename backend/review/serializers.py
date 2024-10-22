@@ -7,7 +7,7 @@ from rest_framework.serializers import (
     ValidationError,
 )
 from review.models import Review
-from profile.models import Profile, LecturerProfile, StudentProfile
+from profile.models import LecturerProfile, StudentProfile
 from purchase.models import Purchase
 from notification.utils import notify
 
@@ -27,7 +27,7 @@ class StudentSerializer(ModelSerializer):
 
 
 class LecturerSerializer(ModelSerializer):
-    full_name = SerializerMethodField("get_full_name")
+    full_name = SerializerMethodField()
     gender = CharField(source="profile.get_gender_display")
     image = ImageField(source="profile.image")
 
@@ -39,8 +39,8 @@ class LecturerSerializer(ModelSerializer):
             "image",
         )
 
-    def get_full_name(self, lecturer):
-        return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
+    def get_full_name(self, lecturer: LecturerProfile):
+        return lecturer.full_name
 
 
 class BestReviewSerializer(ModelSerializer):
@@ -107,16 +107,15 @@ class ReviewSerializer(ModelSerializer):
 
         user = self.context["request"].user
         data = self.context["request"].data
-        profile = Profile.objects.get(user=user)
         lecturer = LecturerProfile.objects.get(pk=data["lecturer"])
 
         if not Purchase.objects.filter(
-            student__profile=profile, lesson=lesson, payment__status="S"
+            student__profile__user=user, lesson=lesson, payment__status="S"
         ).exists():
             raise ValidationError({"lesson": "Lekcja nie została zakupiona."})
 
         if Review.objects.filter(
-            student__profile=profile, lesson=lesson, lecturer=lecturer
+            student__profile__user=user, lesson=lesson, lecturer=lecturer
         ).exists():
             raise ValidationError({"lesson": "Recenzja już istnieje."})
 
@@ -124,9 +123,8 @@ class ReviewSerializer(ModelSerializer):
 
     def create(self, validated_data):
         user = self.context["request"].user
-        profile = Profile.objects.get(user=user)
         review = Review.objects.create(
-            **validated_data, student=StudentProfile.objects.get(profile=profile)
+            **validated_data, student=StudentProfile.objects.get(profile__user=user)
         )
 
         notify(

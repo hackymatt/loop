@@ -13,6 +13,7 @@ import { RouterLink } from "src/routes/components";
 
 import { encodeUrl } from "src/utils/url-utils";
 import { fShortenNumber } from "src/utils/format-number";
+import { getGenderAvatar } from "src/utils/get-gender-avatar";
 
 import Iconify from "src/components/iconify";
 
@@ -56,10 +57,7 @@ type TeacherItemProps = {
 };
 
 function TeacherItem({ teacher }: TeacherItemProps) {
-  const genderAvatarUrl =
-    teacher?.gender === "Kobieta"
-      ? "/assets/images/avatar/avatar_female.jpg"
-      : "/assets/images/avatar/avatar_male.jpg";
+  const genderAvatarUrl = getGenderAvatar(teacher?.gender);
 
   const avatarUrl = teacher?.avatarUrl || genderAvatarUrl;
 

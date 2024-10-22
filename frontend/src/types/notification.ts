@@ -3,12 +3,14 @@ export enum NotificationStatus {
   READ = "READ",
 }
 
+type INotificationStatus = `${NotificationStatus}`;
+
 export type INotificationProp = {
   id: string;
   title: string;
   subtitle?: string;
   description: string;
-  status: NotificationStatus;
+  status: INotificationStatus;
   path?: string;
   icon: string;
   modifiedAt: string;

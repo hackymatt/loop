@@ -1,42 +1,17 @@
 from rest_framework.serializers import (
     ModelSerializer,
-    Serializer,
     SerializerMethodField,
     CharField,
     ImageField,
-    URLField,
     ValidationError,
 )
+from django.db.models import Prefetch
 from purchase.models import Purchase, Payment
 from lesson.models import Lesson, Technology
 from profile.models import Profile, LecturerProfile, StudentProfile
 from reservation.models import Reservation
 from schedule.models import Schedule, Recording
 from review.models import Review
-from datetime import datetime, timedelta
-from django.utils.timezone import make_aware
-from config_global import CANCELLATION_TIME
-
-
-def get_review(purchase):
-    return Review.objects.filter(student=purchase.student, lesson=purchase.lesson)
-
-
-def get_reservation(purchase):
-    return Reservation.objects.filter(purchase=purchase)
-
-
-class LessonStatus:
-    NEW = "nowa"
-    PLANNED = "zaplanowana"
-    CONFIRMED = "potwierdzona"
-    COMPLETED = "zakończona"
-
-
-class ReviewStatus:
-    NOT_COMPLETED = "oczekujące"
-    COMPLETED = "ukończone"
-    NONE = "brak"
 
 
 class TechnologySerializer(ModelSerializer):
@@ -62,7 +37,7 @@ class LessonSerializer(ModelSerializer):
 
 
 class LecturerSerializer(ModelSerializer):
-    full_name = SerializerMethodField("get_full_name")
+    full_name = SerializerMethodField()
     gender = CharField(source="profile.get_gender_display")
     image = ImageField(source="profile.image")
 
@@ -75,8 +50,8 @@ class LecturerSerializer(ModelSerializer):
             "image",
         )
 
-    def get_full_name(self, lecturer):
-        return lecturer.profile.user.first_name + " " + lecturer.profile.user.last_name
+    def get_full_name(self, lecturer: LecturerProfile):
+        return lecturer.full_name
 
 
 class ReviewSerializer(ModelSerializer):
@@ -127,12 +102,12 @@ class RecordingSerializer(ModelSerializer):
 
 class PurchaseGetSerializer(ModelSerializer):
     lesson = LessonSerializer()
-    lesson_status = SerializerMethodField("get_lesson_status")
-    reservation = SerializerMethodField("get_reservation_details")
-    review_status = SerializerMethodField("get_review_status")
-    review = SerializerMethodField("get_review_details")
-    meeting_url = SerializerMethodField("get_meeting_url")
-    recordings = SerializerMethodField("get_recordings_url")
+    lesson_status = SerializerMethodField()
+    reservation = SerializerMethodField()
+    review_status = SerializerMethodField()
+    review = SerializerMethodField()
+    meeting_url = SerializerMethodField()
+    recordings = SerializerMethodField()
 
     class Meta:
         model = Purchase
@@ -141,75 +116,38 @@ class PurchaseGetSerializer(ModelSerializer):
             "modified_at",
         )
 
-    def get_meeting_url(self, purchase):
-        reservation = get_reservation(purchase=purchase)
+    def get_meeting_url(self, purchase: Purchase):
+        return purchase.meeting_url
 
-        if reservation.exists():
-            schedule = reservation.first().schedule
-            if (schedule.start_time - make_aware(datetime.now())) < timedelta(
-                hours=CANCELLATION_TIME
-            ):
-                return schedule.meeting.url
-            else:
-                return None
-        else:
+    def get_recordings(self, purchase: Purchase):
+        if purchase.recordings_ids == []:
+            return None
+        recordings = Recording.objects.filter(id__in=purchase.recordings_ids)
+        return RecordingSerializer(recordings, many=True).data
+
+    def get_lesson_status(self, purchase: Purchase):
+        return purchase.lesson_status
+
+    def get_review_status(self, purchase: Purchase):
+        return purchase.review_status
+
+    def get_reservation(self, purchase: Purchase):
+        if not purchase.reservation_id:
             return None
 
-    def get_recordings_url(self, purchase):
-        reservation = get_reservation(purchase=purchase)
+        reservation = Reservation.objects.prefetch_related(
+            Prefetch(
+                "schedule__lecturer", queryset=LecturerProfile.objects.add_full_name()
+            )
+        ).get(id=purchase.reservation_id)
+        return ReservationSerializer(reservation).data
 
-        if reservation.exists():
-            schedule = reservation.first().schedule
-            recordings = Recording.objects.filter(schedule=schedule)
-            return RecordingSerializer(recordings, many=True).data
-        else:
-            return []
-
-    def get_lesson_status(self, purchase):
-        reservation = get_reservation(purchase=purchase)
-
-        if reservation.exists():
-            start_time = reservation.first().schedule.start_time
-            end_time = reservation.first().schedule.end_time
-            if make_aware(datetime.now()) >= end_time:
-                return LessonStatus.COMPLETED
-            elif (start_time - make_aware(datetime.now())) < timedelta(
-                hours=CANCELLATION_TIME
-            ):
-                return LessonStatus.CONFIRMED
-            else:
-                return LessonStatus.PLANNED
-        else:
-            return LessonStatus.NEW
-
-    def get_review_status(self, purchase):
-        lesson_status = self.get_lesson_status(purchase=purchase)
-
-        if lesson_status == LessonStatus.COMPLETED:
-            review = get_review(purchase=purchase)
-
-            if review.exists():
-                return ReviewStatus.COMPLETED
-            else:
-                return ReviewStatus.NOT_COMPLETED
-        else:
-            return ReviewStatus.NONE
-
-    def get_reservation_details(self, purchase):
-        reservation = get_reservation(purchase=purchase)
-
-        if reservation.exists():
-            return ReservationSerializer(reservation.first()).data
-        else:
+    def get_review(self, purchase: Purchase):
+        if not purchase.review_id:
             return None
 
-    def get_review_details(self, purchase):
-        review = get_review(purchase=purchase)
-
-        if review.exists():
-            return ReviewSerializer(review.first()).data
-        else:
-            return None
+        review = Review.objects.get(id=purchase.review_id)
+        return ReviewSerializer(review).data
 
 
 class PurchaseSerializer(ModelSerializer):

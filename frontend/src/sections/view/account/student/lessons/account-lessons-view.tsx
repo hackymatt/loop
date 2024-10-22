@@ -39,10 +39,10 @@ import AccountLessonsTableRow from "../../../../account/student/account-lessons-
 
 const TABS = [
   { id: "", label: "Wszystkie lekcje" },
-  { id: LessonStatus.nowa, label: "Nowe" },
-  { id: LessonStatus.zaplanowana, label: "Zaplanowane" },
-  { id: LessonStatus.potwierdzona, label: "Potwierdzone" },
-  { id: LessonStatus.zakończona, label: "Zakończone" },
+  { id: LessonStatus.NEW, label: "Nowe" },
+  { id: LessonStatus.PLANNED, label: "Zaplanowane" },
+  { id: LessonStatus.CONFIRMED, label: "Potwierdzone" },
+  { id: LessonStatus.COMPLETED, label: "Zakończone" },
 ];
 
 const TABLE_HEAD = [

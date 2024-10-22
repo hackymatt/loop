@@ -1,26 +1,11 @@
 from django_filters import (
     FilterSet,
-    OrderingFilter,
     CharFilter,
     DateFilter,
     NumberFilter,
 )
 from finance.models import FinanceHistory
-
-
-class OrderFilter(OrderingFilter):
-    def filter(self, queryset, values):
-        if values is None:
-            return super().filter(queryset, values)
-
-        for value in values:
-            if value in ["lecturer_id", "-lecturer_id"]:
-                value_modified = value.replace("_", "__")
-                queryset = queryset.order_by(value_modified)
-            else:
-                queryset = queryset.order_by(value)
-
-        return queryset
+from utils.ordering.ordering import OrderFilter
 
 
 class FinanceHistoryFilter(FilterSet):
@@ -45,8 +30,8 @@ class FinanceHistoryFilter(FilterSet):
             ("-created_at", "Created At DESC"),
         ),
         fields={
-            "lecturer_id": "lecturer_id",
-            "-lecturer_id": "-lecturer_id",
+            "lecturer_id": "lecturer__id",
+            "-lecturer_id": "-lecturer__id",
             "account": "account",
             "-account": "-account",
             "rate": "rate",

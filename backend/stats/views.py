@@ -1,4 +1,4 @@
-from rest_framework.viewsets import ViewSet
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from profile.models import StudentProfile, LecturerProfile
@@ -7,25 +7,35 @@ from lesson.models import Lesson, Technology
 from review.models import Review
 from purchase.models import Purchase
 from django.db.models import Sum, Avg
+from math import ceil
 
 
-class StatsViewSet(ViewSet):
+def format_rating(value):
+    if value is None:
+        return None
+    return ceil(value * 10) / 10
+
+
+class StatsAPIView(APIView):
     http_method_names = ["get"]
 
-    def get_stats(self, request):
+    def get(self, request):
         students_count = StudentProfile.objects.count() - 1
         course_count = Course.objects.count()
-        lessons_count = Lesson.objects.count()
         technology_count = Technology.objects.count()
         lecturers_count = LecturerProfile.objects.count() - 1
         purchase_count = Purchase.objects.filter(payment__status="S").count()
+
+        lessons = Lesson.objects.all()
+        lessons_count = lessons.count()
         hours_sum = (
-            Lesson.objects.aggregate(Sum("duration"))["duration__sum"] / 60
+            lessons.aggregate(Sum("duration"))["duration__sum"] / 60
             if lessons_count > 0
             else 0
         )
-        rating = Review.objects.aggregate(Avg("rating"))["rating__avg"]
-        rating_count = Review.objects.count()
+        reviews = Review.objects.all()
+        rating = format_rating(reviews.aggregate(Avg("rating"))["rating__avg"])
+        rating_count = reviews.count()
 
         return Response(
             status=status.HTTP_200_OK,

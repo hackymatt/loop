@@ -49,21 +49,18 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete, onSendMes
   }, [openOptions, onSendMessage, row]);
 
   const isCompleted = useMemo(
-    () => row.lessonStatus === LessonStatus.zakończona,
+    () => row.lessonStatus === LessonStatus.COMPLETED,
     [row.lessonStatus],
   );
 
-  const isPlanned = useMemo(
-    () => row.lessonStatus === LessonStatus.zaplanowana,
-    [row.lessonStatus],
-  );
+  const isPlanned = useMemo(() => row.lessonStatus === LessonStatus.PLANNED, [row.lessonStatus]);
 
   const isConfirmed = useMemo(
-    () => row.lessonStatus === LessonStatus.potwierdzona,
+    () => row.lessonStatus === LessonStatus.CONFIRMED,
     [row.lessonStatus],
   );
 
-  const isNew = useMemo(() => row.lessonStatus === LessonStatus.nowa, [row.lessonStatus]);
+  const isNew = useMemo(() => row.lessonStatus === LessonStatus.NEW, [row.lessonStatus]);
 
   const canCancel = useMemo(
     () =>

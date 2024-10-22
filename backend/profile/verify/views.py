@@ -16,7 +16,7 @@ from mailer.mailer import Mailer
 
 class ProfileVerifyViewSet(ModelViewSet):
     http_method_names = ["post"]
-    queryset = Profile.objects.all()
+    queryset = Profile.objects.all().order_by("id")
     serializer_class = ProfileVerifySerializer
 
     @staticmethod
@@ -70,7 +70,7 @@ class ProfileVerifyViewSet(ModelViewSet):
 
 class ProfileVerificationCodeViewSet(ModelViewSet):
     http_method_names = ["post"]
-    queryset = Profile.objects.all()
+    queryset = Profile.objects.all().order_by("id")
     serializer_class = ProfileVerificationCodeSerializer
 
     def create(self, request, *args, **kwargs):

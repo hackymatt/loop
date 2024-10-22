@@ -15,6 +15,7 @@ import { RouterLink } from "src/routes/components";
 
 import { fDate } from "src/utils/format-time";
 import { encodeUrl } from "src/utils/url-utils";
+import { getGenderAvatar } from "src/utils/get-gender-avatar";
 
 import Image from "src/components/image";
 
@@ -85,10 +86,7 @@ export function FeaturedPost({ post, sx, ...other }: Props) {
               >
                 <AvatarGroup total={post.authors.length} max={1}>
                   {post.authors.map((author: IAuthorProps) => {
-                    const genderAvatarUrl =
-                      author?.gender === "Kobieta"
-                        ? "/assets/images/avatar/avatar_female.jpg"
-                        : "/assets/images/avatar/avatar_male.jpg";
+                    const genderAvatarUrl = getGenderAvatar(author?.gender);
 
                     const avatarUrl = author?.avatarUrl || genderAvatarUrl;
                     return <Avatar key={author.id} src={avatarUrl} />;

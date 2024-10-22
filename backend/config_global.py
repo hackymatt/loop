@@ -1,4 +1,6 @@
 from django.conf import settings
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
 
 FRONTEND_URL = settings.BASE_FRONTEND_URL
 
@@ -8,6 +10,19 @@ ADMIN_PASSWORD = settings.ADMIN_PASSWORD
 CONTACT_EMAIL = settings.CONTACT_EMAIL
 NOREPLY_EMAIL = settings.NOREPLY_EMAIL
 MEETINGS_EMAIL = settings.MEETINGS_EMAIL
+
+DEFAULT_COUPON = {
+    "code": "programista20",
+    "discount": 20,
+    "is_percentage": True,
+    "all_users": True,
+    "is_infinite": True,
+    "uses_per_user": 1,
+    "active": True,
+    "expiration_date": make_aware(datetime.now() + timedelta(weeks=52 * 99)),
+}
+
+WORDS_PER_MINUTE = 250
 
 DUMMY_LECTURER_EMAIL = settings.DUMMY_LECTURER_EMAIL
 DUMMY_LECTURER_PASSWORD = settings.DUMMY_LECTURER_PASSWORD

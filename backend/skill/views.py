@@ -7,17 +7,13 @@ from skill.models import Skill
 
 class SkillViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Skill.objects.all()
+    queryset = Skill.objects.all().order_by("id")
     serializer_class = SkillSerializer
     permission_classes = [AllowAny]
     filterset_class = SkillFilter
 
     def get_permissions(self):
-        if (
-            self.action == "create"
-            or self.action == "update"
-            or self.action == "destroy"
-        ):
+        if self.action in ["create", "update", "destroy"]:
             permission_classes = [IsAuthenticated, IsAdminUser]
         else:
             permission_classes = self.permission_classes

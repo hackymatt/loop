@@ -6,46 +6,42 @@ from teaching.serializers import (
     ManageTeachingGetSerializer,
     TeachingSerializer,
 )
-from teaching.filters import ManageTeachingFilter, get_teaching, TeachingFilter
+from teaching.filters import ManageTeachingFilter, TeachingFilter
 from lesson.models import Lesson
 from teaching.models import Teaching
-from django.db.models import Q
+from django.db.models import Prefetch
+from profile.models import LecturerProfile
 
 
 class ManageTeachingViewSet(ModelViewSet):
     http_method_names = ["get", "post", "delete"]
-    queryset = Lesson.objects.all()
+    queryset = Lesson.objects.all().order_by("id")
     serializer_class = ManageTeachingGetSerializer
     filterset_class = ManageTeachingFilter
     permission_classes = [IsAuthenticated, IsLecturer]
 
     def get_queryset(self):
-        if (
-            self.action == "retrieve"
-            or self.action == "create"
-            or self.action == "destroy"
-        ):
+        if self.action in ["retrieve", "create", "destroy"]:
             self.filterset_class = None
-            return Teaching.objects.all()
-        else:
-            return get_teaching(self, self.queryset)
+            return Teaching.objects.all().order_by("id")
+        return self.queryset.add_teaching_id(user=self.request.user)
 
     def get_serializer_class(self):
-        if (
-            self.action == "retrieve"
-            or self.action == "create"
-            or self.action == "destroy"
-        ):
+        if self.action in ["retrieve", "create", "destroy"]:
             return ManageTeachingSerializer
-        else:
-            return self.serializer_class
+        return self.serializer_class
 
 
 class TeachingViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Teaching.objects.exclude(
-        Q(lecturer__title__isnull=True) | Q(lecturer__description__isnull=True)
-    )
+    queryset = Teaching.objects.prefetch_related(
+        Prefetch(
+            "lecturer",
+            queryset=LecturerProfile.objects.add_profile_ready().filter(
+                profile_ready=True
+            ),
+        )
+    ).order_by("id")
     serializer_class = TeachingSerializer
     filterset_class = TeachingFilter
     permission_classes = [AllowAny]

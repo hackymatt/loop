@@ -9,25 +9,6 @@ from drf_extra_fields.fields import Base64ImageField
 from profile.models import Profile, LecturerProfile, AdminProfile, StudentProfile
 from finance.models import Finance, FinanceHistory
 from notification.utils import notify
-import urllib.parse
-
-
-def get_finance(profile):
-    if profile.user_type[0] != "W":
-        return None
-
-    finance = Finance.objects.filter(lecturer__profile=profile)
-
-    if not finance.exists():
-        return None
-
-    return finance.first()
-
-
-class FinanceSerializer(ModelSerializer):
-    class Meta:
-        model = Finance
-        fields = ("account",)
 
 
 class UserSerializer(ModelSerializer):
@@ -38,27 +19,18 @@ class UserSerializer(ModelSerializer):
     gender = CharField(source="get_gender_display", allow_blank=True)
     user_type = CharField(source="get_user_type_display", allow_blank=True)
     image = Base64ImageField(required=False)
-    rate = SerializerMethodField("get_rate")
-    commission = SerializerMethodField("get_commission")
-    account = SerializerMethodField("get_account")
+    rate = SerializerMethodField()
+    commission = SerializerMethodField()
+    account = SerializerMethodField()
 
-    def get_rate(self, profile):
-        finance = get_finance(profile=profile)
-        if not finance:
-            return None
-        return finance.rate
+    def get_rate(self, profile: Profile):
+        return profile.rate
 
-    def get_commission(self, profile):
-        finance = get_finance(profile=profile)
-        if not finance:
-            return None
-        return finance.commission
+    def get_commission(self, profile: Profile):
+        return profile.commission
 
-    def get_account(self, profile):
-        finance = get_finance(profile=profile)
-        if not finance:
-            return None
-        return finance.account
+    def get_account(self, profile: Profile):
+        return profile.account
 
     class Meta:
         model = Profile
@@ -69,7 +41,7 @@ class UserSerializer(ModelSerializer):
             "user",
         )
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Profile, validated_data):
         current_user_type = instance.user_type
         user_type = validated_data.get("get_user_type_display")
 
@@ -143,6 +115,6 @@ class UserSerializer(ModelSerializer):
         instance.save()
 
         Profile.objects.filter(pk=instance.pk).update(**validated_data)
-        instance = Profile.objects.get(pk=instance.pk)
+        instance.refresh_from_db()
 
         return instance

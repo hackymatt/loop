@@ -15,7 +15,7 @@ from urllib.parse import quote_plus
 
 class ProfileSerializer(ModelSerializer):
     id = UUIDField(source="uuid")
-    full_name = SerializerMethodField("get_full_name")
+    full_name = SerializerMethodField()
     gender = CharField(source="get_gender_display")
     image = ImageField()
     user_type = CharField(source="get_user_type_display")
@@ -30,8 +30,8 @@ class ProfileSerializer(ModelSerializer):
             "user_type",
         )
 
-    def get_full_name(self, profile):
-        return profile.user.first_name + " " + profile.user.last_name
+    def get_full_name(self, profile: Profile):
+        return profile.full_name
 
 
 class MessageGetSerializer(ModelSerializer):
@@ -66,50 +66,56 @@ class MessageSerializer(ModelSerializer):
         user = self.context["request"].user
         sender = Profile.objects.get(user=user)
 
-        if recipient_id:
-            if recipient_type[0] == "S":
-                recipient = StudentProfile.objects.get(pk=recipient_id).profile
-            elif recipient_type[0] == "W":
-                recipient = LecturerProfile.objects.get(pk=recipient_id).profile
-            else:
-                recipient = AdminProfile.objects.get(pk=recipient_id).profile
-        else:
-            recipient = Profile.objects.get(uuid=recipient_uuid)
+        recipient = self.get_recipient(recipient_id, recipient_uuid, recipient_type)
 
-        obj, _ = Message.objects.get_or_create(
+        message, _ = Message.objects.get_or_create(
             sender=sender, recipient=recipient, status=status, **validated_data
         )
 
+        self.notify_recipient(message)
+
+        self.send_email(sender, message)
+
+        return message
+
+    def get_recipient(self, recipient_id, recipient_uuid, recipient_type):
+        if recipient_id:
+            if recipient_type.startswith("S"):
+                return StudentProfile.objects.get(pk=recipient_id).profile
+            elif recipient_type.startswith("W"):
+                return LecturerProfile.objects.get(pk=recipient_id).profile
+            else:
+                return AdminProfile.objects.get(pk=recipient_id).profile
+        return Profile.objects.get(uuid=recipient_uuid)
+
+    def notify_recipient(self, message):
         notify(
-            profile=obj.recipient,
+            profile=message.recipient,
             title="Otrzymano nową wiadomość",
-            subtitle=obj.subject,
-            description=obj.body,
-            path=f"/account/messages?sort_by=-created_at&page_size=10&type=INBOX&search={quote_plus(obj.subject)}",
+            subtitle=message.subject,
+            description=message.body,
+            path=f"/account/messages?sort_by=-created_at&page_size=10&type=INBOX&search={quote_plus(message.subject)}",
             icon="mdi:email",
         )
 
+    def send_email(self, sender, message):
         mailer = Mailer()
         data = {
-            **{
-                "full_name": f"{sender.user.first_name} {sender.user.last_name}",
-                "subject": obj.subject,
-                "message": obj.body,
-            }
+            "full_name": f"{sender.user.first_name} {sender.user.last_name}",
+            "subject": message.subject,
+            "message": message.body,
         }
         mailer.send(
             email_template="message.html",
-            to=[obj.recipient.user.email],
+            to=[message.recipient.user.email],
             subject="Nowa wiadomość",
             data=data,
         )
 
-        return obj
-
-    def update(self, instance, validated_data):
+    def update(self, instance: Message, validated_data):
         status = validated_data.pop("get_status_display", instance.status)
 
         Message.objects.filter(pk=instance.pk).update(**validated_data, status=status)
-        instance = Message.objects.get(pk=instance.pk)
+        instance.refresh_from_db()
 
         return instance

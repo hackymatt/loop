@@ -40,8 +40,8 @@ export default function AccountUsersTableRow({ row, onEdit, onFinanceHistoryView
 
   const isActive = useMemo(() => row.active, [row.active]);
 
-  const isAdmin = useMemo(() => row.user_type === UserType.Admin, [row.user_type]);
-  const isTeacher = useMemo(() => row.user_type === UserType.Wykładowca, [row.user_type]);
+  const isAdmin = useMemo(() => row.user_type === UserType.ADMIN, [row.user_type]);
+  const isTeacher = useMemo(() => row.user_type === UserType.TEACHER, [row.user_type]);
 
   return (
     <>

@@ -859,8 +859,20 @@ class RecordingsTest(TestCase):
 
     @patch.object(DriveApi, "set_permissions")
     @patch.object(DriveApi, "get_recordings")
-    def test_pull_recordings(self, get_recordings_mock, set_permissions_mock):
+    def test_pull_recordings_1(self, get_recordings_mock, set_permissions_mock):
         schedule_ids = [schedule.id for schedule in self.schedules]
+        mock_get_recordings(mock=get_recordings_mock, schedule_ids=schedule_ids)
+        mock_set_permissions(mock=set_permissions_mock)
+        self.assertEqual(recordings_number(), 0)
+        pull_recordings()
+        self.assertEqual(recordings_number(), len(schedule_ids))
+        self.assertEqual(get_recordings_mock.call_count, 1)
+        self.assertEqual(set_permissions_mock.call_count, len(schedule_ids))
+
+    @patch.object(DriveApi, "set_permissions")
+    @patch.object(DriveApi, "get_recordings")
+    def test_pull_recordings_2(self, get_recordings_mock, set_permissions_mock):
+        schedule_ids = []
         mock_get_recordings(mock=get_recordings_mock, schedule_ids=schedule_ids)
         mock_set_permissions(mock=set_permissions_mock)
         self.assertEqual(recordings_number(), 0)

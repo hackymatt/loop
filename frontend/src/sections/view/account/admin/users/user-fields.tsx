@@ -26,7 +26,7 @@ const GENDER_OPTIONS = [
 
 export const useUserFields = () => {
   const fields: { [key: string]: JSX.Element } = {
-    image: <RHFAvatar name="image" />,
+    image: <RHFAvatar name="image" sx={{ mr: 3 }} />,
 
     first_name: <RHFTextField name="first_name" label="Imię" disabled />,
 

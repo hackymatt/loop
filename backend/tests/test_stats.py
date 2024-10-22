@@ -207,7 +207,7 @@ class StatsTest(APITestCase):
             rating=5,
         )
 
-    def test_get_stats(self):
+    def test_get_stats_1(self):
         # get data
         response = self.client.get(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -224,5 +224,31 @@ class StatsTest(APITestCase):
                 "hours_sum": 3.0,
                 "rating": 4.0,
                 "rating_count": 6,
+            },
+        )
+
+    def test_get_stats_2(self):
+        # get data
+        self.review_1.delete()
+        self.review_2.delete()
+        self.review_3.delete()
+        self.review_4.delete()
+        self.review_5.delete()
+        self.review_6.delete()
+        response = self.client.get(self.endpoint)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        self.assertEqual(
+            data,
+            {
+                "students_count": 3,
+                "course_count": 1,
+                "lessons_count": 4,
+                "technology_count": 1,
+                "lecturers_count": 1,
+                "purchase_count": 7,
+                "hours_sum": 3.0,
+                "rating": 0,
+                "rating_count": 0,
             },
         )

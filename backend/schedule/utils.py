@@ -3,7 +3,6 @@ from utils.google.calendar import CalendarApi
 from profile.models import LecturerProfile, StudentProfile
 from datetime import datetime
 from lesson.models import Lesson
-from finance.models import Finance
 from config_global import MIN_STUDENTS_THRESHOLD
 from math import ceil
 
@@ -72,9 +71,8 @@ class MeetingManager:
 def get_min_students_required(lecturer: LecturerProfile, lesson: Lesson):
     price = float(lesson.price)
     duration_hours = lesson.duration / 60
-    finance = Finance.objects.get(lecturer=lecturer)
-    rate = float(finance.rate)
-    commission = finance.commission / 100
+    rate = float(lecturer.rate)
+    commission = lecturer.commission / 100
     cost = rate * duration_hours + commission * price
     goal = cost * MIN_STUDENTS_THRESHOLD
     return ceil(goal / price)

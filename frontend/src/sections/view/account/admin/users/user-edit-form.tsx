@@ -86,7 +86,7 @@ export default function UserEditForm({ user, onClose, ...other }: Props) {
     field: { value: userType },
   } = useController({ name: "user_type", control });
 
-  const isTeacher = useMemo(() => userType === UserType.Wykładowca, [userType]);
+  const isTeacher = useMemo(() => userType === UserType.TEACHER, [userType]);
 
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>

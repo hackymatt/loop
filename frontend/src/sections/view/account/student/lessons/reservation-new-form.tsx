@@ -15,6 +15,7 @@ import {
 import { useBoolean } from "src/hooks/use-boolean";
 
 import { getTimezone } from "src/utils/get-timezone";
+import { getGenderAvatar } from "src/utils/get-gender-avatar";
 
 import { useLessonDates } from "src/api/lesson-dates/lesson-dates";
 import { useCreateReservation } from "src/api/reservations/reservations";
@@ -61,10 +62,7 @@ export default function ReservationNewForm({ purchase, onClose, ...other }: Prop
             DEFAULT_USER,
             ...lessonLecturers.map((teacher: ITeamMemberProps) => ({
               ...teacher,
-              avatarUrl:
-                teacher.gender === "Kobieta"
-                  ? "/assets/images/avatar/avatar_female.jpg"
-                  : "/assets/images/avatar/avatar_male.jpg",
+              avatarUrl: teacher.avatarUrl || getGenderAvatar(teacher.gender),
             })),
           ]
         : [],

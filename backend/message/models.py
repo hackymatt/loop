@@ -5,8 +5,30 @@ from django.db.models import (
     ForeignKey,
     CASCADE,
     Index,
+    QuerySet,
+    Manager,
+    Case,
+    When,
+    Value,
+    F,
 )
 from profile.models import Profile
+
+
+class MessageQuerySet(QuerySet):
+    def add_type(self):
+        return self.annotate(
+            type=Case(
+                When(profile_id=F("recipient__id"), then=Value("INBOX")),
+                default=Value("SENT"),
+                output_field=CharField(),
+            )
+        )
+
+
+class MessageManager(Manager):
+    def get_queryset(self):
+        return MessageQuerySet(self.model, using=self._db)
 
 
 class Message(BaseModel):
@@ -19,6 +41,8 @@ class Message(BaseModel):
     subject = CharField()
     body = TextField()
     status = CharField(choices=STATUS_CHOICES, null=False, default="N")
+
+    objects = MessageManager()
 
     class Meta:
         db_table = "message"

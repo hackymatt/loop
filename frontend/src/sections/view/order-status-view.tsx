@@ -52,11 +52,11 @@ export default function OrderStatusView() {
       const { status } = paymentStatusData;
 
       switch (status) {
-        case PaymentStatus.Success:
+        case PaymentStatus.SUCCESS:
           push(paths.order.completed);
           break;
 
-        case PaymentStatus.Failure:
+        case PaymentStatus.FAILURE:
           push(paths.order["not-completed"]);
           break;
 

@@ -1,10 +1,10 @@
 export enum PaymentStatus {
-  Pending = "Pending",
-  Success = "Success",
-  Failure = "Failure",
+  PENDING = "Pending",
+  SUCCESS = "Success",
+  FAILURE = "Failure",
 }
 
-export type IPaymentStatus = keyof typeof PaymentStatus;
+export type IPaymentStatus = `${PaymentStatus}`;
 
 export type IPaymentProp = {
   sessionId: string;

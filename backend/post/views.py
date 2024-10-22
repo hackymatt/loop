@@ -10,11 +10,20 @@ from post.serializers import (
 )
 from post.filters import PostFilter, PostCategoryFilter
 from post.models import Post, PostCategory
+from profile.models import LecturerProfile
+from django.db.models import Prefetch
 
 
 class PostViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Post.objects.all()
+    queryset = (
+        Post.objects.prefetch_related(
+            Prefetch("authors", queryset=LecturerProfile.objects.add_full_name())
+        )
+        .add_duration()
+        .all()
+        .order_by("id")
+    )
     serializer_class = PostSerializer
     filterset_class = PostFilter
     search_fields = [
@@ -26,11 +35,7 @@ class PostViewSet(ModelViewSet):
     permission_classes = [AllowAny]
 
     def get_permissions(self):
-        if (
-            self.action == "create"
-            or self.action == "update"
-            or self.action == "destroy"
-        ):
+        if self.action in ["create", "update", "destroy"]:
             permission_classes = [IsAuthenticated, IsAdminUser]
         else:
             permission_classes = self.permission_classes
@@ -49,6 +54,8 @@ class PostViewSet(ModelViewSet):
                 return queryset.filter(active=True).all().distinct()
 
             return queryset.distinct()
+        elif self.action == "retrieve":
+            return self.queryset.add_previous_post().add_next_post().distinct()
 
         return self.queryset.distinct()
 
@@ -57,8 +64,7 @@ class PostViewSet(ModelViewSet):
             return PostListSerializer
         elif self.action == "retrieve":
             return PostGetSerializer
-        else:
-            return self.serializer_class
+        return self.serializer_class
 
     def retrieve(self, request, *args, **kwargs):
         post = super().get_object()
@@ -92,18 +98,20 @@ class PostViewSet(ModelViewSet):
 
 class PostCategoryViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = PostCategory.objects.all()
+    queryset = PostCategory.objects.all().order_by("id")
     serializer_class = PostCategorySerializer
     permission_classes = [AllowAny]
     filterset_class = PostCategoryFilter
 
     def get_permissions(self):
-        if (
-            self.action == "create"
-            or self.action == "update"
-            or self.action == "destroy"
-        ):
+        if self.action in ["create", "update", "destroy"]:
             permission_classes = [IsAuthenticated, IsAdminUser]
         else:
             permission_classes = self.permission_classes
         return [permission() for permission in permission_classes]
+
+    def get_queryset(self):
+        posts_count_from = self.request.query_params.get("posts_count_from", None)
+        if posts_count_from:
+            return self.queryset.add_post_count()
+        return self.queryset

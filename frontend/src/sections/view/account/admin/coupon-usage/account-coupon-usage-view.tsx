@@ -51,7 +51,7 @@ export default function AdminCouponUsageView() {
   const { data: pagesCount } = useCouponUsagePagesCount(filters);
   const { data: couponUsages, count: recordsCount } = useCouponUsage(filters);
   const { data: users } = useUsers({
-    user_type: UserType.Student[0],
+    user_type: UserType.STUDENT[0],
     sort_by: "email",
     page_size: -1,
   });

@@ -9,7 +9,7 @@ from profile.models import StudentProfile
 
 
 class Cart(BaseModel):
-    lesson = ForeignKey(Lesson, on_delete=CASCADE)
+    lesson = ForeignKey(Lesson, on_delete=CASCADE, related_name="cart_lesson")
     student = ForeignKey(StudentProfile, on_delete=CASCADE, related_name="cart_student")
 
     class Meta:

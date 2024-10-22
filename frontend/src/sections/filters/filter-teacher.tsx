@@ -8,6 +8,8 @@ import {
   autocompleteClasses,
 } from "@mui/material";
 
+import { getGenderAvatar } from "src/utils/get-gender-avatar";
+
 import { ICourseTeacherProp } from "src/types/course";
 import { IQueryParamValue } from "src/types/query-params";
 
@@ -68,10 +70,7 @@ export default function FilterTeacher({ value, options, onChange }: Props) {
         />
       )}
       renderOption={(props, option, { selected }) => {
-        const genderAvatarUrl =
-          option.gender === "Kobieta"
-            ? "/assets/images/avatar/avatar_female.jpg"
-            : "/assets/images/avatar/avatar_male.jpg";
+        const genderAvatarUrl = getGenderAvatar(option.gender);
 
         const avatarUrl = option.avatarUrl || genderAvatarUrl;
         return (

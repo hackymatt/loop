@@ -34,7 +34,7 @@ from pytz import utc
 
 class EarningViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Schedule.objects.filter(lesson__isnull=False).all()
+    queryset = Schedule.objects.filter(lesson__isnull=False).all().order_by("id")
     serializer_class = LecturerEarningSerializer
     permission_classes = [IsAuthenticated, ~IsStudent]
 
@@ -65,8 +65,7 @@ class EarningViewSet(ModelViewSet):
             if self.total():
                 return AdminEarningLecturerSerializer
             return EarningByLecturerSerializer
-        else:
-            return self.serializer_class
+        return self.serializer_class
 
     def get_queryset(self):
         user = self.request.user

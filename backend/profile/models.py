@@ -10,14 +10,87 @@ from django.db.models import (
     TextField,
     CASCADE,
     Index,
+    Manager,
+    QuerySet,
+    Value,
+    Case,
+    When,
+    BooleanField,
+    Count,
+    Avg,
+    F,
+    Sum,
+    OuterRef,
+    Subquery,
+    IntegerField,
 )
 from django.contrib.auth.models import User
+from django.db.models.functions import Concat, Coalesce
+from django.contrib.postgres.aggregates import ArrayAgg
 import uuid
+from django.apps import apps
 
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT / profile / <uuid> / <filename>
     return f"profile/{instance.uuid}/{filename}"  # pragma: no cover
+
+
+class ProfileQuerySet(QuerySet):
+    def add_full_name(self):
+        return self.annotate(
+            full_name=Concat("user__first_name", Value(" "), "user__last_name")
+        )
+
+    def add_account(self):
+        Finance = apps.get_model("finance", "Finance")
+        account_subquery = Finance.objects.filter(
+            lecturer__profile=OuterRef("pk")
+        ).values("account")[:1]
+        return self.annotate(
+            account=Case(
+                When(user_type="W", then=Subquery(account_subquery)),
+                default=Value(None),
+                output_field=CharField(),
+            )
+        )
+
+    def add_rate(self):
+        Finance = apps.get_model("finance", "Finance")
+        account_subquery = Finance.objects.filter(
+            lecturer__profile=OuterRef("pk")
+        ).values("rate")[:1]
+        return self.annotate(
+            rate=Case(
+                When(user_type="W", then=Subquery(account_subquery)),
+                default=Value(None),
+                output_field=CharField(),
+            )
+        )
+
+    def add_commission(self):
+        Finance = apps.get_model("finance", "Finance")
+        account_subquery = Finance.objects.filter(
+            lecturer__profile=OuterRef("pk")
+        ).values("commission")[:1]
+        return self.annotate(
+            commission=Case(
+                When(user_type="W", then=Subquery(account_subquery)),
+                default=Value(None),
+                output_field=CharField(),
+            )
+        )
+
+
+class ProfileManager(Manager):
+    def get_queryset(self):
+        return ProfileQuerySet(self.model, using=self._db)
+
+    def add_full_name(self):
+        return self.get_queryset().add_full_name()
+
+    def add_account(self):
+        return self.get_queryset().add_account()
 
 
 class Profile(BaseModel):
@@ -51,6 +124,8 @@ class Profile(BaseModel):
     city = CharField(null=True, blank=True)
     country = CharField(null=True, blank=True)
     image = ImageField(upload_to=user_directory_path, null=True, blank=True)
+
+    objects = ProfileManager()
 
     class Meta:
         db_table = "profile"
@@ -94,8 +169,27 @@ class AdminProfile(BaseModel):
         ]
 
 
+class StudentProfileQuerySet(QuerySet):
+    def add_full_name(self):
+        return self.annotate(
+            full_name=Concat(
+                "profile__user__first_name", Value(" "), "profile__user__last_name"
+            )
+        )
+
+
+class StudentProfileManager(Manager):
+    def get_queryset(self):
+        return StudentProfileQuerySet(self.model, using=self._db)
+
+    def add_full_name(self):
+        return self.get_queryset().add_full_name()
+
+
 class StudentProfile(BaseModel):
     profile = OneToOneField(Profile, on_delete=CASCADE)
+
+    objects = StudentProfileManager()
 
     class Meta:
         db_table = "student_profile"
@@ -114,11 +208,89 @@ class StudentProfile(BaseModel):
         ]
 
 
+class LecturerProfileQuerySet(QuerySet):
+    def add_full_name(self):
+        return self.annotate(
+            full_name=Concat(
+                "profile__user__first_name", Value(" "), "profile__user__last_name"
+            )
+        )
+
+    def add_profile_ready(self):
+        return self.annotate(
+            profile_ready=Case(
+                When(title__isnull=False, description__isnull=False, then=Value(True)),
+                default=Value(False),
+                output_field=BooleanField(),
+            )
+        )
+
+    def add_rating_count(self):
+        return self.annotate(rating_count=Count("review_lecturer", distinct=True))
+
+    def add_rating(self):
+        return self.annotate(rating=Avg("review_lecturer__rating", distinct=True))
+
+    def add_lessons(self):
+        return self.annotate(
+            lessons=ArrayAgg("teaching_lecturer__lesson__id", distinct=True)
+        )
+
+    def add_lessons_duration(self):
+        return self.annotate(
+            lessons_duration=Sum("teaching_lecturer__lesson__duration", distinct=True)
+        )
+
+    def add_lessons_price(self):
+        return self.annotate(
+            lessons_price=Sum("teaching_lecturer__lesson__price", distinct=True)
+        )
+
+    def add_lessons_count(self):
+        return self.annotate(lessons_count=Count("teaching_lecturer", distinct=True))
+
+    def add_students_count(self):
+        Reservation = apps.get_model("reservation", "Reservation")
+        students_count_subquery = (
+            Reservation.objects.filter(schedule__lecturer=OuterRef("pk"))
+            .values("lesson")
+            .annotate(count=Count("lesson"))
+            .values("count")[:1]
+        )
+        return self.annotate(
+            students_count=Coalesce(
+                Subquery(students_count_subquery), Value(0), output_field=IntegerField()
+            )
+        )
+
+    def add_account(self):
+        return self.annotate(account=F("finance_lecturer__account"))
+
+    def add_rate(self):
+        return self.annotate(rate=F("finance_lecturer__rate"))
+
+    def add_commission(self):
+        return self.annotate(commission=F("finance_lecturer__commission"))
+
+
+class LecturerProfileManager(Manager):
+    def get_queryset(self):
+        return LecturerProfileQuerySet(self.model, using=self._db)
+
+    def add_full_name(self):
+        return self.get_queryset().add_full_name()
+
+    def add_profile_ready(self):
+        return self.get_queryset().add_profile_ready()
+
+
 class LecturerProfile(BaseModel):
     profile = OneToOneField(Profile, on_delete=CASCADE)
     title = CharField(null=True, blank=True)
     description = TextField(null=True, blank=True)
     linkedin_url = URLField(null=True, blank=True)
+
+    objects = LecturerProfileManager()
 
     class Meta:
         db_table = "lecturer_profile"

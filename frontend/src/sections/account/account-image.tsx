@@ -4,6 +4,8 @@ import { Stack } from "@mui/system";
 import { Avatar, Tooltip } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 
+import { getGenderAvatar } from "src/utils/get-gender-avatar";
+
 import { useUserDetails, useUpdateUserDetails } from "src/api/auth/details";
 
 import Iconify from "src/components/iconify";
@@ -20,10 +22,7 @@ export default function AccountImage() {
   const { data: userDetails } = useUserDetails();
   const { mutateAsync: updatePhoto, isLoading } = useUpdateUserDetails();
 
-  const genderAvatarUrl =
-    userDetails?.gender === "Kobieta"
-      ? "/assets/images/avatar/avatar_female.jpg"
-      : "/assets/images/avatar/avatar_male.jpg";
+  const genderAvatarUrl = getGenderAvatar(userDetails?.gender);
 
   const avatarUrl = userDetails?.image || genderAvatarUrl;
 

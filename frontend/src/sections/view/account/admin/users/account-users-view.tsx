@@ -40,9 +40,9 @@ import AccountTableHead from "../../../../account/account-table-head";
 
 const TABS = [
   { id: "", label: "Wszyscy użytkownicy" },
-  { id: UserType.Admin.slice(0, 1), label: "Admini" },
-  { id: UserType.Wykładowca.slice(0, 1), label: "Wykładowcy" },
-  { id: UserType.Student.slice(0, 1), label: "Studenci" },
+  { id: UserType.ADMIN.slice(0, 1), label: "Admini" },
+  { id: UserType.TEACHER.slice(0, 1), label: "Wykładowcy" },
+  { id: UserType.STUDENT.slice(0, 1), label: "Studenci" },
 ];
 
 const TABLE_HEAD = [

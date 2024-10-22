@@ -10,7 +10,7 @@ from profile.models import LecturerProfile
 
 
 class Teaching(BaseModel):
-    lesson = ForeignKey(Lesson, on_delete=CASCADE)
+    lesson = ForeignKey(Lesson, on_delete=CASCADE, related_name="teaching_lesson")
     lecturer = ForeignKey(
         LecturerProfile, on_delete=CASCADE, related_name="teaching_lecturer"
     )

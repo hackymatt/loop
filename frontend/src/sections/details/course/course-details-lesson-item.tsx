@@ -30,6 +30,7 @@ import { useBoolean } from "src/hooks/use-boolean";
 
 import { getTimezone } from "src/utils/get-timezone";
 import { trackEvent } from "src/utils/google-analytics";
+import { getGenderAvatar } from "src/utils/get-gender-avatar";
 import { fCurrency, fShortenNumber } from "src/utils/format-number";
 
 import { useCreateCart } from "src/api/carts/carts";
@@ -86,10 +87,7 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
             DEFAULT_USER,
             ...lessonLecturers.map((teacher: ITeamMemberProps) => ({
               ...teacher,
-              avatarUrl:
-                teacher.gender === "Kobieta"
-                  ? "/assets/images/avatar/avatar_female.jpg"
-                  : "/assets/images/avatar/avatar_male.jpg",
+              avatarUrl: teacher.avatarUrl || getGenderAvatar(teacher.gender),
             })),
           ]
         : [],
@@ -209,10 +207,7 @@ export default function CourseDetailsLessonItem({
   const { mutateAsync: createWishlistItem, isLoading: isAddingToFavorites } = useCreateWishlist();
   const { mutateAsync: createCartItem, isLoading: isAddingToCart } = useCreateCart();
 
-  const genderAvatarUrl =
-    details?.teachers?.[0]?.gender === "Kobieta"
-      ? "/assets/images/avatar/avatar_female.jpg"
-      : "/assets/images/avatar/avatar_male.jpg";
+  const genderAvatarUrl = getGenderAvatar(details?.teachers?.[0]?.gender);
 
   const avatarUrl = details?.teachers?.[0]?.avatarUrl || genderAvatarUrl;
 
@@ -443,7 +438,7 @@ export default function CourseDetailsLessonItem({
                   variant="contained"
                   onClick={handleAddToFavorites}
                   loading={isAddingToFavorites}
-                  disabled={userType !== UserType.Student}
+                  disabled={userType !== UserType.STUDENT}
                 >
                   <Iconify icon="carbon:favorite" />
                 </LoadingButton>
@@ -453,7 +448,7 @@ export default function CourseDetailsLessonItem({
                   variant="contained"
                   onClick={handleAddToCart}
                   loading={isAddingToCart}
-                  disabled={userType !== UserType.Student}
+                  disabled={userType !== UserType.STUDENT}
                 >
                   <Iconify icon="carbon:shopping-cart-plus" />
                 </LoadingButton>

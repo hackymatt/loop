@@ -19,12 +19,16 @@ def validate_coupon(coupon_code, user, total):
     max_usage = coupon.max_uses
     usage_per_user = coupon.uses_per_user
 
-    current_usage = CouponUser.objects.filter(coupon=coupon).count()
+    current_usage = CouponUser.objects.filter(
+        coupon=coupon, payment__status="S"
+    ).count()
 
     if current_usage >= max_usage and not infinite:
         return False, "Pula dla kuponu została wyczerpana."
 
-    user_usage = CouponUser.objects.filter(coupon=coupon, user__profile=user).count()
+    user_usage = CouponUser.objects.filter(
+        coupon=coupon, user__profile=user, payment__status="S"
+    ).count()
     if user_usage >= usage_per_user:
         return False, "Nie możesz użyć ponownie tego kuponu."
 

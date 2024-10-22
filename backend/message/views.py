@@ -4,12 +4,21 @@ from message.serializers import MessageSerializer, MessageGetSerializer
 from message.models import Message
 from message.filters import MessageFilter
 from profile.models import Profile
-from django.db.models import Q, Value
+from django.db.models import Q, Value, Prefetch
 
 
 class MessageViewSet(ModelViewSet):
     http_method_names = ["get", "put", "post"]
-    queryset = Message.objects.all()
+    queryset = (
+        Message.objects.prefetch_related(
+            Prefetch("sender", queryset=Profile.objects.add_full_name())
+        )
+        .prefetch_related(
+            Prefetch("recipient", queryset=Profile.objects.add_full_name())
+        )
+        .all()
+        .order_by("id")
+    )
     serializer_class = MessageSerializer
     permission_classes = [IsAuthenticated]
     filterset_class = MessageFilter
@@ -21,14 +30,15 @@ class MessageViewSet(ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         profile = Profile.objects.get(user=user)
-        return self.queryset.filter(Q(sender=profile) | Q(recipient=profile)).annotate(
-            profile_id=Value(profile.id)
-        )
+        type = self.request.query_params.get("type", None)
+        queryset = self.queryset.filter(Q(sender=profile) | Q(recipient=profile))
+        if type:
+            return queryset.annotate(profile_id=Value(profile.id)).add_type()
+        return queryset
 
     def get_serializer_class(self):
         if self.action == "list":
             return MessageGetSerializer
         elif self.action == "retrieve":
             return MessageGetSerializer
-        else:
-            return self.serializer_class
+        return self.serializer_class
