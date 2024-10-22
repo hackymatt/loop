@@ -130,20 +130,13 @@ def get_lowest_30_days_price_module(module: Module):
     return lowest_30_days_price
 
 
-def get_lecturers(course: Course):
-    return (
-        LecturerProfile.objects.add_full_name()
-        .add_profile_ready()
-        .add_rating()
-        .add_rating_count()
-        .add_lessons_count()
+def get_lecturers_info(self, course: Course):
+    lecturers = (
+        LecturerProfile.objects.add_profile_ready()
         .filter(id__in=course.lecturers_ids, profile_ready=True)
+        .add_full_name()
         .order_by("full_name")
     )
-
-
-def get_lecturers_info(self, course: Course):
-    lecturers = get_lecturers(course=course)
     return LecturerSerializer(
         lecturers, many=True, context={"request": self.context.get("request")}
     ).data
@@ -155,7 +148,15 @@ def get_technologies(course: Course):
 
 
 def get_lecturers_details(self, course: Course):
-    lecturers = get_lecturers(course=course)
+    lecturers = (
+        LecturerProfile.objects.add_profile_ready()
+        .filter(id__in=course.lecturers_ids, profile_ready=True)
+        .add_full_name()
+        .add_rating()
+        .add_rating_count()
+        .add_lessons_count()
+        .order_by("full_name")
+    )
     return LecturerDetailsSerializer(
         lecturers, many=True, context={"request": self.context.get("request")}
     ).data

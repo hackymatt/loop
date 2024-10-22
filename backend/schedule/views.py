@@ -31,6 +31,9 @@ class ManageScheduleViewSet(ModelViewSet):
         Schedule.objects.prefetch_related(
             Prefetch("lecturer", queryset=LecturerProfile.objects.add_full_name())
         )
+        .add_meeting_url()
+        .add_reservations_count()
+        .add_students_ids()
         .all()
         .order_by("id")
     )
@@ -115,8 +118,19 @@ class ManageScheduleViewSet(ModelViewSet):
 
 class ScheduleViewSet(ModelViewSet):
     http_method_names = ["get"]
-    queryset = Schedule.objects.add_diff().exclude(
-        lesson__isnull=True, diff__gte=-timedelta(hours=CANCELLATION_TIME)
+    queryset = (
+        Schedule.objects.add_diff()
+        .exclude(lesson__isnull=True, diff__gte=-timedelta(hours=CANCELLATION_TIME))
+        .prefetch_related(
+            Prefetch(
+                "lecturer",
+                queryset=LecturerProfile.objects.add_full_name()
+                .add_rate()
+                .add_commission(),
+            )
+        )
+        .add_reservations_count()
+        .order_by("id")
     )
     serializer_class = ScheduleSerializer
     filterset_class = ScheduleFilter

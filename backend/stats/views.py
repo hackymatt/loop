@@ -7,6 +7,13 @@ from lesson.models import Lesson, Technology
 from review.models import Review
 from purchase.models import Purchase
 from django.db.models import Sum, Avg
+from math import ceil
+
+
+def format_rating(value):
+    if value is None:
+        return None
+    return ceil(value * 10) / 10
 
 
 class StatsAPIView(APIView):
@@ -27,7 +34,7 @@ class StatsAPIView(APIView):
             else 0
         )
         reviews = Review.objects.all()
-        rating = reviews.aggregate(Avg("rating"))["rating__avg"]
+        rating = format_rating(reviews.aggregate(Avg("rating"))["rating__avg"])
         rating_count = reviews.count()
 
         return Response(

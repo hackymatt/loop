@@ -8,19 +8,17 @@ from schedule.models import Schedule
 from schedule.utils import get_min_students_required
 from profile.models import LecturerProfile, StudentProfile
 from lesson.models import Lesson
-from reservation.models import Reservation
 
 
 def get_students_required(schedule: Schedule, lesson: Lesson = None):
     if not lesson:
         return None
 
-    current_reservations = Reservation.objects.filter(schedule=schedule).count()
     return max(
         get_min_students_required(
             lecturer=schedule.lecturer, lesson=lesson if lesson else schedule.lesson
         )
-        - current_reservations,
+        - schedule.reservations_count,
         0,
     )
 
@@ -67,14 +65,15 @@ class ManageScheduleGetSerializer(ModelSerializer):
             "created_at",
         )
 
-    def get_meeting_url(self, schedule):
-        if schedule.meeting:
-            return schedule.meeting.url
-        return None
+    def get_meeting_url(self, schedule: Schedule):
+        return schedule.meeting_url
 
     def get_students(self, schedule: Schedule):
-        ids = Reservation.objects.filter(schedule=schedule).values("student")
-        students = StudentProfile.objects.filter(id__in=ids).add_full_name().all()
+        students = (
+            StudentProfile.objects.filter(id__in=schedule.students_ids)
+            .add_full_name()
+            .all()
+        )
         return StudentSerializer(students, many=True).data
 
     def get_students_required(self, schedule: Schedule):

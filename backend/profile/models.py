@@ -42,6 +42,45 @@ class ProfileQuerySet(QuerySet):
             full_name=Concat("user__first_name", Value(" "), "user__last_name")
         )
 
+    def add_account(self):
+        Finance = apps.get_model("finance", "Finance")
+        account_subquery = Finance.objects.filter(
+            lecturer__profile=OuterRef("pk")
+        ).values("account")[:1]
+        return self.annotate(
+            account=Case(
+                When(user_type="W", then=Subquery(account_subquery)),
+                default=Value(None),
+                output_field=CharField(),
+            )
+        )
+
+    def add_rate(self):
+        Finance = apps.get_model("finance", "Finance")
+        account_subquery = Finance.objects.filter(
+            lecturer__profile=OuterRef("pk")
+        ).values("rate")[:1]
+        return self.annotate(
+            rate=Case(
+                When(user_type="W", then=Subquery(account_subquery)),
+                default=Value(None),
+                output_field=CharField(),
+            )
+        )
+
+    def add_commission(self):
+        Finance = apps.get_model("finance", "Finance")
+        account_subquery = Finance.objects.filter(
+            lecturer__profile=OuterRef("pk")
+        ).values("commission")[:1]
+        return self.annotate(
+            commission=Case(
+                When(user_type="W", then=Subquery(account_subquery)),
+                default=Value(None),
+                output_field=CharField(),
+            )
+        )
+
 
 class ProfileManager(Manager):
     def get_queryset(self):
@@ -49,6 +88,9 @@ class ProfileManager(Manager):
 
     def add_full_name(self):
         return self.get_queryset().add_full_name()
+
+    def add_account(self):
+        return self.get_queryset().add_account()
 
 
 class Profile(BaseModel):
@@ -223,6 +265,12 @@ class LecturerProfileQuerySet(QuerySet):
 
     def add_account(self):
         return self.annotate(account=F("finance_lecturer__account"))
+
+    def add_rate(self):
+        return self.annotate(rate=F("finance_lecturer__rate"))
+
+    def add_commission(self):
+        return self.annotate(commission=F("finance_lecturer__commission"))
 
 
 class LecturerProfileManager(Manager):

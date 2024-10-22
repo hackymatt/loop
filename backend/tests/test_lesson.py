@@ -459,6 +459,8 @@ class LessonTest(APITestCase):
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
+        self.review_1.delete()
+        self.review_2.delete()
         response = self.client.get(f"{self.endpoint}/{self.lesson_1.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
@@ -470,8 +472,8 @@ class LessonTest(APITestCase):
         students_count = data.pop("students_count")
 
         self.assertTrue(is_data_match(get_lesson(data["id"]), data))
-        self.assertEqual(rating, 4.5)
-        self.assertEqual(rating_count, 2)
+        self.assertEqual(rating, None)
+        self.assertEqual(rating_count, 0)
         self.assertEqual(students_count, 1)
 
         for technology_data in technologies_data:

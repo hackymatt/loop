@@ -21,7 +21,7 @@ class LessonViewSet(ModelViewSet):
     queryset = (
         Lesson.objects.prefetch_related("technologies")
         .all()
-        .add_lecturers()
+        .add_lecturers_ids()
         .add_students_count()
         .add_rating()
         .add_rating_count()

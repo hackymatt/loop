@@ -36,9 +36,6 @@ class PostCategoryManager(Manager):
     def get_queryset(self):
         return PostCategoryQuerySet(self.model, using=self._db)
 
-    def add_post_count(self):
-        return self.get_queryset().add_post_count()
-
 
 class PostCategory(BaseModel):
     name = CharField()

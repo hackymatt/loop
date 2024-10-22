@@ -16,6 +16,13 @@ from config_global import LESSON_DURATION_MULTIPLIER
 from notification.utils import notify
 from urllib.parse import quote_plus
 from config_global import GITHUB_REPO
+from math import ceil
+
+
+def format_rating(value):
+    if value is None:
+        return None
+    return ceil(value * 10) / 10
 
 
 def notify_lecturer(lesson: Lesson):
@@ -92,7 +99,7 @@ class LessonGetSerializer(ModelSerializer):
         ).data
 
     def get_rating(self, lesson: Lesson):
-        return lesson.rating
+        return format_rating(lesson.rating)
 
     def get_rating_count(self, lesson: Lesson):
         return lesson.rating_count

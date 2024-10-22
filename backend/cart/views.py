@@ -9,7 +9,7 @@ from lesson.models import Lesson
 class CartViewSet(ModelViewSet):
     http_method_names = ["get", "post", "delete"]
     queryset = Cart.objects.prefetch_related(
-        Prefetch("lesson", queryset=Lesson.objects.add_lecturers().all())
+        Prefetch("lesson", queryset=Lesson.objects.add_lecturers_ids().all())
     ).order_by("id")
     serializer_class = CartGetSerializer
     permission_classes = [IsAuthenticated]

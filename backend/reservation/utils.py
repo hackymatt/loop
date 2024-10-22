@@ -2,7 +2,7 @@ from reservation.models import Reservation
 from schedule.models import Schedule, Meeting, Recording
 from profile.models import StudentProfile, LecturerProfile
 from schedule.utils import MeetingManager, get_min_students_required
-from django.db.models import F, Prefetch
+from django.db.models import Prefetch
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from pytz import timezone, utc
@@ -29,7 +29,12 @@ def confirm_reservations():
         .add_diff()
         .filter(diff__gte=-timedelta(hours=CANCELLATION_TIME))
         .prefetch_related(
-            Prefetch("lecturer", queryset=LecturerProfile.objects.add_full_name())
+            Prefetch(
+                "lecturer",
+                queryset=LecturerProfile.objects.add_full_name()
+                .add_rate()
+                .add_commission(),
+            )
         )
     )
 

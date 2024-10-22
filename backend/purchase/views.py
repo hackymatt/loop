@@ -77,7 +77,6 @@ class PurchaseViewSet(ModelViewSet):
     queryset = (
         Purchase.objects.filter(payment__status="S")
         .add_meeting_url()
-        .add_lecturer_id()
         .add_recordings_ids()
         .add_reservation_id()
         .add_review_id()
@@ -92,7 +91,17 @@ class PurchaseViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return self.queryset.filter(student__profile__user=user)
+        queryset = self.queryset.filter(student__profile__user=user)
+
+        lecturer_id = self.request.query_params.get("lecturer_id", None)
+        sort_by = self.request.query_params.get("sort_by", None)
+        if lecturer_id:
+            return queryset.add_lecturer_id()
+        if sort_by:
+            if "lecturer_id" in sort_by:
+                return queryset.add_lecturer_id()
+
+        return queryset
 
     def get_lessons_price(self, lessons):
         for lesson_data in lessons:

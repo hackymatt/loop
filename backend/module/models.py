@@ -10,9 +10,6 @@ from django.db.models import (
     Value,
     FloatField,
     OuterRef,
-    DecimalField,
-    F,
-    Subquery,
 )
 from lesson.models import Lesson
 from profile.models import Profile
@@ -20,7 +17,6 @@ from reservation.models import Reservation
 from django.db.models.functions import Cast
 from datetime import datetime
 from django.utils.timezone import make_aware
-from django.db.models.functions import Coalesce
 
 
 class ModuleQuerySet(QuerySet):

@@ -2,7 +2,6 @@ from django_filters import (
     FilterSet,
     NumberFilter,
     DateFilter,
-    DateTimeFilter,
     BooleanFilter,
     CharFilter,
 )
@@ -103,7 +102,7 @@ class ScheduleFilter(FilterSet):
     )
     lecturer_id = NumberFilter(field_name="lecturer__id", lookup_expr="exact")
     time = DateFilter(field_name="start_time", lookup_expr="contains")
-    time_from = DateTimeFilter(field_name="start_time", lookup_expr="gte")
+    time_from = DateFilter(field_name="start_time", lookup_expr="gte")
     time_to = DateFilter(field_name="end_time", lookup_expr="lte")
     duration = NumberFilter(
         label="Lesson duration",

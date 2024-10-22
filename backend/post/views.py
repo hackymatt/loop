@@ -98,7 +98,7 @@ class PostViewSet(ModelViewSet):
 
 class PostCategoryViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = PostCategory.objects.add_post_count().all().order_by("id")
+    queryset = PostCategory.objects.all().order_by("id")
     serializer_class = PostCategorySerializer
     permission_classes = [AllowAny]
     filterset_class = PostCategoryFilter
@@ -109,3 +109,9 @@ class PostCategoryViewSet(ModelViewSet):
         else:
             permission_classes = self.permission_classes
         return [permission() for permission in permission_classes]
+
+    def get_queryset(self):
+        posts_count_from = self.request.query_params.get("posts_count_from", None)
+        if posts_count_from:
+            return self.queryset.add_post_count()
+        return self.queryset

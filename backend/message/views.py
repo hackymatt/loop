@@ -30,11 +30,11 @@ class MessageViewSet(ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         profile = Profile.objects.get(user=user)
-        return (
-            self.queryset.filter(Q(sender=profile) | Q(recipient=profile))
-            .annotate(profile_id=Value(profile.id))
-            .add_type()
-        )
+        type = self.request.query_params.get("type", None)
+        queryset = self.queryset.filter(Q(sender=profile) | Q(recipient=profile))
+        if type:
+            return queryset.annotate(profile_id=Value(profile.id)).add_type()
+        return queryset
 
     def get_serializer_class(self):
         if self.action == "list":

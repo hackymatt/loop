@@ -70,7 +70,7 @@ class CourseQuerySet(QuerySet):
             )
         )
 
-    def add_lecturers(self):
+    def add_lecturers_ids(self):
         return self.annotate(
             lecturers_ids=ArrayAgg(
                 "modules__lessons__teaching_lesson__lecturer__id", distinct=True

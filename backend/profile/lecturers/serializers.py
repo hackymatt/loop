@@ -6,6 +6,13 @@ from rest_framework.serializers import (
 from drf_extra_fields.fields import Base64ImageField
 from profile.models import LecturerProfile
 from lesson.models import Lesson
+from math import ceil
+
+
+def format_rating(value):
+    if value is None:
+        return None
+    return ceil(value * 10) / 10
 
 
 def get_lessons(lecturer: LecturerProfile):
@@ -87,7 +94,7 @@ class LecturerSerializer(ModelSerializer):
         return lecturer.full_name
 
     def get_rating(self, lecturer: LecturerProfile):
-        return lecturer.rating
+        return format_rating(lecturer.rating)
 
     def get_rating_count(self, lecturer: LecturerProfile):
         return lecturer.rating_count
@@ -160,7 +167,7 @@ class LecturerGetSerializer(ModelSerializer):
         return lecturer.full_name
 
     def get_rating(self, lecturer: LecturerProfile):
-        return lecturer.rating
+        return format_rating(lecturer.rating)
 
     def get_rating_count(self, lecturer: LecturerProfile):
         return lecturer.rating_count

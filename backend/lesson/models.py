@@ -34,7 +34,7 @@ from django.apps import apps
 
 
 class LessonQuerySet(QuerySet):
-    def add_lecturers(self):
+    def add_lecturers_ids(self):
         return self.annotate(
             lecturers_ids=ArrayAgg("teaching_lesson__lecturer__id", distinct=True)
         )
@@ -147,8 +147,8 @@ class LessonManager(Manager):
     def get_queryset(self):
         return LessonQuerySet(self.model, using=self._db)
 
-    def add_lecturers(self):
-        return self.get_queryset().add_lecturers()
+    def add_lecturers_ids(self):
+        return self.get_queryset().add_lecturers_ids()
 
     def add_progress(self, user):
         return self.get_queryset().add_progress(user=user)

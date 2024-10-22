@@ -14,14 +14,14 @@ class LecturerViewSet(ModelViewSet):
     http_method_names = ["get"]
     queryset = (
         LecturerProfile.objects.add_profile_ready()
+        .add_lessons_count()
+        .filter(lessons_count__gt=0, profile_ready=True)
+        .exclude(profile__user__email=DUMMY_LECTURER_EMAIL)
         .add_full_name()
         .add_rating()
         .add_rating_count()
-        .add_lessons_count()
         .add_lessons_duration()
         .add_students_count()
-        .filter(lessons_count__gt=0, profile_ready=True)
-        .exclude(profile__user__email=DUMMY_LECTURER_EMAIL)
         .order_by("id")
     )
     serializer_class = LecturerSerializer

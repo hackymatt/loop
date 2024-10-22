@@ -9,7 +9,7 @@ from lesson.models import Lesson
 class WishlistViewSet(ModelViewSet):
     http_method_names = ["get", "post", "delete"]
     queryset = Wishlist.objects.prefetch_related(
-        Prefetch("lesson", queryset=Lesson.objects.add_lecturers().all())
+        Prefetch("lesson", queryset=Lesson.objects.add_lecturers_ids().all())
     ).order_by("id")
     serializer_class = WishlistGetSerializer
     permission_classes = [IsAuthenticated]

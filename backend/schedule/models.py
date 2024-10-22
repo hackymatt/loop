@@ -13,8 +13,12 @@ from django.db.models import (
     Manager,
     F,
     Value,
+    Case,
+    When,
+    Count,
 )
 from django.db.models.functions import ExtractYear, ExtractMonth, Concat, Right
+from django.contrib.postgres.aggregates import ArrayAgg
 from profile.models import LecturerProfile
 from lesson.models import Lesson
 from datetime import datetime
@@ -54,6 +58,25 @@ class ScheduleQuerySet(QuerySet):
                 Right(Concat(Value("0"), ExtractMonth(F("start_time"))), 2),
                 output_field=CharField(),
             )
+        )
+
+    def add_meeting_url(self):
+        return self.annotate(
+            meeting_url=Case(
+                When(meeting__isnull=False, then=F("meeting__url")),
+                default=Value(None),
+                output_field=CharField(),
+            )
+        )
+
+    def add_reservations_count(self):
+        return self.annotate(
+            reservations_count=Count("reservation_schedule", distinct=True)
+        )
+
+    def add_students_ids(self):
+        return self.annotate(
+            students_ids=ArrayAgg("reservation_schedule__student", distinct=True)
         )
 
 

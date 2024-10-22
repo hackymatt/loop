@@ -69,7 +69,7 @@ class CouponUserOrderFilter(OrderFilter):
 class CouponUserFilter(FilterSet):
     coupon_code = CharFilter(field_name="coupon__code", lookup_expr="icontains")
     user_id = NumberFilter(field_name="user__id", lookup_expr="exact")
-    created_at = DateFilter(field_name="created_at", lookup_expr="icontains")
+    created_at = DateFilter(field_name="created_at", lookup_expr="contains")
 
     sort_by = CouponUserOrderFilter(
         choices=(

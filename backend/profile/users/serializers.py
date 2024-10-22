@@ -11,24 +11,6 @@ from finance.models import Finance, FinanceHistory
 from notification.utils import notify
 
 
-def get_finance(profile):
-    if profile.user_type[0] != "W":
-        return None
-
-    finance = Finance.objects.filter(lecturer__profile=profile)
-
-    if not finance.exists():
-        return None
-
-    return finance.first()
-
-
-class FinanceSerializer(ModelSerializer):
-    class Meta:
-        model = Finance
-        fields = ("account",)
-
-
 class UserSerializer(ModelSerializer):
     first_name = CharField(source="user.first_name")
     last_name = CharField(source="user.last_name")
@@ -42,22 +24,13 @@ class UserSerializer(ModelSerializer):
     account = SerializerMethodField()
 
     def get_rate(self, profile: Profile):
-        finance = get_finance(profile=profile)
-        if not finance:
-            return None
-        return finance.rate
+        return profile.rate
 
     def get_commission(self, profile: Profile):
-        finance = get_finance(profile=profile)
-        if not finance:
-            return None
-        return finance.commission
+        return profile.commission
 
     def get_account(self, profile: Profile):
-        finance = get_finance(profile=profile)
-        if not finance:
-            return None
-        return finance.account
+        return profile.account
 
     class Meta:
         model = Profile
