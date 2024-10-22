@@ -17,6 +17,7 @@ import { paths } from "src/routes/paths";
 import { useBoolean } from "src/hooks/use-boolean";
 
 import { fShortenNumber } from "src/utils/format-number";
+import { getGenderAvatar } from "src/utils/get-gender-avatar";
 
 import Image from "src/components/image";
 import Iconify from "src/components/iconify";
@@ -51,10 +52,7 @@ export default function CourseDetailsHero({ course }: Props) {
 
   const videoOpen = useBoolean();
 
-  const genderAvatarUrl =
-    teachers?.[0]?.gender === "Kobieta"
-      ? "/assets/images/avatar/avatar_female.jpg"
-      : "/assets/images/avatar/avatar_male.jpg";
+  const genderAvatarUrl = getGenderAvatar(teachers?.[0]?.gender);
 
   const avatarUrl = teachers?.[0]?.avatarUrl || genderAvatarUrl;
 

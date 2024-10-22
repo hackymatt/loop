@@ -1,5 +1,7 @@
 // ----------------------------------------------------------------------
 
+import { IGender } from "./testimonial";
+
 type IReviewUsers = {
   id: string;
   name: string;
@@ -17,7 +19,7 @@ type IReviewReplyComment = {
 export type IReviewItemProp = {
   id: string;
   name: string;
-  gender?: string;
+  gender?: IGender;
   rating: number;
   createdAt: Date;
   message: string;

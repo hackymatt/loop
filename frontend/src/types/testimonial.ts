@@ -3,11 +3,17 @@
 export type ITestimonialProps = {
   id: string;
   name: string;
-  gender?: IGender | null;
+  gender?: IGender;
   review?: string;
   avatarUrl?: string;
   createdAt?: Date;
   ratingNumber?: number;
 };
 
-export type IGender = "Mężczyzna" | "Kobieta" | "Inne";
+export enum Gender {
+  MALE = "Mężczyzna",
+  FEMALE = "Kobieta",
+  OTHER = "Inne",
+}
+
+export type IGender = `${Gender}`;

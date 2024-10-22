@@ -3,6 +3,8 @@ import Avatar from "@mui/material/Avatar";
 import { Box, BoxProps } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
+import { getGenderAvatar } from "src/utils/get-gender-avatar";
+
 import Iconify from "src/components/iconify";
 
 import { ITestimonialProps } from "src/types/testimonial";
@@ -51,10 +53,7 @@ export function TestimonialItemThumbnail({
   testimonial,
   ...other
 }: TestimonialItemThumbnailProps) {
-  const genderAvatarUrl =
-    testimonial.gender === "Kobieta"
-      ? "/assets/images/avatar/avatar_female.jpg"
-      : "/assets/images/avatar/avatar_male.jpg";
+  const genderAvatarUrl = getGenderAvatar(testimonial.gender);
 
   const avatarUrl = testimonial.avatarUrl || genderAvatarUrl;
 

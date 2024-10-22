@@ -82,16 +82,16 @@ export default function Header({ headerOnDark }: Props) {
 
   const { data: wishlistRecords } = useWishlistsRecordsCount(
     { page_size: -1 },
-    isLoggedIn && userType === UserType.Student,
+    isLoggedIn && userType === UserType.STUDENT,
   );
   const { data: cartRecords } = useCartsRecordsCount(
     { page_size: -1 },
-    isLoggedIn && userType === UserType.Student,
+    isLoggedIn && userType === UserType.STUDENT,
   );
 
   const { data: notifications, refetch: refreshNotifications } = useNotifications(
     { sort_by: "-created_at", page_size: -1 },
-    isLoggedIn && userType !== UserType.Admin,
+    isLoggedIn && userType !== UserType.ADMIN,
     60000,
   );
 
@@ -152,7 +152,7 @@ export default function Header({ headerOnDark }: Props) {
       <Stack spacing={3} direction="row" alignItems="center" flexGrow={1} justifyContent="flex-end">
         {isLoggedIn ? (
           <Badge
-            badgeContent={userType !== UserType.Admin ? notificationItems : 0}
+            badgeContent={userType !== UserType.ADMIN ? notificationItems : 0}
             max={99}
             color="primary"
           >
@@ -164,7 +164,7 @@ export default function Header({ headerOnDark }: Props) {
                 refreshNotifications();
                 openNotifications.onOpen(event);
               }}
-              disabled={userType === UserType.Admin}
+              disabled={userType === UserType.ADMIN}
             >
               <Iconify icon="carbon:notification" width={24} />
             </IconButton>
@@ -182,7 +182,7 @@ export default function Header({ headerOnDark }: Props) {
         )}
 
         <Badge
-          badgeContent={userType === UserType.Student ? wishlistItems : 0}
+          badgeContent={userType === UserType.STUDENT ? wishlistItems : 0}
           max={99}
           color="primary"
         >
@@ -192,14 +192,14 @@ export default function Header({ headerOnDark }: Props) {
             size="small"
             color="inherit"
             sx={{ p: 0 }}
-            disabled={userType !== UserType.Student}
+            disabled={userType !== UserType.STUDENT}
           >
             <Iconify icon="carbon:favorite" width={24} />
           </IconButton>
         </Badge>
 
         <Badge
-          badgeContent={userType === UserType.Student ? cartItems : 0}
+          badgeContent={userType === UserType.STUDENT ? cartItems : 0}
           max={99}
           color="primary"
         >
@@ -209,7 +209,7 @@ export default function Header({ headerOnDark }: Props) {
             size="small"
             color="inherit"
             sx={{ p: 0 }}
-            disabled={userType !== UserType.Student}
+            disabled={userType !== UserType.STUDENT}
           >
             <Iconify icon="carbon:shopping-cart" width={24} />
           </IconButton>
@@ -446,9 +446,9 @@ function AccountPopover({ openMenu }: { openMenu: UsePopoverReturn }) {
   const navigations = useMemo(
     () =>
       ({
-        [UserType.Admin]: adminNavigation,
-        [UserType.Wykładowca]: teacherNavigation,
-        [UserType.Student]: studentNavigation,
+        [UserType.ADMIN]: adminNavigation,
+        [UserType.TEACHER]: teacherNavigation,
+        [UserType.STUDENT]: studentNavigation,
       })[userType],
     [userType],
   );

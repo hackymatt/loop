@@ -10,6 +10,7 @@ import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
 import { encodeUrl } from "src/utils/url-utils";
+import { getGenderAvatar } from "src/utils/get-gender-avatar";
 
 import Image from "src/components/image";
 
@@ -24,10 +25,7 @@ type Props = {
 export default function TeamItem({ member }: Props) {
   const { id, name, role, avatarUrl, gender } = member;
 
-  const genderAvatarUrl =
-    gender === "Kobieta"
-      ? "/assets/images/avatar/avatar_female.jpg"
-      : "/assets/images/avatar/avatar_male.jpg";
+  const genderAvatarUrl = getGenderAvatar(gender);
 
   const photoUrl = avatarUrl || genderAvatarUrl;
 

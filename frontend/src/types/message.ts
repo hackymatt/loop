@@ -5,6 +5,8 @@ export enum MessageStatus {
   READ = "READ",
 }
 
+type IMessageStatus = `${MessageStatus}`;
+
 export enum MessageType {
   INBOX = "INBOX",
   SENT = "SENT",
@@ -20,7 +22,7 @@ export type IMessageProp = {
   id: string;
   subject: string;
   body: string;
-  status: MessageStatus;
+  status: IMessageStatus;
   sender: IMessageUserProp;
   recipient: IMessageUserProp;
   modifiedAt: string;

@@ -37,7 +37,7 @@ export const studentNavigation = [
     },
     {
       title: "Recenzje",
-      path: `${paths.account.reviews}/?review_status_exclude=${ReviewStatus.brak}&page_size=10`,
+      path: `${paths.account.reviews}/?review_status_exclude=${ReviewStatus.NONE}&page_size=10`,
       icon: <Iconify icon="carbon:review" />,
       children: [],
     },

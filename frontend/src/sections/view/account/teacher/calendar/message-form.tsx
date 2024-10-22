@@ -63,7 +63,7 @@ export default function MessageForm({ students, info, onClose, ...other }: Props
         createMessage({
           ...data,
           recipient_id: student.id,
-          recipient_type: UserType.Student,
+          recipient_type: UserType.STUDENT,
           status: MessageStatus.NEW,
         }),
       );

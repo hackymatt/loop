@@ -11,6 +11,7 @@ import { paths } from "src/routes/paths";
 
 import { fDate } from "src/utils/format-time";
 import { encodeUrl } from "src/utils/url-utils";
+import { getGenderAvatar } from "src/utils/get-gender-avatar";
 
 import TextMaxLine from "src/components/text-max-line";
 
@@ -48,10 +49,7 @@ type PostAuthorItemProps = {
 };
 
 function PostAuthorItem({ author }: PostAuthorItemProps) {
-  const genderAvatarUrl =
-    author?.gender === "Kobieta"
-      ? "/assets/images/avatar/avatar_female.jpg"
-      : "/assets/images/avatar/avatar_male.jpg";
+  const genderAvatarUrl = getGenderAvatar(author?.gender);
 
   const avatarUrl = author?.avatarUrl || genderAvatarUrl;
 

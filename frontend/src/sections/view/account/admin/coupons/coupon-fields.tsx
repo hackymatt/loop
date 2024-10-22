@@ -16,7 +16,7 @@ import { UserType, IUserDetailsProps } from "src/types/user";
 export const useCouponFields = (control: Control<any>) => {
   const { data: availableUsers, isLoading: isLoadingUsers } = useUsers({
     sort_by: "email",
-    user_type: UserType.Student[0],
+    user_type: UserType.STUDENT[0],
     page_size: -1,
   });
 

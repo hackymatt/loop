@@ -113,7 +113,7 @@ export default function AccountCertificateView() {
       </Typography>
 
       <Tabs
-        value={TABS.find((t) => t.id === tab)?.id ?? ReviewStatus.brak}
+        value={TABS.find((t) => t.id === tab)?.id ?? ReviewStatus.NONE}
         scrollButtons="auto"
         variant="scrollable"
         allowScrollButtonsMobile

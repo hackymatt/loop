@@ -169,7 +169,7 @@ export default function CourseDetailsModuleItem({
               variant="contained"
               onClick={handleAddToFavorites}
               loading={isAddingToFavorites}
-              disabled={userType !== UserType.Student}
+              disabled={userType !== UserType.STUDENT}
             >
               <Iconify icon="carbon:favorite" />
             </LoadingButton>
@@ -179,7 +179,7 @@ export default function CourseDetailsModuleItem({
               variant="contained"
               onClick={handleAddToCart}
               loading={isAddingToCart}
-              disabled={userType !== UserType.Student}
+              disabled={userType !== UserType.STUDENT}
             >
               <Iconify icon="carbon:shopping-cart-plus" />
             </LoadingButton>

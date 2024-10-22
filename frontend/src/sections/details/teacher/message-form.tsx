@@ -57,7 +57,7 @@ export default function MessageForm({ teacher, onClose, ...other }: Props) {
       await createMessage({
         ...data,
         recipient_id: teacher.id,
-        recipient_type: UserType.Wykładowca,
+        recipient_type: UserType.TEACHER,
         status: MessageStatus.NEW,
       });
       reset();

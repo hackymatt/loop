@@ -6,6 +6,7 @@ import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 
 import { fDate } from "src/utils/format-time";
+import { getGenderAvatar } from "src/utils/get-gender-avatar";
 
 import { IReviewItemProp } from "src/types/review";
 
@@ -28,10 +29,7 @@ export default function ReviewItem({
   teacherName,
   showTeacher = true,
 }: IProps) {
-  const genderAvatarUrl =
-    gender === "Kobieta"
-      ? "/assets/images/avatar/avatar_female.jpg"
-      : "/assets/images/avatar/avatar_male.jpg";
+  const genderAvatarUrl = getGenderAvatar(gender);
 
   const studentAvatarUrl = avatarUrl || genderAvatarUrl;
 

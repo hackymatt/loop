@@ -155,7 +155,7 @@ export default function CourseDetailsInfo({ course }: Props) {
             variant="contained"
             loading={isAddingToFavorites}
             onClick={handleAddToFavorites}
-            disabled={userType !== UserType.Student}
+            disabled={userType !== UserType.STUDENT}
           >
             <Iconify icon="carbon:favorite" />
           </LoadingButton>
@@ -166,7 +166,7 @@ export default function CourseDetailsInfo({ course }: Props) {
             startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
             loading={isAddingToCart}
             onClick={handleAddToCart}
-            disabled={userType !== UserType.Student}
+            disabled={userType !== UserType.STUDENT}
             sx={{ width: 1 }}
           >
             Dodaj do koszyka

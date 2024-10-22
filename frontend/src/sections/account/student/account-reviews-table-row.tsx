@@ -45,11 +45,11 @@ export default function AccountReviewsTableRow({ row, onAdd, onEdit, onDelete }:
   }, [openOptions, onDelete, row]);
 
   const isCompleted = useMemo(
-    () => row.reviewStatus === ReviewStatus.ukończone,
+    () => row.reviewStatus === ReviewStatus.COMPLETED,
     [row.reviewStatus],
   );
 
-  const isPending = useMemo(() => row.reviewStatus === ReviewStatus.oczekujące, [row.reviewStatus]);
+  const isPending = useMemo(() => row.reviewStatus === ReviewStatus.PENDING, [row.reviewStatus]);
 
   return (
     <>

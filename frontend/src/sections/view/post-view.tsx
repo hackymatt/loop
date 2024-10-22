@@ -16,6 +16,7 @@ import { paths } from "src/routes/paths";
 import { fDate } from "src/utils/format-time";
 import { decodeUrl } from "src/utils/url-utils";
 import { createMetadata } from "src/utils/create-metadata";
+import { getGenderAvatar } from "src/utils/get-gender-avatar";
 
 import { usePost } from "src/api/posts/post";
 import { usePosts } from "src/api/posts/posts";
@@ -63,10 +64,7 @@ export function PostView({ id }: { id: string }) {
     >
       <AvatarGroup total={post?.authors.length ?? 0} max={1}>
         {post?.authors.map((author: IAuthorProps) => {
-          const genderAvatarUrl =
-            author?.gender === "Kobieta"
-              ? "/assets/images/avatar/avatar_female.jpg"
-              : "/assets/images/avatar/avatar_male.jpg";
+          const genderAvatarUrl = getGenderAvatar(author?.gender);
 
           const avatarUrl = author?.avatarUrl || genderAvatarUrl;
           return <Avatar key={author.id} src={avatarUrl} />;

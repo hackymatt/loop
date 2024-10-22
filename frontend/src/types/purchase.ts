@@ -3,21 +3,21 @@
 import { ITeamMemberProps } from "./team";
 
 export enum LessonStatus {
-  nowa = "nowa",
-  zaplanowana = "zaplanowana",
-  potwierdzona = "potwierdzona",
-  zakończona = "zakończona",
+  NEW = "nowa",
+  PLANNED = "zaplanowana",
+  CONFIRMED = "potwierdzona",
+  COMPLETED = "zakończona",
 }
 
 export enum ReviewStatus {
-  ukończone = "ukończone",
-  oczekujące = "oczekujące",
-  brak = "brak",
+  COMPLETED = "ukończone",
+  PENDING = "oczekujące",
+  NONE = "brak",
 }
 
-export type ILessonStatus = keyof typeof LessonStatus;
+export type ILessonStatus = `${LessonStatus}`;
 
-export type IReviewStatus = keyof typeof ReviewStatus;
+export type IReviewStatus = `${ReviewStatus}`;
 
 export type IRecordingProp = { name: string; url: string };
 

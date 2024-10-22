@@ -52,9 +52,9 @@ export default function Nav({ open, onClose }: Props) {
   const navigations = useMemo(
     () =>
       ({
-        [UserType.Admin]: adminNavigation,
-        [UserType.Wykładowca]: teacherNavigation,
-        [UserType.Student]: studentNavigation,
+        [UserType.ADMIN]: adminNavigation,
+        [UserType.TEACHER]: teacherNavigation,
+        [UserType.STUDENT]: studentNavigation,
       })[userType],
     [userType],
   );
@@ -175,7 +175,7 @@ export function NavItem({ title, path, icon, children, isChild }: NavItemProps) 
     setOpen(!open);
   };
 
-  const itemWithChildren = children.length > 0 ?? false;
+  const itemWithChildren = children.length > 0;
 
   const expandIcon = open ? (
     <ListItemIcon>
