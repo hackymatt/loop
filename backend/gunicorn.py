@@ -5,8 +5,8 @@ wsgi_app = "core.wsgi"
 # The number of worker processes for handling requests
 workers = multiprocessing.cpu_count() * 2 + 1
 # Timeout
-timeout = 60
+timeout = 30
 # The socket to bind
 bind = "0.0.0.0:8000"
 # Daemonize the Gunicorn process (detach & enter background)
-daemon = True
+daemon = False
