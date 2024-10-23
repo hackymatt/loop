@@ -16,3 +16,8 @@ nginx:
   tag: latest.prod
   replicas: 1
   host: loop.edu.pl
+
+pgbouncer:
+  enabled: true
+  tag: latest
+  replicas: 1
