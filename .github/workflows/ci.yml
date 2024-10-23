@@ -111,8 +111,9 @@ jobs:
         ports:
           - 6432:6432
         env:
-          DB_USER: postgres
-          DB_PASSWORD: postgres
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
         options: --health-cmd "pg_isready -p 6432" --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
