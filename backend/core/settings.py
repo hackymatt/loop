@@ -116,7 +116,6 @@ DEBUG_TOOLBAR_PANELS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -125,6 +124,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if DEBUG:
+    MIDDLEWARE.insert(1, "debug_toolbar.middleware.DebugToolbarMiddleware")
 
 REST_FRAMEWORK = {
     "DEFAULT_PARSER_CLASSES": (
@@ -181,7 +183,7 @@ DATABASES = {
         "NAME": os.getenv("DB_NAME", "loop"),
         "USER": os.getenv("DB_USER", "loop_dev"),
         "PASSWORD": os.getenv("DB_PASSWORD", "loop_devpassword"),
-        "HOST": os.getenv("DB_HOST", "localhost"),
+        "HOST": "pgbouncer",
         "PORT": os.environ.get("DB_PORT", "5432"),
     }
 }

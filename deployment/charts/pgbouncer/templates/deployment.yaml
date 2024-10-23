@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgbouncer
+  namespace: default
+  annotations:
+    app.kubernetes.io/managed-by: "Helm"
+  labels:
+    app: pgbouncer
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: pgbouncer
+  template:
+    metadata:
+      labels:
+        app: pgbouncer
+    spec:
+      containers:
+      - name: pgbouncer
+        image: edoburu/pgbouncer:{{ .Values.tag }}
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: pgbouncer-config
+          mountPath: /etc/pgbouncer
+        env:
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: DB_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secrets
+              key: DB_PASSWORD
+      volumes:
+      - name: pgbouncer-config
+        configMap:
+          name: pgbouncer-config
