@@ -127,10 +127,6 @@ jobs:
         run: pip install -r requirements_test.txt
       - name: Install requirements
         run: pip install -r requirements.txt
-      - name: Wait for Postgres and PgBouncer
-        run: |
-          until pg_isready -h localhost -p 5432; do sleep 2; done
-          until pg_isready -h localhost -p 6432; do sleep 2; done
       - name: Run tests
         run: coverage run manage.py test
       - name: Print report
