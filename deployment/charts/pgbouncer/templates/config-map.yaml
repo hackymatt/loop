@@ -8,18 +8,20 @@ metadata:
 data:
   pgbouncer.ini: |
     [databases]
-    your_database_name = host=postgresql port=5432 dbname=postgres user=$DB_USER password=$DB_PASSWORD
+    mydb = host=${DB_HOST} port=${DB_PORT} dbname=${DB_NAME} user=${DB_USER} password=${DB_PASSWORD}
 
     [pgbouncer]
     listen_addr = *
-    listen_port = 5432
+    listen_port = ${DB_PORT}
     auth_type = md5
     auth_file = /etc/pgbouncer/userlist.txt
     pool_mode = transaction
+    max_db_connections = 100
+    default_pool_size = 40
     server_reset_query = DISCARD ALL
     server_check_delay = 30
     server_lifetime = 600
     server_idle_timeout = 300
     client_idle_timeout = 300
   userlist.txt: |
-    "$DB_USER" "$DB_PASSWORD"
+    "${DB_USER}" "${DB_PASSWORD}"

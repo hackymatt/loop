@@ -19,23 +19,24 @@ spec:
     spec:
       containers:
       - name: pgbouncer
-        image: edoburu/pgbouncer:{{ .Values.tag }}
+        image: rmccaffrey/pgbouncer:{{ .Values.tag }}
         ports:
         - containerPort: 5432
         volumeMounts:
         - name: pgbouncer-config
           mountPath: /etc/pgbouncer
-        env:
-        - name: DB_USER
-          valueFrom:
-            secretKeyRef:
+        resources:
+          requests:
+            cpu: 200m
+            memory: 300Mi
+          limits:
+            cpu: 300m
+            memory: 400Mi
+        envFrom:                  
+          - secretRef:
               name: secrets
-              key: DB_USER
-        - name: DB_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: secrets
-              key: DB_PASSWORD
+          - configMapRef:
+              name: pgbouncer-config
       volumes:
       - name: pgbouncer-config
         configMap:

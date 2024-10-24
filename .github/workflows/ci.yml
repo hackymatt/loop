@@ -96,14 +96,26 @@ jobs:
           - 6379:6379
         options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
 
-      pgbouncer:
-        image: edoburu/pgbouncer
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
         ports:
           - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+      pgbouncer:
+        image: rmccaffrey/pgbouncer:latest
         env:
-          DB_USER: postgres
-          DB_PASSWORD: postgres
-          DB_HOST: postgres
+          DATABASE_URL: postgres://postgres:postgres@db:5432/postgres
+          POOL_MODE: transaction
+          MAX_DB_CONNECTIONS: 100
+          DEFAULT_POOL_SIZE: 40
+          AUTH_TYPE: scram-sha-256
+        ports:
+          - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
