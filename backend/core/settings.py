@@ -184,7 +184,7 @@ DATABASES = {
         "USER": os.getenv("DB_USER", "loop_dev"),
         "PASSWORD": os.getenv("DB_PASSWORD", "loop_devpassword"),
         "HOST": os.getenv("DB_HOST", "localhost"),
-        "PORT": os.environ.get("DB_PORT", "6432"),
+        "PORT": os.environ.get("DB_PORT", "5432"),
     }
 }
 
