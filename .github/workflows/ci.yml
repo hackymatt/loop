@@ -111,7 +111,6 @@ jobs:
         env:
           DATABASE_URL: postgres://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@postgres:5432/${{ secrets.DB_NAME }}
           POOL_MODE: transaction
-          AUTH_TYPE: scram-sha-256
         ports:
           - 6432:6432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
