@@ -109,6 +109,9 @@ jobs:
           - 6432:6432
 
     steps:
+      - name: Print secret value (NOT RECOMMENDED)
+        run: |
+          echo "MY_SECRET=${{ secrets.DB_HOST }}" # Only use this for debugging!
       - name: Checkout repository code
         uses: actions/checkout@v4
       - name: Pull python

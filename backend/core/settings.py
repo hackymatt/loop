@@ -183,8 +183,8 @@ DATABASES = {
         "NAME": os.getenv("DB_NAME", "loop"),
         "USER": os.getenv("DB_USER", "loop_dev"),
         "PASSWORD": os.getenv("DB_PASSWORD", "loop_devpassword"),
-        "HOST": "postgres",  # Directly connect to PostgreSQL
-        "PORT": "5432",      # PostgreSQL default port
+        "HOST": os.getenv("DB_HOST", "localhost"),
+        "PORT": os.environ.get("DB_PORT", "6432"),
     }
 }
 
