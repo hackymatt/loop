@@ -102,7 +102,7 @@ jobs:
       pgbouncer:
         image: rmccaffrey/pgbouncer:latest
         env:
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+          DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
           POOL_MODE: transaction
           AUTH_TYPE: scram-sha-256
         ports:
