@@ -183,10 +183,11 @@ DATABASES = {
         "NAME": os.getenv("DB_NAME", "loop"),
         "USER": os.getenv("DB_USER", "loop_dev"),
         "PASSWORD": os.getenv("DB_PASSWORD", "loop_devpassword"),
-        "HOST": "pgbouncer",
+        "HOST": os.getenv("DB_HOST", "localhost"),
         "PORT": os.environ.get("DB_PORT", "6432"),
     }
 }
+
 
 # Cache
 # https://docs.djangoproject.com/en/5.0/topics/cache/
