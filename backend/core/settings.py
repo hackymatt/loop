@@ -126,7 +126,7 @@ MIDDLEWARE = [
 ]
 
 if DEBUG:
-    MIDDLEWARE.insert(1, "debug_toolbar.middleware.DebugToolbarMiddleware")
+    MIDDLEWARE.insert(1, "debug_toolbar.middleware.DebugToolbarMiddleware") # pragma: no cover
 
 REST_FRAMEWORK = {
     "DEFAULT_PARSER_CLASSES": (
@@ -184,7 +184,7 @@ DATABASES = {
         "USER": os.getenv("DB_USER", "loop_dev"),
         "PASSWORD": os.getenv("DB_PASSWORD", "loop_devpassword"),
         "HOST": os.getenv("DB_HOST", "localhost"),
-        "PORT": os.environ.get("DB_PORT", "5432"),
+        "PORT": 6432,
     }
 }
 

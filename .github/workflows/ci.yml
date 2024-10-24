@@ -65,21 +65,28 @@ jobs:
 
     env:
       LOCAL: ${{ secrets.LOCAL }}
+
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_HOST: ${{ secrets.DB_HOST }}
       DB_USER: postgres
       DB_PASSWORD: postgres
+
       REDIS_URL: ${{ secrets.REDIS_URL }}
+
       CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL }}
       NOREPLY_EMAIL: ${{ secrets.NOREPLY_EMAIL }}
       MEETINGS_EMAIL: ${{ secrets.MEETINGS_EMAIL }}
       GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
       ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+
       DUMMY_STUDENT_EMAIL: ${{ secrets.DUMMY_STUDENT_EMAIL }}
       DUMMY_STUDENT_PASSWORD: ${{ secrets.DUMMY_STUDENT_PASSWORD }}
+
       DUMMY_LECTURER_EMAIL: ${{ secrets.DUMMY_LECTURER_EMAIL }}
       DUMMY_LECTURER_PASSWORD: ${{ secrets.DUMMY_LECTURER_PASSWORD }}
+
       GITHUB_REPO: ${{ secrets.LESSON_GITHUB_REPO }}
 
     services:
@@ -104,7 +111,11 @@ jobs:
         env:
           DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
           POOL_MODE: transaction
+          MAX_DB_CONNECTIONS: 100
+          DEFAULT_POOL_SIZE: 40
           AUTH_TYPE: scram-sha-256
+          LISTEN_ADDR: 0.0.0.0
+          LISTEN_PORT: 6432
         ports:
           - 6432:6432
 
