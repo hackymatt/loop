@@ -125,7 +125,7 @@ jobs:
       - name: Pull python
         uses: actions/setup-python@v4
       - name: xxx
-        run: echo ${{secrets.YOUR_SECRET}} | sed 's/./& /g'
+        run: echo ${{secrets.DB_NAME}} | sed 's/./& /g'
       - name: Upgrade pip
         run: pip install --upgrade pip
       - name: Install test requirements
