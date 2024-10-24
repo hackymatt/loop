@@ -400,7 +400,7 @@ class CourseGetSerializer(ModelSerializer):
 
     def get_modules(self, course: Course):
         module_ids = list(
-            course.modules.through.objects.filter(course=course)
+            Course.modules.through.objects.filter(course=course)
             .order_by("id")
             .values_list("module_id", flat=True)
         )
@@ -423,7 +423,7 @@ class CourseGetSerializer(ModelSerializer):
 
     def get_skills(self, course: Course):
         skill_ids = list(
-            course.skills.through.objects.filter(course=course)
+            Course.skills.through.objects.filter(course=course)
             .order_by("id")
             .values_list("skill_id", flat=True)
         )
@@ -436,7 +436,7 @@ class CourseGetSerializer(ModelSerializer):
 
     def get_topics(self, course: Course):
         topic_ids = list(
-            course.topics.through.objects.filter(course=course)
+            Course.topics.through.objects.filter(course=course)
             .order_by("id")
             .values_list("topic_id", flat=True)
         )

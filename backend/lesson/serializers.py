@@ -73,7 +73,7 @@ class LessonGetSerializer(ModelSerializer):
 
     def get_technologies(self, lesson: Lesson):
         technology_ids = list(
-            lesson.technologies.through.objects.order_by("id").values_list(
+            Lesson.technologies.through.objects.filter(lesson=lesson).order_by("id").values_list(
                 "technology_id", flat=True
             )
         )

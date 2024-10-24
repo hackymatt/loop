@@ -126,7 +126,9 @@ MIDDLEWARE = [
 ]
 
 if DEBUG:
-    MIDDLEWARE.insert(1, "debug_toolbar.middleware.DebugToolbarMiddleware") # pragma: no cover
+    MIDDLEWARE.insert(
+        1, "debug_toolbar.middleware.DebugToolbarMiddleware"
+    )  # pragma: no cover
 
 REST_FRAMEWORK = {
     "DEFAULT_PARSER_CLASSES": (

@@ -8,12 +8,12 @@ metadata:
 data:
   pgbouncer.ini: |
     [databases]
-    mydb = host=${DB_HOST} port=${DB_PORT} dbname=${DB_NAME} user=${DB_USER} password=${DB_PASSWORD}
+    * = host=${DB_HOST} port=${DB_PORT} dbname=${DB_NAME} user=${DB_USER} password=${DB_PASSWORD}
 
     [pgbouncer]
     listen_addr = *
-    listen_port = ${DB_PORT}
-    auth_type = md5
+    listen_port = 6432
+    auth_type = scram-sha-256
     auth_file = /etc/pgbouncer/userlist.txt
     pool_mode = transaction
     max_db_connections = 100

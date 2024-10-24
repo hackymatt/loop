@@ -25,7 +25,7 @@ class ModuleGetSerializer(ModelSerializer):
 
     def get_lessons(self, module: Module):
         lesson_ids = list(
-            module.lessons.through.objects.order_by("id").values_list(
+            Module.lessons.through.objects.filter(module=module).order_by("id").values_list(
                 "lesson_id", flat=True
             )
         )

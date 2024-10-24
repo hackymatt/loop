@@ -9,5 +9,5 @@ spec:
   selector:
     app: pgbouncer
   ports:
-    - port: 5432
-      targetPort: 5432
+    - port: 6432
+      targetPort: 6432
