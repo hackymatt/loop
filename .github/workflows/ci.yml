@@ -107,7 +107,6 @@ jobs:
           AUTH_TYPE: scram-sha-256
         ports:
           - 6432:6432
-        options: --health-cmd "pgbouncer -q /etc/pgbouncer/pgbouncer.ini && echo PGBouncer is up" --health-interval 30s --health-timeout 10s --health-retries 8
 
     steps:
       - name: Checkout repository code
