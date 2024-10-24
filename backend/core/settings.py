@@ -177,9 +177,6 @@ WSGI_APPLICATION = "core.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-print("XXXXXXXXXXXXXXXXXXXXXX")
-print(os.getenv("DB_NAME", "loop"))
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
