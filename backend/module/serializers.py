@@ -14,6 +14,8 @@ class LessonSerializer(ModelSerializer):
 
 
 class ModuleGetSerializer(ModelSerializer):
+    price = SerializerMethodField()
+    duration = SerializerMethodField()
     lessons = SerializerMethodField()
 
     class Meta:
@@ -23,11 +25,17 @@ class ModuleGetSerializer(ModelSerializer):
             "modified_at",
         )
 
+    def get_price(self, module: Module):
+        return module.price
+
+    def get_duration(self, module: Module):
+        return module.duration
+
     def get_lessons(self, module: Module):
         lesson_ids = list(
-            module.lessons.through.objects.order_by("id").values_list(
-                "lesson_id", flat=True
-            )
+            Module.lessons.through.objects.filter(module=module)
+            .order_by("id")
+            .values_list("lesson_id", flat=True)
         )
         preserved_order = Case(
             *[When(pk=pk, then=pos) for pos, pk in enumerate(lesson_ids)],
