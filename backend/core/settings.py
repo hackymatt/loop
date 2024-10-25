@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from pathlib import Path
+import sys
 import os
 import base64
 import json
@@ -190,6 +191,8 @@ DATABASES = {
         "CONN_MAX_AGE": 0,
     }
 }
+if "test" in sys.argv:
+    DATABASES["default"]["PORT"] = 5432 # pragma: no cover
 
 
 # Cache

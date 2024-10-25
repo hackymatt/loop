@@ -109,8 +109,8 @@ jobs:
       pgbouncer:
         image: rmccaffrey/pgbouncer:latest
         env:
-          DATABASE_URL: postgres://postgres:postgres@postgres:5432/*
-          POOL_MODE: session
+          DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+          POOL_MODE: transaction
           SERVER_RESET_QUERY: DISCARD ALL
           MAX_DB_CONNECTIONS: 100
           DEFAULT_POOL_SIZE: 40
