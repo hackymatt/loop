@@ -107,19 +107,6 @@ jobs:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
-      pgbouncer:
-        image: rmccaffrey/pgbouncer:latest
-        env:
-          DATABASE_URL: postgres://postgres:postgres@postgres:5432/*
-          POOL_MODE: session
-          MAX_DB_CONNECTIONS: 100
-          DEFAULT_POOL_SIZE: 40
-          AUTH_TYPE: scram-sha-256
-          LISTEN_ADDR: 0.0.0.0
-          LISTEN_PORT: 6432
-        ports:
-          - 6432:6432
-
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v4
