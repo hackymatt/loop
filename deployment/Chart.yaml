@@ -19,7 +19,3 @@ dependencies:
     version: "*"
     repository: file://charts/nginx
     condition: nginx.enabled
-  - name: pgbouncer
-    version: "*"
-    repository: file://charts/pgbouncer
-    condition: pgbouncer.enabled
