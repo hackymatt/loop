@@ -19,5 +19,5 @@ data:
   MIN_STUDENTS_THRESHOLD: "2"
   PAYMENT_SERVER: {{ .Values.env.PAYMENT_SERVER }}
   DB_NAME: "postgres"
-  DB_HOST: "pgbouncer"
-  DB_PORT: "6432"
+  DB_HOST: "postgresql"
+  DB_PORT: "5432"
