@@ -10,6 +10,8 @@ import { Divider, Typography } from "@mui/material";
 
 import { usePopover } from "src/hooks/use-popover";
 
+import { fCurrency } from "src/utils/format-number";
+
 import Iconify from "src/components/iconify";
 
 import { ICourseModuleProp } from "src/types/course";
@@ -40,6 +42,14 @@ export default function AccountModulesTableRow({ row, onEdit, onDelete }: Props)
       <TableRow hover>
         <TableCell>
           <InputBase value={row.title} sx={{ width: 1 }} />
+        </TableCell>
+
+        <TableCell>
+          <InputBase value={`${(row?.totalHours ?? 0) * 60} min`} />
+        </TableCell>
+
+        <TableCell>
+          <InputBase value={fCurrency(row.price ?? 0)} />
         </TableCell>
 
         <TableCell>

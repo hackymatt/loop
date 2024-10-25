@@ -16,8 +16,9 @@ from django.db.models import (
     OuterRef,
     FloatField,
     Subquery,
-    F,
+    IntegerField,
     DecimalField,
+    Q,
 )
 from module.models import Module
 from skill.models import Skill
@@ -38,10 +39,27 @@ def course_directory_path(instance, filename):
 
 class CourseQuerySet(QuerySet):
     def add_price(self):
-        return self.annotate(price=Sum("modules__lessons__price", distinct=True))
+        prices = (
+            Lesson.objects.filter(module_lessons__course_modules=OuterRef("pk"))
+            .annotate(dummy_group_by=Value(1))
+            .values("dummy_group_by")
+            .order_by("dummy_group_by")
+            .annotate(total_price=Sum("price"))
+            .values("total_price")[:1]
+        )
+
+        return self.annotate(price=Subquery(prices, output_field=DecimalField()))
 
     def add_duration(self):
-        return self.annotate(duration=Sum("modules__lessons__duration", distinct=True))
+        duration = (
+            Lesson.objects.filter(module_lessons__course_modules=OuterRef("pk"))
+            .annotate(dummy_group_by=Value(1))
+            .values("dummy_group_by")
+            .order_by("dummy_group_by")
+            .annotate(total_duration=Sum("duration"))
+            .values("total_duration")[:1]
+        )
+        return self.annotate(duration=Subquery(duration, output_field=IntegerField()))
 
     def add_lessons(self):
         return self.annotate(
@@ -50,7 +68,11 @@ class CourseQuerySet(QuerySet):
 
     def add_students_count(self):
         return self.annotate(
-            students_count=Count("modules__lessons__purchase_lesson", distinct=True)
+            students_count=Count(
+                "modules__lessons__purchase_lesson",
+                filter=Q(modules__lessons__purchase_lesson__payment__status="S"),
+                distinct=True,
+            )
         )
 
     def add_rating_count(self):

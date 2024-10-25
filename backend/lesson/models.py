@@ -22,6 +22,7 @@ from django.db.models import (
     When,
     Exists,
     Min,
+    Q,
 )
 from technology.models import Technology
 from django.core.validators import MinValueValidator
@@ -40,7 +41,13 @@ class LessonQuerySet(QuerySet):
         )
 
     def add_students_count(self):
-        return self.annotate(students_count=Count("purchase_lesson", distinct=True))
+        return self.annotate(
+            students_count=Count(
+                "purchase_lesson",
+                filter=Q(purchase_lesson__payment__status="S"),
+                distinct=True,
+            )
+        )
 
     def add_rating(self):
         return self.annotate(rating=Avg("review_lesson__rating", distinct=True))

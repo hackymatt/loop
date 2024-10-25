@@ -98,7 +98,7 @@ export default function CourseView({ id }: { id: string }) {
     [course?.slug, technologyKeywords],
   );
 
-  const isLoading = isLoadingCourse || isLoadingBestCourses || isLoadingCourses;
+  const isLoading = isLoadingCourse;
 
   if (isLoading) {
     return <SplashScreen />;

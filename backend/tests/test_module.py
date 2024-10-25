@@ -186,7 +186,12 @@ class ModuleTest(APITestCase):
         results = data["results"]
         self.assertEqual(count, 3)
         for module_data in results:
+            price = module_data.pop("price")
+            duration = module_data.pop("duration")
             lessons_data = module_data.pop("lessons")
+
+            self.assertEqual(price, 12.98)
+            self.assertEqual(duration, 120)
             self.assertTrue(is_data_match(get_module(module_data["id"]), module_data))
 
             for lesson_data in lessons_data:
@@ -218,9 +223,13 @@ class ModuleTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
 
+        price = data.pop("price")
+        duration = data.pop("duration")
         lessons_data = data.pop("lessons")
 
         self.assertTrue(is_data_match(get_module(data["id"]), data))
+        self.assertEqual(price, 12.98)
+        self.assertEqual(duration, 120)
 
         for lesson_data in lessons_data:
             self.assertTrue(is_data_match(get_lesson(lesson_data["id"]), lesson_data))
@@ -574,7 +583,7 @@ class ModuleOrderTest(APITestCase):
             title="Module 3", lessons=[self.lesson_5, self.lesson_6, self.lesson_2]
         )
 
-        self.fields = ["title", "lessons_count"]
+        self.fields = ["title", "price", "duration", "lessons_count"]
 
     def test_ordering(self):
         for field in self.fields:
