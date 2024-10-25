@@ -8,7 +8,7 @@ metadata:
 data:
   pgbouncer.ini: |
     [databases]
-    * = host=${DB_HOST} port=${DB_PORT} dbname=${DB_NAME} user=${DB_USER} password=${DB_PASSWORD}
+    * = host=postgresql port=6432 dbname=postgres user=${DB_USER} password=${DB_PASSWORD}
 
     [pgbouncer]
     listen_addr = *

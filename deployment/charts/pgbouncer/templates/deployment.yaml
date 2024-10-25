@@ -30,7 +30,7 @@ spec:
       - name: pgbouncer
         image: rmccaffrey/pgbouncer:{{ .Values.tag }}
         ports:
-        - containerPort: 5432
+        - containerPort: 6432
         volumeMounts:
           - name: pgbouncer-config
             mountPath: /etc/pgbouncer
@@ -48,5 +48,4 @@ spec:
               name: pgbouncer-config
       volumes:
         - name: pgbouncer-config
-          configMap:
-            name: pgbouncer-config
+          emptyDir: {}
