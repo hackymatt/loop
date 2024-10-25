@@ -187,6 +187,7 @@ DATABASES = {
         "PASSWORD": os.getenv("DB_PASSWORD", "loop_devpassword"),
         "HOST": os.getenv("DB_HOST", "localhost"),
         "PORT": 6432,
+        "CONN_MAX_AGE": 0,
     }
 }
 

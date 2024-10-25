@@ -15,7 +15,7 @@ data:
     listen_port = 6432
     auth_type = scram-sha-256
     auth_file = /etc/pgbouncer/userlist.txt
-    pool_mode = transaction
+    pool_mode = session
     max_db_connections = 100
     default_pool_size = 40
     server_reset_query = DISCARD ALL
