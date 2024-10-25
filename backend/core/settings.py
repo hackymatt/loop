@@ -192,7 +192,7 @@ DATABASES = {
     }
 }
 if "test" in sys.argv:
-    DATABASES["default"]["PORT"] = 5432 # pragma: no cover
+    DATABASES["default"]["PORT"] = 5432  # pragma: no cover
 
 
 # Cache
