@@ -26,6 +26,9 @@ class ModuleQuerySet(QuerySet):
     def add_price(self):
         return self.annotate(price=Sum("lessons__price"))
 
+    def add_duration(self):
+        return self.annotate(duration=Sum("lessons__duration"))
+
     def add_progress(self, user):
         if not user.is_authenticated:
             return self.annotate(progress=Value(None, output_field=FloatField()))

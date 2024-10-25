@@ -50,6 +50,7 @@ export type ICourseModuleProp = {
   id: string;
   title: string;
   price?: number;
+  totalHours?: number;
   priceSale?: number;
   lowest30DaysPrice?: number;
   lessons?: ICourseLessonProp[];
