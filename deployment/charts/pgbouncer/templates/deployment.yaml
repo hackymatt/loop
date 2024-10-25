@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgbouncer
+  namespace: default
+  annotations:
+    app.kubernetes.io/managed-by: "Helm"
+  labels:
+    app: pgbouncer
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: pgbouncer
+  template:
+    metadata:
+      labels:
+        app: pgbouncer
+    spec:
+      containers:
+      - name: pgbouncer
+        image: rmccaffrey/pgbouncer:{{ .Values.tag }}
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: pgbouncer-config
+          mountPath: /etc/pgbouncer
+        resources:
+          requests:
+            cpu: 200m
+            memory: 300Mi
+          limits:
+            cpu: 300m
+            memory: 400Mi
+        envFrom:                  
+          - secretRef:
+              name: secrets
+          - configMapRef:
+              name: pgbouncer-config
+      volumes:
+      - name: pgbouncer-config
+        configMap:
+          name: pgbouncer-config
