@@ -73,9 +73,9 @@ class LessonGetSerializer(ModelSerializer):
 
     def get_technologies(self, lesson: Lesson):
         technology_ids = list(
-            Lesson.technologies.through.objects.filter(lesson=lesson).order_by("id").values_list(
-                "technology_id", flat=True
-            )
+            Lesson.technologies.through.objects.filter(lesson=lesson)
+            .order_by("id")
+            .values_list("technology_id", flat=True)
         )
         preserved_order = Case(
             *[When(pk=pk, then=pos) for pos, pk in enumerate(technology_ids)],

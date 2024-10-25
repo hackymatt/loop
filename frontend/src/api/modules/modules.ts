@@ -20,10 +20,14 @@ type ILesson = {
 type IModule = {
   id: string;
   title: string;
+  price: number;
+  duration: number;
   lessons: ILesson[];
 };
 
-type ICreateModule = Omit<IModule, "id" | "lessons" | "lessons_count"> & { lessons: string[] };
+type ICreateModule = Omit<IModule, "id" | "lessons" | "price" | "duration" | "lessons_count"> & {
+  lessons: string[];
+};
 type ICreateModuleReturn = ICreateModule;
 export const modulesQuery = (query?: IQueryParams) => {
   const url = endpoint;
@@ -41,9 +45,11 @@ export const modulesQuery = (query?: IQueryParams) => {
       }
     }
     const { results, records_count, pages_count } = data;
-    const modifiedResults = results.map(({ id, title, lessons }: IModule) => ({
+    const modifiedResults = results.map(({ id, title, price, duration, lessons }: IModule) => ({
       id,
       title,
+      totalHours: duration / 60,
+      price,
       lessonsCount: lessons.length,
     }));
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };

@@ -20,7 +20,7 @@ type IModule = {
   lessons: ILesson[];
 };
 
-type IEditModule = Omit<IModule, "id" | "lessons"> & { lessons: string[] };
+type IEditModule = Omit<IModule, "id" | "lessons" | "price" | "duration"> & { lessons: string[] };
 type IEditModuleReturn = IEditModule;
 
 type IDeleteModule = { id: string };

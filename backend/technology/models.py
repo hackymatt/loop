@@ -18,7 +18,9 @@ class TechnologyQuerySet(QuerySet):
     def add_courses_count(self):
         Course = apps.get_model("course", "Course")
         total_courses_count = (
-            Course.objects.filter(modules__lessons__technologies=OuterRef("pk"))
+            Course.objects.filter(
+                active=True, modules__lessons__technologies=OuterRef("pk")
+            )
             .annotate(dummy_group_by=Value(1))
             .values("dummy_group_by")
             .order_by("dummy_group_by")
