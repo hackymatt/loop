@@ -41,13 +41,13 @@ export default function CourseView({ id }: { id: string }) {
   const decodedId = decodeUrl(id);
   const recordId = decodedId.slice(decodedId.lastIndexOf("-") + 1);
 
-  const { data: course, isLoading: isLoadingCourse } = useCourse(recordId);
-  const { data: bestCourses, isLoading: isLoadingBestCourses } = useBestCourses();
+  const { data: course, isLoading } = useCourse(recordId);
+  const { data: bestCourses } = useBestCourses();
 
   const technologies = useMemo(() => course?.category.join(","), [course?.category]);
   const query = { page_size: 3 };
 
-  const { data: courses, isLoading: isLoadingCourses } = useCourses(
+  const { data: courses } = useCourses(
     technologies ? { ...query, technology_in: technologies } : query,
   );
 
@@ -97,8 +97,6 @@ export default function CourseView({ id }: { id: string }) {
       ),
     [course?.slug, technologyKeywords],
   );
-
-  const isLoading = isLoadingCourse;
 
   if (isLoading) {
     return <SplashScreen />;
