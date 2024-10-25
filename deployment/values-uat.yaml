@@ -16,8 +16,3 @@ nginx:
   tag: latest.uat
   replicas: 1
   host: uat.loop.edu.pl
-
-pgbouncer:
-  enabled: true
-  tag: latest
-  replicas: 1

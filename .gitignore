@@ -14,5 +14,3 @@ secrets.sh
 
 auth
 !auth/
-
-pgbouncer

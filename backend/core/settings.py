@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 from pathlib import Path
-import sys
 import os
 import base64
 import json
@@ -117,6 +116,7 @@ DEBUG_TOOLBAR_PANELS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -125,11 +125,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
-if DEBUG:
-    MIDDLEWARE.insert(
-        1, "debug_toolbar.middleware.DebugToolbarMiddleware"
-    )  # pragma: no cover
 
 REST_FRAMEWORK = {
     "DEFAULT_PARSER_CLASSES": (
@@ -187,13 +182,9 @@ DATABASES = {
         "USER": os.getenv("DB_USER", "loop_dev"),
         "PASSWORD": os.getenv("DB_PASSWORD", "loop_devpassword"),
         "HOST": os.getenv("DB_HOST", "localhost"),
-        "PORT": 6432,
-        "CONN_MAX_AGE": 0,
+        "PORT": os.environ.get("DB_PORT", "5432"),
     }
 }
-if "test" in sys.argv:
-    DATABASES["default"]["PORT"] = 5432  # pragma: no cover
-
 
 # Cache
 # https://docs.djangoproject.com/en/5.0/topics/cache/

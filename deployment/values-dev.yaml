@@ -19,8 +19,3 @@ nginx:
   tag: latest.dev
   replicas: 1
   host: dev.loop.edu.pl
-
-pgbouncer:
-  enabled: true
-  tag: latest
-  replicas: 1
