@@ -17,14 +17,23 @@ spec:
       labels:
         app: pgbouncer
     spec:
+      securityContext:
+        fsGroup: 0
+      initContainers:
+        - name: init-permissions
+          image: busybox
+          command: ["sh", "-c", "chmod -R 777 /etc/pgbouncer"]
+          volumeMounts:
+            - name: pgbouncer-config
+              mountPath: /etc/pgbouncer
       containers:
       - name: pgbouncer
         image: rmccaffrey/pgbouncer:{{ .Values.tag }}
         ports:
         - containerPort: 5432
         volumeMounts:
-        - name: pgbouncer-config
-          mountPath: /etc/pgbouncer
+          - name: pgbouncer-config
+            mountPath: /etc/pgbouncer
         resources:
           requests:
             cpu: 200m
@@ -32,12 +41,12 @@ spec:
           limits:
             cpu: 300m
             memory: 400Mi
-        envFrom:                  
+        envFrom:
           - secretRef:
               name: secrets
           - configMapRef:
               name: pgbouncer-config
       volumes:
-      - name: pgbouncer-config
-        configMap:
-          name: pgbouncer-config
+        - name: pgbouncer-config
+          configMap:
+            name: pgbouncer-config
