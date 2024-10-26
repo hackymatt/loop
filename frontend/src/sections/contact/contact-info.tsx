@@ -74,7 +74,7 @@ export default function ContactInfo() {
               <Typography variant="overline">Obserwuj nas</Typography>
               <Stack direction="row">
                 {socials.map((social) => (
-                  <IconButton key={social.value} href={social.url} target="_blank">
+                  <IconButton key={social.value} href={social.url} target="_blank" rel="noopener">
                     <Iconify icon={social.icon} color={social.color} />
                   </IconButton>
                 ))}

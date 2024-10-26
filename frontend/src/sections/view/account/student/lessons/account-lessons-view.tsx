@@ -186,7 +186,12 @@ export default function AccountLessonsPage() {
             handleChange("created_at", value ? fDate(value, "yyyy-MM-dd") : "")
           }
           sx={{ width: 1, minWidth: 180 }}
+          localeText={{
+            toolbarTitle: "Wybierz datę",
+            cancelButtonLabel: "Anuluj",
+          }}
           slotProps={{
+            field: { clearable: true, onClear: () => handleChange("created_at", "") },
             textField: { size: "small", hiddenLabel: true, placeholder: "Data zakupu" },
           }}
         />

@@ -91,6 +91,7 @@ export default function DetailsForm({
             component="a"
             href={eventDetails.event.url}
             target="_blank"
+            rel="noopener"
             startIcon={<Iconify icon="logos:google-meet" />}
             sx={{ mr: 3 }}
             disabled={eventDetails.event.url === ""}

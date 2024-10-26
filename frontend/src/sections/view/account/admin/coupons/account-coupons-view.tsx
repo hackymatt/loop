@@ -200,7 +200,12 @@ export default function AccountCouponsView() {
             handleChange("expiration_date_to", value ? fDate(value, "yyyy-MM-dd") : "")
           }
           sx={{ width: 1, minWidth: 180 }}
+          localeText={{
+            toolbarTitle: "Wybierz datę",
+            cancelButtonLabel: "Anuluj",
+          }}
           slotProps={{
+            field: { clearable: true, onClear: () => handleChange("expiration_date_to", "") },
             textField: { size: "small", hiddenLabel: true, placeholder: "Ważny do" },
           }}
         />

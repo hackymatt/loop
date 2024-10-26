@@ -125,7 +125,13 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete, onSendMes
           },
         }}
       >
-        <Link href={row.lessonResource} target="_blank" underline="none" color="inherit">
+        <Link
+          href={row.lessonResource}
+          target="_blank"
+          rel="noopener"
+          underline="none"
+          color="inherit"
+        >
           <MenuItem>
             <Iconify icon="carbon:logo-github" sx={{ mr: 0.5 }} />
             <Typography variant="body2">Przygotuj się</Typography>
@@ -153,7 +159,13 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete, onSendMes
         )}
 
         {isConfirmed && (
-          <Link href={row.meetingUrl} target="_blank" underline="none" color="inherit">
+          <Link
+            href={row.meetingUrl}
+            target="_blank"
+            rel="noopener"
+            underline="none"
+            color="inherit"
+          >
             <MenuItem>
               <Iconify icon="logos:google-meet" sx={{ mr: 0.5 }} />
               <Typography variant="body2">Dołącz do spotkania</Typography>
@@ -169,6 +181,7 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete, onSendMes
                 key={recording.name}
                 href={recording.url}
                 target="_blank"
+                rel="noopener"
                 underline="none"
                 color="inherit"
               >
