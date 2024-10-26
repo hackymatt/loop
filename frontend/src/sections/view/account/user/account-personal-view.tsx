@@ -97,7 +97,7 @@ export default function AccountPersonalView() {
         street_address: userDetails?.street_address ?? "",
         zip_code: userDetails?.zip_code ?? "",
         city: userDetails?.city ?? "",
-        country: userDetails?.country ?? "",
+        country: userDetails?.country ?? "Polska",
         dob: userDetails?.dob ? new Date(userDetails?.dob) : undefined,
         gender: userDetails?.gender !== null ? userDetails.gender : "Mężczyzna",
       });
@@ -161,6 +161,10 @@ export default function AccountPersonalView() {
           render={({ field, fieldState: { error } }) => (
             <DatePicker
               label="Data urodzenia"
+              localeText={{
+                toolbarTitle: "Wybierz datę",
+                cancelButtonLabel: "Anuluj",
+              }}
               slotProps={{
                 field: { clearable: true, onClear: () => field.onChange("") },
                 textField: {

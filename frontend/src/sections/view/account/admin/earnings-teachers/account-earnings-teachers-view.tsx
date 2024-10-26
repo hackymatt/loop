@@ -95,6 +95,10 @@ export default function AccountEarningsTeachersView() {
           value={filters?.year ? new Date(`${filters.year}-01-01`) : null}
           onChange={(value: Date | null) => handleChange("year", value ? fDate(value, "yyyy") : "")}
           sx={{ width: 1, minWidth: 180 }}
+          localeText={{
+            toolbarTitle: "Wybierz datę",
+            cancelButtonLabel: "Anuluj",
+          }}
           slotProps={{
             field: { clearable: true, onClear: () => handleChange("year", "") },
             textField: { size: "small", hiddenLabel: true, placeholder: "Rok" },
@@ -107,6 +111,10 @@ export default function AccountEarningsTeachersView() {
           value={filters?.month ? new Date(`2000-${filters.month}-01`) : null}
           onChange={(value: Date | null) => handleChange("month", value ? fDate(value, "M") : "")}
           sx={{ width: 1, minWidth: 180 }}
+          localeText={{
+            toolbarTitle: "Wybierz datę",
+            cancelButtonLabel: "Anuluj",
+          }}
           slotProps={{
             field: { clearable: true, onClear: () => handleChange("month", "") },
             textField: { size: "small", hiddenLabel: true, placeholder: "Miesiąc" },
