@@ -73,7 +73,7 @@ export default function AccountCertificatesTableRow({ row }: Props) {
           },
         }}
       >
-        <Link href={certificateUrl} target="_blank" underline="none" color="inherit">
+        <Link href={certificateUrl} target="_blank" rel="noopener" underline="none" color="inherit">
           <MenuItem sx={{ color: "success.main" }}>
             <Iconify icon="carbon:certificate" sx={{ mr: 0.5 }} />
             <Typography variant="body2">Zobacz certyfikat</Typography>

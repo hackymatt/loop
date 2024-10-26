@@ -119,7 +119,7 @@ export default function AccountTeachingsTableRow({ row, onView, onAdd, onDelete 
         )}
         <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
 
-        <Link href={row.githubUrl} target="_blank" underline="none" color="inherit">
+        <Link href={row.githubUrl} target="_blank" rel="noopener" underline="none" color="inherit">
           <MenuItem>
             <Iconify icon="carbon:logo-github" sx={{ mr: 0.5 }} />
             <Typography variant="body2">Repozytorium</Typography>

@@ -163,6 +163,7 @@ export default function Certificate({ id }: IProps) {
               <Button
                 component="a"
                 target="_blank"
+                rel="noopener"
                 href={`https://www.linkedin.com/sharing/share-offsite/?url=${certificateUrl}`}
                 variant="contained"
                 startIcon={<Iconify icon="carbon:logo-linkedin" />}

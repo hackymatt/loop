@@ -99,7 +99,7 @@ export default function Footer() {
                 <Typography variant="h6">Media społecznościowe</Typography>
                 <Stack direction="row">
                   {socials.map((social) => (
-                    <IconButton key={social.value} href={social.url} target="_blank">
+                    <IconButton key={social.value} href={social.url} target="_blank" rel="noopener">
                       <Iconify icon={social.icon} color={social.color} />
                     </IconButton>
                   ))}

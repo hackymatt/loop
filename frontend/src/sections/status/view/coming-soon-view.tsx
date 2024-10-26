@@ -71,7 +71,7 @@ export default function ComingSoonView({ startDate }: { startDate?: Date }) {
 
       <Stack direction="row" justifyContent="center" sx={{ mt: 3 }}>
         {socials.map((social) => (
-          <IconButton key={social.value} href={social.url} target="_blank">
+          <IconButton key={social.value} href={social.url} target="_blank" rel="noopener">
             <Iconify icon={social.icon} color={social.color} />
           </IconButton>
         ))}

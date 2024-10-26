@@ -41,7 +41,12 @@ export default function CookiesBanner({ onConfirm, ...other }: Props) {
             Będziemy używać wszystkich plików cookies tylko wtedy, gdy wyrazisz na to zgodę,
             klikając Akceptuj wszystkie. Możesz zarządzać indywidualnymi preferencjami dotyczącymi
             plików cookie klikając w przycisk Więcej opcji. Więcej informacji znajdziesz w naszej{" "}
-            <Link target="_blank" href={paths.privacyPolicy} sx={{ color: "text.secondary" }}>
+            <Link
+              target="_blank"
+              rel="noopener"
+              href={paths.privacyPolicy}
+              sx={{ color: "text.secondary" }}
+            >
               polityce prywatności
             </Link>
             .
