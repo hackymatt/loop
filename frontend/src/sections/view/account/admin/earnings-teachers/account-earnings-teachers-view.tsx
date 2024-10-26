@@ -96,7 +96,7 @@ export default function AccountEarningsTeachersView() {
           onChange={(value: Date | null) => handleChange("year", value ? fDate(value, "yyyy") : "")}
           sx={{ width: 1, minWidth: 180 }}
           localeText={{
-            toolbarTitle: "Wybierz datę",
+            toolbarTitle: "Wybierz rok",
             cancelButtonLabel: "Anuluj",
           }}
           slotProps={{
@@ -112,7 +112,7 @@ export default function AccountEarningsTeachersView() {
           onChange={(value: Date | null) => handleChange("month", value ? fDate(value, "M") : "")}
           sx={{ width: 1, minWidth: 180 }}
           localeText={{
-            toolbarTitle: "Wybierz datę",
+            toolbarTitle: "Wybierz miesiąc",
             cancelButtonLabel: "Anuluj",
           }}
           slotProps={{
