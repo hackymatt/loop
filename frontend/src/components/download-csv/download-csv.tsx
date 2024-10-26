@@ -32,7 +32,7 @@ export default function DownloadCSVButton({
 
   return (
     <>
-      {initiateDownload && <CSVDownload data={data} target="_blank" rel="noopener" />}
+      {initiateDownload && <CSVDownload data={data} target="_blank" />}
       <LoadingButton
         component="label"
         variant="contained"
