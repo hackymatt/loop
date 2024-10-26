@@ -14,7 +14,10 @@ export default function TeacherPage({ params }: { params: { id: string } }) {
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const decodedId = decodeUrl(params.id);
-  const teacherName = decodedId.slice(0, decodedId.lastIndexOf("-") - 1);
+  const teacherName = decodedId
+    .slice(0, decodedId.lastIndexOf("-") - 1)
+    .replace(/-/g, " ")
+    .toUpperCase();
 
   const metadata = createMetadata(
     `Instruktor: ${teacherName}`,
