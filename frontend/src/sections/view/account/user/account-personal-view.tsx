@@ -69,7 +69,7 @@ export default function AccountPersonalView() {
     street_address: userDetails?.street_address ?? "",
     zip_code: userDetails?.zip_code ?? "",
     city: userDetails?.city ?? "",
-    country: userDetails?.country ?? "",
+    country: userDetails?.country ?? "Polska",
     dob: userDetails?.dob ? new Date(userDetails?.dob) : undefined,
     gender: userDetails?.gender ? userDetails.gender : "Mężczyzna",
   };
@@ -162,6 +162,7 @@ export default function AccountPersonalView() {
             <DatePicker
               label="Data urodzenia"
               slotProps={{
+                field: { clearable: true, onClear: () => field.onChange("") },
                 textField: {
                   helperText: error?.message,
                   error: !!error?.message,

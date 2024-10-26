@@ -179,6 +179,7 @@ export default function AccountPostsView() {
           }
           sx={{ width: 1, minWidth: 180 }}
           slotProps={{
+            field: { clearable: true, onClear: () => handleChange("created_at", "") },
             textField: { size: "small", hiddenLabel: true, placeholder: "Data utworzenia" },
           }}
         />

@@ -201,6 +201,7 @@ export default function AccountCouponsView() {
           }
           sx={{ width: 1, minWidth: 180 }}
           slotProps={{
+            field: { clearable: true, onClear: () => handleChange("expiration_date_to", "") },
             textField: { size: "small", hiddenLabel: true, placeholder: "Ważny do" },
           }}
         />
