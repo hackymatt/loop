@@ -80,13 +80,13 @@ export default function LoginView() {
     clearErrors();
     try {
       await loginUser(data);
+      push(paths.account.personal);
+      enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
+    } catch (error) {
       if (isRegistered && isUnverified) {
         push(paths.verify);
         return;
       }
-      push(paths.account.personal);
-      enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
-    } catch (error) {
       if ((error as AxiosError).response?.status !== 403) {
         handleFormError(error);
       } else {

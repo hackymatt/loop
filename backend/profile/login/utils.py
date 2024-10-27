@@ -99,7 +99,7 @@ def facebook_get_user_info_request(params):
 def facebook_get_user_info(*, access_token: str) -> Dict[str, Any]:
     params = {
         "access_token": access_token,
-        "fields": "email,first_name,last_name,birthday,gender,picture.type(large)",
+        "fields": "email,first_name,last_name,gender,picture.type(large)",
     }
     response = facebook_get_user_info_request(params=params)
 
