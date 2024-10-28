@@ -137,13 +137,8 @@ class FacebookLoginAPIView(APIView):
         email = user_data["email"]
         first_name = user_data.get("first_name", "")
         last_name = user_data.get("last_name", "")
-        dob = user_data.get("birthday", None)
         gender = user_data.get("gender", "I")
         image_data = user_data.get("picture", "")
-
-        if dob:
-            month, day, year = dob.split("/")
-            dob = "-".join([year, month, day])
 
         if gender == "male":
             gender = "M"
@@ -163,7 +158,7 @@ class FacebookLoginAPIView(APIView):
             email=email,
             first_name=first_name,
             last_name=last_name,
-            dob=dob,
+            dob=None,
             gender=gender,
             image=image,
             join_type="Facebook",
