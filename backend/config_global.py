@@ -2,7 +2,6 @@ from django.conf import settings
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 
-LOCAL = settings.LOCAL
 
 FRONTEND_URL = settings.BASE_FRONTEND_URL
 

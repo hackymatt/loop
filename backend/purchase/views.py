@@ -23,7 +23,6 @@ import json
 from mailer.mailer import Mailer
 from notification.utils import notify
 from math import floor
-from config_global import LOCAL
 
 
 def confirm_purchase(status, purchases, payment: Payment):
@@ -211,7 +210,7 @@ class PurchaseViewSet(ModelViewSet):
         )
         instances = serializer.create(serializer.initial_data)
 
-        if total == 0 or LOCAL:
+        if total == 0:
             payment.status = "S"
             payment.save()
             status_code = status.HTTP_200_OK
