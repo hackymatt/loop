@@ -187,6 +187,39 @@ DATABASES = {
     }
 }
 
+# Cache
+# https://docs.djangoproject.com/en/5.0/topics/cache/
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.getenv("REDIS_URL", "redis://redis:6379/0"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {
+                "max_connections": 100,
+                "retry_on_timeout": True,
+            },
+            "COMPRESSOR": "django_redis.compressors.zlib.ZlibCompressor",
+            "IGNORE_EXCEPTIONS": True,
+        },
+    }
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
+CACHEOPS_REDIS = os.getenv("REDIS_URL", "redis://redis:6379/0")
+
+CACHEOPS_DEFAULTS = {"timeout": 60 * 60 * 24}
+CACHEOPS = {
+    "auth.user": {"ops": "get", "timeout": 60 * 15},
+    "auth.*": {"ops": ("fetch", "get")},
+    "auth.permission": {"ops": "all"},
+    "core.*": {
+        "ops": "all",
+    },
+}
+
 # Database backup
 DBBACKUP_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 DBBACKUP_STORAGE_OPTIONS = {
