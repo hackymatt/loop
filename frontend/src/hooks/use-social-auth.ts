@@ -35,7 +35,7 @@ export const useGoogleAuth = () => {
 export const useFacebookAuth = () => {
   const facebookUrl = "https://www.facebook.com/v19.0/dialog/oauth";
 
-  const scope = ["email", "user_birthday", "user_gender", "public_profile"].join(",");
+  const scope = ["email", "user_gender", "public_profile"].join(",");
 
   const state = generateCode(18);
 
