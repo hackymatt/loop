@@ -1,37 +1,33 @@
 import { decodeUrl, encodeUrl } from "./url-utils";
 
 describe("encodeUrl", () => {
-  // Encodes a simple alphanumeric string correctly
-  it("should encode alphanumeric string with hyphens instead of spaces", () => {
-    const input = "hello world";
-    const expectedOutput = "hello-world";
-    const result = encodeUrl(input);
-    expect(result).toBe(expectedOutput);
+  // Converts Polish characters to their mapped equivalents
+  it("should convert Polish characters to their mapped equivalents", () => {
+    const input = "Zażółć gęślą jaźń";
+    const expectedOutput = "Zazolc-gesla-jazn";
+    expect(encodeUrl(input)).toBe(expectedOutput);
   });
 
-  // Encodes an empty string without errors
+  // Handles empty string input
   it("should return an empty string when input is empty", () => {
     const input = "";
     const expectedOutput = "";
-    const result = encodeUrl(input);
-    expect(result).toBe(expectedOutput);
+    expect(encodeUrl(input)).toBe(expectedOutput);
   });
 });
 
 describe("decodeUrl", () => {
-  // Decodes a standard URL-encoded string correctly
-  it("should decode a standard URL-encoded string correctly", () => {
-    const encodedString = "Hello%20World%21";
-    const expectedDecodedString = "Hello World!";
-    const result = decodeUrl(encodedString);
-    expect(result).toBe(expectedDecodedString);
+  // Decode a simple encoded URL string
+  it("should return the original string when given a simple encoded URL", () => {
+    const encodedUrl = "https%3A%2F%2Fexample.com%2Fpath";
+    const expectedDecodedUrl = "https://example.com/path";
+    const result = decodeUrl(encodedUrl);
+    expect(result).toBe(expectedDecodedUrl);
   });
 
-  // Handles empty strings without errors
+  // Handle an empty string input
   it("should return an empty string when input is an empty string", () => {
-    const encodedString = "";
-    const expectedDecodedString = "";
-    const result = decodeUrl(encodedString);
-    expect(result).toBe(expectedDecodedString);
+    const result = decodeUrl("");
+    expect(result).toBe("");
   });
 });
