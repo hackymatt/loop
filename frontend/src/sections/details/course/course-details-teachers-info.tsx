@@ -61,10 +61,7 @@ function TeacherItem({ teacher }: TeacherItemProps) {
 
   const avatarUrl = teacher?.avatarUrl || genderAvatarUrl;
 
-  const path = useMemo(
-    () => `${teacher.name.toLowerCase()}-${teacher.id}`,
-    [teacher.id, teacher.name],
-  );
+  const path = useMemo(() => `${teacher.name}-${teacher.id}`, [teacher.id, teacher.name]);
 
   return (
     <Link

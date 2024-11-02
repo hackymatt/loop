@@ -223,7 +223,7 @@ export function PostView({ id }: { id: string }) {
                   <PrevNextButton
                     title={prevPost.title}
                     coverUrl={prevPost.coverUrl}
-                    href={`${prevPost.title.toLowerCase()}-${prevPost.id}`}
+                    href={`${prevPost.title}-${prevPost.id}`}
                   />
                 )}
                 {nextPost && (
@@ -231,7 +231,7 @@ export function PostView({ id }: { id: string }) {
                     isNext
                     title={nextPost.title}
                     coverUrl={nextPost.coverUrl}
-                    href={`${nextPost.title.toLowerCase()}-${nextPost.id}`}
+                    href={`${nextPost.title}-${nextPost.id}`}
                   />
                 )}
               </Box>

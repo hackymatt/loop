@@ -69,7 +69,7 @@ export default function Newsletter() {
               Zarejestruj się już teraz i otrzymaj <br /> zniżkę na swój pierwszy zakup
             </Box>
             <Typography
-              variant="h1"
+              variant="h2"
               sx={(theme) => ({
                 ...textGradient(
                   `90deg, ${theme.palette.primary.main} 20%, ${theme.palette.secondary.main} 100%`,

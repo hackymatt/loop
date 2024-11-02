@@ -53,7 +53,7 @@ function PostAuthorItem({ author }: PostAuthorItemProps) {
 
   const avatarUrl = author?.avatarUrl || genderAvatarUrl;
 
-  const path = useMemo(() => `${author.name.toLowerCase()}-${author.id}`, [author.id, author.name]);
+  const path = useMemo(() => `${author.name}-${author.id}`, [author.id, author.name]);
 
   return (
     <Box display="flex" gap={{ xs: 3, md: 4 }}>

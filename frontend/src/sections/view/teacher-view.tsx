@@ -35,7 +35,7 @@ export default function TeacherView({ id }: { id: string }) {
   const decodedId = decodeUrl(id);
   const recordId = decodedId.slice(decodedId.lastIndexOf("-") + 1);
 
-  const { data: teacher, isLoading: isLoadingTeacher } = useLecturer(recordId);
+  const { data: teacher, isLoading } = useLecturer(recordId);
 
   const metadata = useMemo(
     () =>
@@ -57,8 +57,6 @@ export default function TeacherView({ id }: { id: string }) {
       ),
     [teacher?.name],
   );
-
-  const isLoading = isLoadingTeacher;
 
   if (isLoading) {
     return <SplashScreen />;

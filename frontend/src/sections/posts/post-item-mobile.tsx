@@ -25,7 +25,7 @@ type Props = BoxProps & {
 };
 
 export function PostItemMobile({ post, onSiderbar, sx, ...other }: Props) {
-  const path = useMemo(() => `${post.title.toLowerCase()}-${post.id}`, [post.id, post.title]);
+  const path = useMemo(() => `${post.title}-${post.id}`, [post.id, post.title]);
   return (
     <Link href={`${paths.post}/${encodeUrl(path)}`} color="inherit" underline="none">
       <Box

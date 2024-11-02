@@ -45,7 +45,7 @@ export default function AccountCoursesTableRow({ row, onEdit, onDelete }: Props)
 
   const isInactive = useMemo(() => !row.active, [row.active]);
 
-  const path = useMemo(() => `${row.slug.toLowerCase()}-${row.id}`, [row.id, row.slug]);
+  const path = useMemo(() => `${row.slug}-${row.id}`, [row.id, row.slug]);
 
   return (
     <>
