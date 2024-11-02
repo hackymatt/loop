@@ -12,10 +12,10 @@ COPY . .
 ARG ENV=PROD
 ENV NEXT_PUBLIC_ENV=$ENV
 
-ARG API_URL=https://www.loop.edu.pl/api
+ARG API_URL=https://loop.edu.pl/api
 ENV NEXT_PUBLIC_API_URL=$API_URL
 
-ARG BASE_URL=https://www.loop.edu.pl
+ARG BASE_URL=https://loop.edu.pl
 ENV NEXT_PUBLIC_BASE_URL=$BASE_URL
 
 ARG GOOGLE_CLIENT_ID=570842553290-me2nmn43nr89bgglao8o3iak7i0k0reb.apps.googleusercontent.com
