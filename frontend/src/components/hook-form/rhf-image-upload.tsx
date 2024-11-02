@@ -80,13 +80,7 @@ const ImageInput = forwardRef(
             startIcon={<Iconify icon="carbon:add-large" />}
           >
             Dodaj zdjęcie
-            <input
-              ref={imageRef}
-              hidden
-              type="file"
-              onChange={handleFilePick}
-              accept=".jpg,.jpeg,.png,.webp"
-            />
+            <input ref={imageRef} hidden type="file" onChange={handleFilePick} accept="image/*" />
           </LoadingButton>
         ) : (
           <LoadingButton
