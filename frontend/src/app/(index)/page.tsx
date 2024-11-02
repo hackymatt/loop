@@ -7,7 +7,7 @@ import HomeView from "src/sections/view/home-view";
 
 export const metadata = createMetadata(
   "Zostań lepszym programistą już dziś!",
-  "Naucz się programować w loop – oferujemy kursy Python, JavaScript, C++, SQL, R oraz wiele innych. Zdobądź certyfikat uznawany na rynku i rozwijaj swoją karierę IT z najlepszymi instruktorami, korzystając z nowoczesnych metod nauki i materiałów dostępnych 24/7.",
+  "Naucz się programować w loop – oferujemy kursy Python, JavaScript, C++, oraz wiele innych. Rozwijaj swoją karierę IT z najlepszymi instruktorami, korzystając z nowoczesnych metod nauki i materiałów dostępnych 24/7.",
   [
     "programowanie dla początkujących",
     "kursy programowania online",

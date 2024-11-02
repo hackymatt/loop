@@ -243,7 +243,7 @@ function LandingAbout() {
             textAlign: { xs: "center", md: "unset" },
           }}
         >
-          <Typography variant="h1">
+          <Typography variant="h2">
             Zobacz co{" "}
             <Box component="span" sx={{ color: "primary.main", textDecoration: "underline" }}>
               nas
@@ -294,7 +294,7 @@ function LandingSuggestions() {
             textAlign: { xs: "center", md: "unset" },
           }}
         >
-          <Typography variant="h1">
+          <Typography variant="h2">
             Nie znalazłeś kursu? Zróbmy to{" "}
             <Box component="span" sx={{ color: "primary.main", textDecoration: "underline" }}>
               razem
@@ -345,7 +345,7 @@ function LandingNewTeacher() {
             textAlign: { xs: "center", md: "unset" },
           }}
         >
-          <Typography variant="h1">
+          <Typography variant="h2">
             Dołącz do{" "}
             <Box component="span" sx={{ color: "primary.main", textDecoration: "underline" }}>
               nas
@@ -400,7 +400,7 @@ function LandingUserTest() {
             textAlign: { xs: "center", md: "unset" },
           }}
         >
-          <Typography variant="h1">
+          <Typography variant="h2">
             Czy{" "}
             <Box component="span" sx={{ color: "text.disabled" }}>
               programowanie

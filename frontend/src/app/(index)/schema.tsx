@@ -10,7 +10,7 @@ const ClientSchema = () => {
     url: "https://loop.edu.pl",
     logo: "https://loop.edu.pl/logo/logo.svg",
     description:
-      "Naucz się programować w loop – oferujemy kursy Python, JavaScript, C++, SQL, R oraz wiele innych. Zdobądź certyfikat uznawany na rynku i rozwijaj swoją karierę IT z najlepszymi instruktorami, korzystając z nowoczesnych metod nauki i materiałów dostępnych 24/7.",
+      "Naucz się programować w loop – oferujemy kursy Python, JavaScript, C++, oraz wiele innych. Rozwijaj swoją karierę IT z najlepszymi instruktorami, korzystając z nowoczesnych metod nauki i materiałów dostępnych 24/7.",
     foundingDate: "2024-01-01",
     address: {
       "@type": "PostalAddress",
