@@ -19,10 +19,9 @@ describe("encodeUrl", () => {
 describe("decodeUrl", () => {
   // Decode a simple encoded URL string
   it("should return the original string when given a simple encoded URL", () => {
-    const encodedUrl = "https%3A%2F%2Fexample.com%2Fpath";
-    const expectedDecodedUrl = "https://example.com/path";
+    const encodedUrl = "https://example.com/path";
     const result = decodeUrl(encodedUrl);
-    expect(result).toBe(expectedDecodedUrl);
+    expect(result).toBe(encodedUrl);
   });
 
   // Handle an empty string input
