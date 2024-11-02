@@ -15,10 +15,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const decodedId = decodeUrl(params.id);
 
-  const courseTitle = decodedId
-    .slice(0, decodedId.lastIndexOf("-"))
-    .replace(/-/g, " ")
-    .toUpperCase();
+  const courseTitle = decodedId.slice(0, decodedId.lastIndexOf("-")).replace(/-/g, " ");
 
   const metadata = createMetadata(
     `Kurs: ${courseTitle}`,

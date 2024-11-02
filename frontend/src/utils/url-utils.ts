@@ -1,18 +1,39 @@
-function createSEOUrl(text: string) {
-  return text
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
-}
-
 export function encodeUrl(text: string) {
-  return createSEOUrl(encodeURIComponent(text).replace(/%20/g, "-"));
+  const polishCharsMap: { [key: string]: string } = {
+    ą: "a",
+    ć: "c",
+    ę: "e",
+    ł: "l",
+    ń: "n",
+    ó: "o",
+    ś: "s",
+    ź: "z",
+    ż: "z",
+    Ą: "A",
+    Ć: "C",
+    Ę: "E",
+    Ł: "L",
+    Ń: "N",
+    Ó: "O",
+    Ś: "S",
+    Ź: "Z",
+    Ż: "Z",
+  };
+
+  // Replace Polish characters with mapped equivalents
+  text = text
+    .split("")
+    .map((char) => polishCharsMap[char] || char)
+    .join("");
+
+  // Allow letters (case-sensitive), numbers, spaces, periods, and hyphens only
+  return text
+    .replace(/[^a-zA-Z0-9\s.-]/g, "") // Keep case sensitivity
+    .trim()
+    .replace(/\s+/g, "-") // Convert spaces to hyphens
+    .replace(/-+/g, "-"); // Remove multiple hyphens
 }
 
 export function decodeUrl(text: string) {
-  return decodeURIComponent(text);
+  return text;
 }
