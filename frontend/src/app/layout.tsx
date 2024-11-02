@@ -34,7 +34,7 @@ export const metadata = {
     url: "https://loop.edu.pl",
     images: "https://loop.edu.pl/logo/logo.svg",
     description:
-      "Naucz się programować w loop – oferujemy kursy Python, JavaScript, C++, SQL, R oraz wiele innych. Zdobądź certyfikat uznawany na rynku i rozwijaj swoją karierę IT z najlepszymi instruktorami, korzystając z nowoczesnych metod nauki i materiałów dostępnych 24/7.",
+      "Naucz się programować w loop – oferujemy kursy Python, JavaScript, C++, oraz wiele innych. Rozwijaj swoją karierę IT z najlepszymi instruktorami, korzystając z nowoczesnych metod nauki i materiałów dostępnych 24/7.",
     title: "Zostań lepszym programistą już dziś! • loop",
   },
   alternates: {
