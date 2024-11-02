@@ -53,7 +53,7 @@ export default function CourseItem({ course, vertical }: Props) {
 
   const avatarUrl = teachers?.[0]?.avatarUrl || genderAvatarUrl;
 
-  const path = useMemo(() => `${slug.toLowerCase()}-${id}`, [id, slug]);
+  const path = useMemo(() => `${slug}-${id}`, [id, slug]);
 
   return (
     <Link

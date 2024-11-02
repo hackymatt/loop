@@ -47,7 +47,7 @@ export default function TeacherItem({ teacher, vertical }: Props) {
 
   const photoUrl = avatarUrl || genderAvatarUrl;
 
-  const path = useMemo(() => `${name.toLowerCase()}-${id}`, [id, name]);
+  const path = useMemo(() => `${name}-${id}`, [id, name]);
 
   return (
     <Link

@@ -15,6 +15,7 @@ import { ToastProvider } from "src/components/toast";
 import CookiesManager from "src/components/cookies/cookies-manager";
 import { ReactQueryProvider } from "./(index)/react-query-provider";
 import GoogleAnalytics from "./(index)/google-analytics";
+import Schema from "./(index)/schema";
 
 // ----------------------------------------------------------------------
 
@@ -28,6 +29,17 @@ export const viewport = {
 export const metadata = {
   manifest: "/manifest.json",
   icons: [{ rel: "icon", url: "/favicon/favicon.ico" }],
+  openGraph: {
+    type: "website",
+    url: "https://loop.edu.pl",
+    images: "https://loop.edu.pl/logo/logo.svg",
+    description:
+      "Naucz się programować w loop – oferujemy kursy Python, JavaScript, C++, SQL, R oraz wiele innych. Zdobądź certyfikat uznawany na rynku i rozwijaj swoją karierę IT z najlepszymi instruktorami, korzystając z nowoczesnych metod nauki i materiałów dostępnych 24/7.",
+    title: "Zostań lepszym programistą już dziś! • loop",
+  },
+  alternates: {
+    canonical: "https://loop.edu.pl/",
+  },
 };
 
 type Props = {
@@ -53,6 +65,7 @@ export default function RootLayout({ children }: Props) {
                     <MotionLazy>
                       <ProgressBar />
                       <CookiesManager />
+                      <Schema />
                       <GoogleAnalytics />
                       {children}
                     </MotionLazy>

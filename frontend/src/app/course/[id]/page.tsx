@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   const decodedId = decodeUrl(params.id);
 
   const courseTitle = decodedId
-    .slice(0, decodedId.lastIndexOf("-") - 1)
+    .slice(0, decodedId.lastIndexOf("-"))
     .replace(/-/g, " ")
     .toUpperCase();
 

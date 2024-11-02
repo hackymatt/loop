@@ -77,7 +77,7 @@ type PostItemProps = PaperProps & {
 };
 
 export function PostItem({ post, sx, ...other }: PostItemProps) {
-  const path = useMemo(() => `${post.title.toLowerCase()}-${post.id}`, [post.id, post.title]);
+  const path = useMemo(() => `${post.title}-${post.id}`, [post.id, post.title]);
   return (
     <Link
       component={RouterLink}

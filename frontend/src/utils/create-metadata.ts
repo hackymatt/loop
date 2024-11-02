@@ -20,6 +20,7 @@ export const createMetadata = (title?: string, description?: string, keywords?: 
       "kursy Git",
       "kursy programistyczne",
       "loop szkoła programowania",
+      "loop",
     ],
   };
 

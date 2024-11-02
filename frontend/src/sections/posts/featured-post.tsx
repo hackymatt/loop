@@ -31,7 +31,7 @@ type Props = BoxProps & {
 };
 
 export function FeaturedPost({ post, sx, ...other }: Props) {
-  const path = useMemo(() => `${post.title.toLowerCase()}-${post.id}`, [post.id, post.title]);
+  const path = useMemo(() => `${post.title}-${post.id}`, [post.id, post.title]);
   return (
     <Link
       component={RouterLink}

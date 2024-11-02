@@ -85,7 +85,7 @@ const ImageInput = forwardRef(
               hidden
               type="file"
               onChange={handleFilePick}
-              accept=".jpg,.jpeg,.png"
+              accept=".jpg,.jpeg,.png,.webp"
             />
           </LoadingButton>
         ) : (

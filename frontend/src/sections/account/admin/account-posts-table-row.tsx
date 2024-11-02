@@ -45,7 +45,7 @@ export default function AccountPostsTableRow({ row, onEdit, onDelete }: Props) {
 
   const isInactive = useMemo(() => !row.active, [row.active]);
 
-  const path = useMemo(() => `${row.title.toLowerCase()}-${row.id}`, [row.id, row.title]);
+  const path = useMemo(() => `${row.title}-${row.id}`, [row.id, row.title]);
 
   return (
     <>
