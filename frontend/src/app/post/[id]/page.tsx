@@ -14,7 +14,7 @@ export default function PostPage({ params }: { params: { id: string } }) {
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const decodedId = decodeUrl(params.id);
-  const postTitle = decodedId.slice(0, decodedId.lastIndexOf("-")).replace(/-/g, " ").toUpperCase();
+  const postTitle = decodedId.slice(0, decodedId.lastIndexOf("-")).replace(/-/g, " ");
 
   const metadata = createMetadata(
     `Artykuł: ${postTitle}`,
