@@ -23,6 +23,7 @@ from django.db.models import (
     OuterRef,
     Subquery,
     IntegerField,
+    DecimalField,
 )
 from django.contrib.auth.models import User
 from django.db.models.functions import Concat, Coalesce
@@ -237,13 +238,27 @@ class LecturerProfileQuerySet(QuerySet):
         )
 
     def add_lessons_duration(self):
+        Lesson = apps.get_model("lesson", "Lesson")
+        duration = (
+            Lesson.objects.filter(teaching_lesson__lecturer=OuterRef("pk"))
+            .values("teaching_lesson__lecturer")
+            .annotate(total_duration=Sum("duration"))
+            .values("total_duration")[:1]
+        )
         return self.annotate(
-            lessons_duration=Sum("teaching_lecturer__lesson__duration", distinct=True)
+            lessons_duration=Subquery(duration, output_field=IntegerField())
         )
 
     def add_lessons_price(self):
+        Lesson = apps.get_model("lesson", "Lesson")
+        prices = (
+            Lesson.objects.filter(teaching_lesson__lecturer=OuterRef("pk"))
+            .values("teaching_lesson__lecturer")
+            .annotate(total_price=Sum("price"))
+            .values("total_price")[:1]
+        )
         return self.annotate(
-            lessons_price=Sum("teaching_lecturer__lesson__price", distinct=True)
+            lessons_price=Subquery(prices, output_field=DecimalField())
         )
 
     def add_lessons_count(self):
