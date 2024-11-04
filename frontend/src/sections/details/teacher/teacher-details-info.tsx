@@ -10,7 +10,7 @@ import { paths } from "src/routes/paths";
 import { useRouter } from "src/routes/hooks";
 
 import { fCurrency } from "src/utils/format-number";
-import { trackEvent } from "src/utils/google-analytics";
+import { trackEvents } from "src/utils/track-events";
 
 import { useCreateCart } from "src/api/carts/carts";
 import { useCreateWishlist } from "src/api/wishlists/wishlists";
@@ -49,7 +49,7 @@ export default function TeacherDetailsInfo({ teacher }: Props) {
         );
         await Promise.allSettled(wishlistItems);
         enqueueSnackbar("Pakiet lekcji został dodany do ulubionych", { variant: "success" });
-        trackEvent("add_to_wishlist", "teacher", "Teacher added to wishlist", teacher.name);
+        trackEvents("add_to_wishlist", "teacher", "Teacher added to wishlist", teacher.name);
       } catch (error) {
         enqueueSnackbar("Wystąpił błąd podczas dodawania do ulubionych", { variant: "error" });
       }
@@ -68,7 +68,7 @@ export default function TeacherDetailsInfo({ teacher }: Props) {
         );
         await Promise.allSettled(cartItems);
         enqueueSnackbar("Pakiet lekcji został dodany do koszyka", { variant: "success" });
-        trackEvent("add_to_cart", "teacher", "Teacher added to cart", teacher.name);
+        trackEvents("add_to_cart", "teacher", "Teacher added to cart", teacher.name);
       } catch (error) {
         enqueueSnackbar("Wystąpił błąd podczas dodawania do koszyka", { variant: "error" });
       }

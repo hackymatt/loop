@@ -13,7 +13,7 @@ import { paths } from "src/routes/paths";
 import { useRouter } from "src/routes/hooks";
 import { RouterLink } from "src/routes/components";
 
-import { trackEvent } from "src/utils/google-analytics";
+import { trackEvents } from "src/utils/track-events";
 
 import { useCarts } from "src/api/carts/carts";
 import { useCreatePurchase } from "src/api/purchase/purchase";
@@ -60,7 +60,7 @@ export default function CartView() {
         return;
       }
 
-      trackEvent(
+      trackEvents(
         "purchase_started",
         "purchase",
         "Purchase started",

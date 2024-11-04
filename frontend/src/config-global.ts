@@ -12,6 +12,7 @@ export const GITHUB_CLIENT_ID = env.GITHUB_CLIENT_ID ?? "";
 export const GITHUB_REPO = env.GITHUB_REPO ?? "";
 
 export const GOOGLE_ANALYTICS_ID = env.GOOGLE_ANALYTICS_ID ?? "";
+export const FACEBOOK_PIXEL_ID = env.FACEBOOK_PIXEL_ID ?? "";
 
 export const MIN_PASSWORD_LENGTH = Number(env.MIN_PASSWORD_LENGTH) ?? 8;
 export const LESSON_DURATION_MULTIPLIER = Number(env.LESSON_DURATION_MULTIPLIER) ?? 30;

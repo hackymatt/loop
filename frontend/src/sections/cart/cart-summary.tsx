@@ -13,7 +13,7 @@ import { Checkbox, FormHelperText, FormControlLabel } from "@mui/material";
 import { useBoolean } from "src/hooks/use-boolean";
 
 import { fCurrency } from "src/utils/format-number";
-import { trackEvent } from "src/utils/google-analytics";
+import { trackEvents } from "src/utils/track-events";
 
 import { validateCoupon } from "src/api/coupons/coupon-validation";
 import { generalAcceptance, paymentAcceptance } from "src/consts/acceptances";
@@ -74,7 +74,7 @@ export default function CartSummary({ total, onPurchase, isLoading, error }: Pro
           0,
         ),
       );
-      trackEvent("apply_coupon", "coupon", "Coupon applied", coupon);
+      trackEvents("apply_coupon", "coupon", "Coupon applied", coupon);
     }
   };
 

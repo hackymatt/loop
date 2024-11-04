@@ -29,7 +29,7 @@ import { useRouter } from "src/routes/hooks/use-router";
 import { useBoolean } from "src/hooks/use-boolean";
 
 import { getTimezone } from "src/utils/get-timezone";
-import { trackEvent } from "src/utils/google-analytics";
+import { trackEvents } from "src/utils/track-events";
 import { getGenderAvatar } from "src/utils/get-gender-avatar";
 import { fCurrency, fShortenNumber } from "src/utils/format-number";
 
@@ -219,7 +219,7 @@ export default function CourseDetailsLessonItem({
     try {
       await createWishlistItem({ lesson: lesson.id });
       enqueueSnackbar("Lekcja została dodana do ulubionych", { variant: "success" });
-      trackEvent("add_to_wishlist", "lesson", "Lesson added to wishlist", lesson.title);
+      trackEvents("add_to_wishlist", "lesson", "Lesson added to wishlist", lesson.title);
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd podczas dodawania do ulubionych", { variant: "error" });
     }
@@ -233,7 +233,7 @@ export default function CourseDetailsLessonItem({
     try {
       await createCartItem({ lesson: lesson.id });
       enqueueSnackbar("Lekcja została dodana do koszyka", { variant: "success" });
-      trackEvent("add_to_cart", "lesson", "Lesson added to cart", lesson.title);
+      trackEvents("add_to_cart", "lesson", "Lesson added to cart", lesson.title);
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd podczas dodawania do koszyka", { variant: "error" });
     }

@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
-import { trackEvent } from "src/utils/google-analytics";
+import { trackEvents } from "src/utils/track-events";
 
 import { useCarts } from "src/api/carts/carts";
 import { useDeleteCart } from "src/api/carts/cart";
@@ -40,7 +40,7 @@ export default function OrderCompletedView() {
           );
         };
         clearCart();
-        trackEvent(
+        trackEvents(
           "purchase_completed",
           "purchase",
           "Purchase completed",

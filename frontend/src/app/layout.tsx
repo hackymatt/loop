@@ -16,6 +16,7 @@ import CookiesManager from "src/components/cookies/cookies-manager";
 import { ReactQueryProvider } from "./(index)/react-query-provider";
 import GoogleAnalytics from "./(index)/google-analytics";
 import Schema from "./(index)/schema";
+import FacebookPixel from "./(index)/facebook-pixel";
 
 // ----------------------------------------------------------------------
 
@@ -67,6 +68,7 @@ export default function RootLayout({ children }: Props) {
                       <CookiesManager />
                       <Schema />
                       <GoogleAnalytics />
+                      <FacebookPixel />
                       {children}
                     </MotionLazy>
                   </ToastProvider>
