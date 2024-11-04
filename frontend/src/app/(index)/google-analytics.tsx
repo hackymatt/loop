@@ -1,7 +1,7 @@
 "use client";
 
 import Script from "next/script";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import { usePathname, useSearchParams } from "src/routes/hooks";
 
@@ -12,26 +12,30 @@ import { pageView, updateConsent } from "src/utils/google-analytics";
 
 import { ENV, GOOGLE_ANALYTICS_ID } from "src/config-global";
 
-const ClientGoogleAnalytics = () => {
+export default function GoogleAnalytics() {
   const measurementId = GOOGLE_ANALYTICS_ID;
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { defaultCookies } = useCookies();
   const { state } = useLocalStorage("cookies", { ...defaultCookies, consent: false });
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    const url = `${pathname}${searchParams.toString()}`;
+    setIsMounted(true);
+  }, []);
 
-    if (measurementId) {
+  useEffect(() => {
+    if (isMounted && measurementId) {
+      const url = `${pathname}${searchParams.toString()}`;
       pageView(measurementId, url);
+
+      updateConsent({
+        analytics_storage: state.analytics && ENV === "PROD" ? "granted" : "denied",
+      });
     }
+  }, [isMounted, measurementId, pathname, searchParams, state.analytics]);
 
-    updateConsent({
-      analytics_storage: state.analytics && ENV === "PROD" ? "granted" : "denied",
-    });
-  }, [measurementId, pathname, searchParams, state.analytics]);
-
-  if (typeof window === "undefined") {
+  if (!isMounted) {
     return null;
   }
 
@@ -46,26 +50,18 @@ const ClientGoogleAnalytics = () => {
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('consent', 'default', {
-                    'analytics_storage': 'denied'
-                });
-                gtag('config', '${measurementId}', {
-                    page_path: window.location.pathname,
-                });
-                `,
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('consent', 'default', {
+                'analytics_storage': 'denied'
+            });
+            gtag('config', '${measurementId}', {
+                page_path: window.location.pathname,
+            });
+          `,
         }}
       />
     </>
   );
-};
-
-export default function GoogleAnalytics() {
-  if (typeof window === "undefined") {
-    return null;
-  }
-
-  return <ClientGoogleAnalytics />;
 }

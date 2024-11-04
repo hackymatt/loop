@@ -90,6 +90,7 @@
     "@svgr/webpack": "^8.1.0",
     "@testing-library/jest-dom": "^6.2.0",
     "@testing-library/react": "^14.1.2",
+    "@types/facebook-pixel": "^0.0.31",
     "@types/google-map-react": "^2.1.10",
     "@types/gtag.js": "^0.0.20",
     "@types/jest": "^29.5.11",

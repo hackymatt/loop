@@ -14,7 +14,7 @@ import { RouterLink } from "src/routes/components";
 import { useRouter } from "src/routes/hooks/use-router";
 
 import { fCurrency } from "src/utils/format-number";
-import { trackEvent } from "src/utils/google-analytics";
+import { trackEvents } from "src/utils/track-events";
 
 import { useCreateCart } from "src/api/carts/carts";
 import { useWishlists } from "src/api/wishlists/wishlists";
@@ -58,7 +58,7 @@ export default function WishlistView() {
       ]);
       await Promise.allSettled(cartItems);
       enqueueSnackbar("Ulubione zostały dodane do koszyka", { variant: "success" });
-      trackEvent(
+      trackEvents(
         "add_to_cart",
         "wishlist_to_cart",
         "Wishlist items added to cart",
