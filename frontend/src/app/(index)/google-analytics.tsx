@@ -12,7 +12,7 @@ import { pageView, updateConsent } from "src/utils/google-analytics";
 
 import { ENV, GOOGLE_ANALYTICS_ID } from "src/config-global";
 
-export default function GoogleAnalytics() {
+const ClientGoogleAnalytics = () => {
   const measurementId = GOOGLE_ANALYTICS_ID;
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -25,10 +25,10 @@ export default function GoogleAnalytics() {
   }, []);
 
   useEffect(() => {
-    if (isMounted && measurementId) {
-      const url = `${pathname}${searchParams.toString()}`;
-      pageView(measurementId, url);
+    const url = `${pathname}${searchParams.toString()}`;
 
+    if (isMounted && measurementId) {
+      pageView(measurementId, url);
       updateConsent({
         analytics_storage: state.analytics && ENV === "PROD" ? "granted" : "denied",
       });
@@ -50,18 +50,26 @@ export default function GoogleAnalytics() {
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('consent', 'default', {
-                'analytics_storage': 'denied'
-            });
-            gtag('config', '${measurementId}', {
-                page_path: window.location.pathname,
-            });
-          `,
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('consent', 'default', {
+                    'analytics_storage': 'denied'
+                });
+                gtag('config', '${measurementId}', {
+                    page_path: window.location.pathname,
+                });
+                `,
         }}
       />
     </>
   );
+};
+
+export default function GoogleAnalytics() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  return <ClientGoogleAnalytics />;
 }

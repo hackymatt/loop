@@ -3,8 +3,6 @@
 import Script from "next/script";
 import { useState, useEffect } from "react";
 
-import { usePathname, useSearchParams } from "src/routes/hooks";
-
 import { useCookies } from "src/hooks/use-cookies";
 import { useLocalStorage } from "src/hooks/use-local-storage";
 
@@ -12,10 +10,8 @@ import { pageView, updateConsent } from "src/utils/facebook-pixel";
 
 import { ENV, FACEBOOK_PIXEL_ID } from "src/config-global";
 
-export default function FacebookPixel() {
+const ClientFacebookPixel = () => {
   const measurementId = FACEBOOK_PIXEL_ID;
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const { defaultCookies } = useCookies();
   const { state } = useLocalStorage("cookies", { ...defaultCookies, consent: false });
   const [isMounted, setIsMounted] = useState(false);
@@ -29,7 +25,7 @@ export default function FacebookPixel() {
       pageView();
       updateConsent(state.marketing && ENV === "PROD" ? "grant" : "revoke");
     }
-  }, [isMounted, measurementId, pathname, searchParams, state.marketing]);
+  }, [isMounted, measurementId, state.marketing]);
 
   if (!isMounted) {
     return null;
@@ -64,4 +60,12 @@ export default function FacebookPixel() {
       </noscript>
     </>
   );
+};
+
+export default function FacebookPixel() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  return <ClientFacebookPixel />;
 }
