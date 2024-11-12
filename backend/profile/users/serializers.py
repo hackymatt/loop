@@ -4,6 +4,7 @@ from rest_framework.serializers import (
     CharField,
     BooleanField,
     SerializerMethodField,
+    ValidationError,
 )
 from drf_extra_fields.fields import Base64ImageField
 from profile.models import Profile, LecturerProfile, AdminProfile, StudentProfile
@@ -40,6 +41,12 @@ class UserSerializer(ModelSerializer):
             "verification_code_created_at",
             "user",
         )
+
+    def validate_user_type(self, user_type):
+        if not user_type[0] in ["A", "W", "S"]:
+            raise ValidationError("Niepoprawna wartość dla user_type")
+
+        return user_type
 
     def update(self, instance: Profile, validated_data):
         current_user_type = instance.user_type
