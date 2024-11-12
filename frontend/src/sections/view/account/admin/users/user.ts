@@ -15,7 +15,7 @@ export const defaultValues = {
   street_address: "",
   zip_code: "",
   city: "",
-  country: "",
+  country: "Polska",
 };
 
 export const schema = Yup.object().shape({

@@ -64,7 +64,7 @@ export const useUserFields = () => {
       <RHFSelect
         name="user_type"
         label="Typ"
-        options={Object.keys(UserType).map((userType: string) => ({
+        options={Object.values(UserType).map((userType: string) => ({
           label: userType,
           value: userType,
         }))}
