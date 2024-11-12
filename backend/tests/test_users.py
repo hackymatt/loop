@@ -372,6 +372,32 @@ class UsersTest(APITestCase):
             is_student_profile_found(get_profile(get_user(user_data["email"])))
         )
 
+    def test_change_user_type(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # new data
+        new_data = {
+            "first_name": "Name",
+            "last_name": "LastName",
+            "email": "lecturer_1@example.com",
+            "phone_number": "999888777",
+            "dob": "1900-01-01",
+            "gender": "M",
+            "user_type": "T",
+            "rate": 100,
+            "commission": 1,
+            "street_address": "abc",
+            "zip_code": "30-100",
+            "city": "Miasto",
+            "country": "Polska",
+            "image": "",
+        }
+        response = self.client.put(
+            f"{self.endpoint}/{self.lecturer_profile_1.profile.id}", new_data
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_amend_financial_details_authenticated_change(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
