@@ -71,7 +71,7 @@ function TeacherItem({ teacher }: TeacherItemProps) {
       underline="none"
     >
       <Paper variant="outlined" sx={{ p: 3, borderRadius: 2 }}>
-        <Stack direction="row" spacing={3} flexWrap="wrap">
+        <Stack direction="row" spacing={3} flexWrap="nowrap">
           <Avatar src={avatarUrl} sx={{ width: 72, height: 72 }} />
 
           <Stack spacing={1} flexGrow={1}>
