@@ -21,7 +21,7 @@ class StatsAPIView(APIView):
 
     def get(self, request):
         students_count = StudentProfile.objects.count() - 1
-        course_count = Course.objects.count()
+        course_count = Course.objects.filter(active=True).count()
         technology_count = Technology.objects.count()
         lecturers_count = LecturerProfile.objects.count() - 1
         purchase_count = Purchase.objects.filter(payment__status="S").count()
