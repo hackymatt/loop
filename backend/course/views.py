@@ -26,6 +26,7 @@ class CourseViewSet(ModelViewSet):
         .add_technologies()
         .add_lecturers_ids()
         .all()
+        .exclude(lecturers_ids=[None])
         .order_by("id")
     )
     serializer_class = CourseSerializer
@@ -83,7 +84,7 @@ class CourseViewSet(ModelViewSet):
         if user.is_superuser:
             return super().retrieve(request, *args, **kwargs)
 
-        if not course.active:
+        if not (course.active or len(course.lecturers_ids) == 0):
             return Response(
                 status=status.HTTP_404_NOT_FOUND,
                 data={"detail": "Nie znaleziono."},

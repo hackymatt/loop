@@ -34,12 +34,12 @@ export default function CourseDetailsSummary({ course }: Props) {
 
         <Stack spacing={1}>
           {course.learnList?.map((learn) => (
-            <Stack key={learn} direction="row" alignItems="center">
+            <Stack key={learn} direction="row" alignItems="center" spacing={1.5}>
               <Box
                 sx={{
-                  mr: 1.5,
                   width: 20,
                   height: 20,
+                  flexShrink: 0,
                   display: "flex",
                   borderRadius: "50%",
                   alignItems: "center",

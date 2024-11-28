@@ -252,6 +252,8 @@ class CourseTest(APITestCase):
             title="Module 2", lessons=[self.lesson_3, self.lesson_4]
         )
 
+        create_teaching(lecturer=self.lecturer_profile_1, lesson=self.lesson_3)
+
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
@@ -1952,6 +1954,39 @@ class CourseOrderTest(APITestCase):
                 self.topic_2,
             ],
             modules=[self.module_3],
+        )
+
+        create_teaching(
+            lesson=self.lesson_1,
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.lesson_2,
+            lecturer=self.lecturer_profile_1,
+        )
+        create_teaching(
+            lesson=self.lesson_1,
+            lecturer=self.lecturer_profile_2,
+        )
+        create_teaching(
+            lesson=self.lesson_2,
+            lecturer=self.lecturer_profile_2,
+        )
+        create_teaching(
+            lesson=self.lesson_3,
+            lecturer=self.lecturer_profile_2,
+        )
+        create_teaching(
+            lesson=self.lesson_4,
+            lecturer=self.lecturer_profile_2,
+        )
+        create_teaching(
+            lesson=self.lesson_5,
+            lecturer=self.lecturer_profile_2,
+        )
+        create_teaching(
+            lesson=self.lesson_6,
+            lecturer=self.lecturer_profile_2,
         )
 
         self.purchase = create_purchase(
