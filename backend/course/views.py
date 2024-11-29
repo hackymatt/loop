@@ -26,7 +26,6 @@ class CourseViewSet(ModelViewSet):
         .add_technologies()
         .add_lecturers_ids()
         .all()
-        .exclude(lecturers_ids=[None])
         .order_by("id")
     )
     serializer_class = CourseSerializer
@@ -64,7 +63,7 @@ class CourseViewSet(ModelViewSet):
 
             active = self.request.query_params.get("active", None)
             if not active:
-                return queryset.filter(active=True).all().distinct()
+                return queryset.exclude(lecturers_ids=[None]).filter(active=True).all().distinct()
 
             return queryset.distinct()
 
