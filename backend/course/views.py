@@ -61,9 +61,11 @@ class CourseViewSet(ModelViewSet):
             if user.is_superuser:
                 return queryset.distinct()
 
+            queryset = queryset.exclude(lecturers_ids=[None])
+
             active = self.request.query_params.get("active", None)
             if not active:
-                return queryset.exclude(lecturers_ids=[None]).filter(active=True).all().distinct()
+                return queryset.filter(active=True).all().distinct()
 
             return queryset.distinct()
 
