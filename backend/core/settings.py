@@ -405,7 +405,7 @@ MIN_PASSWORD_LENGTH = int(os.environ.get("MIN_PASSWORD_LENGTH", "8"))
 LESSON_DURATION_MULTIPLIER = int(os.environ.get("LESSON_DURATION_MULTIPLIER", "30"))
 CANCELLATION_TIME = int(os.environ.get("CANCELLATION_TIME", "24"))
 REMINDER_TIME = int(os.environ.get("REMINDER_TIME", "24"))
-MIN_STUDENTS_THRESHOLD = int(os.environ.get("MIN_STUDENTS_THRESHOLD", "2"))
+MIN_STUDENTS_THRESHOLD = float(os.environ.get("MIN_STUDENTS_THRESHOLD", "2"))
 
 PAYMENT_SERVER = os.environ.get("PAYMENT_SERVER", "https://sandbox.przelewy24.pl")
 PAYMENT_MERCHANT_ID = int(os.environ.get("PAYMENT_MERCHANT_ID", "-1"))
