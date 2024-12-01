@@ -7,6 +7,13 @@ export const socials = [
     url: "https://www.facebook.com/profile.php?id=61560936969271",
   },
   {
+    value: "instagram",
+    label: "Instagram",
+    icon: "carbon:logo-instagram",
+    color: "#E02D69",
+    url: "https://www.instagram.com/loopedupl/",
+  },
+  {
     value: "linkedin",
     label: "Linkedin",
     icon: "carbon:logo-linkedin",
