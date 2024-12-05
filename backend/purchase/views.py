@@ -12,6 +12,7 @@ from purchase.serializers import (
 )
 from purchase.models import Purchase, Payment
 from purchase.filters import PurchaseFilter
+from purchase.utils import Invoice
 from profile.models import Profile, StudentProfile
 from profile.models import Profile
 from lesson.models import Lesson
@@ -26,19 +27,21 @@ from math import floor
 
 
 def confirm_purchase(status, purchases, payment: Payment):
+    payment_successful = status == "S"
+
     title = (
         "Twój zakup jest zakończony!"
-        if status == "S"
+        if payment_successful
         else "Twój zakup nie powiódł się."
     )
     description = (
         "Przejdź do swojego konta i zarezerwuj termin."
-        if status == "S"
+        if payment_successful
         else "Przejdź do koszyka i ponów płatność."
     )
     path = (
         "/account/lessons?sort_by=-created_at&page_size=10"
-        if status == "S"
+        if payment_successful
         else "/cart"
     )
     amount = payment.amount / 100
@@ -61,15 +64,26 @@ def confirm_purchase(status, purchases, payment: Payment):
             "description": description,
             "lessons": [purchase.lesson.title for purchase in purchases],
             "amount": f"{amount:.2f}",
-            "status": "Otrzymana" if status == "S" else "Odrzucona",
+            "status": "Otrzymana" if payment_successful else "Odrzucona",
         }
     }
+
+    attachments = []
+    invoice = Invoice(purchases=purchases, payment=payment)
+    if payment_successful:
+        invoice_path = invoice.create()
+        attachments = [invoice_path]
+
     mailer.send(
         email_template="purchase_confirmation.html",
         to=[purchase.student.profile.user.email],
         subject="Podsumowanie zakupu",
         data=mail_data,
+        attachments=attachments,
     )
+
+    if payment_successful:
+        invoice.remove()
 
 
 class PurchaseViewSet(ModelViewSet):

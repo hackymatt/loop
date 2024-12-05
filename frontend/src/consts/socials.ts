@@ -14,6 +14,13 @@ export const socials = [
     url: "https://www.instagram.com/loopedupl/",
   },
   {
+    value: "youtube",
+    label: "YouTube",
+    icon: "carbon:logo-youtube",
+    color: "#FF0000",
+    url: "https://www.youtube.com/@loopedupl",
+  },
+  {
     value: "linkedin",
     label: "Linkedin",
     icon: "carbon:logo-linkedin",

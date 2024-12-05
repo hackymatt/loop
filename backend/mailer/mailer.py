@@ -9,7 +9,9 @@ class Mailer:
     def __init__(self):
         self.gmail_api = GmailApi(on_behalf_of=NOREPLY_EMAIL)
 
-    def send(self, email_template: str, to: List[str], subject: str, data):
+    def send(
+        self, email_template: str, to: List[str], subject: str, data, attachments=[]
+    ):
         email_body = render_to_string(
             email_template,
             {
@@ -26,6 +28,7 @@ class Mailer:
                 email_to=", ".join(to),
                 email_subject=subject,
                 email_body=email_body,
+                email_attachments=attachments,
             )
         except Exception as e:  # pragma: no cover
             logger.error(

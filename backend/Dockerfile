@@ -12,7 +12,7 @@ RUN apt-get update && apt install wget gnupg2 -y
 RUN sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ bookworm-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 RUN apt-get update \
-    && apt-get -y install postgresql-client-16 cron libpq-dev gcc \
+    && apt-get -y install postgresql-client-16 cron libpq-dev gcc libcairo2 libcairo2-dev libpangocairo-1.0-0 weasyprint \
     && pip install psycopg2
 
 # install dependencies

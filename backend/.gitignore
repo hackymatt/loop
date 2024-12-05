@@ -143,3 +143,6 @@ backup/
 
 # Static
 static/
+
+# Invoice
+invoices/

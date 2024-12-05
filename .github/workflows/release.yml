@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - v*.*.*
+  workflow_dispatch:
 
 jobs:
   lint_backend:
@@ -271,141 +272,148 @@ jobs:
             cd deployment
             helm upgrade --install -f 'values-dev.yaml' loop . -n default
 
-  build_and_push_docker_backend_uat:
-    name: Build and push backend UAT docker image
+  # build_and_push_docker_backend_uat:
+  #   name: Build and push backend UAT docker image
 
-    needs: [dev_deployment]
+  #   needs: [dev_deployment]
 
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository code
-        uses: actions/checkout@v4
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repository code
+  #       uses: actions/checkout@v4
 
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: loopedupl/backend
-          tags: ${{  github.ref_name }}.uat
+  #     - name: Docker meta
+  #       id: meta
+  #       uses: docker/metadata-action@v4
+  #       with:
+  #         images: loopedupl/backend
+  #         tags: ${{  github.ref_name }}.uat
 
-      - name: login to docker registry
-        uses: docker/login-action@v3
-        with:
-          username: ${{secrets.DOCKERHUB_USERNAME}}
-          password: ${{secrets.DOCKERHUB_TOKEN}}
+  #     - name: login to docker registry
+  #       uses: docker/login-action@v3
+  #       with:
+  #         username: ${{secrets.DOCKERHUB_USERNAME}}
+  #         password: ${{secrets.DOCKERHUB_TOKEN}}
 
-      - name: build and push docker image to registry
-        uses: docker/build-push-action@v5
-        with:
-          context: ./backend
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+  #     - name: build and push docker image to registry
+  #       uses: docker/build-push-action@v5
+  #       with:
+  #         context: ./backend
+  #         push: true
+  #         tags: ${{ steps.meta.outputs.tags }}
+  #         labels: ${{ steps.meta.outputs.labels }}
 
-  build_and_push_docker_frontend_uat:
-    name: Build and push frontend UAT docker image
+  # build_and_push_docker_frontend_uat:
+  #   name: Build and push frontend UAT docker image
 
-    needs: [dev_deployment]
+  #   needs: [dev_deployment]
 
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository code
-        uses: actions/checkout@v4
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repository code
+  #       uses: actions/checkout@v4
 
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: loopedupl/frontend
-          tags: ${{  github.ref_name }}.uat
+  #     - name: Docker meta
+  #       id: meta
+  #       uses: docker/metadata-action@v4
+  #       with:
+  #         images: loopedupl/frontend
+  #         tags: ${{  github.ref_name }}.uat
 
-      - name: login to docker registry
-        uses: docker/login-action@v3
-        with:
-          username: ${{secrets.DOCKERHUB_USERNAME}}
-          password: ${{secrets.DOCKERHUB_TOKEN}}
+  #     - name: login to docker registry
+  #       uses: docker/login-action@v3
+  #       with:
+  #         username: ${{secrets.DOCKERHUB_USERNAME}}
+  #         password: ${{secrets.DOCKERHUB_TOKEN}}
 
-      - name: build and push docker image to registry
-        uses: docker/build-push-action@v5
-        with:
-          context: ./frontend
-          file: ./frontend/Dockerfile.uat
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+  #     - name: build and push docker image to registry
+  #       uses: docker/build-push-action@v5
+  #       with:
+  #         context: ./frontend
+  #         file: ./frontend/Dockerfile.uat
+  #         push: true
+  #         tags: ${{ steps.meta.outputs.tags }}
+  #         labels: ${{ steps.meta.outputs.labels }}
 
-  build_and_push_docker_nginx_uat:
-    name: Build and push nginx UAT docker image
+  # build_and_push_docker_nginx_uat:
+  #   name: Build and push nginx UAT docker image
 
-    needs: [dev_deployment]
+  #   needs: [dev_deployment]
 
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository code
-        uses: actions/checkout@v4
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repository code
+  #       uses: actions/checkout@v4
 
-      - name: Docker meta
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: loopedupl/nginx
-          tags: ${{  github.ref_name }}.uat
+  #     - name: Docker meta
+  #       id: meta
+  #       uses: docker/metadata-action@v4
+  #       with:
+  #         images: loopedupl/nginx
+  #         tags: ${{  github.ref_name }}.uat
 
-      - name: login to docker registry
-        uses: docker/login-action@v3
-        with:
-          username: ${{secrets.DOCKERHUB_USERNAME}}
-          password: ${{secrets.DOCKERHUB_TOKEN}}
+  #     - name: login to docker registry
+  #       uses: docker/login-action@v3
+  #       with:
+  #         username: ${{secrets.DOCKERHUB_USERNAME}}
+  #         password: ${{secrets.DOCKERHUB_TOKEN}}
 
-      - name: build and push docker image to registry
-        uses: docker/build-push-action@v5
-        with:
-          context: ./nginx
-          file: ./nginx/Dockerfile.dev
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+  #     - name: build and push docker image to registry
+  #       uses: docker/build-push-action@v5
+  #       with:
+  #         context: ./nginx
+  #         file: ./nginx/Dockerfile.dev
+  #         push: true
+  #         tags: ${{ steps.meta.outputs.tags }}
+  #         labels: ${{ steps.meta.outputs.labels }}
 
-  uat_deployment:
-    name: Deploy to UAT
+  # uat_deployment:
+  #   name: Deploy to UAT
 
-    needs:
-      [
-        build_and_push_docker_backend_uat,
-        build_and_push_docker_frontend_uat,
-        build_and_push_docker_nginx_uat,
-      ]
+  #   needs:
+  #     [
+  #       build_and_push_docker_backend_uat,
+  #       build_and_push_docker_frontend_uat,
+  #       build_and_push_docker_nginx_uat,
+  #     ]
 
-    runs-on: ubuntu-latest
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository code
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout repository code
+  #       uses: actions/checkout@v4
 
-      - name: Update Helm Chart Values
-        uses: Nextdoor/helm-set-image-tag-action@main
-        with:
-          values_files: deployment/values-uat.yaml
-          tag_keys: .backend.tag,.frontend.tag,.nginx.tag
-          tag_value: ${{ github.ref }}.uat
+  #     - name: Update Helm Chart Values
+  #       uses: Nextdoor/helm-set-image-tag-action@main
+  #       with:
+  #         values_files: deployment/values-uat.yaml
+  #         tag_keys: .backend.tag,.frontend.tag,.nginx.tag
+  #         tag_value: ${{ github.ref }}.uat
 
-      - name: Deploy
-        uses: wahyd4/kubectl-helm-action@master
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_UAT }}
-        with:
-          args: |
-            helm repo add bitnami https://charts.bitnami.com/bitnami
-            cd deployment
-            helm upgrade --install -f 'values-uat.yaml' loop . -n default
+  #     - name: Deploy
+  #       uses: wahyd4/kubectl-helm-action@master
+  #       env:
+  #         KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_UAT }}
+  #       with:
+  #         args: |
+  #           helm repo add bitnami https://charts.bitnami.com/bitnami
+  #           cd deployment
+  #           helm upgrade --install -f 'values-uat.yaml' loop . -n default
 
   build_and_push_docker_backend_prod:
     name: Build and push backend PROD docker image
 
-    needs: [uat_deployment]
+    needs: [dev_deployment]
 
     runs-on: ubuntu-latest
+
+    if: github.event_name == 'workflow_dispatch' || success()
+
     steps:
+      - name: Waiting for manual trigger
+        run: echo "This step requires a manual trigger from workflow_dispatch."
+        if: github.event_name == 'workflow_dispatch'
+
       - name: Checkout repository code
         uses: actions/checkout@v4
 
@@ -433,10 +441,17 @@ jobs:
   build_and_push_docker_frontend_prod:
     name: Build and push frontend PROD docker image
 
-    needs: [uat_deployment]
+    needs: [dev_deployment]
 
     runs-on: ubuntu-latest
+
+    if: github.event_name == 'workflow_dispatch' || success()
+
     steps:
+      - name: Waiting for manual trigger
+        run: echo "This step requires a manual trigger from workflow_dispatch."
+        if: github.event_name == 'workflow_dispatch'
+
       - name: Checkout repository code
         uses: actions/checkout@v4
 
@@ -464,10 +479,17 @@ jobs:
   build_and_push_docker_nginx_prod:
     name: Build and push nginx PROD docker image
 
-    needs: [uat_deployment]
+    needs: [dev_deployment]
 
     runs-on: ubuntu-latest
+
+    if: github.event_name == 'workflow_dispatch' || success()
+
     steps:
+      - name: Waiting for manual trigger
+        run: echo "This step requires a manual trigger from workflow_dispatch."
+        if: github.event_name == 'workflow_dispatch'
+
       - name: Checkout repository code
         uses: actions/checkout@v4
 
