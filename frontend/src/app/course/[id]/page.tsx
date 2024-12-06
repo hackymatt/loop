@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   const courseTitle = decodedId.slice(0, decodedId.lastIndexOf("-")).replace(/-/g, " ");
 
   const metadata = createMetadata(
-    `Kurs: ${courseTitle}`,
+    `Kurs ${courseTitle} - sprawdź program nauczania`,
     `Zapisz się na kurs ${courseTitle} w loop i naucz się programować. Oferujemy praktyczne lekcje online z certyfikatem ukończenia oraz wsparcie doświadczonych instruktorów.`,
     [
       `kurs ${courseTitle}`,

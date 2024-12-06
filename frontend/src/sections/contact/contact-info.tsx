@@ -85,7 +85,7 @@ export default function ContactInfo() {
 
         {mdUp && (
           <Grid xs={12} md={6} lg={7}>
-            <Image alt="contact" src="/assets/illustrations/illustration_contact.svg" />
+            <Image alt="kontakt" src="/assets/illustrations/illustration_contact.svg" />
           </Grid>
         )}
       </Grid>

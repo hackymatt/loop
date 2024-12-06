@@ -38,7 +38,7 @@ export default function LandingIntroduce() {
         {mdUp && (
           <Grid xs={12} md={6} lg={5}>
             <Image
-              alt="about"
+              alt="o-nas"
               src="/assets/images/general/course-6.webp"
               ratio="3/4"
               sx={{ borderRadius: 2 }}

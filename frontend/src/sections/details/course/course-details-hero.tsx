@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
+import { IconButton } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import Grid from "@mui/material/Unstable_Grid2";
 import Container from "@mui/material/Container";
@@ -16,6 +17,7 @@ import { paths } from "src/routes/paths";
 
 import { useBoolean } from "src/hooks/use-boolean";
 
+import { encodeUrl } from "src/utils/url-utils";
 import { fShortenNumber } from "src/utils/format-number";
 import { getGenderAvatar } from "src/utils/get-gender-avatar";
 
@@ -34,6 +36,7 @@ type Props = {
 
 export default function CourseDetailsHero({ course }: Props) {
   const {
+    id,
     slug,
     level,
     modules,
@@ -110,7 +113,7 @@ export default function CourseDetailsHero({ course }: Props) {
                 )}
 
                 <Image
-                  alt="hero"
+                  alt={slug}
                   src={coverUrl}
                   overlay={`linear-gradient(to bottom, ${alpha(
                     theme.palette.common.black,
@@ -191,6 +194,20 @@ export default function CourseDetailsHero({ course }: Props) {
                       </Box>
                     </Stack>
                   )}
+
+                  <Box display="flex" alignItems="center">
+                    <IconButton
+                      onClick={() =>
+                        navigator.share({
+                          url: encodeUrl(`${slug}-${id}`),
+                          title: course?.slug,
+                          text: course?.description,
+                        })
+                      }
+                    >
+                      <Iconify icon="solar:share-outline" />
+                    </IconButton>
+                  </Box>
                 </Stack>
 
                 {teachers?.length > 0 && (

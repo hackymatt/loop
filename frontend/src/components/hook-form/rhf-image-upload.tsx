@@ -94,7 +94,7 @@ const ImageInput = forwardRef(
             Usuń zdjęcie
           </LoadingButton>
         )}
-        {source && <Image alt="course_photo" src={source} />}
+        {source && <Image alt="photo" src={source} />}
       </Stack>
     );
   },

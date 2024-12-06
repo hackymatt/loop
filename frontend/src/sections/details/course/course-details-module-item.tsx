@@ -30,18 +30,11 @@ import CourseDetailsLessonList from "./course-details-lesson-list";
 type ModuleItemProps = {
   module: ICourseModuleProp;
   index: number;
-  expanded: boolean;
-  onExpanded: (event: React.SyntheticEvent, isExpanded: boolean) => void;
 };
 
 // ----------------------------------------------------------------------
 
-export default function CourseDetailsModuleItem({
-  module,
-  index,
-  expanded,
-  onExpanded,
-}: ModuleItemProps) {
+export default function CourseDetailsModuleItem({ module, index }: ModuleItemProps) {
   const { enqueueSnackbar } = useToastContext();
   const { isLoggedIn, userType } = useUserContext();
   const { push } = useRouter();
@@ -85,8 +78,7 @@ export default function CourseDetailsModuleItem({
 
   return (
     <Accordion
-      expanded={expanded}
-      onChange={onExpanded}
+      expanded
       sx={{
         [`&.${accordionClasses.expanded}`]: {
           borderRadius: 0,
@@ -147,8 +139,6 @@ export default function CourseDetailsModuleItem({
               )}
           </Typography>
         </Stack>
-
-        <Iconify icon={expanded ? "carbon:chevron-down" : "carbon:chevron-right"} sx={{ ml: 2 }} />
       </AccordionSummary>
 
       <AccordionDetails

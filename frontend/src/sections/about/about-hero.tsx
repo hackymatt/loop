@@ -47,7 +47,10 @@ export default function AboutHero() {
           </Grid>
 
           <Grid xs={12} md={6} lg={6}>
-            <Image alt="courses-online" src="/assets/illustrations/illustration_courses_hero.svg" />
+            <Image
+              alt="kurs-programowania-online"
+              src="/assets/illustrations/illustration_courses_hero.svg"
+            />
           </Grid>
         </Grid>
       </Container>

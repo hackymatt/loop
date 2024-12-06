@@ -6,8 +6,8 @@ import { polishPlurals } from "polish-plurals";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
-import Grid from "@mui/material/Unstable_Grid2";
 import Container from "@mui/material/Container";
+import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 import { Avatar, IconButton, AvatarGroup } from "@mui/material";
 
@@ -92,9 +92,7 @@ export function PostView({ id }: { id: string }) {
 
       <Box display="flex" alignItems="center">
         <IconButton
-          onClick={() =>
-            navigator.share({ url: "xxxxx", title: post?.title, text: post?.description })
-          }
+          onClick={() => navigator.share({ url: id, title: post?.title, text: post?.description })}
         >
           <Iconify icon="solar:share-outline" />
         </IconButton>

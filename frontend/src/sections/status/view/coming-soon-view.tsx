@@ -32,7 +32,7 @@ export default function ComingSoonView({ startDate }: { startDate?: Date }) {
       </Typography>
 
       <Image
-        alt="comingsoon"
+        alt="juz-wkrotce"
         src="/assets/illustrations/illustration_comingsoon.svg"
         sx={{
           my: 3,
