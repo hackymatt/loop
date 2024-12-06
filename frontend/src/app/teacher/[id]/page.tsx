@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   const teacherName = decodedId.slice(0, decodedId.lastIndexOf("-")).replace(/-/g, " ");
 
   const metadata = createMetadata(
-    `Instruktor: ${teacherName}`,
+    `Instruktor ${teacherName} - sprawdź oferowane lekcje`,
     `Poznaj ${teacherName} — doświadczonego instruktora w loop. Sprawdź jego profil, lekcje, które prowadzi, oraz opinie studentów. Rozpocznij naukę programowania pod okiem profesjonalisty!`,
     [
       "profil instruktora",

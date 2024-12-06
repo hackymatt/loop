@@ -67,7 +67,7 @@ export default function ForgotPasswordView() {
   return (
     <Stack sx={{ textAlign: "center" }}>
       <Image
-        alt="reset password"
+        alt="odzyskaj-hasło"
         src="/assets/icons/ic_lock_password.svg"
         sx={{ mb: 5, width: 96, height: 96, mx: "auto" }}
       />

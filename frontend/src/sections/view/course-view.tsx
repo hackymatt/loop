@@ -85,8 +85,8 @@ export default function CourseView({ id }: { id: string }) {
   const metadata = useMemo(
     () =>
       createMetadata(
-        `Kurs: ${course?.slug}`,
-        `Zapisz się na kurs ${course?.slug} w loop i naucz się programować. Oferujemy praktyczne lekcje online z certyfikatem ukończenia oraz wsparcie doświadczonych instruktorów.`,
+        `Kurs ${course?.slug} - sprawdź program nauczania`,
+        `Zapisz się na kurs ${course?.slug} w loop i naucz się programować. ${course?.description} Oferujemy praktyczne lekcje online z certyfikatem ukończenia oraz wsparcie doświadczonych instruktorów.`,
         [
           `kurs ${course?.slug}`,
           "kursy programowania",
@@ -95,7 +95,7 @@ export default function CourseView({ id }: { id: string }) {
           ...(technologyKeywords ?? []),
         ],
       ),
-    [course?.slug, technologyKeywords],
+    [course?.description, course?.slug, technologyKeywords],
   );
 
   if (isLoading) {

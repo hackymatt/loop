@@ -1,5 +1,4 @@
 import { IGender } from "./testimonial";
-import { ISocialLinks } from "./socials";
 
 // ----------------------------------------------------------------------
 
@@ -119,7 +118,6 @@ export type ICourseProps = {
   totalQuizzes?: number;
   totalReviews: number;
   totalStudents: number;
-  shareLinks?: ISocialLinks;
   modules: ICourseModuleProp[];
   teachers: ICourseTeacherProp[];
   active: boolean;

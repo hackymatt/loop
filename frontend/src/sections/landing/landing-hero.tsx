@@ -273,7 +273,7 @@ function LandingAbout() {
       {mdUp && (
         <Grid xs={12} md={6} lg={7}>
           <Image
-            alt="about"
+            alt="o-nas"
             src="/assets/images/general/course-7.webp"
             sx={{ borderRadius: 2, height: 670 }}
           />
@@ -324,7 +324,7 @@ function LandingSuggestions() {
       {mdUp && (
         <Grid xs={12} md={6} lg={7}>
           <Image
-            alt="about"
+            alt="sugestie"
             src="/assets/images/general/course-9.webp"
             sx={{ borderRadius: 2, height: 670 }}
           />
@@ -379,7 +379,7 @@ function LandingNewTeacher() {
       {mdUp && (
         <Grid xs={12} md={6} lg={7}>
           <Image
-            alt="about"
+            alt="praca"
             src="/assets/images/general/course-2.webp"
             sx={{ borderRadius: 2, height: 670 }}
           />

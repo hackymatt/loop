@@ -6,7 +6,7 @@ import TeachersView from "src/sections/view/teachers-view";
 // ----------------------------------------------------------------------
 
 export const metadata = createMetadata(
-  "Instruktorzy",
+  "Instruktorzy - sprawdź oferowane lekcje",
   "Poznaj instruktorów loop — doświadczonych programistów, którzy poprowadzą Cię przez kursy programowania online. Sprawdź profile naszych nauczycieli i wybierz idealnego instruktora dla siebie.",
   [
     "instruktorzy",

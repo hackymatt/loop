@@ -80,7 +80,7 @@ export default function About() {
       >
         <Grid xs={12} md={6} lg={6}>
           <Image
-            alt="about"
+            alt="o-nas"
             src="/assets/images/general/about-summary.webp"
             ratio="3/4"
             sx={{ borderRadius: 2 }}

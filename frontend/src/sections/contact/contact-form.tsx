@@ -84,7 +84,7 @@ export default function ContactForm() {
           {mdUp && (
             <Grid xs={12} md={6} lg={5}>
               <Image
-                alt="contact"
+                alt="napisz-do-nas"
                 src="/assets/illustrations/illustration_courses_contact.svg"
                 sx={{ maxWidth: 260 }}
               />

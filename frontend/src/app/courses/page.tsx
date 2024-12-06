@@ -6,7 +6,7 @@ import CoursesView from "src/sections/view/courses-view";
 // ----------------------------------------------------------------------
 
 export const metadata = createMetadata(
-  "Kursy",
+  "Kursy programowania online - sprawdź ofertę",
   "Odkryj ofertę kursów programowania w loop. Nauka Python, JavaScript, C++ oraz innych od podstaw z certyfikatem. Zajęcia prowadzone online przez doświadczonych instruktorów.",
   [
     "oferta kursów programowania",

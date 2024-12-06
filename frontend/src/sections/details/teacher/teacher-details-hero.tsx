@@ -83,7 +83,7 @@ export default function TeacherDetailsHero({ teacher }: Props) {
                 overflow: "hidden",
               }}
             >
-              <Image alt="hero" src={photoUrl} />
+              <Image alt={name} src={photoUrl} />
             </Stack>
           </Grid>
 

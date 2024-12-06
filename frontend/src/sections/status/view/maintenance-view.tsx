@@ -26,7 +26,7 @@ export default function MaintenanceView() {
 
       <m.div variants={varBounce().in}>
         <Image
-          alt="maintenance"
+          alt="prace-serwisowe"
           src="/assets/illustrations/illustration_maintenance.svg"
           sx={{
             mx: "auto",

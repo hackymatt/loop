@@ -40,8 +40,8 @@ export default function TeacherView({ id }: { id: string }) {
   const metadata = useMemo(
     () =>
       createMetadata(
-        `Instruktor: ${teacher?.name}`,
-        `Poznaj ${teacher?.name} — doświadczonego instruktora w loop. Sprawdź jego profil, lekcje, które prowadzi, oraz opinie studentów. Rozpocznij naukę programowania pod okiem profesjonalisty!`,
+        `Instruktor ${teacher?.name} - sprawdź oferowane lekcje`,
+        `Poznaj ${teacher?.name} — doświadczonego instruktora w loop. ${teacher?.description} Sprawdź jego profil, lekcje, które prowadzi, oraz opinie studentów. Rozpocznij naukę programowania pod okiem profesjonalisty!`,
         [
           "profil instruktora",
           "instruktor programowania",
@@ -55,7 +55,7 @@ export default function TeacherView({ id }: { id: string }) {
           "szkoła programowania",
         ],
       ),
-    [teacher?.name],
+    [teacher?.description, teacher?.name],
   );
 
   if (isLoading) {

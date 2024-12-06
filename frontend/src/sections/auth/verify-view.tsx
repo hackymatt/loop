@@ -83,7 +83,7 @@ export default function VerifyView() {
   return (
     <Stack sx={{ textAlign: "center" }}>
       <Image
-        alt="email inbox"
+        alt="zweryfikuj-konto"
         src="/assets/icons/ic_email_inbox.svg"
         sx={{ mb: 5, width: 96, height: 96, mx: "auto" }}
       />

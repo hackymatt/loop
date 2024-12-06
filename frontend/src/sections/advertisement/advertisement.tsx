@@ -44,7 +44,7 @@ export default function Advertisement({ advertisement, sx, ...other }: Props) {
       </Stack>
 
       <Image
-        alt="advertisement"
+        alt="kursy-programowania"
         src={advertisement.imageUrl}
         ratio="1/1"
         overlay={`linear-gradient(to bottom, ${alpha(theme.palette.common.black, 0)} 0%, ${
