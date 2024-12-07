@@ -10,25 +10,25 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useDeleteSkill } from "src/api/skills/skill";
+import { useDeleteTag } from "src/api/tags/tag";
 
 import FormProvider from "src/components/hook-form";
 
-import { ICourseBySkillProps } from "src/types/course";
+import { ITagProps } from "src/types/tags";
 
-import { defaultValues } from "./skill";
+import { defaultValues } from "./tag";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  skill: ICourseBySkillProps;
+  tag: ITagProps;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function SkillDeleteForm({ skill, onClose, ...other }: Props) {
-  const { mutateAsync: deleteSkill } = useDeleteSkill();
+export default function TagDeleteForm({ tag, onClose, ...other }: Props) {
+  const { mutateAsync: deleteTag } = useDeleteTag();
 
   const methods = useForm({
     defaultValues,
@@ -44,7 +44,7 @@ export default function SkillDeleteForm({ skill, onClose, ...other }: Props) {
 
   const onSubmit = handleSubmit(async () => {
     try {
-      await deleteSkill({ id: skill.id });
+      await deleteTag({ id: tag.id });
       reset();
       onClose();
     } catch (error) {
@@ -55,10 +55,10 @@ export default function SkillDeleteForm({ skill, onClose, ...other }: Props) {
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń umiejętność</DialogTitle>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń tag</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
-          <Typography>{`Czy na pewno chcesz usunąć umiejętność ${skill.name}?`}</Typography>
+          <Typography>{`Czy na pewno chcesz usunąć tag ${tag.name}?`}</Typography>
         </DialogContent>
 
         <DialogActions>

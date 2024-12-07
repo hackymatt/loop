@@ -8,13 +8,16 @@ import {
   InsertTable,
   EditorInFocus,
   DirectiveNode,
+  InsertSandpack,
   BlockTypeSelect,
   InsertCodeBlock,
   ShowSandpackInfo,
   InsertAdmonition,
+  InsertFrontmatter,
   ConditionalContents,
   InsertThematicBreak,
   ChangeAdmonitionType,
+  DiffSourceToggleWrapper,
   ChangeCodeMirrorLanguage,
   BoldItalicUnderlineToggles,
 } from "@mdxeditor/editor";
@@ -31,66 +34,72 @@ function whenInAdmonition(editorInFocus: EditorInFocus | null) {
 }
 
 export const Toolbar = () => (
-  <ConditionalContents
-    options={[
-      {
-        when: (editor) => editor?.editorType === "codeblock",
-        contents: () => <ChangeCodeMirrorLanguage />,
-      },
-      {
-        when: (editor) => editor?.editorType === "sandpack",
-        contents: () => <ShowSandpackInfo />,
-      },
-      {
-        fallback: () => (
-          <>
-            <UndoRedo />
-            <Separator />
-            <BoldItalicUnderlineToggles />
-            <CodeToggle />
-            <Separator />
-            <ListsToggle />
-            <Separator />
+  <DiffSourceToggleWrapper>
+    <ConditionalContents
+      options={[
+        {
+          when: (editor) => editor?.editorType === "codeblock",
+          contents: () => <ChangeCodeMirrorLanguage />,
+        },
+        {
+          when: (editor) => editor?.editorType === "sandpack",
+          contents: () => <ShowSandpackInfo />,
+        },
+        {
+          fallback: () => (
+            <>
+              <UndoRedo />
+              <Separator />
+              <BoldItalicUnderlineToggles />
+              <CodeToggle />
+              <Separator />
+              <ListsToggle />
+              <Separator />
 
-            <ConditionalContents
-              options={[
-                {
-                  when: whenInAdmonition,
-                  contents: () => <ChangeAdmonitionType />,
-                },
-                { fallback: () => <BlockTypeSelect /> },
-              ]}
-            />
+              <ConditionalContents
+                options={[
+                  {
+                    when: whenInAdmonition,
+                    contents: () => <ChangeAdmonitionType />,
+                  },
+                  { fallback: () => <BlockTypeSelect /> },
+                ]}
+              />
 
-            <Separator />
+              <Separator />
 
-            <CreateLink />
-            <InsertImage />
+              <CreateLink />
+              <InsertImage />
 
-            <Separator />
+              <Separator />
 
-            <InsertTable />
-            <InsertThematicBreak />
+              <InsertTable />
+              <InsertThematicBreak />
 
-            <Separator />
-            <InsertCodeBlock />
+              <Separator />
+              <InsertCodeBlock />
+              <InsertSandpack />
 
-            <ConditionalContents
-              options={[
-                {
-                  when: (editorInFocus) => !whenInAdmonition(editorInFocus),
-                  contents: () => (
-                    <>
-                      <Separator />
-                      <InsertAdmonition />
-                    </>
-                  ),
-                },
-              ]}
-            />
-          </>
-        ),
-      },
-    ]}
-  />
+              <ConditionalContents
+                options={[
+                  {
+                    when: (editorInFocus) => !whenInAdmonition(editorInFocus),
+                    contents: () => (
+                      <>
+                        <Separator />
+                        <InsertAdmonition />
+                      </>
+                    ),
+                  },
+                ]}
+              />
+
+              <Separator />
+              <InsertFrontmatter />
+            </>
+          ),
+        },
+      ]}
+    />
+  </DiffSourceToggleWrapper>
 );

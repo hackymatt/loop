@@ -37,11 +37,15 @@ type IPost = {
   created_at: string;
 };
 
-type ICreatePost = Omit<IPost, "id" | "authors" | "category" | "duration" | "created_at"> & {
+type ICreatePost = Omit<
+  IPost,
+  "id" | "authors" | "category" | "tags" | "duration" | "created_at"
+> & {
   content: string;
   category: string;
   active: boolean;
   authors: string[];
+  tags: string[];
 };
 
 type ICreatePostReturn = ICreatePost;

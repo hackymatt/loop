@@ -89,12 +89,6 @@ export type ICourseByTopicProps = {
   createdAt: Date;
 };
 
-export type ICourseBySkillProps = {
-  id: string;
-  name: string;
-  createdAt: Date;
-};
-
 export type ILevel = "P" | "Ś" | "Z" | "E";
 
 export type ICourseProps = {
@@ -106,16 +100,13 @@ export type ICourseProps = {
   coverUrl: string;
   video?: string;
   category: string[];
-  skills: string[];
+  tags: string[];
   priceSale: number;
   lowest30DaysPrice?: number;
-  resources?: number;
   totalHours: number;
   description?: string;
-  languages?: string[];
   learnList: string[];
   ratingNumber: number;
-  totalQuizzes?: number;
   totalReviews: number;
   totalStudents: number;
   modules: ICourseModuleProp[];

@@ -57,10 +57,10 @@ type ICreateCourse = Omit<
   | "rating"
   | "rating_count"
   | "modules"
-  | "skills"
+  | "tags"
   | "topics"
   | "progress"
-> & { modules: string[]; skills: string[]; topics: string[] };
+> & { modules: string[]; tags: string[]; topics: string[] };
 
 type ICreateCourseReturn = ICreateCourse;
 

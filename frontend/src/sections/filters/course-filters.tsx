@@ -8,12 +8,15 @@ import Typography from "@mui/material/Typography";
 import { useResponsive } from "src/hooks/use-responsive";
 import { useQueryParams } from "src/hooks/use-query-params";
 
+import { useTags } from "src/api/tags/tags";
 import { useLecturers } from "src/api/lecturers/lecturers";
 import { useTechnologies } from "src/api/technologies/technologies";
 
+import { ITagProps } from "src/types/tags";
 import { IQueryParamValue } from "src/types/query-params";
 import { ICourseByCategoryProps } from "src/types/course";
 
+import FilterTag from "./filter-tag";
 import FilterLevel from "./filter-level";
 import FilterPrice from "./filter-price";
 import FilterRating from "./filter-rating";
@@ -52,8 +55,9 @@ export default function Filters({ open, onClose }: Props) {
   const mdUp = useResponsive("up", "md");
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
-  const { data: technologies } = useTechnologies({ sort_by: "name" });
+  const { data: technologies } = useTechnologies({ sort_by: "name", page_size: -1 });
   const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: -1 });
+  const { data: tags } = useTags({ sort_by: "-course_count", page_size: -1 });
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
@@ -100,7 +104,7 @@ export default function Filters({ open, onClose }: Props) {
       <Block title="Technologia">
         <FilterCategories
           value={filters?.technology_in ?? ""}
-          options={technologies?.map((technology: ICourseByCategoryProps) => technology.name)}
+          options={technologies?.map((technology: ICourseByCategoryProps) => technology.name) ?? []}
           onChangeCategory={(value) => handleChange("technology_in", value)}
         />
       </Block>
@@ -116,7 +120,7 @@ export default function Filters({ open, onClose }: Props) {
       <Block title="Instruktorzy">
         <FilterTeachers
           value={filters?.lecturer_in ?? ""}
-          options={teachers}
+          options={teachers ?? []}
           onChangeTeacher={(value) => handleChange("lecturer_in", value)}
         />
       </Block>
@@ -127,6 +131,15 @@ export default function Filters({ open, onClose }: Props) {
           valuePriceTo={filters?.price_to ?? 0}
           onChangeStartPrice={(value) => handleChange("price_from", value)}
           onChangeEndPrice={(value) => handleChange("price_to", value)}
+        />
+      </Block>
+
+      <Block title="Tagi">
+        <FilterTag
+          value={filters?.tags_in ?? ""}
+          options={tags?.map((tag: ITagProps) => tag.name) ?? []}
+          onChangeTag={(value) => handleChange("tags_in", value)}
+          // sx={{ mt: 2 }}
         />
       </Block>
     </Stack>

@@ -1,16 +1,16 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
-from skill.serializers import SkillSerializer
-from skill.filters import SkillFilter
-from skill.models import Skill
+from tag.serializers import TagSerializer, TagCreateSerializer
+from tag.filters import TagFilter
+from tag.models import Tag
 
 
-class SkillViewSet(ModelViewSet):
+class TagViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = Skill.objects.all().order_by("id")
-    serializer_class = SkillSerializer
+    queryset = Tag.objects.add_post_count().add_course_count().all().order_by("id")
+    serializer_class = TagSerializer
     permission_classes = [AllowAny]
-    filterset_class = SkillFilter
+    filterset_class = TagFilter
 
     def get_permissions(self):
         if self.action in ["create", "update", "destroy"]:
@@ -18,3 +18,8 @@ class SkillViewSet(ModelViewSet):
         else:
             permission_classes = self.permission_classes
         return [permission() for permission in permission_classes]
+
+    def get_serializer_class(self):
+        if self.action in ["create"]:
+            return TagCreateSerializer
+        return self.serializer_class

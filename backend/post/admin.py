@@ -4,3 +4,4 @@ from .models import Post, PostCategory
 admin.site.register(Post)
 admin.site.register(PostCategory)
 admin.site.register(Post.authors.through)
+admin.site.register(Post.tags.through)

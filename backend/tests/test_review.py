@@ -10,7 +10,7 @@ from .factory import (
     create_course,
     create_lesson,
     create_technology,
-    create_skill,
+    create_tag,
     create_topic,
     create_review,
     create_purchase,
@@ -128,8 +128,8 @@ class ReviewTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -142,7 +142,7 @@ class ReviewTest(APITestCase):
             title="course_title",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -486,8 +486,8 @@ class BestReviewTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2, self.lesson_3]
@@ -497,7 +497,7 @@ class BestReviewTest(APITestCase):
             title="course_title",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -657,8 +657,8 @@ class ReviewStatsTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -671,7 +671,7 @@ class ReviewStatsTest(APITestCase):
             title="course_title",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -883,8 +883,8 @@ class ReviewConfirmationTest(TestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -894,7 +894,7 @@ class ReviewConfirmationTest(TestCase):
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1072,8 +1072,8 @@ class ReviewFilterTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -1083,7 +1083,7 @@ class ReviewFilterTest(APITestCase):
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1146,7 +1146,7 @@ class ReviewFilterTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             level="Zaawansowany",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1205,7 +1205,7 @@ class ReviewFilterTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             level="Ekspert",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1374,8 +1374,8 @@ class ReviewOrderTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -1385,7 +1385,7 @@ class ReviewOrderTest(APITestCase):
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1448,7 +1448,7 @@ class ReviewOrderTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             level="Zaawansowany",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1507,7 +1507,7 @@ class ReviewOrderTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             level="Ekspert",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,

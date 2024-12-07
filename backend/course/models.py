@@ -21,7 +21,7 @@ from django.db.models import (
     Q,
 )
 from module.models import Module
-from skill.models import Skill
+from tag.models import Tag
 from topic.models import Topic
 from django.contrib.postgres.aggregates import ArrayAgg
 from django.db.models.functions import Coalesce, Cast
@@ -92,6 +92,9 @@ class CourseQuerySet(QuerySet):
             )
         )
 
+    def add_tags(self):
+        return self.annotate(tags_names=ArrayAgg("tags__name", distinct=True))
+
     def add_lecturers_ids(self):
         return self.annotate(
             lecturers_ids=ArrayAgg(
@@ -137,7 +140,7 @@ class Course(BaseModel):
     title = CharField()
     description = TextField()
     level = CharField(choices=LEVEL_CHOICES, null=True)
-    skills = ManyToManyField(Skill, related_name="course_skills")
+    tags = ManyToManyField(Tag, related_name="course_tags")
     topics = ManyToManyField(Topic, related_name="course_topics")
     active = BooleanField(default=False)
     image = ImageField(upload_to=course_directory_path)

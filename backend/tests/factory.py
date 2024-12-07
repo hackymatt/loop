@@ -6,7 +6,7 @@ from lesson.models import Lesson, LessonPriceHistory
 from technology.models import Technology
 from topic.models import Topic
 from finance.models import Finance, FinanceHistory
-from skill.models import Skill
+from tag.models import Tag
 from review.models import Review
 from module.models import Module
 from purchase.models import Purchase, Payment
@@ -146,7 +146,7 @@ def create_course(
     title: str,
     description: str,
     level: str,
-    skills,
+    tags,
     topics,
     modules,
     active: bool = True,
@@ -159,7 +159,7 @@ def create_course(
     )
 
     course.modules.add(*modules)
-    course.skills.add(*skills)
+    course.tags.add(*tags)
     course.topics.add(*topics)
     course.image = create_image()
     course.video = create_video()
@@ -173,7 +173,7 @@ def create_course_obj(
     description: str,
     level: str,
     modules: List[Dict[str, int]],
-    skills,
+    tags,
     topics,
     image: str = None,
     video: str = None,
@@ -184,7 +184,7 @@ def create_course_obj(
         "description": description,
         "level": level,
         "modules": modules,
-        "skills": skills,
+        "tags": tags,
         "topics": topics,
         "image": image,
         "video": video,
@@ -270,11 +270,11 @@ def create_technology_obj(name: str):
     return {"name": name}
 
 
-def create_skill(name: str):
-    return Skill.objects.create(name=name)
+def create_tag(name: str):
+    return Tag.objects.create(name=name)
 
 
-def create_skill_obj(name: str):
+def create_tag_obj(name: str):
     return {"name": name}
 
 
@@ -525,6 +525,7 @@ def create_post(
     content: str,
     category: PostCategory,
     authors,
+    tags,
     active: bool = True,
 ):
     post = Post.objects.create(
@@ -536,6 +537,7 @@ def create_post(
     )
 
     post.authors.add(*authors)
+    post.tags.add(*tags)
     post.image = create_image()
     post.save()
 
@@ -548,6 +550,7 @@ def create_post_obj(
     content: str,
     category: str,
     authors,
+    tags,
     image: str = None,
     active: bool = True,
 ):
@@ -557,6 +560,7 @@ def create_post_obj(
         "content": content,
         "category": category,
         "authors": authors,
+        "tags": tags,
         "image": image,
         "active": active,
     }

@@ -31,10 +31,10 @@ export const topicQuery = (id: string) => {
   const queryFn = async () => {
     const response = await Api.get<ITopic>(queryUrl);
     const { data } = response;
-    const { id: skillId, name, created_at } = data;
+    const { id: topicId, name, created_at } = data;
 
     const modifiedResults = {
-      id: skillId,
+      id: topicId,
       name,
       createdAt: created_at,
     };

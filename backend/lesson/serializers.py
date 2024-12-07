@@ -139,9 +139,22 @@ class LessonSerializer(ModelSerializer):
 
         return github_url
 
-    def add_technology(self, lesson, technologies):
-        for technology in technologies:
-            lesson.technologies.add(technology)
+    def add_technology(self, lesson: Lesson, technologies):
+        names = [technology.name for technology in technologies]
+        existing_names = set(
+            Technology.objects.filter(name__in=names).values_list("name", flat=True)
+        )
+
+        missing_technologies = [
+            Technology(name=name) for name in set(names) - existing_names
+        ]
+
+        Technology.objects.bulk_create(missing_technologies, ignore_conflicts=True)
+
+        technologies_objs = Technology.objects.filter(name__in=names)
+
+        for technology_obj in technologies_objs:
+            lesson.technologies.add(technology_obj)
 
         return lesson
 

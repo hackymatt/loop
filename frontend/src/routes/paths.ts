@@ -34,7 +34,6 @@ export const paths = {
     admin: {
       courses: {
         list: "/account/admin/courses/list",
-        skills: "/account/admin/courses/skills",
         topics: "/account/admin/courses/topics",
       },
       modules: {
@@ -49,6 +48,7 @@ export const paths = {
         list: "/account/admin/posts/list",
         categories: "/account/admin/posts/categories",
       },
+      tags: "/account/admin/tags",
       users: {
         list: "/account/admin/users/list",
         financeHistory: "/account/admin/users/finance-history",

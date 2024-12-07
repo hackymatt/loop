@@ -14,17 +14,17 @@ import { fDate } from "src/utils/format-time";
 
 import Iconify from "src/components/iconify";
 
-import { ICourseBySkillProps } from "src/types/course";
+import { ITagProps } from "src/types/tags";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: ICourseBySkillProps;
-  onEdit: (skill: ICourseBySkillProps) => void;
-  onDelete: (skill: ICourseBySkillProps) => void;
+  row: ITagProps;
+  onEdit: (tag: ITagProps) => void;
+  onDelete: (tag: ITagProps) => void;
 };
 
-export default function AccountSkillsTableRow({ row, onEdit, onDelete }: Props) {
+export default function AccountTagsTableRow({ row, onEdit, onDelete }: Props) {
   const openOptions = usePopover();
 
   const handleEdit = useCallback(() => {
@@ -69,14 +69,14 @@ export default function AccountSkillsTableRow({ row, onEdit, onDelete }: Props) 
       >
         <MenuItem onClick={handleEdit} sx={{ mr: 1, width: "100%" }}>
           <Iconify icon="carbon:edit" sx={{ mr: 0.5 }} />
-          <Typography variant="body2">Edytuj umiejętność</Typography>
+          <Typography variant="body2">Edytuj tag</Typography>
         </MenuItem>
 
         <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
 
         <MenuItem onClick={handleDelete} sx={{ mr: 1, color: "error.main", width: "fit-content" }}>
           <Iconify icon="carbon:trash-can" sx={{ mr: 0.5 }} />
-          <Typography variant="body2">Usuń umiejętność</Typography>
+          <Typography variant="body2">Usuń tag</Typography>
         </MenuItem>
       </Popover>
     </>

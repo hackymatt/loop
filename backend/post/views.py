@@ -21,6 +21,7 @@ class PostViewSet(ModelViewSet):
             Prefetch("authors", queryset=LecturerProfile.objects.add_full_name())
         )
         .add_duration()
+        .add_tags()
         .all()
         .order_by("id")
     )

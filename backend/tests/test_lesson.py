@@ -15,7 +15,7 @@ from .factory import (
     create_lesson_price_history,
     create_payment,
     create_topic,
-    create_skill,
+    create_tag,
     create_course,
     create_module,
 )
@@ -1389,8 +1389,8 @@ class LessonPriceHistoryFilterTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -1400,7 +1400,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             title="course_title",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1439,7 +1439,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             title="course_title 2",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1478,7 +1478,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             title="course_title 3",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1598,8 +1598,8 @@ class LessonPriceHistoryOrderTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -1609,7 +1609,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
             title="course_title",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1649,7 +1649,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
             title="course_title 2",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1689,7 +1689,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
             title="course_title 3",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,

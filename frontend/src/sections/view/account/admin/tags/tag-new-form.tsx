@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -12,27 +11,26 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useSkill, useEditSkill } from "src/api/skills/skill";
+import { useCreateTag } from "src/api/tags/tags";
 
 import FormProvider from "src/components/hook-form";
+import { useToastContext } from "src/components/toast";
 
-import { ICourseBySkillProps } from "src/types/course";
-
-import { schema, defaultValues } from "./skill";
-import { useSkillFields } from "./skill-fields";
+import { useTagFields } from "./tag-fields";
+import { schema, defaultValues } from "./tag";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  skill: ICourseBySkillProps;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function SkillEditForm({ skill, onClose, ...other }: Props) {
-  const { data: skillData } = useSkill(skill.id);
-  const { mutateAsync: editSkill } = useEditSkill(skill.id);
+export default function TagNewForm({ onClose, ...other }: Props) {
+  const { enqueueSnackbar } = useToastContext();
+
+  const { mutateAsync: createTag } = useCreateTag();
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -45,30 +43,25 @@ export default function SkillEditForm({ skill, onClose, ...other }: Props) {
     formState: { isSubmitting },
   } = methods;
 
-  useEffect(() => {
-    if (skillData) {
-      reset(skillData);
-    }
-  }, [reset, skillData]);
-
   const handleFormError = useFormErrorHandler(methods);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await editSkill(data);
+      await createTag(data);
       reset();
       onClose();
+      enqueueSnackbar("Tag został dodany", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }
   });
 
-  const { fields } = useSkillFields();
+  const { fields } = useTagFields();
 
   return (
     <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj umiejętność</DialogTitle>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nowy tag</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
           <Stack spacing={1}>{fields.name}</Stack>
@@ -79,8 +72,8 @@ export default function SkillEditForm({ skill, onClose, ...other }: Props) {
             Anuluj
           </Button>
 
-          <LoadingButton color="inherit" type="submit" variant="contained" loading={isSubmitting}>
-            Zapisz
+          <LoadingButton color="success" type="submit" variant="contained" loading={isSubmitting}>
+            Dodaj
           </LoadingButton>
         </DialogActions>
       </FormProvider>

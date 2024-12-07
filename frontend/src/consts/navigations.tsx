@@ -107,12 +107,6 @@ export const adminNavigation = [
           children: [],
         },
         {
-          title: "Umiejętności",
-          path: `${paths.account.admin.courses.skills}/?sort_by=name&page_size=10`,
-          icon: <Iconify icon="carbon:policy" />,
-          children: [],
-        },
-        {
           title: "Tematy",
           path: `${paths.account.admin.courses.topics}/?sort_by=name&page_size=10`,
           icon: <Iconify icon="carbon:query" />,
@@ -169,6 +163,12 @@ export const adminNavigation = [
           children: [],
         },
       ],
+    },
+    {
+      title: "Tagi",
+      path: `${paths.account.admin.tags}/?sort_by=name&page_size=10`,
+      icon: <Iconify icon="carbon:hashtag" />,
+      children: [],
     },
     {
       title: "Użytkownicy",

@@ -15,6 +15,11 @@ type ICategory = {
   name: string;
 };
 
+type ITag = {
+  id: string;
+  name: string;
+};
+
 type ILecturer = {
   full_name: string;
   id: string;
@@ -38,6 +43,7 @@ type IPost = {
   content: string;
   category: ICategory;
   duration: number;
+  tags: ITag[];
   authors: ILecturer[];
   active: boolean;
   image: string;
@@ -48,12 +54,13 @@ type IPost = {
 
 type IEditPost = Omit<
   IPost,
-  "id" | "authors" | "category" | "duration" | "created_at" | "previous_post" | "next_post"
+  "id" | "authors" | "category" | "tags" | "duration" | "created_at" | "previous_post" | "next_post"
 > & {
   content: string;
   category: string;
   active: boolean;
   authors: string[];
+  tags: string[];
 };
 
 type IEditPostReturn = IEditPost;
@@ -79,6 +86,7 @@ export const postQuery = (id: string) => {
         category,
         duration,
         authors,
+        tags,
         active,
         image,
         created_at,
@@ -94,6 +102,7 @@ export const postQuery = (id: string) => {
         category: category.name,
         duration: `${duration} min`,
         coverUrl: image,
+        tags: tags.map((tag: ITag) => tag.name),
         authors: authors.map(
           ({
             id: lecturerId,

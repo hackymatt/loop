@@ -17,8 +17,10 @@ from django.db.models import (
     Subquery,
     Count,
 )
+from tag.models import Tag
 from profile.models import LecturerProfile
 from config_global import WORDS_PER_MINUTE
+from django.contrib.postgres.aggregates import ArrayAgg
 from django.db.models.functions import Length, Ceil, Cast, Coalesce
 
 
@@ -62,6 +64,9 @@ class PostQuerySet(QuerySet):
             )
         )
 
+    def add_tags(self):
+        return self.annotate(tags_names=ArrayAgg("tags__name", distinct=True))
+
     def add_previous_post(self):
         previous_post = Post.objects.filter(
             created_at__lt=OuterRef("created_at"), active=True
@@ -98,6 +103,7 @@ class Post(BaseModel):
     authors = ManyToManyField(LecturerProfile, related_name="post_authors")
     image = ImageField(upload_to=post_directory_path)
     visits = IntegerField(default=0)
+    tags = ManyToManyField(Tag, related_name="post_tags")
     active = BooleanField(default=False)
 
     objects = PostManager()

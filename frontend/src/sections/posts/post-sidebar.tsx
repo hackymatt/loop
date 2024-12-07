@@ -4,7 +4,7 @@ import Avatar from "@mui/material/Avatar";
 import type { BoxProps } from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import type { Theme, SxProps } from "@mui/material/styles";
-import { Checkbox, FormControlLabel } from "@mui/material";
+import { Chip, Checkbox, FormControlLabel } from "@mui/material";
 
 import { useResponsive } from "src/hooks/use-responsive";
 
@@ -18,13 +18,16 @@ import FilterSearch from "../filters/filter-search";
 // ----------------------------------------------------------------------
 
 type PostSidebarProps = Omit<BoxProps, "onChange"> & {
-  value: string;
-  onChange: (category: IQueryParamValue) => void;
+  category: string;
+  onChangeCategory: (category: IQueryParamValue) => void;
+  categoryOptions?: IPostCategoryProps[];
   searchValue: string;
   onChangeSearch: (search: IQueryParamValue) => void;
+  tags: string;
+  onChangeTags: (tags: IQueryParamValue) => void;
+  tagsOptions?: string[];
   author?: IAuthorProps;
   popularPosts?: IPostProps[];
-  categories?: IPostCategoryProps[];
   slots?: {
     topNode?: React.ReactNode;
     bottomNode?: React.ReactNode;
@@ -38,15 +41,18 @@ type PostSidebarProps = Omit<BoxProps, "onChange"> & {
 };
 
 export function PostSidebar({
-  value,
-  onChange,
+  category,
+  onChangeCategory,
+  categoryOptions,
   searchValue,
   onChangeSearch,
+  tags,
+  onChangeTags,
+  tagsOptions,
   sx,
   slots,
   author,
   slotProps,
-  categories,
   popularPosts,
   ...other
 }: PostSidebarProps) {
@@ -77,37 +83,39 @@ export function PostSidebar({
     </Box>
   );
 
-  const renderCategories = !!categories?.length && (
+  const renderCategories = !!categoryOptions?.length && (
     <Stack spacing={1} sx={slotProps?.categories}>
       <Typography variant="h5">Kategorie</Typography>
 
       <Stack spacing={2} alignItems="flex-start">
-        {categories.map((category) => (
+        {categoryOptions.map((c) => (
           <FormControlLabel
-            key={category.id}
-            value={category.name}
+            key={c.id}
+            value={c.name}
             control={
               <Checkbox
-                checked={value === category.name}
-                onClick={() => (category.name !== value ? onChange(category.name) : onChange(null))}
+                checked={category === c.name}
+                onClick={() =>
+                  c.name !== category ? onChangeCategory(c.name) : onChangeCategory(null)
+                }
                 sx={{ display: "none" }}
               />
             }
             label={
-              <Box key={category.name} gap={2} display="flex" alignItems="center">
+              <Box key={c.name} gap={2} display="flex" alignItems="center">
                 <Box
                   component="span"
                   sx={{ width: 6, height: 6, borderRadius: "50%", bgcolor: "primary.main" }}
                 />
 
-                {category.name}
+                {c.name}
               </Box>
             }
             sx={{
               m: 0,
               fontWeight: "fontWeightSemiBold",
               "&:hover": { color: "primary.main" },
-              ...(value === category.name && {
+              ...(category === c.name && {
                 color: "primary.main",
               }),
             }}
@@ -124,6 +132,45 @@ export function PostSidebar({
       {popularPosts.map((post: IPostProps) => (
         <PostItemMobile key={post.id} post={post} onSiderbar />
       ))}
+    </Stack>
+  );
+
+  const currentTags = tags
+    ? (tags as string)
+        .split(",")
+        .map((filterTag: string) => tagsOptions?.find((t) => t === filterTag))
+    : [];
+  const renderTags = !!tagsOptions?.length && (
+    <Stack spacing={2} sx={slotProps?.tags}>
+      <Typography variant="h5">Tagi</Typography>
+
+      <Box gap={1} display="flex" flexWrap="wrap">
+        {tagsOptions.map((option) => {
+          const selected = currentTags.includes(option as string);
+
+          return (
+            <Chip
+              key={option}
+              size="small"
+              label={option}
+              variant="outlined"
+              onClick={() => {
+                if (selected) {
+                  onChangeTags(currentTags.filter((t: IQueryParamValue) => t !== option).join(","));
+                } else {
+                  onChangeTags([...currentTags, option].join(","));
+                }
+              }}
+              sx={{
+                ...(selected && {
+                  bgcolor: "action.selected",
+                  fontWeight: "fontWeightBold",
+                }),
+              }}
+            />
+          );
+        })}
+      </Box>
     </Stack>
   );
 
@@ -150,6 +197,8 @@ export function PostSidebar({
         {renderCategories}
 
         {renderRecentPosts}
+
+        {renderTags}
 
         {slots?.bottomNode}
       </Box>

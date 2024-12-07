@@ -15,7 +15,7 @@ import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import { urlToBlob } from "src/utils/blob-to-base64";
 
-import { useSkills } from "src/api/skills/skills";
+import { useTags } from "src/api/tags/tags";
 import { useTopics } from "src/api/topics/topics";
 import { useModules } from "src/api/modules/modules";
 import { useCourse, useEditCourse } from "src/api/courses/course";
@@ -23,13 +23,8 @@ import { useCourse, useEditCourse } from "src/api/courses/course";
 import FormProvider from "src/components/hook-form";
 import { isStepFailed } from "src/components/stepper/step";
 
-import {
-  ILevel,
-  ICourseProps,
-  ICourseModuleProp,
-  ICourseBySkillProps,
-  ICourseByTopicProps,
-} from "src/types/course";
+import { ITagProps } from "src/types/tags";
+import { ILevel, ICourseProps, ICourseModuleProp, ICourseByTopicProps } from "src/types/course";
 
 import { useCourseFields } from "./course-fields";
 import { steps, schema, defaultValues } from "./course";
@@ -48,7 +43,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
     sort_by: "title",
     page_size: -1,
   });
-  const { data: availableSkills } = useSkills({
+  const { data: availableTags } = useTags({
     sort_by: "name",
     page_size: -1,
   });
@@ -72,12 +67,12 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
   } = methods;
 
   useEffect(() => {
-    if (courseData && availableSkills && availableTopics && availableModules) {
+    if (courseData && availableTags && availableTopics && availableModules) {
       reset({
         ...courseData,
         title: courseData.slug,
-        skills: courseData.skills.map((skill: string) =>
-          availableSkills.find((s: ICourseBySkillProps) => s.name === skill),
+        tags: courseData.tags.map((tag: string) =>
+          availableTags.find((s: ITagProps) => s.name === tag),
         ),
         topics: courseData.learnList.map((topic: string) =>
           availableTopics.find((t: ICourseByTopicProps) => t.name === topic),
@@ -97,7 +92,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
         video: courseData.video ?? "",
       });
     }
-  }, [availableModules, availableSkills, availableTopics, courseData, reset]);
+  }, [availableModules, availableTags, availableTopics, courseData, reset]);
 
   const handleFormError = useFormErrorHandler(methods);
 
@@ -111,7 +106,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
       await editCourse({
         ...data,
         modules: data.modules.map((module: ICourseModuleProp) => module.id),
-        skills: data.skills.map((skill: ICourseBySkillProps) => skill.id),
+        tags: data.tags.map((tag: ITagProps) => tag.id),
         topics: data.topics.map((topic: ICourseByTopicProps) => topic.id),
         level: data.level.slice(0, 1) as ILevel,
         image: (await urlToBlob(data.image)) as string,

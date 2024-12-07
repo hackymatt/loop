@@ -9,7 +9,7 @@ from drf_extra_fields.fields import Base64ImageField, Base64FileField
 from course.models import Course
 from lesson.models import Lesson, Technology
 from topic.models import Topic
-from skill.models import Skill
+from tag.models import Tag
 from module.models import Module
 from profile.models import LecturerProfile, StudentProfile
 from notification.utils import notify
@@ -171,9 +171,9 @@ class TechnologySerializer(ModelSerializer):
         )
 
 
-class SkillSerializer(ModelSerializer):
+class TagSerializer(ModelSerializer):
     class Meta:
-        model = Skill
+        model = Tag
         exclude = (
             "modified_at",
             "created_at",
@@ -360,7 +360,7 @@ class CourseListSerializer(ModelSerializer):
         model = Course
         exclude = (
             "modules",
-            "skills",
+            "tags",
             "topics",
             "video",
             "created_at",
@@ -376,7 +376,7 @@ class CourseGetSerializer(ModelSerializer):
     duration = SerializerMethodField()
     modules = SerializerMethodField()
     technologies = SerializerMethodField()
-    skills = SerializerMethodField()
+    tags = SerializerMethodField()
     topics = SerializerMethodField()
     lecturers = SerializerMethodField()
     students_count = SerializerMethodField()
@@ -421,18 +421,18 @@ class CourseGetSerializer(ModelSerializer):
             context={"request": self.context.get("request")},
         ).data
 
-    def get_skills(self, course: Course):
-        skill_ids = list(
-            Course.skills.through.objects.filter(course=course)
+    def get_tags(self, course: Course):
+        tag_ids = list(
+            Course.tags.through.objects.filter(course=course)
             .order_by("id")
-            .values_list("skill_id", flat=True)
+            .values_list("tag_id", flat=True)
         )
         preserved_order = Case(
-            *[When(pk=pk, then=pos) for pos, pk in enumerate(skill_ids)],
+            *[When(pk=pk, then=pos) for pos, pk in enumerate(tag_ids)],
             output_field=IntegerField(),
         )
-        skills = Skill.objects.filter(id__in=skill_ids).order_by(preserved_order)
-        return SkillSerializer(skills, many=True).data
+        tags = Tag.objects.filter(id__in=tag_ids).order_by(preserved_order)
+        return TagSerializer(tags, many=True).data
 
     def get_topics(self, course: Course):
         topic_ids = list(
@@ -481,32 +481,54 @@ class CourseSerializer(ModelSerializer):
         model = Course
         fields = "__all__"
 
-    def add_modules(self, course, modules):
+    def add_modules(self, course: Course, modules):
         for module in modules:
             course.modules.add(module)
 
         return course
 
-    def add_skills(self, course, skills):
-        for skill in skills:
-            course.skills.add(skill)
+    def add_tags(self, course: Course, tags):
+        names = [tag.name for tag in tags]
+        existing_names = set(
+            Tag.objects.filter(name__in=names).values_list("name", flat=True)
+        )
+
+        missing_tags = [Tag(name=name) for name in set(names) - existing_names]
+
+        Tag.objects.bulk_create(missing_tags, ignore_conflicts=True)
+
+        tags_objs = Tag.objects.filter(name__in=names)
+
+        for tags_obj in tags_objs:
+            course.tags.add(tags_obj)
 
         return course
 
-    def add_topics(self, course, topics):
-        for topic in topics:
-            course.topics.add(topic)
+    def add_topics(self, course: Course, topics):
+        names = [topic.name for topic in topics]
+        existing_names = set(
+            Topic.objects.filter(name__in=names).values_list("name", flat=True)
+        )
+
+        missing_topics = [Topic(name=name) for name in set(names) - existing_names]
+
+        Topic.objects.bulk_create(missing_topics, ignore_conflicts=True)
+
+        topics_objs = Topic.objects.filter(name__in=names)
+
+        for topics_obj in topics_objs:
+            course.topics.add(topics_obj)
 
         return course
 
     def create(self, validated_data):
         modules = validated_data.pop("modules")
-        skills = validated_data.pop("skills")
+        tags = validated_data.pop("tags")
         topics = validated_data.pop("topics")
 
         course = Course.objects.create(**validated_data)
         course = self.add_modules(course=course, modules=modules)
-        course = self.add_skills(course=course, skills=skills)
+        course = self.add_tags(course=course, tags=tags)
         course = self.add_topics(course=course, topics=topics)
         course.save()
 
@@ -517,7 +539,7 @@ class CourseSerializer(ModelSerializer):
 
     def update(self, instance: Course, validated_data):
         modules = validated_data.pop("modules")
-        skills = validated_data.pop("skills")
+        tags = validated_data.pop("tags")
         topics = validated_data.pop("topics")
 
         instance.active = validated_data.get("active", instance.active)
@@ -530,8 +552,8 @@ class CourseSerializer(ModelSerializer):
 
         instance.modules.clear()
         instance = self.add_modules(course=instance, modules=modules)
-        instance.skills.clear()
-        instance = self.add_skills(course=instance, skills=skills)
+        instance.tags.clear()
+        instance = self.add_tags(course=instance, tags=tags)
         instance.topics.clear()
         instance = self.add_topics(course=instance, topics=topics)
 
@@ -587,7 +609,7 @@ class BestCourseSerializer(ModelSerializer):
         model = Course
         exclude = (
             "active",
-            "skills",
+            "tags",
             "topics",
             "video",
             "created_at",

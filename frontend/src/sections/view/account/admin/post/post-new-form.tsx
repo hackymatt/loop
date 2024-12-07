@@ -19,6 +19,7 @@ import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
 import { isStepFailed } from "src/components/stepper/step";
 
+import { ITagProps } from "src/types/tags";
 import { IAuthorProps } from "src/types/author";
 import { IPostCategoryProps } from "src/types/blog";
 
@@ -62,6 +63,7 @@ export default function PostNewForm({ onClose, ...other }: Props) {
         ...data,
         authors: data.authors.map((author: IAuthorProps) => author.id),
         category: data.category.map((c: IPostCategoryProps) => c.id)[0],
+        tags: data.tags.map((tag: ITagProps) => tag.id),
       });
       reset();
       onCloseWithReset();

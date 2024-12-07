@@ -20,12 +20,8 @@ import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
 import { isStepFailed } from "src/components/stepper/step";
 
-import {
-  ILevel,
-  ICourseModuleProp,
-  ICourseBySkillProps,
-  ICourseByTopicProps,
-} from "src/types/course";
+import { ITagProps } from "src/types/tags";
+import { ILevel, ICourseModuleProp, ICourseByTopicProps } from "src/types/course";
 
 import { useCourseFields } from "./course-fields";
 import { steps, schema, defaultValues } from "./course";
@@ -72,7 +68,7 @@ export default function CourseNewForm({ onClose, ...other }: Props) {
           ...data,
           level: data.level.slice(0, 1) as ILevel,
           modules: data.modules.map((module: ICourseModuleProp) => module.id),
-          skills: data.skills.map((skill: ICourseBySkillProps) => skill.id),
+          tags: data.tags.map((tag: ITagProps) => tag.id),
           topics: data.topics.map((topic: ICourseByTopicProps) => topic.id),
         });
       }
