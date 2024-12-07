@@ -1,4 +1,4 @@
-import { useSkills } from "src/api/skills/skills";
+import { useTags } from "src/api/tags/tags";
 import { useTopics } from "src/api/topics/topics";
 import { useModules } from "src/api/modules/modules";
 
@@ -11,7 +11,8 @@ import {
   RHFAutocompleteDnd,
 } from "src/components/hook-form";
 
-import { ICourseModuleProp, ICourseBySkillProps, ICourseByTopicProps } from "src/types/course";
+import { ITagProps } from "src/types/tags";
+import { ICourseModuleProp, ICourseByTopicProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +25,7 @@ export const useCourseFields = () => {
     sort_by: "title",
     page_size: -1,
   });
-  const { data: availableSkills, isLoading: isLoadingSkills } = useSkills({
+  const { data: availableTags, isLoading: isLoadingTags } = useTags({
     sort_by: "name",
     page_size: -1,
   });
@@ -60,16 +61,16 @@ export const useCourseFields = () => {
         loading={isLoadingModules}
       />
     ),
-    skills: (
+    tags: (
       <RHFAutocompleteDnd
-        key="skills"
-        name="skills"
-        label="Umiejętności"
+        key="tags"
+        name="tags"
+        label="Tagi"
         multiple
-        options={availableSkills ?? []}
-        getOptionLabel={(option) => (option as ICourseBySkillProps)?.name ?? ""}
+        options={availableTags ?? []}
+        getOptionLabel={(option) => (option as ITagProps)?.name ?? ""}
         isOptionEqualToValue={(a, b) => a.id === b.id}
-        loading={isLoadingSkills}
+        loading={isLoadingTags}
       />
     ),
     topics: (

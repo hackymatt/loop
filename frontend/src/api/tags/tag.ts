@@ -2,38 +2,38 @@ import { AxiosError } from "axios";
 import { compact } from "lodash-es";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { ICourseBySkillProps } from "src/types/course";
+import { ITagProps } from "src/types/tags";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
 
-const endpoint = "/skills" as const;
+const endpoint = "/tags" as const;
 
-type ISkill = {
+type ITag = {
   id: string;
   created_at: string;
   name: string;
 };
 
-type IEditSkill = Pick<ISkill, "name">;
+type IEditTag = Pick<ITag, "name">;
 
-type IEditSkillReturn = IEditSkill;
+type IEditTagReturn = IEditTag;
 
-type IDeleteSkill = { id: string };
+type IDeleteTag = { id: string };
 
-type IDeleteSkillReturn = {};
+type IDeleteTagReturn = {};
 
-export const skillQuery = (id: string) => {
+export const tagQuery = (id: string) => {
   const url = endpoint;
   const queryUrl = `${url}/${id}`;
 
   const queryFn = async () => {
-    const response = await Api.get<ISkill>(queryUrl);
+    const response = await Api.get<ITag>(queryUrl);
     const { data } = response;
-    const { id: skillId, name, created_at } = data;
+    const { id: tagId, name, created_at } = data;
 
     const modifiedResults = {
-      id: skillId,
+      id: tagId,
       name,
       createdAt: created_at,
     };
@@ -43,16 +43,16 @@ export const skillQuery = (id: string) => {
   return { url, queryFn, queryKey: compact([endpoint, id]) };
 };
 
-export const useSkill = (id: string) => {
-  const { queryKey, queryFn } = skillQuery(id);
+export const useTag = (id: string) => {
+  const { queryKey, queryFn } = tagQuery(id);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as any as ICourseBySkillProps, ...rest };
+  return { data: data?.results as any as ITagProps, ...rest };
 };
 
-export const useEditSkill = (id: string) => {
+export const useEditTag = (id: string) => {
   const queryClient = useQueryClient();
   const url = `${endpoint}/${id}`;
-  return useMutation<IEditSkillReturn, AxiosError, IEditSkill>(
+  return useMutation<IEditTagReturn, AxiosError, IEditTag>(
     async (variables) => {
       const result = await Api.put(url, variables, {
         headers: {
@@ -69,9 +69,9 @@ export const useEditSkill = (id: string) => {
   );
 };
 
-export const useDeleteSkill = () => {
+export const useDeleteTag = () => {
   const queryClient = useQueryClient();
-  return useMutation<IDeleteSkillReturn, AxiosError, IDeleteSkill>(
+  return useMutation<IDeleteTagReturn, AxiosError, IDeleteTag>(
     async ({ id }) => {
       const result = await Api.delete(`${endpoint}/${id}`, {
         headers: {

@@ -18,27 +18,27 @@ import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
 
-import { useSkills, useSkillsPagesCount } from "src/api/skills/skills";
+import { useTags, useTagsPagesCount } from "src/api/tags/tags";
 
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
 import DownloadCSVButton from "src/components/download-csv";
 
-import AccountSkillsTableRow from "src/sections/account/admin/account-skills-table-row";
+import AccountTagsTableRow from "src/sections/account/admin/account-tags-table-row";
 
-import { ICourseBySkillProps } from "src/types/course";
+import { ITagProps } from "src/types/tags";
 import { IQueryParamValue } from "src/types/query-params";
 
-import SkillNewForm from "./skill-new-form";
-import SkillEditForm from "./skill-edit-form";
-import SkillDeleteForm from "./skill-delete-form";
+import TagNewForm from "./tag-new-form";
+import TagEditForm from "./tag-edit-form";
+import TagDeleteForm from "./tag-delete-form";
 import FilterSearch from "../../../../filters/filter-search";
 import AccountTableHead from "../../../../account/account-table-head";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: "name", label: "Nazwa tematu", minWidth: 200 },
+  { id: "name", label: "Nazwa tagu", minWidth: 200 },
   { id: "created_at", label: "Data utworzenia", width: 200 },
   { id: "", width: 25 },
 ];
@@ -47,25 +47,25 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, { label: "Wszystkie", value: -1 }];
 
 // ----------------------------------------------------------------------
 
-export default function AccountCoursesSkillsView() {
-  const newSkillFormOpen = useBoolean();
-  const editSkillFormOpen = useBoolean();
-  const deleteSkillFormOpen = useBoolean();
+export default function AccountTagsView() {
+  const newTagFormOpen = useBoolean();
+  const editTagFormOpen = useBoolean();
+  const deleteTagFormOpen = useBoolean();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const { data: pagesCount } = useSkillsPagesCount(filters);
-  const { data: skills, count: recordsCount } = useSkills(filters);
+  const { data: pagesCount } = useTagsPagesCount(filters);
+  const { data: tags, count: recordsCount } = useTags(filters);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
   const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "title";
   const order = filters?.sort_by && filters.sort_by.startsWith("-") ? "desc" : "asc";
 
-  const [editedSkill, setEditedSkill] = useState<ICourseBySkillProps>();
-  const [deletedSkill, setDeletedSkill] = useState<ICourseBySkillProps>();
+  const [editedTag, setEditedTag] = useState<ITagProps>();
+  const [deletedTag, setDeletedTag] = useState<ITagProps>();
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -101,37 +101,37 @@ export default function AccountCoursesSkillsView() {
     [handleChange],
   );
 
-  const handleEditSkill = useCallback(
-    (skill: ICourseBySkillProps) => {
-      setEditedSkill(skill);
-      editSkillFormOpen.onToggle();
+  const handleEditTag = useCallback(
+    (tag: ITagProps) => {
+      setEditedTag(tag);
+      editTagFormOpen.onToggle();
     },
-    [editSkillFormOpen],
+    [editTagFormOpen],
   );
 
-  const handleDeleteSkill = useCallback(
-    (skill: ICourseBySkillProps) => {
-      setDeletedSkill(skill);
-      deleteSkillFormOpen.onToggle();
+  const handleDeleteTag = useCallback(
+    (tag: ITagProps) => {
+      setDeletedTag(tag);
+      deleteTagFormOpen.onToggle();
     },
-    [deleteSkillFormOpen],
+    [deleteTagFormOpen],
   );
 
   return (
     <>
       <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
         <Typography variant="h5" sx={{ mb: 3 }}>
-          Umiejętności
+          Tagi
         </Typography>
         <Stack direction="row" spacing={1}>
-          <DownloadCSVButton queryHook={useSkills} disabled={(recordsCount ?? 0) === 0} />
+          <DownloadCSVButton queryHook={useTags} disabled={(recordsCount ?? 0) === 0} />
           <LoadingButton
             component="label"
             variant="contained"
             size="small"
             color="success"
             loading={false}
-            onClick={newSkillFormOpen.onToggle}
+            onClick={newTagFormOpen.onToggle}
           >
             <Iconify icon="carbon:add" />
           </LoadingButton>
@@ -142,7 +142,7 @@ export default function AccountCoursesSkillsView() {
         <FilterSearch
           value={filters?.name ?? ""}
           onChangeSearch={(value) => handleChange("name", value)}
-          placeholder="Nazwa umiejętności..."
+          placeholder="Nazwa tagu..."
         />
 
         <DatePicker
@@ -188,14 +188,14 @@ export default function AccountCoursesSkillsView() {
               headCells={TABLE_HEAD}
             />
 
-            {skills && (
+            {tags && (
               <TableBody>
-                {skills.map((row) => (
-                  <AccountSkillsTableRow
+                {tags.map((row) => (
+                  <AccountTagsTableRow
                     key={row.id}
                     row={row}
-                    onEdit={handleEditSkill}
-                    onDelete={handleDeleteSkill}
+                    onEdit={handleEditTag}
+                    onDelete={handleDeleteTag}
                   />
                 ))}
               </TableBody>
@@ -218,19 +218,19 @@ export default function AccountCoursesSkillsView() {
         />
       </Box>
 
-      <SkillNewForm open={newSkillFormOpen.value} onClose={newSkillFormOpen.onFalse} />
-      {editedSkill && (
-        <SkillEditForm
-          skill={editedSkill}
-          open={editSkillFormOpen.value}
-          onClose={editSkillFormOpen.onFalse}
+      <TagNewForm open={newTagFormOpen.value} onClose={newTagFormOpen.onFalse} />
+      {editedTag && (
+        <TagEditForm
+          tag={editedTag}
+          open={editTagFormOpen.value}
+          onClose={editTagFormOpen.onFalse}
         />
       )}
-      {deletedSkill && (
-        <SkillDeleteForm
-          skill={deletedSkill}
-          open={deleteSkillFormOpen.value}
-          onClose={deleteSkillFormOpen.onFalse}
+      {deletedTag && (
+        <TagDeleteForm
+          tag={deletedTag}
+          open={deleteTagFormOpen.value}
+          onClose={deleteTagFormOpen.onFalse}
         />
       )}
     </>

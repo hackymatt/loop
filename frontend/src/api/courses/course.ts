@@ -28,7 +28,7 @@ type ITechnology = {
   name: string;
 };
 
-type ISkill = {
+type ITag = {
   id: string;
   name: string;
 };
@@ -66,7 +66,7 @@ type ICourse = {
   duration: number;
   modules: IModule[];
   technologies: ITechnology[];
-  skills: ISkill[];
+  tags: ITag[];
   topics: ITopic[];
   lecturers: ILecturer[];
   students_count: number;
@@ -93,10 +93,10 @@ type IEditCourse = Omit<
   | "rating"
   | "rating_count"
   | "modules"
-  | "skills"
+  | "tags"
   | "topics"
   | "progress"
-> & { modules: string[]; skills: string[]; topics: string[] };
+> & { modules: string[]; tags: string[]; topics: string[] };
 
 type IEditCourseReturn = IEditCourse;
 
@@ -129,7 +129,7 @@ export const courseQuery = (id: string) => {
         rating_count,
         students_count,
         lecturers,
-        skills,
+        tags,
         topics,
         modules,
         active,
@@ -172,7 +172,7 @@ export const courseQuery = (id: string) => {
             role: lecturerTitle,
           }),
         ),
-        skills: skills.map((skill: ISkill) => skill.name),
+        tags: tags.map((tag: ITag) => tag.name),
         learnList: topics.map((topic: ITopic) => topic.name),
         modules: modules.map(
           ({

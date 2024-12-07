@@ -10,27 +10,27 @@ import { ICourseByCategoryProps } from "src/types/course";
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
 
-const endpoint = "/skills" as const;
+const endpoint = "/tags" as const;
 
-type ISkill = {
+type ITag = {
   id: string;
   modified_at: string;
   created_at: string;
   name: string;
 };
 
-type ICreateSkill = Pick<ISkill, "name">;
+type ICreateTag = Pick<ITag, "name">;
 
-type ICreateSkillReturn = ICreateSkill;
+type ICreateTagReturn = ICreateTag;
 
-export const skillsQuery = (query?: IQueryParams) => {
+export const tagsQuery = (query?: IQueryParams) => {
   const url = endpoint;
   const urlParams = formatQueryParams(query);
 
   const queryFn = async () => {
     const { data } = await Api.get(`${url}?${urlParams}`);
     const { results, records_count, pages_count } = data;
-    const modifiedResults = results.map(({ id, name, created_at }: ISkill) => ({
+    const modifiedResults = results.map(({ id, name, created_at }: ITag) => ({
       id,
       name,
       createdAt: created_at,
@@ -41,21 +41,21 @@ export const skillsQuery = (query?: IQueryParams) => {
   return { url, queryFn, queryKey: compact([url, urlParams]) };
 };
 
-export const useSkills = (query?: IQueryParams, enabled: boolean = true) => {
-  const { queryKey, queryFn } = skillsQuery(query);
+export const useTags = (query?: IQueryParams, enabled: boolean = true) => {
+  const { queryKey, queryFn } = tagsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
   return { data: data?.results as ICourseByCategoryProps[], count: data?.count, ...rest };
 };
 
-export const useSkillsPagesCount = (query?: IQueryParams) => {
-  const { queryKey, queryFn } = skillsQuery(query);
+export const useTagsPagesCount = (query?: IQueryParams) => {
+  const { queryKey, queryFn } = tagsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.pagesCount, ...rest };
 };
 
-export const useCreateSkill = () => {
+export const useCreateTag = () => {
   const queryClient = useQueryClient();
-  return useMutation<ICreateSkillReturn, AxiosError, ICreateSkill>(
+  return useMutation<ICreateTagReturn, AxiosError, ICreateTag>(
     async (variables) => {
       const result = await Api.post(endpoint, variables, {
         headers: {

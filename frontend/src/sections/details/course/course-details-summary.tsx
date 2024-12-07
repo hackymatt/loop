@@ -59,11 +59,11 @@ export default function CourseDetailsSummary({ course }: Props) {
       </Stack>
 
       <Stack spacing={3}>
-        <Typography variant="h4">Umiejętności, które zdobędziesz</Typography>
+        <Typography variant="subtitle2">Tagi</Typography>
 
         <Stack direction="row" flexWrap="wrap" spacing={1}>
-          {course.skills?.map((skill) => (
-            <Chip key={skill} label={skill} size="small" variant="soft" clickable={false} />
+          {course.tags?.map((tag) => (
+            <Chip key={tag} label={tag} size="small" variant="soft" clickable={false} />
           ))}
         </Stack>
       </Stack>
