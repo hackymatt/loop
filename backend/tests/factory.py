@@ -525,6 +525,7 @@ def create_post(
     content: str,
     category: PostCategory,
     authors,
+    tags,
     active: bool = True,
 ):
     post = Post.objects.create(
@@ -536,6 +537,7 @@ def create_post(
     )
 
     post.authors.add(*authors)
+    post.tags.add(*tags)
     post.image = create_image()
     post.save()
 
@@ -548,6 +550,7 @@ def create_post_obj(
     content: str,
     category: str,
     authors,
+    tags,
     image: str = None,
     active: bool = True,
 ):
@@ -557,6 +560,7 @@ def create_post_obj(
         "content": content,
         "category": category,
         "authors": authors,
+        "tags": tags,
         "image": image,
         "active": active,
     }

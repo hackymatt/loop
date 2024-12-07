@@ -66,7 +66,6 @@ class PostFilter(FilterSet):
         return return_queryset
 
 
-
 class PostCategoryFilter(FilterSet):
     name = CharFilter(field_name="name", lookup_expr="icontains")
     posts_count_from = NumberFilter(field_name="posts_count", lookup_expr="gte")

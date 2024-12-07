@@ -28,6 +28,7 @@ class TagSerializer(ModelSerializer):
             "created_at",
         )
 
+
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField()
     gender = CharField(source="profile.get_gender_display")
@@ -101,7 +102,7 @@ class PostListSerializer(ModelSerializer):
 
 class PostGetSerializer(ModelSerializer):
     category = CategorySerializer()
-    tags = TagSerializer(many=True)
+    tags = SerializerMethodField()
     authors = LecturerDetailsSerializer(many=True)
     image = Base64ImageField(required=True)
     duration = SerializerMethodField()
@@ -133,7 +134,7 @@ class PostGetSerializer(ModelSerializer):
         return PostNavigationSerializer(
             post, context={"request": self.context.get("request")}
         ).data
-    
+
     def get_tags(self, post: Post):
         tag_ids = list(
             Post.tags.through.objects.filter(post=post)
@@ -160,10 +161,21 @@ class PostSerializer(ModelSerializer):
             post.authors.add(author)
 
         return post
-    
+
     def add_tags(self, post: Post, tags):
-        for tag in tags:
-            post.tags.add(tag)
+        names = [tag.name for tag in tags]
+        existing_names = set(
+            Tag.objects.filter(name__in=names).values_list("name", flat=True)
+        )
+
+        missing_tags = [Tag(name=name) for name in set(names) - existing_names]
+
+        Tag.objects.bulk_create(missing_tags, ignore_conflicts=True)
+
+        tags_objs = Tag.objects.filter(name__in=names)
+
+        for tags_obj in tags_objs:
+            post.tags.add(tags_obj)
 
         return post
 

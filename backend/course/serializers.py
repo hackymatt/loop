@@ -481,21 +481,43 @@ class CourseSerializer(ModelSerializer):
         model = Course
         fields = "__all__"
 
-    def add_modules(self, course, modules):
+    def add_modules(self, course: Course, modules):
         for module in modules:
             course.modules.add(module)
 
         return course
 
-    def add_tags(self, course, tags):
-        for tag in tags:
-            course.tags.add(tag)
+    def add_tags(self, course: Course, tags):
+        names = [tag.name for tag in tags]
+        existing_names = set(
+            Tag.objects.filter(name__in=names).values_list("name", flat=True)
+        )
+
+        missing_tags = [Tag(name=name) for name in set(names) - existing_names]
+
+        Tag.objects.bulk_create(missing_tags, ignore_conflicts=True)
+
+        tags_objs = Tag.objects.filter(name__in=names)
+
+        for tags_obj in tags_objs:
+            course.tags.add(tags_obj)
 
         return course
 
-    def add_topics(self, course, topics):
-        for topic in topics:
-            course.topics.add(topic)
+    def add_topics(self, course: Course, topics):
+        names = [topic.name for topic in topics]
+        existing_names = set(
+            Topic.objects.filter(name__in=names).values_list("name", flat=True)
+        )
+
+        missing_topics = [Topic(name=name) for name in set(names) - existing_names]
+
+        Topic.objects.bulk_create(missing_topics, ignore_conflicts=True)
+
+        topics_objs = Topic.objects.filter(name__in=names)
+
+        for topics_obj in topics_objs:
+            course.topics.add(topics_obj)
 
         return course
 

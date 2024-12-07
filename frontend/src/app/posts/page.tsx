@@ -6,7 +6,7 @@ import { PostsView } from "src/sections/view/posts-view";
 // ----------------------------------------------------------------------
 
 export const metadata = createMetadata(
-  "Blog",
+  "Blog - sprawdź artykuły dotyczące technologii",
   "Blog to źródło wiedzy dla każdego, kto pragnie zgłębić świat programowania. Publikujemy artykuły, porady i tutoriale dotyczące najnowszych technologii, najlepszych praktyk w programowaniu oraz rozwoju umiejętności w IT. Dołącz do naszej społeczności i ucz się z nami!",
   [
     "nauka programowania",

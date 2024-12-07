@@ -10,6 +10,7 @@ from .factory import (
     create_post,
     create_post_obj,
     create_image,
+    create_tag,
 )
 from .helpers import (
     login,
@@ -17,6 +18,7 @@ from .helpers import (
     is_data_match,
     get_post,
     get_post_category,
+    get_tag,
     notifications_number,
     is_float,
 )
@@ -77,12 +79,16 @@ class PostTest(APITestCase):
         self.category_2 = create_post_category(name="Coding")
         create_post_category(name="Testing")
 
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
+
         self.post = create_post(
             title="abc",
             description="aaaa",
             content="bbbbbbbb",
             category=self.category,
             authors=[self.lecturer_profile],
+            tags=[self.tag_1, self.tag_2],
         )
         create_post(
             title="abcd",
@@ -90,6 +96,7 @@ class PostTest(APITestCase):
             content="bbbbbbbbb",
             category=self.category_2,
             authors=[self.lecturer_profile],
+            tags=[self.tag_2],
         )
         create_post(
             title="abc2",
@@ -97,6 +104,7 @@ class PostTest(APITestCase):
             content="bbbbbbbb2",
             category=self.category,
             authors=[self.lecturer_profile],
+            tags=[self.tag_2],
         )
         self.post_2 = create_post(
             title="abcd2",
@@ -104,6 +112,7 @@ class PostTest(APITestCase):
             content="bbbbbbbbb2",
             category=self.category_2,
             authors=[self.lecturer_profile],
+            tags=[self.tag_1],
             active=False,
         )
 
@@ -113,6 +122,7 @@ class PostTest(APITestCase):
             content="post_content",
             category=self.category.id,
             authors=[self.lecturer_profile.id],
+            tags=[self.tag_1.id, self.tag_2.id],
             image=b64encode(create_image().read()),
         )
 
@@ -122,6 +132,7 @@ class PostTest(APITestCase):
             content="post_content",
             category=self.category_2.id,
             authors=[self.lecturer_profile.id],
+            tags=[self.tag_2.id],
             image=b64encode(create_image().read()),
             active=False,
         )
@@ -132,6 +143,7 @@ class PostTest(APITestCase):
             content="post_content_other",
             category=self.category.id,
             authors=[self.lecturer_profile.id],
+            tags=[self.tag_1.id],
             image=b64encode(create_image().read()),
         )
 
@@ -141,6 +153,7 @@ class PostTest(APITestCase):
             content="post_content_other",
             category=self.category_2.id,
             authors=[self.lecturer_profile.id],
+            tags=[self.tag_2.id],
             image=b64encode(create_image().read()),
             active=False,
         )
@@ -209,12 +222,16 @@ class PostTest(APITestCase):
         post_data.pop("authors")
         category_data = post_data.pop("category")
         duration = post_data.pop("duration")
+        tags_data = post_data.pop("tags")
         self.assertTrue(is_data_match(get_post(self.post.id), post_data))
         self.assertEqual(duration, 1)
 
         self.assertTrue(
             is_data_match(get_post_category(category_data["id"]), category_data)
         )
+
+        for tag_data in tags_data:
+            self.assertTrue(is_data_match(get_tag(tag_data["id"]), tag_data))
 
     def test_get_post_authenticated(self):
         # login
@@ -227,12 +244,16 @@ class PostTest(APITestCase):
         post_data.pop("authors")
         category_data = post_data.pop("category")
         duration = post_data.pop("duration")
+        tags_data = post_data.pop("tags")
         self.assertTrue(is_data_match(get_post(self.post.id), post_data))
         self.assertEqual(duration, 1)
 
         self.assertTrue(
             is_data_match(get_post_category(category_data["id"]), category_data)
         )
+
+        for tag_data in tags_data:
+            self.assertTrue(is_data_match(get_tag(tag_data["id"]), tag_data))
 
     def test_get_post_authenticated_2(self):
         # login
@@ -253,12 +274,16 @@ class PostTest(APITestCase):
         post_data.pop("authors")
         category_data = post_data.pop("category")
         duration = post_data.pop("duration")
+        tags_data = post_data.pop("tags")
         self.assertTrue(is_data_match(get_post(self.post_2.id), post_data))
         self.assertEqual(duration, 1)
 
         self.assertTrue(
             is_data_match(get_post_category(category_data["id"]), category_data)
         )
+
+        for tag_data in tags_data:
+            self.assertTrue(is_data_match(get_tag(tag_data["id"]), tag_data))
 
     def test_create_post_unauthenticated(self):
         # no login
@@ -513,12 +538,16 @@ class PostCategoryFilterTest(APITestCase):
         self.category_2 = create_post_category(name="Coding")
         create_post_category(name="Testing")
 
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
+
         create_post(
             title="abc",
             description="aaaa",
             content="bbbbbbbb",
             category=self.category,
             authors=[self.lecturer_profile],
+            tags=[self.tag_2],
         )
         create_post(
             title="abcd",
@@ -526,6 +555,7 @@ class PostCategoryFilterTest(APITestCase):
             content="bbbbbbbbb",
             category=self.category_2,
             authors=[self.lecturer_profile],
+            tags=[self.tag_1],
         )
 
     def test_name_filter(self):
@@ -616,12 +646,16 @@ class PostFilterTest(APITestCase):
         self.category_2 = create_post_category(name="Coding")
         create_post_category(name="Testing")
 
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
+
         self.post = create_post(
             title="abc",
             description="aaaa",
             content="bbbbbbbb",
             category=self.category,
             authors=[self.lecturer_profile],
+            tags=[self.tag_1, self.tag_2],
         )
         create_post(
             title="abcd",
@@ -629,6 +663,7 @@ class PostFilterTest(APITestCase):
             content="bbbbbbbbb",
             category=self.category_2,
             authors=[self.lecturer_profile],
+            tags=[self.tag_2],
         )
         create_post(
             title="abc2",
@@ -636,6 +671,7 @@ class PostFilterTest(APITestCase):
             content="bbbbbbbb2",
             category=self.category,
             authors=[self.lecturer_profile],
+            tags=[self.tag_2],
         )
         self.post_2 = create_post(
             title="abcd2",
@@ -643,6 +679,7 @@ class PostFilterTest(APITestCase):
             content="bbbbbbbbb2",
             category=self.category_2,
             authors=[self.lecturer_profile],
+            tags=[self.tag_1],
             active=False,
         )
 
@@ -661,6 +698,17 @@ class PostFilterTest(APITestCase):
         )
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
+
+    def test_tags_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        tag = "coding,IDE"
+        response = self.client.get(f"{self.endpoint}?tags_in={tag}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 3)
 
     def test_active_filter(self):
         # no login
@@ -753,12 +801,16 @@ class PostCategoryOrderTest(APITestCase):
         self.category_2 = create_post_category(name="Coding")
         create_post_category(name="Testing")
 
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
+
         create_post(
             title="abc",
             description="aaaa",
             content="bbbbbbbb",
             category=self.category,
             authors=[self.lecturer_profile],
+            tags=[self.tag_1],
         )
         create_post(
             title="abcd",
@@ -766,6 +818,7 @@ class PostCategoryOrderTest(APITestCase):
             content="bbbbbbbbb",
             category=self.category_2,
             authors=[self.lecturer_profile],
+            tags=[self.tag_2],
         )
 
         self.fields = ["name", "created_at"]
@@ -864,12 +917,16 @@ class PostOrderTest(APITestCase):
         self.category_2 = create_post_category(name="Coding")
         create_post_category(name="Testing")
 
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
+
         self.post = create_post(
             title="abc",
             description="aaaa",
             content="bbbbbbbb",
             category=self.category,
             authors=[self.lecturer_profile],
+            tags=[self.tag_2, self.tag_1],
         )
         create_post(
             title="abcd",
@@ -877,6 +934,7 @@ class PostOrderTest(APITestCase):
             content="bbbbbbbbb",
             category=self.category_2,
             authors=[self.lecturer_profile],
+            tags=[self.tag_1, self.tag_2],
         )
         create_post(
             title="abc2",
@@ -884,6 +942,7 @@ class PostOrderTest(APITestCase):
             content="bbbbbbbb2",
             category=self.category,
             authors=[self.lecturer_profile],
+            tags=[self.tag_1],
         )
         self.post_2 = create_post(
             title="abcd2",
@@ -892,6 +951,7 @@ class PostOrderTest(APITestCase):
             category=self.category_2,
             authors=[self.lecturer_profile],
             active=False,
+            tags=[self.tag_2],
         )
 
         self.fields = ["created_at", "title", "active"]

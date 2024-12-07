@@ -57,7 +57,7 @@ export default function Filters({ open, onClose }: Props) {
 
   const { data: technologies } = useTechnologies({ sort_by: "name", page_size: -1 });
   const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: -1 });
-  const { data: tags } = useTags({ sort_by: "name", page_size: -1 });
+  const { data: tags } = useTags({ sort_by: "-course_count", page_size: -1 });
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
@@ -134,7 +134,7 @@ export default function Filters({ open, onClose }: Props) {
         />
       </Block>
 
-      <Block title="Tags">
+      <Block title="Tagi">
         <FilterTag
           value={filters?.tags_in ?? ""}
           options={tags?.map((tag: ITagProps) => tag.name) ?? []}

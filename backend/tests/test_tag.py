@@ -229,7 +229,7 @@ class TagOrderTest(APITestCase):
         create_tag(name="D")
         create_tag(name="E")
 
-        self.fields = ["name", "created_at"]
+        self.fields = ["name", "created_at", "post_count", "course_count"]
 
     def test_ordering(self):
         for field in self.fields:

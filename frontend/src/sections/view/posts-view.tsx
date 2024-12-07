@@ -47,7 +47,7 @@ export function PostsView() {
     page_size: 4,
     sort_by: "-visits",
   });
-  const { data: availableTags } = useTags({ sort_by: "name", page_size: -1 });
+  const { data: availableTags } = useTags({ sort_by: "-post_count", page_size: -1 });
   const { data: availableCategories, isLoading: isLoadingCategories } = usePostCategories({
     page_size: -1,
     posts_count_from: 1,

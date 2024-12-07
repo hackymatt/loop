@@ -91,13 +91,9 @@ class CourseQuerySet(QuerySet):
                 "modules__lessons__technologies__name", distinct=True
             )
         )
-    
+
     def add_tags(self):
-        return self.annotate(
-            tags_names=ArrayAgg(
-                "tags__name", distinct=True
-            )
-        )
+        return self.annotate(tags_names=ArrayAgg("tags__name", distinct=True))
 
     def add_lecturers_ids(self):
         return self.annotate(

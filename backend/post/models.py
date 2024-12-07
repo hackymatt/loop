@@ -63,13 +63,9 @@ class PostQuerySet(QuerySet):
                 Cast(Length("content"), FloatField()) / Value(WORDS_PER_MINUTE)
             )
         )
-    
+
     def add_tags(self):
-        return self.annotate(
-            tags_names=ArrayAgg(
-                "tags__name", distinct=True
-            )
-        )
+        return self.annotate(tags_names=ArrayAgg("tags__name", distinct=True))
 
     def add_previous_post(self):
         previous_post = Post.objects.filter(
