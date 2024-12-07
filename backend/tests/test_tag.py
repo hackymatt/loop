@@ -5,17 +5,17 @@ from .factory import (
     create_profile,
     create_admin_profile,
     create_student_profile,
-    create_skill,
-    create_skill_obj,
+    create_tag,
+    create_tag_obj,
 )
-from .helpers import login, skills_number, is_float
+from .helpers import login, tags_number, is_float
 from django.contrib import auth
 import json
 
 
-class SkillTest(APITestCase):
+class TagTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/api/skills"
+        self.endpoint = "/api/tags"
         self.admin_data = {
             "email": "admin_test_email@example.com",
             "password": "TestPassword123",
@@ -44,17 +44,17 @@ class SkillTest(APITestCase):
         )
         self.profile = create_student_profile(profile=create_profile(user=self.user))
 
-        create_skill(name="A")
-        self.skill = create_skill(name="B")
-        create_skill(name="C")
-        create_skill(name="D")
-        create_skill(name="E")
+        create_tag(name="A")
+        self.tag = create_tag(name="B")
+        create_tag(name="C")
+        create_tag(name="D")
+        create_tag(name="E")
 
-        self.new_skill = create_skill_obj(name="F")
+        self.new_tag = create_tag_obj(name="F")
 
-        self.amend_skill = create_skill_obj(name=self.skill.name)
+        self.amend_tag = create_tag_obj(name=self.tag.name)
 
-    def test_get_skills_unauthenticated(self):
+    def test_get_tags_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
@@ -62,9 +62,9 @@ class SkillTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(skills_number(), count)
+        self.assertEqual(tags_number(), count)
 
-    def test_get_skills_authenticated(self):
+    def test_get_tags_authenticated(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -73,98 +73,98 @@ class SkillTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         count = data["records_count"]
-        self.assertEqual(skills_number(), count)
+        self.assertEqual(tags_number(), count)
 
-    def test_create_skills_unauthenticated(self):
+    def test_create_tags_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
-        data = self.new_skill
+        data = self.new_tag
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(skills_number(), 5)
+        self.assertEqual(tags_number(), 5)
 
-    def test_create_skills_not_admin(self):
+    def test_create_tags_not_admin(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        data = self.new_skill
+        data = self.new_tag
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(skills_number(), 5)
+        self.assertEqual(tags_number(), 5)
 
-    def test_create_skills_authenticated(self):
+    def test_create_tags_authenticated(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        data = self.new_skill
+        data = self.new_tag
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         data = json.loads(response.content)
-        self.assertEqual(data["name"], self.new_skill["name"])
-        self.assertEqual(skills_number(), 6)
+        self.assertEqual(data["name"], self.new_tag["name"])
+        self.assertEqual(tags_number(), 6)
 
-    def test_update_skills_unauthenticated(self):
+    def test_update_tags_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
-        data = self.amend_skill
-        response = self.client.put(f"{self.endpoint}/{self.skill.id}", data)
+        data = self.amend_tag
+        response = self.client.put(f"{self.endpoint}/{self.tag.id}", data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(skills_number(), 5)
+        self.assertEqual(tags_number(), 5)
 
-    def test_update_skills_not_admin(self):
+    def test_update_tags_not_admin(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        data = self.amend_skill
-        response = self.client.put(f"{self.endpoint}/{self.skill.id}", data)
+        data = self.amend_tag
+        response = self.client.put(f"{self.endpoint}/{self.tag.id}", data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_update_skills_authenticated(self):
+    def test_update_tags_authenticated(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        data = self.amend_skill
-        response = self.client.put(f"{self.endpoint}/{self.skill.id}", data)
+        data = self.amend_tag
+        response = self.client.put(f"{self.endpoint}/{self.tag.id}", data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(data["name"], self.amend_skill["name"])
+        self.assertEqual(data["name"], self.amend_tag["name"])
 
-    def test_delete_skills_unauthenticated(self):
+    def test_delete_tags_unauthenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
-        response = self.client.delete(f"{self.endpoint}/{self.skill.id}")
+        response = self.client.delete(f"{self.endpoint}/{self.tag.id}")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(skills_number(), 5)
+        self.assertEqual(tags_number(), 5)
 
-    def test_delete_skills_not_admin(self):
+    def test_delete_tags_not_admin(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        response = self.client.delete(f"{self.endpoint}/{self.skill.id}")
+        response = self.client.delete(f"{self.endpoint}/{self.tag.id}")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(skills_number(), 5)
+        self.assertEqual(tags_number(), 5)
 
-    def test_delete_skills_authenticated(self):
+    def test_delete_tags_authenticated(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        response = self.client.delete(f"{self.endpoint}/{self.skill.id}")
+        response = self.client.delete(f"{self.endpoint}/{self.tag.id}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(skills_number(), 4)
+        self.assertEqual(tags_number(), 4)
 
 
-class SkillFilterTest(APITestCase):
+class TagFilterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/api/skills"
+        self.endpoint = "/api/tags"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -176,11 +176,11 @@ class SkillFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.skill = create_skill(name="A")
-        create_skill(name="B")
-        create_skill(name="C")
-        create_skill(name="D")
-        create_skill(name="E")
+        self.tag = create_tag(name="A")
+        create_tag(name="B")
+        create_tag(name="C")
+        create_tag(name="D")
+        create_tag(name="E")
 
     def test_name_filter(self):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -197,7 +197,7 @@ class SkillFilterTest(APITestCase):
     def test_created_at_filter(self):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
-        date = str(self.skill.created_at)[0:10]
+        date = str(self.tag.created_at)[0:10]
         response = self.client.get(f"{self.endpoint}?created_at={date}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
@@ -209,9 +209,9 @@ class SkillFilterTest(APITestCase):
         self.assertTrue(dates[0])
 
 
-class SkillOrderTest(APITestCase):
+class TagOrderTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/api/skills"
+        self.endpoint = "/api/tags"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -223,11 +223,11 @@ class SkillOrderTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        create_skill(name="A")
-        create_skill(name="B")
-        create_skill(name="C")
-        create_skill(name="D")
-        create_skill(name="E")
+        create_tag(name="A")
+        create_tag(name="B")
+        create_tag(name="C")
+        create_tag(name="D")
+        create_tag(name="E")
 
         self.fields = ["name", "created_at"]
 

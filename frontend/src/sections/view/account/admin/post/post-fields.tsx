@@ -1,3 +1,4 @@
+import { useTags } from "src/api/tags/tags";
 import { useLecturers } from "src/api/lecturers/lecturers";
 import { usePostCategories } from "src/api/post-categories/post-categories";
 
@@ -9,6 +10,7 @@ import {
   RHFAutocompleteDnd,
 } from "src/components/hook-form";
 
+import { ITagProps } from "src/types/tags";
 import { ITeamMemberProps } from "src/types/team";
 import { IPostCategoryProps } from "src/types/blog";
 
@@ -19,6 +21,10 @@ export const usePostFields = () => {
   });
   const { data: availableLecturers, isLoading: isLoadingLecturers } = useLecturers({
     sort_by: "full_name",
+    page_size: -1,
+  });
+  const { data: availableTags, isLoading: isLoadingTags } = useTags({
+    sort_by: "name",
     page_size: -1,
   });
 
@@ -38,6 +44,18 @@ export const usePostFields = () => {
         getOptionLabel={(option) => (option as IPostCategoryProps)?.name ?? ""}
         loading={isLoadingCategories}
         isOptionEqualToValue={(a, b) => a.name === b.name}
+      />
+    ),
+    tags: (
+      <RHFAutocompleteDnd
+        key="tags"
+        name="tags"
+        label="Tagi"
+        multiple
+        options={availableTags ?? []}
+        getOptionLabel={(option) => (option as ITagProps)?.name ?? ""}
+        isOptionEqualToValue={(a, b) => a.id === b.id}
+        loading={isLoadingTags}
       />
     ),
     authors: (

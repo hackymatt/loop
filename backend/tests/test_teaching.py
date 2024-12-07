@@ -7,7 +7,7 @@ from .factory import (
     create_course,
     create_lesson,
     create_technology,
-    create_skill,
+    create_tag,
     create_topic,
     create_teaching,
     create_module,
@@ -60,8 +60,8 @@ class TeachingTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -71,7 +71,7 @@ class TeachingTest(APITestCase):
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -122,7 +122,7 @@ class TeachingTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             level="Zaawansowany",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -152,7 +152,7 @@ class TeachingTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             level="Ekspert",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -281,8 +281,8 @@ class ManageTeachingFilterTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -292,7 +292,7 @@ class ManageTeachingFilterTest(APITestCase):
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -343,7 +343,7 @@ class ManageTeachingFilterTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             level="Zaawansowany",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -373,7 +373,7 @@ class ManageTeachingFilterTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             level="Ekspert",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -560,8 +560,8 @@ class TeachingFilterTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -571,7 +571,7 @@ class TeachingFilterTest(APITestCase):
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -622,7 +622,7 @@ class TeachingFilterTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             level="Zaawansowany",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -652,7 +652,7 @@ class TeachingFilterTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             level="Ekspert",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -721,8 +721,8 @@ class TeachingOrderTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -732,7 +732,7 @@ class TeachingOrderTest(APITestCase):
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -783,7 +783,7 @@ class TeachingOrderTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             level="Zaawansowany",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -813,7 +813,7 @@ class TeachingOrderTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             level="Ekspert",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,

@@ -4,8 +4,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
+import { ITagProps } from "src/types/tags";
 import { IQueryParams } from "src/types/query-params";
-import { ICourseByCategoryProps } from "src/types/course";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
@@ -44,7 +44,7 @@ export const tagsQuery = (query?: IQueryParams) => {
 export const useTags = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = tagsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as ICourseByCategoryProps[], count: data?.count, ...rest };
+  return { data: data?.results as ITagProps[], count: data?.count, ...rest };
 };
 
 export const useTagsPagesCount = (query?: IQueryParams) => {

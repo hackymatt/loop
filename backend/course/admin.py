@@ -3,5 +3,5 @@ from .models import Course
 
 admin.site.register(Course)
 admin.site.register(Course.modules.through)
-admin.site.register(Course.skills.through)
+admin.site.register(Course.tags.through)
 admin.site.register(Course.topics.through)

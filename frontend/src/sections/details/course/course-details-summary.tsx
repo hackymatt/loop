@@ -1,8 +1,12 @@
 import Box from "@mui/material/Box";
+import { Link } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { alpha } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+
+import { paths } from "src/routes/paths";
+import { RouterLink } from "src/routes/components";
 
 import Iconify from "src/components/iconify";
 import { CircularProgressWithLabel } from "src/components/progress-label/circle-progress";
@@ -58,15 +62,19 @@ export default function CourseDetailsSummary({ course }: Props) {
         </Stack>
       </Stack>
 
-      <Stack spacing={3}>
-        <Typography variant="subtitle2">Tagi</Typography>
+      <Box display="flex" alignItems="center" flexWrap="wrap">
+        <Typography variant="subtitle2" sx={{ mr: 1 }}>
+          Tagi:
+        </Typography>
 
-        <Stack direction="row" flexWrap="wrap" spacing={1}>
+        <Box gap={1} display="flex" flexWrap="wrap">
           {course.tags?.map((tag) => (
-            <Chip key={tag} label={tag} size="small" variant="soft" clickable={false} />
+            <Link component={RouterLink} key={tag} href={`${paths.courses}?tags_in=${tag}`}>
+              <Chip key={tag} size="small" variant="soft" label={tag} />
+            </Link>
           ))}
-        </Stack>
-      </Stack>
+        </Box>
+      </Box>
     </Stack>
   );
 }

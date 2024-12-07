@@ -3,11 +3,11 @@ from django_filters import (
     CharFilter,
     DateFilter,
 )
-from skill.models import Skill
+from tag.models import Tag
 from utils.ordering.ordering import OrderFilter
 
 
-class SkillFilter(FilterSet):
+class TagFilter(FilterSet):
     name = CharFilter(field_name="name", lookup_expr="icontains")
     created_at = DateFilter(field_name="created_at", lookup_expr="contains")
     sort_by = OrderFilter(
@@ -26,7 +26,7 @@ class SkillFilter(FilterSet):
     )
 
     class Meta:
-        model = Skill
+        model = Tag
         fields = (
             "name",
             "created_at",

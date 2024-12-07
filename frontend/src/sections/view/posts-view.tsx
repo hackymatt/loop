@@ -10,11 +10,13 @@ import { paths } from "src/routes/paths";
 import { useResponsive } from "src/hooks/use-responsive";
 import { useQueryParams } from "src/hooks/use-query-params";
 
+import { useTags } from "src/api/tags/tags";
 import { usePosts, usePostsPagesCount } from "src/api/posts/posts";
 import { usePostCategories } from "src/api/post-categories/post-categories";
 
 import { SplashScreen } from "src/components/loading-screen";
 
+import { ITagProps } from "src/types/tags";
 import { IPostProps } from "src/types/blog";
 import { IQueryParamValue } from "src/types/query-params";
 
@@ -45,7 +47,8 @@ export function PostsView() {
     page_size: 4,
     sort_by: "-visits",
   });
-  const { data: categories, isLoading: isLoadingCategories } = usePostCategories({
+  const { data: availableTags } = useTags({ sort_by: "name", page_size: -1 });
+  const { data: availableCategories, isLoading: isLoadingCategories } = usePostCategories({
     page_size: -1,
     posts_count_from: 1,
     sort_by: "name",
@@ -99,11 +102,14 @@ export function PostsView() {
 
           <Grid xs={12} md={4}>
             <PostSidebar
-              value={query?.category ?? ""}
-              onChange={(value) => handleChange("category", value)}
+              category={query?.category ?? ""}
+              onChangeCategory={(value) => handleChange("category", value)}
+              categoryOptions={availableCategories ?? []}
               searchValue={query?.search ?? ""}
               onChangeSearch={(value) => handleChange("search", value)}
-              categories={categories ?? []}
+              tags={query?.tags_in ?? ""}
+              onChangeTags={(value) => handleChange("tags_in", value)}
+              tagsOptions={availableTags?.map((tag: ITagProps) => tag.name) ?? []}
               popularPosts={popularPosts}
               slots={{
                 bottomNode: (

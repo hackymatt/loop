@@ -6,7 +6,9 @@ from rest_framework.serializers import (
 )
 from drf_extra_fields.fields import Base64ImageField
 from post.models import Post, PostCategory
+from tag.models import Tag
 from profile.models import LecturerProfile
+from django.db.models import Case, When, IntegerField
 
 
 class CategorySerializer(ModelSerializer):
@@ -17,6 +19,14 @@ class CategorySerializer(ModelSerializer):
             "name",
         )
 
+
+class TagSerializer(ModelSerializer):
+    class Meta:
+        model = Tag
+        exclude = (
+            "modified_at",
+            "created_at",
+        )
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField()
@@ -80,6 +90,7 @@ class PostListSerializer(ModelSerializer):
         model = Post
         exclude = (
             "content",
+            "tags",
             "visits",
             "modified_at",
         )
@@ -90,6 +101,7 @@ class PostListSerializer(ModelSerializer):
 
 class PostGetSerializer(ModelSerializer):
     category = CategorySerializer()
+    tags = TagSerializer(many=True)
     authors = LecturerDetailsSerializer(many=True)
     image = Base64ImageField(required=True)
     duration = SerializerMethodField()
@@ -121,6 +133,19 @@ class PostGetSerializer(ModelSerializer):
         return PostNavigationSerializer(
             post, context={"request": self.context.get("request")}
         ).data
+    
+    def get_tags(self, post: Post):
+        tag_ids = list(
+            Post.tags.through.objects.filter(post=post)
+            .order_by("id")
+            .values_list("tag_id", flat=True)
+        )
+        preserved_order = Case(
+            *[When(pk=pk, then=pos) for pos, pk in enumerate(tag_ids)],
+            output_field=IntegerField(),
+        )
+        tags = Tag.objects.filter(id__in=tag_ids).order_by(preserved_order)
+        return TagSerializer(tags, many=True).data
 
 
 class PostSerializer(ModelSerializer):
@@ -135,18 +160,27 @@ class PostSerializer(ModelSerializer):
             post.authors.add(author)
 
         return post
+    
+    def add_tags(self, post: Post, tags):
+        for tag in tags:
+            post.tags.add(tag)
+
+        return post
 
     def create(self, validated_data):
         authors = validated_data.pop("authors")
+        tags = validated_data.pop("tags")
 
         post = Post.objects.create(**validated_data)
         post = self.add_authors(post=post, authors=authors)
+        post = self.add_tags(post=post, tags=tags)
         post.save()
 
         return post
 
     def update(self, instance: Post, validated_data):
         authors = validated_data.pop("authors")
+        tags = validated_data.pop("tags")
 
         instance.active = validated_data.get("active", instance.active)
         instance.title = validated_data.get("title", instance.title)
@@ -157,6 +191,8 @@ class PostSerializer(ModelSerializer):
 
         instance.authors.clear()
         instance = self.add_authors(post=instance, authors=authors)
+        instance.tags.clear()
+        instance = self.add_tags(post=instance, tags=tags)
 
         instance.save()
 

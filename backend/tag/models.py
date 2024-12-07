@@ -5,11 +5,11 @@ from django.db.models import (
 )
 
 
-class Skill(BaseModel):
+class Tag(BaseModel):
     name = TextField()
 
     class Meta:
-        db_table = "skill"
+        db_table = "tags"
         ordering = ["name"]
         indexes = [
             Index(

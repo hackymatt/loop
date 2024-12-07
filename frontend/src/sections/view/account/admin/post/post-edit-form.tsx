@@ -15,6 +15,7 @@ import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import { urlToBlob } from "src/utils/blob-to-base64";
 
+import { useTags } from "src/api/tags/tags";
 import { usePost, useEditPost } from "src/api/posts/post";
 import { useLecturers } from "src/api/lecturers/lecturers";
 import { usePostCategories } from "src/api/post-categories/post-categories";
@@ -22,6 +23,7 @@ import { usePostCategories } from "src/api/post-categories/post-categories";
 import FormProvider from "src/components/hook-form";
 import { isStepFailed } from "src/components/stepper/step";
 
+import { ITagProps } from "src/types/tags";
 import { IAuthorProps } from "src/types/author";
 import { ITeamMemberProps } from "src/types/team";
 import { IPostProps, IPostCategoryProps } from "src/types/blog";
@@ -47,6 +49,10 @@ export default function PostEditForm({ post, onClose, ...other }: Props) {
     sort_by: "full_name",
     page_size: -1,
   });
+  const { data: availableTags } = useTags({
+    sort_by: "name",
+    page_size: -1,
+  });
 
   const { data: postData } = usePost(post.id);
   const { mutateAsync: editPost } = useEditPost(post.id);
@@ -63,17 +69,20 @@ export default function PostEditForm({ post, onClose, ...other }: Props) {
   } = methods;
 
   useEffect(() => {
-    if (postData && availableCategories && availableLecturers) {
+    if (postData && availableTags && availableCategories && availableLecturers) {
       reset({
         ...postData,
         category: [availableCategories.find((c: IPostCategoryProps) => c.name === post.category)],
         authors: postData.authors.map((author: IAuthorProps) =>
           availableLecturers.find((lecturer: ITeamMemberProps) => lecturer.id === author.id),
         ),
+        tags: postData.tags.map((tag: string) =>
+          availableTags.find((s: ITagProps) => s.name === tag),
+        ),
         image: postData.coverUrl ?? "",
       });
     }
-  }, [availableCategories, availableLecturers, post.category, postData, reset]);
+  }, [availableCategories, availableLecturers, availableTags, post.category, postData, reset]);
 
   const handleFormError = useFormErrorHandler(methods);
 
@@ -88,6 +97,7 @@ export default function PostEditForm({ post, onClose, ...other }: Props) {
         ...data,
         authors: data.authors.map((author: IAuthorProps) => author.id),
         category: data.category.map((c: IPostCategoryProps) => c.id)[0],
+        tags: data.tags.map((tag: ITagProps) => tag.id),
         image: (await urlToBlob(data.image)) as string,
       });
       reset();

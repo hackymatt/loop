@@ -11,6 +11,11 @@ from utils.ordering.ordering import OrderFilter
 class PostFilter(FilterSet):
     title = CharFilter(field_name="title", lookup_expr="icontains")
     category = CharFilter(field_name="category__name", lookup_expr="icontains")
+    tags_in = CharFilter(
+        label="Tags in",
+        field_name="tags_names",
+        method="filter_in",
+    )
     created_at = DateFilter(field_name="created_at", lookup_expr="contains")
     sort_by = OrderFilter(
         choices=(
@@ -40,10 +45,26 @@ class PostFilter(FilterSet):
         fields = (
             "title",
             "category",
+            "tags_in",
             "created_at",
             "active",
             "sort_by",
         )
+
+    def filter_in(self, queryset, field_name, value):
+        lookup_field_name = f"{field_name}__contains"
+
+        values = value.split(",")
+
+        v_first, *v_rest = values
+        return_queryset = queryset.filter(**{lookup_field_name: [v_first]})
+        for v in v_rest:
+            return_queryset = return_queryset | queryset.filter(
+                **{lookup_field_name: [v]}
+            )
+
+        return return_queryset
+
 
 
 class PostCategoryFilter(FilterSet):

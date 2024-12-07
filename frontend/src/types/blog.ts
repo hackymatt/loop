@@ -23,6 +23,7 @@ export type IPostProps = {
   duration: string;
   coverUrl: string;
   authors: IAuthorProps[];
+  tags: string[];
   createdAt: string;
   previousPost?: IPostNavigationProps;
   nextPost?: IPostNavigationProps;

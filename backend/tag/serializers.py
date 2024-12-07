@@ -1,8 +1,8 @@
 from rest_framework.serializers import ModelSerializer
-from skill.models import Skill
+from tag.models import Tag
 
 
-class SkillSerializer(ModelSerializer):
+class TagSerializer(ModelSerializer):
     class Meta:
-        model = Skill
+        model = Tag
         exclude = ("modified_at",)

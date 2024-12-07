@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("skill", "0001_initial"),
+        ("tag", "0001_initial"),
         ("module", "0001_initial"),
         ("topic", "0001_initial"),
     ]
@@ -64,7 +64,7 @@ class Migration(migrations.Migration):
                 (
                     "skills",
                     models.ManyToManyField(
-                        related_name="course_skills", to="skill.skill"
+                        related_name="course_skills", to="tag.skill"
                     ),
                 ),
                 (

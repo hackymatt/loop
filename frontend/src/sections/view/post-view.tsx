@@ -28,6 +28,7 @@ import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
 import { IAuthorProps } from "src/types/author";
 
+import { PostTags } from "../posts/post-tags";
 import Newsletter from "../newsletter/newsletter";
 import { PostAuthors } from "../posts/post-author";
 import { PopularPosts } from "../posts/popular-posts";
@@ -103,8 +104,8 @@ export function PostView({ id }: { id: string }) {
   const metadata = useMemo(
     () =>
       createMetadata(
-        `Artykuł: ${post?.title}`,
-        `Przeczytaj nasz artykuł o ${post?.title}. Dowiedz się, jak ${post?.description.toLowerCase()}. Odkryj praktyczne porady i najlepsze praktyki, które pomogą Ci w rozwoju umiejętności programistycznych.`,
+        `Artykuł ${post?.title} - przeczytaj już teraz`,
+        `Przeczytaj nasz artykuł o ${post?.title}. ${post?.description} Dowiedz się, jak ${post?.description.toLowerCase()}. Odkryj praktyczne porady i najlepsze praktyki, które pomogą Ci w rozwoju umiejętności programistycznych.`,
         [
           post?.title,
           post?.description,
@@ -203,6 +204,8 @@ export function PostView({ id }: { id: string }) {
             {renderToolbar}
 
             <Markdown content={post?.content ?? ""} />
+
+            {!!post.tags?.length && <PostTags tags={post.tags} />}
 
             <Divider sx={{ mt: 10 }} />
 

@@ -23,6 +23,11 @@ class CourseFilter(FilterSet):
         field_name="technologies_names",
         method="filter_in",
     )
+    tags_in = CharFilter(
+        label="Tags in",
+        field_name="tags_names",
+        method="filter_in",
+    )
     level_in = CharInFilter(field_name="level", lookup_expr="in")
     price_from = NumberFilter(field_name="price", lookup_expr="gte")
     price_to = NumberFilter(field_name="price", lookup_expr="lte")
@@ -69,6 +74,7 @@ class CourseFilter(FilterSet):
         fields = (
             "lecturer_in",
             "technology_in",
+            "tags_in",
             "level_in",
             "price_from",
             "price_to",

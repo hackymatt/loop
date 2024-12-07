@@ -10,7 +10,7 @@ from .factory import (
     create_course_obj,
     create_lesson,
     create_technology,
-    create_skill,
+    create_tag,
     create_topic,
     create_review,
     create_purchase,
@@ -30,11 +30,11 @@ from .helpers import (
     get_lesson,
     get_module,
     get_technology,
-    get_skill,
+    get_tag,
     get_topic,
     courses_number,
     get_course_modules,
-    get_course_skills,
+    get_course_tags,
     get_course_topics,
     notifications_number,
     is_float,
@@ -132,8 +132,8 @@ class CourseTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -143,7 +143,7 @@ class CourseTest(APITestCase):
             title="course_title",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -258,7 +258,7 @@ class CourseTest(APITestCase):
             title="course_title 2",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -296,7 +296,7 @@ class CourseTest(APITestCase):
             title="course_title 3",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -319,7 +319,7 @@ class CourseTest(APITestCase):
             description="course_description",
             level="E",
             modules=[self.module_3.id, self.module_2.id],
-            skills=[self.skill_1.id, self.skill_2.id],
+            tags=[self.tag_1.id, self.tag_2.id],
             topics=[
                 self.topic_1.id,
                 self.topic_2.id,
@@ -333,7 +333,7 @@ class CourseTest(APITestCase):
             description="course_description",
             level="E",
             modules=[self.module_3.id, self.module_2.id],
-            skills=[self.skill_1.id, self.skill_2.id],
+            tags=[self.tag_1.id, self.tag_2.id],
             topics=[
                 self.topic_1.id,
                 self.topic_2.id,
@@ -348,7 +348,7 @@ class CourseTest(APITestCase):
             description="course_description_other",
             level="Z",
             modules=[self.module_3.id, self.module_2.id],
-            skills=[self.skill_1.id],
+            tags=[self.tag_1.id],
             topics=[self.topic_2.id],
             image=b64encode(create_image().read()),
             video=b64encode(create_video().read()),
@@ -359,7 +359,7 @@ class CourseTest(APITestCase):
             description="course_description_other",
             level="Z",
             modules=[self.module_3.id, self.module_2.id],
-            skills=[self.skill_1.id],
+            tags=[self.tag_1.id],
             topics=[self.topic_2.id],
             image=b64encode(create_image().read()),
             video=b64encode(create_video().read()),
@@ -375,7 +375,7 @@ class CourseTest(APITestCase):
         data = json.loads(response.content)
         results = data["results"]
         self.assertFalse(all("lessons" in course.keys() for course in results))
-        self.assertFalse(all("skills" in course.keys() for course in results))
+        self.assertFalse(all("tags" in course.keys() for course in results))
         self.assertFalse(all("topics" in course.keys() for course in results))
         self.assertEqual(results[0]["rating"], 4.0)
         self.assertEqual(results[0]["rating_count"], 3)
@@ -391,7 +391,7 @@ class CourseTest(APITestCase):
         data = json.loads(response.content)
         results = data["results"]
         self.assertFalse(all("lessons" in course.keys() for course in results))
-        self.assertFalse(all("skills" in course.keys() for course in results))
+        self.assertFalse(all("tags" in course.keys() for course in results))
         self.assertFalse(all("topics" in course.keys() for course in results))
         self.assertEqual(results[0]["rating"], 4.0)
         self.assertEqual(results[0]["rating_count"], 3)
@@ -407,7 +407,7 @@ class CourseTest(APITestCase):
         data = json.loads(response.content)
         results = data["results"]
         self.assertFalse(all("lessons" in course.keys() for course in results))
-        self.assertFalse(all("skills" in course.keys() for course in results))
+        self.assertFalse(all("tags" in course.keys() for course in results))
         self.assertFalse(all("topics" in course.keys() for course in results))
         self.assertEqual(results[0]["rating"], 4.0)
         self.assertEqual(results[0]["rating_count"], 3)
@@ -432,7 +432,7 @@ class CourseTest(APITestCase):
         course_data = json.loads(response.content)
         modules_data = course_data.pop("modules")
         technology_data = course_data.pop("technologies")
-        skills_data = course_data.pop("skills")
+        tags_data = course_data.pop("tags")
         topics_data = course_data.pop("topics")
         course_data.pop("duration")
         course_data.pop("lecturers")
@@ -488,8 +488,8 @@ class CourseTest(APITestCase):
 
         for technology in technology_data:
             self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
-        for skill_data in skills_data:
-            self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
+        for tag_data in tags_data:
+            self.assertTrue(is_data_match(get_tag(tag_data["id"]), tag_data))
         for topic_data in topics_data:
             self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
 
@@ -503,7 +503,7 @@ class CourseTest(APITestCase):
         course_data = json.loads(response.content)
         modules_data = course_data.pop("modules")
         technology_data = course_data.pop("technologies")
-        skills_data = course_data.pop("skills")
+        tags_data = course_data.pop("tags")
         topics_data = course_data.pop("topics")
         course_data.pop("duration")
         course_data.pop("lecturers")
@@ -559,8 +559,8 @@ class CourseTest(APITestCase):
 
         for technology in technology_data:
             self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
-        for skill_data in skills_data:
-            self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
+        for tag_data in tags_data:
+            self.assertTrue(is_data_match(get_tag(tag_data["id"]), tag_data))
         for topic_data in topics_data:
             self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
 
@@ -574,7 +574,7 @@ class CourseTest(APITestCase):
         course_data = json.loads(response.content)
         modules_data = course_data.pop("modules")
         technology_data = course_data.pop("technologies")
-        skills_data = course_data.pop("skills")
+        tags_data = course_data.pop("tags")
         topics_data = course_data.pop("topics")
         course_data.pop("duration")
         course_data.pop("lecturers")
@@ -621,8 +621,8 @@ class CourseTest(APITestCase):
 
         for technology in technology_data:
             self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
-        for skill_data in skills_data:
-            self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
+        for tag_data in tags_data:
+            self.assertTrue(is_data_match(get_tag(tag_data["id"]), tag_data))
         for topic_data in topics_data:
             self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
 
@@ -636,7 +636,7 @@ class CourseTest(APITestCase):
         course_data = json.loads(response.content)
         modules_data = course_data.pop("modules")
         technology_data = course_data.pop("technologies")
-        skills_data = course_data.pop("skills")
+        tags_data = course_data.pop("tags")
         topics_data = course_data.pop("topics")
         course_data.pop("duration")
         course_data.pop("lecturers")
@@ -683,8 +683,8 @@ class CourseTest(APITestCase):
 
         for technology in technology_data:
             self.assertTrue(is_data_match(get_technology(technology["id"]), technology))
-        for skill_data in skills_data:
-            self.assertTrue(is_data_match(get_skill(skill_data["id"]), skill_data))
+        for tag_data in tags_data:
+            self.assertTrue(is_data_match(get_tag(tag_data["id"]), tag_data))
         for topic_data in topics_data:
             self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
 
@@ -720,7 +720,7 @@ class CourseTest(APITestCase):
         self.assertEqual(courses_number(), 4)
         course_data = json.loads(response.content)
         modules_ids = course_data.pop("modules")
-        skills_ids = course_data.pop("skills")
+        tags_ids = course_data.pop("tags")
         topics_ids = course_data.pop("topics")
         self.assertTrue(is_data_match(get_course(course_data["id"]), course_data))
         self.assertEqual(
@@ -737,10 +737,8 @@ class CourseTest(APITestCase):
             sorted(modules_ids),
         )
         self.assertEqual(
-            sorted(
-                [record.skill.id for record in get_course_skills(course_data["id"])]
-            ),
-            sorted(skills_ids),
+            sorted([record.tag.id for record in get_course_tags(course_data["id"])]),
+            sorted(tags_ids),
         )
         self.assertEqual(
             sorted(
@@ -761,7 +759,7 @@ class CourseTest(APITestCase):
         self.assertEqual(courses_number(), 4)
         course_data = json.loads(response.content)
         modules_ids = course_data.pop("modules")
-        skills_ids = course_data.pop("skills")
+        tags_ids = course_data.pop("tags")
         topics_ids = course_data.pop("topics")
         self.assertTrue(is_data_match(get_course(course_data["id"]), course_data))
         self.assertEqual(
@@ -778,10 +776,8 @@ class CourseTest(APITestCase):
             sorted(modules_ids),
         )
         self.assertEqual(
-            sorted(
-                [record.skill.id for record in get_course_skills(course_data["id"])]
-            ),
-            sorted(skills_ids),
+            sorted([record.tag.id for record in get_course_tags(course_data["id"])]),
+            sorted(tags_ids),
         )
         self.assertEqual(
             sorted(
@@ -805,14 +801,14 @@ class CourseTest(APITestCase):
         self.assertEqual(courses_number(), 3)
         self.assertEqual(notifications_number(), 0)
 
-    def test_create_course_without_skills(self):
+    def test_create_course_without_tags(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = self.new_course
-        del data["skills"]
-        data["skills"] = []
+        del data["tags"]
+        data["tags"] = []
 
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -865,7 +861,7 @@ class CourseTest(APITestCase):
         self.assertEqual(courses_number(), 3)
         course_data = json.loads(response.content)
         modules_ids = course_data.pop("modules")
-        skills_ids = course_data.pop("skills")
+        tags_ids = course_data.pop("tags")
         topics_ids = course_data.pop("topics")
         self.assertTrue(is_data_match(get_course(course_data["id"]), course_data))
         self.assertEqual(
@@ -882,10 +878,8 @@ class CourseTest(APITestCase):
             sorted(modules_ids),
         )
         self.assertEqual(
-            sorted(
-                [record.skill.id for record in get_course_skills(course_data["id"])]
-            ),
-            sorted(skills_ids),
+            sorted([record.tag.id for record in get_course_tags(course_data["id"])]),
+            sorted(tags_ids),
         )
         self.assertEqual(
             sorted(
@@ -906,7 +900,7 @@ class CourseTest(APITestCase):
         self.assertEqual(courses_number(), 3)
         course_data = json.loads(response.content)
         modules_ids = course_data.pop("modules")
-        skills_ids = course_data.pop("skills")
+        tags_ids = course_data.pop("tags")
         topics_ids = course_data.pop("topics")
         self.assertTrue(is_data_match(get_course(course_data["id"]), course_data))
         self.assertEqual(
@@ -923,10 +917,8 @@ class CourseTest(APITestCase):
             sorted(modules_ids),
         )
         self.assertEqual(
-            sorted(
-                [record.skill.id for record in get_course_skills(course_data["id"])]
-            ),
-            sorted(skills_ids),
+            sorted([record.tag.id for record in get_course_tags(course_data["id"])]),
+            sorted(tags_ids),
         )
         self.assertEqual(
             sorted(
@@ -950,14 +942,14 @@ class CourseTest(APITestCase):
         self.assertEqual(courses_number(), 3)
         self.assertEqual(notifications_number(), 0)
 
-    def test_update_course_without_skills(self):
+    def test_update_course_without_tags(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = self.amend_course
-        del data["skills"]
-        data["skills"] = []
+        del data["tags"]
+        data["tags"] = []
 
         response = self.client.put(f"{self.endpoint}/{self.course.id}", data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -1088,8 +1080,8 @@ class BestCourseTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -1099,7 +1091,7 @@ class BestCourseTest(APITestCase):
             title="course_title",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1192,7 +1184,7 @@ class BestCourseTest(APITestCase):
             title="course_title 2",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1233,7 +1225,7 @@ class BestCourseTest(APITestCase):
             title="course_title 3",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1345,8 +1337,8 @@ class CourseFilterTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -1356,7 +1348,7 @@ class CourseFilterTest(APITestCase):
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1450,7 +1442,7 @@ class CourseFilterTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             level="Zaawansowany",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1566,7 +1558,7 @@ class CourseFilterTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             level="Ekspert",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1771,8 +1763,8 @@ class CourseOrderTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -1782,7 +1774,7 @@ class CourseOrderTest(APITestCase):
             title="Python Beginner",
             description="Learn Python today",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1858,7 +1850,7 @@ class CourseOrderTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             level="Zaawansowany",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1948,7 +1940,7 @@ class CourseOrderTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             level="Ekspert",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,

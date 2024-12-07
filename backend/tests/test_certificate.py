@@ -10,7 +10,7 @@ from .factory import (
     create_course,
     create_lesson,
     create_technology,
-    create_skill,
+    create_tag,
     create_topic,
     create_purchase,
     create_schedule,
@@ -129,8 +129,8 @@ class CertificateTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -143,7 +143,7 @@ class CertificateTest(APITestCase):
             title="course_title",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -472,8 +472,8 @@ class CertificateInfoTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -486,7 +486,7 @@ class CertificateInfoTest(APITestCase):
             title="course_title",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -865,8 +865,8 @@ class CertificateGenerateTest(TestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -883,7 +883,7 @@ class CertificateGenerateTest(TestCase):
             title="course_title",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -895,7 +895,7 @@ class CertificateGenerateTest(TestCase):
             title="course_title_2",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1121,8 +1121,8 @@ class CertificateFilterTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -1135,7 +1135,7 @@ class CertificateFilterTest(APITestCase):
             title="course_title",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
@@ -1484,8 +1484,8 @@ class CertificateOrderTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
-        self.skill_1 = create_skill(name="coding")
-        self.skill_2 = create_skill(name="IDE")
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
 
         self.module_1 = create_module(
             title="Module 1", lessons=[self.lesson_1, self.lesson_2]
@@ -1498,7 +1498,7 @@ class CertificateOrderTest(APITestCase):
             title="course_title",
             description="course_description",
             level="Podstawowy",
-            skills=[self.skill_1, self.skill_2],
+            tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
