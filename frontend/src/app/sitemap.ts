@@ -25,6 +25,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.5,
     },
     {
+      url: `https://www.${env}loop.edu.pl/posts`,
+      lastModified: new Date().toISOString(),
+      changeFrequency: "always",
+      priority: 0.8,
+    },
+    {
       url: `https://www.${env}loop.edu.pl/about`,
       lastModified: new Date().toISOString(),
       changeFrequency: "yearly",
