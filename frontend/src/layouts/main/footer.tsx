@@ -58,6 +58,24 @@ export default function Footer() {
 
                 <Link
                   component={RouterLink}
+                  href={paths.teachers}
+                  variant="body2"
+                  sx={{ color: "text.primary" }}
+                >
+                  Instruktorzy
+                </Link>
+
+                <Link
+                  component={RouterLink}
+                  href={paths.posts}
+                  variant="body2"
+                  sx={{ color: "text.primary" }}
+                >
+                  Blog
+                </Link>
+
+                <Link
+                  component={RouterLink}
                   href={paths.about}
                   variant="body2"
                   sx={{ color: "text.primary" }}

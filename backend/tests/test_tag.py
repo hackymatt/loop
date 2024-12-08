@@ -5,8 +5,16 @@ from .factory import (
     create_profile,
     create_admin_profile,
     create_student_profile,
+    create_lecturer_profile,
     create_tag,
     create_tag_obj,
+    create_post_category,
+    create_post,
+    create_technology,
+    create_topic,
+    create_lesson,
+    create_course,
+    create_module,
 )
 from .helpers import login, tags_number, is_float
 from django.contrib import auth
@@ -176,11 +184,79 @@ class TagFilterTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
+        self.lecturer_data = {
+            "email": "lecturer_1@example.com",
+            "password": "TestPassword123",
+        }
+        self.lecturer_user = create_user(
+            first_name="l1_first_name",
+            last_name="l1_last_name",
+            email=self.lecturer_data["email"],
+            password=self.lecturer_data["password"],
+            is_active=True,
+        )
+        self.lecturer_profile = create_lecturer_profile(
+            profile=create_profile(user=self.lecturer_user, user_type="W")
+        )
+
         self.tag = create_tag(name="A")
-        create_tag(name="B")
-        create_tag(name="C")
+        self.tag_2 = create_tag(name="B")
+        self.tag_3 = create_tag(name="C")
         create_tag(name="D")
         create_tag(name="E")
+
+        self.category = create_post_category(name="AI")
+
+        create_post(
+            title="abc",
+            description="aaaa",
+            content="bbbbbbbb",
+            category=self.category,
+            authors=[self.lecturer_profile],
+            tags=[self.tag, self.tag_2],
+        )
+
+        self.technology_1 = create_technology(name="Python")
+
+        self.lesson_1 = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="99.99",
+            technologies=[self.technology_1],
+        )
+
+        self.lesson_2 = create_lesson(
+            title="Python lesson 2",
+            description="bbbb",
+            duration="30",
+            github_url="https://github.com/loopedupl/lesson",
+            price="2.99",
+            technologies=[self.technology_1],
+        )
+
+        self.topic_1 = create_topic(name="You will learn how to code")
+        self.topic_2 = create_topic(name="You will learn a new IDE")
+
+        self.tag_1 = create_tag(name="coding")
+        self.tag_2 = create_tag(name="IDE")
+
+        self.module_1 = create_module(
+            title="Module 1", lessons=[self.lesson_1, self.lesson_2]
+        )
+
+        create_course(
+            title="Python Beginner",
+            description="Learn Python today",
+            level="Podstawowy",
+            tags=[self.tag_1, self.tag_2, self.tag_3],
+            topics=[
+                self.topic_1,
+                self.topic_2,
+            ],
+            modules=[self.module_1],
+        )
 
     def test_name_filter(self):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -203,10 +279,34 @@ class TagFilterTest(APITestCase):
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 5)
+        self.assertEqual(records_count, 7)
         dates = list(set([date in record["created_at"] for record in results]))
         self.assertTrue(len(dates) == 1)
         self.assertTrue(dates[0])
+
+    def test_post_count_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}?post_count_gt=0")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 2)
+        tags = [record["name"] for record in results]
+        self.assertEqual(tags, ["A", "B"])
+
+    def test_course_count_filter(self):
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}?course_count_gt=0")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 3)
+        tags = [record["name"] for record in results]
+        self.assertEqual(tags, ["C", "coding", "IDE"])
 
 
 class TagOrderTest(APITestCase):

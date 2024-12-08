@@ -14,7 +14,7 @@ import { Avatar, IconButton, AvatarGroup } from "@mui/material";
 import { paths } from "src/routes/paths";
 
 import { fDate } from "src/utils/format-time";
-import { decodeUrl } from "src/utils/url-utils";
+import { decodeUrl, encodeUrl } from "src/utils/url-utils";
 import { createMetadata } from "src/utils/create-metadata";
 import { getGenderAvatar } from "src/utils/get-gender-avatar";
 
@@ -220,19 +220,22 @@ export function PostView({ id }: { id: string }) {
                 gridTemplateColumns={{ xs: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
                 sx={{ py: 10 }}
               >
-                {prevPost && (
+                {prevPost ? (
                   <PrevNextButton
                     title={prevPost.title}
                     coverUrl={prevPost.coverUrl}
-                    href={`${prevPost.title}-${prevPost.id}`}
+                    href={`${paths.post}/${encodeUrl(`${prevPost.title}-${prevPost.id}`)}`}
                   />
+                ) : (
+                  <Box />
                 )}
+
                 {nextPost && (
                   <PrevNextButton
                     isNext
                     title={nextPost.title}
                     coverUrl={nextPost.coverUrl}
-                    href={`${nextPost.title}-${nextPost.id}`}
+                    href={`${paths.post}/${encodeUrl(`${nextPost.title}-${nextPost.id}`)}`}
                   />
                 )}
               </Box>

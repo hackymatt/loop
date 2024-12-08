@@ -55,9 +55,13 @@ export default function Filters({ open, onClose }: Props) {
   const mdUp = useResponsive("up", "md");
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
-  const { data: technologies } = useTechnologies({ sort_by: "name", page_size: -1 });
+  const { data: technologies } = useTechnologies({
+    courses_count_from: 1,
+    sort_by: "name",
+    page_size: -1,
+  });
   const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: -1 });
-  const { data: tags } = useTags({ sort_by: "-course_count", page_size: -1 });
+  const { data: tags } = useTags({ course_count_gt: 0, sort_by: "-course_count", page_size: -1 });
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
