@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Box } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import ButtonBase from "@mui/material/ButtonBase";
@@ -46,13 +47,13 @@ export function PrevNextButton({ coverUrl, title, isNext, href, sx, ...other }: 
 
       <Avatar src={coverUrl} sx={{ width: 64, height: 64 }} />
 
-      <div>
+      <Box>
         <Typography variant="overline" sx={{ mb: 0.5, display: "block", color: "text.disabled" }}>
           {isNext ? "Następny" : "Poprzedni"}
         </Typography>
 
         <Typography variant="subtitle1">{title}</Typography>
-      </div>
+      </Box>
     </ButtonBase>
   );
 }

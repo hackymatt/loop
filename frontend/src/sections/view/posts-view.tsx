@@ -43,12 +43,16 @@ export function PostsView() {
     ...query,
     sort_by: "-created_at",
   });
-  const { data: popularPosts, isLoading: isLoadingPopularPosts } = usePosts({
+  const { data: popularPosts } = usePosts({
     page_size: 4,
     sort_by: "-visits",
   });
-  const { data: availableTags } = useTags({ sort_by: "-post_count", page_size: -1 });
-  const { data: availableCategories, isLoading: isLoadingCategories } = usePostCategories({
+  const { data: availableTags } = useTags({
+    post_count_gt: 0,
+    sort_by: "-post_count",
+    page_size: -1,
+  });
+  const { data: availableCategories } = usePostCategories({
     page_size: -1,
     posts_count_from: 1,
     sort_by: "name",
@@ -60,8 +64,7 @@ export function PostsView() {
     [featuredPost?.id, recentPosts],
   );
 
-  const isLoading =
-    isLoadingPagesCount || isLoadingFeaturedPost || isLoadingPopularPosts || isLoadingCategories;
+  const isLoading = isLoadingPagesCount || isLoadingFeaturedPost;
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {

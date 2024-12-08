@@ -6,6 +6,8 @@ from utils.ordering.ordering import OrderFilter
 class TagFilter(FilterSet):
     name = CharFilter(field_name="name", lookup_expr="icontains")
     created_at = DateFilter(field_name="created_at", lookup_expr="contains")
+    post_count_gt = NumberFilter(field_name="post_count", lookup_expr="gt")
+    course_count_gt = NumberFilter(field_name="course_count", lookup_expr="gt")
     sort_by = OrderFilter(
         choices=(
             ("name", "Name ASC"),
@@ -34,5 +36,7 @@ class TagFilter(FilterSet):
         fields = (
             "name",
             "created_at",
+            "post_count_gt",
+            "course_count_gt",
             "sort_by",
         )
