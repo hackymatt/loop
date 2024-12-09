@@ -249,7 +249,7 @@ export default function RegisterView() {
         <Stack spacing={0.5}>
           <RHFCheckbox name="acceptance" label={generalAcceptance} />
           <RHFCheckbox name="dataAcceptance" label={dataAcceptance} />
-          <RHFCheckbox name="newsletter" label={newsletterAcceptance} />
+          <RHFCheckbox name="newsletter" label={newsletterAcceptance({})} />
         </Stack>
 
         <LoadingButton
