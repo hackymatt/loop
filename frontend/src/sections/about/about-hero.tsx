@@ -2,23 +2,45 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
+import { alpha, useTheme } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
 import { paths } from "src/routes/paths";
+
+import { bgGradient } from "src/theme/css";
 
 import Image from "src/components/image";
 
 // ----------------------------------------------------------------------
 
 export default function AboutHero() {
+  const theme = useTheme();
   return (
     <Box
+      component="section"
       sx={{
-        py: { xs: 10, md: 20 },
+        ...bgGradient({
+          color: `to bottom, ${alpha(theme.palette.background.default, 0.9)}, ${alpha(theme.palette.background.default, 0.9)}`,
+          imgUrl: "/assets/background/overlay-1.webp",
+        }),
         overflow: "hidden",
-        bgcolor: "primary.lighter",
+        position: "relative",
+        py: { xs: 10, md: 20 },
       }}
     >
+      <Box
+        component="img"
+        alt="Texture"
+        src="/assets/background/texture-1.webp"
+        sx={{
+          top: 0,
+          right: 0,
+          zIndex: 8,
+          opacity: 0.24,
+          position: "absolute",
+          height: `calc(100% + 80px)`,
+        }}
+      />
       <Container>
         <Grid container spacing={{ xs: 8, md: 3 }} justifyContent="space-between">
           <Grid

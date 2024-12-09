@@ -34,16 +34,27 @@ export const dataAcceptance = (
   </Typography>
 );
 
-export const newsletterAcceptance = (
-  <Typography variant="caption" align="left" sx={{ color: "text.secondary", textAlign: "justify" }}>
+export const newsletterAcceptance = ({
+  color,
+  opacity = 1,
+}: {
+  color?: string;
+  opacity?: number;
+}) => (
+  <Typography
+    variant="caption"
+    align="left"
+    sx={{ color: color ?? "text.secondary", textAlign: "justify", opacity }}
+  >
     Wyrażam zgodę na otrzymywanie na podany adres poczty elektronicznej informacji handlowych
     dotyczących usług oraz w celu otrzymywania newslettera — więcej informacji uzyskają Państwo{" "}
     <Link
       target="_blank"
       rel="noopener"
       href={paths.privacyPolicy}
-      color="text.primary"
+      color={color ?? "text.primary"}
       underline="always"
+      sx={{ opacity }}
     >
       tutaj
     </Link>

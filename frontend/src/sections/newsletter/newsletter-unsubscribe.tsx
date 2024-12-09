@@ -3,8 +3,10 @@ import { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
+import { alpha, useTheme } from "@mui/material";
 import Typography from "@mui/material/Typography";
 
+import { bgGradient } from "src/theme/css";
 import { useUnregisterNewsletter } from "src/api/newsletter/unregister";
 
 import Image from "src/components/image";
@@ -12,6 +14,8 @@ import Image from "src/components/image";
 // ----------------------------------------------------------------------
 
 export default function NewsletterUnsubscribe({ id }: { id: string }) {
+  const theme = useTheme();
+
   const { mutateAsync: unregister } = useUnregisterNewsletter();
 
   useEffect(() => {
@@ -20,12 +24,30 @@ export default function NewsletterUnsubscribe({ id }: { id: string }) {
 
   return (
     <Box
+      component="section"
       sx={{
-        py: { xs: 10, md: 15 },
+        ...bgGradient({
+          color: `to bottom, ${alpha(theme.palette.background.default, 0.9)}, ${alpha(theme.palette.background.default, 0.9)}`,
+          imgUrl: "/assets/background/overlay-1.webp",
+        }),
         overflow: "hidden",
-        bgcolor: "primary.lighter",
+        position: "relative",
+        py: { xs: 10, md: 20 },
       }}
     >
+      <Box
+        component="img"
+        alt="Texture"
+        src="/assets/background/texture-1.webp"
+        sx={{
+          top: 0,
+          right: 0,
+          zIndex: 8,
+          opacity: 0.24,
+          position: "absolute",
+          height: `calc(100% + 80px)`,
+        }}
+      />
       <Container>
         <Grid
           container
