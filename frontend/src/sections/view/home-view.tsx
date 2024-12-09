@@ -1,5 +1,6 @@
 "use client";
 
+import { usePosts } from "src/api/posts/posts";
 import { useBestCourses } from "src/api/courses/best-courses";
 import { useBestReviews } from "src/api/reviews/best-reviews";
 import { useBestLecturers } from "src/api/lecturers/best-lecturers";
@@ -8,6 +9,7 @@ import { useBestTechnologies } from "src/api/technologies/best-technologies";
 import Team from "../team/team";
 import Newsletter from "../newsletter/newsletter";
 import LandingHero from "../landing/landing-hero";
+import { LatestPosts } from "../posts/latest-posts";
 import Testimonial from "../testimonial/testimonial";
 import LandingServices from "../landing/landing-services";
 import LandingIntroduce from "../landing/landing-introduce";
@@ -24,6 +26,10 @@ export default function HomeView() {
     sort_by: "-courses_count",
   });
   const { data: bestLecturers } = useBestLecturers();
+  const { data: recentPosts } = usePosts({
+    sort_by: "-created_at",
+    page_size: 3,
+  });
 
   return (
     <>
@@ -40,6 +46,8 @@ export default function HomeView() {
       {bestLecturers?.length >= 4 && <Team members={bestLecturers} />}
 
       {bestReviews?.length >= 5 && <Testimonial testimonials={bestReviews} />}
+
+      {recentPosts?.length === 3 && <LatestPosts posts={recentPosts} />}
 
       <Newsletter />
     </>

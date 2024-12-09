@@ -29,7 +29,7 @@ export default function Newsletter() {
       sx={{
         overflow: "hidden",
         position: "relative",
-        bgcolor: "primary.lighter",
+        bgcolor: "common.black",
         py: { xs: 10, md: 15 },
       }}
     >
@@ -41,7 +41,7 @@ export default function Newsletter() {
           my: "auto",
           width: 760,
           height: 760,
-          opacity: 0.14,
+          opacity: 0.24,
           position: "absolute",
           transform: "translateX(-50%)",
         }}
@@ -62,10 +62,11 @@ export default function Newsletter() {
             mx: "auto",
             maxWidth: 480,
             textAlign: "center",
+            color: "common.white",
           }}
         >
           <Box gap={2} display="flex" alignItems="center" justifyContent="center">
-            <Box component="span" sx={{ textAlign: "right", typography: "h5" }}>
+            <Box component="span" sx={{ textAlign: "right", typography: "h4" }}>
               Zarejestruj się już teraz i otrzymaj <br /> zniżkę na swój pierwszy zakup
             </Box>
             <Typography
@@ -80,7 +81,7 @@ export default function Newsletter() {
             </Typography>
           </Box>
 
-          <Typography sx={{ mt: 2.5 }}>Zapisz się do newslettera</Typography>
+          <Typography sx={{ mt: 3, opacity: 0.64 }}>Zapisz się do newslettera</Typography>
           <Typography
             variant="h3"
             sx={(theme) => ({
@@ -93,7 +94,7 @@ export default function Newsletter() {
             Be in the loop
           </Typography>
 
-          <NewsletterEmail buttonLabel="Zapisz" />
+          <NewsletterEmail buttonLabel="Zapisz" bgColor="common.white" />
         </Box>
       </Container>
     </Box>
@@ -105,6 +106,7 @@ interface Props extends LoadingButtonProps {
   showSnackbar?: boolean;
   onSuccess?: VoidFunction;
   onFailure?: VoidFunction;
+  bgColor?: string;
 }
 
 export function NewsletterEmail({
@@ -112,6 +114,7 @@ export function NewsletterEmail({
   showSnackbar = true,
   onSuccess,
   onFailure,
+  bgColor,
 }: Props) {
   const { enqueueSnackbar } = useToastContext();
 
@@ -178,12 +181,38 @@ export function NewsletterEmail({
               </LoadingButton>
             </InputAdornment>
           ),
-          sx: { pr: 0.5 },
+          sx: {
+            pr: 0.5,
+            pl: 1.5,
+            height: 56,
+            borderRadius: 1,
+            ...(bgColor && {
+              bgcolor: bgColor,
+              "&:hover": {
+                bgcolor: bgColor,
+              },
+              "&.Mui-focused": {
+                bgcolor: bgColor,
+              },
+              "&.Mui-error": {
+                bgcolor: bgColor,
+              },
+              "&.Mui-focused.Mui-error": {
+                bgcolor: bgColor,
+              },
+            }),
+          },
         }}
       />
 
       <Stack spacing={0.5} alignItems="flex-start">
-        <RHFCheckbox name="newsletter" label={newsletterAcceptance} />
+        <RHFCheckbox
+          name="newsletter"
+          label={newsletterAcceptance({
+            color: bgColor || undefined,
+            opacity: bgColor ? 0.64 : 1,
+          })}
+        />
       </Stack>
     </FormProvider>
   );

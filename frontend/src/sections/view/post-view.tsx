@@ -31,7 +31,7 @@ import { IAuthorProps } from "src/types/author";
 import { PostTags } from "../posts/post-tags";
 import Newsletter from "../newsletter/newsletter";
 import { PostAuthors } from "../posts/post-author";
-import { PopularPosts } from "../posts/popular-posts";
+import { LatestPosts } from "../posts/latest-posts";
 import { PrevNextButton } from "../posts/post-prev-and-next";
 
 // ----------------------------------------------------------------------
@@ -42,15 +42,15 @@ export function PostView({ id }: { id: string }) {
 
   const { data: post, isLoading: isLoadingPost } = usePost(recordId);
 
-  const { data: popularPosts, isLoading: isLoadingPopularPosts } = usePosts({
+  const { data: recentPosts } = usePosts({
+    sort_by: "-created_at",
     page_size: 3,
-    sort_by: "-visits",
   });
 
   const prevPost = useMemo(() => post?.previousPost, [post?.previousPost]);
   const nextPost = useMemo(() => post?.nextPost, [post?.nextPost]);
 
-  const isLoading = isLoadingPost || isLoadingPopularPosts;
+  const isLoading = isLoadingPost;
 
   const renderToolbar = (
     <Box
@@ -246,7 +246,7 @@ export function PostView({ id }: { id: string }) {
 
       <Divider />
 
-      {popularPosts?.length === 3 && <PopularPosts posts={popularPosts} />}
+      {recentPosts?.length === 3 && <LatestPosts posts={recentPosts} />}
 
       <Newsletter />
     </>
