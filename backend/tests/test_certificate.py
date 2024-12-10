@@ -142,6 +142,7 @@ class CertificateTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -485,6 +486,7 @@ class CertificateInfoTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -882,6 +884,7 @@ class CertificateGenerateTest(TestCase):
         self.course_1 = create_course(
             title="course_title",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -894,6 +897,7 @@ class CertificateGenerateTest(TestCase):
         self.course_2 = create_course(
             title="course_title_2",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -1134,6 +1138,7 @@ class CertificateFilterTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -1497,6 +1502,7 @@ class CertificateOrderTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[

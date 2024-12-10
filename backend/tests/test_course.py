@@ -142,6 +142,7 @@ class CourseTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -257,6 +258,7 @@ class CourseTest(APITestCase):
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -295,6 +297,7 @@ class CourseTest(APITestCase):
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -317,6 +320,7 @@ class CourseTest(APITestCase):
         self.new_course = create_course_obj(
             title="Javascript course",
             description="course_description",
+            overview="course_overview",
             level="E",
             modules=[self.module_3.id, self.module_2.id],
             tags=[self.tag_1.id, self.tag_2.id],
@@ -331,6 +335,7 @@ class CourseTest(APITestCase):
         self.new_course_2 = create_course_obj(
             title="Javascript course",
             description="course_description",
+            overview="course_overview",
             level="E",
             modules=[self.module_3.id, self.module_2.id],
             tags=[self.tag_1.id, self.tag_2.id],
@@ -346,6 +351,7 @@ class CourseTest(APITestCase):
         self.amend_course = create_course_obj(
             title="Python for beginners course",
             description="course_description_other",
+            overview="course_overview_other",
             level="Z",
             modules=[self.module_3.id, self.module_2.id],
             tags=[self.tag_1.id],
@@ -357,6 +363,7 @@ class CourseTest(APITestCase):
         self.amend_course_2 = create_course_obj(
             title="Python for beginners course",
             description="course_description_other",
+            overview="course_overview_other",
             level="Z",
             modules=[self.module_3.id, self.module_2.id],
             tags=[self.tag_1.id],
@@ -1090,6 +1097,7 @@ class BestCourseTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -1183,6 +1191,7 @@ class BestCourseTest(APITestCase):
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -1224,6 +1233,7 @@ class BestCourseTest(APITestCase):
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -1347,6 +1357,7 @@ class CourseFilterTest(APITestCase):
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
+            overview="Python is great language",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -1441,6 +1452,7 @@ class CourseFilterTest(APITestCase):
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
+            overview="Learn more",
             level="Zaawansowany",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -1557,6 +1569,7 @@ class CourseFilterTest(APITestCase):
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
+            overview="Learn more",
             level="Ekspert",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -1773,6 +1786,7 @@ class CourseOrderTest(APITestCase):
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
+            overview="Python is great language",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -1849,6 +1863,7 @@ class CourseOrderTest(APITestCase):
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
+            overview="Learn more",
             level="Zaawansowany",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -1939,6 +1954,7 @@ class CourseOrderTest(APITestCase):
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
+            overview="Learn more",
             level="Ekspert",
             tags=[self.tag_1, self.tag_2],
             topics=[

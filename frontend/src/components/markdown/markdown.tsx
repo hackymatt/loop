@@ -2,7 +2,6 @@ import React from "react";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import ReactMarkdown from "react-markdown";
-import rehypeSanitize from "rehype-sanitize";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 // ----------------------------------------------------------------------
@@ -98,9 +97,26 @@ export function Markdown({ content }: MarkdownProps) {
             </blockquote>
           );
         },
+        iframe({ node, ...props }) {
+          return (
+            <iframe
+              title="video"
+              {...props}
+              style={{
+                width: "100%",
+                height: "315px",
+                border: "none",
+                borderRadius: "8px",
+                margin: "1rem 0",
+              }}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          );
+        },
       }}
       remarkPlugins={[remarkGfm]}
-      rehypePlugins={[rehypeRaw, rehypeSanitize]}
+      rehypePlugins={[rehypeRaw]}
       remarkRehypeOptions={{ passThrough: ["link"] }}
     />
   );

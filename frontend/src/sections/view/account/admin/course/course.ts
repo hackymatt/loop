@@ -4,6 +4,7 @@ export const defaultValues = {
   active: false,
   title: "",
   description: "",
+  overview: "",
   level: "Podstawowy",
   modules: [],
   tags: [],
@@ -15,7 +16,7 @@ export const defaultValues = {
 export const steps = [
   {
     label: "Uzupełnij podstawowe informacje",
-    fields: ["title", "description", "level", "duration", "github_url"],
+    fields: ["title", "description", "overview", "level", "duration", "github_url"],
   },
   { label: "Wybierz moduły", fields: ["modules"] },
   { label: "Wybierz tematy", fields: ["topics"] },
@@ -28,6 +29,7 @@ export const schema = Yup.object().shape({
   active: Yup.boolean().required("Status jest wymagany"),
   title: Yup.string().required("Nazwa jest wymagana"),
   description: Yup.string().required("Opis jest wymagany"),
+  overview: Yup.string().required("Podsumowanie jest wymagane"),
   level: Yup.string().required("Poziom jest wymagany"),
   image: Yup.string().required("Zdjęcie jest wymagane"),
   video: Yup.string(),

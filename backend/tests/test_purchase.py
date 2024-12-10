@@ -103,6 +103,7 @@ class PurchaseTest(TestCase):
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
+            overview="Python is great language",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -217,6 +218,7 @@ class PurchaseTest(TestCase):
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
+            overview="Learn more",
             level="Zaawansowany",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -261,6 +263,7 @@ class PurchaseTest(TestCase):
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
+            overview="Learn more",
             level="Ekspert",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -725,6 +728,7 @@ class PurchaseFilterTest(APITestCase):
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
+            overview="Python is great language",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -869,6 +873,7 @@ class PurchaseFilterTest(APITestCase):
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
+            overview="Learn more",
             level="Zaawansowany",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -914,6 +919,7 @@ class PurchaseFilterTest(APITestCase):
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
+            overview="Learn more",
             level="Ekspert",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -1094,6 +1100,7 @@ class PurchaseOrderTest(APITestCase):
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
+            overview="Python is great language",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -1204,6 +1211,7 @@ class PurchaseOrderTest(APITestCase):
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
+            overview="Learn more",
             level="Zaawansowany",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -1248,6 +1256,7 @@ class PurchaseOrderTest(APITestCase):
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
+            overview="Learn more",
             level="Ekspert",
             tags=[self.tag_1, self.tag_2],
             topics=[

@@ -76,6 +76,7 @@ type ICourse = {
   video?: string;
   title: string;
   description: string;
+  overview: string;
   active: boolean;
   progress: number | null;
 };
@@ -116,6 +117,7 @@ export const courseQuery = (id: string) => {
       const {
         id: courseId,
         description,
+        overview,
         price,
         level,
         image,
@@ -139,6 +141,7 @@ export const courseQuery = (id: string) => {
       modifiedResults = {
         id: courseId,
         description,
+        overview,
         price,
         level,
         coverUrl: image,

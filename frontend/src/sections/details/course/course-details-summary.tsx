@@ -33,8 +33,51 @@ export default function CourseDetailsSummary({ course }: Props) {
 
       {course.modules && <CourseDetailsModuleList modules={course.modules ?? []} />}
 
+      <Box>
+        <Typography component="h6" variant="h4" sx={{ mb: 2 }}>
+          Dlaczego ten kurs?
+        </Typography>
+        <Typography>
+          {course?.overview?.split("\n").map((line, index) => (
+            <Typography key={index}>
+              {line}
+              <br />
+            </Typography>
+          )) ?? ""}
+        </Typography>
+      </Box>
+
       <Stack spacing={3}>
-        <Typography variant="h4">Czego się nauczysz</Typography>
+        <Typography variant="h4">Dla kogo ten kurs?</Typography>
+
+        <Stack spacing={1}>
+          {course.learnList?.map((learn) => (
+            <Stack key={learn} direction="row" alignItems="center" spacing={1.5}>
+              <Box
+                sx={{
+                  width: 20,
+                  height: 20,
+                  flexShrink: 0,
+                  display: "flex",
+                  borderRadius: "50%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  bgcolor: (theme) => alpha(theme?.palette?.primary?.main, 0.08),
+                }}
+              >
+                <Iconify
+                  icon="carbon:checkmark"
+                  sx={{ width: 16, height: 16, color: "primary.main" }}
+                />
+              </Box>
+              {learn}
+            </Stack>
+          ))}
+        </Stack>
+      </Stack>
+
+      <Stack spacing={3}>
+        <Typography variant="h4">Czego się nauczysz?</Typography>
 
         <Stack spacing={1}>
           {course.learnList?.map((learn) => (
@@ -64,7 +107,7 @@ export default function CourseDetailsSummary({ course }: Props) {
 
       <Box display="flex" alignItems="center" flexWrap="wrap">
         <Typography variant="subtitle2" sx={{ mr: 1 }}>
-          Tagi:
+          Tagi
         </Typography>
 
         <Box gap={1} display="flex" flexWrap="wrap">

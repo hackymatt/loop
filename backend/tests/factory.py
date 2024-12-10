@@ -145,6 +145,7 @@ def find_fields(values, model):
 def create_course(
     title: str,
     description: str,
+    overview: str,
     level: str,
     tags,
     topics,
@@ -154,6 +155,7 @@ def create_course(
     course = Course.objects.create(
         title=title,
         description=description,
+        overview=overview,
         level=level,
         active=active,
     )
@@ -171,6 +173,7 @@ def create_course(
 def create_course_obj(
     title: str,
     description: str,
+    overview: str,
     level: str,
     modules: List[Dict[str, int]],
     tags,
@@ -182,6 +185,7 @@ def create_course_obj(
     return {
         "title": title,
         "description": description,
+        "overview": overview,
         "level": level,
         "modules": modules,
         "tags": tags,

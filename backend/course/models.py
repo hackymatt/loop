@@ -139,6 +139,7 @@ class Course(BaseModel):
     )
     title = CharField()
     description = TextField()
+    overview = TextField()
     level = CharField(choices=LEVEL_CHOICES, null=True)
     tags = ManyToManyField(Tag, related_name="course_tags")
     topics = ManyToManyField(Topic, related_name="course_topics")

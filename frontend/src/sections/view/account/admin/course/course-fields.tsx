@@ -38,6 +38,9 @@ export const useCourseFields = () => {
     description: (
       <RHFTextField key="description" name="description" label="Opis" multiline rows={5} />
     ),
+    overview: (
+      <RHFTextField key="overview" name="overview" label="Podsumowanie" multiline rows={10} />
+    ),
     level: (
       <RHFAutocomplete
         key="level"

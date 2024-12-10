@@ -114,6 +114,7 @@ class StatsTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[

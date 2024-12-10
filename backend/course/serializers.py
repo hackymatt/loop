@@ -363,6 +363,7 @@ class CourseListSerializer(ModelSerializer):
             "tags",
             "topics",
             "video",
+            "overview",
             "created_at",
             "modified_at",
         )
@@ -545,6 +546,7 @@ class CourseSerializer(ModelSerializer):
         instance.active = validated_data.get("active", instance.active)
         instance.title = validated_data.get("title", instance.title)
         instance.description = validated_data.get("description", instance.description)
+        instance.overview = validated_data.get("overview", instance.overview)
         instance.level = validated_data.get("level", instance.level)
 
         instance.image = validated_data.get("image", instance.image)
@@ -612,7 +614,9 @@ class BestCourseSerializer(ModelSerializer):
             "tags",
             "topics",
             "video",
+            "overview",
             "created_at",
             "modified_at",
             "description",
+            "overview",
         )

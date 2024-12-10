@@ -105,6 +105,7 @@ export type ICourseProps = {
   lowest30DaysPrice?: number;
   totalHours: number;
   description?: string;
+  overview?: string;
   learnList: string[];
   ratingNumber: number;
   totalReviews: number;

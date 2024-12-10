@@ -1399,6 +1399,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -1438,6 +1439,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -1477,6 +1479,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -1608,6 +1611,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -1648,6 +1652,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
@@ -1688,6 +1693,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[

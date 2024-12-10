@@ -249,6 +249,7 @@ class TagFilterTest(APITestCase):
         create_course(
             title="Python Beginner",
             description="Learn Python today",
+            overview="Python is great language",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2, self.tag_3],
             topics=[
