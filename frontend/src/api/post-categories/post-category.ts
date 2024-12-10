@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import { compact } from "lodash-es";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { ICourseByCategoryProps } from "src/types/course";
+import { ICourseByTechnologyProps } from "src/types/course";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
@@ -47,7 +47,7 @@ export const postCategoryQuery = (id: string) => {
 export const usePostCategory = (id: string) => {
   const { queryKey, queryFn } = postCategoryQuery(id);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as any as ICourseByCategoryProps, ...rest };
+  return { data: data?.results as any as ICourseByTechnologyProps, ...rest };
 };
 
 export const useEditPostCategory = (id: string) => {

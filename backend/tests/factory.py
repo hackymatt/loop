@@ -271,12 +271,12 @@ def create_lesson_obj(
     }
 
 
-def create_technology(name: str):
-    return Technology.objects.create(name=name)
+def create_technology(name: str, description: str = "description"):
+    return Technology.objects.create(name=name, description=description)
 
 
-def create_technology_obj(name: str):
-    return {"name": name}
+def create_technology_obj(name: str, description: str = "description"):
+    return {"name": name, "description": description}
 
 
 def create_tag(name: str):

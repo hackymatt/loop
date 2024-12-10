@@ -14,14 +14,14 @@ import { fDate } from "src/utils/format-time";
 
 import Iconify from "src/components/iconify";
 
-import { ICourseByCategoryProps } from "src/types/course";
+import { ICourseByTechnologyProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: ICourseByCategoryProps;
-  onEdit: (technology: ICourseByCategoryProps) => void;
-  onDelete: (technology: ICourseByCategoryProps) => void;
+  row: ICourseByTechnologyProps;
+  onEdit: (technology: ICourseByTechnologyProps) => void;
+  onDelete: (technology: ICourseByTechnologyProps) => void;
 };
 
 export default function AccountTechnologiesTableRow({ row, onEdit, onDelete }: Props) {

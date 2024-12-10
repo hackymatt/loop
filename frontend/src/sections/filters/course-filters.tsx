@@ -14,7 +14,7 @@ import { useTechnologies } from "src/api/technologies/technologies";
 
 import { ITagProps } from "src/types/tags";
 import { IQueryParamValue } from "src/types/query-params";
-import { ICourseByCategoryProps } from "src/types/course";
+import { ICourseByTechnologyProps } from "src/types/course";
 
 import FilterTag from "./filter-tag";
 import FilterLevel from "./filter-level";
@@ -23,7 +23,7 @@ import FilterRating from "./filter-rating";
 import FilterSearch from "./filter-search";
 import FilterDuration from "./filter-duration";
 import FilterTeachers from "./filter-teachers";
-import FilterCategories from "./filter-categories";
+import FilterTechnologies from "./filter-technologies";
 
 // ----------------------------------------------------------------------
 
@@ -106,10 +106,12 @@ export default function Filters({ open, onClose }: Props) {
       </Block>
 
       <Block title="Technologia">
-        <FilterCategories
+        <FilterTechnologies
           value={filters?.technology_in ?? ""}
-          options={technologies?.map((technology: ICourseByCategoryProps) => technology.name) ?? []}
-          onChangeCategory={(value) => handleChange("technology_in", value)}
+          options={
+            technologies?.map((technology: ICourseByTechnologyProps) => technology.name) ?? []
+          }
+          onChangeTechnology={(value) => handleChange("technology_in", value)}
         />
       </Block>
 

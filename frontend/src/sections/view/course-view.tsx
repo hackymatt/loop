@@ -23,7 +23,12 @@ import { SplashScreen } from "src/components/loading-screen";
 import Review from "src/sections/review/review";
 import NotFoundView from "src/sections/error/not-found-view";
 
-import { ICourseProps, ICourseLessonProp, ICourseModuleProp } from "src/types/course";
+import {
+  ICourseProps,
+  ICourseLessonProp,
+  ICourseModuleProp,
+  ICourseByTechnologyProps,
+} from "src/types/course";
 
 import Advertisement from "../advertisement";
 import Newsletter from "../newsletter/newsletter";
@@ -44,7 +49,11 @@ export default function CourseView({ id }: { id: string }) {
   const { data: course, isLoading } = useCourse(recordId);
   const { data: bestCourses } = useBestCourses();
 
-  const technologies = useMemo(() => course?.category.join(","), [course?.category]);
+  const technologies = useMemo(
+    () =>
+      course?.technologies.map((technology: ICourseByTechnologyProps) => technology.name).join(","),
+    [course?.technologies],
+  );
   const query = { page_size: 3 };
 
   const { data: courses } = useCourses(
@@ -69,17 +78,17 @@ export default function CourseView({ id }: { id: string }) {
 
   const technologyKeywords = useMemo(
     () =>
-      course?.category
-        .map((category: string) => [
-          `${category} online`,
-          `nauka ${category}`,
-          `programowanie ${category}`,
-          `${category} od podstaw`,
-          `certyfikat ${category}`,
-          `zajęcia z ${category}`,
+      course?.technologies
+        .map((technology: ICourseByTechnologyProps) => [
+          `${technology.name} online`,
+          `nauka ${technology.name}`,
+          `programowanie ${technology.name}`,
+          `${technology.name} od podstaw`,
+          `certyfikat ${technology.name}`,
+          `zajęcia z ${technology.name}`,
         ])
         .flat(),
-    [course?.category],
+    [course?.technologies],
   );
 
   const metadata = useMemo(

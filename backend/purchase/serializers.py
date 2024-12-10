@@ -18,6 +18,7 @@ class TechnologySerializer(ModelSerializer):
     class Meta:
         model = Technology
         exclude = (
+            "description",
             "modified_at",
             "created_at",
         )

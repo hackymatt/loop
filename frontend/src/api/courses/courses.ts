@@ -106,7 +106,7 @@ export const coursesQuery = (query?: IQueryParams) => {
         level,
         coverUrl: image,
         slug: title,
-        category: technologies.map(({ name }: ITechnology) => name),
+        technologies,
         priceSale: previous_price,
         lowest30DaysPrice: lowest_30_days_price,
         totalHours: duration / 60,

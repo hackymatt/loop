@@ -119,8 +119,8 @@ export default function AccountNewsletterView() {
         allowScrollButtonsMobile
         onChange={handleChangeTab}
       >
-        {TABS.map((category) => (
-          <Tab key={category.id} value={category.id} label={category.label} />
+        {TABS.map((t) => (
+          <Tab key={t.id} value={t.id} label={t.label} />
         ))}
       </Tabs>
       <Stack direction={{ xs: "column", md: "row" }} spacing={1} sx={{ mt: 5, mb: 3 }}>

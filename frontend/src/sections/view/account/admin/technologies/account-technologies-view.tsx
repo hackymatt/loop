@@ -27,7 +27,7 @@ import DownloadCSVButton from "src/components/download-csv";
 import AccountTechnologiesTableRow from "src/sections/account/admin/account-technologies-table-row";
 
 import { IQueryParamValue } from "src/types/query-params";
-import { ICourseByCategoryProps } from "src/types/course";
+import { ICourseByTechnologyProps } from "src/types/course";
 
 import TechnologyNewForm from "./technology-new-form";
 import TechnologyEditForm from "./technology-edit-form";
@@ -64,8 +64,8 @@ export default function AccountTechnologiesView() {
   const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "title";
   const order = filters?.sort_by && filters.sort_by.startsWith("-") ? "desc" : "asc";
 
-  const [editedTechnology, setEditedTechnology] = useState<ICourseByCategoryProps>();
-  const [deletedTechnology, setDeletedTechnology] = useState<ICourseByCategoryProps>();
+  const [editedTechnology, setEditedTechnology] = useState<ICourseByTechnologyProps>();
+  const [deletedTechnology, setDeletedTechnology] = useState<ICourseByTechnologyProps>();
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -102,7 +102,7 @@ export default function AccountTechnologiesView() {
   );
 
   const handleEditTechnology = useCallback(
-    (technology: ICourseByCategoryProps) => {
+    (technology: ICourseByTechnologyProps) => {
       setEditedTechnology(technology);
       editTechnologyFormOpen.onToggle();
     },
@@ -110,7 +110,7 @@ export default function AccountTechnologiesView() {
   );
 
   const handleDeleteTechnology = useCallback(
-    (technology: ICourseByCategoryProps) => {
+    (technology: ICourseByTechnologyProps) => {
       setDeletedTechnology(technology);
       deleteTechnologyFormOpen.onToggle();
     },

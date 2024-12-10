@@ -75,7 +75,7 @@ export const lessonQuery = (id: string) => {
         ratingNumber: rating,
         totalReviews: rating_count,
         totalStudents: students_count,
-        category: technologies.map(({ name }: ITechnology) => name),
+        technologies,
         teachers: lecturers.map(
           ({ id: lecturerId, full_name, gender, image: lecturerImage }: ILecturer) => ({
             id: lecturerId,

@@ -175,8 +175,8 @@ export default function AccountCouponsView() {
         allowScrollButtonsMobile
         onChange={handleChangeTab}
       >
-        {TABS.map((category) => (
-          <Tab key={category.id} value={category.id} label={category.label} />
+        {TABS.map((t) => (
+          <Tab key={t.id} value={t.id} label={t.label} />
         ))}
       </Tabs>
 

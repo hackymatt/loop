@@ -13,7 +13,7 @@ import { LatestPosts } from "../posts/latest-posts";
 import Testimonial from "../testimonial/testimonial";
 import LandingServices from "../landing/landing-services";
 import LandingIntroduce from "../landing/landing-introduce";
-import LandingCategories from "../landing/landing-categories";
+import LandingTechnologies from "../landing/landing-technologies";
 import LandingFeaturedCourses from "../landing/landing-featured-courses";
 
 // ----------------------------------------------------------------------
@@ -41,7 +41,7 @@ export default function HomeView() {
 
       {bestCourses?.length >= 4 && <LandingFeaturedCourses courses={bestCourses} />}
 
-      {technologies?.length >= 1 && <LandingCategories categories={technologies} />}
+      {technologies?.length >= 1 && <LandingTechnologies technologies={technologies} />}
 
       {bestLecturers?.length >= 4 && <Team members={bestLecturers} />}
 

@@ -14,7 +14,7 @@ import { useTechnologies } from "src/api/technologies/technologies";
 
 import FormProvider from "src/components/hook-form";
 
-import { ITeachingProp, ICourseByCategoryProps } from "src/types/course";
+import { ITeachingProp, ICourseByTechnologyProps } from "src/types/course";
 
 import { useTeachingFields } from "./teaching-fields";
 import { steps, schema, defaultValues } from "./teaching";
@@ -48,9 +48,9 @@ export default function TeachingViewForm({ teaching, onClose, ...other }: Props)
       reset({
         ...lessonData,
         github_url: lessonData.githubUrl,
-        technologies: lessonData.category.map((category: string) =>
+        technologies: lessonData.technologies.map((t: ICourseByTechnologyProps) =>
           availableTechnologies.find(
-            (technology: ICourseByCategoryProps) => technology.name === category,
+            (technology: ICourseByTechnologyProps) => technology.name === t.name,
           ),
         ),
       });

@@ -59,7 +59,7 @@ export const wishlistsQuery = (query?: IQueryParams) => {
           duration,
           price,
           teachers: lecturers.map(({ full_name }: ILecturer) => ({ name: full_name })),
-          category: technologies.map(({ name }: ITechnology) => name),
+          technologies,
         },
       };
     });
