@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { formatQueryParams } from "src/utils/query-params";
 
 import { IQueryParams } from "src/types/query-params";
-import { ICourseByCategoryProps } from "src/types/course";
+import { ICourseByTechnologyProps } from "src/types/course";
 
 import { Api } from "../service";
 
@@ -39,5 +39,5 @@ export const bestTechnologiesQuery = (query?: IQueryParams) => {
 export const useBestTechnologies = (query?: IQueryParams) => {
   const { queryKey, queryFn } = bestTechnologiesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as ICourseByCategoryProps[], count: data?.count, ...rest };
+  return { data: data?.results as ICourseByTechnologyProps[], count: data?.count, ...rest };
 };

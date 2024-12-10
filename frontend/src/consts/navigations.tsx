@@ -107,6 +107,12 @@ export const adminNavigation = [
           children: [],
         },
         {
+          title: "Kandydaci",
+          path: `${paths.account.admin.courses.candidates}/?sort_by=name&page_size=10`,
+          icon: <Iconify icon="carbon:user-simulation" />,
+          children: [],
+        },
+        {
           title: "Tematy",
           path: `${paths.account.admin.courses.topics}/?sort_by=name&page_size=10`,
           icon: <Iconify icon="carbon:query" />,

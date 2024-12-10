@@ -12,6 +12,7 @@ from .factory import (
     create_technology,
     create_tag,
     create_topic,
+    create_candidate,
     create_review,
     create_purchase,
     create_teaching,
@@ -132,6 +133,9 @@ class CourseTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.candidate_1 = create_candidate(name="No tech knowledge")
+        self.candidate_2 = create_candidate(name="Tech interested")
+
         self.tag_1 = create_tag(name="coding")
         self.tag_2 = create_tag(name="IDE")
 
@@ -142,11 +146,16 @@ class CourseTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_1],
         )
@@ -257,11 +266,16 @@ class CourseTest(APITestCase):
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_2],
         )
@@ -295,11 +309,16 @@ class CourseTest(APITestCase):
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_3],
         )
@@ -317,12 +336,17 @@ class CourseTest(APITestCase):
         self.new_course = create_course_obj(
             title="Javascript course",
             description="course_description",
+            overview="course_overview",
             level="E",
             modules=[self.module_3.id, self.module_2.id],
             tags=[self.tag_1.id, self.tag_2.id],
             topics=[
                 self.topic_1.id,
                 self.topic_2.id,
+            ],
+            candidates=[
+                self.candidate_1.id,
+                self.candidate_2.id,
             ],
             image=b64encode(create_image().read()),
             video=b64encode(create_video().read()),
@@ -331,12 +355,17 @@ class CourseTest(APITestCase):
         self.new_course_2 = create_course_obj(
             title="Javascript course",
             description="course_description",
+            overview="course_overview",
             level="E",
             modules=[self.module_3.id, self.module_2.id],
             tags=[self.tag_1.id, self.tag_2.id],
             topics=[
                 self.topic_1.id,
                 self.topic_2.id,
+            ],
+            candidates=[
+                self.candidate_1.id,
+                self.candidate_2.id,
             ],
             image=b64encode(create_image().read()),
             video=b64encode(create_video().read()),
@@ -346,10 +375,12 @@ class CourseTest(APITestCase):
         self.amend_course = create_course_obj(
             title="Python for beginners course",
             description="course_description_other",
+            overview="course_overview_other",
             level="Z",
             modules=[self.module_3.id, self.module_2.id],
             tags=[self.tag_1.id],
             topics=[self.topic_2.id],
+            candidates=[self.candidate_2.id],
             image=b64encode(create_image().read()),
             video=b64encode(create_video().read()),
         )
@@ -357,10 +388,12 @@ class CourseTest(APITestCase):
         self.amend_course_2 = create_course_obj(
             title="Python for beginners course",
             description="course_description_other",
+            overview="course_overview_other",
             level="Z",
             modules=[self.module_3.id, self.module_2.id],
             tags=[self.tag_1.id],
             topics=[self.topic_2.id],
+            candidates=[self.candidate_2.id],
             image=b64encode(create_image().read()),
             video=b64encode(create_video().read()),
             active=False,
@@ -434,6 +467,7 @@ class CourseTest(APITestCase):
         technology_data = course_data.pop("technologies")
         tags_data = course_data.pop("tags")
         topics_data = course_data.pop("topics")
+        candidates_data = course_data.pop("candidates")
         course_data.pop("duration")
         course_data.pop("lecturers")
         price = course_data.pop("price")
@@ -492,6 +526,8 @@ class CourseTest(APITestCase):
             self.assertTrue(is_data_match(get_tag(tag_data["id"]), tag_data))
         for topic_data in topics_data:
             self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
+        for candidate_data in candidates_data:
+            self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
 
     def test_get_course_authenticated(self):
         # login
@@ -505,6 +541,7 @@ class CourseTest(APITestCase):
         technology_data = course_data.pop("technologies")
         tags_data = course_data.pop("tags")
         topics_data = course_data.pop("topics")
+        candidates_data = course_data.pop("candidates")
         course_data.pop("duration")
         course_data.pop("lecturers")
         price = course_data.pop("price")
@@ -563,6 +600,8 @@ class CourseTest(APITestCase):
             self.assertTrue(is_data_match(get_tag(tag_data["id"]), tag_data))
         for topic_data in topics_data:
             self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
+        for candidate_data in candidates_data:
+            self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
 
     def test_get_course_authenticated_2(self):
         # login
@@ -576,6 +615,7 @@ class CourseTest(APITestCase):
         technology_data = course_data.pop("technologies")
         tags_data = course_data.pop("tags")
         topics_data = course_data.pop("topics")
+        candidates_data = course_data.pop("candidates")
         course_data.pop("duration")
         course_data.pop("lecturers")
         price = course_data.pop("price")
@@ -625,6 +665,8 @@ class CourseTest(APITestCase):
             self.assertTrue(is_data_match(get_tag(tag_data["id"]), tag_data))
         for topic_data in topics_data:
             self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
+        for candidate_data in candidates_data:
+            self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
 
     def test_get_course_authenticated_admin(self):
         # login
@@ -638,6 +680,7 @@ class CourseTest(APITestCase):
         technology_data = course_data.pop("technologies")
         tags_data = course_data.pop("tags")
         topics_data = course_data.pop("topics")
+        candidates_data = course_data.pop("candidates")
         course_data.pop("duration")
         course_data.pop("lecturers")
         price = course_data.pop("price")
@@ -686,6 +729,8 @@ class CourseTest(APITestCase):
         for tag_data in tags_data:
             self.assertTrue(is_data_match(get_tag(tag_data["id"]), tag_data))
         for topic_data in topics_data:
+            self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
+        for candidate_data in candidates_data:
             self.assertTrue(is_data_match(get_topic(topic_data["id"]), topic_data))
 
     def test_create_course_unauthenticated(self):
@@ -1080,6 +1125,9 @@ class BestCourseTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.candidate_1 = create_candidate(name="No tech knowledge")
+        self.candidate_2 = create_candidate(name="Tech interested")
+
         self.tag_1 = create_tag(name="coding")
         self.tag_2 = create_tag(name="IDE")
 
@@ -1090,11 +1138,16 @@ class BestCourseTest(APITestCase):
         self.course = create_course(
             title="course_title",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_1],
         )
@@ -1183,11 +1236,16 @@ class BestCourseTest(APITestCase):
         self.course_2 = create_course(
             title="course_title 2",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_2],
         )
@@ -1224,11 +1282,16 @@ class BestCourseTest(APITestCase):
         self.course_3 = create_course(
             title="course_title 3",
             description="course_description",
+            overview="course_overview",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_3],
         )
@@ -1337,6 +1400,9 @@ class CourseFilterTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.candidate_1 = create_candidate(name="No tech knowledge")
+        self.candidate_2 = create_candidate(name="Tech interested")
+
         self.tag_1 = create_tag(name="coding")
         self.tag_2 = create_tag(name="IDE")
 
@@ -1347,11 +1413,16 @@ class CourseFilterTest(APITestCase):
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
+            overview="Python is great language",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_1],
         )
@@ -1441,11 +1512,16 @@ class CourseFilterTest(APITestCase):
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
+            overview="Learn more",
             level="Zaawansowany",
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_2],
         )
@@ -1557,11 +1633,16 @@ class CourseFilterTest(APITestCase):
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
+            overview="Learn more",
             level="Ekspert",
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_3],
         )
@@ -1763,6 +1844,9 @@ class CourseOrderTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.candidate_1 = create_candidate(name="No tech knowledge")
+        self.candidate_2 = create_candidate(name="Tech interested")
+
         self.tag_1 = create_tag(name="coding")
         self.tag_2 = create_tag(name="IDE")
 
@@ -1773,11 +1857,16 @@ class CourseOrderTest(APITestCase):
         self.course_1 = create_course(
             title="Python Beginner",
             description="Learn Python today",
+            overview="Python is great language",
             level="Podstawowy",
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_1],
         )
@@ -1849,11 +1938,16 @@ class CourseOrderTest(APITestCase):
         self.course_2 = create_course(
             title="Javascript course for Advanced",
             description="Course for programmers",
+            overview="Learn more",
             level="Zaawansowany",
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_2],
         )
@@ -1939,11 +2033,16 @@ class CourseOrderTest(APITestCase):
         self.course_3 = create_course(
             title="VBA course for Expert",
             description="Course for programmers",
+            overview="Learn more",
             level="Ekspert",
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_3],
         )

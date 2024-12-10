@@ -34,6 +34,7 @@ class CourseViewSet(ModelViewSet):
     search_fields = [
         "title",
         "description",
+        "overview",
         "modules__lessons__title",
         "modules__lessons__description",
     ]

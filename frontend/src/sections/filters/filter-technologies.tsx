@@ -10,7 +10,7 @@ import { IQueryParamValue } from "src/types/query-params";
 type Props = {
   value: IQueryParamValue;
   options: IQueryParamValue[];
-  onChangeCategory: (newValue: IQueryParamValue) => void;
+  onChangeTechnology: (newValue: IQueryParamValue) => void;
 };
 
 const autocompleteProps = {
@@ -35,7 +35,7 @@ const autocompleteProps = {
   },
 } as const;
 
-export default function FilterCategories({ value, options, onChangeCategory }: Props) {
+export default function FilterTechnologies({ value, options, onChangeTechnology }: Props) {
   const currentValue = value ? (value as string).split(",") : [];
   return (
     <Autocomplete
@@ -47,7 +47,7 @@ export default function FilterCategories({ value, options, onChangeCategory }: P
       getOptionLabel={(option) => option as string}
       value={currentValue}
       noOptionsText="Brak opcji"
-      onChange={(event, selectedValue) => onChangeCategory(selectedValue.join(","))}
+      onChange={(event, selectedValue) => onChangeTechnology(selectedValue.join(","))}
       slotProps={{
         paper: {
           sx: {

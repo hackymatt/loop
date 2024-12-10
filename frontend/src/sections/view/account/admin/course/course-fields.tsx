@@ -1,6 +1,7 @@
 import { useTags } from "src/api/tags/tags";
 import { useTopics } from "src/api/topics/topics";
 import { useModules } from "src/api/modules/modules";
+import { useCandidates } from "src/api/candidates/candidates";
 
 import {
   RHFSwitch,
@@ -12,7 +13,7 @@ import {
 } from "src/components/hook-form";
 
 import { ITagProps } from "src/types/tags";
-import { ICourseModuleProp, ICourseByTopicProps } from "src/types/course";
+import { ICourseModuleProp, ICourseByTopicProps, ICourseByCandidateProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -33,10 +34,17 @@ export const useCourseFields = () => {
     sort_by: "name",
     page_size: -1,
   });
+  const { data: availableCandidates, isLoading: isLoadingCandidates } = useCandidates({
+    sort_by: "name",
+    page_size: -1,
+  });
   const fields: { [key: string]: JSX.Element } = {
     title: <RHFTextField key="title" name="title" label="Nazwa" />,
     description: (
       <RHFTextField key="description" name="description" label="Opis" multiline rows={5} />
+    ),
+    overview: (
+      <RHFTextField key="overview" name="overview" label="Podsumowanie" multiline rows={10} />
     ),
     level: (
       <RHFAutocomplete
@@ -83,6 +91,18 @@ export const useCourseFields = () => {
         getOptionLabel={(option) => (option as ICourseByTopicProps)?.name ?? ""}
         isOptionEqualToValue={(a, b) => a.id === b.id}
         loading={isLoadingTopics}
+      />
+    ),
+    candidates: (
+      <RHFAutocompleteDnd
+        key="candidates"
+        name="candidates"
+        label="Kandydaci"
+        multiple
+        options={availableCandidates ?? []}
+        getOptionLabel={(option) => (option as ICourseByCandidateProps)?.name ?? ""}
+        isOptionEqualToValue={(a, b) => a.id === b.id}
+        loading={isLoadingCandidates}
       />
     ),
     active: <RHFSwitch name="active" label="Status" />,

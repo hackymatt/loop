@@ -6,6 +6,7 @@ from certificate.models import Certificate
 from lesson.models import Lesson
 from technology.models import Technology
 from topic.models import Topic
+from candidate.models import Candidate
 from tag.models import Tag
 from review.models import Review
 from module.models import Module
@@ -143,6 +144,10 @@ def get_course_topics(id: int):
     return Course.topics.through.objects.filter(course_id=id)
 
 
+def get_course_candidates(id: int):
+    return Course.candidates.through.objects.filter(course_id=id)
+
+
 def lessons_number():
     return Lesson.objects.count()
 
@@ -165,6 +170,10 @@ def technologies_number():
 
 def topics_number():
     return Topic.objects.count()
+
+
+def candidates_number():
+    return Candidate.objects.count()
 
 
 def tags_number():
@@ -201,6 +210,10 @@ def get_tag(id: int):
 
 def get_topic(id: int):
     return Topic.objects.get(pk=id)
+
+
+def get_candidate(id: int):
+    return Candidate.objects.get(pk=id)
 
 
 def get_schedules(lecturer: Profile):

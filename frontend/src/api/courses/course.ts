@@ -26,6 +26,7 @@ type ILecturer = {
 type ITechnology = {
   id: string;
   name: string;
+  description: string;
 };
 
 type ITag = {
@@ -34,6 +35,11 @@ type ITag = {
 };
 
 type ITopic = {
+  id: string;
+  name: string;
+};
+
+type ICandidate = {
   id: string;
   name: string;
 };
@@ -68,6 +74,7 @@ type ICourse = {
   technologies: ITechnology[];
   tags: ITag[];
   topics: ITopic[];
+  candidates: ICandidate[];
   lecturers: ILecturer[];
   students_count: number;
   rating: number;
@@ -76,6 +83,7 @@ type ICourse = {
   video?: string;
   title: string;
   description: string;
+  overview: string;
   active: boolean;
   progress: number | null;
 };
@@ -95,8 +103,9 @@ type IEditCourse = Omit<
   | "modules"
   | "tags"
   | "topics"
+  | "candidates"
   | "progress"
-> & { modules: string[]; tags: string[]; topics: string[] };
+> & { modules: string[]; tags: string[]; topics: string[]; candidates: string[] };
 
 type IEditCourseReturn = IEditCourse;
 
@@ -116,6 +125,7 @@ export const courseQuery = (id: string) => {
       const {
         id: courseId,
         description,
+        overview,
         price,
         level,
         image,
@@ -131,6 +141,7 @@ export const courseQuery = (id: string) => {
         lecturers,
         tags,
         topics,
+        candidates,
         modules,
         active,
         progress,
@@ -139,12 +150,13 @@ export const courseQuery = (id: string) => {
       modifiedResults = {
         id: courseId,
         description,
+        overview,
         price,
         level,
         coverUrl: image,
         video,
         slug: title,
-        category: technologies.map(({ name }: ITechnology) => name),
+        technologies,
         priceSale: previous_price,
         lowest30DaysPrice: lowest_30_days_price,
         totalHours: duration / 60,
@@ -174,6 +186,7 @@ export const courseQuery = (id: string) => {
         ),
         tags: tags.map((tag: ITag) => tag.name),
         learnList: topics.map((topic: ITopic) => topic.name),
+        candidateList: candidates.map((candidate: ICandidate) => candidate.name),
         modules: modules.map(
           ({
             id: moduleId,

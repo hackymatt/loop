@@ -12,16 +12,16 @@ import { paths } from "src/routes/paths";
 import Iconify from "src/components/iconify";
 import TextMaxLine from "src/components/text-max-line";
 
-import { ICourseByCategoryProps } from "src/types/course";
+import { ICourseByTechnologyProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  categories: ICourseByCategoryProps[];
+  technologies: ICourseByTechnologyProps[];
 };
 
-export default function LandingCategories({ categories }: Props) {
-  const CATEGORIES_SLOTS: number = 9 as const;
+export default function LandingTechnologies({ technologies }: Props) {
+  const TECHNOLOGIES_SLOTS: number = 9 as const;
   return (
     <Box
       sx={{
@@ -45,7 +45,7 @@ export default function LandingCategories({ categories }: Props) {
               Sprawdź technologie dostępne w naszych kursach
             </Typography>
 
-            {categories.length > CATEGORIES_SLOTS && (
+            {technologies.length > TECHNOLOGIES_SLOTS && (
               <Button
                 variant="contained"
                 size="large"
@@ -69,15 +69,17 @@ export default function LandingCategories({ categories }: Props) {
                 },
               }}
             >
-              {categories.slice(0, CATEGORIES_SLOTS).map((category) => (
-                <Button
-                  key={category.id}
-                  href={`${paths.courses}?technology_in=${category.name}`}
-                  sx={{ borderRadius: 1.5, padding: 0 }}
-                >
-                  <CategoryItem key={category.id} category={category} />
-                </Button>
-              ))}
+              {technologies
+                .slice(0, TECHNOLOGIES_SLOTS)
+                .map((technology: ICourseByTechnologyProps) => (
+                  <Button
+                    key={technology.id}
+                    href={`${paths.courses}?technology_in=${technology.name}`}
+                    sx={{ borderRadius: 1.5, padding: 0 }}
+                  >
+                    <TechnologyItem key={technology.id} technology={technology} />
+                  </Button>
+                ))}
             </Box>
           </Grid>
         </Grid>
@@ -88,11 +90,11 @@ export default function LandingCategories({ categories }: Props) {
 
 // ----------------------------------------------------------------------
 
-type CategoryItemProps = {
-  category: ICourseByCategoryProps;
+type TechnologyItemProps = {
+  technology: ICourseByTechnologyProps;
 };
 
-function CategoryItem({ category }: CategoryItemProps) {
+function TechnologyItem({ technology }: TechnologyItemProps) {
   return (
     <Paper
       variant="outlined"
@@ -116,13 +118,13 @@ function CategoryItem({ category }: CategoryItemProps) {
       }}
     >
       <TextMaxLine variant="h6" line={1}>
-        {category.name}
+        {technology.name}
       </TextMaxLine>
 
-      {category.totalStudents && (
+      {technology.totalStudents && (
         <Typography variant="body2" sx={{ mt: 1, color: "text.disabled" }}>
-          {category.totalStudents}{" "}
-          {polishPlurals("kurs", "kursy", "kursów", category.totalStudents)}
+          {technology.totalStudents}{" "}
+          {polishPlurals("kurs", "kursy", "kursów", technology.totalStudents)}
         </Typography>
       )}
     </Paper>

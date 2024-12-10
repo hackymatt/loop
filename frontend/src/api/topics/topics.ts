@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatQueryParams } from "src/utils/query-params";
 
 import { IQueryParams } from "src/types/query-params";
-import { ICourseByCategoryProps } from "src/types/course";
+import { ICourseByTopicProps } from "src/types/course";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
@@ -44,7 +44,7 @@ export const topicsQuery = (query?: IQueryParams) => {
 export const useTopics = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = topicsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as ICourseByCategoryProps[], count: data?.count, ...rest };
+  return { data: data?.results as ICourseByTopicProps[], count: data?.count, ...rest };
 };
 
 export const useTopicsPagesCount = (query?: IQueryParams) => {

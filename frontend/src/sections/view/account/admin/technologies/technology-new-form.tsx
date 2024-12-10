@@ -64,7 +64,10 @@ export default function TechnologyNewForm({ onClose, ...other }: Props) {
         <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nową technologię</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
-          <Stack spacing={1}>{fields.name}</Stack>
+          <Stack spacing={1}>
+            {fields.name}
+            {fields.description}
+          </Stack>
         </DialogContent>
 
         <DialogActions>

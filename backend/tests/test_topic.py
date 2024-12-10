@@ -6,6 +6,7 @@ from .factory import (
     create_admin_profile,
     create_student_profile,
     create_topic,
+    create_candidate,
     create_topic_obj,
 )
 from .helpers import login, topics_number, is_float

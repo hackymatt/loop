@@ -16,7 +16,7 @@ import { useTechnology, useEditTechnology } from "src/api/technologies/technolog
 
 import FormProvider from "src/components/hook-form";
 
-import { ICourseByCategoryProps } from "src/types/course";
+import { ICourseByTechnologyProps } from "src/types/course";
 
 import { schema, defaultValues } from "./technology";
 import { useTechnologyFields } from "./technology-fields";
@@ -24,7 +24,7 @@ import { useTechnologyFields } from "./technology-fields";
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  technology: ICourseByCategoryProps;
+  technology: ICourseByTechnologyProps;
   onClose: VoidFunction;
 }
 
@@ -71,7 +71,10 @@ export default function TechnologyEditForm({ technology, onClose, ...other }: Pr
         <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj technologię</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
-          <Stack spacing={1}>{fields.name}</Stack>
+          <Stack spacing={1}>
+            {fields.name}
+            {fields.description}
+          </Stack>
         </DialogContent>
 
         <DialogActions>

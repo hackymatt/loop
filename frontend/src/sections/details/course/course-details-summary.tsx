@@ -11,7 +11,7 @@ import { RouterLink } from "src/routes/components";
 import Iconify from "src/components/iconify";
 import { CircularProgressWithLabel } from "src/components/progress-label/circle-progress";
 
-import { ICourseProps } from "src/types/course";
+import { ICourseProps, ICourseByTechnologyProps } from "src/types/course";
 
 import CourseDetailsModuleList from "./course-details-module-list";
 
@@ -33,8 +33,51 @@ export default function CourseDetailsSummary({ course }: Props) {
 
       {course.modules && <CourseDetailsModuleList modules={course.modules ?? []} />}
 
+      <Box>
+        <Typography component="h6" variant="h4" sx={{ mb: 2 }}>
+          Dlaczego ten kurs?
+        </Typography>
+        <Typography>
+          {course?.overview?.split("\n").map((line, index) => (
+            <Typography key={index}>
+              {line}
+              <br />
+            </Typography>
+          )) ?? ""}
+        </Typography>
+      </Box>
+
       <Stack spacing={3}>
-        <Typography variant="h4">Czego się nauczysz</Typography>
+        <Typography variant="h4">Dla kogo ten kurs?</Typography>
+
+        <Stack spacing={1}>
+          {course.candidateList?.map((candidate) => (
+            <Stack key={candidate} direction="row" alignItems="center" spacing={1.5}>
+              <Box
+                sx={{
+                  width: 20,
+                  height: 20,
+                  flexShrink: 0,
+                  display: "flex",
+                  borderRadius: "50%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  bgcolor: (theme) => alpha(theme?.palette?.primary?.main, 0.08),
+                }}
+              >
+                <Iconify
+                  icon="carbon:checkmark"
+                  sx={{ width: 16, height: 16, color: "primary.main" }}
+                />
+              </Box>
+              {candidate}
+            </Stack>
+          ))}
+        </Stack>
+      </Stack>
+
+      <Stack spacing={3}>
+        <Typography variant="h4">Czego się nauczysz?</Typography>
 
         <Stack spacing={1}>
           {course.learnList?.map((learn) => (
@@ -62,9 +105,48 @@ export default function CourseDetailsSummary({ course }: Props) {
         </Stack>
       </Stack>
 
+      <Stack spacing={3}>
+        <Typography variant="h4">O technologiach w tym kursie</Typography>
+
+        <Stack spacing={2}>
+          {course.technologies?.map((technology: ICourseByTechnologyProps) => (
+            <Stack spacing={0}>
+              <Stack key={technology.id} direction="row" alignItems="center" spacing={1.5}>
+                <Box
+                  sx={{
+                    width: 20,
+                    height: 20,
+                    flexShrink: 0,
+                    display: "flex",
+                    borderRadius: "50%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    bgcolor: (theme) => alpha(theme?.palette?.primary?.main, 0.08),
+                  }}
+                >
+                  <Iconify
+                    icon="carbon:code"
+                    sx={{ width: 16, height: 16, color: "primary.main" }}
+                  />
+                </Box>
+                {technology.name}
+              </Stack>
+              <Typography variant="body2" color="text.secondary" ml={4}>
+                {technology.description?.split("\n").map((line, index) => (
+                  <Typography key={index}>
+                    {line}
+                    <br />
+                  </Typography>
+                )) ?? ""}
+              </Typography>
+            </Stack>
+          ))}
+        </Stack>
+      </Stack>
+
       <Box display="flex" alignItems="center" flexWrap="wrap">
         <Typography variant="subtitle2" sx={{ mr: 1 }}>
-          Tagi:
+          Tagi
         </Typography>
 
         <Box gap={1} display="flex" flexWrap="wrap">

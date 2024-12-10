@@ -20,7 +20,7 @@ import { useTechnologies } from "src/api/technologies/technologies";
 import FormProvider from "src/components/hook-form";
 import { isStepFailed } from "src/components/stepper/step";
 
-import { ICourseLessonProp, ICourseByCategoryProps } from "src/types/course";
+import { ICourseLessonProp, ICourseByTechnologyProps } from "src/types/course";
 
 import { useLessonFields } from "./lesson-fields";
 import { steps, schema, defaultValues } from "./lesson";
@@ -59,9 +59,9 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
       reset({
         ...lessonData,
         github_url: lessonData.githubUrl.replace(GITHUB_REPO, ""),
-        technologies: lessonData.category.map((category: string) =>
+        technologies: lessonData.technologies.map((t: ICourseByTechnologyProps) =>
           availableTechnologies.find(
-            (technology: ICourseByCategoryProps) => technology.name === category,
+            (technology: ICourseByTechnologyProps) => technology.name === t.name,
           ),
         ),
       });
@@ -79,7 +79,9 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
     try {
       await editLesson({
         ...data,
-        technologies: data.technologies.map((technology: ICourseByCategoryProps) => technology.id),
+        technologies: data.technologies.map(
+          (technology: ICourseByTechnologyProps) => technology.id,
+        ),
         github_url: `${GITHUB_REPO}${data.github_url}`,
       });
       reset();

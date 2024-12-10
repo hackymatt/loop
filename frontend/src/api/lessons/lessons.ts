@@ -93,7 +93,7 @@ export const lessonsQuery = (query?: IQueryParams) => {
         priceSale: previous_price,
         lowest30DaysPrice: lowest_30_days_price,
         title,
-        category: technologies.map(({ name }: ITechnology) => name),
+        technologies,
         duration,
         ratingNumber: rating,
         totalReviews: rating_count,

@@ -1,6 +1,7 @@
 from core.base_model import BaseModel
 from django.db.models import (
     CharField,
+    TextField,
     Index,
     QuerySet,
     Manager,
@@ -45,6 +46,7 @@ class TechnologyManager(Manager):
 
 class Technology(BaseModel):
     name = CharField()
+    description = TextField()
 
     objects = TechnologyManager()
 

@@ -148,7 +148,6 @@ export default function Footer() {
                         cursor: "pointer",
                         display: "inline-flex",
                         alignItems: "center",
-                        minHeight: "45px",
                       }}
                     >
                       {`Kursy ${technology.name}`}

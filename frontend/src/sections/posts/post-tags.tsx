@@ -17,7 +17,7 @@ export function PostTags({ tags, sx, ...other }: PostTagsProps) {
   return (
     <Box display="flex" alignItems="center" flexWrap="wrap" sx={{ mt: 5, ...sx }} {...other}>
       <Typography variant="subtitle2" sx={{ mr: 1 }}>
-        Tagi:
+        Tagi
       </Typography>
 
       <Box gap={1} display="flex" flexWrap="wrap">

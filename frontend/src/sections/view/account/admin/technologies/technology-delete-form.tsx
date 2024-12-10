@@ -14,14 +14,14 @@ import { useDeleteTechnology } from "src/api/technologies/technology";
 
 import FormProvider from "src/components/hook-form";
 
-import { ICourseByCategoryProps } from "src/types/course";
+import { ICourseByTechnologyProps } from "src/types/course";
 
 import { defaultValues } from "./technology";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  technology: ICourseByCategoryProps;
+  technology: ICourseByTechnologyProps;
   onClose: VoidFunction;
 }
 

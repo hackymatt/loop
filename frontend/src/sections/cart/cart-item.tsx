@@ -16,7 +16,7 @@ import { useToastContext } from "src/components/toast";
 import TextMaxLine from "src/components/text-max-line";
 
 import { ICartProp } from "src/types/cart";
-import { ICourseTeacherProp } from "src/types/course";
+import { ICourseTeacherProp, ICourseByTechnologyProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -91,9 +91,12 @@ export default function CartItem({ cartItem, error, wishlist }: Props) {
             Czas trwania: {cartItem.lesson.duration}{" "}
             {polishPlurals("minuta", "minuty", "minut", cartItem.lesson.duration)}
           </Typography>
-          {cartItem.lesson.category && cartItem.lesson.category.length > 0 && (
+          {cartItem.lesson.technologies && cartItem.lesson.technologies.length > 0 && (
             <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              Technologie: {cartItem.lesson.category.join(", ")}{" "}
+              Technologie:{" "}
+              {cartItem.lesson.technologies
+                .map((technology: ICourseByTechnologyProps) => technology.name)
+                .join(", ")}{" "}
             </Typography>
           )}
           {cartItem.lesson.teachers && cartItem.lesson.teachers.length > 0 && (

@@ -23,6 +23,7 @@ class TechnologySerializer(ModelSerializer):
         model = Technology
         exclude = (
             "id",
+            "description",
             "modified_at",
             "created_at",
         )

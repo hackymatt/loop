@@ -34,6 +34,7 @@ from lesson.views import (
 from module.views import ModuleViewSet
 from technology.views import TechnologyViewSet, BestTechnologyViewSet
 from topic.views import TopicViewSet
+from candidate.views import CandidateViewSet
 from tag.views import TagViewSet
 from post.views import PostViewSet, PostCategoryViewSet
 from review.views import ReviewViewSet, ReviewStatsViewSet, BestReviewViewSet
@@ -107,6 +108,7 @@ router.register(r"tags", TagViewSet, basename="tags")
 router.register(r"teaching", ManageTeachingViewSet, basename="teaching")
 router.register(r"technologies", TechnologyViewSet, basename="technologies")
 router.register(r"topics", TopicViewSet, basename="topics")
+router.register(r"candidates", CandidateViewSet, basename="candidates")
 router.register(r"users", UserViewSet, basename="users")
 router.register(r"verify", ProfileVerifyViewSet, basename="user_verification")
 router.register(

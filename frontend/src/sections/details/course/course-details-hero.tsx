@@ -26,7 +26,13 @@ import Iconify from "src/components/iconify";
 import { PlayerDialog } from "src/components/player";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
-import { ILevel, ICourseProps, ICourseLessonProp, ICourseModuleProp } from "src/types/course";
+import {
+  ILevel,
+  ICourseProps,
+  ICourseLessonProp,
+  ICourseModuleProp,
+  ICourseByTechnologyProps,
+} from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -40,7 +46,7 @@ export default function CourseDetailsHero({ course }: Props) {
     slug,
     level,
     modules,
-    category: categories,
+    technologies,
     coverUrl,
     video,
     totalHours,
@@ -126,7 +132,7 @@ export default function CourseDetailsHero({ course }: Props) {
             <Grid xs={12} md={7}>
               <Stack spacing={3}>
                 <Stack spacing={2} alignItems="flex-start">
-                  {categories && (
+                  {technologies && (
                     <Stack
                       spacing={0.5}
                       direction="row"
@@ -143,13 +149,13 @@ export default function CourseDetailsHero({ course }: Props) {
                         />
                       }
                     >
-                      {categories.map((category: string) => (
+                      {technologies.map((technology: ICourseByTechnologyProps) => (
                         <Typography
-                          key={category}
+                          key={technology.id}
                           variant="overline"
                           sx={{ color: "primary.main" }}
                         >
-                          {category}
+                          {technology.name}
                         </Typography>
                       ))}
                     </Stack>

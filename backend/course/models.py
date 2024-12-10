@@ -23,6 +23,7 @@ from django.db.models import (
 from module.models import Module
 from tag.models import Tag
 from topic.models import Topic
+from candidate.models import Candidate
 from django.contrib.postgres.aggregates import ArrayAgg
 from django.db.models.functions import Coalesce, Cast
 from datetime import datetime
@@ -139,9 +140,11 @@ class Course(BaseModel):
     )
     title = CharField()
     description = TextField()
+    overview = TextField()
     level = CharField(choices=LEVEL_CHOICES, null=True)
     tags = ManyToManyField(Tag, related_name="course_tags")
     topics = ManyToManyField(Topic, related_name="course_topics")
+    candidates = ManyToManyField(Candidate, related_name="course_candidates")
     active = BooleanField(default=False)
     image = ImageField(upload_to=course_directory_path)
     video = FileField(upload_to=course_directory_path, null=True, blank=True)

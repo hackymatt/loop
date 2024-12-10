@@ -1,6 +1,10 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
-from technology.serializers import TechnologySerializer, BestTechnologySerializer
+from technology.serializers import (
+    TechnologyListSerializer,
+    TechnologySerializer,
+    BestTechnologySerializer,
+)
 from technology.filters import TechnologyFilter
 from technology.models import Technology
 
@@ -24,6 +28,11 @@ class TechnologyViewSet(ModelViewSet):
         if courses_count_from:
             return self.queryset.add_courses_count()
         return self.queryset
+
+    def get_serializer_class(self):
+        if self.action in ["list"]:
+            return TechnologyListSerializer
+        return self.serializer_class
 
 
 class BestTechnologyViewSet(ModelViewSet):

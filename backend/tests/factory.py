@@ -5,6 +5,7 @@ from coupon.models import Coupon, CouponUser
 from lesson.models import Lesson, LessonPriceHistory
 from technology.models import Technology
 from topic.models import Topic
+from candidate.models import Candidate
 from finance.models import Finance, FinanceHistory
 from tag.models import Tag
 from review.models import Review
@@ -145,15 +146,18 @@ def find_fields(values, model):
 def create_course(
     title: str,
     description: str,
+    overview: str,
     level: str,
     tags,
     topics,
+    candidates,
     modules,
     active: bool = True,
 ):
     course = Course.objects.create(
         title=title,
         description=description,
+        overview=overview,
         level=level,
         active=active,
     )
@@ -161,6 +165,7 @@ def create_course(
     course.modules.add(*modules)
     course.tags.add(*tags)
     course.topics.add(*topics)
+    course.candidates.add(*candidates)
     course.image = create_image()
     course.video = create_video()
     course.save()
@@ -171,10 +176,12 @@ def create_course(
 def create_course_obj(
     title: str,
     description: str,
+    overview: str,
     level: str,
     modules: List[Dict[str, int]],
     tags,
     topics,
+    candidates,
     image: str = None,
     video: str = None,
     active: bool = True,
@@ -182,10 +189,12 @@ def create_course_obj(
     return {
         "title": title,
         "description": description,
+        "overview": overview,
         "level": level,
         "modules": modules,
         "tags": tags,
         "topics": topics,
+        "candidates": candidates,
         "image": image,
         "video": video,
         "active": active,
@@ -262,12 +271,12 @@ def create_lesson_obj(
     }
 
 
-def create_technology(name: str):
-    return Technology.objects.create(name=name)
+def create_technology(name: str, description: str = "description"):
+    return Technology.objects.create(name=name, description=description)
 
 
-def create_technology_obj(name: str):
-    return {"name": name}
+def create_technology_obj(name: str, description: str = "description"):
+    return {"name": name, "description": description}
 
 
 def create_tag(name: str):
@@ -282,7 +291,15 @@ def create_topic(name: str):
     return Topic.objects.create(name=name)
 
 
+def create_candidate(name: str):
+    return Candidate.objects.create(name=name)
+
+
 def create_topic_obj(name: str):
+    return {"name": name}
+
+
+def create_candidate_obj(name: str):
     return {"name": name}
 
 

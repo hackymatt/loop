@@ -29,7 +29,7 @@ export type ICourseLessonProp = {
   id: string;
   title: string;
   duration: number;
-  category: string[];
+  technologies: ICourseByTechnologyProps[];
   videoPath?: string;
   unLocked?: boolean;
   description: string;
@@ -76,14 +76,21 @@ export type ICourseLessonPriceHistoryProp = {
   createdAt: Date;
 };
 
-export type ICourseByCategoryProps = {
+export type ICourseByTechnologyProps = {
   id: string;
   name: string;
+  description?: string;
   totalStudents?: number;
   createdAt: Date;
 };
 
 export type ICourseByTopicProps = {
+  id: string;
+  name: string;
+  createdAt: Date;
+};
+
+export type ICourseByCandidateProps = {
   id: string;
   name: string;
   createdAt: Date;
@@ -99,13 +106,15 @@ export type ICourseProps = {
   createdAt?: Date;
   coverUrl: string;
   video?: string;
-  category: string[];
+  technologies: ICourseByTechnologyProps[];
   tags: string[];
   priceSale: number;
   lowest30DaysPrice?: number;
   totalHours: number;
   description?: string;
+  overview?: string;
   learnList: string[];
+  candidateList: string[];
   ratingNumber: number;
   totalReviews: number;
   totalStudents: number;

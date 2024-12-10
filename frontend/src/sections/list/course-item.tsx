@@ -21,7 +21,7 @@ import Iconify from "src/components/iconify";
 import TextMaxLine from "src/components/text-max-line";
 import { CircularProgressWithLabel } from "src/components/progress-label/circle-progress";
 
-import { ILevel, ICourseProps } from "src/types/course";
+import { ILevel, ICourseProps, ICourseByTechnologyProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -38,7 +38,7 @@ export default function CourseItem({ course, vertical }: Props) {
     price,
     teachers,
     coverUrl,
-    category: categories,
+    technologies,
     priceSale,
     lowest30DaysPrice,
     totalHours,
@@ -112,7 +112,7 @@ export default function CourseItem({ course, vertical }: Props) {
             }}
           >
             <Stack direction="row" alignItems="center" justifyContent="space-between">
-              {categories && (
+              {technologies && (
                 <Stack
                   spacing={0.5}
                   direction="row"
@@ -129,9 +129,13 @@ export default function CourseItem({ course, vertical }: Props) {
                     />
                   }
                 >
-                  {categories.map((category: string) => (
-                    <Typography key={category} variant="overline" sx={{ color: "primary.main" }}>
-                      {category}
+                  {technologies.map((technology: ICourseByTechnologyProps) => (
+                    <Typography
+                      key={technology.id}
+                      variant="overline"
+                      sx={{ color: "primary.main" }}
+                    >
+                      {technology.name}
                     </Typography>
                   ))}
                 </Stack>

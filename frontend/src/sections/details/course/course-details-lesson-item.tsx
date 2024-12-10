@@ -47,7 +47,7 @@ import { CircularProgressWithLabel } from "src/components/progress-label/circle-
 
 import { UserType } from "src/types/user";
 import { ITeamMemberProps } from "src/types/team";
-import { IScheduleProp, ICourseLessonProp } from "src/types/course";
+import { IScheduleProp, ICourseLessonProp, ICourseByTechnologyProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -321,7 +321,7 @@ export default function CourseDetailsLessonItem({
             <LinearProgress />
           ) : (
             <Stack spacing={3}>
-              {details.category && (
+              {details.technologies && (
                 <Stack
                   spacing={0.5}
                   direction="row"
@@ -338,9 +338,13 @@ export default function CourseDetailsLessonItem({
                     />
                   }
                 >
-                  {details.category.map((category: string) => (
-                    <Typography key={category} variant="overline" sx={{ color: "primary.main" }}>
-                      {category}
+                  {details.technologies.map((technology: ICourseByTechnologyProps) => (
+                    <Typography
+                      key={technology.id}
+                      variant="overline"
+                      sx={{ color: "primary.main" }}
+                    >
+                      {technology.name}
                     </Typography>
                   ))}
                 </Stack>
