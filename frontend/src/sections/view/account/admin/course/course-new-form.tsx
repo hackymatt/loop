@@ -21,7 +21,12 @@ import { useToastContext } from "src/components/toast";
 import { isStepFailed } from "src/components/stepper/step";
 
 import { ITagProps } from "src/types/tags";
-import { ILevel, ICourseModuleProp, ICourseByTopicProps } from "src/types/course";
+import {
+  ILevel,
+  ICourseModuleProp,
+  ICourseByTopicProps,
+  ICourseByCandidateProps,
+} from "src/types/course";
 
 import { useCourseFields } from "./course-fields";
 import { steps, schema, defaultValues } from "./course";
@@ -70,6 +75,7 @@ export default function CourseNewForm({ onClose, ...other }: Props) {
           modules: data.modules.map((module: ICourseModuleProp) => module.id),
           tags: data.tags.map((tag: ITagProps) => tag.id),
           topics: data.topics.map((topic: ICourseByTopicProps) => topic.id),
+          candidates: data.candidates.map((candidate: ICourseByCandidateProps) => candidate.id),
         });
       }
       reset();

@@ -11,6 +11,7 @@ from .factory import (
     create_technology,
     create_tag,
     create_topic,
+    create_candidate,
     create_schedule,
     create_teaching,
     create_module,
@@ -112,6 +113,9 @@ class LessonDatesTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.candidate_1 = create_candidate(name="No tech knowledge")
+        self.candidate_2 = create_candidate(name="Tech interested")
+
         self.tag_1 = create_tag(name="coding")
         self.tag_2 = create_tag(name="IDE")
 
@@ -128,6 +132,10 @@ class LessonDatesTest(APITestCase):
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_1],
         )
@@ -182,6 +190,10 @@ class LessonDatesTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
+            ],
             modules=[self.module_2],
         )
 
@@ -216,6 +228,10 @@ class LessonDatesTest(APITestCase):
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_3],
         )
@@ -398,6 +414,9 @@ class LessonDatesFilterTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.candidate_1 = create_candidate(name="No tech knowledge")
+        self.candidate_2 = create_candidate(name="Tech interested")
+
         self.tag_1 = create_tag(name="coding")
         self.tag_2 = create_tag(name="IDE")
 
@@ -414,6 +433,10 @@ class LessonDatesFilterTest(APITestCase):
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_1],
         )
@@ -468,6 +491,10 @@ class LessonDatesFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
+            ],
             modules=[self.module_2],
         )
 
@@ -502,6 +529,10 @@ class LessonDatesFilterTest(APITestCase):
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_3],
         )

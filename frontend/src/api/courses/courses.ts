@@ -59,8 +59,9 @@ type ICreateCourse = Omit<
   | "modules"
   | "tags"
   | "topics"
+  | "candidates"
   | "progress"
-> & { modules: string[]; tags: string[]; topics: string[] };
+> & { modules: string[]; tags: string[]; topics: string[]; candidates: string[] };
 
 type ICreateCourseReturn = ICreateCourse;
 

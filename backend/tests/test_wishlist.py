@@ -10,6 +10,7 @@ from .factory import (
     create_technology,
     create_tag,
     create_topic,
+    create_candidate,
     create_wishlist,
     create_teaching,
     create_module,
@@ -76,6 +77,9 @@ class WishlistTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.candidate_1 = create_candidate(name="No tech knowledge")
+        self.candidate_2 = create_candidate(name="Tech interested")
+
         self.tag_1 = create_tag(name="coding")
         self.tag_2 = create_tag(name="IDE")
 
@@ -92,6 +96,10 @@ class WishlistTest(APITestCase):
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_1],
         )
@@ -145,6 +153,10 @@ class WishlistTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
+            ],
             modules=[self.module_2],
         )
 
@@ -175,6 +187,10 @@ class WishlistTest(APITestCase):
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_3],
         )

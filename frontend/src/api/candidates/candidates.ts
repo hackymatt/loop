@@ -5,32 +5,32 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatQueryParams } from "src/utils/query-params";
 
 import { IQueryParams } from "src/types/query-params";
-import { ICourseByTopicProps } from "src/types/course";
+import { ICourseByCandidateProps } from "src/types/course";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
 
-const endpoint = "/topics" as const;
+const endpoint = "/candidates" as const;
 
-type ITopic = {
+type ICandidate = {
   id: string;
   modified_at: string;
   created_at: string;
   name: string;
 };
 
-type ICreateTopic = Pick<ITopic, "name">;
+type ICreateCandidate = Pick<ICandidate, "name">;
 
-type ICreateTopicReturn = ICreateTopic;
+type ICreateCandidateReturn = ICreateCandidate;
 
-export const topicsQuery = (query?: IQueryParams) => {
+export const candidatesQuery = (query?: IQueryParams) => {
   const url = endpoint;
   const urlParams = formatQueryParams(query);
 
   const queryFn = async () => {
     const { data } = await Api.get(`${url}?${urlParams}`);
     const { results, records_count, pages_count } = data;
-    const modifiedResults = results.map(({ id, name, created_at }: ITopic) => ({
+    const modifiedResults = results.map(({ id, name, created_at }: ICandidate) => ({
       id,
       name,
       createdAt: created_at,
@@ -41,21 +41,21 @@ export const topicsQuery = (query?: IQueryParams) => {
   return { url, queryFn, queryKey: compact([url, urlParams]) };
 };
 
-export const useTopics = (query?: IQueryParams, enabled: boolean = true) => {
-  const { queryKey, queryFn } = topicsQuery(query);
+export const useCandidates = (query?: IQueryParams, enabled: boolean = true) => {
+  const { queryKey, queryFn } = candidatesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as ICourseByTopicProps[], count: data?.count, ...rest };
+  return { data: data?.results as ICourseByCandidateProps[], count: data?.count, ...rest };
 };
 
-export const useTopicsPagesCount = (query?: IQueryParams) => {
-  const { queryKey, queryFn } = topicsQuery(query);
+export const useCandidatesPagesCount = (query?: IQueryParams) => {
+  const { queryKey, queryFn } = candidatesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.pagesCount, ...rest };
 };
 
-export const useCreateTopic = () => {
+export const useCreateCandidate = () => {
   const queryClient = useQueryClient();
-  return useMutation<ICreateTopicReturn, AxiosError, ICreateTopic>(
+  return useMutation<ICreateCandidateReturn, AxiosError, ICreateCandidate>(
     async (variables) => {
       const result = await Api.post(endpoint, variables, {
         headers: {

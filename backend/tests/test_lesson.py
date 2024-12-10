@@ -15,6 +15,7 @@ from .factory import (
     create_lesson_price_history,
     create_payment,
     create_topic,
+    create_candidate,
     create_tag,
     create_course,
     create_module,
@@ -1389,6 +1390,9 @@ class LessonPriceHistoryFilterTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.candidate_1 = create_candidate(name="No tech knowledge")
+        self.candidate_2 = create_candidate(name="Tech interested")
+
         self.tag_1 = create_tag(name="coding")
         self.tag_2 = create_tag(name="IDE")
 
@@ -1405,6 +1409,10 @@ class LessonPriceHistoryFilterTest(APITestCase):
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_1],
         )
@@ -1446,6 +1454,10 @@ class LessonPriceHistoryFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
+            ],
             modules=[self.module_2],
         )
 
@@ -1485,6 +1497,10 @@ class LessonPriceHistoryFilterTest(APITestCase):
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_3],
         )
@@ -1601,6 +1617,9 @@ class LessonPriceHistoryOrderTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.candidate_1 = create_candidate(name="No tech knowledge")
+        self.candidate_2 = create_candidate(name="Tech interested")
+
         self.tag_1 = create_tag(name="coding")
         self.tag_2 = create_tag(name="IDE")
 
@@ -1617,6 +1636,10 @@ class LessonPriceHistoryOrderTest(APITestCase):
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_1],
         )
@@ -1659,6 +1682,10 @@ class LessonPriceHistoryOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
+            ],
             modules=[self.module_2],
         )
 
@@ -1699,6 +1726,10 @@ class LessonPriceHistoryOrderTest(APITestCase):
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_3],
         )

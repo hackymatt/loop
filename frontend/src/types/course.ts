@@ -89,6 +89,12 @@ export type ICourseByTopicProps = {
   createdAt: Date;
 };
 
+export type ICourseByCandidateProps = {
+  id: string;
+  name: string;
+  createdAt: Date;
+};
+
 export type ILevel = "P" | "Ś" | "Z" | "E";
 
 export type ICourseProps = {
@@ -107,6 +113,7 @@ export type ICourseProps = {
   description?: string;
   overview?: string;
   learnList: string[];
+  candidateList: string[];
   ratingNumber: number;
   totalReviews: number;
   totalStudents: number;

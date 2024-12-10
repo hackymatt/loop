@@ -38,6 +38,11 @@ type ITopic = {
   name: string;
 };
 
+type ICandidate = {
+  id: string;
+  name: string;
+};
+
 type ILesson = {
   id: string;
   title: string;
@@ -68,6 +73,7 @@ type ICourse = {
   technologies: ITechnology[];
   tags: ITag[];
   topics: ITopic[];
+  candidates: ICandidate[];
   lecturers: ILecturer[];
   students_count: number;
   rating: number;
@@ -96,8 +102,9 @@ type IEditCourse = Omit<
   | "modules"
   | "tags"
   | "topics"
+  | "candidates"
   | "progress"
-> & { modules: string[]; tags: string[]; topics: string[] };
+> & { modules: string[]; tags: string[]; topics: string[]; candidates: string[] };
 
 type IEditCourseReturn = IEditCourse;
 
@@ -133,6 +140,7 @@ export const courseQuery = (id: string) => {
         lecturers,
         tags,
         topics,
+        candidates,
         modules,
         active,
         progress,
@@ -177,6 +185,7 @@ export const courseQuery = (id: string) => {
         ),
         tags: tags.map((tag: ITag) => tag.name),
         learnList: topics.map((topic: ITopic) => topic.name),
+        candidateList: candidates.map((candidate: ICandidate) => candidate.name),
         modules: modules.map(
           ({
             id: moduleId,

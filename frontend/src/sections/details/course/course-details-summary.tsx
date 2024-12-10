@@ -51,8 +51,8 @@ export default function CourseDetailsSummary({ course }: Props) {
         <Typography variant="h4">Dla kogo ten kurs?</Typography>
 
         <Stack spacing={1}>
-          {course.learnList?.map((learn) => (
-            <Stack key={learn} direction="row" alignItems="center" spacing={1.5}>
+          {course.candidateList?.map((candidate) => (
+            <Stack key={candidate} direction="row" alignItems="center" spacing={1.5}>
               <Box
                 sx={{
                   width: 20,
@@ -70,7 +70,7 @@ export default function CourseDetailsSummary({ course }: Props) {
                   sx={{ width: 16, height: 16, color: "primary.main" }}
                 />
               </Box>
-              {learn}
+              {candidate}
             </Stack>
           ))}
         </Stack>

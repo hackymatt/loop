@@ -18,13 +18,20 @@ import { urlToBlob } from "src/utils/blob-to-base64";
 import { useTags } from "src/api/tags/tags";
 import { useTopics } from "src/api/topics/topics";
 import { useModules } from "src/api/modules/modules";
+import { useCandidates } from "src/api/candidates/candidates";
 import { useCourse, useEditCourse } from "src/api/courses/course";
 
 import FormProvider from "src/components/hook-form";
 import { isStepFailed } from "src/components/stepper/step";
 
 import { ITagProps } from "src/types/tags";
-import { ILevel, ICourseProps, ICourseModuleProp, ICourseByTopicProps } from "src/types/course";
+import {
+  ILevel,
+  ICourseProps,
+  ICourseModuleProp,
+  ICourseByTopicProps,
+  ICourseByCandidateProps,
+} from "src/types/course";
 
 import { useCourseFields } from "./course-fields";
 import { steps, schema, defaultValues } from "./course";
@@ -51,6 +58,10 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
     sort_by: "name",
     page_size: -1,
   });
+  const { data: availableCandidates } = useCandidates({
+    sort_by: "name",
+    page_size: -1,
+  });
 
   const { data: courseData } = useCourse(course.id);
   const { mutateAsync: editCourse } = useEditCourse(course.id);
@@ -67,7 +78,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
   } = methods;
 
   useEffect(() => {
-    if (courseData && availableTags && availableTopics && availableModules) {
+    if (courseData && availableTags && availableCandidates && availableTopics && availableModules) {
       reset({
         ...courseData,
         title: courseData.slug,
@@ -76,6 +87,9 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
         ),
         topics: courseData.learnList.map((topic: string) =>
           availableTopics.find((t: ICourseByTopicProps) => t.name === topic),
+        ),
+        candidates: courseData.candidateList.map((candidate: string) =>
+          availableCandidates.find((c: ICourseByCandidateProps) => c.name === candidate),
         ),
         modules: courseData.modules.map((module: ICourseModuleProp) => {
           const moduleData = availableModules.find((m: ICourseModuleProp) => m.id === module.id);
@@ -92,7 +106,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
         video: courseData.video ?? "",
       });
     }
-  }, [availableModules, availableTags, availableTopics, courseData, reset]);
+  }, [availableCandidates, availableModules, availableTags, availableTopics, courseData, reset]);
 
   const handleFormError = useFormErrorHandler(methods);
 
@@ -108,6 +122,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
         modules: data.modules.map((module: ICourseModuleProp) => module.id),
         tags: data.tags.map((tag: ITagProps) => tag.id),
         topics: data.topics.map((topic: ICourseByTopicProps) => topic.id),
+        candidates: data.candidates.map((candidate: ICourseByCandidateProps) => candidate.id),
         level: data.level.slice(0, 1) as ILevel,
         image: (await urlToBlob(data.image)) as string,
         video: data.video ? ((await urlToBlob(data.video)) as string) : "",

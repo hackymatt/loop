@@ -35,6 +35,7 @@ export const paths = {
       courses: {
         list: "/account/admin/courses/list",
         topics: "/account/admin/courses/topics",
+        candidates: "/account/admin/courses/candidates",
       },
       modules: {
         list: "/account/admin/modules/list",

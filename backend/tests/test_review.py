@@ -12,6 +12,7 @@ from .factory import (
     create_technology,
     create_tag,
     create_topic,
+    create_candidate,
     create_review,
     create_purchase,
     create_reservation,
@@ -128,6 +129,9 @@ class ReviewTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.candidate_1 = create_candidate(name="No tech knowledge")
+        self.candidate_2 = create_candidate(name="Tech interested")
+
         self.tag_1 = create_tag(name="coding")
         self.tag_2 = create_tag(name="IDE")
 
@@ -147,6 +151,10 @@ class ReviewTest(APITestCase):
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_1, self.module_2],
         )
@@ -487,6 +495,9 @@ class BestReviewTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.candidate_1 = create_candidate(name="No tech knowledge")
+        self.candidate_2 = create_candidate(name="Tech interested")
+
         self.tag_1 = create_tag(name="coding")
         self.tag_2 = create_tag(name="IDE")
 
@@ -503,6 +514,10 @@ class BestReviewTest(APITestCase):
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_1],
         )
@@ -659,6 +674,9 @@ class ReviewStatsTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.candidate_1 = create_candidate(name="No tech knowledge")
+        self.candidate_2 = create_candidate(name="Tech interested")
+
         self.tag_1 = create_tag(name="coding")
         self.tag_2 = create_tag(name="IDE")
 
@@ -678,6 +696,10 @@ class ReviewStatsTest(APITestCase):
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_1, self.module_2],
         )
@@ -886,6 +908,9 @@ class ReviewConfirmationTest(TestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.candidate_1 = create_candidate(name="No tech knowledge")
+        self.candidate_2 = create_candidate(name="Tech interested")
+
         self.tag_1 = create_tag(name="coding")
         self.tag_2 = create_tag(name="IDE")
 
@@ -902,6 +927,10 @@ class ReviewConfirmationTest(TestCase):
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_1],
         )
@@ -1076,6 +1105,9 @@ class ReviewFilterTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.candidate_1 = create_candidate(name="No tech knowledge")
+        self.candidate_2 = create_candidate(name="Tech interested")
+
         self.tag_1 = create_tag(name="coding")
         self.tag_2 = create_tag(name="IDE")
 
@@ -1092,6 +1124,10 @@ class ReviewFilterTest(APITestCase):
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_1],
         )
@@ -1157,6 +1193,10 @@ class ReviewFilterTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
+            ],
             modules=[self.module_2],
         )
 
@@ -1216,6 +1256,10 @@ class ReviewFilterTest(APITestCase):
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_3],
         )
@@ -1381,6 +1425,9 @@ class ReviewOrderTest(APITestCase):
         self.topic_1 = create_topic(name="You will learn how to code")
         self.topic_2 = create_topic(name="You will learn a new IDE")
 
+        self.candidate_1 = create_candidate(name="No tech knowledge")
+        self.candidate_2 = create_candidate(name="Tech interested")
+
         self.tag_1 = create_tag(name="coding")
         self.tag_2 = create_tag(name="IDE")
 
@@ -1397,6 +1444,10 @@ class ReviewOrderTest(APITestCase):
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_1],
         )
@@ -1462,6 +1513,10 @@ class ReviewOrderTest(APITestCase):
                 self.topic_1,
                 self.topic_2,
             ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
+            ],
             modules=[self.module_2],
         )
 
@@ -1521,6 +1576,10 @@ class ReviewOrderTest(APITestCase):
             topics=[
                 self.topic_1,
                 self.topic_2,
+            ],
+            candidates=[
+                self.candidate_1,
+                self.candidate_2,
             ],
             modules=[self.module_3],
         )

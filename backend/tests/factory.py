@@ -5,6 +5,7 @@ from coupon.models import Coupon, CouponUser
 from lesson.models import Lesson, LessonPriceHistory
 from technology.models import Technology
 from topic.models import Topic
+from candidate.models import Candidate
 from finance.models import Finance, FinanceHistory
 from tag.models import Tag
 from review.models import Review
@@ -149,6 +150,7 @@ def create_course(
     level: str,
     tags,
     topics,
+    candidates,
     modules,
     active: bool = True,
 ):
@@ -163,6 +165,7 @@ def create_course(
     course.modules.add(*modules)
     course.tags.add(*tags)
     course.topics.add(*topics)
+    course.candidates.add(*candidates)
     course.image = create_image()
     course.video = create_video()
     course.save()
@@ -178,6 +181,7 @@ def create_course_obj(
     modules: List[Dict[str, int]],
     tags,
     topics,
+    candidates,
     image: str = None,
     video: str = None,
     active: bool = True,
@@ -190,6 +194,7 @@ def create_course_obj(
         "modules": modules,
         "tags": tags,
         "topics": topics,
+        "candidates": candidates,
         "image": image,
         "video": video,
         "active": active,
@@ -286,7 +291,15 @@ def create_topic(name: str):
     return Topic.objects.create(name=name)
 
 
+def create_candidate(name: str):
+    return Candidate.objects.create(name=name)
+
+
 def create_topic_obj(name: str):
+    return {"name": name}
+
+
+def create_candidate_obj(name: str):
     return {"name": name}
 
 

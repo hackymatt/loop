@@ -9,6 +9,7 @@ from drf_extra_fields.fields import Base64ImageField, Base64FileField
 from course.models import Course
 from lesson.models import Lesson, Technology
 from topic.models import Topic
+from candidate.models import Candidate
 from tag.models import Tag
 from module.models import Module
 from profile.models import LecturerProfile, StudentProfile
@@ -189,6 +190,15 @@ class TopicSerializer(ModelSerializer):
         )
 
 
+class CandidateSerializer(ModelSerializer):
+    class Meta:
+        model = Candidate
+        exclude = (
+            "modified_at",
+            "created_at",
+        )
+
+
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField()
     gender = CharField(source="profile.get_gender_display")
@@ -362,6 +372,7 @@ class CourseListSerializer(ModelSerializer):
             "modules",
             "tags",
             "topics",
+            "candidates",
             "video",
             "overview",
             "created_at",
@@ -379,6 +390,7 @@ class CourseGetSerializer(ModelSerializer):
     technologies = SerializerMethodField()
     tags = SerializerMethodField()
     topics = SerializerMethodField()
+    candidates = SerializerMethodField()
     lecturers = SerializerMethodField()
     students_count = SerializerMethodField()
     rating = SerializerMethodField()
@@ -447,6 +459,21 @@ class CourseGetSerializer(ModelSerializer):
         )
         topics = Topic.objects.filter(id__in=topic_ids).order_by(preserved_order)
         return TopicSerializer(topics, many=True).data
+
+    def get_candidates(self, course: Course):
+        candidate_ids = list(
+            Course.candidates.through.objects.filter(course=course)
+            .order_by("id")
+            .values_list("candidate_id", flat=True)
+        )
+        preserved_order = Case(
+            *[When(pk=pk, then=pos) for pos, pk in enumerate(candidate_ids)],
+            output_field=IntegerField(),
+        )
+        candidates = Candidate.objects.filter(id__in=candidate_ids).order_by(
+            preserved_order
+        )
+        return CandidateSerializer(candidates, many=True).data
 
     def get_duration(self, course: Course):
         return course.duration
@@ -522,15 +549,36 @@ class CourseSerializer(ModelSerializer):
 
         return course
 
+    def add_candidates(self, course: Course, candidates):
+        names = [candidate.name for candidate in candidates]
+        existing_names = set(
+            Candidate.objects.filter(name__in=names).values_list("name", flat=True)
+        )
+
+        missing_candidates = [
+            Candidate(name=name) for name in set(names) - existing_names
+        ]
+
+        Candidate.objects.bulk_create(missing_candidates, ignore_conflicts=True)
+
+        candidates_objs = Candidate.objects.filter(name__in=names)
+
+        for candidates_obj in candidates_objs:
+            course.candidates.add(candidates_obj)
+
+        return course
+
     def create(self, validated_data):
         modules = validated_data.pop("modules")
         tags = validated_data.pop("tags")
         topics = validated_data.pop("topics")
+        candidates = validated_data.pop("candidates")
 
         course = Course.objects.create(**validated_data)
         course = self.add_modules(course=course, modules=modules)
         course = self.add_tags(course=course, tags=tags)
         course = self.add_topics(course=course, topics=topics)
+        course = self.add_candidates(course=course, candidates=candidates)
         course.save()
 
         if course.active:
@@ -542,6 +590,7 @@ class CourseSerializer(ModelSerializer):
         modules = validated_data.pop("modules")
         tags = validated_data.pop("tags")
         topics = validated_data.pop("topics")
+        candidates = validated_data.pop("candidates")
 
         instance.active = validated_data.get("active", instance.active)
         instance.title = validated_data.get("title", instance.title)
@@ -558,6 +607,8 @@ class CourseSerializer(ModelSerializer):
         instance = self.add_tags(course=instance, tags=tags)
         instance.topics.clear()
         instance = self.add_topics(course=instance, topics=topics)
+        instance.candidates.clear()
+        course = self.add_candidates(course=instance, candidates=candidates)
 
         instance.save()
 
@@ -613,8 +664,8 @@ class BestCourseSerializer(ModelSerializer):
             "active",
             "tags",
             "topics",
+            "candidates",
             "video",
-            "overview",
             "created_at",
             "modified_at",
             "description",

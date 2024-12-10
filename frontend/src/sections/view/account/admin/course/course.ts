@@ -8,6 +8,7 @@ export const defaultValues = {
   level: "Podstawowy",
   modules: [],
   tags: [],
+  candidates: [],
   topics: [],
   image: "",
   video: "",
@@ -19,6 +20,7 @@ export const steps = [
     fields: ["title", "description", "overview", "level", "duration", "github_url"],
   },
   { label: "Wybierz moduły", fields: ["modules"] },
+  { label: "Wybierz kandydatów", fields: ["candidates"] },
   { label: "Wybierz tematy", fields: ["topics"] },
   { label: "Wybierz tagi", fields: ["tags"] },
   { label: "Wybierz zdjęcie", fields: ["image"] },
@@ -35,5 +37,8 @@ export const schema = Yup.object().shape({
   video: Yup.string(),
   modules: Yup.array().required("Moduły są wymagane").min(1, "Wymagany przynajmniej jeden moduł"),
   tags: Yup.array().required("Tagi są wymagane").min(1, "Wymagany przynajmniej jeden tag"),
+  candidates: Yup.array()
+    .required("Kandydaci są wymagani")
+    .min(1, "Wymagany przynajmniej jeden kandydat"),
   topics: Yup.array().required("Tematy są wymagane").min(1, "Wymagana przynajmniej jeden temat"),
 });
