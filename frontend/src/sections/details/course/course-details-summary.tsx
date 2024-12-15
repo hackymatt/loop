@@ -37,7 +37,7 @@ export default function CourseDetailsSummary({ course }: Props) {
         <Typography component="h6" variant="h4" sx={{ mb: 2 }}>
           Dlaczego ten kurs?
         </Typography>
-        <Typography>
+        <Typography sx={{ textAlign: "justify" }}>
           {course?.overview?.split("\n").map((line, index) => (
             <Typography key={index}>
               {line}
@@ -131,7 +131,12 @@ export default function CourseDetailsSummary({ course }: Props) {
                 </Box>
                 {technology.name}
               </Stack>
-              <Typography variant="body2" color="text.secondary" ml={4}>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                ml={4}
+                sx={{ textAlign: "justify" }}
+              >
                 {technology.description?.split("\n").map((line, index) => (
                   <Typography key={index}>
                     {line}
