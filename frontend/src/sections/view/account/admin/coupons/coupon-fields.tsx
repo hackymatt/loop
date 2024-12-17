@@ -141,7 +141,7 @@ export const useCouponFields = (control: Control<any>) => {
         }}
       />
     ),
-    active: <RHFSwitch name="active" label="Status" />,
+    active: <RHFSwitch name="active" label="Status" labelPlacement="start" sx={{ pr: 3 }} />,
   };
   return { fields };
 };

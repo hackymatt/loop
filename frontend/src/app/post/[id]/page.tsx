@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   const postTitle = decodedId.slice(0, decodedId.lastIndexOf("-")).replace(/-/g, " ");
 
   const metadata = createMetadata(
-    `Artykuł ${postTitle} - przeczytaj już teraz`,
+    `${postTitle} - przeczytaj artykuł już teraz`,
     `Przeczytaj nasz artykuł o ${postTitle}. Odkryj praktyczne porady i najlepsze praktyki, które pomogą Ci w rozwoju umiejętności programistycznych.`,
     [
       postTitle,

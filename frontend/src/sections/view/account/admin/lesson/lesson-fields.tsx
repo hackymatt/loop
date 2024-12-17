@@ -70,7 +70,7 @@ export const useLessonFields = () => {
         isOptionEqualToValue={(a, b) => a.name === b.name}
       />
     ),
-    active: <RHFSwitch name="active" label="Status" />,
+    active: <RHFSwitch name="active" label="Status" labelPlacement="start" sx={{ pr: 3 }} />,
   };
   return { fields };
 };

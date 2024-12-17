@@ -23,7 +23,7 @@ export const plugins = [
   toolbarPlugin({ toolbarContents: () => <Toolbar /> }),
   listsPlugin(),
   quotePlugin(),
-  headingsPlugin({ allowedHeadingLevels: [1, 2, 3] }),
+  headingsPlugin({ allowedHeadingLevels: [1, 2, 3, 4, 5, 6] }),
   linkPlugin(),
   linkDialogPlugin(),
   imagePlugin(),
@@ -42,6 +42,6 @@ export const plugins = [
   directivesPlugin({
     directiveDescriptors: [AdmonitionDirectiveDescriptor],
   }),
-  diffSourcePlugin({ viewMode: "rich-text", diffMarkdown: "boo" }),
+  diffSourcePlugin({ viewMode: "rich-text", diffMarkdown: "" }),
   markdownShortcutPlugin(),
 ];
