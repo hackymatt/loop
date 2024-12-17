@@ -53,7 +53,19 @@ export default function ModuleDeleteForm({ module, onClose, ...other }: Props) {
   });
 
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={onClose} {...other}>
+    <Dialog
+      fullScreen
+      fullWidth
+      maxWidth="sm"
+      disablePortal
+      onClose={onClose}
+      {...other}
+      sx={{
+        zIndex: (theme) => theme.zIndex.modal + 1,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń moduł</DialogTitle>
 
@@ -61,7 +73,18 @@ export default function ModuleDeleteForm({ module, onClose, ...other }: Props) {
           <Typography>{`Czy na pewno chcesz usunąć moduł ${module.title}?`}</Typography>
         </DialogContent>
 
-        <DialogActions>
+        <DialogActions
+          sx={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: (theme) => theme.zIndex.modal + 2,
+            bgcolor: "background.paper",
+            boxShadow: (theme) => theme.shadows[4],
+            p: 2,
+          }}
+        >
           <Button variant="outlined" onClick={onClose} color="inherit">
             Anuluj
           </Button>

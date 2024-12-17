@@ -71,7 +71,7 @@ export const usePostFields = () => {
       />
     ),
     image: <RHFImageUpload key="image" name="image" label="" />,
-    active: <RHFSwitch name="active" label="Status" />,
+    active: <RHFSwitch name="active" label="Status" labelPlacement="start" sx={{ pr: 3 }} />,
   };
   return { fields };
 };

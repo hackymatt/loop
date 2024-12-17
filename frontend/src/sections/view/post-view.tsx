@@ -104,7 +104,7 @@ export function PostView({ id }: { id: string }) {
   const metadata = useMemo(
     () =>
       createMetadata(
-        `Artykuł ${post?.title} - przeczytaj już teraz`,
+        `${post?.title} - przeczytaj artykuł już teraz`,
         `Przeczytaj nasz artykuł o ${post?.title}. ${post?.description} Dowiedz się, jak ${post?.description.toLowerCase()}. Odkryj praktyczne porady i najlepsze praktyki, które pomogą Ci w rozwoju umiejętności programistycznych.`,
         [
           post?.title,
@@ -203,7 +203,9 @@ export function PostView({ id }: { id: string }) {
 
             {renderToolbar}
 
-            <Markdown content={post?.content ?? ""} />
+            <Box sx={{ textAlign: "justify" }}>
+              <Markdown content={post?.content ?? ""} />
+            </Box>
 
             {!!post.tags?.length && <PostTags tags={post.tags} />}
 

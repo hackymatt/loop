@@ -67,7 +67,7 @@ export default function PostNewForm({ onClose, ...other }: Props) {
       });
       reset();
       onCloseWithReset();
-      enqueueSnackbar("Lekcja została dodana", { variant: "success" });
+      enqueueSnackbar("Artykuł został dodany", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }
@@ -80,7 +80,19 @@ export default function PostNewForm({ onClose, ...other }: Props) {
   const stepContent = steps[activeStep].fields.map((field: string) => fields[field]);
 
   return (
-    <Dialog fullWidth maxWidth="lg" onClose={onCloseWithReset} {...other} sx={{ zIndex: 1 }}>
+    <Dialog
+      fullScreen
+      fullWidth
+      maxWidth="lg"
+      disablePortal
+      onClose={onCloseWithReset}
+      {...other}
+      sx={{
+        zIndex: (theme) => theme.zIndex.modal + 1,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nowy artykuł</DialogTitle>
@@ -110,7 +122,18 @@ export default function PostNewForm({ onClose, ...other }: Props) {
           </Stack>
         </DialogContent>
 
-        <DialogActions>
+        <DialogActions
+          sx={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: (theme) => theme.zIndex.modal + 2,
+            bgcolor: "background.paper",
+            boxShadow: (theme) => theme.shadows[4],
+            p: 2,
+          }}
+        >
           {activeStep === 0 && (
             <>
               <Button variant="outlined" onClick={onCloseWithReset} color="inherit">
