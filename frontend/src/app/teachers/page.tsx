@@ -1,4 +1,3 @@
-import { ViewUtil } from "src/utils/page-utils";
 import { createMetadata } from "src/utils/create-metadata";
 
 import TeachersView from "src/sections/view/teachers-view";
@@ -22,5 +21,5 @@ export const metadata = createMetadata(
   ],
 );
 export default function CoursesPage() {
-  return <ViewUtil defaultView={<TeachersView />} />;
+  return <TeachersView />;
 }

@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 
-import { ViewUtil } from "src/utils/page-utils";
 import { decodeUrl } from "src/utils/url-utils";
 import { createMetadata } from "src/utils/create-metadata";
 
@@ -9,7 +8,7 @@ import { PostView } from "src/sections/view/post-view";
 // ----------------------------------------------------------------------
 
 export default function PostPage({ params }: { params: { id: string } }) {
-  return <ViewUtil defaultView={<PostView id={params.id} />} />;
+  return <PostView id={params.id} />;
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {

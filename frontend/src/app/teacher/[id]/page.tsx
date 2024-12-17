@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 
-import { ViewUtil } from "src/utils/page-utils";
 import { decodeUrl } from "src/utils/url-utils";
 import { createMetadata } from "src/utils/create-metadata";
 
@@ -9,7 +8,7 @@ import TeacherView from "src/sections/view/teacher-view";
 // ----------------------------------------------------------------------
 
 export default function TeacherPage({ params }: { params: { id: string } }) {
-  return <ViewUtil defaultView={<TeacherView id={params.id} />} />;
+  return <TeacherView id={params.id} />;
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {

@@ -1,7 +1,5 @@
 "use client";
 
-import { LayoutUtil } from "src/utils/page-utils";
-
 import AuthIllustrationLayout from "src/layouts/auth/illustration";
 
 // ----------------------------------------------------------------------
@@ -11,10 +9,5 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
-  return (
-    <LayoutUtil
-      defaultLayout={<AuthIllustrationLayout>{children}</AuthIllustrationLayout>}
-      children={children}
-    />
-  );
+  return <AuthIllustrationLayout>{children}</AuthIllustrationLayout>;
 }

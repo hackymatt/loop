@@ -1,7 +1,5 @@
 "use client";
 
-import { LayoutUtil } from "src/utils/page-utils";
-
 import MainLayout from "src/layouts/main";
 
 // ----------------------------------------------------------------------
@@ -11,5 +9,5 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
-  return <LayoutUtil defaultLayout={<MainLayout>{children}</MainLayout>} children={children} />;
+  return <MainLayout>{children}</MainLayout>;
 }
