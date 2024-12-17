@@ -4,7 +4,7 @@ import { forwardRef } from "react";
 import "@mdxeditor/editor/style.css";
 import { MDXEditor, MDXEditorMethods } from "@mdxeditor/editor";
 
-import { plugins } from "./pluggins";
+import { allPlugins } from "./pluggins";
 
 interface EditorProps {
   value: string;
@@ -13,7 +13,13 @@ interface EditorProps {
 
 export const MarkdownEditor = forwardRef<MDXEditorMethods | null, EditorProps>(
   ({ value, onChange, ...otherProps }, ref) => (
-    <MDXEditor onChange={onChange} ref={ref} markdown={value} plugins={plugins} {...otherProps} />
+    <MDXEditor
+      onChange={onChange}
+      ref={ref}
+      markdown={value}
+      plugins={allPlugins}
+      {...otherProps}
+    />
   ),
 );
 

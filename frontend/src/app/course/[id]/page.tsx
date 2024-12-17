@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 
-import { ViewUtil } from "src/utils/page-utils";
 import { decodeUrl } from "src/utils/url-utils";
 import { createMetadata } from "src/utils/create-metadata";
 
@@ -9,7 +8,7 @@ import CourseView from "src/sections/view/course-view";
 // ----------------------------------------------------------------------
 
 export default function CoursePage({ params }: { params: { id: string } }) {
-  return <ViewUtil defaultView={<CourseView id={params.id} />} />;
+  return <CourseView id={params.id} />;
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {

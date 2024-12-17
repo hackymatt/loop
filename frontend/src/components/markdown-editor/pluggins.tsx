@@ -19,8 +19,9 @@ import {
 
 import { Toolbar } from "./toolbar";
 
+export const toolbar = toolbarPlugin({ toolbarContents: () => <Toolbar /> });
+
 export const plugins = [
-  toolbarPlugin({ toolbarContents: () => <Toolbar /> }),
   listsPlugin(),
   quotePlugin(),
   headingsPlugin({ allowedHeadingLevels: [1, 2, 3, 4, 5, 6] }),
@@ -69,3 +70,5 @@ export const plugins = [
   diffSourcePlugin({ viewMode: "rich-text", diffMarkdown: "" }),
   markdownShortcutPlugin(),
 ];
+
+export const allPlugins = [toolbar, ...plugins];

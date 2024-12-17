@@ -1,4 +1,3 @@
-import { ViewUtil } from "src/utils/page-utils";
 import { createMetadata } from "src/utils/create-metadata";
 
 import { PostsView } from "src/sections/view/posts-view";
@@ -23,5 +22,5 @@ export const metadata = createMetadata(
 );
 
 export default function PostsPage() {
-  return <ViewUtil defaultView={<PostsView />} />;
+  return <PostsView />;
 }
