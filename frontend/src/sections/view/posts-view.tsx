@@ -23,6 +23,7 @@ import { IQueryParamValue } from "src/types/query-params";
 import { Posts } from "../posts/posts";
 import Advertisement from "../advertisement";
 import Newsletter from "../newsletter/newsletter";
+import NotFoundView from "../error/not-found-view";
 import { PostSidebar } from "../posts/post-sidebar";
 import { FeaturedPost } from "../posts/featured-post";
 import { PostSearchMobile } from "../posts/post-search-mobile";
@@ -79,6 +80,10 @@ export function PostsView() {
 
   if (isLoading) {
     return <SplashScreen />;
+  }
+
+  if (pagesCount === 0) {
+    return <NotFoundView />;
   }
 
   return (
