@@ -38,7 +38,7 @@ const TABLE_HEAD = [
   { id: "title", label: "Nazwa modułu", minWidth: 500 },
   { id: "duration", label: "Czas" },
   { id: "price", label: "Cena" },
-  { id: "lessons_count", label: "Liczba lekcji" },
+  { id: "lessons_count", label: "Liczba lekcji", minWidth: 200 },
   { id: "", width: 25 },
 ];
 

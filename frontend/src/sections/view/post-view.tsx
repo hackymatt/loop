@@ -31,6 +31,7 @@ import { IAuthorProps } from "src/types/author";
 import { PostTags } from "../posts/post-tags";
 import Newsletter from "../newsletter/newsletter";
 import { PostAuthors } from "../posts/post-author";
+import NotFoundView from "../error/not-found-view";
 import { LatestPosts } from "../posts/latest-posts";
 import { PrevNextButton } from "../posts/post-prev-and-next";
 
@@ -122,6 +123,10 @@ export function PostView({ id }: { id: string }) {
 
   if (isLoading) {
     return <SplashScreen />;
+  }
+
+  if (Object.keys(post).length === 0) {
+    return <NotFoundView />;
   }
 
   return (

@@ -28,11 +28,11 @@ import FilterTechnologies from "./filter-technologies";
 // ----------------------------------------------------------------------
 
 const DURATION_OPTIONS = [
-  { value: "(duration_to=60)", label: "0 - 1 godzin" },
-  { value: "(duration_from=60)&(duration_to=180)", label: "1 - 3 godzin" },
+  { value: "(duration_to=180)", label: "0 - 3 godzin" },
   { value: "(duration_from=180)&(duration_to=360)", label: "3 - 6 godzin" },
-  { value: "(duration_from=360)&(duration_to=1080)", label: "6 - 18 godzin" },
-  { value: "(duration_from=1080)", label: "18+ godzin" },
+  { value: "(duration_from=360)&(duration_to=540)", label: "6 - 9 godzin" },
+  { value: "(duration_from=540)&(duration_to=720)", label: "9 - 12 godzin" },
+  { value: "(duration_from=720)", label: "12+ godzin" },
 ];
 
 const LEVEL_OPTIONS = [

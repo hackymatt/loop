@@ -1694,6 +1694,16 @@ class CourseFilterTest(APITestCase):
         count = data["records_count"]
         self.assertEqual(count, 1)
 
+    def test_title_filter(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}?title=Python Beginner")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        count = data["records_count"]
+        self.assertEqual(count, 1)
+
     def test_rating_filter(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)

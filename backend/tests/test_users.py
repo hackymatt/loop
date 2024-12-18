@@ -633,14 +633,14 @@ class UsersFilterTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         column = "user_type"
-        variable = "w"
+        variable = "W"
         response = self.client.get(f"{self.endpoint}?{column}={variable}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 3)
-        values = list(set([variable in record[column].lower() for record in results]))
+        values = list(set([variable == record[column][0] for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
 
