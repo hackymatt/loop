@@ -47,7 +47,7 @@ class UserFilter(FilterSet):
     )
     active = BooleanFilter(field_name="user__is_active", lookup_expr="exact")
     gender = CharFilter(field_name="gender", lookup_expr="icontains")
-    user_type = CharFilter(field_name="user_type", lookup_expr="icontains")
+    user_type = CharFilter(field_name="user_type", lookup_expr="startswith")
     created_at = DateFilter(field_name="created_at", lookup_expr="contains")
     phone_number = CharFilter(field_name="phone_number", lookup_expr="icontains")
     dob = CharFilter(field_name="dob", lookup_expr="icontains")

@@ -164,18 +164,6 @@ export default function AccountUsersView() {
         />
 
         <FilterSearch
-          value={filters?.first_name ?? ""}
-          onChangeSearch={(value) => handleChange("first_name", value)}
-          placeholder="Imię..."
-        />
-
-        <FilterSearch
-          value={filters?.last_name ?? ""}
-          onChangeSearch={(value) => handleChange("last_name", value)}
-          placeholder="Nazwisko..."
-        />
-
-        <FilterSearch
           value={filters?.email ?? ""}
           onChangeSearch={(value) => handleChange("email", value)}
           placeholder="Email..."

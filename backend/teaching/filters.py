@@ -67,7 +67,8 @@ class ManageTeachingFilter(FilterSet):
 
     def filter_teaching(self, queryset, field_name, value):
         lookup_field_name = f"{field_name}__isnull"
-        return queryset.filter(**{lookup_field_name: not bool(value)})
+        bool_value = value.lower() == "true"
+        return queryset.filter(**{lookup_field_name: not bool_value})
 
 
 class TeachingFilter(FilterSet):

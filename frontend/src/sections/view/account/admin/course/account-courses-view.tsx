@@ -39,11 +39,11 @@ import AccountTableHead from "../../../../account/account-table-head";
 // ----------------------------------------------------------------------
 
 const DURATION_OPTIONS = [
-  { value: "(duration_to=30)", label: "0 - 30 minut" },
-  { value: "(duration_from=30)&(duration_to=60)", label: "30 - 60 minut" },
-  { value: "(duration_from=60)&(duration_to=90)", label: "60 - 90 minut" },
-  { value: "(duration_from=90)&(duration_to=120)", label: "90 - 120 minut" },
-  { value: "(duration_from=120)", label: "120+ minut" },
+  { value: "(duration_to=180)", label: "0 - 3 godzin" },
+  { value: "(duration_from=180)&(duration_to=360)", label: "3 - 6 godzin" },
+  { value: "(duration_from=360)&(duration_to=540)", label: "6 - 9 godzin" },
+  { value: "(duration_from=540)&(duration_to=720)", label: "9 - 12 godzin" },
+  { value: "(duration_from=720)", label: "12+ godzin" },
 ];
 
 const LEVEL_OPTIONS = [

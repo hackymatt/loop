@@ -28,6 +28,7 @@ class CourseFilter(FilterSet):
         field_name="tags_names",
         method="filter_in",
     )
+    title = CharFilter(field_name="title", lookup_expr="icontains")
     level_in = CharInFilter(field_name="level", lookup_expr="in")
     price_from = NumberFilter(field_name="price", lookup_expr="gte")
     price_to = NumberFilter(field_name="price", lookup_expr="lte")
