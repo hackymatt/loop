@@ -42,6 +42,7 @@ export default function RHFAutocomplete<
           {...field}
           id={`autocomplete-${name}`}
           noOptionsText="Brak opcji"
+          disablePortal
           onChange={(event, newValue) => setValue(name, newValue, { shouldValidate: true })}
           renderInput={(params) => (
             <TextField

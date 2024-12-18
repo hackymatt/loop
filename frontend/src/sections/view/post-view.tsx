@@ -64,8 +64,8 @@ export function PostView({ id }: { id: string }) {
         borderBottom: `solid 1px ${theme.palette.divider}`,
       })}
     >
-      <AvatarGroup total={post?.authors.length ?? 0} max={1}>
-        {post?.authors.map((author: IAuthorProps) => {
+      <AvatarGroup total={post?.authors?.length ?? 0} max={1}>
+        {post?.authors?.map((author: IAuthorProps) => {
           const genderAvatarUrl = getGenderAvatar(author?.gender);
 
           const avatarUrl = author?.avatarUrl || genderAvatarUrl;
@@ -75,7 +75,7 @@ export function PostView({ id }: { id: string }) {
 
       <Stack spacing={0.5} flexGrow={1} typography="subtitle2">
         <Stack direction="row" spacing={0.5}>
-          {post?.authors[0].name}
+          {post?.authors?.[0].name}
           {(post?.authors?.length ?? 0) > 1 && (
             <Typography
               color="text.secondary"

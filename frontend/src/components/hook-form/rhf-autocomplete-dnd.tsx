@@ -81,6 +81,7 @@ export default function RHFAutocompleteDnd<
           disableCloseOnSelect={multiple}
           onChange={(event, newValue) => setValue(name, newValue, { shouldValidate: true })}
           noOptionsText="Brak opcji"
+          disablePortal
           renderInput={(params) => (
             <TextField
               {...params}
