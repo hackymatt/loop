@@ -25,6 +25,8 @@ from .helpers import (
 from django.contrib import auth
 import json
 from base64 import b64encode
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
 
 
 class PostTest(APITestCase):
@@ -89,6 +91,7 @@ class PostTest(APITestCase):
             category=self.category,
             authors=[self.lecturer_profile],
             tags=[self.tag_1, self.tag_2],
+            publication_date=make_aware(datetime.now() - timedelta(days=11)).date(),
         )
         create_post(
             title="abcd",
@@ -97,6 +100,7 @@ class PostTest(APITestCase):
             category=self.category_2,
             authors=[self.lecturer_profile],
             tags=[self.tag_2],
+            publication_date=make_aware(datetime.now() - timedelta(days=11)).date(),
         )
         create_post(
             title="abc2",
@@ -105,6 +109,7 @@ class PostTest(APITestCase):
             category=self.category,
             authors=[self.lecturer_profile],
             tags=[self.tag_2],
+            publication_date=make_aware(datetime.now() - timedelta(days=11)).date(),
         )
         self.post_2 = create_post(
             title="abcd2",
@@ -113,6 +118,7 @@ class PostTest(APITestCase):
             category=self.category_2,
             authors=[self.lecturer_profile],
             tags=[self.tag_1],
+            publication_date=make_aware(datetime.now() - timedelta(days=11)).date(),
             active=False,
         )
 
@@ -123,6 +129,7 @@ class PostTest(APITestCase):
             category=self.category.id,
             authors=[self.lecturer_profile.id],
             tags=[self.tag_1.id, self.tag_2.id],
+            publication_date=make_aware(datetime.now() - timedelta(days=5)).date(),
             image=b64encode(create_image().read()),
         )
 
@@ -133,6 +140,7 @@ class PostTest(APITestCase):
             category=self.category_2.id,
             authors=[self.lecturer_profile.id],
             tags=[self.tag_2.id],
+            publication_date=make_aware(datetime.now() - timedelta(days=5)).date(),
             image=b64encode(create_image().read()),
             active=False,
         )
@@ -144,6 +152,7 @@ class PostTest(APITestCase):
             category=self.category.id,
             authors=[self.lecturer_profile.id],
             tags=[self.tag_1.id],
+            publication_date=make_aware(datetime.now() - timedelta(days=5)).date(),
             image=b64encode(create_image().read()),
         )
 
@@ -154,6 +163,7 @@ class PostTest(APITestCase):
             category=self.category_2.id,
             authors=[self.lecturer_profile.id],
             tags=[self.tag_2.id],
+            publication_date=make_aware(datetime.now() - timedelta(days=5)).date(),
             image=b64encode(create_image().read()),
             active=False,
         )
@@ -548,6 +558,7 @@ class PostCategoryFilterTest(APITestCase):
             category=self.category,
             authors=[self.lecturer_profile],
             tags=[self.tag_2],
+            publication_date=make_aware(datetime.now() - timedelta(days=11)).date(),
         )
         create_post(
             title="abcd",
@@ -556,6 +567,7 @@ class PostCategoryFilterTest(APITestCase):
             category=self.category_2,
             authors=[self.lecturer_profile],
             tags=[self.tag_1],
+            publication_date=make_aware(datetime.now() - timedelta(days=11)).date(),
         )
 
     def test_name_filter(self):
@@ -656,6 +668,7 @@ class PostFilterTest(APITestCase):
             category=self.category,
             authors=[self.lecturer_profile],
             tags=[self.tag_1, self.tag_2],
+            publication_date=make_aware(datetime.now() - timedelta(days=11)).date(),
         )
         create_post(
             title="abcd",
@@ -664,6 +677,7 @@ class PostFilterTest(APITestCase):
             category=self.category_2,
             authors=[self.lecturer_profile],
             tags=[self.tag_2],
+            publication_date=make_aware(datetime.now() - timedelta(days=11)).date(),
         )
         create_post(
             title="abc2",
@@ -672,6 +686,7 @@ class PostFilterTest(APITestCase):
             category=self.category,
             authors=[self.lecturer_profile],
             tags=[self.tag_2],
+            publication_date=make_aware(datetime.now() - timedelta(days=11)).date(),
         )
         self.post_2 = create_post(
             title="abcd2",
@@ -680,6 +695,7 @@ class PostFilterTest(APITestCase):
             category=self.category_2,
             authors=[self.lecturer_profile],
             tags=[self.tag_1],
+            publication_date=make_aware(datetime.now() - timedelta(days=11)).date(),
             active=False,
         )
 
@@ -734,17 +750,17 @@ class PostFilterTest(APITestCase):
         self.assertTrue(len(titles) == 1)
         self.assertTrue(titles[0])
 
-    def test_created_at_filter(self):
+    def test_publication_date_filter(self):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # get data
-        date = str(self.post.created_at)[0:10]
-        response = self.client.get(f"{self.endpoint}?created_at={date}")
+        date = str(self.post.publication_date)[0:10]
+        response = self.client.get(f"{self.endpoint}?publication_date={date}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 3)
-        dates = list(set([date in record["created_at"] for record in results]))
+        dates = list(set([date in record["publication_date"] for record in results]))
         self.assertTrue(len(dates) == 1)
         self.assertTrue(dates[0])
 
@@ -811,6 +827,7 @@ class PostCategoryOrderTest(APITestCase):
             category=self.category,
             authors=[self.lecturer_profile],
             tags=[self.tag_1],
+            publication_date=make_aware(datetime.now() - timedelta(days=11)).date(),
         )
         create_post(
             title="abcd",
@@ -819,6 +836,7 @@ class PostCategoryOrderTest(APITestCase):
             category=self.category_2,
             authors=[self.lecturer_profile],
             tags=[self.tag_2],
+            publication_date=make_aware(datetime.now() - timedelta(days=11)).date(),
         )
 
         self.fields = ["name", "created_at"]
@@ -927,6 +945,7 @@ class PostOrderTest(APITestCase):
             category=self.category,
             authors=[self.lecturer_profile],
             tags=[self.tag_2, self.tag_1],
+            publication_date=make_aware(datetime.now() - timedelta(days=11)).date(),
         )
         create_post(
             title="abcd",
@@ -935,6 +954,7 @@ class PostOrderTest(APITestCase):
             category=self.category_2,
             authors=[self.lecturer_profile],
             tags=[self.tag_1, self.tag_2],
+            publication_date=make_aware(datetime.now() - timedelta(days=11)).date(),
         )
         create_post(
             title="abc2",
@@ -943,6 +963,7 @@ class PostOrderTest(APITestCase):
             category=self.category,
             authors=[self.lecturer_profile],
             tags=[self.tag_1],
+            publication_date=make_aware(datetime.now() - timedelta(days=11)).date(),
         )
         self.post_2 = create_post(
             title="abcd2",
@@ -950,11 +971,12 @@ class PostOrderTest(APITestCase):
             content="bbbbbbbbb2",
             category=self.category_2,
             authors=[self.lecturer_profile],
+            publication_date=make_aware(datetime.now() - timedelta(days=11)).date(),
             active=False,
             tags=[self.tag_2],
         )
 
-        self.fields = ["created_at", "title", "active"]
+        self.fields = ["publication_date", "title", "active"]
 
     def test_ordering(self):
         for field in self.fields:

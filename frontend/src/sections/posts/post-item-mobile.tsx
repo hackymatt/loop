@@ -47,7 +47,7 @@ export function PostItemMobile({ post, onSiderbar, sx, ...other }: Props) {
           </TextMaxLine>
 
           <PostTime
-            createdAt={fDate(post.createdAt, "d MMMM yyyy")}
+            createdAt={fDate(post.publicationDate, "d MMMM yyyy")}
             duration={post.duration}
             category={post.category}
           />

@@ -34,13 +34,10 @@ type IPost = {
   authors: ILecturer[];
   active: boolean;
   image: string;
-  created_at: string;
+  publication_date: string;
 };
 
-type ICreatePost = Omit<
-  IPost,
-  "id" | "authors" | "category" | "tags" | "duration" | "created_at"
-> & {
+type ICreatePost = Omit<IPost, "id" | "authors" | "category" | "tags" | "duration"> & {
   content: string;
   category: string;
   active: boolean;
@@ -76,7 +73,7 @@ export const postsQuery = (query?: IQueryParams) => {
         authors,
         active,
         image,
-        created_at,
+        publication_date,
       }: IPost) => ({
         id,
         title,
@@ -93,7 +90,7 @@ export const postsQuery = (query?: IQueryParams) => {
           }),
         ),
         active,
-        createdAt: created_at,
+        publicationDate: publication_date,
       }),
     );
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };

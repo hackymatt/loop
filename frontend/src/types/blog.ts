@@ -24,7 +24,7 @@ export type IPostProps = {
   coverUrl: string;
   authors: IAuthorProps[];
   tags: string[];
-  createdAt: string;
+  publicationDate: Date;
   previousPost?: IPostNavigationProps;
   nextPost?: IPostNavigationProps;
   active: boolean;

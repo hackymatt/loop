@@ -543,6 +543,7 @@ def create_post(
     category: PostCategory,
     authors,
     tags,
+    publication_date: datetime,
     active: bool = True,
 ):
     post = Post.objects.create(
@@ -550,6 +551,7 @@ def create_post(
         description=description,
         content=content,
         category=category,
+        publication_date=publication_date,
         active=active,
     )
 
@@ -568,6 +570,7 @@ def create_post_obj(
     category: str,
     authors,
     tags,
+    publication_date,
     image: str = None,
     active: bool = True,
 ):
@@ -579,6 +582,7 @@ def create_post_obj(
         "authors": authors,
         "tags": tags,
         "image": image,
+        "publication_date": publication_date,
         "active": active,
     }
 

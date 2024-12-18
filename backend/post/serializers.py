@@ -94,6 +94,7 @@ class PostListSerializer(ModelSerializer):
             "tags",
             "visits",
             "modified_at",
+            "created_at",
         )
 
     def get_duration(self, post: Post):
@@ -114,6 +115,7 @@ class PostGetSerializer(ModelSerializer):
         exclude = (
             "visits",
             "modified_at",
+            "created_at",
         )
 
     def get_duration(self, post: Post):
@@ -195,6 +197,9 @@ class PostSerializer(ModelSerializer):
         tags = validated_data.pop("tags")
 
         instance.active = validated_data.get("active", instance.active)
+        instance.publication_date = validated_data.get(
+            "publication_date", instance.publication_date
+        )
         instance.title = validated_data.get("title", instance.title)
         instance.description = validated_data.get("description", instance.description)
         instance.content = validated_data.get("content", instance.content)

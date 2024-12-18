@@ -13,6 +13,8 @@ import { Step, Stepper, StepLabel, StepContent } from "@mui/material";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
+import { fDate } from "src/utils/format-time";
+
 import { useCreatePost } from "src/api/posts/posts";
 
 import FormProvider from "src/components/hook-form";
@@ -64,6 +66,7 @@ export default function PostNewForm({ onClose, ...other }: Props) {
         authors: data.authors.map((author: IAuthorProps) => author.id),
         category: data.category.map((c: IPostCategoryProps) => c.id)[0],
         tags: data.tags.map((tag: ITagProps) => tag.id),
+        publication_date: fDate(data.publication_date, "yyyy-MM-dd"),
       });
       reset();
       onCloseWithReset();

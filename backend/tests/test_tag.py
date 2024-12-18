@@ -20,6 +20,8 @@ from .factory import (
 from .helpers import login, tags_number, is_float
 from django.contrib import auth
 import json
+from datetime import datetime, timedelta
+from django.utils.timezone import make_aware
 
 
 class TagTest(APITestCase):
@@ -215,6 +217,7 @@ class TagFilterTest(APITestCase):
             category=self.category,
             authors=[self.lecturer_profile],
             tags=[self.tag, self.tag_2],
+            publication_date=make_aware(datetime.now() - timedelta(days=11)).date(),
         )
 
         self.technology_1 = create_technology(name="Python")

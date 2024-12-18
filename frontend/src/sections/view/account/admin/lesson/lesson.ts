@@ -37,7 +37,5 @@ export const schema = Yup.object().shape({
       (number) => number % LESSON_DURATION_MULTIPLIER === 0,
     ),
   github_url: Yup.string().required("Link do repozytorium jest wymagany"),
-  technologies: Yup.array()
-    .required("Technologie są wymagane")
-    .min(1, "Wymagana przynajmniej jedna technologia"),
+  technologies: Yup.array().nullable(),
 });

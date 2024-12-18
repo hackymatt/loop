@@ -47,14 +47,14 @@ type IPost = {
   authors: ILecturer[];
   active: boolean;
   image: string;
-  created_at: string;
+  publication_date: string;
   previous_post: IPostNavigation;
   next_post: IPostNavigation;
 };
 
 type IEditPost = Omit<
   IPost,
-  "id" | "authors" | "category" | "tags" | "duration" | "created_at" | "previous_post" | "next_post"
+  "id" | "authors" | "category" | "tags" | "duration" | "previous_post" | "next_post"
 > & {
   content: string;
   category: string;
@@ -89,7 +89,7 @@ export const postQuery = (id: string) => {
         tags,
         active,
         image,
-        created_at,
+        publication_date,
         previous_post,
         next_post,
       } = data;
@@ -123,7 +123,7 @@ export const postQuery = (id: string) => {
           }),
         ),
         active,
-        createdAt: created_at,
+        publicationDate: publication_date,
         previousPost:
           previous_post === null
             ? previous_post

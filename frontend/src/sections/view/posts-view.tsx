@@ -38,11 +38,11 @@ export function PostsView() {
 
   const { data: pagesCount, isLoading: isLoadingPagesCount } = usePostsPagesCount({
     ...query,
-    sort_by: "-created_at",
+    sort_by: "-publication_date",
   });
   const { data: recentPosts, isLoading: isLoadingFeaturedPost } = usePosts({
     ...query,
-    sort_by: "-created_at",
+    sort_by: "-publication_date",
   });
   const { data: popularPosts } = usePosts({
     page_size: 4,

@@ -100,11 +100,11 @@ export function PostItem({ post, sx, ...other }: PostItemProps) {
         <Box display="flex" gap={3} sx={{ p: 3 }}>
           <Box sx={{ textAlign: "center" }}>
             <Typography variant="subtitle2" component="span">
-              {fDate(post.createdAt, "MMM")}
+              {fDate(post.publicationDate, "MMM")}
             </Typography>
             <Divider sx={{ mt: 1, mb: 0.5 }} />
             <Typography variant="h3" component="span">
-              {fDate(post.createdAt, "dd")}
+              {fDate(post.publicationDate, "dd")}
             </Typography>
           </Box>
 

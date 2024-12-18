@@ -160,7 +160,7 @@ class LessonSerializer(ModelSerializer):
         return lesson
 
     def create(self, validated_data):
-        technologies = validated_data.pop("technologies")
+        technologies = validated_data.pop("technologies", [])
 
         lesson = Lesson.objects.create(**validated_data)
         lesson = self.add_technology(lesson=lesson, technologies=technologies)
@@ -172,7 +172,7 @@ class LessonSerializer(ModelSerializer):
         return lesson
 
     def update(self, instance: Lesson, validated_data):
-        technologies = validated_data.pop("technologies")
+        technologies = validated_data.pop("technologies", [])
 
         current_price = instance.price
         new_price = validated_data.get("price", instance.price)
