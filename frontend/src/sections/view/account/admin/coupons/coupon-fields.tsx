@@ -122,6 +122,9 @@ export const useCouponFields = (control: Control<any>) => {
                 helperText: error?.message,
                 error: !!error?.message,
               },
+              popper: {
+                disablePortal: true,
+              },
             }}
             {...field}
             value={field.value}

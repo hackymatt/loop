@@ -164,7 +164,9 @@ class LessonManager(Manager):
 class Lesson(BaseModel):
     title = CharField()
     description = TextField()
-    technologies = ManyToManyField(Technology, related_name="lesson_technologies")
+    technologies = ManyToManyField(
+        Technology, related_name="lesson_technologies", blank=True
+    )
     duration = PositiveIntegerField()
     github_url = URLField()
     price = DecimalField(

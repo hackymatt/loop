@@ -6,6 +6,7 @@ from django.db.models import (
     TextField,
     IntegerField,
     BooleanField,
+    DateField,
     ImageField,
     Index,
     PROTECT,
@@ -22,6 +23,7 @@ from profile.models import LecturerProfile
 from config_global import WORDS_PER_MINUTE
 from django.contrib.postgres.aggregates import ArrayAgg
 from django.db.models.functions import Length, Ceil, Cast, Coalesce
+from datetime import datetime
 
 
 def post_directory_path(instance, filename):
@@ -104,6 +106,7 @@ class Post(BaseModel):
     image = ImageField(upload_to=post_directory_path)
     visits = IntegerField(default=0)
     tags = ManyToManyField(Tag, related_name="post_tags")
+    publication_date = DateField(default=datetime.today)
     active = BooleanField(default=False)
 
     objects = PostManager()

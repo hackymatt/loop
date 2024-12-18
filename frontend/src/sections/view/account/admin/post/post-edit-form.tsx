@@ -13,6 +13,7 @@ import { Step, Stepper, StepLabel, StepContent } from "@mui/material";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
+import { fDate } from "src/utils/format-time";
 import { urlToBlob } from "src/utils/blob-to-base64";
 
 import { useTags } from "src/api/tags/tags";
@@ -80,6 +81,7 @@ export default function PostEditForm({ post, onClose, ...other }: Props) {
           availableTags.find((s: ITagProps) => s.name === tag),
         ),
         image: postData.coverUrl ?? "",
+        publication_date: new Date(postData.publicationDate),
       });
     }
   }, [availableCategories, availableLecturers, availableTags, post.category, postData, reset]);
@@ -99,6 +101,7 @@ export default function PostEditForm({ post, onClose, ...other }: Props) {
         category: data.category.map((c: IPostCategoryProps) => c.id)[0],
         tags: data.tags.map((tag: ITagProps) => tag.id),
         image: (await urlToBlob(data.image)) as string,
+        publication_date: fDate(data.publication_date, "yyyy-MM-dd"),
       });
       reset();
       onCloseWithReset();

@@ -1,3 +1,7 @@
+import { Controller } from "react-hook-form";
+
+import { DatePicker } from "@mui/x-date-pickers";
+
 import { useTags } from "src/api/tags/tags";
 import { useLecturers } from "src/api/lecturers/lecturers";
 import { usePostCategories } from "src/api/post-categories/post-categories";
@@ -68,6 +72,27 @@ export const usePostFields = () => {
         getOptionLabel={(option) => (option as ITeamMemberProps)?.name ?? ""}
         loading={isLoadingLecturers}
         isOptionEqualToValue={(a, b) => a.name === b.name}
+      />
+    ),
+    publication_date: (
+      <Controller
+        name="publication_date"
+        render={({ field, fieldState: { error } }) => (
+          <DatePicker
+            label="Data publikacji"
+            slotProps={{
+              textField: {
+                helperText: error?.message,
+                error: !!error?.message,
+              },
+              popper: {
+                disablePortal: true,
+              },
+            }}
+            {...field}
+            value={field.value}
+          />
+        )}
       />
     ),
     image: <RHFImageUpload key="image" name="image" label="" />,

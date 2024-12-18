@@ -79,7 +79,7 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
     try {
       await editLesson({
         ...data,
-        technologies: data.technologies.map(
+        technologies: (data.technologies ?? []).map(
           (technology: ICourseByTechnologyProps) => technology.id,
         ),
         github_url: `${GITHUB_REPO}${data.github_url}`,

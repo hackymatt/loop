@@ -46,7 +46,7 @@ const TABS = [
 const TABLE_HEAD = [
   { id: "title", label: "Nazwa artykułu", minWidth: 200 },
   { id: "active", label: "Status", width: 100 },
-  { id: "created_at", label: "Data utworzenia", width: 200 },
+  { id: "publication_date", label: "Data publikacji", width: 200 },
   { id: "", width: 25 },
 ];
 
@@ -173,9 +173,9 @@ export default function AccountPostsView() {
         />
 
         <DatePicker
-          value={filters?.created_at ? new Date(filters.created_at) : null}
+          value={filters?.publication_date ? new Date(filters.publication_date) : null}
           onChange={(value: Date | null) =>
-            handleChange("created_at", value ? fDate(value, "yyyy-MM-dd") : "")
+            handleChange("publication_date", value ? fDate(value, "yyyy-MM-dd") : "")
           }
           sx={{ width: 1, minWidth: 180 }}
           localeText={{
@@ -183,8 +183,8 @@ export default function AccountPostsView() {
             cancelButtonLabel: "Anuluj",
           }}
           slotProps={{
-            field: { clearable: true, onClear: () => handleChange("created_at", "") },
-            textField: { size: "small", hiddenLabel: true, placeholder: "Data utworzenia" },
+            field: { clearable: true, onClear: () => handleChange("publication_date", "") },
+            textField: { size: "small", hiddenLabel: true, placeholder: "Data publikacji" },
           }}
         />
       </Stack>

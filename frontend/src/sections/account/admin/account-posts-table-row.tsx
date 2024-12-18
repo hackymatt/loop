@@ -64,7 +64,7 @@ export default function AccountPostsTableRow({ row, onEdit, onDelete }: Props) {
         </TableCell>
 
         <TableCell>
-          <InputBase value={fDate(row.createdAt)} />
+          <InputBase value={fDate(row.publicationDate)} />
         </TableCell>
 
         <TableCell align="right" padding="none">

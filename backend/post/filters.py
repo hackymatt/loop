@@ -16,7 +16,7 @@ class PostFilter(FilterSet):
         field_name="tags_names",
         method="filter_in",
     )
-    created_at = DateFilter(field_name="created_at", lookup_expr="contains")
+    publication_date = DateFilter(field_name="publication_date", lookup_expr="contains")
     sort_by = OrderFilter(
         choices=(
             ("title", "Title ASC"),
@@ -25,8 +25,8 @@ class PostFilter(FilterSet):
             ("-active", "Active DESC"),
             ("visits", "Visits ASC"),
             ("-visits", "Visits DESC"),
-            ("created_at", "Created At ASC"),
-            ("-created_at", "Created At DESC"),
+            ("publication_date", "Publication date ASC"),
+            ("-publication_date", "Publication date DESC"),
         ),
         fields={
             "title": "title",
@@ -35,8 +35,8 @@ class PostFilter(FilterSet):
             "-active": "-active",
             "visits": "visits",
             "-visits": "-visits",
-            "created_at": "created_at",
-            "created_at": "-created_at",
+            "publication_date": "publication_date",
+            "publication_date": "-publication_date",
         },
     )
 
@@ -46,7 +46,7 @@ class PostFilter(FilterSet):
             "title",
             "category",
             "tags_in",
-            "created_at",
+            "publication_date",
             "active",
             "sort_by",
         )

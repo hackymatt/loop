@@ -60,7 +60,7 @@ export default function LessonNewForm({ onClose, ...other }: Props) {
     try {
       await createLesson({
         ...data,
-        technologies: data.technologies.map(
+        technologies: (data.technologies ?? []).map(
           (technology: ICourseByTechnologyProps) => technology.id,
         ),
         github_url: `${GITHUB_REPO}${data.github_url}`,

@@ -44,7 +44,7 @@ export function PostView({ id }: { id: string }) {
   const { data: post, isLoading: isLoadingPost } = usePost(recordId);
 
   const { data: recentPosts } = usePosts({
-    sort_by: "-created_at",
+    sort_by: "-publication_date",
     page_size: 3,
   });
 
@@ -88,7 +88,7 @@ export function PostView({ id }: { id: string }) {
           )}
         </Stack>
         <Typography variant="caption" sx={{ color: "text.secondary" }}>
-          {fDate(post?.createdAt, "d MMMM yyyy")}
+          {fDate(post?.publicationDate, "d MMMM yyyy")}
         </Typography>
       </Stack>
 
