@@ -18,7 +18,7 @@ export default function AboutView() {
   const { data: bestReviews } = useBestReviews();
   const { data: bestLecturers } = useBestLecturers();
   const { data: recentPosts } = usePosts({
-    sort_by: "-created_at",
+    sort_by: "-publication_date",
     page_size: 3,
   });
 

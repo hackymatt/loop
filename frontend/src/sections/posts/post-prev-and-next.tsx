@@ -41,6 +41,7 @@ export function PrevNextButton({ coverUrl, title, isNext, href, sx, ...other }: 
     >
       <Iconify
         width={24}
+        flexShrink={0}
         icon={isNext ? "solar:alt-arrow-right-outline" : "solar:alt-arrow-left-outline"}
         sx={{ color: "text.disabled" }}
       />
