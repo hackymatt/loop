@@ -16,6 +16,6 @@ export default function robots(): MetadataRoute.Robots {
 
   return {
     rules,
-    sitemap: `https://www.${env}loop.edu.pl/sitemap.xml`,
+    sitemap: `https://${env}loop.edu.pl/sitemap.xml`,
   };
 }
