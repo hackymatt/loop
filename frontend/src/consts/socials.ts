@@ -4,7 +4,7 @@ export const socials = [
     label: "FaceBook",
     icon: "carbon:logo-facebook",
     color: "#1877F2",
-    url: "https://www.facebook.com/profile.php?id=61560936969271",
+    url: "https://www.facebook.com/loopedupl/",
   },
   {
     value: "instagram",
@@ -14,6 +14,13 @@ export const socials = [
     url: "https://www.instagram.com/loopedupl/",
   },
   {
+    value: "linkedin",
+    label: "Linkedin",
+    icon: "carbon:logo-linkedin",
+    color: "#007EBB",
+    url: "https://www.linkedin.com/company/loopedupl",
+  },
+  {
     value: "youtube",
     label: "YouTube",
     icon: "carbon:logo-youtube",
@@ -21,11 +28,11 @@ export const socials = [
     url: "https://www.youtube.com/@loopedupl",
   },
   {
-    value: "linkedin",
-    label: "Linkedin",
-    icon: "carbon:logo-linkedin",
-    color: "#007EBB",
-    url: "https://www.linkedin.com/company/103649492",
+    value: "udemy",
+    label: "Udemy",
+    icon: "logos:udemy-icon",
+    color: "",
+    url: "https://www.udemy.com/user/loop-edu-pl/",
   },
   {
     value: "github",
