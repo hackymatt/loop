@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 
+import { paths } from "src/routes/paths";
+
 import { decodeUrl } from "src/utils/url-utils";
 import { createMetadata } from "src/utils/create-metadata";
 
@@ -16,7 +18,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
   const courseTitle = decodedId.slice(0, decodedId.lastIndexOf("-")).replace(/-/g, " ");
 
-  const metadata = createMetadata(
+  return createMetadata(
     `Kurs ${courseTitle} - sprawdź program nauczania`,
     `Zapisz się na kurs ${courseTitle} w loop i naucz się programować. Oferujemy praktyczne lekcje online z certyfikatem ukończenia oraz wsparcie doświadczonych instruktorów.`,
     [
@@ -25,11 +27,6 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
       "szkoła programowania loop",
       "kurs programowania",
     ],
+    `${paths.course}/${params.id}`,
   );
-
-  return {
-    title: metadata.title,
-    description: metadata.description,
-    keywords: metadata.keywords,
-  };
 }

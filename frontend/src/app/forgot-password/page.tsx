@@ -1,3 +1,5 @@
+import { paths } from "src/routes/paths";
+
 import { createMetadata } from "src/utils/create-metadata";
 
 import ForgotPasswordView from "src/sections/auth/forgot-password-view";
@@ -19,6 +21,7 @@ export const metadata = createMetadata(
     "loop reset hasła",
     "problemy z hasłem",
   ],
+  paths.forgotPassword,
 );
 export default function ForgotPasswordPage() {
   return <ForgotPasswordView />;

@@ -117,8 +117,9 @@ export function PostView({ id }: { id: string }) {
           "szkoła programowania",
           "loop",
         ],
+        `${paths.post}/${id}`,
       ),
-    [post?.description, post?.title],
+    [id, post?.description, post?.title],
   );
 
   if (isLoading) {

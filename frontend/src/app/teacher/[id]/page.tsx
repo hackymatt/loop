@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 
+import { paths } from "src/routes/paths";
+
 import { decodeUrl } from "src/utils/url-utils";
 import { createMetadata } from "src/utils/create-metadata";
 
@@ -30,6 +32,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
       "mentor programistyczny",
       "szkoła programowania",
     ],
+    `${paths.teacher}/${params.id}`,
   );
 
   return {

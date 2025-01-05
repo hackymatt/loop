@@ -1,3 +1,5 @@
+import { paths } from "src/routes/paths";
+
 import { createMetadata } from "src/utils/create-metadata";
 
 import CoursesView from "src/sections/view/courses-view";
@@ -20,6 +22,7 @@ export const metadata = createMetadata(
     "lekcje programowania online",
     "loop kursy programowania",
   ],
+  paths.courses,
 );
 
 export default function CoursesPage() {

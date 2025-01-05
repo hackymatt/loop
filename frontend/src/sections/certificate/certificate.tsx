@@ -3,6 +3,8 @@ import { useRef, useMemo } from "react";
 
 import { Stack, alpha, Button, useTheme, Container, Typography } from "@mui/material";
 
+import { paths } from "src/routes/paths";
+
 import { fDate } from "src/utils/format-time";
 import { createMetadata } from "src/utils/create-metadata";
 
@@ -37,7 +39,7 @@ export default function Certificate({ id }: IProps) {
     [certificateData?.isAuthorized],
   );
 
-  const certificateUrl = useMemo(() => `${BASE_URL}/certificate/${id}`, [id]);
+  const certificateUrl = useMemo(() => `${BASE_URL}${paths.certificate}/${id}`, [id]);
 
   const type = useMemo(() => {
     switch (certificateData?.type) {
@@ -56,8 +58,11 @@ export default function Certificate({ id }: IProps) {
     () =>
       createMetadata(
         `Certyfikat ukończenia ${type.toLowerCase()} ${certificateData?.title} dla ${certificateData?.studentName}`,
+        undefined,
+        undefined,
+        `${paths.certificate}/${id}`,
       ),
-    [certificateData?.studentName, certificateData?.title, type],
+    [certificateData?.studentName, certificateData?.title, id, type],
   );
 
   if (isLoading) {

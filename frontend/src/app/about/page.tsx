@@ -1,3 +1,5 @@
+import { paths } from "src/routes/paths";
+
 import { createMetadata } from "src/utils/create-metadata";
 
 import AboutView from "src/sections/view/about-view";
@@ -19,6 +21,7 @@ export const metadata = createMetadata(
     "certyfikaty programowania",
     "mentorzy programowania",
   ],
+  paths.about,
 );
 
 export default function AboutPage() {

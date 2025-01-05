@@ -1,3 +1,5 @@
+import { paths } from "src/routes/paths";
+
 import { createMetadata } from "src/utils/create-metadata";
 
 import PredispositionTestView from "src/sections/view/predisposition-test-view";
@@ -19,6 +21,7 @@ export const metadata = createMetadata(
     "test dla przyszłych programistów",
     "sprawdź predyspozycje programisty",
   ],
+  paths.tests.predisposition,
 );
 export default function PredispositionTestPage() {
   return <PredispositionTestView />;

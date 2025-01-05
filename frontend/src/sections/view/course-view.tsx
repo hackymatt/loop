@@ -103,8 +103,9 @@ export default function CourseView({ id }: { id: string }) {
           "kurs programowania",
           ...(technologyKeywords ?? []),
         ],
+        `${paths.course}/${id}`,
       ),
-    [course?.description, course?.slug, technologyKeywords],
+    [course?.description, course?.slug, id, technologyKeywords],
   );
 
   if (isLoading) {

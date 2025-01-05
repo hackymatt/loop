@@ -54,8 +54,9 @@ export default function TeacherView({ id }: { id: string }) {
           "mentor programistyczny",
           "szkoła programowania",
         ],
+        `${paths.teacher}/${id}`,
       ),
-    [teacher?.description, teacher?.name],
+    [id, teacher?.description, teacher?.name],
   );
 
   if (isLoading) {

@@ -1,3 +1,5 @@
+import { paths } from "src/routes/paths";
+
 import { createMetadata } from "src/utils/create-metadata";
 
 import TermsAndConditionsView from "src/sections/view/terms-and-conditions-view";
@@ -19,6 +21,7 @@ export const metadata = createMetadata(
     "ochrona danych",
     "loop regulamin",
   ],
+  paths.termsAndConditions,
 );
 export default function TermsAndConditionsPage() {
   return <TermsAndConditionsView />;
