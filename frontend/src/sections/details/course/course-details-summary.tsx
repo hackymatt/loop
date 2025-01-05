@@ -110,8 +110,8 @@ export default function CourseDetailsSummary({ course }: Props) {
 
         <Stack spacing={2}>
           {course.technologies?.map((technology: ICourseByTechnologyProps) => (
-            <Stack spacing={0}>
-              <Stack key={technology.id} direction="row" alignItems="center" spacing={1.5}>
+            <Stack key={technology.id} spacing={0}>
+              <Stack direction="row" alignItems="center" spacing={1.5}>
                 <Box
                   sx={{
                     width: 20,

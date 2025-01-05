@@ -206,7 +206,7 @@ class EarningsTest(APITestCase):
                 lecturer=self.lecturer_profile_1,
                 start_time=make_aware(
                     datetime.now().replace(
-                        year=2024,
+                        year=datetime.now().year,
                         month=1,
                         day=1,
                         hour=0,
@@ -218,7 +218,7 @@ class EarningsTest(APITestCase):
                 ),
                 end_time=make_aware(
                     datetime.now().replace(
-                        year=2024,
+                        year=datetime.now().year,
                         month=1,
                         day=1,
                         hour=0,
@@ -475,7 +475,7 @@ class EarningsFilterTest(APITestCase):
                 lecturer=self.lecturer_profile_1,
                 start_time=make_aware(
                     datetime.now().replace(
-                        year=2024,
+                        year=datetime.now().year,
                         month=1,
                         day=1,
                         hour=0,
@@ -487,7 +487,7 @@ class EarningsFilterTest(APITestCase):
                 ),
                 end_time=make_aware(
                     datetime.now().replace(
-                        year=2024,
+                        year=datetime.now().year,
                         month=1,
                         day=1,
                         hour=0,

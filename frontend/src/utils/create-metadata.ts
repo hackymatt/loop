@@ -7,6 +7,7 @@ export const createMetadata = (
   description?: string,
   keywords?: string[],
   path?: string,
+  image?: string,
 ) => {
   const defaultMetadata = {
     title: "Szkoła programowania",
@@ -41,7 +42,7 @@ export const createMetadata = (
     openGraph: {
       type: "website",
       url: `https://loop.edu.pl${location}`,
-      images: "https://loop.edu.pl/logo/logo.svg",
+      images: image ?? "https://loop.edu.pl/logo/logo.svg",
       title: `${title ?? defaultMetadata.title} • ${packageInfo.name}`,
       description: description ?? defaultMetadata.description,
     },
