@@ -12,7 +12,6 @@ import { paths } from "src/routes/paths";
 import { useResponsive } from "src/hooks/use-responsive";
 
 import { decodeUrl } from "src/utils/url-utils";
-import { createMetadata } from "src/utils/create-metadata";
 
 import { useCourse } from "src/api/courses/course";
 import { useCourses } from "src/api/courses/courses";
@@ -76,37 +75,6 @@ export default function CourseView({ id }: { id: string }) {
     [course?.modules],
   );
 
-  const technologyKeywords = useMemo(
-    () =>
-      course?.technologies
-        .map((technology: ICourseByTechnologyProps) => [
-          `${technology.name} online`,
-          `nauka ${technology.name}`,
-          `programowanie ${technology.name}`,
-          `${technology.name} od podstaw`,
-          `certyfikat ${technology.name}`,
-          `zajęcia z ${technology.name}`,
-        ])
-        .flat(),
-    [course?.technologies],
-  );
-
-  const metadata = useMemo(
-    () =>
-      createMetadata(
-        `Kurs ${course?.slug} - sprawdź program nauczania`,
-        `Zapisz się na kurs ${course?.slug} w loop i naucz się programować. ${course?.description} Oferujemy praktyczne lekcje online z certyfikatem ukończenia oraz wsparcie doświadczonych instruktorów.`,
-        [
-          `kurs ${course?.slug}`,
-          "kursy programowania",
-          "szkoła programowania loop",
-          "kurs programowania",
-          ...(technologyKeywords ?? []),
-        ],
-      ),
-    [course?.description, course?.slug, technologyKeywords],
-  );
-
   if (isLoading) {
     return <SplashScreen />;
   }
@@ -117,10 +85,6 @@ export default function CourseView({ id }: { id: string }) {
 
   return (
     <>
-      <title>{metadata.title}</title>
-      <meta name="description" content={metadata.description} />
-      <meta name="keywords" content={metadata.keywords} />
-
       <CourseDetailsHero course={course} />
 
       <Container

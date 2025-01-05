@@ -1,3 +1,5 @@
+import { paths } from "src/routes/paths";
+
 import { createMetadata } from "src/utils/create-metadata";
 
 import { PostsView } from "src/sections/view/posts-view";
@@ -19,6 +21,7 @@ export const metadata = createMetadata(
     "rozwój umiejętności programistycznych",
     "tutoriale programistyczne",
   ],
+  paths.posts,
 );
 
 export default function PostsPage() {

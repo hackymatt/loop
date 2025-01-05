@@ -1,3 +1,5 @@
+import { paths } from "src/routes/paths";
+
 import { createMetadata } from "src/utils/create-metadata";
 
 import LoginView from "src/sections/auth/login-view";
@@ -19,6 +21,7 @@ export const metadata = createMetadata(
     "loop logowanie",
     "dane logowania",
   ],
+  paths.login,
 );
 export default function LoginPage() {
   return <LoginView />;

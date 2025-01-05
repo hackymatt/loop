@@ -15,7 +15,6 @@ import { paths } from "src/routes/paths";
 
 import { fDate } from "src/utils/format-time";
 import { decodeUrl, encodeUrl } from "src/utils/url-utils";
-import { createMetadata } from "src/utils/create-metadata";
 import { getGenderAvatar } from "src/utils/get-gender-avatar";
 
 import { usePost } from "src/api/posts/post";
@@ -102,25 +101,6 @@ export function PostView({ id }: { id: string }) {
     </Box>
   );
 
-  const metadata = useMemo(
-    () =>
-      createMetadata(
-        `${post?.title} - przeczytaj artykuł już teraz`,
-        `Przeczytaj nasz artykuł o ${post?.title}. ${post?.description} Dowiedz się, jak ${post?.description.toLowerCase()}. Odkryj praktyczne porady i najlepsze praktyki, które pomogą Ci w rozwoju umiejętności programistycznych.`,
-        [
-          post?.title,
-          post?.description,
-          "programowanie",
-          "nauka programowania",
-          "najlepsze praktyki",
-          "porady programistyczne",
-          "szkoła programowania",
-          "loop",
-        ],
-      ),
-    [post?.description, post?.title],
-  );
-
   if (isLoading) {
     return <SplashScreen />;
   }
@@ -131,10 +111,6 @@ export function PostView({ id }: { id: string }) {
 
   return (
     <>
-      <title>{metadata.title}</title>
-      <meta name="description" content={metadata.description} />
-      <meta name="keywords" content={metadata.keywords} />
-
       <Container>
         <CustomBreadcrumbs
           links={[

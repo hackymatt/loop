@@ -1,3 +1,5 @@
+import { paths } from "src/routes/paths";
+
 import { createMetadata } from "src/utils/create-metadata";
 
 import ContactView from "src/sections/view/contact-view";
@@ -21,6 +23,7 @@ export const metadata = createMetadata(
     "praca szkoła programowania",
     "kariera szkoła programowania",
   ],
+  paths.contact,
 );
 export default function ContactPage() {
   return <ContactView />;

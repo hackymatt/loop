@@ -32,7 +32,7 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon/favicon.ico" }],
   openGraph: {
     type: "website",
-    url: "https://loop.edu.pl",
+    url: "https://loop.edu.pl/",
     images: "https://loop.edu.pl/logo/logo.svg",
     description:
       "Naucz się programować w loop – oferujemy kursy Python, JavaScript, C++, oraz wiele innych. Rozwijaj swoją karierę IT z najlepszymi instruktorami, korzystając z nowoczesnych metod nauki i materiałów dostępnych 24/7.",

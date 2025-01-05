@@ -3,8 +3,9 @@ import { useRef, useMemo } from "react";
 
 import { Stack, alpha, Button, useTheme, Container, Typography } from "@mui/material";
 
+import { paths } from "src/routes/paths";
+
 import { fDate } from "src/utils/format-time";
-import { createMetadata } from "src/utils/create-metadata";
 
 import { grey } from "src/theme/palette";
 import { bgGradient } from "src/theme/css";
@@ -37,7 +38,7 @@ export default function Certificate({ id }: IProps) {
     [certificateData?.isAuthorized],
   );
 
-  const certificateUrl = useMemo(() => `${BASE_URL}/certificate/${id}`, [id]);
+  const certificateUrl = useMemo(() => `${BASE_URL}${paths.certificate}/${id}`, [id]);
 
   const type = useMemo(() => {
     switch (certificateData?.type) {
@@ -51,14 +52,6 @@ export default function Certificate({ id }: IProps) {
         return "LEKCJI";
     }
   }, [certificateData?.type]);
-
-  const metadata = useMemo(
-    () =>
-      createMetadata(
-        `Certyfikat ukończenia ${type.toLowerCase()} ${certificateData?.title} dla ${certificateData?.studentName}`,
-      ),
-    [certificateData?.studentName, certificateData?.title, type],
-  );
 
   if (isLoading) {
     return <SplashScreen />;
@@ -86,95 +79,91 @@ export default function Certificate({ id }: IProps) {
   };
 
   return (
-    <>
-      <title>{metadata.title}</title>
-
-      <Container
-        ref={elementRef}
-        sx={{
-          height: "80%",
-          p: 5,
-          mt: 2,
-          borderStyle: "solid",
-          borderWidth: "thin",
-          borderColor: grey[300],
-          borderRadius: "8px",
-          ...bgGradient({
-            color: alpha(theme.palette.background.default, 0.95),
-            imgUrl: "/assets/background/overlay-2.webp",
-          }),
-        }}
-      >
-        <Stack spacing={8}>
-          <Stack direction="row" justifyContent="space-between">
-            <Logo sx={{ width: "200px", ml: 16 }} />
-            <Stack spacing={0.5} alignItems="flex-end">
-              <Typography variant="caption" color={grey[600]}>
-                {`Numer certyfikatu: ${id}`}
-              </Typography>
-              <Typography variant="caption" color={grey[600]}>
-                {`Link certyfikatu: ${certificateUrl}`}
-              </Typography>
-              <Typography variant="caption" color={grey[600]}>
-                {`Numer referencyjny: ${certificateData?.referenceNumber}`}
-              </Typography>
-            </Stack>
-          </Stack>
-
-          <Stack spacing={1} sx={{ minHeight: "300px", maxHeight: "350px" }}>
-            <Typography variant="h6" color={grey[600]} sx={{ fontWeight: "bold" }}>
-              {`CERTYFIKAT UKOŃCZENIA ${type}`}
+    <Container
+      ref={elementRef}
+      sx={{
+        height: "80%",
+        p: 5,
+        mt: 2,
+        borderStyle: "solid",
+        borderWidth: "thin",
+        borderColor: grey[300],
+        borderRadius: "8px",
+        ...bgGradient({
+          color: alpha(theme.palette.background.default, 0.95),
+          imgUrl: "/assets/background/overlay-2.webp",
+        }),
+      }}
+    >
+      <Stack spacing={8}>
+        <Stack direction="row" justifyContent="space-between">
+          <Logo sx={{ width: "200px", ml: 16 }} />
+          <Stack spacing={0.5} alignItems="flex-end">
+            <Typography variant="caption" color={grey[600]}>
+              {`Numer certyfikatu: ${id}`}
             </Typography>
-            <Typography variant="h1">{certificateData?.title}</Typography>
+            <Typography variant="caption" color={grey[600]}>
+              {`Link certyfikatu: ${certificateUrl}`}
+            </Typography>
+            <Typography variant="caption" color={grey[600]}>
+              {`Numer referencyjny: ${certificateData?.referenceNumber}`}
+            </Typography>
           </Stack>
-
-          <Stack spacing={2}>
-            <Typography variant="h2">{certificateData?.studentName}</Typography>
-            <Stack spacing={0.5}>
-              <Stack direction="row" spacing={1}>
-                <Typography variant="body1" color={grey[800]}>
-                  Data ukończenia
-                </Typography>
-                <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                  {fDate(certificateData?.completedAt)}
-                </Typography>
-              </Stack>
-
-              <Stack direction="row" spacing={1}>
-                <Typography variant="body1" color={grey[800]}>
-                  Czas trwania
-                </Typography>
-                <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                  {`${certificateData?.duration} minut`}
-                </Typography>
-              </Stack>
-            </Stack>
-          </Stack>
-
-          {authorized && (
-            <Stack direction="row" spacing={1} justifyContent="flex-end">
-              <Button
-                variant="contained"
-                startIcon={<Iconify icon="carbon:download" />}
-                onClick={downloadPng}
-              >
-                Pobierz
-              </Button>
-              <Button
-                component="a"
-                target="_blank"
-                rel="noopener"
-                href={`https://www.linkedin.com/sharing/share-offsite/?url=${certificateUrl}`}
-                variant="contained"
-                startIcon={<Iconify icon="carbon:logo-linkedin" />}
-                sx={{ backgroundColor: "#007EBB" }}
-              >
-                Udostępnij
-              </Button>
-            </Stack>
-          )}
         </Stack>
-      </Container>
-    </>
+
+        <Stack spacing={1} sx={{ minHeight: "300px", maxHeight: "350px" }}>
+          <Typography variant="h6" color={grey[600]} sx={{ fontWeight: "bold" }}>
+            {`CERTYFIKAT UKOŃCZENIA ${type}`}
+          </Typography>
+          <Typography variant="h1">{certificateData?.title}</Typography>
+        </Stack>
+
+        <Stack spacing={2}>
+          <Typography variant="h2">{certificateData?.studentName}</Typography>
+          <Stack spacing={0.5}>
+            <Stack direction="row" spacing={1}>
+              <Typography variant="body1" color={grey[800]}>
+                Data ukończenia
+              </Typography>
+              <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                {fDate(certificateData?.completedAt)}
+              </Typography>
+            </Stack>
+
+            <Stack direction="row" spacing={1}>
+              <Typography variant="body1" color={grey[800]}>
+                Czas trwania
+              </Typography>
+              <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                {`${certificateData?.duration} minut`}
+              </Typography>
+            </Stack>
+          </Stack>
+        </Stack>
+
+        {authorized && (
+          <Stack direction="row" spacing={1} justifyContent="flex-end">
+            <Button
+              variant="contained"
+              startIcon={<Iconify icon="carbon:download" />}
+              onClick={downloadPng}
+            >
+              Pobierz
+            </Button>
+            <Button
+              component="a"
+              target="_blank"
+              rel="noopener"
+              href={`https://www.linkedin.com/sharing/share-offsite/?url=${certificateUrl}`}
+              variant="contained"
+              startIcon={<Iconify icon="carbon:logo-linkedin" />}
+              sx={{ backgroundColor: "#007EBB" }}
+            >
+              Udostępnij
+            </Button>
+          </Stack>
+        )}
+      </Stack>
+    </Container>
   );
 }

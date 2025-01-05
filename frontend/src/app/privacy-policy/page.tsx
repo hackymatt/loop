@@ -1,3 +1,5 @@
+import { paths } from "src/routes/paths";
+
 import { createMetadata } from "src/utils/create-metadata";
 
 import PrivacyPolicyView from "src/sections/view/privacy-policy-view";
@@ -19,6 +21,7 @@ export const metadata = createMetadata(
     "udostępnianie danych",
     "zabezpieczenie informacji",
   ],
+  paths.privacyPolicy,
 );
 export default function PrivacyPolicyPage() {
   return <PrivacyPolicyView />;

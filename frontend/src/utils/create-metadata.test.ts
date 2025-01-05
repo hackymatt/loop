@@ -8,12 +8,14 @@ describe("createMetadata", () => {
     const title = "Test Title";
     const description = "Test Description";
     const keywords = ["keyword1", "keyword2"];
+    const path = "/test-path";
 
-    const result = createMetadata(title, description, keywords);
+    const result = createMetadata(title, description, keywords, path);
 
     expect(result.title).toBe(`Test Title • ${packageInfo.name}`);
     expect(result.description).toBe(description);
     expect(result.keywords).toBe("keyword1,keyword2");
+    expect(result.alternates.canonical).toBe(`https://loop.edu.pl${path}/`);
   });
 
   // Handles empty title string
@@ -27,5 +29,20 @@ describe("createMetadata", () => {
     expect(result.title).toBe(` • ${packageInfo.name}`);
     expect(result.description).toBe(description);
     expect(result.keywords).toBe("keyword1,keyword2");
+  });
+
+  // Handles empty path string
+  it("should handle empty path string", () => {
+    const title = "Test Title";
+    const description = "Test Description";
+    const keywords = ["keyword1", "keyword2"];
+    const path = "";
+
+    const result = createMetadata(title, description, keywords, path);
+
+    expect(result.title).toBe(`Test Title • ${packageInfo.name}`);
+    expect(result.description).toBe(description);
+    expect(result.keywords).toBe("keyword1,keyword2");
+    expect(result.alternates.canonical).toBe(`https://loop.edu.pl/`);
   });
 });

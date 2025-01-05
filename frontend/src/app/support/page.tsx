@@ -1,3 +1,5 @@
+import { paths } from "src/routes/paths";
+
 import { createMetadata } from "src/utils/create-metadata";
 
 import SupportView from "src/sections/view/support-view";
@@ -19,6 +21,7 @@ export const metadata = createMetadata(
     "pomoc w rejestracji",
     "pomoc w logowaniu",
   ],
+  paths.support,
 );
 export default function SupportPage() {
   return <SupportView />;

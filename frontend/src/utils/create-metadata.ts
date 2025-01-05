@@ -2,7 +2,13 @@ import packageInfo from "package.json";
 
 // ----------------------------------------------------------------------
 
-export const createMetadata = (title?: string, description?: string, keywords?: string[]) => {
+export const createMetadata = (
+  title?: string,
+  description?: string,
+  keywords?: string[],
+  path?: string,
+  image?: string,
+) => {
   const defaultMetadata = {
     title: "Szkoła programowania",
     description:
@@ -24,9 +30,21 @@ export const createMetadata = (title?: string, description?: string, keywords?: 
     ],
   };
 
+  const location = path ? `${path}/` : "/";
+
   return {
     title: `${title ?? defaultMetadata.title} • ${packageInfo.name}`,
     description: description ?? defaultMetadata.description,
     keywords: (keywords ?? defaultMetadata.keywords).join(","),
+    alternates: {
+      canonical: `https://loop.edu.pl${location}`,
+    },
+    openGraph: {
+      type: "website",
+      url: `https://loop.edu.pl${location}`,
+      images: image ?? "https://loop.edu.pl/logo/logo.svg",
+      title: `${title ?? defaultMetadata.title} • ${packageInfo.name}`,
+      description: description ?? defaultMetadata.description,
+    },
   };
 };

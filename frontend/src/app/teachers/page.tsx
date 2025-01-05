@@ -1,3 +1,5 @@
+import { paths } from "src/routes/paths";
+
 import { createMetadata } from "src/utils/create-metadata";
 
 import TeachersView from "src/sections/view/teachers-view";
@@ -19,6 +21,7 @@ export const metadata = createMetadata(
     "nauka z instruktorem",
     "szkoła programowania loop",
   ],
+  paths.teachers,
 );
 export default function CoursesPage() {
   return <TeachersView />;

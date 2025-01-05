@@ -1,3 +1,5 @@
+import { paths } from "src/routes/paths";
+
 import { createMetadata } from "src/utils/create-metadata";
 
 import RegisterView from "src/sections/auth/register-view";
@@ -19,6 +21,7 @@ export const metadata = createMetadata(
     "rejestracja na kursy",
     "loop rejestracja",
   ],
+  paths.register,
 );
 export default function RegisterPage() {
   return <RegisterView />;

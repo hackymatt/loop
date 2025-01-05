@@ -81,7 +81,7 @@ export type ICourseByTechnologyProps = {
   name: string;
   description?: string;
   totalStudents?: number;
-  createdAt: Date;
+  createdAt?: Date;
 };
 
 export type ICourseByTopicProps = {
