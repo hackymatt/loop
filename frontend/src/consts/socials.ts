@@ -4,7 +4,7 @@ export const socials = [
     label: "FaceBook",
     icon: "carbon:logo-facebook",
     color: "#1877F2",
-    url: "https://www.facebook.com/loopedupl/",
+    url: "https://www.facebook.com/loopedupl.official/",
   },
   {
     value: "instagram",
