@@ -13,7 +13,7 @@ export const paths = {
   post: "/post",
   about: "/about",
   contact: "/contact",
-  newsletter: "/newsletter-unsubscribe",
+  newsletter: { subscribe: "/newsletter", unsubscribe: "/newsletter-unsubscribe" },
   cart: "/cart",
   checkout: "/checkout",
   order: {

@@ -100,6 +100,15 @@ export default function Footer() {
                 >
                   Pomoc
                 </Link>
+
+                <Link
+                  component={RouterLink}
+                  href={paths.newsletter.subscribe}
+                  variant="body2"
+                  sx={{ color: "text.primary" }}
+                >
+                  Newsletter
+                </Link>
               </Stack>
 
               <Stack spacing={2}>
