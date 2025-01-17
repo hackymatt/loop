@@ -11,8 +11,9 @@ import Newsletter from "../newsletter/newsletter";
 import LandingHero from "../landing/landing-hero";
 import { LatestPosts } from "../posts/latest-posts";
 import Testimonial from "../testimonial/testimonial";
-import LandingServices from "../landing/landing-services";
+import LandingBenefits from "../landing/landing-benefits";
 import LandingIntroduce from "../landing/landing-introduce";
+import LandingHowItWork from "../landing/landing-how-it-work";
 import LandingTechnologies from "../landing/landing-technologies";
 import LandingFeaturedCourses from "../landing/landing-featured-courses";
 
@@ -37,7 +38,9 @@ export default function HomeView() {
 
       <LandingIntroduce />
 
-      <LandingServices />
+      <LandingHowItWork />
+
+      <LandingBenefits />
 
       {bestCourses?.length >= 4 && <LandingFeaturedCourses courses={bestCourses} />}
 
