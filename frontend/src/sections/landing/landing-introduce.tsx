@@ -51,16 +51,12 @@ export default function LandingIntroduce() {
             Szkoła programowania dla każdego
           </Typography>
 
-          <Stack sx={{ gap: 2, textAlign: "justify" }}>
+          <Stack sx={{ gap: 2 }}>
             <Typography sx={{ color: "text.secondary" }}>
               Nazwa{" "}
-              <Typography
-                variant="overline"
-                color="primary"
-                sx={{ fontSize: 17, textTransform: "none" }}
-              >
+              <Box component="span" sx={{ color: "primary.main" }}>
                 loop
-              </Typography>{" "}
+              </Box>{" "}
               odzwierciedla jedną z najważniejszych struktur w programowaniu — pętlę (ang. loop).
               Symbolizuje ciągłe doskonalenie, powtarzalność i nieustanny rozwój — wartości, które
               są kluczowe w nauce programowania. Dzięki regularnemu powtarzaniu i ulepszaniu swoich
@@ -70,13 +66,9 @@ export default function LandingIntroduce() {
 
             <Typography sx={{ color: "text.secondary" }}>
               W{" "}
-              <Typography
-                variant="overline"
-                color="primary"
-                sx={{ fontSize: 17, textTransform: "none" }}
-              >
+              <Box component="span" sx={{ color: "primary.main" }}>
                 loop
-              </Typography>{" "}
+              </Box>{" "}
               naszą misją jest wspieranie zarówno początkujących entuzjastów, jak i doświadczonych
               inżynierów oprogramowania w rozwijaniu ich wiedzy i umiejętności w dynamicznym świecie
               programowania. Tworzymy przyjazne, dostępne środowisko edukacyjne, gdzie ciekawość i
@@ -100,13 +92,9 @@ export default function LandingIntroduce() {
 
             <Typography sx={{ color: "text.secondary" }}>
               Dołącz do nas w{" "}
-              <Typography
-                variant="overline"
-                color="primary"
-                sx={{ fontSize: 17, textTransform: "none" }}
-              >
+              <Box component="span" sx={{ color: "primary.main" }}>
                 loop
-              </Typography>{" "}
+              </Box>{" "}
               gdzie nauka nie zna ograniczeń, a razem kształtujemy przyszłość programowania.
             </Typography>
           </Stack>

@@ -59,7 +59,11 @@ export default function LandingBenefits() {
     >
       <Container>
         <Typography variant="h2" sx={{ textAlign: "center" }}>
-          Dlaczego warto wybrać loop?
+          Dlaczego warto wybrać{" "}
+          <Box component="span" sx={{ color: "primary.main" }}>
+            loop
+          </Box>
+          ?
         </Typography>
 
         <Typography

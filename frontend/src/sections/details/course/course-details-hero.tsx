@@ -155,9 +155,7 @@ export default function CourseDetailsHero({ course }: Props) {
                     {slug}
                   </Typography>
 
-                  <Typography sx={{ color: "text.secondary", textAlign: "justify" }}>
-                    {description}
-                  </Typography>
+                  <Typography sx={{ color: "text.secondary" }}>{description}</Typography>
                 </Stack>
 
                 <Stack

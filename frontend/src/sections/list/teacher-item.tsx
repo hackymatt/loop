@@ -108,7 +108,6 @@ export default function TeacherItem({ teacher, vertical }: Props) {
                   ...(vertical && {
                     display: { sm: "none" },
                   }),
-                  textAlign: "justify",
                 }}
               >
                 {description}

@@ -162,10 +162,10 @@ export default function PredispositionTestView() {
                 punktów.
               </Typography>
             </Stack>
-            <Typography variant="h5" fontWeight="bold" pt={2} textAlign="justify">
+            <Typography variant="h5" fontWeight="bold" pt={2}>
               {result?.title}
             </Typography>
-            <Typography variant="h6" fontWeight="regular" textAlign="justify">
+            <Typography variant="h6" fontWeight="regular">
               {result?.subtitle}
             </Typography>
           </Stack>

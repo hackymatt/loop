@@ -346,9 +346,7 @@ export default function TeacherDetailsLessonItem({
                 </Stack>
               )}
 
-              <Typography sx={{ color: "text.secondary", textAlign: "justify" }}>
-                {details?.description}
-              </Typography>
+              <Typography sx={{ color: "text.secondary" }}>{details?.description}</Typography>
 
               <Stack
                 spacing={1.5}

@@ -98,9 +98,7 @@ export default function TeacherDetailsHero({ teacher }: Props) {
                   {name}
                 </Typography>
 
-                <Typography sx={{ color: "text.secondary", textAlign: "justify" }}>
-                  {description}
-                </Typography>
+                <Typography sx={{ color: "text.secondary" }}>{description}</Typography>
               </Stack>
 
               <Stack spacing={2}>

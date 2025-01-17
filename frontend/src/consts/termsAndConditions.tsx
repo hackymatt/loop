@@ -7,7 +7,7 @@ export const termsAndConditions = [
   {
     header: "§1 Podstawowe definicje",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. Serwis internetowy — serwis znajdujący się pod adresem niniejszej strony internetowej,
           za pośrednictwem którego Sprzedawca świadczy usługi drogą elektroniczną.
@@ -82,7 +82,7 @@ export const termsAndConditions = [
   {
     header: "§2 Postanowienia ogólne",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. Sprzedawca oświadcza, że przestrzega wszelkich wymaganych zasad ochrony danych
           osobowych Klientów, przewidzianych między innymi Ustawą o ochronie danych osobowych,
@@ -305,7 +305,7 @@ export const termsAndConditions = [
   {
     header: "§3 Warunki świadczenia usług",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. Serwis internetowy świadczy usługi drogą elektroniczną, warunkiem przystąpienia do
           umowy jest wypełnienie formularza zamówienia w celu zawarcia umowy o świadczenie usług.
@@ -350,7 +350,7 @@ export const termsAndConditions = [
   {
     header: "§4 Warunki umowy",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. Dla dokonania zawarcia ważnej i wiążącej strony Umowy o świadczenie usług, Klient
           dokonuje wyboru zgodnie z wyświetloną ofertą Serwisu internetowego określając ilość Usług
@@ -414,7 +414,7 @@ export const termsAndConditions = [
   {
     header: "§5 Realizacja zamówienia",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. Sprzedawca rzetelnie realizuje zamówienia Klienta według kolejności ich wpłynięcia —
           każde zamówienie jest dla nas priorytetowe i bardzo ważne!
@@ -435,7 +435,7 @@ export const termsAndConditions = [
   {
     header: "§6 Dostawa",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. Dostawa w rozumieniu niniejszego regulaminu odnosi się do dostarczenia usługi, co może
           obejmować dostęp do materiałów szkoleniowych, transmisji online lub innego rodzaju
@@ -459,7 +459,7 @@ export const termsAndConditions = [
   {
     header: "§7 Metody płatności",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. Sprzedawca umożliwia płatność za zamówiony Towar w formie przedpłaty na rachunek
           bankowy.
@@ -478,7 +478,7 @@ export const termsAndConditions = [
   {
     header: "§8 Rękojmia",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. W przypadku roszczeń dotyczących usług Sprzedawca odpowiada za zgodność usługi z umową,
           zgodnie z obowiązującymi przepisami prawa.
@@ -511,7 +511,7 @@ export const termsAndConditions = [
   {
     header: "§9 Odstąpienie",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. Zgodnie z przepisami prawa Klientowi będącemu Konsumentem w myśl art. 27 ustawy z dnia
           30 maja 2014 r. (Dz.U. z 2014 r. poz. 827 z późn. zm.) o prawach Konsumenta, przysługuje
@@ -583,7 +583,7 @@ export const termsAndConditions = [
   {
     header: "§10 Postępowanie reklamacyjne",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. Dla prawidłowego złożenia reklamacji Klient powinien podać swoje dane takie jak: imię i
           nazwisko lub nazwę firmy, adres zamieszkania lub adres siedziby firmy oraz adres poczty
@@ -620,7 +620,7 @@ export const termsAndConditions = [
   {
     header: "§11 Odpowiedzialność",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. Zamieszczając ewentualne treści oraz udostępniając je, Klient dobrowolnie je
           rozpowszechnia. Sprzedawca nie jest dostawcą treści i w żaden sposób nie utożsamia się z
@@ -667,7 +667,7 @@ export const termsAndConditions = [
   {
     header: "§12 Pozasądowe sposoby rozpatrywania reklamacji i dochodzenia roszczeń",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. Informacje o pozasądowych sposobach rozpatrywania reklamacji i dochodzenia roszczeń, a
           także zasady dostępu do tych procedur udostępniane są w siedzibach oraz na stronach
@@ -722,7 +722,7 @@ export const termsAndConditions = [
   {
     header: "§13 Postanowienia dotyczące przedsiębiorców",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. Regulację i postanowienia w niniejszym paragrafie 13 dotyczą tylko Klientów i
           Usługobiorców nie będących konsumentami (zakup o charakterze zawodowym).
@@ -779,7 +779,7 @@ export const termsAndConditions = [
   {
     header: "§14 Postanowienia końcowe",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. Serwis internetowy honoruje wszelkie prawa Klientów przewidziane w przepisach
           obowiązującego prawa.
