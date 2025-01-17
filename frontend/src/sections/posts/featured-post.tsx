@@ -74,7 +74,7 @@ export function FeaturedPost({ post, sx, ...other }: Props) {
 
               {post.title}
 
-              <Typography sx={{ color: "text.secondary", flexGrow: 1, textAlign: "justify" }}>
+              <Typography sx={{ color: "text.secondary", flexGrow: 1 }}>
                 {post.description}
               </Typography>
 

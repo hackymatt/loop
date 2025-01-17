@@ -35,7 +35,7 @@ export default function CookiesBanner({ onConfirm, ...other }: Props) {
         <FormProvider methods={methods}>
           <DialogTitle sx={{ typography: "h6", pb: 3 }}>Informacja o plikach cookies</DialogTitle>
 
-          <DialogContent sx={{ py: 0, typography: "body2", textAlign: "justify" }}>
+          <DialogContent sx={{ py: 0, typography: "body2" }}>
             Ta strona korzysta z plików cookies, które pomagają jej funkcjonować i śledzić sposób
             interakcji z nią, dzięki czemu możemy zapewnić lepszą i spersonalizowaną obsługę.
             Będziemy używać wszystkich plików cookies tylko wtedy, gdy wyrazisz na to zgodę,

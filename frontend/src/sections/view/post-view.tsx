@@ -184,7 +184,7 @@ export function PostView({ id }: { id: string }) {
 
             {renderToolbar}
 
-            <Box sx={{ textAlign: "justify" }}>
+            <Box>
               <Markdown content={post?.content ?? ""} />
             </Box>
 

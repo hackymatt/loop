@@ -7,7 +7,7 @@ export const privacyPolicy = [
   {
     header: "§1 Postanowienia ogólne",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. Ten dokument stanowi załącznik do Regulaminu. Korzystając z naszych usług, powierzasz
           nam swoje informacje. Niniejsza Polityka prywatności służy jedynie jako pomoc w
@@ -64,7 +64,7 @@ export const privacyPolicy = [
   {
     header: "§2 Zasady prywatności",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         {" "}
         <Typography>
           1. Poważnie traktujemy prywatność. Charakteryzuje nas szacunek dla prywatności oraz
@@ -203,7 +203,7 @@ export const privacyPolicy = [
   {
     header: "§3 Zakres i cel zbierania danych osobowych",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. Przetwarzamy niezbędne dane osobowe w celu realizacji usług oraz w celach księgowych i
           tylko takich tj. :<Typography sx={{ ml: 3 }}>a) w celu złożenia zamówienia,</Typography>
@@ -318,7 +318,7 @@ export const privacyPolicy = [
   {
     header: "§4 Polityka „Cookies”",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. Zbieramy w sposób automatyczny informacje zawarte w plikach cookies w celu gromadzenia
           danych Użytkownika. Plik Cookies to mały fragment tekstu, który jest wysyłany do
@@ -394,7 +394,7 @@ export const privacyPolicy = [
   {
     header: "§5 Prawa i obowiązki",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. Mamy prawo a w przypadkach prawem określonych także i ustawowy obowiązek do przekazania
           wybranych bądź wszystkich informacji dotyczących danych osobowych organom władzy
@@ -478,7 +478,7 @@ export const privacyPolicy = [
   {
     header: "§6 Podstawowe zasady bezpieczeństwa",
     content: (
-      <Typography sx={{ textAlign: "justify" }}>
+      <Typography>
         <Typography>
           1. Każdy użytkownik powinien dbać o swoje własne bezpieczeństwo danych oraz o
           bezpieczeństwo swoich urządzeń, które służą dostępowi do sieci Internet. Takie urządzenie

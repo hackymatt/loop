@@ -3,7 +3,7 @@ import { Link, Typography } from "@mui/material";
 import { paths } from "src/routes/paths";
 
 export const generalAcceptance = (
-  <Typography variant="caption" align="left" sx={{ color: "text.secondary", textAlign: "justify" }}>
+  <Typography variant="caption" align="left" sx={{ color: "text.secondary" }}>
     Akceptuję{" "}
     <Link
       target="_blank"
@@ -28,7 +28,7 @@ export const generalAcceptance = (
 );
 
 export const dataAcceptance = (
-  <Typography variant="caption" align="left" sx={{ color: "text.secondary", textAlign: "justify" }}>
+  <Typography variant="caption" align="left" sx={{ color: "text.secondary" }}>
     Wyrażam zgodę na przetwarzanie moich danych osobowych zawartych w formularzu w celu i zakresie
     niezbędnym do realizacji usługi i tylko w takim celu.
   </Typography>
@@ -41,11 +41,7 @@ export const newsletterAcceptance = ({
   color?: string;
   opacity?: number;
 }) => (
-  <Typography
-    variant="caption"
-    align="left"
-    sx={{ color: color ?? "text.secondary", textAlign: "justify", opacity }}
-  >
+  <Typography variant="caption" align="left" sx={{ color: color ?? "text.secondary", opacity }}>
     Wyrażam zgodę na otrzymywanie na podany adres poczty elektronicznej informacji handlowych
     dotyczących usług oraz w celu otrzymywania newslettera — więcej informacji uzyskają Państwo{" "}
     <Link
@@ -63,7 +59,7 @@ export const newsletterAcceptance = ({
 );
 
 export const paymentAcceptance = (
-  <Typography variant="caption" align="left" sx={{ color: "text.secondary", textAlign: "justify" }}>
+  <Typography variant="caption" align="left" sx={{ color: "text.secondary" }}>
     Oświadczam, że zapoznałem się z{" "}
     <Link
       target="_blank"

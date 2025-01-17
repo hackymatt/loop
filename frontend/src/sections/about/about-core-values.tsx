@@ -12,25 +12,25 @@ const CORE_VALUES = [
   {
     title: "Innowacyjność",
     description:
-      "Nasza szkoła kładzie nacisk na stałe dostosowywanie programów nauczania do najnowszych trendów i technologii, umożliwiając studentom naukę zgodną z aktualnymi wymaganiami rynku pracy.",
+      "Stale dostosowujemy nasze kursy do najnowszych technologii i trendów, abyś zawsze był o krok przed wymaganiami rynku pracy.",
     icon: "streamline:ai-technology-spark",
   },
   {
     title: "Otwartość",
     description:
-      "Nasza szkoła kładzie nacisk na zapewnienie przystępności cenowej kursów, aby umożliwić szerokiemu gronu uczniów korzystanie z wysokiej jakości edukacji bez dużego obciążenia finansowego.",
+      "Oferujemy przystępne cenowo kursy, aby każdy miał szansę na rozwój i zdobycie nowych umiejętności bez dużych wydatków.",
     icon: "nimbus:money",
   },
   {
     title: "Elastyczność",
     description:
-      "Zdajemy sobie sprawę, że nasi studenci mają różnorodne zobowiązania, dlatego oferujemy elastyczność w harmonogramie kursów, aby umożliwić dostosowanie nauki do indywidualnych potrzeb i czasu każdego uczestnika.",
+      "Dopasuj naukę do swojego harmonogramu – ucz się wtedy, kiedy masz czas i energię, bez zbędnych ograniczeń.",
     icon: "cil:calendar",
   },
   {
     title: "Dostępność",
     description:
-      "Zapewniamy dostęp do wysokiej jakości edukacji programowania z dowolnego miejsca na świecie, umożliwiając elastyczność i swobodę nauki online.",
+      "Nasze kursy są dostępne online z każdego miejsca na świecie, co pozwala na naukę w pełni na Twoich warunkach.",
     icon: "wpf:worldwide-location",
   },
 ];
