@@ -11,7 +11,7 @@ import { useBoolean } from "src/hooks/use-boolean";
 
 import Logo from "src/components/logo";
 import Iconify from "src/components/iconify";
-import Scrollbar from "src/components/scrollbar";
+import { Scrollbar } from "src/components/scrollbar";
 
 import NavList from "./nav-list";
 import { NavProps } from "../types";
@@ -47,7 +47,7 @@ export default function NavMobile({ data }: NavProps) {
           },
         }}
       >
-        <Scrollbar>
+        <Scrollbar fillContent>
           <Box sx={{ lineHeight: 0, position: "relative", mx: 2.5, my: 3 }}>
             <Logo />
           </Box>
@@ -58,6 +58,12 @@ export default function NavMobile({ data }: NavProps) {
             ))}
           </List>
         </Scrollbar>
+
+        <Box gap={1.5} display="flex" sx={{ px: 2.5, py: 3 }}>
+          <IconButton size="small" color="inherit" sx={{ p: 0 }}>
+            <Iconify icon="circle-flags:pl" width={24} />
+          </IconButton>
+        </Box>
       </Drawer>
     </>
   );

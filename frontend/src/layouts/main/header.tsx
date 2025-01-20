@@ -19,6 +19,8 @@ import {
   Divider,
   Popover,
   ListItem,
+  MenuList,
+  MenuItem,
   Typography,
   ListItemIcon,
   ListItemText,
@@ -38,6 +40,7 @@ import { usePopover, UsePopoverReturn } from "src/hooks/use-popover";
 import { getTimezone } from "src/utils/get-timezone";
 
 import { bgBlur } from "src/theme/css";
+import { locales } from "src/consts/locales";
 import { useCartsRecordsCount } from "src/api/carts/carts";
 import { useWishlistsRecordsCount } from "src/api/wishlists/wishlists";
 import { useNotifications } from "src/api/notifications/notifications";
@@ -69,6 +72,7 @@ type Props = {
 export default function Header({ headerOnDark }: Props) {
   const theme = useTheme();
 
+  const openLocale = usePopover();
   const openNotifications = usePopover();
   const openMenu = usePopover();
 
@@ -124,6 +128,7 @@ export default function Header({ headerOnDark }: Props) {
           <Box sx={{ lineHeight: 0, position: "relative", mt: 0.5 }}>
             <Logo />
           </Box>
+
           <>
             <Stack
               flexGrow={1}
@@ -150,75 +155,79 @@ export default function Header({ headerOnDark }: Props) {
       )}
 
       <Stack spacing={3} direction="row" alignItems="center" flexGrow={1} justifyContent="flex-end">
-        {isLoggedIn ? (
-          <Badge
-            badgeContent={userType !== UserType.ADMIN ? notificationItems : 0}
-            max={99}
-            color="primary"
-          >
-            <IconButton
-              size="small"
-              color="inherit"
-              sx={{ p: 0 }}
-              onClick={(event) => {
-                refreshNotifications();
-                openNotifications.onOpen(event);
-              }}
-              disabled={userType === UserType.ADMIN}
-            >
-              <Iconify icon="carbon:notification" width={24} />
-            </IconButton>
-          </Badge>
-        ) : (
+        {mdUp && (
           <IconButton
-            component={RouterLink}
-            href={paths.login}
             size="small"
             color="inherit"
             sx={{ p: 0 }}
+            onClick={(event) => {
+              openLocale.onOpen(event);
+            }}
           >
-            <Iconify icon="carbon:notification" width={24} />
+            <Iconify icon="circle-flags:pl" width={24} />
           </IconButton>
         )}
 
-        <Badge
-          badgeContent={userType === UserType.STUDENT ? wishlistItems : 0}
-          max={99}
-          color="primary"
-        >
-          <IconButton
-            component={RouterLink}
-            href={isLoggedIn ? paths.wishlist : paths.login}
-            size="small"
-            color="inherit"
-            sx={{ p: 0 }}
-            disabled={userType !== UserType.STUDENT}
-          >
-            <Iconify icon="carbon:favorite" width={24} />
-          </IconButton>
-        </Badge>
-
-        <Badge
-          badgeContent={userType === UserType.STUDENT ? cartItems : 0}
-          max={99}
-          color="primary"
-        >
-          <IconButton
-            component={RouterLink}
-            href={isLoggedIn ? paths.cart : paths.login}
-            size="small"
-            color="inherit"
-            sx={{ p: 0 }}
-            disabled={userType !== UserType.STUDENT}
-          >
-            <Iconify icon="carbon:shopping-cart" width={24} />
-          </IconButton>
-        </Badge>
-
         {isLoggedIn ? (
-          <IconButton size="small" color="inherit" sx={{ p: 0 }} onClick={openMenu.onOpen}>
-            <Iconify icon="carbon:user" width={24} />
-          </IconButton>
+          <>
+            {userType !== UserType.ADMIN && (
+              <Badge
+                badgeContent={userType !== UserType.ADMIN ? notificationItems : 0}
+                max={99}
+                color="primary"
+              >
+                <IconButton
+                  size="small"
+                  color="inherit"
+                  sx={{ p: 0 }}
+                  onClick={(event) => {
+                    refreshNotifications();
+                    openNotifications.onOpen(event);
+                  }}
+                >
+                  <Iconify icon="carbon:notification" width={24} />
+                </IconButton>
+              </Badge>
+            )}
+
+            {userType === UserType.STUDENT && (
+              <>
+                <Badge
+                  badgeContent={userType === UserType.STUDENT ? wishlistItems : 0}
+                  max={99}
+                  color="primary"
+                >
+                  <IconButton
+                    component={RouterLink}
+                    href={isLoggedIn ? paths.wishlist : paths.login}
+                    size="small"
+                    color="inherit"
+                    sx={{ p: 0 }}
+                  >
+                    <Iconify icon="carbon:favorite" width={24} />
+                  </IconButton>
+                </Badge>
+                <Badge
+                  badgeContent={userType === UserType.STUDENT ? cartItems : 0}
+                  max={99}
+                  color="primary"
+                >
+                  <IconButton
+                    component={RouterLink}
+                    href={isLoggedIn ? paths.cart : paths.login}
+                    size="small"
+                    color="inherit"
+                    sx={{ p: 0 }}
+                  >
+                    <Iconify icon="carbon:shopping-cart" width={24} />
+                  </IconButton>
+                </Badge>
+              </>
+            )}
+            <IconButton size="small" color="inherit" sx={{ p: 0 }} onClick={openMenu.onOpen}>
+              <Iconify icon="carbon:user" width={24} />
+            </IconButton>
+          </>
         ) : (
           <IconButton
             component={RouterLink}
@@ -231,6 +240,8 @@ export default function Header({ headerOnDark }: Props) {
           </IconButton>
         )}
       </Stack>
+
+      <LocalePopover openMenu={openLocale} />
 
       <NotificationsPopover
         openNotifications={openNotifications}
@@ -359,6 +370,46 @@ function NotificationItem({
         />
       </ListItemButton>
     </ListItem>
+  );
+}
+
+function LocalePopover({ openMenu }: { openMenu: UsePopoverReturn }) {
+  return (
+    <Popover
+      open={openMenu.open}
+      anchorEl={openMenu.anchorEl}
+      onClose={openMenu.onClose}
+      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      slotProps={{
+        paper: {
+          sx: {
+            mt: 1,
+            [`& .${buttonBaseClasses.root}`]: {
+              px: 1.5,
+              py: 0.75,
+              height: "auto",
+            },
+          },
+        },
+      }}
+    >
+      <Box component="nav">
+        <MenuList sx={{ width: 160, minHeight: 72 }}>
+          {locales?.map((option) => (
+            <MenuItem
+              key={option.value}
+              selected={option.countryCode === "pl"}
+              // onClick={() => handleChangeLang(option.value)}
+              sx={{ gap: 2 }}
+            >
+              <Iconify icon={`circle-flags:${option.countryCode}`} width={24} />
+              {option.label}
+            </MenuItem>
+          ))}
+        </MenuList>
+      </Box>
+    </Popover>
   );
 }
 
