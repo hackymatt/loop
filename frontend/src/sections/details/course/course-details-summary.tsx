@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import { paths } from "src/routes/paths";
 import { RouterLink } from "src/routes/components";
 
-import Iconify from "src/components/iconify";
+import Iconify, { isIconExists } from "src/components/iconify";
 import { CircularProgressWithLabel } from "src/components/progress-label/circle-progress";
 
 import { ICourseProps, ICourseByTechnologyProps } from "src/types/course";
@@ -37,7 +37,7 @@ export default function CourseDetailsSummary({ course }: Props) {
         <Typography component="h6" variant="h4" sx={{ mb: 2 }}>
           Dlaczego ten kurs?
         </Typography>
-        <Typography>
+        <Typography sx={{ textAlign: "justify" }}>
           {course?.overview?.split("\n").map((line, index) => (
             <Typography key={index}>
               {line}
@@ -109,38 +109,44 @@ export default function CourseDetailsSummary({ course }: Props) {
         <Typography variant="h4">O technologiach w tym kursie</Typography>
 
         <Stack spacing={2}>
-          {course.technologies?.map((technology: ICourseByTechnologyProps) => (
-            <Stack key={technology.id} spacing={0}>
-              <Stack direction="row" alignItems="center" spacing={1.5}>
-                <Box
-                  sx={{
-                    width: 20,
-                    height: 20,
-                    flexShrink: 0,
-                    display: "flex",
-                    borderRadius: "50%",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    bgcolor: (theme) => alpha(theme?.palette?.primary?.main, 0.08),
-                  }}
+          {course.technologies?.map((technology: ICourseByTechnologyProps) => {
+            const defaultIcon = `bxl:${technology.name.toLowerCase()}`;
+            const icon = isIconExists(defaultIcon) ? defaultIcon : "carbon:code";
+            return (
+              <Stack key={technology.id} spacing={0}>
+                <Stack direction="row" alignItems="center" spacing={1.5}>
+                  <Box
+                    sx={{
+                      width: 20,
+                      height: 20,
+                      flexShrink: 0,
+                      display: "flex",
+                      borderRadius: "50%",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      bgcolor: (theme) => alpha(theme?.palette?.primary?.main, 0.08),
+                    }}
+                  >
+                    <Iconify icon={icon} sx={{ width: 16, height: 16, color: "primary.main" }} />
+                  </Box>
+                  {technology.name}
+                </Stack>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  ml={4}
+                  sx={{ textAlign: "justify" }}
                 >
-                  <Iconify
-                    icon="carbon:code"
-                    sx={{ width: 16, height: 16, color: "primary.main" }}
-                  />
-                </Box>
-                {technology.name}
+                  {technology.description?.split("\n").map((line, index) => (
+                    <Typography key={index}>
+                      {line}
+                      <br />
+                    </Typography>
+                  )) ?? ""}
+                </Typography>
               </Stack>
-              <Typography variant="body2" color="text.secondary" ml={4}>
-                {technology.description?.split("\n").map((line, index) => (
-                  <Typography key={index}>
-                    {line}
-                    <br />
-                  </Typography>
-                )) ?? ""}
-              </Typography>
-            </Stack>
-          ))}
+            );
+          })}
         </Stack>
       </Stack>
 
