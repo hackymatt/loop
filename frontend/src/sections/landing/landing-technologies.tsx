@@ -1,6 +1,7 @@
 import { polishPlurals } from "polish-plurals";
 
 import Box from "@mui/material/Box";
+import { Stack } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -9,8 +10,8 @@ import Typography from "@mui/material/Typography";
 
 import { paths } from "src/routes/paths";
 
-import Iconify from "src/components/iconify";
 import TextMaxLine from "src/components/text-max-line";
+import Iconify, { isIconExists } from "src/components/iconify";
 
 import { ICourseByTechnologyProps } from "src/types/course";
 
@@ -95,6 +96,10 @@ type TechnologyItemProps = {
 };
 
 function TechnologyItem({ technology }: TechnologyItemProps) {
+  const defaultIcon = isIconExists(`logos:${technology.name.toLowerCase()}-icon`)
+    ? `logos:${technology.name.toLowerCase()}-icon`
+    : `logos:${technology.name.toLowerCase()}`;
+  const icon = isIconExists(defaultIcon) ? defaultIcon : "carbon:code";
   return (
     <Paper
       variant="outlined"
@@ -117,9 +122,13 @@ function TechnologyItem({ technology }: TechnologyItemProps) {
         },
       }}
     >
-      <TextMaxLine variant="h6" line={1}>
-        {technology.name}
-      </TextMaxLine>
+      <Stack direction="row" alignItems="center" spacing={1}>
+        <Iconify icon={icon} sx={{ width: 16, height: 16 }} />
+
+        <TextMaxLine variant="h6" line={1}>
+          {technology.name}
+        </TextMaxLine>
+      </Stack>
 
       {technology.totalStudents && (
         <Typography variant="body2" sx={{ mt: 1, color: "text.disabled" }}>

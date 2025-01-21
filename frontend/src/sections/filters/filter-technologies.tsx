@@ -3,6 +3,8 @@ import TextField from "@mui/material/TextField";
 import Checkbox, { checkboxClasses } from "@mui/material/Checkbox";
 import Autocomplete, { autocompleteClasses } from "@mui/material/Autocomplete";
 
+import Iconify, { isIconExists } from "src/components/iconify";
+
 import { IQueryParamValue } from "src/types/query-params";
 
 // ----------------------------------------------------------------------
@@ -73,12 +75,17 @@ export default function FilterTechnologies({ value, options, onChangeTechnology 
           }}
         />
       )}
-      renderOption={(props, option, { selected }) => (
-        <li {...props} key={option}>
-          <Checkbox key={option} size="small" disableRipple checked={selected} />
-          {option}
-        </li>
-      )}
+      renderOption={(props, option, { selected }) => {
+        const defaultIcon = `bxl:${(option as string)?.toLowerCase()}`;
+        const icon = isIconExists(defaultIcon) ? defaultIcon : "carbon:code";
+        return (
+          <li {...props} key={option}>
+            <Checkbox key={option} size="small" disableRipple checked={selected} />
+            <Iconify icon={icon} sx={{ width: 16, height: 16, color: "primary.main", mr: 0.5 }} />
+            {option}
+          </li>
+        );
+      }}
       renderTags={(selected, getTagProps) =>
         selected.map((option, index) => (
           <Chip
