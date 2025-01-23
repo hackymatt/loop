@@ -4,15 +4,11 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Unstable_Grid2";
 import Typography from "@mui/material/Typography";
 
-import { useResponsive } from "src/hooks/use-responsive";
-
 import Image from "src/components/image";
 
 // ----------------------------------------------------------------------
 
 export default function LandingIntroduce() {
-  const mdUp = useResponsive("up", "md");
-
   return (
     <Container
       sx={{
@@ -35,16 +31,17 @@ export default function LandingIntroduce() {
         alignItems={{ md: "center" }}
         justifyContent={{ md: "space-between" }}
       >
-        {mdUp && (
-          <Grid xs={12} md={6} lg={5}>
-            <Image
-              alt="o-nas"
-              src="/assets/images/general/course-6.webp"
-              ratio="3/4"
-              sx={{ borderRadius: 2 }}
-            />
-          </Grid>
-        )}
+        <Grid xs={12} md={6} lg={5}>
+          <Image
+            alt="o-nas"
+            src="/assets/images/general/course-6.webp"
+            sx={{
+              width: 1,
+              borderRadius: 2,
+              aspectRatio: { xs: "4/3", md: "4/6" },
+            }}
+          />
+        </Grid>
 
         <Grid xs={12} md={6} lg={6}>
           <Typography variant="h3" sx={{ mb: 3 }}>
@@ -80,14 +77,6 @@ export default function LandingIntroduce() {
               dla wszystkich. Oferujemy angażujące i wszechstronne kursy, które dostarczają solidne
               podstawy dla nowicjuszy oraz zaawansowaną wiedzę dla doświadczonych programistów,
               pomagając im nadążyć za nieustannie zmieniającym się krajobrazem technologicznym.
-            </Typography>
-
-            <Typography sx={{ color: "text.secondary" }}>
-              Wierzymy, że każdy powinien mieć możliwość nauki i rozwoju w dziedzinie programowania.
-              Dlatego zapewniamy elastyczne i wygodne opcje edukacyjne, dostosowane do różnych
-              harmonogramów i preferencji. Nasi doświadczeni instruktorzy z pasją dzielą się swoją
-              wiedzą, prowadząc uczestników przez praktyczne projekty i oferując wsparcie na każdym
-              etapie nauki.
             </Typography>
 
             <Typography sx={{ color: "text.secondary" }}>

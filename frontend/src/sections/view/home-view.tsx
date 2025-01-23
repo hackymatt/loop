@@ -14,6 +14,7 @@ import Testimonial from "../testimonial/testimonial";
 import LandingBenefits from "../landing/landing-benefits";
 import LandingIntroduce from "../landing/landing-introduce";
 import LandingHowItWork from "../landing/landing-how-it-work";
+import LandingDownloadApp from "../landing/landing-download-app";
 import LandingTechnologies from "../landing/landing-technologies";
 import LandingFeaturedCourses from "../landing/landing-featured-courses";
 
@@ -51,6 +52,8 @@ export default function HomeView() {
       {bestReviews?.length >= 5 && <Testimonial testimonials={bestReviews} />}
 
       {recentPosts?.length === 3 && <LatestPosts posts={recentPosts} />}
+
+      <LandingDownloadApp />
 
       <Newsletter />
     </>
