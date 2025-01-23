@@ -203,7 +203,7 @@ function DownloadPrompt({ platform, onClose, ...other }: Props) {
   );
 
   return (
-    <Dialog fullWidth maxWidth="xs" {...other}>
+    <Dialog fullWidth maxWidth="xs" onClose={onClose} {...other}>
       <Stack direction="row" justifyContent="space-between" alignItems="center" pb={2}>
         <DialogTitle sx={{ typography: "h6" }}>Zainstaluj aplikację</DialogTitle>
         <IconButton onClick={onClose} sx={{ p: 3 }}>
