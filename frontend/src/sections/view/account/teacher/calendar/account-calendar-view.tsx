@@ -208,6 +208,10 @@ export default function AccountScheduleView() {
           right: "today dayGridMonth,timeGridWeek,timeGridDay",
         }}
         selectable
+        selectAllow={(selectInfo) => {
+          const duration = selectInfo.end.getTime() - selectInfo.start.getTime();
+          return duration === SLOT_SIZE * 60 * 1000;
+        }}
         select={handleAddTimeSlot}
         initialDate={filters?.time_from ?? undefined}
         datesSet={handleChange}
