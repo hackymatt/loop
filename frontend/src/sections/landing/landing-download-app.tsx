@@ -195,10 +195,37 @@ function DownloadPrompt({ platform, onClose, ...other }: Props) {
           icon={
             platform === Platform.iOS ? "material-symbols:ios-share" : "material-symbols:more-vert"
           }
+          width={28}
+          sx={{ bgcolor: "background.neutral", p: 0.5, borderRadius: 1 }}
         />
         {platform === Platform.iOS ? "na dole ekranu" : "na górze ekranu"}
       </Stack>
-      <Typography variant="body2">2. Wybierz &#39;Dodaj do ekranu głównego&#39;</Typography>
+      <Stack direction="row" spacing={0.5} justifyContent="left" alignItems="center">
+        <Typography variant="body2">2. Wybierz opcję</Typography>
+        {platform === Platform.iOS ? (
+          <Stack
+            direction="row"
+            spacing={0.5}
+            justifyContent="left"
+            alignItems="center"
+            sx={{ bgcolor: "background.neutral", p: 0.5, borderRadius: 1 }}
+          >
+            <Typography variant="body2">Do ekranu głównego</Typography>
+            <Iconify icon="material-symbols:add-box-outline-rounded" />
+          </Stack>
+        ) : (
+          <Stack
+            direction="row"
+            spacing={0.5}
+            justifyContent="left"
+            alignItems="center"
+            sx={{ bgcolor: "background.neutral", p: 0.5, borderRadius: 1 }}
+          >
+            <Iconify icon="material-symbols:open-in-phone" />
+            <Typography variant="body2">Dodaj do ekranu głównego</Typography>
+          </Stack>
+        )}
+      </Stack>
     </Stack>
   );
 
