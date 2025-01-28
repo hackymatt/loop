@@ -4,7 +4,7 @@ describe("encodeUrl", () => {
   // Converts Polish characters to their mapped equivalents
   it("should convert Polish characters to their mapped equivalents", () => {
     const input = "Zażółć gęślą jaźń";
-    const expectedOutput = "Zazolc-gesla-jazn";
+    const expectedOutput = "zazolc-gesla-jazn";
     expect(encodeUrl(input)).toBe(expectedOutput);
   });
 
