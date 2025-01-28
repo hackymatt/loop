@@ -1,5 +1,5 @@
-export function encodeUrl(text: string) {
-  const polishCharsMap: { [key: string]: string } = {
+export function encodeUrl(text: string): string {
+  const polishCharMap: { [key: string]: string } = {
     ą: "a",
     ć: "c",
     ę: "e",
@@ -20,18 +20,14 @@ export function encodeUrl(text: string) {
     Ż: "Z",
   };
 
-  // Replace Polish characters with mapped equivalents
-  text = text
-    .split("")
-    .map((char) => polishCharsMap[char] || char)
-    .join("");
-
-  // Allow letters (case-sensitive), numbers, spaces, periods, and hyphens only
   return text
-    .replace(/[^a-zA-Z0-9\s.-]/g, "") // Keep case sensitivity
-    .trim()
-    .replace(/\s+/g, "-") // Convert spaces to hyphens
-    .replace(/-+/g, "-"); // Remove multiple hyphens
+    .toLowerCase() // Convert to lowercase
+    .split("") // Split into characters
+    .map((char) => polishCharMap[char] || char) // Replace Polish characters
+    .join("") // Join characters back into a string
+    .replace(/[^a-z0-9\s-]/g, "") // Remove non-alphanumeric characters (except spaces and hyphens)
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/-+/g, "-"); // Replace multiple hyphens with a single hyphen
 }
 
 export function decodeUrl(text: string) {
