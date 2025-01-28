@@ -200,7 +200,12 @@ function DownloadPrompt({ platform, onClose, ...other }: Props) {
         />
         {platform === Platform.iOS ? "na dole ekranu" : "na górze ekranu"}
       </Stack>
-      <Stack direction="row" spacing={0.5} justifyContent="left" alignItems="center">
+      <Stack
+        direction={{ xs: "column", md: "row" }}
+        spacing={0.5}
+        justifyContent="left"
+        alignItems={{ xs: "left", md: "center" }}
+      >
         <Typography variant="body2">2. Wybierz opcję</Typography>
         {platform === Platform.iOS ? (
           <Stack
