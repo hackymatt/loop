@@ -41,7 +41,9 @@ export default function LoginView() {
   const queryParams = useMemo(() => getQueryParams(), [getQueryParams]);
 
   const { redirect, state } = queryParams;
-  const { redirect: oAuthRedirect } = state ? JSON.parse(decodeURIComponent(state)) : {};
+  const { redirect: oAuthRedirect } = state
+    ? JSON.parse(decodeURIComponent(state))
+    : { redirect: undefined };
 
   const { authUrl: googleAuthUrl } = useGoogleAuth(redirect);
   const { authUrl: facebookAuthUrl } = useFacebookAuth(redirect);
