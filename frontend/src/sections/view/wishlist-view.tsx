@@ -48,7 +48,7 @@ export default function WishlistView() {
 
   const handleSubmit = async () => {
     if (!isLoggedIn) {
-      push(paths.login);
+      push(`${paths.login}?redirect=${paths.wishlist}`);
       return;
     }
     try {

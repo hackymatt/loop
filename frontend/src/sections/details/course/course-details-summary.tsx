@@ -31,7 +31,7 @@ export default function CourseDetailsSummary({ course }: Props) {
         <Typography variant="h4">Program szkolenia</Typography>
       </Stack>
 
-      {course.modules && <CourseDetailsModuleList modules={course.modules ?? []} />}
+      {course.modules && <CourseDetailsModuleList course={course} modules={course.modules ?? []} />}
 
       <Box>
         <Typography component="h6" variant="h4" sx={{ mb: 2 }}>

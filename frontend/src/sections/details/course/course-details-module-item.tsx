@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import { LoadingButton } from "@mui/lab";
 import Typography from "@mui/material/Typography";
 import { Box, Stack, Divider } from "@mui/material";
@@ -8,6 +10,7 @@ import AccordionSummary, { accordionSummaryClasses } from "@mui/material/Accordi
 import { paths } from "src/routes/paths";
 import { useRouter } from "src/routes/hooks/use-router";
 
+import { encodeUrl } from "src/utils/url-utils";
 import { fCurrency } from "src/utils/format-number";
 import { romanize } from "src/utils/romanize-number";
 import { trackEvents } from "src/utils/track-events";
@@ -21,20 +24,21 @@ import { useToastContext } from "src/components/toast";
 import { CircularProgressWithLabel } from "src/components/progress-label/circle-progress";
 
 import { UserType } from "src/types/user";
-import { ICourseLessonProp, ICourseModuleProp } from "src/types/course";
+import { ICourseProps, ICourseLessonProp, ICourseModuleProp } from "src/types/course";
 
 import CourseDetailsLessonList from "./course-details-lesson-list";
 
 // ----------------------------------------------------------------------
 
 type ModuleItemProps = {
+  course: ICourseProps;
   module: ICourseModuleProp;
   index: number;
 };
 
 // ----------------------------------------------------------------------
 
-export default function CourseDetailsModuleItem({ module, index }: ModuleItemProps) {
+export default function CourseDetailsModuleItem({ course, module, index }: ModuleItemProps) {
   const { enqueueSnackbar } = useToastContext();
   const { isLoggedIn, userType } = useUserContext();
   const { push } = useRouter();
@@ -42,9 +46,14 @@ export default function CourseDetailsModuleItem({ module, index }: ModuleItemPro
   const { mutateAsync: createWishlistItem, isLoading: isAddingToFavorites } = useCreateWishlist();
   const { mutateAsync: createCartItem, isLoading: isAddingToCart } = useCreateCart();
 
+  const path = useMemo(
+    () => `${paths.course}/${encodeUrl(`${course.slug}-${course.id}`)}/`,
+    [course.id, course.slug],
+  );
+
   const handleAddToFavorites = async () => {
     if (!isLoggedIn) {
-      push(paths.login);
+      push(`${paths.login}?redirect=${path}`);
       return;
     }
     try {
@@ -61,7 +70,7 @@ export default function CourseDetailsModuleItem({ module, index }: ModuleItemPro
 
   const handleAddToCart = async () => {
     if (!isLoggedIn) {
-      push(paths.login);
+      push(`${paths.login}?redirect=${path}`);
       return;
     }
     try {
@@ -148,7 +157,9 @@ export default function CourseDetailsModuleItem({ module, index }: ModuleItemPro
         }}
       >
         <Stack spacing={3}>
-          {module.lessons && <CourseDetailsLessonList lessons={module.lessons ?? []} />}
+          {module.lessons && (
+            <CourseDetailsLessonList course={course} lessons={module.lessons ?? []} />
+          )}
 
           <Divider sx={{ borderStyle: "dashed" }} />
 

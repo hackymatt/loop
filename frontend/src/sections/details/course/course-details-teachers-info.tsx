@@ -66,7 +66,7 @@ function TeacherItem({ teacher }: TeacherItemProps) {
   return (
     <Link
       component={RouterLink}
-      href={`${paths.teacher}/${encodeUrl(path)}`}
+      href={`${paths.teacher}/${encodeUrl(path)}/`}
       color="inherit"
       underline="none"
     >

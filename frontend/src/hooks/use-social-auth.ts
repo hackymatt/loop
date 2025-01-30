@@ -9,7 +9,13 @@ import {
   FACEBOOK_CLIENT_ID,
 } from "src/config-global";
 
-export const useGoogleAuth = () => {
+const getState = (redirectUrl?: string) => {
+  const base = { state: generateCode(18) };
+  const statePayload = redirectUrl ? { ...base, redirect: redirectUrl } : base;
+  return encodeURIComponent(JSON.stringify(statePayload));
+};
+
+export const useGoogleAuth = (redirectUrl?: string) => {
   const googleUrl = "https://accounts.google.com/o/oauth2/v2/auth";
 
   const scope = [
@@ -17,7 +23,7 @@ export const useGoogleAuth = () => {
     "https://www.googleapis.com/auth/userinfo.profile",
   ].join(" ");
 
-  const state = generateCode(18);
+  const state = getState(redirectUrl);
 
   const params = new URLSearchParams({
     client_id: GOOGLE_CLIENT_ID,
@@ -32,12 +38,12 @@ export const useGoogleAuth = () => {
   return { authUrl: `${googleUrl}?${params}`, state };
 };
 
-export const useFacebookAuth = () => {
+export const useFacebookAuth = (redirectUrl?: string) => {
   const facebookUrl = "https://www.facebook.com/v19.0/dialog/oauth";
 
   const scope = ["email", "user_gender", "public_profile"].join(",");
 
-  const state = generateCode(18);
+  const state = getState(redirectUrl);
 
   const params = new URLSearchParams({
     client_id: FACEBOOK_CLIENT_ID,
@@ -50,12 +56,12 @@ export const useFacebookAuth = () => {
   return { authUrl: `${facebookUrl}?${params}`, state };
 };
 
-export const useGithubAuth = () => {
+export const useGithubAuth = (redirectUrl?: string) => {
   const githubUrl = "https://github.com/login/oauth/authorize";
 
   const scope = ["user:email", "read:user"].join(" ");
 
-  const state = generateCode(18);
+  const state = getState(redirectUrl);
 
   const params = new URLSearchParams({
     client_id: GITHUB_CLIENT_ID,

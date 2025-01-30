@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import { paths } from "src/routes/paths";
 import { useRouter } from "src/routes/hooks";
 
+import { encodeUrl } from "src/utils/url-utils";
 import { fCurrency } from "src/utils/format-number";
 import { trackEvents } from "src/utils/track-events";
 
@@ -45,9 +46,14 @@ export default function CourseDetailsInfo({ course }: Props) {
     [course?.modules],
   );
 
+  const path = useMemo(
+    () => `${paths.course}/${encodeUrl(`${course.slug}-${course.id}`)}/`,
+    [course.id, course.slug],
+  );
+
   const handleAddToFavorites = async () => {
     if (!isLoggedIn) {
-      push(paths.login);
+      push(`${paths.login}?redirect=${path}`);
       return;
     }
 
@@ -65,7 +71,7 @@ export default function CourseDetailsInfo({ course }: Props) {
 
   const handleAddToCart = async () => {
     if (!isLoggedIn) {
-      push(paths.login);
+      push(`${paths.login}?redirect=${path}`);
       return;
     }
     try {

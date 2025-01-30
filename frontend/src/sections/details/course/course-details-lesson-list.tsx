@@ -2,17 +2,18 @@ import { useState, useCallback } from "react";
 
 import { useLesson } from "src/api/lessons/lesson";
 
-import { ICourseLessonProp } from "src/types/course";
+import { ICourseProps, ICourseLessonProp } from "src/types/course";
 
 import CourseDetailsLessonItem from "./course-details-lesson-item";
 
 // ----------------------------------------------------------------------
 
 type Props = {
+  course: ICourseProps;
   lessons: ICourseLessonProp[];
 };
 
-export default function CourseDetailsLessonList({ lessons }: Props) {
+export default function CourseDetailsLessonList({ course, lessons }: Props) {
   const [lessonId, setLessonId] = useState<string>(lessons[0].id);
   const [expanded, setExpanded] = useState<string | false>(false);
 
@@ -32,6 +33,7 @@ export default function CourseDetailsLessonList({ lessons }: Props) {
         <CourseDetailsLessonItem
           key={lesson.id}
           index={index + 1}
+          course={course}
           lesson={lesson}
           details={details}
           expanded={expanded === lesson.id}

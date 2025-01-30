@@ -93,7 +93,13 @@ export function PostView({ id }: { id: string }) {
 
       <Box display="flex" alignItems="center">
         <IconButton
-          onClick={() => navigator.share({ url: id, title: post?.title, text: post?.description })}
+          onClick={() =>
+            navigator.share({
+              url: `${paths.post}/${encodeUrl(`${post?.title}-${post?.id}/`)}`,
+              title: post?.title,
+              text: post?.description,
+            })
+          }
         >
           <Iconify icon="solar:share-outline" />
         </IconButton>
@@ -207,7 +213,7 @@ export function PostView({ id }: { id: string }) {
                   <PrevNextButton
                     title={prevPost.title}
                     coverUrl={prevPost.coverUrl}
-                    href={`${paths.post}/${encodeUrl(`${prevPost.title}-${prevPost.id}`)}`}
+                    href={`${paths.post}/${encodeUrl(`${prevPost.title}-${prevPost.id}`)}/`}
                   />
                 ) : (
                   <Box />
@@ -218,7 +224,7 @@ export function PostView({ id }: { id: string }) {
                     isNext
                     title={nextPost.title}
                     coverUrl={nextPost.coverUrl}
-                    href={`${paths.post}/${encodeUrl(`${nextPost.title}-${nextPost.id}`)}`}
+                    href={`${paths.post}/${encodeUrl(`${nextPost.title}-${nextPost.id}`)}/`}
                   />
                 )}
               </Box>

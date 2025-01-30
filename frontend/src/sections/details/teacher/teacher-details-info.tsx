@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { polishPlurals } from "polish-plurals";
 
 import Box from "@mui/material/Box";
@@ -9,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import { paths } from "src/routes/paths";
 import { useRouter } from "src/routes/hooks";
 
+import { encodeUrl } from "src/utils/url-utils";
 import { fCurrency } from "src/utils/format-number";
 import { trackEvents } from "src/utils/track-events";
 
@@ -37,9 +39,14 @@ export default function TeacherDetailsInfo({ teacher }: Props) {
   const { mutateAsync: createWishlistItem, isLoading: isAddingToFavorites } = useCreateWishlist();
   const { mutateAsync: createCartItem, isLoading: isAddingToCart } = useCreateCart();
 
+  const path = useMemo(
+    () => `${paths.teacher}/${encodeUrl(`${teacher.name}-${teacher.id}`)}/`,
+    [teacher.id, teacher.name],
+  );
+
   const handleAddToFavorites = async () => {
     if (!isLoggedIn) {
-      push(paths.login);
+      push(`${paths.login}?redirect=${path}`);
       return;
     }
     if (teacher.lessons) {
@@ -58,7 +65,7 @@ export default function TeacherDetailsInfo({ teacher }: Props) {
 
   const handleAddToCart = async () => {
     if (!isLoggedIn) {
-      push(paths.login);
+      push(`${paths.login}?redirect=${path}`);
       return;
     }
     if (teacher.lessons) {

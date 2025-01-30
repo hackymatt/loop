@@ -27,7 +27,9 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
   const courseTitle =
     course?.slug ?? decodedId.slice(0, decodedId.lastIndexOf("-")).replace(/-/g, " ");
-  const courseDescription = course?.description ? `${course.description} ` : "";
+  const courseDescription = course?.description
+    ? course.description
+    : `Zapisz się na kurs ${courseTitle} w loop i naucz się programować. Oferujemy praktyczne lekcje online z certyfikatem ukończenia oraz wsparcie doświadczonych instruktorów.`;
 
   const technologyKeywords = (course?.technologies ?? [])
     .map((technology: ICourseByTechnologyProps) => [
@@ -42,7 +44,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
   return createMetadata(
     `Kurs ${courseTitle} - sprawdź program nauczania`,
-    `Zapisz się na kurs ${courseTitle} w loop i naucz się programować. ${courseDescription}Oferujemy praktyczne lekcje online z certyfikatem ukończenia oraz wsparcie doświadczonych instruktorów.`,
+    courseDescription,
     [
       `kurs ${courseTitle}`,
       "kursy programowania",

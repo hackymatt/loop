@@ -193,7 +193,7 @@ export default function CourseDetailsHero({ course }: Props) {
                     <IconButton
                       onClick={() =>
                         navigator.share({
-                          url: encodeUrl(`${slug}-${id}`),
+                          url: `${paths.course}/${encodeUrl(`${slug}-${id}/`)}`,
                           title: course?.slug,
                           text: course?.description,
                         })

@@ -74,7 +74,7 @@ function PostAuthorItem({ author }: PostAuthorItemProps) {
           </Stack>
 
           <Box display="flex">
-            <Button href={`${paths.teacher}/${encodeUrl(path)}`} variant="text" color="primary">
+            <Button href={`${paths.teacher}/${encodeUrl(path)}/`} variant="text" color="primary">
               Zobacz profil
             </Button>
           </Box>

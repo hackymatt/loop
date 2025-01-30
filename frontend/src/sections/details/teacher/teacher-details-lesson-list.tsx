@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 
 import { useLesson } from "src/api/lessons/lesson";
 
+import { ITeamMemberProps } from "src/types/team";
 import { ICourseLessonProp } from "src/types/course";
 
 import TeacherDetailsLessonItem from "./teacher-details-lesson-item";
@@ -11,10 +12,11 @@ import TeacherDetailsLessonItem from "./teacher-details-lesson-item";
 // ----------------------------------------------------------------------
 
 type Props = {
+  teacher: ITeamMemberProps;
   lessons: ICourseLessonProp[];
 };
 
-export default function TeacherDetailsLessonList({ lessons }: Props) {
+export default function TeacherDetailsLessonList({ teacher, lessons }: Props) {
   const [lessonId, setLessonId] = useState<string>(lessons[0].id);
   const [expanded, setExpanded] = useState<string | false>(false);
 
@@ -37,6 +39,7 @@ export default function TeacherDetailsLessonList({ lessons }: Props) {
       {lessons.map((lesson) => (
         <TeacherDetailsLessonItem
           key={lesson.id}
+          teacher={teacher}
           lesson={lesson}
           details={details}
           expanded={expanded === lesson.id}

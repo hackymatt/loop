@@ -29,7 +29,7 @@ export const lessonDatesQuery = (query?: IQueryParams) => {
       }
     }
     const { results, records_count, pages_count } = data;
-    const modifiedResults = results.map(({ date }: ILessonDate) => date);
+    const modifiedResults = results?.map(({ date }: ILessonDate) => date);
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };
   };
 
