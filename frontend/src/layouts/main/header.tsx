@@ -188,7 +188,7 @@ export default function Header({ headerOnDark }: Props) {
         >
           <IconButton
             component={RouterLink}
-            href={isLoggedIn ? paths.wishlist : paths.login}
+            href={isLoggedIn ? paths.wishlist : `${paths.login}?redirect=${paths.wishlist}`}
             size="small"
             color="inherit"
             sx={{ p: 0 }}
@@ -205,7 +205,7 @@ export default function Header({ headerOnDark }: Props) {
         >
           <IconButton
             component={RouterLink}
-            href={isLoggedIn ? paths.cart : paths.login}
+            href={isLoggedIn ? paths.cart : `${paths.login}?redirect=${paths.cart}`}
             size="small"
             color="inherit"
             sx={{ p: 0 }}

@@ -34,7 +34,7 @@ export default function TeamItem({ member }: Props) {
   return (
     <Link
       component={RouterLink}
-      href={`${paths.teacher}/${encodeUrl(path)}`}
+      href={`${paths.teacher}/${encodeUrl(path)}/`}
       color="inherit"
       underline="none"
     >

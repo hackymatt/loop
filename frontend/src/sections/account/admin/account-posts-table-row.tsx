@@ -86,7 +86,7 @@ export default function AccountPostsTableRow({ row, onEdit, onDelete }: Props) {
           },
         }}
       >
-        <Link href={`${paths.post}/${encodeUrl(path)}`} target="_blank" rel="noopener">
+        <Link href={`${paths.post}/${encodeUrl(path)}/`} target="_blank" rel="noopener">
           <MenuItem sx={{ mr: 1, width: "100%", color: "success.main" }}>
             <Iconify icon="carbon:view" sx={{ mr: 0.5 }} />
             <Typography variant="body2">Podgląd</Typography>

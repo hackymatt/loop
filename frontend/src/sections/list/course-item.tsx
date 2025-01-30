@@ -58,7 +58,7 @@ export default function CourseItem({ course, vertical }: Props) {
   return (
     <Link
       component={RouterLink}
-      href={`${paths.course}/${encodeUrl(path)}`}
+      href={`${paths.course}/${encodeUrl(path)}/`}
       color="inherit"
       underline="none"
     >

@@ -28,6 +28,7 @@ import { useRouter } from "src/routes/hooks/use-router";
 
 import { useBoolean } from "src/hooks/use-boolean";
 
+import { encodeUrl } from "src/utils/url-utils";
 import { getTimezone } from "src/utils/get-timezone";
 import { trackEvents } from "src/utils/track-events";
 import { getGenderAvatar } from "src/utils/get-gender-avatar";
@@ -47,7 +48,12 @@ import { CircularProgressWithLabel } from "src/components/progress-label/circle-
 
 import { UserType } from "src/types/user";
 import { ITeamMemberProps } from "src/types/team";
-import { IScheduleProp, ICourseLessonProp, ICourseByTechnologyProps } from "src/types/course";
+import {
+  ICourseProps,
+  IScheduleProp,
+  ICourseLessonProp,
+  ICourseByTechnologyProps,
+} from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -57,6 +63,7 @@ interface Props extends DialogProps {
 }
 
 type LessonItemProps = {
+  course: ICourseProps;
   lesson: Pick<
     ICourseLessonProp,
     "id" | "title" | "price" | "priceSale" | "lowest30DaysPrice" | "progress"
@@ -191,6 +198,7 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
 }
 
 export default function CourseDetailsLessonItem({
+  course,
   lesson,
   index,
   details,
@@ -211,9 +219,14 @@ export default function CourseDetailsLessonItem({
 
   const avatarUrl = details?.teachers?.[0]?.avatarUrl || genderAvatarUrl;
 
+  const path = useMemo(
+    () => `${paths.course}/${encodeUrl(`${course.slug}-${course.id}`)}/`,
+    [course.id, course.slug],
+  );
+
   const handleAddToFavorites = async () => {
     if (!isLoggedIn) {
-      push(paths.login);
+      push(`${paths.login}?redirect=${path}`);
       return;
     }
     try {
@@ -227,7 +240,7 @@ export default function CourseDetailsLessonItem({
 
   const handleAddToCart = async () => {
     if (!isLoggedIn) {
-      push(paths.login);
+      push(`${paths.login}?redirect=${path}`);
       return;
     }
     try {

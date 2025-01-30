@@ -28,6 +28,7 @@ import { useRouter } from "src/routes/hooks/use-router";
 
 import { useBoolean } from "src/hooks/use-boolean";
 
+import { encodeUrl } from "src/utils/url-utils";
 import { getTimezone } from "src/utils/get-timezone";
 import { trackEvents } from "src/utils/track-events";
 import { getGenderAvatar } from "src/utils/get-gender-avatar";
@@ -56,6 +57,7 @@ interface Props extends DialogProps {
 }
 
 type LessonItemProps = {
+  teacher: ITeamMemberProps;
   lesson: Pick<
     ICourseLessonProp,
     "id" | "title" | "price" | "priceSale" | "lowest30DaysPrice" | "progress"
@@ -189,6 +191,7 @@ function CheckTimeSlots({ lesson, onClose, ...other }: Props) {
 }
 
 export default function TeacherDetailsLessonItem({
+  teacher,
   lesson,
   details,
   expanded,
@@ -208,9 +211,14 @@ export default function TeacherDetailsLessonItem({
 
   const avatarUrl = details?.teachers?.[0]?.avatarUrl || genderAvatarUrl;
 
+  const path = useMemo(
+    () => `${paths.teacher}/${encodeUrl(`${teacher.name}-${teacher.id}`)}/`,
+    [teacher.id, teacher.name],
+  );
+
   const handleAddToFavorites = async () => {
     if (!isLoggedIn) {
-      push(paths.login);
+      push(`${paths.login}?redirect=${path}`);
       return;
     }
     try {
@@ -229,7 +237,7 @@ export default function TeacherDetailsLessonItem({
 
   const handleAddToCart = async () => {
     if (!isLoggedIn) {
-      push(paths.login);
+      push(`${paths.login}?redirect=${path}`);
       return;
     }
     try {

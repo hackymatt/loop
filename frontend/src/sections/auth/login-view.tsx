@@ -38,11 +38,14 @@ export default function LoginView() {
 
   const passwordShow = useBoolean();
 
-  const { authUrl: googleAuthUrl } = useGoogleAuth();
-  const { authUrl: facebookAuthUrl } = useFacebookAuth();
-  const { authUrl: githubAuthUrl } = useGithubAuth();
-
   const queryParams = useMemo(() => getQueryParams(), [getQueryParams]);
+
+  const { redirect, state } = queryParams;
+  const { redirect: oAuthRedirect } = state ? JSON.parse(decodeURIComponent(state)) : {};
+
+  const { authUrl: googleAuthUrl } = useGoogleAuth(redirect);
+  const { authUrl: facebookAuthUrl } = useFacebookAuth(redirect);
+  const { authUrl: githubAuthUrl } = useGithubAuth(redirect);
 
   const {
     loginUser,
@@ -80,7 +83,7 @@ export default function LoginView() {
     clearErrors();
     try {
       await loginUser(data);
-      push(paths.account.personal);
+      push(redirect ?? paths.account.personal);
       enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
     } catch (error) {
       if (isRegistered && isUnverified) {
@@ -100,7 +103,7 @@ export default function LoginView() {
     try {
       const { code } = queryParams;
       await loginGoogleUser({ code });
-      push(paths.account.personal);
+      push(oAuthRedirect ?? paths.account.personal);
       enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
     } catch (error) {
       if ((error as AxiosError).response?.status !== 403) {
@@ -109,14 +112,22 @@ export default function LoginView() {
         enqueueSnackbar("Wystąpił błąd podczas logowania", { variant: "error" });
       }
     }
-  }, [clearErrors, enqueueSnackbar, handleFormError, loginGoogleUser, push, queryParams]);
+  }, [
+    clearErrors,
+    queryParams,
+    loginGoogleUser,
+    push,
+    oAuthRedirect,
+    enqueueSnackbar,
+    handleFormError,
+  ]);
 
   const onFacebookSubmit = useCallback(async () => {
     clearErrors();
     try {
       const { code } = queryParams;
       await loginFacebookUser({ code });
-      push(paths.account.personal);
+      push(oAuthRedirect ?? paths.account.personal);
       enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
     } catch (error) {
       if ((error as AxiosError).response?.status !== 403) {
@@ -125,14 +136,22 @@ export default function LoginView() {
         enqueueSnackbar("Wystąpił błąd podczas logowania", { variant: "error" });
       }
     }
-  }, [clearErrors, enqueueSnackbar, handleFormError, loginFacebookUser, push, queryParams]);
+  }, [
+    clearErrors,
+    queryParams,
+    loginFacebookUser,
+    push,
+    oAuthRedirect,
+    enqueueSnackbar,
+    handleFormError,
+  ]);
 
   const onGithubSubmit = useCallback(async () => {
     clearErrors();
     try {
       const { code } = queryParams;
       await loginGithubUser({ code });
-      push(paths.account.personal);
+      push(oAuthRedirect ?? paths.account.personal);
       enqueueSnackbar("Zalogowano pomyślnie", { variant: "success" });
     } catch (error) {
       if ((error as AxiosError).response?.status !== 403) {
@@ -141,7 +160,15 @@ export default function LoginView() {
         enqueueSnackbar("Wystąpił błąd podczas logowania", { variant: "error" });
       }
     }
-  }, [clearErrors, enqueueSnackbar, handleFormError, loginGithubUser, push, queryParams]);
+  }, [
+    clearErrors,
+    queryParams,
+    loginGithubUser,
+    push,
+    oAuthRedirect,
+    enqueueSnackbar,
+    handleFormError,
+  ]);
 
   const effectRan = useRef(false);
   useEffect(() => {

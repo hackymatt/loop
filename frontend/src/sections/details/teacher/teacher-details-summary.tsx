@@ -13,7 +13,9 @@ type Props = {
 export default function TeacherDetailsSummary({ teacher }: Props) {
   return (
     <Stack spacing={5}>
-      {teacher.lessons && <TeacherDetailsLessonList lessons={teacher.lessons ?? []} />}
+      {teacher.lessons && (
+        <TeacherDetailsLessonList teacher={teacher} lessons={teacher.lessons ?? []} />
+      )}
     </Stack>
   );
 }

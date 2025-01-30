@@ -25,11 +25,13 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 
   const postTitle =
     post?.title ?? decodedId.slice(0, decodedId.lastIndexOf("-")).replace(/-/g, " ");
-  const postDescription = post?.description ? `${post.description} ` : "";
+  const postDescription = post?.description
+    ? post.description
+    : `Przeczytaj nasz artykuł pod tytułem ${postTitle}. Odkryj praktyczne porady i najlepsze praktyki, które pomogą Ci w rozwoju umiejętności programistycznych.`;
 
   return createMetadata(
     `${postTitle} - przeczytaj artykuł już teraz`,
-    `Przeczytaj nasz artykuł o ${postTitle}. ${postDescription}Odkryj praktyczne porady i najlepsze praktyki, które pomogą Ci w rozwoju umiejętności programistycznych.`,
+    postDescription,
     [
       postTitle,
       "programowanie",

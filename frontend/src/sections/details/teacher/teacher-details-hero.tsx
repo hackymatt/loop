@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { polishPlurals } from "polish-plurals";
 
 import Box from "@mui/material/Box";
@@ -12,6 +13,7 @@ import { paths } from "src/routes/paths";
 
 import { useBoolean } from "src/hooks/use-boolean";
 
+import { encodeUrl } from "src/utils/url-utils";
 import { fShortenNumber } from "src/utils/format-number";
 import { getGenderAvatar } from "src/utils/get-gender-avatar";
 
@@ -51,6 +53,11 @@ export default function TeacherDetailsHero({ teacher }: Props) {
 
   const genderAvatarUrl = getGenderAvatar(teacher.gender);
   const photoUrl = avatarUrl || genderAvatarUrl;
+
+  const path = useMemo(
+    () => `${paths.teacher}/${encodeUrl(`${teacher.name}-${teacher.id}`)}/`,
+    [teacher.id, teacher.name],
+  );
 
   return (
     <Box
@@ -156,7 +163,7 @@ export default function TeacherDetailsHero({ teacher }: Props) {
                       <Link
                         color="inherit"
                         variant="body2"
-                        href={paths.login}
+                        href={`${paths.login}?redirect=${path}`}
                         sx={{ cursor: "pointer" }}
                       >
                         Napisz do mnie
