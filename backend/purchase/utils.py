@@ -17,6 +17,7 @@ class Invoice:
         self.payment = payment
         self.date = date.today()
         self.is_vat = self._is_vat()
+        self.vat_rate = VAT_RATE if self.is_vat else 0
         self.invoice_number = self._get_invoice_number(payment.id)
         self.customer = purchases[0].student
         self.path = os.path.join(self.INVOICE_DIR, f"{self.invoice_number}.pdf")
@@ -47,7 +48,7 @@ class Invoice:
                             price=purchase.lesson.price, quantity=self.PRODUCT_QUANTITY
                         )
                     ),
-                    "vat_percent": f"{VAT_RATE}%",
+                    "vat_percent": f"{self.vat_rate}%",
                     "vat": self._format_price(
                         price=self._calc_vat(price=purchase.lesson.price)
                     ),
@@ -76,13 +77,13 @@ class Invoice:
         return "{:07d}".format(id)
 
     def _calc_net_price(self, price: float):
-        return float(price) * (1 - VAT_RATE / 100)
+        return float(price) * (1 - self.vat_rate / 100)
 
     def _calc_net_subtotal(self, price: float, quantity: int):
         return self._calc_net_price(price=price) * quantity
 
     def _calc_vat(self, price: float):
-        return float(price) * (VAT_RATE / 100)
+        return float(price) * (self.vat_rate / 100)
 
     def _format_price(self, price: float):
         return "{:,.2f} zł".format(price)
@@ -100,7 +101,7 @@ class Invoice:
             if sales.count() > 0
             else 0
         )
-        return self._calc_net_price(price=total_sales)
+        return total_sales
 
     def _is_vat(self):
         return self._calc_sales() > VAT_LIMIT

@@ -70,9 +70,11 @@ class PostQuerySet(QuerySet):
         return self.annotate(tags_names=ArrayAgg("tags__name", distinct=True))
 
     def add_previous_post(self):
-        previous_post = Post.objects.filter(
-            created_at__lt=OuterRef("created_at"), active=True
-        ).values("id")[:1]
+        previous_post = (
+            Post.objects.filter(created_at__lt=OuterRef("created_at"), active=True)
+            .order_by("-created_at")
+            .values("id")[:1]
+        )
 
         return self.annotate(
             previous_post=Coalesce(
@@ -81,9 +83,11 @@ class PostQuerySet(QuerySet):
         )
 
     def add_next_post(self):
-        next_post = Post.objects.filter(
-            created_at__gt=OuterRef("created_at"), active=True
-        ).values("id")[:1]
+        next_post = (
+            Post.objects.filter(created_at__gt=OuterRef("created_at"), active=True)
+            .order_by("-created_at")
+            .values("id")[:1]
+        )
 
         return self.annotate(
             next_post=Coalesce(
