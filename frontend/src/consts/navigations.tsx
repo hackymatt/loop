@@ -171,6 +171,25 @@ export const adminNavigation = [
       ],
     },
     {
+      title: "Zakupy",
+      path: paths.account.admin.posts.list,
+      icon: <Iconify icon="carbon:purchase" />,
+      children: [
+        {
+          title: "Spis zakupów",
+          path: `${paths.account.admin.purchases.list}/?sort_by=-created_at&page_size=10`,
+          icon: <Iconify icon="carbon:list" />,
+          children: [],
+        },
+        {
+          title: "Płatności",
+          path: `${paths.account.admin.purchases.payments}/?sort_by=-created_at&page_size=10`,
+          icon: <Iconify icon="carbon:money" />,
+          children: [],
+        },
+      ],
+    },
+    {
       title: "Tagi",
       path: `${paths.account.admin.tags}/?sort_by=name&page_size=10`,
       icon: <Iconify icon="carbon:hashtag" />,
