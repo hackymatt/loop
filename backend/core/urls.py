@@ -51,7 +51,12 @@ from schedule.views import (
 from stats.views import StatsAPIView
 from wishlist.views import WishlistViewSet
 from cart.views import CartViewSet
-from purchase.views import PurchaseViewSet, PaymentVerifyAPIView, PaymentStatusViewSet
+from purchase.views import (
+    PurchaseViewSet,
+    PaymentViewSet,
+    PaymentVerifyAPIView,
+    PaymentStatusViewSet,
+)
 from teaching.views import ManageTeachingViewSet, TeachingViewSet
 from reservation.views import ReservationViewSet
 from contact.views import ContactAPIView
@@ -99,6 +104,7 @@ router.register(
 router.register(r"posts", PostViewSet, basename="posts")
 router.register(r"post-categories", PostCategoryViewSet, basename="post_categories")
 router.register(r"purchase", PurchaseViewSet, basename="purchase")
+router.register(r"payments", PaymentViewSet, basename="payments")
 router.register(r"register", ProfileRegisterViewSet, basename="user_register")
 router.register(r"reservation", ReservationViewSet, basename="reservation")
 router.register(r"reviews", ReviewViewSet, basename="reviews")

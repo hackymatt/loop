@@ -501,7 +501,8 @@
                 <td class="w-1/2 align-top">
                   <div class="text-sm text-neutral-600">
                     <p class="font-bold">"loop" Mateusz Szczepek</p>
-                    <p>NIP: 23456789</p>
+                    <p>NIP: 6861677925</p>
+                    <p>VAT UE: PL6861677925</p>
                     <p>Przewóz 34E/1</p>
                     <p>30-716 Kraków</p>
                     <p>Polska</p>
@@ -556,7 +557,6 @@
                 >
                   Ilość
                 </td>
-                {% if vat %}
                 <td
                   class="border-b-2 border-main pb-3 pl-2 text-right font-bold text-main"
                 >
@@ -587,18 +587,6 @@
                 >
                   Wartość brutto
                 </td>
-                {% endif %} {% if not vat %}
-                <td
-                  class="border-b-2 border-main pb-3 pl-2 text-right font-bold text-main"
-                >
-                  Cena
-                </td>
-                <td
-                  class="border-b-2 border-main pb-3 pl-2 pr-3 text-right font-bold text-main"
-                >
-                  Wartość
-                </td>
-                {% endif %}
               </tr>
             </thead>
             <tbody>
@@ -613,7 +601,6 @@
                 <td class="border-b py-3 pl-2 text-center">
                   {{ product.quantity }}
                 </td>
-                {% if vat %}
                 <td class="border-b py-3 pl-2 text-right">
                   {{ product.price_netto }}
                 </td>
@@ -630,22 +617,10 @@
                 <td class="border-b py-3 pl-2 text-right">
                   {{product.subtotal_brutto }}
                 </td>
-                {% endif %} {% if not vat %}
-                <td class="border-b py-3 pl-2 text-right">
-                  {{product.price_brutto }}
-                </td>
-                <td class="border-b py-3 pl-2 text-right">
-                  {{product.subtotal_brutto }}
-                </td>
-                {% endif %}
               </tr>
               {% endfor %}
               <tr>
-                {% if vat %}
-                <td colspan="11">{% endif %} {% if not vat %}</td>
-
-                <td colspan="7">
-                  {% endif %}
+                <td colspan="11">
                   <table class="w-full border-collapse border-spacing-0">
                     <tbody>
                       <tr>
@@ -655,7 +630,6 @@
                             class="w-full border-collapse border-spacing-0"
                           >
                             <tbody>
-                              {% if vat %}
                               <tr>
                                 <td class="border-b p-3">
                                   <div class="whitespace-nowrap text-slate-400">
@@ -684,22 +658,14 @@
                                   </div>
                                 </td>
                               </tr>
-                              {% endif %}
+
                               <tr>
                                 <td class="bg-main p-3">
-                                  {% if vat %}
                                   <div
                                     class="whitespace-nowrap font-bold text-white"
                                   >
                                     Suma brutto:
                                   </div>
-                                  {% endif %} {% if not vat %}
-                                  <div
-                                    class="whitespace-nowrap font-bold text-white"
-                                  >
-                                    Suma:
-                                  </div>
-                                  {% endif %}
                                 </td>
                                 <td class="bg-main p-3 text-right">
                                   <div
@@ -723,19 +689,19 @@
 
         <div class="px-14 text-sm text-neutral-700">
           <p class="text-main font-bold">Szczegóły płatności</p>
-          <p>Forma płatności: Przelewy24</p>
-          <p>Status płatności: Zapłacono</p>
+          <p>Forma płatności: {{ payment_method }}</p>
+          <p>Status płatności: {{ payment_status}}</p>
         </div>
 
-        {% if not vat %}
         <div class="px-14 py-10 text-sm text-neutral-700">
           <p class="text-main font-bold">Uwagi:</p>
+          {% if not vat %}
           <p class="italic">
             Dostawa towarów lub świadczenie usług zwolnionych od podatku VAT na
             podstawie art. 113 ust. 1 i 9 ustawy o VAT.
           </p>
+          {% endif %}
         </div>
-        {% endif %}
 
         <footer
           class="fixed bottom-0 left-0 bg-slate-100 w-full text-neutral-600 text-center text-xs py-3"

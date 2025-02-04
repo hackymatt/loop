@@ -109,6 +109,7 @@ class PurchaseGetSerializer(ModelSerializer):
     review = SerializerMethodField()
     meeting_url = SerializerMethodField()
     recordings = SerializerMethodField()
+    payment = SerializerMethodField()
 
     class Meta:
         model = Purchase
@@ -150,6 +151,9 @@ class PurchaseGetSerializer(ModelSerializer):
         review = Review.objects.get(id=purchase.review_id)
         return ReviewSerializer(review).data
 
+    def get_payment(self, purchase: Purchase):
+        return Payment.objects.get(id=purchase.payment_id).session_id
+
 
 class PurchaseSerializer(ModelSerializer):
     class Meta:
@@ -190,6 +194,5 @@ class PaymentSerializer(ModelSerializer):
         model = Payment
         exclude = (
             "id",
-            "created_at",
             "modified_at",
         )

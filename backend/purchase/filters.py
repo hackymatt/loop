@@ -4,7 +4,7 @@ from django_filters import (
     NumberFilter,
     DateFilter,
 )
-from purchase.models import Purchase
+from purchase.models import Purchase, Payment
 from utils.ordering.ordering import OrderFilter
 
 
@@ -76,3 +76,57 @@ class PurchaseFilter(FilterSet):
     def filter_review_status_exclude(self, queryset, field_name, value):
         lookup_field_name = field_name
         return queryset.exclude(**{lookup_field_name: value})
+
+
+class PaymentFilter(FilterSet):
+    session_id = CharFilter(field_name="session_id", lookup_expr="icontains")
+    amount_from = NumberFilter(
+        label="Amount from",
+        field_name="amount__gte",
+        method="filter_amount",
+    )
+    amount_to = NumberFilter(
+        label="Amount to",
+        field_name="amount__lte",
+        method="filter_amount",
+    )
+    status = CharFilter(field_name="status", lookup_expr="icontains")
+    created_at = DateFilter(field_name="created_at", lookup_expr="contains")
+
+    sort_by = OrderFilter(
+        choices=(
+            ("session_id", "Session Id ASC"),
+            ("-session_id", "Session Id DESC"),
+            ("amount", "Amount ASC"),
+            ("-amount", "Amount DESC"),
+            ("status", "Status ASC"),
+            ("-status", "Status DESC"),
+            ("created_at", "Created At ASC"),
+            ("-created_at", "Created At DESC"),
+        ),
+        fields={
+            "session_id": "session_id",
+            "-session_id": "-session_id",
+            "amount": "amount",
+            "-amount": "-amount",
+            "status": "status",
+            "-status": "-status",
+            "created_at": "created_at",
+            "-created_at": "-created_at",
+        },
+    )
+
+    class Meta:
+        model = Payment
+        fields = (
+            "session_id",
+            "amount_from",
+            "amount_to",
+            "status",
+            "created_at",
+            "sort_by",
+        )
+
+    def filter_amount(self, queryset, field_name, value):
+        lookup_field_name = field_name
+        return queryset.filter(**{lookup_field_name: value * 100})

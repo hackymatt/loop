@@ -61,6 +61,7 @@ type IPurchase = {
   price: number;
   meeting_url?: string;
   recordings: IRecording[];
+  payment: string;
 };
 
 type ICreatePurchase = {
@@ -92,6 +93,7 @@ export const purchaseQuery = (query?: IQueryParams) => {
         review,
         meeting_url,
         recordings,
+        payment,
         created_at,
       }: IPurchase) => {
         const { id: lessonId, title: lessonTitle, duration, github_url } = lesson;
@@ -119,10 +121,11 @@ export const purchaseQuery = (query?: IQueryParams) => {
           ratingNumber: review?.rating,
           review: review?.review,
           meetingUrl: meeting_url,
-          recordings: recordings.map(({ file_name, file_url }: IRecording) => ({
+          recordings: (recordings ?? []).map(({ file_name, file_url }: IRecording) => ({
             name: file_name,
             url: file_url,
           })),
+          paymentId: payment,
           createdAt: created_at,
         };
       },

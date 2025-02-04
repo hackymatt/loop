@@ -2,23 +2,24 @@ from typing import List
 from django.db.models import Sum
 from django.template.loader import render_to_string
 from datetime import date, datetime
-from purchase.models import Purchase, Payment
+from purchase.models import Payment
 from config_global import VAT_RATE, VAT_LIMIT, FRONTEND_URL
 from weasyprint import HTML
 import os
 
 
 class Invoice:
-    def __init__(self, purchases: List[Purchase], payment: Payment):
+    def __init__(self, customer, items, payment):
         self.PRODUCT_TYPE = "szt."
         self.PRODUCT_QUANTITY = 1
         self.INVOICE_DIR = "invoices"
-        self.products = purchases
+        self.items = items
         self.payment = payment
         self.date = date.today()
         self.is_vat = self._is_vat()
-        self.invoice_number = self._get_invoice_number(payment.id)
-        self.customer = purchases[0].student
+        self.vat_rate = VAT_RATE if self.is_vat else 0
+        self.invoice_number = self._get_invoice_number(self.payment["id"])
+        self.customer = customer
         self.path = os.path.join(self.INVOICE_DIR, f"{self.invoice_number}.pdf")
 
         self.data = {
@@ -26,45 +27,47 @@ class Invoice:
             "invoice_date": self.date,
             "invoice_number": self.invoice_number,
             "customer": {
-                "full_name": f"{self.customer.profile.user.first_name} {self.customer.profile.user.last_name}",
-                "id": self._format_id(id=self.customer.id),
-                "street": self.customer.profile.street_address,
-                "city": self.customer.profile.city,
-                "zip_code": self.customer.profile.zip_code,
-                "country": self.customer.profile.country,
+                "full_name": self.customer["full_name"],
+                "id": self._format_id(id=self.customer["id"]),
+                "street": self.customer["street_address"],
+                "city": self.customer["city"],
+                "zip_code": self.customer["zip_code"],
+                "country": self.customer["country"],
             },
             "products": [
                 {
-                    "id": self._format_id(id=purchase.lesson.id),
-                    "name": purchase.lesson.title,
+                    "id": self._format_id(id=item["id"]),
+                    "name": item["name"],
                     "type": self.PRODUCT_TYPE,
                     "quantity": self.PRODUCT_QUANTITY,
                     "price_netto": self._format_price(
-                        price=self._calc_net_price(price=purchase.lesson.price)
+                        price=self._calc_net_price(price=item["price"])
                     ),
                     "subtotal_netto": self._format_price(
                         price=self._calc_net_subtotal(
-                            price=purchase.lesson.price, quantity=self.PRODUCT_QUANTITY
+                            price=item["price"], quantity=self.PRODUCT_QUANTITY
                         )
                     ),
-                    "vat_percent": f"{VAT_RATE}%",
+                    "vat_percent": f"{self.vat_rate}%",
                     "vat": self._format_price(
-                        price=self._calc_vat(price=purchase.lesson.price)
+                        price=self._calc_vat(price=item["price"])
                     ),
-                    "price_brutto": self._format_price(price=purchase.lesson.price),
+                    "price_brutto": self._format_price(price=item["price"]),
                     "subtotal_brutto": self._format_price(
-                        price=purchase.lesson.price * self.PRODUCT_QUANTITY
+                        price=item["price"] * self.PRODUCT_QUANTITY
                     ),
                 }
-                for purchase in purchases
+                for item in self.items
             ],
             "total_netto": self._format_price(
-                price=self._calc_net_price(price=payment.amount / 100)
+                price=self._calc_net_price(price=self.payment["amount"])
             ),
             "total_vat": self._format_price(
-                price=self._calc_vat(price=payment.amount / 100)
+                price=self._calc_vat(price=self.payment["amount"])
             ),
-            "total_brutto": self._format_price(price=payment.amount / 100),
+            "total_brutto": self._format_price(price=self.payment["amount"]),
+            "payment_method": self.payment["method"],
+            "payment_status": self.payment["status"],
         }
 
         os.makedirs(self.INVOICE_DIR, mode=0o777, exist_ok=True)
@@ -76,13 +79,13 @@ class Invoice:
         return "{:07d}".format(id)
 
     def _calc_net_price(self, price: float):
-        return float(price) * (1 - VAT_RATE / 100)
+        return float(price) * (1 - self.vat_rate / 100)
 
     def _calc_net_subtotal(self, price: float, quantity: int):
         return self._calc_net_price(price=price) * quantity
 
     def _calc_vat(self, price: float):
-        return float(price) * (VAT_RATE / 100)
+        return float(price) * (self.vat_rate / 100)
 
     def _format_price(self, price: float):
         return "{:,.2f} zł".format(price)
@@ -100,7 +103,7 @@ class Invoice:
             if sales.count() > 0
             else 0
         )
-        return self._calc_net_price(price=total_sales)
+        return total_sales
 
     def _is_vat(self):
         return self._calc_sales() > VAT_LIMIT

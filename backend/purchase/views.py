@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.serializers import ValidationError
 from rest_framework import status
 from rest_framework.response import Response
@@ -11,7 +11,7 @@ from purchase.serializers import (
     PaymentSerializer,
 )
 from purchase.models import Purchase, Payment
-from purchase.filters import PurchaseFilter
+from purchase.filters import PurchaseFilter, PaymentFilter
 from purchase.utils import Invoice
 from profile.models import Profile, StudentProfile
 from profile.models import Profile
@@ -69,7 +69,30 @@ def confirm_purchase(status, purchases, payment: Payment):
     }
 
     attachments = []
-    invoice = Invoice(purchases=purchases, payment=payment)
+
+    customer = {
+        "id": purchase.student.id,
+        "full_name": f"{purchase.student.profile.user.first_name} {purchase.student.profile.user.last_name}",
+        "street_address": purchase.student.profile.street_address,
+        "city": purchase.student.profile.city,
+        "zip_code": purchase.student.profile.zip_code,
+        "country": purchase.student.profile.country,
+    }
+    items = [
+        {
+            "id": purchase.lesson.id,
+            "name": purchase.lesson.title,
+            "price": purchase.lesson.price,
+        }
+        for purchase in purchases
+    ]
+    payment = {
+        "id": payment.id,
+        "amount": payment.amount,
+        "status": "Zapłacono" if payment_successful else "Do zapłaty",
+        "method": "Przelewy24",
+    }
+    invoice = Invoice(customer=customer, items=items, payment=payment)
     if payment_successful:
         invoice_path = invoice.create()
         attachments = [invoice_path]
@@ -105,7 +128,11 @@ class PurchaseViewSet(ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        queryset = self.queryset.filter(student__profile__user=user)
+
+        if not user.is_superuser:
+            queryset = self.queryset.filter(student__profile__user=user)
+        else:
+            queryset = self.queryset
 
         lecturer_id = self.request.query_params.get("lecturer_id", None)
         sort_by = self.request.query_params.get("sort_by", None)
@@ -307,3 +334,11 @@ class PaymentStatusViewSet(ModelViewSet):
         confirm_purchase(status=data["status"], purchases=purchases, payment=payment)
 
         return Response(data)
+
+
+class PaymentViewSet(ModelViewSet):
+    http_method_names = ["get"]
+    queryset = Payment.objects.all().order_by("id")
+    serializer_class = PaymentSerializer
+    filterset_class = PaymentFilter
+    permission_classes = [IsAuthenticated, IsAdminUser]
