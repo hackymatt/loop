@@ -1636,7 +1636,7 @@ class PaymentFilterTest(APITestCase):
         self.assertTrue(dates[0])
 
 
-class PurchaseOrderTest(APITestCase):
+class PaymentOrderTest(APITestCase):
     def setUp(self):
         self.endpoint = "/api/payments"
         self.admin_data = {
