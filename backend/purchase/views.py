@@ -94,7 +94,8 @@ def confirm_purchase(status, purchases, payment: Payment):
         "method": "Przelewy24",
         "account": "",
     }
-    invoice = Invoice(customer=customer, items=items, payment=payment)
+    notes = ""
+    invoice = Invoice(customer=customer, items=items, payment=payment, notes=notes)
     if payment_successful:
         invoice_path = invoice.create()
         attachments = [invoice_path]
@@ -403,6 +404,7 @@ class PaymentInvoiceAPIView(APIView):
                 "customer": customer,
                 "items": items,
                 "payment": payment,
+                "notes": "",
             },
         )
 
@@ -411,6 +413,7 @@ class PaymentInvoiceAPIView(APIView):
         customer = invoice_data["customer"]
         items = invoice_data["items"]
         payment = invoice_data["payment"]
+        notes = invoice_data["notes"]
 
         mailer = Mailer()
         mail_data = {
@@ -421,14 +424,16 @@ class PaymentInvoiceAPIView(APIView):
 
         attachments = []
 
-        invoice = Invoice(customer=customer, items=items, payment=payment)
+        invoice = Invoice(customer=customer, items=items, payment=payment, notes=notes)
         invoice_path = invoice.create()
         attachments = [invoice_path]
+
+        invoice_number = invoice.get_invoice_number(id=payment["id"])
 
         mailer.send(
             email_template="generate_invoice.html",
             to=[CONTACT_EMAIL],
-            subject="Faktura została wygenerowana",
+            subject=f"Faktura {invoice_number} została wygenerowana",
             data=mail_data,
             attachments=attachments,
         )

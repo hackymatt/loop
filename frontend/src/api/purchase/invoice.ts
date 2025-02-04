@@ -36,6 +36,7 @@ type IInvoice = {
   customer: ICustomer;
   items: IItem[];
   payment: IPayment;
+  notes: string;
 };
 
 type ICreateInvoice = IInvoice;
@@ -51,7 +52,7 @@ export const invoiceQuery = (id: string) => {
     try {
       const response = await Api.get<IInvoice>(queryUrl);
       const { data } = response;
-      const { customer, items, payment } = data;
+      const { customer, items, payment, notes } = data;
       const {
         full_name: name,
         street_address: streetAddress,
@@ -63,6 +64,7 @@ export const invoiceQuery = (id: string) => {
         customer: { ...rest, name, streetAddress, zipCode },
         items,
         payment,
+        notes,
       };
     } catch (error) {
       if (error.response && (error.response.status === 400 || error.response.status === 404)) {

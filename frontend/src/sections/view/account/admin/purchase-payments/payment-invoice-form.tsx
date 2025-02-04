@@ -79,6 +79,7 @@ export default function PaymentInvoiceForm({ payment, onClose, ...other }: Props
           status: status as IInvoicePaymentStatus,
           method: method as IInvoicePaymentMethod,
         },
+        notes: data?.notes ?? "",
       });
       reset();
       onClose();

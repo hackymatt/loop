@@ -1,4 +1,4 @@
-import { Control, useFieldArray } from "react-hook-form";
+import { Control, useController, useFieldArray } from "react-hook-form";
 
 import { Stack, Button, InputAdornment } from "@mui/material";
 
@@ -9,6 +9,9 @@ export const useInvoiceFields = (control: Control<any>) => {
     control,
     name: "items", // This refers to the `items` array in your form data
   });
+  const {
+    field: { value: paymentMethod },
+  } = useController({ name: "payment.method", control });
 
   const invoiceFields: { [key: string]: JSX.Element } = {
     customer: (
@@ -73,7 +76,7 @@ export const useInvoiceFields = (control: Control<any>) => {
     ),
     payment: (
       <>
-        <RHFTextField key="payment-id" name="payment.id" label="ID" type="text" required />
+        <RHFTextField key="payment-id" name="payment.id" label="ID" type="text" disabled />
         <RHFTextField
           key="payment-amount"
           name="payment.amount"
@@ -83,12 +86,7 @@ export const useInvoiceFields = (control: Control<any>) => {
             inputProps: { min: 0, step: ".01" },
             endAdornment: <InputAdornment position="end">zł</InputAdornment>,
           }}
-        />
-        <RHFTextField
-          key="payment-account"
-          name="payment.account"
-          label="Numer Konta"
-          type="text"
+          disabled
         />
         <RHFAutocomplete
           key="payment-status"
@@ -96,6 +94,7 @@ export const useInvoiceFields = (control: Control<any>) => {
           label="Status"
           options={["Zapłacono", "Do zapłaty"]}
           isOptionEqualToValue={(option, value) => option === value}
+          disabled
         />
         <RHFAutocomplete
           key="payment-method"
@@ -103,9 +102,20 @@ export const useInvoiceFields = (control: Control<any>) => {
           label="Metoda"
           options={["Przelewy24", "Przelew"]}
           isOptionEqualToValue={(option, value) => option === value}
+          disabled
         />
+        {paymentMethod === "Przelew" && (
+          <RHFTextField
+            key="payment-account"
+            name="payment.account"
+            label="Numer Konta"
+            type="text"
+            disabled
+          />
+        )}
       </>
     ),
+    notes: <RHFTextField key="notes" name="notes" label="Uwagi" multiline rows={3} />,
   };
 
   return { fields: invoiceFields };

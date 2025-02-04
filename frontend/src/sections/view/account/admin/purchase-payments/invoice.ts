@@ -25,6 +25,7 @@ export const defaultValues = {
     method: "Przelew" as IInvoicePaymentMethod,
     account: "",
   },
+  notes: "",
 };
 
 export const steps = [
@@ -34,6 +35,7 @@ export const steps = [
   },
   { label: "Uzupełnij dane przedmiotów", fields: ["items"] },
   { label: "Uzupełnij dane płatności", fields: ["payment"] },
+  { label: "Uzupełnij uwagi", fields: ["notes"] },
 ];
 
 export const schema = Yup.object().shape({
@@ -62,6 +64,7 @@ export const schema = Yup.object().shape({
     method: Yup.string()
       .oneOf(["Przelewy24", "Przelew"])
       .required("Metoda płatności jest wymagana"),
-    account: Yup.string().required("Numer konta jest wymagany"),
+    account: Yup.string(),
   }),
+  notes: Yup.string(),
 });

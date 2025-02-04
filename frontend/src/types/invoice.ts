@@ -28,4 +28,5 @@ export type IInvoiceProp = {
   customer: ICustomer;
   items: IItem[];
   payment: IPayment;
+  notes: string;
 };
