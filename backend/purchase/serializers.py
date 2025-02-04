@@ -192,25 +192,19 @@ class PaymentSerializer(ModelSerializer):
 
     class Meta:
         model = Payment
-        exclude = (
-            "modified_at",
-        )
+        exclude = ("modified_at",)
 
     def create(self, validated_data):
         status = validated_data.pop("get_status_display")
 
-        payment = Payment.objects.create(
-            status=status, **validated_data
-        )
+        payment = Payment.objects.create(status=status, **validated_data)
 
         return payment
 
     def update(self, instance: Payment, validated_data):
         status = validated_data.pop("get_status_display")
 
-        Payment.objects.filter(pk=instance.pk).update(
-            status=status, **validated_data
-        )
+        Payment.objects.filter(pk=instance.pk).update(status=status, **validated_data)
 
         instance.refresh_from_db()
 
