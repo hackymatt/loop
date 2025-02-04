@@ -184,7 +184,7 @@ class InvoiceTest(TestCase):
                 "items": [],
                 "payment": {
                     "id": self.payment_2.id,
-                    "amount": self.payment_2.amount,
+                    "amount": self.payment_2.amount / 100,
                     "status": "Do zapłaty",
                     "method": "Przelew",
                     "account": "PL 59 1160 2202 0000 0006 2440 0188",
