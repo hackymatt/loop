@@ -183,8 +183,8 @@ class InvoiceTest(TestCase):
                 },
                 "items": [],
                 "payment": {
-                    "id": 12,
-                    "amount": 10000.0,
+                    "id": self.payment_2.id,
+                    "amount": self.payment_2.amount,
                     "status": "Do zapłaty",
                     "method": "Przelew",
                     "account": "PL 59 1160 2202 0000 0006 2440 0188",
