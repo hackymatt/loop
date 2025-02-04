@@ -46,6 +46,7 @@ export type IPurchaseError = { lessons: { lesson: string }[]; coupon: string };
 
 export type IPaymentItemProp = {
   id: string;
+  sessionId: string;
   amount: number;
   status: IPaymentStatus;
   createdAt: Date;

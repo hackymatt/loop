@@ -19,6 +19,7 @@ from teaching.models import Teaching
 from cart.models import Cart
 from wishlist.models import Wishlist
 from post.models import Post, PostCategory
+from purchase.models import Payment
 import uuid
 
 
@@ -290,6 +291,10 @@ def posts_number():
 
 def get_post(id: int):
     return Post.objects.get(id=id)
+
+
+def payments_number():
+    return Payment.objects.count()
 
 
 def mock_send_message(mock):
