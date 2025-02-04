@@ -68,6 +68,7 @@ class Invoice:
             "total_brutto": self._format_price(price=self.payment["amount"]),
             "payment_method": self.payment["method"],
             "payment_status": self.payment["status"],
+            "payment_account": self.payment["account"],
         }
 
         os.makedirs(self.INVOICE_DIR, mode=0o777, exist_ok=True)

@@ -24,6 +24,7 @@ import json
 from mailer.mailer import Mailer
 from notification.utils import notify
 from math import floor
+from config_global import CONTACT_EMAIL
 
 
 def confirm_purchase(status, purchases, payment: Payment):
@@ -88,9 +89,10 @@ def confirm_purchase(status, purchases, payment: Payment):
     ]
     payment = {
         "id": payment.id,
-        "amount": payment.amount,
+        "amount": payment.amount / 100,
         "status": "Zapłacono" if payment_successful else "Do zapłaty",
         "method": "Przelewy24",
+        "account": "",
     }
     invoice = Invoice(customer=customer, items=items, payment=payment)
     if payment_successful:
@@ -342,3 +344,95 @@ class PaymentViewSet(ModelViewSet):
     serializer_class = PaymentSerializer
     filterset_class = PaymentFilter
     permission_classes = [IsAuthenticated, IsAdminUser]
+
+
+class PaymentInvoiceAPIView(APIView):
+    http_method_names = ["get", "post"]
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def get(self, request, id):
+        payment_obj = Payment.objects.get(id=id)
+        purchases = Purchase.objects.filter(payment=payment_obj)
+
+        if purchases.exists():
+            purchase = purchases.first()
+            customer = {
+                "id": purchase.student.id,
+                "full_name": f"{purchase.student.profile.user.first_name} {purchase.student.profile.user.last_name}",
+                "street_address": purchase.student.profile.street_address,
+                "city": purchase.student.profile.city,
+                "zip_code": purchase.student.profile.zip_code,
+                "country": purchase.student.profile.country,
+            }
+            items = [
+                {
+                    "id": purchase.lesson.id,
+                    "name": purchase.lesson.title,
+                    "price": purchase.lesson.price,
+                }
+                for purchase in purchases
+            ]
+            payment = {
+                "id": payment_obj.id,
+                "amount": payment_obj.amount / 100,
+                "status": "Zapłacono" if payment_obj.status == "S" else "Do zapłaty",
+                "method": "Przelewy24",
+                "account": "",
+            }
+        else:
+            customer = {
+                "id": "",
+                "full_name": "",
+                "street_address": "",
+                "city": "",
+                "zip_code": "",
+                "country": "",
+            }
+            items = []
+            payment = {
+                "id": payment_obj.id,
+                "amount": payment_obj.amount / 100,
+                "status": "Zapłacono" if payment_obj.status == "S" else "Do zapłaty",
+                "method": "Przelew",
+                "account": "PL 59 1160 2202 0000 0006 2440 0188",
+            }
+
+        return JsonResponse(
+            status=status.HTTP_200_OK,
+            data={
+                "customer": customer,
+                "items": items,
+                "payment": payment,
+            },
+        )
+
+    def post(self, request):
+        invoice_data = request.data
+        customer = invoice_data["customer"]
+        items = invoice_data["items"]
+        payment = invoice_data["payment"]
+
+        mailer = Mailer()
+        mail_data = {
+            **{
+                "customer_full_name": customer["full_name"],
+            }
+        }
+
+        attachments = []
+
+        invoice = Invoice(customer=customer, items=items, payment=payment)
+        invoice_path = invoice.create()
+        attachments = [invoice_path]
+
+        mailer.send(
+            email_template="generate_invoice.html",
+            to=[CONTACT_EMAIL],
+            subject="Faktura została wygenerowana",
+            data=mail_data,
+            attachments=attachments,
+        )
+
+        invoice.remove()
+
+        return Response(status=status.HTTP_200_OK, data=invoice_data)
