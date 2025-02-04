@@ -9,16 +9,17 @@ import os
 
 
 class Invoice:
-    def __init__(self, customer, items, payment):
+    def __init__(self, customer, items, payment, notes):
         self.PRODUCT_TYPE = "szt."
         self.PRODUCT_QUANTITY = 1
         self.INVOICE_DIR = "invoices"
         self.items = items
         self.payment = payment
+        self.notes = notes
         self.date = date.today()
         self.is_vat = self._is_vat()
         self.vat_rate = VAT_RATE if self.is_vat else 0
-        self.invoice_number = self._get_invoice_number(self.payment["id"])
+        self.invoice_number = self.get_invoice_number(self.payment["id"])
         self.customer = customer
         self.path = os.path.join(self.INVOICE_DIR, f"{self.invoice_number}.pdf")
 
@@ -68,11 +69,13 @@ class Invoice:
             "total_brutto": self._format_price(price=self.payment["amount"]),
             "payment_method": self.payment["method"],
             "payment_status": self.payment["status"],
+            "payment_account": self.payment["account"],
+            "notes": self.notes,
         }
 
         os.makedirs(self.INVOICE_DIR, mode=0o777, exist_ok=True)
 
-    def _get_invoice_number(self, id: int):
+    def get_invoice_number(self, id: int):
         return "LOOPINV{:07d}".format(id)
 
     def _format_id(self, id: int):

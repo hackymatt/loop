@@ -264,7 +264,7 @@
       }
 
       .h-12 {
-        height: 3rem;
+        height: 1.5rem;
       }
 
       .w-1\/2 {
@@ -389,7 +389,7 @@
       }
 
       .text-xs {
-        font-size: 0.75rem;
+        font-size: 0.575rem;
         line-height: 1rem;
       }
 
@@ -445,14 +445,14 @@
           <table class="w-full border-collapse border-spacing-0">
             <tbody>
               <tr>
-                <td class="w-full align-top">
+                <td class="w-full align-center">
                   <div>
                     <img src="{{website_url}}/logo/logo.svg" class="h-12" />
                   </div>
                 </td>
 
                 <td class="align-top">
-                  <div class="text-sm">
+                  <div class="text-xs">
                     <table class="border-collapse border-spacing-0">
                       <tbody>
                         <tr>
@@ -494,12 +494,12 @@
           </table>
         </div>
 
-        <div class="bg-slate-100 px-14 py-6 text-sm">
+        <div class="bg-slate-100 px-14 py-6 text-xs">
           <table class="w-full border-collapse border-spacing-0">
             <tbody>
               <tr>
                 <td class="w-1/2 align-top">
-                  <div class="text-sm text-neutral-600">
+                  <div class="text-xs text-neutral-600">
                     <p class="font-bold">"loop" Mateusz Szczepek</p>
                     <p>NIP: 6861677925</p>
                     <p>VAT UE: PL6861677925</p>
@@ -509,7 +509,7 @@
                   </div>
                 </td>
                 <td class="w-1/2 align-top text-right">
-                  <div class="text-sm text-neutral-600">
+                  <div class="text-xs text-neutral-600">
                     <p class="font-bold">{{ customer.full_name }}</p>
                     <p class="whitespace-nowrap">
                       Numer klienta: {{ customer.id }}
@@ -528,14 +528,14 @@
           </table>
         </div>
 
-        <div class="px-14 py-10 text-sm text-neutral-700">
+        <div class="px-14 py-10 text-xs text-neutral-700">
           <table class="w-full border-collapse border-spacing-0">
-            <thead>
+            <thead class="align-top">
               <tr>
                 <td
                   class="border-b-2 border-main pb-3 pl-3 font-bold text-main whitespace-nowrap"
                 >
-                  L. p.
+                  L.p.
                 </td>
                 <td
                   class="border-b-2 border-main pb-3 pl-2 font-bold text-main"
@@ -550,7 +550,7 @@
                 <td
                   class="border-b-2 border-main pb-3 pl-2 text-center font-bold text-main whitespace-nowrap"
                 >
-                  J. m.
+                  J.m.
                 </td>
                 <td
                   class="border-b-2 border-main pb-3 pl-2 text-center font-bold text-main"
@@ -601,20 +601,22 @@
                 <td class="border-b py-3 pl-2 text-center">
                   {{ product.quantity }}
                 </td>
-                <td class="border-b py-3 pl-2 text-right">
+                <td class="border-b py-3 pl-2 text-right whitespace-nowrap">
                   {{ product.price_netto }}
                 </td>
-                <td class="border-b py-3 pl-2 text-right">
+                <td class="border-b py-3 pl-2 text-right whitespace-nowrap">
                   {{ product.subtotal_netto }}
                 </td>
                 <td class="border-b py-3 pl-2 text-center">
                   {{ product.vat_percent }}
                 </td>
-                <td class="border-b py-3 pl-2 text-right">{{ product.vat }}</td>
-                <td class="border-b py-3 pl-2 text-right">
+                <td class="border-b py-3 pl-2 text-right whitespace-nowrap">
+                  {{ product.vat }}
+                </td>
+                <td class="border-b py-3 pl-2 text-right whitespace-nowrap">
                   {{product.price_brutto }}
                 </td>
-                <td class="border-b py-3 pl-2 text-right">
+                <td class="border-b py-3 pl-2 text-right whitespace-nowrap">
                   {{product.subtotal_brutto }}
                 </td>
               </tr>
@@ -687,13 +689,16 @@
           </table>
         </div>
 
-        <div class="px-14 text-sm text-neutral-700">
+        <div class="px-14 text-xs text-neutral-700">
           <p class="text-main font-bold">Szczegóły płatności</p>
           <p>Forma płatności: {{ payment_method }}</p>
+          {% if payment_method != "Przelewy24" %}
+          <p>Nr konta: {{ payment_account }}</p>
+          {% endif %}
           <p>Status płatności: {{ payment_status}}</p>
         </div>
 
-        <div class="px-14 py-10 text-sm text-neutral-700">
+        <div class="px-14 py-10 text-xs text-neutral-700">
           <p class="text-main font-bold">Uwagi:</p>
           {% if not vat %}
           <p class="italic">
@@ -701,6 +706,7 @@
             podstawie art. 113 ust. 1 i 9 ustawy o VAT.
           </p>
           {% endif %}
+          <p class="italic">{{ notes }}</p>
         </div>
 
         <footer

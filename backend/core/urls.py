@@ -56,6 +56,7 @@ from purchase.views import (
     PaymentViewSet,
     PaymentVerifyAPIView,
     PaymentStatusViewSet,
+    PaymentInvoiceAPIView,
 )
 from teaching.views import ManageTeachingViewSet, TeachingViewSet
 from reservation.views import ReservationViewSet
@@ -158,6 +159,14 @@ api_urlpatterns = [
     path(
         "payment-status",
         PaymentStatusViewSet.as_view({"get": "list"}),
+    ),
+    path(
+        "invoice/<str:id>",
+        PaymentInvoiceAPIView.as_view(),
+    ),
+    path(
+        "invoice",
+        PaymentInvoiceAPIView.as_view(),
     ),
     path("contact", ContactAPIView.as_view()),
     path(

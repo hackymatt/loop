@@ -3,7 +3,7 @@ import { useMemo, useCallback } from "react";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import InputBase from "@mui/material/InputBase";
-import { Popover, MenuItem, Typography, IconButton } from "@mui/material";
+import { Popover, Divider, MenuItem, Typography, IconButton } from "@mui/material";
 
 import { usePopover } from "src/hooks/use-popover";
 
@@ -21,15 +21,21 @@ import { IPaymentItemProp } from "src/types/purchase";
 type Props = {
   row: IPaymentItemProp;
   onEdit: (payment: IPaymentItemProp) => void;
+  onInvoice: (payment: IPaymentItemProp) => void;
 };
 
-export default function AccountPaymentsTableRow({ row, onEdit }: Props) {
+export default function AccountPaymentsTableRow({ row, onEdit, onInvoice }: Props) {
   const openOptions = usePopover();
 
   const handleEdit = useCallback(() => {
     openOptions.onClose();
     onEdit(row);
   }, [openOptions, onEdit, row]);
+
+  const handleInvoice = useCallback(() => {
+    openOptions.onClose();
+    onInvoice(row);
+  }, [openOptions, onInvoice, row]);
 
   const isSuccess = useMemo(() => row.status === PaymentStatus.SUCCESS, [row.status]);
   const isFailure = useMemo(() => row.status === PaymentStatus.FAILURE, [row.status]);
@@ -80,6 +86,13 @@ export default function AccountPaymentsTableRow({ row, onEdit }: Props) {
         <MenuItem onClick={handleEdit} sx={{ mr: 1, width: "100%" }}>
           <Iconify icon="carbon:edit" sx={{ mr: 0.5 }} />
           <Typography variant="body2">Edytuj płatność</Typography>
+        </MenuItem>
+
+        <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
+
+        <MenuItem onClick={handleInvoice} sx={{ mr: 1, width: "100%" }}>
+          <Iconify icon="carbon:document-signed" sx={{ mr: 0.5 }} />
+          <Typography variant="body2">Wygeneruj fakturę</Typography>
         </MenuItem>
       </Popover>
     </>

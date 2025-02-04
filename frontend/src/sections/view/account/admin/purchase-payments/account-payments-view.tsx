@@ -35,6 +35,7 @@ import { IQueryParamValue } from "src/types/query-params";
 
 import PaymentNewForm from "./payment-new-form";
 import PaymentEditForm from "./payment-edit-form";
+import PaymentInvoiceForm from "./payment-invoice-form";
 import FilterSearch from "../../../../filters/filter-search";
 import AccountTableHead from "../../../../account/account-table-head";
 
@@ -62,6 +63,7 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, { label: "Wszystkie", value: -1 }];
 export default function AccountPaymentPage() {
   const newPaymentFormOpen = useBoolean();
   const editPaymentFormOpen = useBoolean();
+  const invoicePaymentFormOpen = useBoolean();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
@@ -77,6 +79,7 @@ export default function AccountPaymentPage() {
   const tab = filters?.status ? filters.status : "";
 
   const [editedPayment, setEditedPayment] = useState<IPaymentItemProp>();
+  const [invoicePayment, setInvoicePayment] = useState<IPaymentItemProp>();
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -125,6 +128,14 @@ export default function AccountPaymentPage() {
       editPaymentFormOpen.onToggle();
     },
     [editPaymentFormOpen],
+  );
+
+  const handleInvoicePayment = useCallback(
+    (payment: IPaymentItemProp) => {
+      setInvoicePayment(payment);
+      invoicePaymentFormOpen.onToggle();
+    },
+    [invoicePaymentFormOpen],
   );
 
   return (
@@ -220,7 +231,12 @@ export default function AccountPaymentPage() {
             {lessons && (
               <TableBody>
                 {lessons.map((row) => (
-                  <AccountPaymentsTableRow key={row.id} row={row} onEdit={handleEditPayment} />
+                  <AccountPaymentsTableRow
+                    key={row.id}
+                    row={row}
+                    onEdit={handleEditPayment}
+                    onInvoice={handleInvoicePayment}
+                  />
                 ))}
               </TableBody>
             )}
@@ -248,6 +264,13 @@ export default function AccountPaymentPage() {
           payment={editedPayment}
           open={editPaymentFormOpen.value}
           onClose={editPaymentFormOpen.onFalse}
+        />
+      )}
+      {invoicePayment && (
+        <PaymentInvoiceForm
+          payment={invoicePayment}
+          open={invoicePaymentFormOpen.value}
+          onClose={invoicePaymentFormOpen.onFalse}
         />
       )}
     </>
