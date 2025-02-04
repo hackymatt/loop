@@ -337,7 +337,7 @@ class PaymentStatusViewSet(ModelViewSet):
 
 
 class PaymentViewSet(ModelViewSet):
-    http_method_names = ["get"]
+    http_method_names = ["get", "post", "put"]
     queryset = Payment.objects.all().order_by("id")
     serializer_class = PaymentSerializer
     filterset_class = PaymentFilter

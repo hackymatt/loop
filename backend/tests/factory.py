@@ -319,6 +319,10 @@ def create_payment(amount: int, status: str = "S"):
     return Payment.objects.create(amount=float(amount) * 100, status=status)
 
 
+def create_payment_obj(amount: int, status: str = "Success"):
+    return {"amount": amount, "status": status}
+
+
 def create_purchase(
     lesson: Lesson,
     student: Profile,

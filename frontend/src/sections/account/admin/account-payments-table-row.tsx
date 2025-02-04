@@ -1,13 +1,17 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import InputBase from "@mui/material/InputBase";
+import { Popover, MenuItem, Typography, IconButton } from "@mui/material";
+
+import { usePopover } from "src/hooks/use-popover";
 
 import { fDate } from "src/utils/format-time";
 import { fCurrency } from "src/utils/format-number";
 
 import Label from "src/components/label";
+import Iconify from "src/components/iconify";
 
 import { PaymentStatus } from "src/types/payment";
 import { IPaymentItemProp } from "src/types/purchase";
@@ -16,34 +20,68 @@ import { IPaymentItemProp } from "src/types/purchase";
 
 type Props = {
   row: IPaymentItemProp;
+  onEdit: (payment: IPaymentItemProp) => void;
 };
 
-export default function AccountPaymentsTableRow({ row }: Props) {
+export default function AccountPaymentsTableRow({ row, onEdit }: Props) {
+  const openOptions = usePopover();
+
+  const handleEdit = useCallback(() => {
+    openOptions.onClose();
+    onEdit(row);
+  }, [openOptions, onEdit, row]);
+
   const isSuccess = useMemo(() => row.status === PaymentStatus.SUCCESS, [row.status]);
   const isFailure = useMemo(() => row.status === PaymentStatus.FAILURE, [row.status]);
 
   return (
-    <TableRow hover>
-      <TableCell>
-        <InputBase value={row.id} />
-      </TableCell>
+    <>
+      <TableRow hover>
+        <TableCell>
+          <InputBase value={row.sessionId} />
+        </TableCell>
 
-      <TableCell>
-        <InputBase value={fCurrency(row.amount ?? 0)} />
-      </TableCell>
+        <TableCell>
+          <InputBase value={fCurrency(row.amount ?? 0)} />
+        </TableCell>
 
-      <TableCell>
-        <Label
-          sx={{ textTransform: "uppercase" }}
-          color={(isSuccess && "success") || (isFailure && "error") || "default"}
-        >
-          {row.status}
-        </Label>
-      </TableCell>
+        <TableCell>
+          <Label
+            sx={{ textTransform: "uppercase" }}
+            color={(isSuccess && "success") || (isFailure && "error") || "default"}
+          >
+            {row.status}
+          </Label>
+        </TableCell>
 
-      <TableCell>
-        <InputBase value={fDate(row.createdAt)} />
-      </TableCell>
-    </TableRow>
+        <TableCell>
+          <InputBase value={fDate(row.createdAt)} />
+        </TableCell>
+
+        <TableCell align="right" padding="none">
+          <IconButton onClick={openOptions.onOpen}>
+            <Iconify icon="carbon:overflow-menu-vertical" />
+          </IconButton>
+        </TableCell>
+      </TableRow>
+
+      <Popover
+        open={openOptions.open}
+        anchorEl={openOptions.anchorEl}
+        onClose={openOptions.onClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        slotProps={{
+          paper: {
+            sx: { width: "fit-content" },
+          },
+        }}
+      >
+        <MenuItem onClick={handleEdit} sx={{ mr: 1, width: "100%" }}>
+          <Iconify icon="carbon:edit" sx={{ mr: 0.5 }} />
+          <Typography variant="body2">Edytuj płatność</Typography>
+        </MenuItem>
+      </Popover>
+    </>
   );
 }
