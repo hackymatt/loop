@@ -530,12 +530,12 @@
 
         <div class="px-14 py-10 text-xs text-neutral-700">
           <table class="w-full border-collapse border-spacing-0">
-            <thead>
+            <thead class="align-top">
               <tr>
                 <td
                   class="border-b-2 border-main pb-3 pl-3 font-bold text-main whitespace-nowrap"
                 >
-                  L. p.
+                  L.p.
                 </td>
                 <td
                   class="border-b-2 border-main pb-3 pl-2 font-bold text-main"
@@ -550,7 +550,7 @@
                 <td
                   class="border-b-2 border-main pb-3 pl-2 text-center font-bold text-main whitespace-nowrap"
                 >
-                  J. m.
+                  J.m.
                 </td>
                 <td
                   class="border-b-2 border-main pb-3 pl-2 text-center font-bold text-main"
@@ -601,20 +601,22 @@
                 <td class="border-b py-3 pl-2 text-center">
                   {{ product.quantity }}
                 </td>
-                <td class="border-b py-3 pl-2 text-right">
+                <td class="border-b py-3 pl-2 text-right whitespace-nowrap">
                   {{ product.price_netto }}
                 </td>
-                <td class="border-b py-3 pl-2 text-right">
+                <td class="border-b py-3 pl-2 text-right whitespace-nowrap">
                   {{ product.subtotal_netto }}
                 </td>
                 <td class="border-b py-3 pl-2 text-center">
                   {{ product.vat_percent }}
                 </td>
-                <td class="border-b py-3 pl-2 text-right">{{ product.vat }}</td>
-                <td class="border-b py-3 pl-2 text-right">
+                <td class="border-b py-3 pl-2 text-right whitespace-nowrap">
+                  {{ product.vat }}
+                </td>
+                <td class="border-b py-3 pl-2 text-right whitespace-nowrap">
                   {{product.price_brutto }}
                 </td>
-                <td class="border-b py-3 pl-2 text-right">
+                <td class="border-b py-3 pl-2 text-right whitespace-nowrap">
                   {{product.subtotal_brutto }}
                 </td>
               </tr>
