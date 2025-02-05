@@ -70,7 +70,7 @@ export default function PaymentInvoiceForm({ payment, onClose, ...other }: Props
         zipCode: zip_code,
         ...customerData
       } = data.customer;
-      const { status, method, ...paymentData } = data.payment;
+      const { status, method, account, ...paymentData } = data.payment;
       await createInvoice({
         ...data,
         customer: { ...customerData, full_name, street_address, zip_code },
@@ -78,6 +78,7 @@ export default function PaymentInvoiceForm({ payment, onClose, ...other }: Props
           ...paymentData,
           status: status as IInvoicePaymentStatus,
           method: method as IInvoicePaymentMethod,
+          account: account ?? "",
         },
         notes: data?.notes ?? "",
       });
