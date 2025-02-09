@@ -12,13 +12,11 @@ from .factory import (
     create_purchase,
     create_payment,
 )
-from .helpers import (
-    login,
-    mock_send_message,
-)
+from .helpers import login, mock_send_message, mock_upload_invoice
 import json
 from django.contrib import auth
 from utils.google.gmail import GmailApi
+from purchase.utils import Invoice
 
 
 class InvoiceTest(TestCase):
@@ -213,9 +211,13 @@ class InvoiceTest(TestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    @patch.object(Invoice, "upload")
     @patch.object(GmailApi, "_send_message")
-    def test_create_invoice_authorized_admin(self, _send_message_mock):
+    def test_create_invoice_authorized_admin_1(
+        self, _send_message_mock, upload_invoice_mock
+    ):
         mock_send_message(mock=_send_message_mock)
+        mock_upload_invoice(mock=upload_invoice_mock)
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -225,9 +227,13 @@ class InvoiceTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(_send_message_mock.call_count, 1)
 
+    @patch.object(Invoice, "upload")
     @patch.object(GmailApi, "_send_message")
-    def test_create_invoice_authorized_admin(self, _send_message_mock):
+    def test_create_invoice_authorized_admin_2(
+        self, _send_message_mock, upload_invoice_mock
+    ):
         mock_send_message(mock=_send_message_mock)
+        mock_upload_invoice(mock=upload_invoice_mock)
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)

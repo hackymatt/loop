@@ -3,9 +3,11 @@ from django.db.models import Sum
 from django.template.loader import render_to_string
 from datetime import date, datetime
 from purchase.models import Payment
-from config_global import VAT_RATE, VAT_LIMIT, FRONTEND_URL
+from config_global import VAT_RATE, VAT_LIMIT, FRONTEND_URL, IS_LOCAL, STORAGES
 from weasyprint import HTML
 import os
+from django.core.files.storage import get_storage_class
+from utils.logger.logger import logger
 
 
 class Invoice:
@@ -21,7 +23,8 @@ class Invoice:
         self.vat_rate = VAT_RATE if self.is_vat else 0
         self.invoice_number = self.get_invoice_number(self.payment["id"])
         self.customer = customer
-        self.path = os.path.join(self.INVOICE_DIR, f"{self.invoice_number}.pdf")
+        self.filename = f"{self.invoice_number}.pdf"
+        self.path = os.path.join(self.INVOICE_DIR, self.filename)
 
         self.data = {
             "vat": self.is_vat,
@@ -91,11 +94,11 @@ class Invoice:
         return float(price) * (self.vat_rate / 100)
 
     def _format_number(self, number: float):
-        return "{:,.2f}".format(number)
+        return f"{float(number):,.2f}"
 
     def _format_price(self, price: float):
         currency = self.payment["currency"]
-        return f"{price:,.2f} {currency}"
+        return f"{float(price):,.2f} {currency}"
 
     def _calc_sales(self):
         current_year = datetime.now().year
@@ -130,6 +133,22 @@ class Invoice:
         HTML(string=html_content).write_pdf(self.path)
 
         return self.path
+
+    def upload(self):
+        if not IS_LOCAL:
+            logger.warning("Invoice upload has been skipped", exc_info=True)
+            return None
+
+        bucket_name = datetime.today().strftime("%Y%m%d")
+        invoices_storage_config = STORAGES.get("invoices", {})
+        storage_class = get_storage_class(invoices_storage_config["BACKEND"])
+        storage = storage_class(**invoices_storage_config["OPTIONS"])
+        location = f"{bucket_name}/{self.filename}"
+
+        with open(self.path, "rb") as f:
+            file_path = storage.save(location, f)
+
+        return storage.url(file_path)
 
     def remove(self):
         os.remove(self.path)

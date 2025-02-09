@@ -29,6 +29,7 @@ from .helpers import (
     login,
     mock_register_payment,
     mock_send_message,
+    mock_upload_invoice,
     notifications_number,
     is_float,
 )
@@ -40,6 +41,7 @@ from config_global import CANCELLATION_TIME
 import uuid
 from utils.przelewy24.payment import Przelewy24Api
 from utils.google.gmail import GmailApi
+from purchase.utils import Invoice
 
 
 class PurchaseTest(TestCase):
@@ -499,9 +501,13 @@ class PurchaseTest(TestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    @patch.object(Invoice, "upload")
     @patch.object(GmailApi, "_send_message")
-    def test_create_purchase_4_authenticated(self, _send_message_mock):
+    def test_create_purchase_4_authenticated(
+        self, _send_message_mock, upload_invoice_mock
+    ):
         mock_send_message(mock=_send_message_mock)
+        mock_upload_invoice(mock=upload_invoice_mock)
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
