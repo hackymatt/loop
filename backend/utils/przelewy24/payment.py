@@ -17,7 +17,7 @@ import hashlib
 
 
 class Przelewy24Api:
-    def __init__(self, payment) -> None:
+    def __init__(self, payment: Payment) -> None:
         self.register_url = f"{PAYMENT_SERVER}/api/v1/transaction/register"
         self.verify_url = f"{PAYMENT_SERVER}/api/v1/transaction/verify"
 
@@ -38,7 +38,7 @@ class Przelewy24Api:
             "sessionId": str(self.payment.session_id),
             "merchantId": int(PAYMENT_MERCHANT_ID),
             "amount": int(self.payment.amount),
-            "currency": "PLN",
+            "currency": self.payment.currency,
             "crc": PAYMENT_CRC,
         }
         return self._create_sign(data=data)
@@ -48,7 +48,7 @@ class Przelewy24Api:
             "sessionId": str(self.payment.session_id),
             "orderId": int(self.payment.order_id),
             "amount": int(self.payment.amount),
-            "currency": "PLN",
+            "currency": self.payment.currency,
             "crc": PAYMENT_CRC,
         }
         return self._create_sign(data=data)
@@ -59,7 +59,7 @@ class Przelewy24Api:
             "posId": PAYMENT_STORE_ID,
             "sessionId": str(self.payment.session_id),
             "amount": int(self.payment.amount),
-            "currency": "PLN",
+            "currency": self.payment.currency,
             "description": ", ".join([purchase.lesson.title for purchase in purchases]),
             "email": client.user.email,
             "client": f"{client.user.first_name} {client.user.last_name}",
@@ -101,7 +101,7 @@ class Przelewy24Api:
             "posId": PAYMENT_STORE_ID,
             "sessionId": str(self.payment.session_id),
             "amount": int(self.payment.amount),
-            "currency": "PLN",
+            "currency": self.payment.currency,
             "orderId": int(self.payment.order_id),
             "sign": self._create_verify_sign(),
         }

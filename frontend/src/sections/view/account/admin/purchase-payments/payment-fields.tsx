@@ -18,6 +18,15 @@ export const usePaymentFields = () => {
         }}
       />
     ),
+    currency: (
+      <RHFAutocomplete
+        key="currency"
+        name="currency"
+        label="Waluta"
+        options={["PLN", "EUR", "USD"]}
+        isOptionEqualToValue={(option, value) => option === value}
+      />
+    ),
     status: (
       <RHFAutocomplete
         key="status"

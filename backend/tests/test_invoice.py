@@ -95,6 +95,7 @@ class InvoiceTest(TestCase):
             "payment": {
                 "id": self.payment_1.id,
                 "amount": self.payment_1.amount / 100,
+                "currency": self.payment_1.currency,
                 "status": "Zapłacono" if self.payment_1.status == "S" else "Do zapłaty",
                 "method": "Przelewy24",
                 "account": "",
@@ -130,6 +131,7 @@ class InvoiceTest(TestCase):
             "payment": {
                 "id": self.payment_2.id,
                 "amount": self.payment_2.amount / 100,
+                "currency": self.payment_2.currency,
                 "status": "Zapłacono" if self.payment_2.status == "S" else "Do zapłaty",
                 "method": "Przelew",
                 "account": "123456",
@@ -185,6 +187,7 @@ class InvoiceTest(TestCase):
                 "payment": {
                     "id": self.payment_2.id,
                     "amount": self.payment_2.amount / 100,
+                    "currency": self.payment_2.currency,
                     "status": "Do zapłaty",
                     "method": "Przelew",
                     "account": "PL 59 1160 2202 0000 0006 2440 0188",

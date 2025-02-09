@@ -48,7 +48,7 @@ export default function AccountPaymentsTableRow({ row, onEdit, onInvoice }: Prop
         </TableCell>
 
         <TableCell>
-          <InputBase value={fCurrency(row.amount ?? 0)} />
+          <InputBase value={fCurrency(row.amount ?? 0, row.currency ?? "PLN")} />
         </TableCell>
 
         <TableCell>

@@ -27,6 +27,7 @@ type IItem = {
 type IPayment = {
   id: number;
   amount: number;
+  currency: "PLN" | "USD" | "EUR";
   status: "Zapłacono" | "Do zapłaty";
   method: "Przelewy24" | "Przelew";
   account: string;

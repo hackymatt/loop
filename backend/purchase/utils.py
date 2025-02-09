@@ -41,21 +41,21 @@ class Invoice:
                     "name": item["name"],
                     "type": self.PRODUCT_TYPE,
                     "quantity": self.PRODUCT_QUANTITY,
-                    "price_netto": self._format_price(
-                        price=self._calc_net_price(price=item["price"])
+                    "price_netto": self._format_number(
+                        number=self._calc_net_price(price=item["price"])
                     ),
-                    "subtotal_netto": self._format_price(
-                        price=self._calc_net_subtotal(
+                    "subtotal_netto": self._format_number(
+                        number=self._calc_net_subtotal(
                             price=item["price"], quantity=self.PRODUCT_QUANTITY
                         )
                     ),
                     "vat_percent": f"{self.vat_rate}%",
-                    "vat": self._format_price(
-                        price=self._calc_vat(price=item["price"])
+                    "vat": self._format_number(
+                        number=self._calc_vat(price=item["price"])
                     ),
-                    "price_brutto": self._format_price(price=item["price"]),
-                    "subtotal_brutto": self._format_price(
-                        price=item["price"] * self.PRODUCT_QUANTITY
+                    "price_brutto": self._format_number(number=item["price"]),
+                    "subtotal_brutto": self._format_number(
+                        number=item["price"] * self.PRODUCT_QUANTITY
                     ),
                 }
                 for item in self.items
@@ -90,8 +90,12 @@ class Invoice:
     def _calc_vat(self, price: float):
         return float(price) * (self.vat_rate / 100)
 
+    def _format_number(self, number: float):
+        return "{:,.2f}".format(number)
+
     def _format_price(self, price: float):
-        return "{:,.2f} zł".format(price)
+        currency = self.payment["currency"]
+        return f"{price:,.2f} {currency}"
 
     def _calc_sales(self):
         current_year = datetime.now().year

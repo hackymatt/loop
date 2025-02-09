@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 
+import { IPaymentCurrencyProp } from "src/types/purchase";
 import { IInvoicePaymentMethod, IInvoicePaymentStatus } from "src/types/invoice";
 
 export const defaultValues = {
@@ -21,6 +22,7 @@ export const defaultValues = {
   payment: {
     id: 0,
     amount: 0,
+    currency: "PLN" as IPaymentCurrencyProp,
     status: "Do zapłaty" as IInvoicePaymentStatus,
     method: "Przelew" as IInvoicePaymentMethod,
     account: "",
@@ -60,6 +62,9 @@ export const schema = Yup.object().shape({
   payment: Yup.object().shape({
     id: Yup.number().required("ID płatności jest wymagane"),
     amount: Yup.number().positive().required("Kwota jest wymagana"),
+    currency: Yup.string()
+      .oneOf(["PLN", "USD", "EUR"], "Nieobsługiwana waluta")
+      .required("Waluta jest wymagana"),
     status: Yup.string().oneOf(["Zapłacono", "Do zapłaty"]).required("Status jest wymagany"),
     method: Yup.string()
       .oneOf(["Przelewy24", "Przelew"])

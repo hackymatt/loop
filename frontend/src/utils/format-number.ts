@@ -31,8 +31,8 @@ export function fNumber(inputValue: InputValue) {
 
 // ----------------------------------------------------------------------
 
-export function fCurrency(inputValue: InputValue) {
-  const { code, currency } = getLocaleCode();
+export function fCurrency(inputValue: InputValue, currency?: string) {
+  const { code, currency: defaultCurrency } = getLocaleCode();
 
   if (inputValue === null) return "";
 
@@ -40,7 +40,8 @@ export function fCurrency(inputValue: InputValue) {
 
   const fm = new Intl.NumberFormat(code, {
     style: "currency",
-    currency,
+    currencyDisplay: "symbol",
+    currency: currency ?? defaultCurrency,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(number);

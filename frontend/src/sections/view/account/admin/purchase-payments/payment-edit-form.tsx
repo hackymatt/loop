@@ -90,6 +90,7 @@ export default function PaymentEditForm({ payment, onClose, ...other }: Props) {
         <DialogContent sx={{ py: 0 }}>
           <Stack spacing={1}>
             {fields.amount}
+            {fields.currency}
             {fields.status}
           </Stack>
         </DialogContent>
