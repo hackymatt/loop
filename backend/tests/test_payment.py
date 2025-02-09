@@ -170,6 +170,7 @@ class PaymentStatusTest(TestCase):
             data,
             {
                 "amount": int(self.purchase_1.payment.amount),
+                "currency": self.purchase_1.payment.currency,
                 "order_id": self.purchase_1.payment.order_id,
                 "session_id": str(self.purchase_1.payment.session_id),
                 "id": self.purchase_1.payment.id,
@@ -202,6 +203,7 @@ class PaymentStatusTest(TestCase):
             data,
             {
                 "amount": int(self.purchase_1.payment.amount),
+                "currency": self.purchase_1.payment.currency,
                 "order_id": self.purchase_1.payment.order_id,
                 "session_id": str(self.purchase_1.payment.session_id),
                 "id": self.purchase_1.payment.id,
