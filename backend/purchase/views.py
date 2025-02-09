@@ -90,6 +90,7 @@ def confirm_purchase(status, purchases, payment: Payment):
     payment = {
         "id": payment.id,
         "amount": payment.amount / 100,
+        "currency": payment.currency,
         "status": "Zapłacono" if payment_successful else "Do zapłaty",
         "method": "Przelewy24",
         "account": "",
@@ -376,6 +377,7 @@ class PaymentInvoiceAPIView(APIView):
             payment = {
                 "id": payment_obj.id,
                 "amount": payment_obj.amount / 100,
+                "currency": payment_obj.currency,
                 "status": "Zapłacono" if payment_obj.status == "S" else "Do zapłaty",
                 "method": "Przelewy24",
                 "account": "",
@@ -393,6 +395,7 @@ class PaymentInvoiceAPIView(APIView):
             payment = {
                 "id": payment_obj.id,
                 "amount": payment_obj.amount / 100,
+                "currency": payment_obj.currency,
                 "status": "Zapłacono" if payment_obj.status == "S" else "Do zapłaty",
                 "method": "Przelew",
                 "account": "PL 59 1160 2202 0000 0006 2440 0188",

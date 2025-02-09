@@ -17,6 +17,7 @@ type IPayment = {
   id: string;
   session_id: string;
   amount: number;
+  currency: "PLN" | "USD" | "EUR";
   status: IPaymentStatus;
   created_at: string;
 };
@@ -34,10 +35,11 @@ export const paymentQuery = (query?: IQueryParams) => {
     const { data } = await Api.get(queryUrl);
     const { results, records_count, pages_count } = data;
     const modifiedResults = results.map(
-      ({ id, session_id, amount, status, created_at }: IPayment) => ({
+      ({ id, session_id, amount, currency, status, created_at }: IPayment) => ({
         id,
         sessionId: session_id,
         amount: amount / 100,
+        currency,
         status,
         createdAt: created_at,
       }),

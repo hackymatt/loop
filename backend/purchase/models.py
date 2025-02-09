@@ -41,9 +41,15 @@ class Payment(BaseModel):
         ("S", "Success"),
         ("F", "Failure"),
     )
+    CURRENCY_CHOICES = (
+        ("PLN", "PLN"),
+        ("EUR", "EUR"),
+        ("USD", "USD"),
+    )
     session_id = UUIDField(default=uuid.uuid4)
     order_id = BigIntegerField(null=True, default=None)
     amount = IntegerField()
+    currency = CharField(max_length=3, choices=CURRENCY_CHOICES, default="PLN")
     status = CharField(choices=STATUS_CHOICES, default="P")
 
     class Meta:

@@ -89,6 +89,14 @@ export const useInvoiceFields = (control: Control<any>) => {
           disabled
         />
         <RHFAutocomplete
+          key="payment-currency"
+          name="payment.currency"
+          label="Waluta"
+          options={["PLN", "EUR", "USD"]}
+          isOptionEqualToValue={(option, value) => option === value}
+          disabled
+        />
+        <RHFAutocomplete
           key="payment-status"
           name="payment.status"
           label="Status"
