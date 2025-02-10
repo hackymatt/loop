@@ -24,7 +24,7 @@ export const schema = Yup.object().shape({
   email: Yup.string().required("Adres email jest wymagany"),
   gender: Yup.string().required("Płeć jest wymagana"),
   user_type: Yup.string().required("Typ jest wymagany"),
-  account: Yup.string().nullable().length(26, "Numer konta musi mieć 26 znaków"),
+  account: Yup.string().notRequired(),
   rate: Yup.number().nullable().min(0, "Stawka musi wynosić min 0 zł"),
   commission: Yup.number()
     .nullable()

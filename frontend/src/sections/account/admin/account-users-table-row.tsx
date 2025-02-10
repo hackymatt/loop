@@ -42,6 +42,7 @@ export default function AccountUsersTableRow({ row, onEdit, onFinanceHistoryView
 
   const isAdmin = useMemo(() => row.user_type === UserType.ADMIN, [row.user_type]);
   const isTeacher = useMemo(() => row.user_type === UserType.TEACHER, [row.user_type]);
+  const isStudent = useMemo(() => row.user_type === UserType.STUDENT, [row.user_type]);
 
   return (
     <>
@@ -63,7 +64,12 @@ export default function AccountUsersTableRow({ row, onEdit, onFinanceHistoryView
         <TableCell>
           <Label
             sx={{ textTransform: "uppercase" }}
-            color={(isAdmin && "error") || (isTeacher && "warning") || "default"}
+            color={
+              (isAdmin && "error") ||
+              (isTeacher && "warning") ||
+              (isStudent && "success") ||
+              "default"
+            }
           >
             {row.user_type}
           </Label>

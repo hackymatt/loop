@@ -4,6 +4,7 @@ export enum UserType {
   ADMIN = "Admin",
   TEACHER = "Wykładowca",
   STUDENT = "Student",
+  OTHER = "Inny",
 }
 
 export type IUserType = `${UserType}`;

@@ -28,11 +28,11 @@ export const useUserFields = () => {
   const fields: { [key: string]: JSX.Element } = {
     image: <RHFAvatar name="image" sx={{ mr: 3 }} />,
 
-    first_name: <RHFTextField name="first_name" label="Imię" disabled />,
+    first_name: <RHFTextField name="first_name" label="Imię" />,
 
-    last_name: <RHFTextField name="last_name" label="Nazwisko" disabled />,
+    last_name: <RHFTextField name="last_name" label="Nazwisko" />,
 
-    email: <RHFTextField name="email" label="Adres e-mail" disabled />,
+    email: <RHFTextField name="email" label="Adres e-mail" />,
 
     commission: (
       <RHFTextField
@@ -58,7 +58,7 @@ export const useUserFields = () => {
       />
     ),
 
-    account: <RHFTextField name="account" label="Nr konta" disabled />,
+    account: <RHFTextField name="account" label="Nr konta" />,
 
     user_type: (
       <RHFSelect
@@ -72,7 +72,7 @@ export const useUserFields = () => {
       />
     ),
 
-    phone_number: <RHFTextField name="phone_number" label="Numer telefonu" disabled />,
+    phone_number: <RHFTextField name="phone_number" label="Numer telefonu" />,
 
     dob: (
       <Controller
@@ -88,29 +88,22 @@ export const useUserFields = () => {
             }}
             {...field}
             value={field.value}
-            disabled
           />
         )}
       />
     ),
 
     gender: (
-      <RHFSelect
-        name="gender"
-        label="Płeć"
-        options={GENDER_OPTIONS}
-        placeholder="Wybierz płeć"
-        disabled
-      />
+      <RHFSelect name="gender" label="Płeć" options={GENDER_OPTIONS} placeholder="Wybierz płeć" />
     ),
 
     street_address: (
-      <RHFTextField name="street_address" label="Ulica, numer budynku, numer lokalu" disabled />
+      <RHFTextField name="street_address" label="Ulica, numer budynku, numer lokalu" />
     ),
 
-    zip_code: <RHFTextField name="zip_code" label="Kod pocztowy" disabled />,
+    zip_code: <RHFTextField name="zip_code" label="Kod pocztowy" />,
 
-    city: <RHFTextField name="city" label="Miasto" disabled />,
+    city: <RHFTextField name="city" label="Miasto" />,
 
     country: (
       <RHFAutocompleteCountry
@@ -120,7 +113,6 @@ export const useUserFields = () => {
         fullWidth
         options={countries.map((option) => option.label)}
         getOptionLabel={(option) => option}
-        disabled
       />
     ),
   };

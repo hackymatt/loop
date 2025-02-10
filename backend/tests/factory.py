@@ -1,5 +1,11 @@
 from django.contrib.auth.models import User
-from profile.models import Profile, LecturerProfile, AdminProfile, StudentProfile
+from profile.models import (
+    Profile,
+    LecturerProfile,
+    AdminProfile,
+    StudentProfile,
+    OtherProfile,
+)
 from course.models import Course
 from coupon.models import Coupon, CouponUser
 from lesson.models import Lesson, LessonPriceHistory
@@ -73,6 +79,12 @@ def create_lecturer_profile(
         title=title,
         description=description,
         linkedin_url=linkedin_url,
+    )
+
+
+def create_other_profile(profile: Profile):
+    return OtherProfile.objects.create(
+        profile=profile,
     )
 
 

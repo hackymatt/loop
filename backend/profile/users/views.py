@@ -6,7 +6,7 @@ from profile.users.filters import UserFilter
 
 
 class UserViewSet(ModelViewSet):
-    http_method_names = ["get", "put"]
+    http_method_names = ["get", "post", "put"]
     queryset = (
         Profile.objects.add_account().add_rate().add_commission().all().order_by("id")
     )
