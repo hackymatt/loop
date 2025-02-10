@@ -1,5 +1,11 @@
 from django.contrib.auth.models import User
-from profile.models import Profile, AdminProfile, LecturerProfile, StudentProfile
+from profile.models import (
+    Profile,
+    AdminProfile,
+    LecturerProfile,
+    StudentProfile,
+    OtherProfile,
+)
 from course.models import Course
 from coupon.models import Coupon
 from certificate.models import Certificate
@@ -67,6 +73,10 @@ def is_lecturer_profile_found(profile: Profile):
 
 def is_student_profile_found(profile: Profile):
     return StudentProfile.objects.filter(profile=profile).exists()
+
+
+def is_other_profile_found(profile: Profile):
+    return OtherProfile.objects.filter(profile=profile).exists()
 
 
 def get_profile(user: User):

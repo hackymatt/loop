@@ -7,7 +7,14 @@ from rest_framework.serializers import (
     ValidationError,
 )
 from drf_extra_fields.fields import Base64ImageField
-from profile.models import Profile, LecturerProfile, AdminProfile, StudentProfile
+from django.contrib.auth.models import User
+from profile.models import (
+    Profile,
+    LecturerProfile,
+    AdminProfile,
+    StudentProfile,
+    OtherProfile,
+)
 from finance.models import Finance, FinanceHistory
 from notification.utils import notify
 
@@ -43,10 +50,41 @@ class UserSerializer(ModelSerializer):
         )
 
     def validate_user_type(self, user_type):
-        if not user_type[0] in ["A", "W", "S"]:
+        user_types = (
+            ["I"] if self.context["request"].method == "POST" else ["A", "W", "S", "I"]
+        )
+        if not user_type[0] in user_types:
             raise ValidationError("Niepoprawna wartość dla user_type")
 
         return user_type
+
+    def create(self, validated_data):
+        user_data = validated_data.pop("user")
+        user_type = validated_data.pop("get_user_type_display")
+        gender = validated_data.pop("get_gender_display")
+
+        user = User.objects.create(
+            username=user_data["email"],
+            email=user_data["email"],
+            first_name=user_data["first_name"],
+            last_name=user_data["last_name"],
+            is_active=False,
+        )
+
+        new_profile = Profile.objects.create(
+            user=user, user_type=user_type, gender=gender, **validated_data
+        )
+
+        profile = (
+            Profile.objects.add_account()
+            .add_rate()
+            .add_commission()
+            .get(id=new_profile.id)
+        )
+
+        OtherProfile.objects.create(profile=profile)
+
+        return profile
 
     def update(self, instance: Profile, validated_data):
         current_user_type = instance.user_type
@@ -65,15 +103,19 @@ class UserSerializer(ModelSerializer):
                     path="/account/teacher/profile",
                     icon="mdi:teach",
                 )
-            else:
+            elif user_type[0] == "S":
                 StudentProfile.objects.get_or_create(profile=instance)
+            else:
+                OtherProfile.objects.get_or_create(profile=instance)
 
             if current_user_type[0] == "A":
                 AdminProfile.objects.get(profile=instance).delete()
             elif current_user_type[0] == "W":
                 LecturerProfile.objects.get(profile=instance).delete()
-            else:
+            elif current_user_type[0] == "S":
                 StudentProfile.objects.get(profile=instance).delete()
+            else:
+                OtherProfile.objects.get(profile=instance).delete()
 
         if user_type[0] == "W":
             data = self.context["request"].data

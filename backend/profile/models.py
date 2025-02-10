@@ -104,6 +104,7 @@ class Profile(BaseModel):
         ("S", "Student"),
         ("W", "Wykładowca"),
         ("A", "Admin"),
+        ("I", "Inny"),
     )
     JOIN_CHOICES = (
         ("Email", "Email"),
@@ -309,6 +310,26 @@ class LecturerProfile(BaseModel):
 
     class Meta:
         db_table = "lecturer_profile"
+        ordering = ["id"]
+        indexes = [
+            Index(
+                fields=[
+                    "id",
+                ]
+            ),
+            Index(
+                fields=[
+                    "profile",
+                ]
+            ),
+        ]
+
+
+class OtherProfile(BaseModel):
+    profile = OneToOneField(Profile, on_delete=CASCADE)
+
+    class Meta:
+        db_table = "other_profile"
         ordering = ["id"]
         indexes = [
             Index(
