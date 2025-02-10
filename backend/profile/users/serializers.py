@@ -54,9 +54,16 @@ class UserSerializer(ModelSerializer):
             ["I"] if self.context["request"].method == "POST" else ["A", "W", "S", "I"]
         )
         if not user_type[0] in user_types:
-            raise ValidationError("Niepoprawna wartość dla user_type")
+            raise ValidationError("Niepoprawna wartość dla user_type.")
 
         return user_type
+    
+    def validate_email(self, email):
+        if self.context["request"].method == "POST":
+            if User.objects.filter(email=email).exists():
+                raise ValidationError("Użytkownik już istnieje.")
+
+        return email
 
     def create(self, validated_data):
         user_data = validated_data.pop("user")

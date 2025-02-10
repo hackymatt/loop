@@ -1,5 +1,6 @@
+import { AxiosError } from "axios";
 import { compact } from "lodash-es";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
@@ -7,8 +8,13 @@ import { IUserDetailsProps } from "src/types/user";
 import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
+import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/users" as const;
+
+type ICreateUser = Omit<IUserDetailsProps, "id" | "image" | "active">;
+
+type ICreateUserReturn = ICreateUser;
 
 export const usersQuery = (query?: IQueryParams) => {
   const url = endpoint;
@@ -42,4 +48,23 @@ export const useUsersPagesCount = (query?: IQueryParams) => {
   const { queryKey, queryFn } = usersQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.pagesCount, ...rest };
+};
+
+export const useCreateUser = () => {
+  const queryClient = useQueryClient();
+  return useMutation<ICreateUserReturn, AxiosError, ICreateUser>(
+    async (variables) => {
+      const result = await Api.post(endpoint, variables, {
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      });
+      return result.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [endpoint] });
+      },
+    },
+  );
 };

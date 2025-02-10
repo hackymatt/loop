@@ -5,6 +5,7 @@ import { useMemo, useState, useCallback } from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
+import { LoadingButton } from "@mui/lab";
 import { Tab, Tabs } from "@mui/material";
 import TableBody from "@mui/material/TableBody";
 import { DatePicker } from "@mui/x-date-pickers";
@@ -23,6 +24,7 @@ import { fDate } from "src/utils/format-time";
 
 import { useUsers, useUsersPagesCount } from "src/api/users/users";
 
+import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
 import DownloadCSVButton from "src/components/download-csv/download-csv";
 
@@ -32,6 +34,7 @@ import AccountUsersTableRow from "src/sections/account/admin/account-users-table
 import { IQueryParamValue } from "src/types/query-params";
 import { UserType, IUserDetailsProps } from "src/types/user";
 
+import UserNewForm from "./user-new-form";
 import UserEditForm from "./user-edit-form";
 import FilterSearch from "../../../../filters/filter-search";
 import AccountTableHead from "../../../../account/account-table-head";
@@ -43,6 +46,7 @@ const TABS = [
   { id: UserType.ADMIN.slice(0, 1), label: "Admini" },
   { id: UserType.TEACHER.slice(0, 1), label: "Wykładowcy" },
   { id: UserType.STUDENT.slice(0, 1), label: "Studenci" },
+  { id: UserType.OTHER.slice(0, 1), label: "Inni" },
 ];
 
 const TABLE_HEAD = [
@@ -59,6 +63,7 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, { label: "Wszystkie", value: -1 }];
 
 export default function AccountUsersView() {
   const { push } = useRouter();
+  const newFormOpen = useBoolean();
   const editFormOpen = useBoolean();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
@@ -140,7 +145,19 @@ export default function AccountUsersView() {
         <Typography variant="h5" sx={{ mb: 3 }}>
           Spis użytkowników
         </Typography>
-        <DownloadCSVButton queryHook={useUsers} disabled={(recordsCount ?? 0) === 0} />
+        <Stack direction="row" spacing={1}>
+          <DownloadCSVButton queryHook={useUsers} disabled={(recordsCount ?? 0) === 0} />
+          <LoadingButton
+            component="label"
+            variant="contained"
+            size="small"
+            color="success"
+            loading={false}
+            onClick={newFormOpen.onToggle}
+          >
+            <Iconify icon="carbon:add" />
+          </LoadingButton>
+        </Stack>
       </Stack>
 
       <Tabs
@@ -241,6 +258,8 @@ export default function AccountUsersView() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Box>
+
+      <UserNewForm open={newFormOpen.value} onClose={newFormOpen.onFalse} />
 
       {editedUser && (
         <UserEditForm user={editedUser} open={editFormOpen.value} onClose={editFormOpen.onFalse} />
