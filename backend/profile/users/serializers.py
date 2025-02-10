@@ -57,7 +57,7 @@ class UserSerializer(ModelSerializer):
             raise ValidationError("Niepoprawna wartość dla user_type.")
 
         return user_type
-    
+
     def validate_email(self, email):
         if self.context["request"].method == "POST":
             if User.objects.filter(email=email).exists():
