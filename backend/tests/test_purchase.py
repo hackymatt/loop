@@ -501,7 +501,7 @@ class PurchaseTest(TestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    @patch.object(Invoice, "upload")
+    @patch.object(Invoice, "_upload")
     @patch.object(GmailApi, "_send_message")
     def test_create_purchase_4_authenticated(
         self, _send_message_mock, upload_invoice_mock

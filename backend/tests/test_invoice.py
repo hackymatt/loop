@@ -211,7 +211,7 @@ class InvoiceTest(TestCase):
         response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    @patch.object(Invoice, "upload")
+    @patch.object(Invoice, "_upload")
     @patch.object(GmailApi, "_send_message")
     def test_create_invoice_authorized_admin_1(
         self, _send_message_mock, upload_invoice_mock
@@ -227,7 +227,7 @@ class InvoiceTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(_send_message_mock.call_count, 1)
 
-    @patch.object(Invoice, "upload")
+    @patch.object(Invoice, "_upload")
     @patch.object(GmailApi, "_send_message")
     def test_create_invoice_authorized_admin_2(
         self, _send_message_mock, upload_invoice_mock

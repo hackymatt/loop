@@ -134,21 +134,30 @@ class Invoice:
 
         return self.path
 
-    def upload(self):
-        if not IS_LOCAL:
+    def _upload(self, storage, location):  # pragma: no cover
+        if IS_LOCAL:
             logger.warning("Invoice upload has been skipped", exc_info=True)
             return None
 
+        with open(self.path, "rb") as f:
+            return storage.save(location, f)
+
+    def upload(self):
         bucket_name = datetime.today().strftime("%Y%m%d")
-        invoices_storage_config = STORAGES.get("invoices", {})
+        invoices_storage_config = STORAGES.get(
+            "invoices",
+            {
+                "BACKEND": "storages.backends.s3.S3Storage",
+                "OPTIONS": {},
+            },
+        )
         storage_class = get_storage_class(invoices_storage_config["BACKEND"])
         storage = storage_class(**invoices_storage_config["OPTIONS"])
         location = f"{bucket_name}/{self.filename}"
 
-        with open(self.path, "rb") as f:
-            file_path = storage.save(location, f)
+        file_path = self._upload(storage=storage, location=location)
 
-        return storage.url(file_path)
+        return storage.url(file_path) if file_path else None
 
     def remove(self):
         os.remove(self.path)
