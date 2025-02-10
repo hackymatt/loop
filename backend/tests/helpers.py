@@ -345,3 +345,7 @@ def mock_register_payment(mock):
 
 def mock_verify_payment(mock, result):
     mock.return_value = result
+
+
+def mock_upload_invoice(mock):
+    mock.return_value = None

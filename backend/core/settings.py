@@ -367,6 +367,17 @@ else:
                 "location": f"{ENV}/static" if ENV != "PROD" else "static",
             },
         },
+        "invoices": {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "access_key": os.getenv("S3_ACCESS_KEY", ""),
+                "secret_key": os.getenv("S3_SECRET_KEY", ""),
+                "bucket_name": "files",
+                "region_name": "FRA1",
+                "endpoint_url": "https://objectstore.fra1.civo.com",
+                "location": f"{ENV}/invoices" if ENV != "PROD" else "invoices",
+            },
+        },
     }  # pragma: no cover
 
 # Default primary key field type

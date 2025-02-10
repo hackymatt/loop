@@ -100,6 +100,7 @@ def confirm_purchase(status, purchases, payment: Payment):
     if payment_successful:
         invoice_path = invoice.create()
         attachments = [invoice_path]
+        invoice.upload()
 
     mailer.send(
         email_template="purchase_confirmation.html",
@@ -430,6 +431,7 @@ class PaymentInvoiceAPIView(APIView):
         invoice = Invoice(customer=customer, items=items, payment=payment, notes=notes)
         invoice_path = invoice.create()
         attachments = [invoice_path]
+        invoice.upload()
 
         invoice_number = invoice.get_invoice_number(id=payment["id"])
 

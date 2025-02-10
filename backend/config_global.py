@@ -3,6 +3,9 @@ from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 
 
+IS_LOCAL = settings.LOCAL
+STORAGES = settings.STORAGES
+
 FRONTEND_URL = settings.BASE_FRONTEND_URL
 
 ADMIN_EMAIL = settings.ADMIN_EMAIL
