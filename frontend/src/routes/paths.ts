@@ -33,6 +33,7 @@ export const paths = {
     messages: "/account/messages",
     admin: {
       courses: {
+        root: "/account/admin/courses",
         list: "/account/admin/courses/list",
         topics: "/account/admin/courses/topics",
         candidates: "/account/admin/courses/candidates",
@@ -41,6 +42,7 @@ export const paths = {
         list: "/account/admin/modules/list",
       },
       lessons: {
+        root: "/account/admin/lessons",
         list: "/account/admin/lessons/list",
         priceHistory: "/account/admin/lessons/price-history",
         technologies: "/account/admin/lessons/technologies",
@@ -49,29 +51,36 @@ export const paths = {
         list: "/account/admin/services/list",
       },
       posts: {
+        root: "/account/admin/posts",
         list: "/account/admin/posts/list",
         categories: "/account/admin/posts/categories",
       },
       purchases: {
+        root: "/account/admin/purchases",
         lessons: {
-          list: "/account/admin/purchases/list",
-          payments: "/account/admin/purchases/payments",
+          root: "/account/admin/purchases/lessons",
+          list: "/account/admin/purchases/lessons/list",
+          payments: "/account/admin/purchases/lessons/payments",
         },
         services: {
-          list: "/account/admin/purchases/list",
-          payments: "/account/admin/purchases/payments",
+          root: "/account/admin/purchases/services",
+          list: "/account/admin/purchases/services/list",
+          payments: "/account/admin/purchases/services/payments",
         },
       },
       tags: "/account/admin/tags",
       users: {
+        root: "/account/admin/users",
         list: "/account/admin/users/list",
         financeHistory: "/account/admin/users/finance-history",
       },
       coupons: {
+        root: "/account/admin/coupons",
         list: "/account/admin/coupons/list",
         usage: "/account/admin/coupons/usage",
       },
       earnings: {
+        root: "/account/admin/earnings",
         company: "/account/admin/earnings/company",
         teachers: "/account/admin/earnings/teachers",
       },

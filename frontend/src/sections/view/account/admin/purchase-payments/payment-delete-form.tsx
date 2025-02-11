@@ -1,9 +1,7 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 
-import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import { Typography } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -12,19 +10,13 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { usePayment, useEditPayment } from "src/api/purchases/admin/services/payment";
+import { useDeletePayment } from "src/api/purchases/admin/services/payment";
 
 import FormProvider from "src/components/hook-form";
 
-import {
-  IPaymentProp,
-  IPaymentStatus,
-  IPaymentMethodProp,
-  IPaymentCurrencyProp,
-} from "src/types/payment";
+import { IPaymentProp } from "src/types/payment";
 
-import { schema, defaultValues } from "./payment";
-import { usePaymentFields } from "./payment-fields";
+import { defaultValues } from "./payment";
 
 // ----------------------------------------------------------------------
 
@@ -35,47 +27,30 @@ interface Props extends DialogProps {
 
 // ----------------------------------------------------------------------
 
-export default function PaymentEditForm({ payment, onClose, ...other }: Props) {
-  const { data: categoryData } = usePayment(payment.id!);
-  const { mutateAsync: editPayment } = useEditPayment(payment.id!);
+export default function PaymentDeleteForm({ payment, onClose, ...other }: Props) {
+  const { mutateAsync: deletePayment } = useDeletePayment();
 
   const methods = useForm({
-    resolver: yupResolver(schema),
     defaultValues,
   });
 
   const {
-    control,
     reset,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  useEffect(() => {
-    if (categoryData) {
-      reset(categoryData);
-    }
-  }, [reset, categoryData]);
-
   const handleFormError = useFormErrorHandler(methods);
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async () => {
     try {
-      await editPayment({
-        ...data,
-        amount: data.amount * 100,
-        currency: data.currency as IPaymentCurrencyProp,
-        method: data.method as IPaymentMethodProp,
-        status: data.status as IPaymentStatus,
-      });
+      await deletePayment({ id: payment.id! });
       reset();
       onClose();
     } catch (error) {
       handleFormError(error);
     }
   });
-
-  const { fields } = usePaymentFields(control);
 
   return (
     <Dialog
@@ -92,16 +67,10 @@ export default function PaymentEditForm({ payment, onClose, ...other }: Props) {
       }}
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj płatność</DialogTitle>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń płatność</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
-          <Stack spacing={1}>
-            {fields.amount}
-            {fields.currency}
-            {fields.method}
-            {fields.status}
-            {fields.notes}
-          </Stack>
+          <Typography>{`Czy na pewno chcesz usunąć płatność ${payment.sessionId}?`}</Typography>
         </DialogContent>
 
         <DialogActions
@@ -120,8 +89,8 @@ export default function PaymentEditForm({ payment, onClose, ...other }: Props) {
             Anuluj
           </Button>
 
-          <LoadingButton color="inherit" type="submit" variant="contained" loading={isSubmitting}>
-            Zapisz
+          <LoadingButton color="error" type="submit" variant="contained" loading={isSubmitting}>
+            Usuń
           </LoadingButton>
         </DialogActions>
       </FormProvider>

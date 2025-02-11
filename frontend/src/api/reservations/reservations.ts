@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
-import { purchaseQuery } from "../purchase/purchase";
+import { purchaseQuery } from "../purchases/admin/lessons/purchases";
 import { lessonSchedulesQuery } from "../lesson-schedules/lesson-schedules";
 
 const endpoint = "/reservation" as const;

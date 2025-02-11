@@ -169,7 +169,7 @@ type NavItemProps = {
 export function NavItem({ title, path, icon, children, isChild }: NavItemProps) {
   const active = useActiveLink(path);
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(active);
 
   const handleClick = () => {
     setOpen(!open);
@@ -198,12 +198,23 @@ export function NavItem({ title, path, icon, children, isChild }: NavItemProps) 
         }}
         onClick={handleClick}
       >
-        {icon && <ListItemIcon>{icon}</ListItemIcon>}
+        {icon && (
+          <ListItemIcon
+            sx={{
+              ...(active && {
+                color: (theme) => theme.palette.primary.main,
+              }),
+            }}
+          >
+            {icon}
+          </ListItemIcon>
+        )}
         <ListItemText
           primary={title}
           primaryTypographyProps={{
             typography: "body2",
             ...(active && {
+              color: (theme) => theme.palette.primary.main,
               typography: "subtitle2",
             }),
           }}

@@ -11,7 +11,7 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useCreatePayment } from "src/api/purchase/service-payments";
+import { useCreatePayment } from "src/api/purchases/admin/services/payments";
 
 import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";

@@ -97,7 +97,7 @@ export const adminNavigation = [
   ...[
     {
       title: "Kursy",
-      path: paths.account.admin.courses.list,
+      path: paths.account.admin.courses.root,
       icon: <Iconify icon="carbon:book" />,
       children: [
         {
@@ -128,7 +128,7 @@ export const adminNavigation = [
     },
     {
       title: "Lekcje",
-      path: paths.account.admin.lessons.list,
+      path: paths.account.admin.lessons.root,
       icon: <Iconify icon="carbon:notebook" />,
       children: [
         {
@@ -159,7 +159,7 @@ export const adminNavigation = [
     },
     {
       title: "Blog",
-      path: paths.account.admin.posts.list,
+      path: paths.account.admin.posts.root,
       icon: <Iconify icon="carbon:blog" />,
       children: [
         {
@@ -178,12 +178,12 @@ export const adminNavigation = [
     },
     {
       title: "Zakupy",
-      path: paths.account.admin.purchases.lessons.list,
+      path: paths.account.admin.purchases.root,
       icon: <Iconify icon="carbon:purchase" />,
       children: [
         {
           title: "Lekcje",
-          path: paths.account.admin.purchases.lessons.list,
+          path: paths.account.admin.purchases.lessons.root,
           icon: <Iconify icon="carbon:notebook" />,
           children: [
             {
@@ -202,7 +202,7 @@ export const adminNavigation = [
         },
         {
           title: "Usługi",
-          path: paths.account.admin.purchases.services.list,
+          path: paths.account.admin.purchases.services.root,
           icon: <Iconify icon="carbon:customer-service" />,
           children: [
             {
@@ -229,7 +229,7 @@ export const adminNavigation = [
     },
     {
       title: "Użytkownicy",
-      path: paths.account.admin.users.list,
+      path: paths.account.admin.users.root,
       icon: <Iconify icon="carbon:user-multiple" />,
       children: [
         {
@@ -248,7 +248,7 @@ export const adminNavigation = [
     },
     {
       title: "Kupony",
-      path: paths.account.admin.users.list,
+      path: paths.account.admin.coupons.root,
       icon: <Iconify icon="carbon:cut-out" />,
       children: [
         {
@@ -267,7 +267,7 @@ export const adminNavigation = [
     },
     {
       title: "Zarobki",
-      path: `${paths.account.admin.earnings.company}/?page_size=12`,
+      path: paths.account.admin.earnings.root,
       icon: <Iconify icon="carbon:currency-dollar" />,
       children: [
         {

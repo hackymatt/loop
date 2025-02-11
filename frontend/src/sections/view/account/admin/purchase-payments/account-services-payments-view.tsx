@@ -20,7 +20,7 @@ import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
 
-import { usePayments, usePaymentsPageCount } from "src/api/purchase/service-payments";
+import { usePayments, usePaymentsPageCount } from "src/api/purchases/admin/services/payments";
 
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
@@ -34,6 +34,7 @@ import { IPaymentProp, PaymentStatus } from "src/types/payment";
 
 import PaymentNewForm from "./payment-new-form";
 import PaymentEditForm from "./payment-edit-form";
+import PaymentDeleteForm from "./payment-delete-form";
 import FilterSearch from "../../../../filters/filter-search";
 import AccountTableHead from "../../../../account/account-table-head";
 
@@ -61,6 +62,7 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, { label: "Wszystkie", value: -1 }];
 export default function AccountServicePaymentView() {
   const newPaymentFormOpen = useBoolean();
   const editPaymentFormOpen = useBoolean();
+  const deletePaymentFormOpen = useBoolean();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
@@ -76,6 +78,7 @@ export default function AccountServicePaymentView() {
   const tab = filters?.status ? filters.status : "";
 
   const [editedPayment, setEditedPayment] = useState<IPaymentProp>();
+  const [deletedPayment, setDeletedPayment] = useState<IPaymentProp>();
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -124,6 +127,14 @@ export default function AccountServicePaymentView() {
       editPaymentFormOpen.onToggle();
     },
     [editPaymentFormOpen],
+  );
+
+  const handleDeletePayment = useCallback(
+    (payment: IPaymentProp) => {
+      setDeletedPayment(payment);
+      deletePaymentFormOpen.onToggle();
+    },
+    [deletePaymentFormOpen],
   );
 
   return (
@@ -224,7 +235,7 @@ export default function AccountServicePaymentView() {
                     key={row.id}
                     row={row}
                     onEdit={handleEditPayment}
-                    onInvoice={() => {}}
+                    onDelete={handleDeletePayment}
                   />
                 ))}
               </TableBody>
@@ -253,6 +264,13 @@ export default function AccountServicePaymentView() {
           payment={editedPayment}
           open={editPaymentFormOpen.value}
           onClose={editPaymentFormOpen.onFalse}
+        />
+      )}
+      {deletedPayment && (
+        <PaymentDeleteForm
+          payment={deletedPayment}
+          open={deletePaymentFormOpen.value}
+          onClose={deletePaymentFormOpen.onFalse}
         />
       )}
     </>

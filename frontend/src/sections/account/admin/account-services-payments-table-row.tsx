@@ -20,10 +20,10 @@ import { IPaymentProp, PaymentStatus } from "src/types/payment";
 type Props = {
   row: IPaymentProp;
   onEdit: (payment: IPaymentProp) => void;
-  onInvoice: (payment: IPaymentProp) => void;
+  onDelete: (payment: IPaymentProp) => void;
 };
 
-export default function AccountServicesPaymentsTableRow({ row, onEdit, onInvoice }: Props) {
+export default function AccountServicesPaymentsTableRow({ row, onEdit, onDelete }: Props) {
   const openOptions = usePopover();
 
   const handleEdit = useCallback(() => {
@@ -31,10 +31,10 @@ export default function AccountServicesPaymentsTableRow({ row, onEdit, onInvoice
     onEdit(row);
   }, [openOptions, onEdit, row]);
 
-  const handleInvoice = useCallback(() => {
+  const handleDelete = useCallback(() => {
     openOptions.onClose();
-    onInvoice(row);
-  }, [openOptions, onInvoice, row]);
+    onDelete(row);
+  }, [openOptions, onDelete, row]);
 
   const isSuccess = useMemo(() => row.status === PaymentStatus.SUCCESS, [row.status]);
   const isFailure = useMemo(() => row.status === PaymentStatus.FAILURE, [row.status]);
@@ -89,9 +89,9 @@ export default function AccountServicesPaymentsTableRow({ row, onEdit, onInvoice
 
         <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
 
-        <MenuItem onClick={handleInvoice} sx={{ mr: 1, width: "100%" }}>
-          <Iconify icon="carbon:document-signed" sx={{ mr: 0.5 }} />
-          <Typography variant="body2">Wygeneruj fakturę</Typography>
+        <MenuItem onClick={handleDelete} sx={{ mr: 1, color: "error.main", width: "fit-content" }}>
+          <Iconify icon="carbon:trash-can" sx={{ mr: 0.5 }} />
+          <Typography variant="body2">Usuń płatność</Typography>
         </MenuItem>
       </Popover>
     </>

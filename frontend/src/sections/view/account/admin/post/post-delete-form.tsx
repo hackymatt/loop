@@ -67,7 +67,7 @@ export default function PostDeleteForm({ post, onClose, ...other }: Props) {
       }}
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń kurs</DialogTitle>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń artykuł</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
           <Typography>{`Czy na pewno chcesz usunąć artykuł ${post.title}?`}</Typography>

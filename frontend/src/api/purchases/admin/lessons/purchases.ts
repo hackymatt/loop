@@ -8,10 +8,10 @@ import { IGender } from "src/types/testimonial";
 import { IQueryParams } from "src/types/query-params";
 import { ILessonStatus, IReviewStatus, IPurchaseItemProp } from "src/types/purchase";
 
-import { Api } from "../service";
-import { getCsrfToken } from "../utils/csrf";
+import { Api } from "../../../service";
+import { getCsrfToken } from "../../../utils/csrf";
 
-const endpoint = "/purchase" as const;
+const endpoint = "/purchases" as const;
 
 type ILecturer = {
   id: string;

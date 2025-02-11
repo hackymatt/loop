@@ -108,10 +108,10 @@ router.register(
 )
 router.register(r"posts", PostViewSet, basename="posts")
 router.register(r"post-categories", PostCategoryViewSet, basename="post_categories")
-router.register(r"purchase", PurchaseViewSet, basename="purchase")
+router.register(r"purchases", PurchaseViewSet, basename="purchases")
 router.register(r"payments", PaymentViewSet, basename="payments")
 router.register(
-    r"service-purchase", ServicePurchaseViewSet, basename="service-purchase"
+    r"service-purchases", ServicePurchaseViewSet, basename="service-purchase"
 )
 router.register(r"service-payments", ServicePaymentViewSet, basename="service-payments")
 router.register(r"register", ProfileRegisterViewSet, basename="user_register")

@@ -21,7 +21,7 @@ import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
 
-import { usePurchase, usePurchasePageCount } from "src/api/purchase/purchase";
+import { usePurchase, usePurchasePageCount } from "src/api/purchases/admin/services/purchases";
 
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
@@ -236,7 +236,7 @@ export default function AccountServicesPurchaseView() {
         />
       </Box>
 
-      <PurchaseNewForm open={newPurchaseFormOpen.value} onClose={newPurchaseFormOpen.onFalse} />
+      {/* <PurchaseNewForm open={newPurchaseFormOpen.value} onClose={newPurchaseFormOpen.onFalse} />
       {editedPurchase && (
         <PurchaseEditForm
           lesson={editedPurchase}
@@ -250,7 +250,7 @@ export default function AccountServicesPurchaseView() {
           open={deletePurchaseFormOpen.value}
           onClose={deletePurchaseFormOpen.onFalse}
         />
-      )}
+      )} */}
     </>
   );
 }

@@ -2,13 +2,17 @@ import { AxiosError } from "axios";
 import { compact } from "lodash-es";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { IPaymentStatus } from "src/types/payment";
-import { IPaymentItemProp, IPaymentMethodProp, IPaymentCurrencyProp } from "src/types/purchase";
+import {
+  IPaymentProp,
+  IPaymentStatus,
+  IPaymentMethodProp,
+  IPaymentCurrencyProp,
+} from "src/types/payment";
 
-import { Api } from "../service";
-import { getCsrfToken } from "../utils/csrf";
+import { Api } from "../../../service";
+import { getCsrfToken } from "../../../utils/csrf";
 
-const endpoint = "/payments" as const;
+const endpoint = "/service-payments" as const;
 
 type IPayment = {
   id: string;
@@ -23,6 +27,10 @@ type IPayment = {
 type IEditPayment = Omit<IPayment, "id" | "session_id" | "created_at">;
 
 type IEditPaymentReturn = IEditPayment;
+
+type IDeletePayment = { id: string };
+
+type IDeletePaymentReturn = {};
 
 export const paymentQuery = (id: string) => {
   const url = endpoint;
@@ -58,7 +66,7 @@ export const paymentQuery = (id: string) => {
 export const usePayment = (id: string) => {
   const { queryKey, queryFn } = paymentQuery(id);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as any as IPaymentItemProp, ...rest };
+  return { data: data?.results as any as IPaymentProp, ...rest };
 };
 
 export const useEditPayment = (id: string) => {
@@ -67,6 +75,25 @@ export const useEditPayment = (id: string) => {
   return useMutation<IEditPaymentReturn, AxiosError, IEditPayment>(
     async (variables) => {
       const result = await Api.put(url, variables, {
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      });
+      return result.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [endpoint] });
+      },
+    },
+  );
+};
+
+export const useDeletePayment = () => {
+  const queryClient = useQueryClient();
+  return useMutation<IDeletePaymentReturn, AxiosError, IDeletePayment>(
+    async ({ id }) => {
+      const result = await Api.delete(`${endpoint}/${id}`, {
         headers: {
           "X-CSRFToken": getCsrfToken(),
         },

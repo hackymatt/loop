@@ -8,8 +8,8 @@ import { IPaymentStatus } from "src/types/payment";
 import { IQueryParams } from "src/types/query-params";
 import { IPaymentItemProp, IPaymentMethodProp, IPaymentCurrencyProp } from "src/types/purchase";
 
-import { Api } from "../service";
-import { getCsrfToken } from "../utils/csrf";
+import { Api } from "../../../service";
+import { getCsrfToken } from "../../../utils/csrf";
 
 const endpoint = "/payments" as const;
 
