@@ -9,13 +9,12 @@ import { fCurrency } from "src/utils/format-number";
 
 import Label from "src/components/label";
 
-import { PaymentStatus } from "src/types/payment";
-import { IPaymentItemProp } from "src/types/purchase";
+import { IPaymentProp, PaymentStatus } from "src/types/payment";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: IPaymentItemProp;
+  row: IPaymentProp;
 };
 
 export default function AccountLessonsPaymentsTableRow({ row }: Props) {

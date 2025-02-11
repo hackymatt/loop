@@ -1,7 +1,6 @@
 // ----------------------------------------------------------------------
 
 import { ITeamMemberProps } from "./team";
-import { IPaymentStatus } from "./payment";
 
 export enum LessonStatus {
   NEW = "nowa",
@@ -44,14 +43,3 @@ export type IPurchaseItemProp = {
 };
 
 export type IPurchaseError = { lessons: { lesson: string }[]; coupon: string };
-
-export type IPaymentCurrencyProp = "PLN" | "USD" | "EUR";
-
-export type IPaymentItemProp = {
-  id: string;
-  sessionId: string;
-  amount: number;
-  currency: IPaymentCurrencyProp;
-  status: IPaymentStatus;
-  createdAt: Date;
-};

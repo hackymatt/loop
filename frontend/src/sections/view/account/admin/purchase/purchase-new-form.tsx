@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
+import { useState, useCallback } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useState, useEffect, useCallback } from "react";
 
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -13,29 +13,30 @@ import { Step, Stepper, StepLabel, StepContent } from "@mui/material";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useInvoice, useCreateInvoice } from "src/api/purchase/invoice";
+import { GITHUB_REPO } from "src/config-global";
+import { useCreateLesson } from "src/api/lessons/lessons";
 
 import FormProvider from "src/components/hook-form";
+import { useToastContext } from "src/components/toast";
 import { isStepFailed } from "src/components/stepper/step";
 
-import { IPaymentItemProp } from "src/types/purchase";
-import { IInvoicePaymentMethod, IInvoicePaymentStatus } from "src/types/invoice";
+import { ICourseByTechnologyProps } from "src/types/course";
 
-import { useInvoiceFields } from "./invoice-fields";
-import { steps, schema, defaultValues } from "./invoice";
+import { useLessonFields } from "./purchase-fields";
+import { steps, schema, defaultValues } from "./purchase";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  payment: IPaymentItemProp;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function PaymentInvoiceForm({ payment, onClose, ...other }: Props) {
-  const { data: invoiceData } = useInvoice(payment.id);
-  const { mutateAsync: createInvoice } = useCreateInvoice();
+export default function LessonNewForm({ onClose, ...other }: Props) {
+  const { enqueueSnackbar } = useToastContext();
+
+  const { mutateAsync: createLesson } = useCreateLesson();
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -43,17 +44,10 @@ export default function PaymentInvoiceForm({ payment, onClose, ...other }: Props
   });
 
   const {
-    control,
     reset,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = methods;
-
-  useEffect(() => {
-    if (invoiceData) {
-      reset(invoiceData);
-    }
-  }, [reset, invoiceData]);
 
   const handleFormError = useFormErrorHandler(methods);
 
@@ -64,26 +58,16 @@ export default function PaymentInvoiceForm({ payment, onClose, ...other }: Props
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const {
-        name: full_name,
-        streetAddress: street_address,
-        zipCode: zip_code,
-        ...customerData
-      } = data.customer;
-      const { status, method, account, ...paymentData } = data.payment;
-      await createInvoice({
+      await createLesson({
         ...data,
-        customer: { ...customerData, full_name, street_address, zip_code },
-        payment: {
-          ...paymentData,
-          status: status as IInvoicePaymentStatus,
-          method: method as IInvoicePaymentMethod,
-          account: account ?? "",
-        },
-        notes: data?.notes ?? "",
+        technologies: (data.technologies ?? []).map(
+          (technology: ICourseByTechnologyProps) => technology.id,
+        ),
+        github_url: `${GITHUB_REPO}${data.github_url}`,
       });
       reset();
-      onClose();
+      onCloseWithReset();
+      enqueueSnackbar("Lekcja została dodana", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }
@@ -91,7 +75,7 @@ export default function PaymentInvoiceForm({ payment, onClose, ...other }: Props
 
   const [activeStep, setActiveStep] = useState(0);
 
-  const { fields } = useInvoiceFields(control);
+  const { fields } = useLessonFields();
 
   const stepContent = steps[activeStep].fields.map((field: string) => fields[field]);
 
@@ -101,7 +85,7 @@ export default function PaymentInvoiceForm({ payment, onClose, ...other }: Props
       fullWidth
       maxWidth="sm"
       disablePortal
-      onClose={onClose}
+      onClose={onCloseWithReset}
       {...other}
       sx={{
         zIndex: (theme) => theme.zIndex.modal + 1,
@@ -110,7 +94,10 @@ export default function PaymentInvoiceForm({ payment, onClose, ...other }: Props
       }}
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Wygeneruj fakturę</DialogTitle>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nową lekcję</DialogTitle>
+          {fields.active}
+        </Stack>
 
         <DialogContent sx={{ py: 0 }}>
           <Stack spacing={1}>
@@ -194,7 +181,7 @@ export default function PaymentInvoiceForm({ payment, onClose, ...other }: Props
                 variant="contained"
                 loading={isSubmitting}
               >
-                Wygeneruj
+                Dodaj
               </LoadingButton>
             </>
           )}

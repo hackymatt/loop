@@ -4,14 +4,18 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
-import { IPaymentStatus } from "src/types/payment";
 import { IQueryParams } from "src/types/query-params";
-import { IPaymentItemProp, IPaymentMethodProp, IPaymentCurrencyProp } from "src/types/purchase";
+import {
+  IPaymentProp,
+  IPaymentStatus,
+  IPaymentMethodProp,
+  IPaymentCurrencyProp,
+} from "src/types/payment";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
 
-const endpoint = "/payments" as const;
+const endpoint = "/service-payments" as const;
 
 type IPayment = {
   id: string;
@@ -55,7 +59,7 @@ export const paymentQuery = (query?: IQueryParams) => {
 export const usePayments = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = paymentQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as IPaymentItemProp[], count: data?.count, ...rest };
+  return { data: data?.results as IPaymentProp[], count: data?.count, ...rest };
 };
 
 export const usePaymentsPageCount = (query?: IQueryParams) => {

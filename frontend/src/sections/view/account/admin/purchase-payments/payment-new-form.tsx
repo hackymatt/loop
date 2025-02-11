@@ -11,12 +11,12 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useCreatePayment } from "src/api/purchase/payments";
+import { useCreatePayment } from "src/api/purchase/service-payments";
 
 import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
 
-import { IPaymentStatus } from "src/types/payment";
+import { IPaymentStatus, IPaymentMethodProp, IPaymentCurrencyProp } from "src/types/payment";
 
 import { schema, defaultValues } from "./payment";
 import { usePaymentFields } from "./payment-fields";
@@ -40,6 +40,7 @@ export default function PaymentNewForm({ onClose, ...other }: Props) {
   });
 
   const {
+    control,
     reset,
     handleSubmit,
     formState: { isSubmitting },
@@ -52,6 +53,8 @@ export default function PaymentNewForm({ onClose, ...other }: Props) {
       await createPayment({
         ...data,
         amount: data.amount * 100,
+        currency: data.currency as IPaymentCurrencyProp,
+        method: data.method as IPaymentMethodProp,
         status: data.status as IPaymentStatus,
       });
       reset();
@@ -62,7 +65,7 @@ export default function PaymentNewForm({ onClose, ...other }: Props) {
     }
   });
 
-  const { fields } = usePaymentFields();
+  const { fields } = usePaymentFields(control);
 
   return (
     <Dialog
@@ -85,7 +88,9 @@ export default function PaymentNewForm({ onClose, ...other }: Props) {
           <Stack spacing={1}>
             {fields.amount}
             {fields.currency}
+            {fields.method}
             {fields.status}
+            {fields.notes}
           </Stack>
         </DialogContent>
 

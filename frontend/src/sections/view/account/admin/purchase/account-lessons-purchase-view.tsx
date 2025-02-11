@@ -22,9 +22,10 @@ import { fDate } from "src/utils/format-time";
 import { usePurchase, usePurchasePageCount } from "src/api/purchase/purchase";
 
 import Scrollbar from "src/components/scrollbar";
+import DownloadCSVButton from "src/components/download-csv";
 
 import FilterPrice from "src/sections/filters/filter-price";
-import AccountPurchasesTableRow from "src/sections/account/admin/account-purchases-table-row";
+import AccountPurchasesTableRow from "src/sections/account/admin/account-lessons-purchases-table-row";
 
 import { IPurchaseItemProp } from "src/types/purchase";
 import { IQueryParamValue } from "src/types/query-params";
@@ -103,9 +104,12 @@ export default function AccountLessonsPurchaseView() {
 
   return (
     <>
-      <Typography variant="h5" sx={{ mb: 3 }}>
-        Zakupy
-      </Typography>
+      <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
+        <Typography variant="h5" sx={{ mb: 3 }}>
+          Zakupy
+        </Typography>
+        <DownloadCSVButton queryHook={usePurchase} disabled={(recordsCount ?? 0) === 0} />
+      </Stack>
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 5, mb: 3 }}>
         <FilterSearch

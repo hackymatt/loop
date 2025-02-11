@@ -24,18 +24,24 @@ class PurchaseOrderFilter(OrderFilter):
 
 class PurchaseFilter(FilterSet):
     service_title = CharFilter(field_name="service__title", lookup_expr="icontains")
+    price_from = NumberFilter(field_name="price", lookup_expr="gte")
+    price_to = NumberFilter(field_name="price", lookup_expr="lte")
     created_at = DateFilter(field_name="created_at", lookup_expr="contains")
 
     sort_by = PurchaseOrderFilter(
         choices=(
             ("service_title", "Service Title ASC"),
             ("-service_title", "Service Title DESC"),
+            ("price", "Price ASC"),
+            ("-price", "Price DESC"),
             ("created_at", "Created At ASC"),
             ("-created_at", "Created At DESC"),
         ),
         fields={
             "service_title": "service__title",
             "-service_title": "-service__title",
+            "price": "price",
+            "-price": "-price",
             "created_at": "created_at",
             "-created_at": "-created_at",
         },
@@ -45,6 +51,8 @@ class PurchaseFilter(FilterSet):
         model = Purchase
         fields = (
             "service_title",
+            "price_from",
+            "price_to",
             "created_at",
             "sort_by",
         )

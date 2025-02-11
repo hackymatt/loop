@@ -17,7 +17,7 @@ import { usePayment, useEditPayment } from "src/api/purchase/payment";
 import FormProvider from "src/components/hook-form";
 
 import { IPaymentStatus } from "src/types/payment";
-import { IPaymentItemProp } from "src/types/purchase";
+import { IPaymentProp } from "src/types/payment";
 
 import { schema, defaultValues } from "./payment";
 import { usePaymentFields } from "./payment-fields";

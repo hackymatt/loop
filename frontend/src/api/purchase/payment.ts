@@ -3,7 +3,7 @@ import { compact } from "lodash-es";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { IPaymentStatus } from "src/types/payment";
-import { IPaymentItemProp } from "src/types/purchase";
+import { IPaymentItemProp, IPaymentMethodProp, IPaymentCurrencyProp } from "src/types/purchase";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
@@ -14,7 +14,8 @@ type IPayment = {
   id: string;
   session_id: string;
   amount: number;
-  currency: "PLN" | "USD" | "EUR";
+  currency: IPaymentCurrencyProp;
+  method: IPaymentMethodProp;
   status: IPaymentStatus;
   created_at: string;
 };
@@ -32,13 +33,14 @@ export const paymentQuery = (id: string) => {
     try {
       const response = await Api.get<IPayment>(queryUrl);
       const { data } = response;
-      const { id: paymentId, session_id, amount, currency, status, created_at } = data;
+      const { id: paymentId, session_id, amount, currency, method, status, created_at } = data;
 
       modifiedResults = {
         id: paymentId,
         sessionId: session_id,
         amount: amount / 100,
         currency,
+        method,
         status,
         createdAt: created_at,
       };

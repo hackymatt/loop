@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
+import { useMemo, useState, useCallback } from "react";
 
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
+import { LoadingButton } from "@mui/lab";
 import TableBody from "@mui/material/TableBody";
 import Typography from "@mui/material/Typography";
 import TableContainer from "@mui/material/TableContainer";
@@ -15,29 +16,31 @@ import TablePagination from "@mui/material/TablePagination";
 import { paths } from "src/routes/paths";
 import { useRouter } from "src/routes/hooks";
 
+import { useBoolean } from "src/hooks/use-boolean";
 import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
 
-import { useLecturers } from "src/api/lecturers/lecturers";
 import { usePurchase, usePurchasePageCount } from "src/api/purchase/purchase";
 
+import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
+import DownloadCSVButton from "src/components/download-csv";
 
-import AccountPurchasesTableRow from "src/sections/account/admin/account-purchases-table-row";
+import FilterPrice from "src/sections/filters/filter-price";
+import AccountPurchasesTableRow from "src/sections/account/admin/account-services-purchases-table-row";
 
 import { IPurchaseItemProp } from "src/types/purchase";
 import { IQueryParamValue } from "src/types/query-params";
 
 import FilterSearch from "../../../../filters/filter-search";
-import FilterTeacher from "../../../../filters/filter-teacher";
 import AccountTableHead from "../../../../account/account-table-head";
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: "service_title", label: "Nazwa usługi", minWidth: 230 },
-  { id: "service_price", label: "Cena" },
+  { id: "price", label: "Cena" },
   { id: "created_at", label: "Data zakupu", minWidth: 150 },
   { id: "" },
 ];
@@ -47,6 +50,10 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, { label: "Wszystkie", value: -1 }];
 // ----------------------------------------------------------------------
 
 export default function AccountServicesPurchaseView() {
+  const newPurchaseFormOpen = useBoolean();
+  const editPurchaseFormOpen = useBoolean();
+  const deletePurchaseFormOpen = useBoolean();
+
   const { push } = useRouter();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
@@ -56,12 +63,13 @@ export default function AccountServicesPurchaseView() {
   const { data: pagesCount } = usePurchasePageCount(filters);
   const { data: lessons, count: recordsCount } = usePurchase(filters);
 
-  const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: -1 });
-
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
   const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "created_at";
   const order = filters?.sort_by && !filters.sort_by.startsWith("-") ? "asc" : "desc";
+
+  const [editedPurchase, setEditedPurchase] = useState<IPurchaseItemProp>();
+  const [deletedPurchase, setDeletedPurchase] = useState<IPurchaseItemProp>();
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -97,6 +105,20 @@ export default function AccountServicesPurchaseView() {
     [handleChange],
   );
 
+  const handleEditPayment = useCallback(
+    (purchase: IPurchaseItemProp) => {
+      push(`${paths.account.admin.purchases.services.payments}/?session_id=${purchase.paymentId}`);
+    },
+    [push],
+  );
+
+  const handleDeletePayment = useCallback(
+    (purchase: IPurchaseItemProp) => {
+      push(`${paths.account.admin.purchases.services.payments}/?session_id=${purchase.paymentId}`);
+    },
+    [push],
+  );
+
   const handleViewPayment = useCallback(
     (purchase: IPurchaseItemProp) => {
       push(`${paths.account.admin.purchases.services.payments}/?session_id=${purchase.paymentId}`);
@@ -106,24 +128,39 @@ export default function AccountServicesPurchaseView() {
 
   return (
     <>
-      <Typography variant="h5" sx={{ mb: 3 }}>
-        Zakupy
-      </Typography>
+      <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
+        <Typography variant="h5" sx={{ mb: 3 }}>
+          Zakupy
+        </Typography>
+        <Stack direction="row" spacing={1}>
+          <DownloadCSVButton queryHook={usePurchase} disabled={(recordsCount ?? 0) === 0} />
+          <LoadingButton
+            component="label"
+            variant="contained"
+            size="small"
+            color="success"
+            loading={false}
+            onClick={newPurchaseFormOpen.onToggle}
+          >
+            <Iconify icon="carbon:add" />
+          </LoadingButton>
+        </Stack>
+      </Stack>
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 5, mb: 3 }}>
         <FilterSearch
-          value={filters?.lesson_title ?? ""}
-          onChangeSearch={(value) => handleChange("lesson_title", value)}
-          placeholder="Nazwa lekcji..."
+          value={filters?.service_title ?? ""}
+          onChangeSearch={(value) => handleChange("service_title", value)}
+          placeholder="Nazwa usługi..."
         />
 
-        {teachers && (
-          <FilterTeacher
-            value={filters?.lecturer_id ?? ""}
-            options={teachers ?? []}
-            onChange={(value) => handleChange("lecturer_id", value)}
-          />
-        )}
+        <FilterPrice
+          valuePriceFrom={filters?.price_from ?? ""}
+          valuePriceTo={filters?.price_to ?? ""}
+          onChangeStartPrice={(value) => handleChange("price_from", value)}
+          onChangeEndPrice={(value) => handleChange("price_to", value)}
+          currency=""
+        />
 
         <DatePicker
           value={filters?.created_at ? new Date(filters.created_at) : null}
@@ -174,6 +211,8 @@ export default function AccountServicesPurchaseView() {
                   <AccountPurchasesTableRow
                     key={row.id}
                     row={row}
+                    onEdit={handleEditPayment}
+                    onDelete={handleDeletePayment}
                     onViewPayment={handleViewPayment}
                   />
                 ))}
@@ -196,6 +235,22 @@ export default function AccountServicesPurchaseView() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Box>
+
+      <PurchaseNewForm open={newPurchaseFormOpen.value} onClose={newPurchaseFormOpen.onFalse} />
+      {editedPurchase && (
+        <PurchaseEditForm
+          lesson={editedPurchase}
+          open={editPurchaseFormOpen.value}
+          onClose={editPurchaseFormOpen.onFalse}
+        />
+      )}
+      {deletedPurchase && (
+        <PurchaseDeleteForm
+          lesson={deletedPurchase}
+          open={deletePurchaseFormOpen.value}
+          onClose={deletePurchaseFormOpen.onFalse}
+        />
+      )}
     </>
   );
 }

@@ -11,7 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import { usePopover } from "src/hooks/use-popover";
 
 import { fDate } from "src/utils/format-time";
-import { fCurrency } from "src/utils/format-number";
+import { fNumber } from "src/utils/format-number";
 
 import Iconify from "src/components/iconify";
 
@@ -40,7 +40,7 @@ export default function AccountPurchasesTableRow({ row, onViewPayment }: Props) 
         </TableCell>
 
         <TableCell>
-          <InputBase value={fCurrency(row.lessonPrice ?? 0)} />
+          <InputBase value={fNumber(row.lessonPrice ?? 0, 2)} />
         </TableCell>
 
         <TableCell>

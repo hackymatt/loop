@@ -1,10 +1,18 @@
+import { Control, useController } from "react-hook-form";
+
 import { InputAdornment } from "@mui/material";
 
 import { RHFTextField, RHFAutocomplete } from "src/components/hook-form";
 
-import { PaymentStatus } from "src/types/payment";
+import { PaymentMethod, PaymentStatus, PaymentCurrency } from "src/types/payment";
 
-export const usePaymentFields = () => {
+export const usePaymentFields = (control: Control<any>) => {
+  const currencySymbol: { [key: string]: string } = { PLN: "zł", USD: "$", EUR: "€" } as const;
+
+  const {
+    field: { value: currency },
+  } = useController({ name: "currency", control });
+
   const fields: { [key: string]: JSX.Element } = {
     amount: (
       <RHFTextField
@@ -14,7 +22,11 @@ export const usePaymentFields = () => {
         type="number"
         InputProps={{
           inputProps: { min: 0, step: ".01" },
-          endAdornment: <InputAdornment position="end">zł</InputAdornment>,
+          endAdornment: (
+            <InputAdornment position="end">
+              {currencySymbol[(currency as string) ?? "PLN"]}
+            </InputAdornment>
+          ),
         }}
       />
     ),
@@ -23,7 +35,16 @@ export const usePaymentFields = () => {
         key="currency"
         name="currency"
         label="Waluta"
-        options={["PLN", "EUR", "USD"]}
+        options={Object.values(PaymentCurrency)}
+        isOptionEqualToValue={(option, value) => option === value}
+      />
+    ),
+    method: (
+      <RHFAutocomplete
+        key="method"
+        name="method"
+        label="Metoda"
+        options={Object.values(PaymentMethod)}
         isOptionEqualToValue={(option, value) => option === value}
       />
     ),
@@ -36,6 +57,7 @@ export const usePaymentFields = () => {
         isOptionEqualToValue={(option, value) => option === value}
       />
     ),
+    notes: <RHFTextField name="notes" multiline rows={3} label="Uwagi" />,
   };
   return { fields };
 };

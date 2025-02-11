@@ -20,7 +20,7 @@ import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
 
-import { usePayments, usePaymentsPageCount } from "src/api/purchase/payments";
+import { usePayments, usePaymentsPageCount } from "src/api/purchase/service-payments";
 
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
@@ -29,13 +29,11 @@ import DownloadCSVButton from "src/components/download-csv";
 import FilterPrice from "src/sections/filters/filter-price";
 import AccountServicesPaymentsTableRow from "src/sections/account/admin/account-services-payments-table-row";
 
-import { PaymentStatus } from "src/types/payment";
-import { IPaymentItemProp } from "src/types/purchase";
 import { IQueryParamValue } from "src/types/query-params";
+import { IPaymentProp, PaymentStatus } from "src/types/payment";
 
 import PaymentNewForm from "./payment-new-form";
 import PaymentEditForm from "./payment-edit-form";
-import PaymentInvoiceForm from "./payment-invoice-form";
 import FilterSearch from "../../../../filters/filter-search";
 import AccountTableHead from "../../../../account/account-table-head";
 
@@ -63,7 +61,6 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, { label: "Wszystkie", value: -1 }];
 export default function AccountServicePaymentView() {
   const newPaymentFormOpen = useBoolean();
   const editPaymentFormOpen = useBoolean();
-  const invoicePaymentFormOpen = useBoolean();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
@@ -78,8 +75,7 @@ export default function AccountServicePaymentView() {
   const order = filters?.sort_by && !filters.sort_by.startsWith("-") ? "asc" : "desc";
   const tab = filters?.status ? filters.status : "";
 
-  const [editedPayment, setEditedPayment] = useState<IPaymentItemProp>();
-  const [invoicePayment, setInvoicePayment] = useState<IPaymentItemProp>();
+  const [editedPayment, setEditedPayment] = useState<IPaymentProp>();
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -123,19 +119,11 @@ export default function AccountServicePaymentView() {
   );
 
   const handleEditPayment = useCallback(
-    (payment: IPaymentItemProp) => {
+    (payment: IPaymentProp) => {
       setEditedPayment(payment);
       editPaymentFormOpen.onToggle();
     },
     [editPaymentFormOpen],
-  );
-
-  const handleInvoicePayment = useCallback(
-    (payment: IPaymentItemProp) => {
-      setInvoicePayment(payment);
-      invoicePaymentFormOpen.onToggle();
-    },
-    [invoicePaymentFormOpen],
   );
 
   return (
@@ -183,6 +171,7 @@ export default function AccountServicePaymentView() {
           valuePriceTo={filters?.amount_to ?? ""}
           onChangeStartPrice={(value) => handleChange("amount_from", value)}
           onChangeEndPrice={(value) => handleChange("amount_to", value)}
+          currency=""
         />
 
         <DatePicker
@@ -235,7 +224,7 @@ export default function AccountServicePaymentView() {
                     key={row.id}
                     row={row}
                     onEdit={handleEditPayment}
-                    onInvoice={handleInvoicePayment}
+                    onInvoice={() => {}}
                   />
                 ))}
               </TableBody>
@@ -264,13 +253,6 @@ export default function AccountServicePaymentView() {
           payment={editedPayment}
           open={editPaymentFormOpen.value}
           onClose={editPaymentFormOpen.onFalse}
-        />
-      )}
-      {invoicePayment && (
-        <PaymentInvoiceForm
-          payment={invoicePayment}
-          open={invoicePaymentFormOpen.value}
-          onClose={invoicePaymentFormOpen.onFalse}
         />
       )}
     </>
