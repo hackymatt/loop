@@ -152,6 +152,12 @@ export const adminNavigation = [
       ],
     },
     {
+      title: "Usługi",
+      path: `${paths.account.admin.services.list}/?sort_by=title&page_size=10`,
+      icon: <Iconify icon="carbon:customer-service" />,
+      children: [],
+    },
+    {
       title: "Blog",
       path: paths.account.admin.posts.list,
       icon: <Iconify icon="carbon:blog" />,
