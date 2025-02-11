@@ -20,6 +20,7 @@ from newsletter.models import Newsletter
 from notification.models import Notification
 from message.models import Message
 from schedule.models import Schedule, Recording
+from service.models import Service
 from reservation.models import Reservation
 from teaching.models import Teaching
 from cart.models import Cart
@@ -163,12 +164,20 @@ def lessons_number():
     return Lesson.objects.count()
 
 
+def services_number():
+    return Service.objects.count()
+
+
 def modules_number():
     return Module.objects.count()
 
 
 def get_lesson(id: int):
     return Lesson.objects.get(pk=id)
+
+
+def get_service(id: int):
+    return Service.objects.get(pk=id)
 
 
 def get_module(id: int):

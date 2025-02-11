@@ -45,6 +45,9 @@ export const paths = {
         priceHistory: "/account/admin/lessons/price-history",
         technologies: "/account/admin/lessons/technologies",
       },
+      services: {
+        list: "/account/admin/services/list",
+      },
       posts: {
         list: "/account/admin/posts/list",
         categories: "/account/admin/posts/categories",

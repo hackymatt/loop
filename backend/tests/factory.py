@@ -21,6 +21,7 @@ from newsletter.models import Newsletter
 from notification.models import Notification
 from message.models import Message
 from schedule.models import Schedule, Meeting, Recording
+from service.models import Service
 from wishlist.models import Wishlist
 from post.models import Post, PostCategory
 from cart.models import Cart
@@ -279,6 +280,34 @@ def create_lesson_obj(
         "github_url": github_url,
         "price": price,
         "technologies": technologies,
+        "active": active,
+    }
+
+
+def create_service(
+    title: str,
+    description: str,
+    price: str,
+):
+    return Service.objects.create(
+        title=title,
+        description=description,
+        price=price,
+    )
+
+
+def create_service_obj(
+    title: str,
+    description: str,
+    price: str,
+    id: int = -1,
+    active: bool = True,
+):
+    return {
+        "id": id,
+        "title": title,
+        "description": description,
+        "price": price,
         "active": active,
     }
 

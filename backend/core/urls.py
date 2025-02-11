@@ -31,6 +31,7 @@ from lesson.views import (
     LessonViewSet,
     LessonPriceHistoryViewSet,
 )
+from service.views import ServiceViewSet
 from module.views import ModuleViewSet
 from technology.views import TechnologyViewSet, BestTechnologyViewSet
 from topic.views import TopicViewSet
@@ -111,6 +112,7 @@ router.register(r"reservation", ReservationViewSet, basename="reservation")
 router.register(r"reviews", ReviewViewSet, basename="reviews")
 router.register(r"reviews-stats", ReviewStatsViewSet, basename="reviews-stats")
 router.register(r"schedules", ManageScheduleViewSet, basename="schedules")
+router.register(r"services", ServiceViewSet, basename="services")
 router.register(r"tags", TagViewSet, basename="tags")
 router.register(r"teaching", ManageTeachingViewSet, basename="teaching")
 router.register(r"technologies", TechnologyViewSet, basename="technologies")

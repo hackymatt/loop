@@ -30,8 +30,6 @@ export type ICourseLessonProp = {
   title: string;
   duration: number;
   technologies: ICourseByTechnologyProps[];
-  videoPath?: string;
-  unLocked?: boolean;
   description: string;
   price: number;
   priceSale?: number;
