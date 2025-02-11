@@ -24,7 +24,7 @@ type Props = {
   onInvoice: (payment: IPaymentItemProp) => void;
 };
 
-export default function AccountPaymentsTableRow({ row, onEdit, onInvoice }: Props) {
+export default function AccountServicesPaymentsTableRow({ row, onEdit, onInvoice }: Props) {
   const openOptions = usePopover();
 
   const handleEdit = useCallback(() => {

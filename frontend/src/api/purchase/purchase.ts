@@ -87,6 +87,7 @@ export const purchaseQuery = (query?: IQueryParams) => {
       ({
         id,
         lesson,
+        price,
         lesson_status,
         reservation,
         review_status,
@@ -103,6 +104,7 @@ export const purchaseQuery = (query?: IQueryParams) => {
           lessonTitle,
           lessonResource: github_url,
           lessonDuration: duration,
+          lessonPrice: price,
           lessonStatus: lesson_status,
           lessonSlot: reservation
             ? [reservation.schedule.start_time, reservation.schedule.end_time]

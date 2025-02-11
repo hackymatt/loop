@@ -53,8 +53,14 @@ export const paths = {
         categories: "/account/admin/posts/categories",
       },
       purchases: {
-        list: "/account/admin/purchases/list",
-        payments: "/account/admin/purchases/payments",
+        lessons: {
+          list: "/account/admin/purchases/list",
+          payments: "/account/admin/purchases/payments",
+        },
+        services: {
+          list: "/account/admin/purchases/list",
+          payments: "/account/admin/purchases/payments",
+        },
       },
       tags: "/account/admin/tags",
       users: {

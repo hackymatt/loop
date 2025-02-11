@@ -3,8 +3,6 @@
 import { useMemo, useCallback } from "react";
 
 import Box from "@mui/material/Box";
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
 import Stack from "@mui/material/Stack";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -21,35 +19,24 @@ import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
 
-import { useLecturers } from "src/api/lecturers/lecturers";
 import { usePurchase, usePurchasePageCount } from "src/api/purchase/purchase";
 
 import Scrollbar from "src/components/scrollbar";
 
+import FilterPrice from "src/sections/filters/filter-price";
 import AccountPurchasesTableRow from "src/sections/account/admin/account-purchases-table-row";
 
+import { IPurchaseItemProp } from "src/types/purchase";
 import { IQueryParamValue } from "src/types/query-params";
-import { LessonStatus, IPurchaseItemProp } from "src/types/purchase";
 
 import FilterSearch from "../../../../filters/filter-search";
-import FilterTeacher from "../../../../filters/filter-teacher";
 import AccountTableHead from "../../../../account/account-table-head";
 
 // ----------------------------------------------------------------------
 
-const TABS = [
-  { id: "", label: "Wszystkie lekcje" },
-  { id: LessonStatus.NEW, label: "Nowe" },
-  { id: LessonStatus.PLANNED, label: "Zaplanowane" },
-  { id: LessonStatus.CONFIRMED, label: "Potwierdzone" },
-  { id: LessonStatus.COMPLETED, label: "Zakończone" },
-];
-
 const TABLE_HEAD = [
   { id: "lesson_title", label: "Nazwa lekcji", minWidth: 230 },
-  { id: "lesson_status", label: "Status" },
-  { id: "reservation_date", label: "Termin", minWidth: 150 },
-  { id: "lecturer_id", label: "Instruktor", minWidth: 100 },
+  { id: "price", label: "Cena" },
   { id: "created_at", label: "Data zakupu", minWidth: 150 },
   { id: "" },
 ];
@@ -58,7 +45,7 @@ const ROWS_PER_PAGE_OPTIONS = [5, 10, 25, { label: "Wszystkie", value: -1 }];
 
 // ----------------------------------------------------------------------
 
-export default function AccountPurchasePage() {
+export default function AccountLessonsPurchaseView() {
   const { push } = useRouter();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
@@ -68,13 +55,10 @@ export default function AccountPurchasePage() {
   const { data: pagesCount } = usePurchasePageCount(filters);
   const { data: lessons, count: recordsCount } = usePurchase(filters);
 
-  const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: -1 });
-
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
   const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "created_at";
   const order = filters?.sort_by && !filters.sort_by.startsWith("-") ? "asc" : "desc";
-  const tab = filters?.lesson_status ? filters.lesson_status : "";
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -85,13 +69,6 @@ export default function AccountPurchasePage() {
       }
     },
     [removeQueryParam, setQueryParam],
-  );
-
-  const handleChangeTab = useCallback(
-    (event: React.SyntheticEvent, newValue: string) => {
-      handleChange("lesson_status", newValue);
-    },
-    [handleChange],
   );
 
   const handleSort = useCallback(
@@ -119,7 +96,7 @@ export default function AccountPurchasePage() {
 
   const handleViewPayment = useCallback(
     (purchase: IPurchaseItemProp) => {
-      push(`${paths.account.admin.purchases.payments}/?session_id=${purchase.paymentId}`);
+      push(`${paths.account.admin.purchases.lessons.payments}/?session_id=${purchase.paymentId}`);
     },
     [push],
   );
@@ -130,18 +107,6 @@ export default function AccountPurchasePage() {
         Zakupy
       </Typography>
 
-      <Tabs
-        value={TABS.find((t) => t.id === tab)?.id ?? ""}
-        scrollButtons="auto"
-        variant="scrollable"
-        allowScrollButtonsMobile
-        onChange={handleChangeTab}
-      >
-        {TABS.map((t) => (
-          <Tab key={t.id} value={t.id} label={t.label} />
-        ))}
-      </Tabs>
-
       <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 5, mb: 3 }}>
         <FilterSearch
           value={filters?.lesson_title ?? ""}
@@ -149,13 +114,12 @@ export default function AccountPurchasePage() {
           placeholder="Nazwa lekcji..."
         />
 
-        {teachers && (
-          <FilterTeacher
-            value={filters?.lecturer_id ?? ""}
-            options={teachers ?? []}
-            onChange={(value) => handleChange("lecturer_id", value)}
-          />
-        )}
+        <FilterPrice
+          valuePriceFrom={filters?.price_from ?? ""}
+          valuePriceTo={filters?.price_to ?? ""}
+          onChangeStartPrice={(value) => handleChange("price_from", value)}
+          onChangeEndPrice={(value) => handleChange("price_to", value)}
+        />
 
         <DatePicker
           value={filters?.created_at ? new Date(filters.created_at) : null}

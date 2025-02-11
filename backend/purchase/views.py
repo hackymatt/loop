@@ -27,8 +27,8 @@ from math import floor
 from config_global import CONTACT_EMAIL
 
 
-def confirm_purchase(status, purchases, payment: Payment):
-    payment_successful = status == "S"
+def confirm_purchase(purchases, payment: Payment):
+    payment_successful = payment.status == "S"
 
     title = (
         "Twój zakup jest zakończony!"
@@ -46,6 +46,7 @@ def confirm_purchase(status, purchases, payment: Payment):
         else "/cart"
     )
     amount = payment.amount / 100
+    currency = payment.currency
 
     purchase = purchases[0]
 
@@ -64,7 +65,7 @@ def confirm_purchase(status, purchases, payment: Payment):
             "title": title,
             "description": description,
             "lessons": [purchase.lesson.title for purchase in purchases],
-            "amount": f"{amount:.2f}",
+            "amount": f"{amount:,.2f} {currency}",
             "status": "Otrzymana" if payment_successful else "Odrzucona",
         }
     }
@@ -92,7 +93,7 @@ def confirm_purchase(status, purchases, payment: Payment):
         "amount": payment.amount / 100,
         "currency": payment.currency,
         "status": "Zapłacono" if payment_successful else "Do zapłaty",
-        "method": "Przelewy24",
+        "method": payment.method,
         "account": "",
     }
     notes = ""
@@ -117,8 +118,7 @@ def confirm_purchase(status, purchases, payment: Payment):
 class PurchaseViewSet(ModelViewSet):
     http_method_names = ["get", "post"]
     queryset = (
-        Purchase.objects.filter(payment__status="S")
-        .add_meeting_url()
+        Purchase.objects.add_meeting_url()
         .add_recordings_ids()
         .add_reservation_id()
         .add_review_id()
@@ -135,7 +135,9 @@ class PurchaseViewSet(ModelViewSet):
         user = self.request.user
 
         if not user.is_superuser:
-            queryset = self.queryset.filter(student__profile__user=user)
+            queryset = self.queryset.filter(
+                student__profile__user=user, payment__status="S"
+            )
         else:
             queryset = self.queryset
 
@@ -262,7 +264,7 @@ class PurchaseViewSet(ModelViewSet):
             status_code = status.HTTP_200_OK
             data = {"token": ""}
             purchases = Purchase.objects.filter(payment=payment)
-            confirm_purchase(status="S", purchases=purchases, payment=payment)
+            confirm_purchase(purchases=purchases, payment=payment)
         else:
             # register payment
             przelewy24 = Przelewy24Api(payment=payment)
@@ -336,113 +338,14 @@ class PaymentStatusViewSet(ModelViewSet):
         serializer = PaymentSerializer(instance=payment)
         data = serializer.data
 
-        confirm_purchase(status=data["status"], purchases=purchases, payment=payment)
+        confirm_purchase(purchases=purchases, payment=payment)
 
         return Response(data)
 
 
 class PaymentViewSet(ModelViewSet):
-    http_method_names = ["get", "post", "put"]
+    http_method_names = ["get"]
     queryset = Payment.objects.all().order_by("id")
     serializer_class = PaymentSerializer
     filterset_class = PaymentFilter
     permission_classes = [IsAuthenticated, IsAdminUser]
-
-
-class PaymentInvoiceAPIView(APIView):
-    http_method_names = ["get", "post"]
-    permission_classes = [IsAuthenticated, IsAdminUser]
-
-    def get(self, request, id):
-        payment_obj = Payment.objects.get(id=id)
-        purchases = Purchase.objects.filter(payment=payment_obj)
-
-        if purchases.exists():
-            purchase = purchases.first()
-            customer = {
-                "id": purchase.student.id,
-                "full_name": f"{purchase.student.profile.user.first_name} {purchase.student.profile.user.last_name}",
-                "street_address": purchase.student.profile.street_address,
-                "city": purchase.student.profile.city,
-                "zip_code": purchase.student.profile.zip_code,
-                "country": purchase.student.profile.country,
-            }
-            items = [
-                {
-                    "id": purchase.lesson.id,
-                    "name": purchase.lesson.title,
-                    "price": purchase.lesson.price,
-                }
-                for purchase in purchases
-            ]
-            payment = {
-                "id": payment_obj.id,
-                "amount": payment_obj.amount / 100,
-                "currency": payment_obj.currency,
-                "status": "Zapłacono" if payment_obj.status == "S" else "Do zapłaty",
-                "method": "Przelewy24",
-                "account": "",
-            }
-        else:
-            customer = {
-                "id": "",
-                "full_name": "",
-                "street_address": "",
-                "city": "",
-                "zip_code": "",
-                "country": "",
-            }
-            items = []
-            payment = {
-                "id": payment_obj.id,
-                "amount": payment_obj.amount / 100,
-                "currency": payment_obj.currency,
-                "status": "Zapłacono" if payment_obj.status == "S" else "Do zapłaty",
-                "method": "Przelew",
-                "account": "PL 59 1160 2202 0000 0006 2440 0188",
-            }
-
-        return JsonResponse(
-            status=status.HTTP_200_OK,
-            data={
-                "customer": customer,
-                "items": items,
-                "payment": payment,
-                "notes": "",
-            },
-        )
-
-    def post(self, request):
-        invoice_data = request.data
-        customer = invoice_data["customer"]
-        items = invoice_data["items"]
-        payment = invoice_data["payment"]
-        notes = invoice_data["notes"]
-
-        mailer = Mailer()
-        mail_data = {
-            **{
-                "customer_full_name": customer["full_name"],
-            }
-        }
-
-        attachments = []
-
-        invoice = Invoice(customer=customer, items=items, payment=payment, notes=notes)
-        invoice_path = invoice.create()
-        attachments = [invoice_path]
-        invoice.upload()
-
-        invoice_number = invoice.get_invoice_number(id=payment["id"])
-
-        mailer.send(
-            email_template="generate_invoice.html",
-            to=[CONTACT_EMAIL],
-            subject=f"Faktura {invoice_number} została wygenerowana",
-            data=mail_data,
-            attachments=attachments,
-        )
-
-        invoice.remove()
-
-        return Response(status=status.HTTP_200_OK, data=invoice_data)

@@ -46,10 +46,16 @@ class Payment(BaseModel):
         ("EUR", "EUR"),
         ("USD", "USD"),
     )
+    METHOD_CHOICES = (("Przelewy24", "Przelewy24"),)
     session_id = UUIDField(default=uuid.uuid4)
     order_id = BigIntegerField(null=True, default=None)
     amount = IntegerField()
     currency = CharField(max_length=3, choices=CURRENCY_CHOICES, default="PLN")
+    method = CharField(
+        max_length=max(len(choice[0]) for choice in METHOD_CHOICES),
+        choices=METHOD_CHOICES,
+        default="Przelewy24",
+    )
     status = CharField(choices=STATUS_CHOICES, default="P")
 
     class Meta:
@@ -175,6 +181,9 @@ class PurchaseQuerySet(QuerySet):
 class PurchaseManager(Manager):
     def get_queryset(self):
         return PurchaseQuerySet(self.model, using=self._db)
+
+    def add_meeting_url(self):
+        return self.get_queryset().add_meeting_url()
 
 
 class Purchase(BaseModel):

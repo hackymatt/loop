@@ -178,20 +178,46 @@ export const adminNavigation = [
     },
     {
       title: "Zakupy",
-      path: paths.account.admin.posts.list,
+      path: paths.account.admin.purchases.lessons.list,
       icon: <Iconify icon="carbon:purchase" />,
       children: [
         {
-          title: "Spis zakupów",
-          path: `${paths.account.admin.purchases.list}/?sort_by=-created_at&page_size=10`,
-          icon: <Iconify icon="carbon:list" />,
-          children: [],
+          title: "Lekcje",
+          path: paths.account.admin.purchases.lessons.list,
+          icon: <Iconify icon="carbon:notebook" />,
+          children: [
+            {
+              title: "Spis zakupów",
+              path: `${paths.account.admin.purchases.lessons.list}/?sort_by=-created_at&page_size=10`,
+              icon: <Iconify icon="carbon:list" />,
+              children: [],
+            },
+            {
+              title: "Płatności",
+              path: `${paths.account.admin.purchases.lessons.payments}/?sort_by=-created_at&page_size=10`,
+              icon: <Iconify icon="carbon:money" />,
+              children: [],
+            },
+          ],
         },
         {
-          title: "Płatności",
-          path: `${paths.account.admin.purchases.payments}/?sort_by=-created_at&page_size=10`,
-          icon: <Iconify icon="carbon:money" />,
-          children: [],
+          title: "Usługi",
+          path: paths.account.admin.purchases.services.list,
+          icon: <Iconify icon="carbon:customer-service" />,
+          children: [
+            {
+              title: "Spis zakupów",
+              path: `${paths.account.admin.purchases.services.list}/?sort_by=-created_at&page_size=10`,
+              icon: <Iconify icon="carbon:list" />,
+              children: [],
+            },
+            {
+              title: "Płatności",
+              path: `${paths.account.admin.purchases.services.payments}/?sort_by=-created_at&page_size=10`,
+              icon: <Iconify icon="carbon:money" />,
+              children: [],
+            },
+          ],
         },
       ],
     },

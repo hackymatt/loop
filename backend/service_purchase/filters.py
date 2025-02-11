@@ -4,7 +4,7 @@ from django_filters import (
     NumberFilter,
     DateFilter,
 )
-from purchase.models import Purchase, Payment
+from service_purchase.models import Purchase, Payment
 from utils.ordering.ordering import OrderFilter
 
 
@@ -14,7 +14,7 @@ class PurchaseOrderFilter(OrderFilter):
             return super().filter(queryset, values)
 
         for value in values:
-            if "lesson_title" in value:
+            if "service_title" in value:
                 queryset = queryset.order_by(value.replace("_", "__"))
             else:
                 queryset = queryset.order_by(value)
@@ -23,45 +23,19 @@ class PurchaseOrderFilter(OrderFilter):
 
 
 class PurchaseFilter(FilterSet):
-    lesson_title = CharFilter(field_name="lesson__title", lookup_expr="icontains")
-    price_from = NumberFilter(field_name="price", lookup_expr="gte")
-    price_to = NumberFilter(field_name="price", lookup_expr="lte")
-    lesson_status = CharFilter(field_name="lesson_status", lookup_expr="exact")
-    lecturer_id = NumberFilter(field_name="lecturer_id", lookup_expr="exact")
-    review_status = CharFilter(field_name="review_status", lookup_expr="exact")
-    review_status_exclude = CharFilter(
-        label="Review status exclude",
-        field_name="review_status",
-        method="filter_review_status_exclude",
-    )
+    service_title = CharFilter(field_name="service__title", lookup_expr="icontains")
     created_at = DateFilter(field_name="created_at", lookup_expr="contains")
 
     sort_by = PurchaseOrderFilter(
         choices=(
-            ("lesson_title", "Lesson Title ASC"),
-            ("-lesson_title", "Lesson Title DESC"),
-            ("price", "Price ASC"),
-            ("-price", "Price DESC"),
-            ("lesson_status", "Lesson Status ASC"),
-            ("-lesson_status", "Lesson Status DESC"),
-            ("review_status", "Review Status ASC"),
-            ("-review_status", "Review Status DESC"),
-            ("lecturer_id", "Lecturer Id ASC"),
-            ("-lecturer_id", "Lecturer Id DESC"),
+            ("service_title", "Service Title ASC"),
+            ("-service_title", "Service Title DESC"),
             ("created_at", "Created At ASC"),
             ("-created_at", "Created At DESC"),
         ),
         fields={
-            "lesson_title": "lesson__title",
-            "-lesson_title": "-lesson__title",
-            "price": "price",
-            "-price": "-price",            
-            "lesson_status": "lesson_status",
-            "-lesson_status": "-lesson_status",
-            "review_status": "review_status",
-            "-review_status": "-review_status",
-            "lecturer_id": "lecturer_id",
-            "-lecturer_id": "-lecturer_id",
+            "service_title": "service__title",
+            "-service_title": "-service__title",
             "created_at": "created_at",
             "-created_at": "-created_at",
         },
@@ -70,20 +44,10 @@ class PurchaseFilter(FilterSet):
     class Meta:
         model = Purchase
         fields = (
-            "lesson_title",
-            "price_from",
-            "price_to",
-            "lesson_status",
-            "lecturer_id",
-            "review_status",
-            "review_status_exclude",
+            "service_title",
             "created_at",
             "sort_by",
         )
-
-    def filter_review_status_exclude(self, queryset, field_name, value):
-        lookup_field_name = field_name
-        return queryset.exclude(**{lookup_field_name: value})
 
 
 class PaymentFilter(FilterSet):

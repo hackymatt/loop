@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from "react";
+import { useCallback } from "react";
 
 import { Typography } from "@mui/material";
 import Popover from "@mui/material/Popover";
@@ -10,12 +10,12 @@ import IconButton from "@mui/material/IconButton";
 
 import { usePopover } from "src/hooks/use-popover";
 
-import { fDate, fDateTime } from "src/utils/format-time";
+import { fDate } from "src/utils/format-time";
+import { fCurrency } from "src/utils/format-number";
 
-import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 
-import { LessonStatus, IPurchaseItemProp } from "src/types/purchase";
+import { IPurchaseItemProp } from "src/types/purchase";
 
 // ----------------------------------------------------------------------
 
@@ -32,20 +32,6 @@ export default function AccountPurchasesTableRow({ row, onViewPayment }: Props) 
     onViewPayment(row);
   }, [openOptions, onViewPayment, row]);
 
-  const isCompleted = useMemo(
-    () => row.lessonStatus === LessonStatus.COMPLETED,
-    [row.lessonStatus],
-  );
-
-  const isPlanned = useMemo(() => row.lessonStatus === LessonStatus.PLANNED, [row.lessonStatus]);
-
-  const isConfirmed = useMemo(
-    () => row.lessonStatus === LessonStatus.CONFIRMED,
-    [row.lessonStatus],
-  );
-
-  const isNew = useMemo(() => row.lessonStatus === LessonStatus.NEW, [row.lessonStatus]);
-
   return (
     <>
       <TableRow hover>
@@ -54,26 +40,7 @@ export default function AccountPurchasesTableRow({ row, onViewPayment }: Props) 
         </TableCell>
 
         <TableCell>
-          <Label
-            sx={{ textTransform: "uppercase" }}
-            color={
-              (isCompleted && "error") ||
-              (isConfirmed && "success") ||
-              (isPlanned && "warning") ||
-              (isNew && "info") ||
-              "default"
-            }
-          >
-            {row.lessonStatus}
-          </Label>
-        </TableCell>
-
-        <TableCell>
-          <InputBase value={fDateTime(row.lessonSlot[0])} />
-        </TableCell>
-
-        <TableCell>
-          <InputBase value={row.teacher.name} />
+          <InputBase value={fCurrency(row.lessonPrice ?? 0)} />
         </TableCell>
 
         <TableCell>

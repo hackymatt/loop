@@ -101,6 +101,7 @@ INSTALLED_APPS = [
     "post",
     "candidate",
     "service",
+    "service_purchase",
 ]
 
 DEBUG_TOOLBAR_PANELS = [
@@ -400,6 +401,8 @@ DUMMY_STUDENT_EMAIL = os.getenv("DUMMY_STUDENT_EMAIL", "")
 DUMMY_STUDENT_PASSWORD = os.getenv("DUMMY_STUDENT_PASSWORD", "")
 DUMMY_LECTURER_EMAIL = os.getenv("DUMMY_LECTURER_EMAIL", "")
 DUMMY_LECTURER_PASSWORD = os.getenv("DUMMY_LECTURER_PASSWORD", "")
+DUMMY_OTHER_EMAIL = os.getenv("DUMMY_OTHER_EMAIL", "")
+DUMMY_OTHER_PASSWORD = os.getenv("DUMMY_OTHER_PASSWORD", "")
 
 BASE_FRONTEND_URL = os.environ.get("BASE_URL", "http://localhost")
 
