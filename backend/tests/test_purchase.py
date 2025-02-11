@@ -840,6 +840,36 @@ class PurchaseFilterTest(APITestCase):
         self.assertTrue(len(titles) == 1)
         self.assertTrue(titles[0])
 
+    def test_price_from_filter(self):
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        price = 5
+        response = self.client.get(f"{self.endpoint}?price_from={price}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 3)
+        prices = list(set([float(record["price"]) >= price for record in results]))
+        self.assertTrue(len(prices) == 1)
+        self.assertTrue(prices[0])
+
+    def test_price_to_filter(self):
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        price = 10
+        response = self.client.get(f"{self.endpoint}?price_to={price}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        records_count = data["records_count"]
+        results = data["results"]
+        self.assertEqual(records_count, 8)
+        prices = list(set([float(record["price"]) <= price for record in results]))
+        self.assertTrue(len(prices) == 1)
+        self.assertTrue(prices[0])
+
     def test_lesson_status_filter(self):
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
@@ -1177,6 +1207,7 @@ class PurchaseOrderTest(APITestCase):
 
         self.fields = [
             "lesson_title",
+            "price",
             "lesson_status",
             "review_status",
             "lecturer_id",

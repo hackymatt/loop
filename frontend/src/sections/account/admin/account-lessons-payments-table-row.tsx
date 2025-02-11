@@ -25,7 +25,7 @@ export default function AccountLessonsPaymentsTableRow({ row }: Props) {
   return (
     <TableRow hover>
       <TableCell>
-        <InputBase value={row.sessionId} />
+        <InputBase value={row.sessionId} sx={{ width: 1 }} />
       </TableCell>
 
       <TableCell>

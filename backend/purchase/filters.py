@@ -55,7 +55,7 @@ class PurchaseFilter(FilterSet):
             "lesson_title": "lesson__title",
             "-lesson_title": "-lesson__title",
             "price": "price",
-            "-price": "-price",            
+            "-price": "-price",
             "lesson_status": "lesson_status",
             "-lesson_status": "-lesson_status",
             "review_status": "review_status",

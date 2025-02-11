@@ -42,9 +42,9 @@ const TABS = [
 ];
 
 const TABLE_HEAD = [
-  { id: "session_id", label: "Id", minWidth: 230 },
+  { id: "session_id", label: "Id", minWidth: 400 },
   { id: "amount", label: "Kwota" },
-  { id: "status", label: "Status", minWidth: 150 },
+  { id: "status", label: "Status" },
   { id: "created_at", label: "Data płatności", minWidth: 150 },
 ];
 
