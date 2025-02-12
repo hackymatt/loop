@@ -64,13 +64,19 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete, onSendMes
 
   const canCancel = useMemo(
     () =>
-      (new Date(row.lessonSlot[0]).getTime() - new Date().getTime()) / (60 * 60 * 1000) >=
+      (new Date(row.lessonSlot![0]).getTime() - new Date().getTime()) / (60 * 60 * 1000) >=
       CANCELLATION_TIME,
     [row.lessonSlot],
   );
 
-  const hasRecordings = useMemo(() => row.recordings.length > 0, [row.recordings.length]);
-  const moreThanOneRecording = useMemo(() => row.recordings.length > 1, [row.recordings.length]);
+  const hasRecordings = useMemo(
+    () => row.recordings && row.recordings.length > 0,
+    [row.recordings],
+  );
+  const moreThanOneRecording = useMemo(
+    () => row.recordings && row.recordings.length > 1,
+    [row.recordings],
+  );
 
   return (
     <>
@@ -95,11 +101,11 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete, onSendMes
         </TableCell>
 
         <TableCell>
-          <InputBase value={fDateTime(row.lessonSlot[0])} />
+          <InputBase value={fDateTime(row.lessonSlot && row.lessonSlot[0])} />
         </TableCell>
 
         <TableCell>
-          <InputBase value={row.teacher.name} />
+          <InputBase value={row.teacher && row.teacher.name} />
         </TableCell>
 
         <TableCell>
@@ -176,7 +182,7 @@ export default function AccountLessonsTableRow({ row, onAdd, onDelete, onSendMes
         {isCompleted && (
           <>
             {hasRecordings && <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />}
-            {row.recordings.map((recording: IRecordingProp, index: number) => (
+            {(row.recordings ?? []).map((recording: IRecordingProp, index: number) => (
               <Link
                 key={recording.name}
                 href={recording.url}

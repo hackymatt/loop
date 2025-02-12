@@ -27,6 +27,10 @@ from cart.models import Cart
 from wishlist.models import Wishlist
 from post.models import Post, PostCategory
 from purchase.models import Payment
+from service_purchase.models import (
+    Payment as ServicePayment,
+    Purchase as ServicePurchase,
+)
 import uuid
 
 
@@ -314,6 +318,14 @@ def get_post(id: int):
 
 def payments_number():
     return Payment.objects.count()
+
+
+def service_payments_number():
+    return ServicePayment.objects.count()
+
+
+def service_purchases_number():
+    return ServicePurchase.objects.count()
 
 
 def mock_send_message(mock):

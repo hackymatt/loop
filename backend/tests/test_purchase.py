@@ -46,7 +46,7 @@ from purchase.utils import Invoice
 
 class PurchaseTest(TestCase):
     def setUp(self):
-        self.endpoint = "/api/purchase"
+        self.endpoint = "/api/purchases"
         self.client = APIClient()
         self.admin_data = {
             "email": "admin_test_email@example.com",
@@ -539,7 +539,7 @@ class PurchaseTest(TestCase):
 
 class PurchaseFilterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/api/purchase"
+        self.endpoint = "/api/purchases"
         self.data = {
             "email": "user@example.com",
             "password": "TestPassword123",
@@ -964,7 +964,7 @@ class PurchaseFilterTest(APITestCase):
 
 class PurchaseOrderTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/api/purchase"
+        self.endpoint = "/api/purchases"
         self.data = {
             "email": "user@example.com",
             "password": "TestPassword123",

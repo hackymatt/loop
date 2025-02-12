@@ -22,7 +22,7 @@ import { isStepFailed } from "src/components/stepper/step";
 
 import { ICourseLessonProp, ICourseByTechnologyProps } from "src/types/course";
 
-import { useLessonFields } from "./purchase-fields";
+import { usePurchaseFields } from "./purchase-fields";
 import { steps, schema, defaultValues } from "./purchase";
 
 // ----------------------------------------------------------------------
@@ -93,7 +93,7 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
 
   const [activeStep, setActiveStep] = useState(0);
 
-  const { fields } = useLessonFields();
+  const { fields } = usePurchaseFields();
 
   const stepContent = steps[activeStep].fields.map((field: string) => fields[field]);
 

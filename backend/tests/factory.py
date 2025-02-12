@@ -17,6 +17,10 @@ from tag.models import Tag
 from review.models import Review
 from module.models import Module
 from purchase.models import Purchase, Payment
+from service_purchase.models import (
+    Purchase as ServicePurchase,
+    Payment as ServicePayment,
+)
 from newsletter.models import Newsletter
 from notification.models import Notification
 from message.models import Message
@@ -288,11 +292,13 @@ def create_service(
     title: str,
     description: str,
     price: str,
+    active: bool = True,
 ):
     return Service.objects.create(
         title=title,
         description=description,
         price=price,
+        active=active,
     )
 
 
@@ -360,13 +366,19 @@ def create_payment(amount: int, status: str = "S"):
     return Payment.objects.create(amount=float(amount) * 100, status=status)
 
 
-def create_payment_obj(amount: int, status: str = "Success"):
-    return {"amount": amount, "status": status}
+def create_service_payment(amount: int, status: str = "S", notes: str = ""):
+    return ServicePayment.objects.create(
+        amount=float(amount) * 100, status=status, notes=notes
+    )
+
+
+def create_service_payment_obj(amount: int, status: str = "Success", notes: str = ""):
+    return {"amount": amount, "status": status, "notes": notes}
 
 
 def create_purchase(
     lesson: Lesson,
-    student: Profile,
+    student: StudentProfile,
     price: float,
     payment: Payment,
 ):
@@ -376,6 +388,29 @@ def create_purchase(
         price=price,
         payment=payment,
     )
+
+
+def create_service_purchase(
+    service: Service,
+    other: OtherProfile,
+    price: float,
+    payment: ServicePayment,
+):
+    return ServicePurchase.objects.create(
+        service=service,
+        other=other,
+        price=price,
+        payment=payment,
+    )
+
+
+def create_service_purchase_obj(
+    service: int,
+    other: int,
+    price: float,
+    payment: int,
+):
+    return {"service": service, "other": other, "price": price, "payment": payment}
 
 
 def create_newsletter(email: str, active: bool = True):

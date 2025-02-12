@@ -223,8 +223,8 @@ class UnregisterTest(TestCase):
         response = self.client.delete(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertTrue(is_user_found(self.data["email"]))
-        self.assertEqual(profiles_number(), 7)
-        self.assertEqual(users_number(), 7)
+        self.assertEqual(profiles_number(), 8)
+        self.assertEqual(users_number(), 8)
 
     def test_delete_authenticated_admin(self):
         # login
@@ -234,8 +234,8 @@ class UnregisterTest(TestCase):
         response = self.client.delete(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertTrue(is_user_found(self.admin_data["email"]))
-        self.assertEqual(profiles_number(), 7)
-        self.assertEqual(users_number(), 7)
+        self.assertEqual(profiles_number(), 8)
+        self.assertEqual(users_number(), 8)
 
     @patch.object(GmailApi, "_send_message")
     def test_delete_authenticated_lecturer(self, _send_message_mock):
@@ -247,8 +247,8 @@ class UnregisterTest(TestCase):
         response = self.client.delete(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(is_user_found(self.lecturer_data["email"]))
-        self.assertEqual(profiles_number(), 6)
-        self.assertEqual(users_number(), 6)
+        self.assertEqual(profiles_number(), 7)
+        self.assertEqual(users_number(), 7)
         self.assertEqual(_send_message_mock.call_count, 1)
         self.assertEqual(notifications_number(), 1)
 
@@ -262,8 +262,8 @@ class UnregisterTest(TestCase):
         response = self.client.delete(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(is_user_found(self.data["email"]))
-        self.assertEqual(profiles_number(), 6)
-        self.assertEqual(users_number(), 6)
+        self.assertEqual(profiles_number(), 7)
+        self.assertEqual(users_number(), 7)
         self.assertEqual(_send_message_mock.call_count, 1)
         self.assertTrue(get_schedule(self.future_schedule_1.id).lesson is None)
         self.assertEqual(notifications_number(), 1)
@@ -284,7 +284,7 @@ class UnregisterTest(TestCase):
         response = self.client.delete(self.endpoint)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(is_user_found(self.data["email"]))
-        self.assertEqual(profiles_number(), 6)
-        self.assertEqual(users_number(), 6)
+        self.assertEqual(profiles_number(), 7)
+        self.assertEqual(users_number(), 7)
         self.assertEqual(_send_message_mock.call_count, 0)
         self.assertEqual(notifications_number(), 0)
