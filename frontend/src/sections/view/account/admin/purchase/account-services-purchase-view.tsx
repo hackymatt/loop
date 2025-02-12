@@ -21,7 +21,7 @@ import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
 
-import { usePurchase, usePurchasePageCount } from "src/api/purchases/admin/services/purchases";
+import { usePurchase, usePurchasePageCount } from "src/api/purchases/services-purchases";
 
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
@@ -33,6 +33,7 @@ import AccountPurchasesTableRow from "src/sections/account/admin/account-service
 import { IPurchaseItemProp } from "src/types/purchase";
 import { IQueryParamValue } from "src/types/query-params";
 
+import PurchaseNewForm from "./purchase-new-form";
 import FilterSearch from "../../../../filters/filter-search";
 import AccountTableHead from "../../../../account/account-table-head";
 
@@ -236,8 +237,8 @@ export default function AccountServicesPurchaseView() {
         />
       </Box>
 
-      {/* <PurchaseNewForm open={newPurchaseFormOpen.value} onClose={newPurchaseFormOpen.onFalse} />
-      {editedPurchase && (
+      <PurchaseNewForm open={newPurchaseFormOpen.value} onClose={newPurchaseFormOpen.onFalse} />
+      {/* {editedPurchase && (
         <PurchaseEditForm
           lesson={editedPurchase}
           open={editPurchaseFormOpen.value}

@@ -8,10 +8,10 @@ import { IGender } from "src/types/testimonial";
 import { IQueryParams } from "src/types/query-params";
 import { ILessonStatus, IReviewStatus, IPurchaseItemProp } from "src/types/purchase";
 
-import { Api } from "../../service";
-import { getCsrfToken } from "../../utils/csrf";
+import { Api } from "../service";
+import { getCsrfToken } from "../utils/csrf";
 
-const endpoint = "/purchases" as const;
+const endpoint = "/service-purchases" as const;
 
 type ILecturer = {
   id: string;
@@ -65,8 +65,10 @@ type IPurchase = {
 };
 
 type ICreatePurchase = {
-  lessons: { lesson: string }[];
-  coupon: string;
+  service: string;
+  price: number;
+  other: string;
+  payment: string;
 };
 
 type ICreatePurchaseReturn = {
@@ -75,7 +77,7 @@ type ICreatePurchaseReturn = {
   responseCode: 0;
 };
 
-export const purchasesQuery = (query?: IQueryParams) => {
+export const purchaseQuery = (query?: IQueryParams) => {
   const url = endpoint;
   const urlParams = formatQueryParams(query);
   const queryUrl = urlParams ? `${url}?${urlParams}` : url;
@@ -138,14 +140,14 @@ export const purchasesQuery = (query?: IQueryParams) => {
   return { url, queryFn, queryKey: compact([endpoint, urlParams]) };
 };
 
-export const usePurchases = (query?: IQueryParams, enabled: boolean = true) => {
-  const { queryKey, queryFn } = purchasesQuery(query);
+export const usePurchase = (query?: IQueryParams, enabled: boolean = true) => {
+  const { queryKey, queryFn } = purchaseQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
   return { data: data?.results as IPurchaseItemProp[], count: data?.count, ...rest };
 };
 
-export const usePurchasesPageCount = (query?: IQueryParams) => {
-  const { queryKey, queryFn } = purchasesQuery(query);
+export const usePurchasePageCount = (query?: IQueryParams) => {
+  const { queryKey, queryFn } = purchaseQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.pagesCount, ...rest };
 };

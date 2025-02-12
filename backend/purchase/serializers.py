@@ -155,6 +155,18 @@ class PurchaseGetSerializer(ModelSerializer):
         return Payment.objects.get(id=purchase.payment_id).session_id
 
 
+class PurchaseGetAdminSerializer(ModelSerializer):
+    lesson = LessonSerializer()
+    payment = SerializerMethodField()
+
+    class Meta:
+        model = Purchase
+        exclude = ("student",)
+
+    def get_payment(self, purchase: Purchase):
+        return Payment.objects.get(id=purchase.payment_id).session_id
+
+
 class PurchaseSerializer(ModelSerializer):
     class Meta:
         model = Purchase

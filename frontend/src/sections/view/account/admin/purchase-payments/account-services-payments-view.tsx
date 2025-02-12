@@ -20,7 +20,7 @@ import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
 
-import { usePayments, usePaymentsPageCount } from "src/api/purchases/admin/services/payments";
+import { usePayments, usePaymentsPageCount } from "src/api/payment/services-payments";
 
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";

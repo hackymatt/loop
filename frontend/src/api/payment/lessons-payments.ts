@@ -1,15 +1,17 @@
-import { AxiosError } from "axios";
 import { compact } from "lodash-es";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
-import { IPaymentStatus } from "src/types/payment";
 import { IQueryParams } from "src/types/query-params";
-import { IPaymentItemProp, IPaymentMethodProp, IPaymentCurrencyProp } from "src/types/purchase";
+import {
+  IPaymentProp,
+  IPaymentStatus,
+  IPaymentMethodProp,
+  IPaymentCurrencyProp,
+} from "src/types/payment";
 
-import { Api } from "../../../service";
-import { getCsrfToken } from "../../../utils/csrf";
+import { Api } from "../service";
 
 const endpoint = "/payments" as const;
 
@@ -22,10 +24,6 @@ type IPayment = {
   status: IPaymentStatus;
   created_at: string;
 };
-
-type ICreatePayment = Omit<IPayment, "id" | "session_id" | "created_at">;
-
-type ICreatePaymentReturn = ICreatePayment;
 
 export const paymentQuery = (query?: IQueryParams) => {
   const url = endpoint;
@@ -55,30 +53,11 @@ export const paymentQuery = (query?: IQueryParams) => {
 export const usePayments = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = paymentQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as IPaymentItemProp[], count: data?.count, ...rest };
+  return { data: data?.results as IPaymentProp[], count: data?.count, ...rest };
 };
 
 export const usePaymentsPageCount = (query?: IQueryParams) => {
   const { queryKey, queryFn } = paymentQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.pagesCount, ...rest };
-};
-
-export const useCreatePayment = () => {
-  const queryClient = useQueryClient();
-  return useMutation<ICreatePaymentReturn, AxiosError, ICreatePayment>(
-    async (variables) => {
-      const result = await Api.post(endpoint, variables, {
-        headers: {
-          "X-CSRFToken": getCsrfToken(),
-        },
-      });
-      return result.data;
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [endpoint] });
-      },
-    },
-  );
 };

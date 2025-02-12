@@ -5,7 +5,7 @@ import { IGender } from "src/types/testimonial";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
-import { purchaseQuery } from "../purchases/admin/lessons/purchases";
+import { purchaseQuery } from "../purchases/lessons-purchases";
 
 const endpoint = "/reviews" as const;
 

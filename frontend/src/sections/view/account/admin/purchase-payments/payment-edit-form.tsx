@@ -12,7 +12,7 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { usePayment, useEditPayment } from "src/api/purchases/admin/services/payment";
+import { usePayment, useEditPayment } from "src/api/payment/services-payment";
 
 import FormProvider from "src/components/hook-form";
 

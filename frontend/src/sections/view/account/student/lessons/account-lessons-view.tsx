@@ -20,7 +20,7 @@ import { useQueryParams } from "src/hooks/use-query-params";
 import { fDate } from "src/utils/format-time";
 
 import { useLecturers } from "src/api/lecturers/lecturers";
-import { usePurchases, usePurchasesPageCount } from "src/api/purchases/student/purchases";
+import { usePurchases, usePurchasesPageCount } from "src/api/purchases/purchases";
 
 import Scrollbar from "src/components/scrollbar";
 

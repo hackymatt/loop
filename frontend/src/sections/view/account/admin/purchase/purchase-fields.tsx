@@ -1,22 +1,42 @@
-import { Typography, InputAdornment } from "@mui/material";
+import { useUsers } from "src/api/users/users";
+import { useServices } from "src/api/services/services";
+import { usePayments } from "src/api/payment/services-payments";
 
-import { GITHUB_REPO } from "src/config-global";
-import { useTechnologies } from "src/api/technologies/technologies";
+import { RHFTextField, RHFAutocompleteDnd } from "src/components/hook-form";
 
-import { RHFSwitch, RHFTextField, RHFAutocompleteDnd } from "src/components/hook-form";
+import { IPaymentProp } from "src/types/payment";
+import { IServiceProp } from "src/types/service";
+import { UserType, IUserDetailsProps } from "src/types/user";
 
-import { ICourseByTechnologyProps } from "src/types/course";
+export const usePurchaseFields = () => {
+  const { data: availableServices, isLoading: isLoadingServices } = useServices({
+    sort_by: "title",
+    page_size: -1,
+  });
+  const { data: availableOthers, isLoading: isLoadingOthers } = useUsers({
+    sort_by: "email",
+    user_type: UserType.OTHER[0],
+    active: "False",
+    page_size: -1,
+  });
 
-export const useLessonFields = () => {
-  const { data: availableTechnologies, isLoading: isLoadingTechnologies } = useTechnologies({
-    sort_by: "name",
+  const { data: availablePayments, isLoading: isLoadingPayments } = usePayments({
+    sort_by: "session_id",
     page_size: -1,
   });
 
   const fields: { [key: string]: JSX.Element } = {
-    title: <RHFTextField key="title" name="title" label="Nazwa" />,
-    description: (
-      <RHFTextField key="description" name="description" label="Opis" multiline rows={5} />
+    service: (
+      <RHFAutocompleteDnd
+        key="service"
+        name="service"
+        label="Usługa"
+        multiple
+        options={availableServices ?? []}
+        getOptionLabel={(option) => (option as IServiceProp)?.title ?? ""}
+        loading={isLoadingServices}
+        isOptionEqualToValue={(a, b) => a.title === b.title}
+      />
     ),
     price: (
       <RHFTextField
@@ -26,51 +46,33 @@ export const useLessonFields = () => {
         type="number"
         InputProps={{
           inputProps: { min: 0, step: ".01" },
-          endAdornment: <InputAdornment position="end">zł</InputAdornment>,
         }}
       />
     ),
-    duration: (
-      <RHFTextField
-        key="duration"
-        name="duration"
-        label="Czas trwania"
-        type="number"
-        InputProps={{
-          inputProps: { min: 30 },
-          endAdornment: <InputAdornment position="end">min</InputAdornment>,
-        }}
-      />
-    ),
-    github_url: (
-      <RHFTextField
-        key="github_url"
-        name="github_url"
-        label="Repozytorium"
-        type="url"
-        InputLabelProps={{ shrink: true }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Typography variant="body2">{GITHUB_REPO}</Typography>
-            </InputAdornment>
-          ),
-        }}
-      />
-    ),
-    technologies: (
+    other: (
       <RHFAutocompleteDnd
-        key="technologies"
-        name="technologies"
-        label="Technologie"
+        key="other"
+        name="other"
+        label="Użytkownik"
         multiple
-        options={availableTechnologies ?? []}
-        getOptionLabel={(option) => (option as ICourseByTechnologyProps)?.name ?? ""}
-        loading={isLoadingTechnologies}
-        isOptionEqualToValue={(a, b) => a.name === b.name}
+        options={availableOthers ?? []}
+        getOptionLabel={(option) => (option as IUserDetailsProps)?.email ?? ""}
+        loading={isLoadingOthers}
+        isOptionEqualToValue={(a, b) => a.email === b.email}
       />
     ),
-    active: <RHFSwitch name="active" label="Status" labelPlacement="start" sx={{ pr: 3 }} />,
+    payment: (
+      <RHFAutocompleteDnd
+        key="payment"
+        name="payment"
+        label="Płatność"
+        multiple
+        options={availablePayments ?? []}
+        getOptionLabel={(option) => (option as IPaymentProp)?.sessionId ?? ""}
+        loading={isLoadingPayments}
+        isOptionEqualToValue={(a, b) => a.sessionId === b.sessionId}
+      />
+    ),
   };
   return { fields };
 };

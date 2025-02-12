@@ -192,9 +192,8 @@ def get_image_content(url: str, provider: str) -> str:
 
 
 def create_user(username, email, first_name, last_name, dob, gender, image, join_type):
-    user, created = User.objects.get_or_create(email=email)
+    user, created = User.objects.get_or_create(email=email, username=email)
     if created:
-        user.username = username
         user.first_name = first_name
         user.last_name = last_name
         user.is_active = True

@@ -10,7 +10,7 @@ import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
-import { purchaseQuery } from "../purchases/admin/lessons/purchases";
+import { purchaseQuery } from "../purchases/lessons-purchases";
 
 const endpoint = "/reviews" as const;
 

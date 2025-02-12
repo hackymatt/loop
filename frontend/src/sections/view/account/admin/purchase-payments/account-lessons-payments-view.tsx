@@ -18,7 +18,7 @@ import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
 
-import { usePayments, usePaymentsPageCount } from "src/api/purchases/admin/lessons/payments";
+import { usePayments, usePaymentsPageCount } from "src/api/payment/lessons-payments";
 
 import Scrollbar from "src/components/scrollbar";
 import DownloadCSVButton from "src/components/download-csv";

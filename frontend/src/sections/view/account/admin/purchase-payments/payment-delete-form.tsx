@@ -10,7 +10,7 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useDeletePayment } from "src/api/purchases/admin/services/payment";
+import { useDeletePayment } from "src/api/payment/services-payment";
 
 import FormProvider from "src/components/hook-form";
 

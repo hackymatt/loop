@@ -9,8 +9,8 @@ import {
   IPaymentCurrencyProp,
 } from "src/types/payment";
 
-import { Api } from "../../../service";
-import { getCsrfToken } from "../../../utils/csrf";
+import { Api } from "../service";
+import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/service-payments" as const;
 

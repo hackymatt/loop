@@ -39,7 +39,7 @@ class PurchaseGetSerializer(ModelSerializer):
 class PurchaseSerializer(ModelSerializer):
     class Meta:
         model = Purchase
-        exclude = ("student", "payment")
+        fields = "__all__"
 
     def validate(self, data):
         self.validate_service(data["service"])
@@ -47,13 +47,13 @@ class PurchaseSerializer(ModelSerializer):
 
         return data
 
-    def validate_service(self, service):
+    def validate_service(self, service: Service):
         if not service.active:
             raise ValidationError("Usługa jest nieaktywna.")
 
         return service
 
-    def validate_price(self, price, payment):
+    def validate_price(self, price: float, payment: Payment):
         payment = Payment.objects.get(id=payment)
         amount = payment.amount / 100
         purchases = Purchase.objects.filter(payment=payment).all()

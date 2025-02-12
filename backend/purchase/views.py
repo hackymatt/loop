@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from purchase.serializers import (
     PurchaseSerializer,
     PurchaseGetSerializer,
+    PurchaseGetAdminSerializer,
     PaymentSerializer,
 )
 from purchase.models import Purchase, Payment
@@ -130,6 +131,11 @@ class PurchaseViewSet(ModelViewSet):
     serializer_class = PurchaseGetSerializer
     filterset_class = PurchaseFilter
     permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.request.user.is_superuser:
+            return PurchaseGetAdminSerializer
+        return self.serializer_class
 
     def get_queryset(self):
         user = self.request.user
