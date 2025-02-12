@@ -368,7 +368,7 @@ class ServiceFilterTest(APITestCase):
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
-        self.service_5.active = True
+        self.service_5.active = False
         self.service_5.save()
 
         active = "True"
@@ -377,7 +377,7 @@ class ServiceFilterTest(APITestCase):
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 1)
+        self.assertEqual(records_count, 5)
         actives = list(set([record["active"] for record in results]))
         self.assertTrue(len(actives) == 1)
         self.assertTrue(actives[0])

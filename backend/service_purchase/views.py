@@ -53,6 +53,7 @@ def confirm_purchase(purchases, payment: Payment):
         }
         for purchase in purchases
     ]
+    notes = payment.notes
     payment = {
         "id": payment.id,
         "amount": payment.amount / 100,
@@ -61,7 +62,6 @@ def confirm_purchase(purchases, payment: Payment):
         "method": payment.method,
         "account": ACCOUNT_NUMBER if payment.method == "Przelew" else None,
     }
-    notes = payment.notes
     invoice = Invoice(customer=customer, items=items, payment=payment, notes=notes)
     if not payment_rejected:
         invoice_path = invoice.create()
@@ -108,5 +108,5 @@ def check_total_purchase_amount(sender, instance: Purchase, **kwargs):
 
     total_price = purchases.aggregate(Sum("price"))["price__sum"]
 
-    if total_price == payment.amount:
+    if total_price == payment.amount / 100:
         confirm_purchase(purchases=purchases, payment=payment)

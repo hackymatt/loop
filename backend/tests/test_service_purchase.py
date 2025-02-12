@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 from django.test import TestCase
+from unittest.mock import patch
 from .factory import (
     create_user,
     create_profile,
@@ -17,9 +18,15 @@ from .helpers import (
     is_float,
     is_data_match,
     service_purchases_number as purchases_number,
+    mock_send_message,
+    mock_upload_invoice,
 )
 import json
 from django.contrib import auth
+from django.db.models.signals import post_save
+from service_purchase.models import Purchase
+from utils.google.gmail import GmailApi
+from purchase.utils import Invoice
 
 
 class PurchaseTest(TestCase):
@@ -52,7 +59,9 @@ class PurchaseTest(TestCase):
             password=self.data["password"],
             is_active=True,
         )
-        self.profile = create_student_profile(profile=create_profile(user=self.user_1))
+        self.profile_1 = create_student_profile(
+            profile=create_profile(user=self.user_1)
+        )
 
         self.user_2 = create_user(
             first_name="first_name",
@@ -140,7 +149,9 @@ class PurchaseTest(TestCase):
             payment=self.payment_2,
         )
 
-        self.payment_3 = create_payment(amount=float(self.service_6.price), status="P")
+        self.payment_3 = create_payment(
+            amount=float(self.service_6.price) + 10, status="P"
+        )
         self.purchase_6 = create_purchase(
             service=self.service_6,
             other=self.profile,
@@ -330,6 +341,77 @@ class PurchaseTest(TestCase):
         response = self.client.delete(f"{self.endpoint}/{self.purchase_1.id}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(purchases_number(), 5)
+
+
+class PurchaseSignalTest(TestCase):
+    def setUp(self):
+        self.data = {
+            "email": "user@example.com",
+            "password": "TestPassword123",
+        }
+        self.user = create_user(
+            first_name="first_name",
+            last_name="last_name",
+            email="other@example.com",
+            password=self.data["password"],
+            is_active=False,
+        )
+        self.profile = create_other_profile(profile=create_profile(user=self.user))
+
+        self.service = create_service(
+            title="Python service 1",
+            description="bbbb",
+            price="9.99",
+        )
+
+        self.payment = create_payment(amount=50)
+        self.purchase_1 = create_purchase(
+            service=self.service, other=self.profile, price=30, payment=self.payment
+        )
+
+    @patch.object(Invoice, "_upload")
+    @patch.object(GmailApi, "_send_message")
+    def test_signal_triggers_confirm_purchase_1(
+        self, _send_message_mock, upload_invoice_mock
+    ):
+        mock_send_message(mock=_send_message_mock)
+        mock_upload_invoice(mock=upload_invoice_mock)
+        create_purchase(
+            service=self.service, other=self.profile, price=20, payment=self.payment
+        )
+        self.assertEqual(_send_message_mock.call_count, 1)
+        self.assertEqual(upload_invoice_mock.call_count, 1)
+
+    @patch.object(Invoice, "_upload")
+    @patch.object(GmailApi, "_send_message")
+    def test_signal_triggers_confirm_purchase_2(
+        self, _send_message_mock, upload_invoice_mock
+    ):
+        mock_send_message(mock=_send_message_mock)
+        mock_upload_invoice(mock=upload_invoice_mock)
+        self.payment.status = "F"
+        self.payment.save()
+        create_purchase(
+            service=self.service, other=self.profile, price=20, payment=self.payment
+        )
+        self.assertEqual(_send_message_mock.call_count, 1)
+        self.assertEqual(upload_invoice_mock.call_count, 0)
+
+    @patch.object(Invoice, "_upload")
+    @patch.object(GmailApi, "_send_message")
+    def test_signal_does_not_trigger_when_total_is_less(
+        self, _send_message_mock, upload_invoice_mock
+    ):
+        mock_send_message(mock=_send_message_mock)
+        mock_upload_invoice(mock=upload_invoice_mock)
+        create_purchase(
+            service=self.service, other=self.profile, price=10, payment=self.payment
+        )
+        self.assertEqual(_send_message_mock.call_count, 0)
+        self.assertEqual(upload_invoice_mock.call_count, 0)
+
+    def test_signal_is_connected(self):
+        self.assertTrue(post_save.has_listeners(Purchase))
 
 
 class PurchaseFilterTest(APITestCase):
