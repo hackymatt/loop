@@ -535,6 +535,7 @@ class PurchaseTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(notifications_number(), 1)
         self.assertEqual(_send_message_mock.call_count, 1)
+        self.assertEqual(upload_invoice_mock.call_count, 1)
 
 
 class PurchaseFilterTest(APITestCase):

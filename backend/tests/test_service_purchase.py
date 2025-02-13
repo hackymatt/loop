@@ -9,8 +9,8 @@ from .factory import (
     create_admin_profile,
     create_other_profile,
     create_service,
+    create_payment,
     create_service_purchase as create_purchase,
-    create_service_payment as create_payment,
     create_service_purchase_obj as create_purchase_obj,
 )
 from .helpers import (
@@ -24,12 +24,12 @@ from .helpers import (
 import json
 from django.contrib import auth
 from django.db.models.signals import post_save
-from service_purchase.models import Purchase
+from purchase.models import ServicePurchase
 from utils.google.gmail import GmailApi
 from purchase.utils import Invoice
 
 
-class PurchaseTest(TestCase):
+class ServicePurchaseTest(TestCase):
     def setUp(self):
         self.endpoint = "/api/service-purchases"
         self.client = APIClient()
@@ -343,7 +343,7 @@ class PurchaseTest(TestCase):
         self.assertEqual(purchases_number(), 5)
 
 
-class PurchaseSignalTest(TestCase):
+class ServicePurchaseSignalTest(TestCase):
     def setUp(self):
         self.data = {
             "email": "user@example.com",
@@ -411,10 +411,10 @@ class PurchaseSignalTest(TestCase):
         self.assertEqual(upload_invoice_mock.call_count, 0)
 
     def test_signal_is_connected(self):
-        self.assertTrue(post_save.has_listeners(Purchase))
+        self.assertTrue(post_save.has_listeners(ServicePurchase))
 
 
-class PurchaseFilterTest(APITestCase):
+class ServicePurchaseFilterTest(APITestCase):
     def setUp(self):
         self.endpoint = "/api/service-purchases"
         self.client = APIClient()
@@ -594,7 +594,7 @@ class PurchaseFilterTest(APITestCase):
         self.assertTrue(dates[0])
 
 
-class PurchaseOrderTest(APITestCase):
+class ServicePurchaseOrderTest(APITestCase):
     def setUp(self):
         self.endpoint = "/api/service-purchases"
         self.client = APIClient()

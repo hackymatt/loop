@@ -16,11 +16,7 @@ from finance.models import Finance, FinanceHistory
 from tag.models import Tag
 from review.models import Review
 from module.models import Module
-from purchase.models import Purchase, Payment
-from service_purchase.models import (
-    Purchase as ServicePurchase,
-    Payment as ServicePayment,
-)
+from purchase.models import Purchase, ServicePurchase, Payment
 from newsletter.models import Newsletter
 from notification.models import Notification
 from message.models import Message
@@ -366,13 +362,7 @@ def create_payment(amount: int, status: str = "S"):
     return Payment.objects.create(amount=float(amount) * 100, status=status)
 
 
-def create_service_payment(amount: int, status: str = "S", notes: str = ""):
-    return ServicePayment.objects.create(
-        amount=float(amount) * 100, status=status, notes=notes
-    )
-
-
-def create_service_payment_obj(amount: int, status: str = "Success", notes: str = ""):
+def create_payment_obj(amount: int, status: str = "Success", notes: str = ""):
     return {"amount": amount, "status": status, "notes": notes}
 
 
@@ -394,7 +384,7 @@ def create_service_purchase(
     service: Service,
     other: OtherProfile,
     price: float,
-    payment: ServicePayment,
+    payment: Payment,
 ):
     return ServicePurchase.objects.create(
         service=service,

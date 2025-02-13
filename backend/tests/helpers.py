@@ -26,11 +26,7 @@ from teaching.models import Teaching
 from cart.models import Cart
 from wishlist.models import Wishlist
 from post.models import Post, PostCategory
-from purchase.models import Payment
-from service_purchase.models import (
-    Payment as ServicePayment,
-    Purchase as ServicePurchase,
-)
+from purchase.models import ServicePurchase, Payment
 import uuid
 
 
@@ -318,10 +314,6 @@ def get_post(id: int):
 
 def payments_number():
     return Payment.objects.count()
-
-
-def service_payments_number():
-    return ServicePayment.objects.count()
 
 
 def service_purchases_number():

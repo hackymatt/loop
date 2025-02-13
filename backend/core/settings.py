@@ -101,7 +101,6 @@ INSTALLED_APPS = [
     "post",
     "candidate",
     "service",
-    "service_purchase",
 ]
 
 DEBUG_TOOLBAR_PANELS = [

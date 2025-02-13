@@ -54,13 +54,10 @@ from wishlist.views import WishlistViewSet
 from cart.views import CartViewSet
 from purchase.views import (
     PurchaseViewSet,
+    ServicePurchaseViewSet,
     PaymentViewSet,
     PaymentVerifyAPIView,
     PaymentStatusViewSet,
-)
-from service_purchase.views import (
-    PurchaseViewSet as ServicePurchaseViewSet,
-    PaymentViewSet as ServicePaymentViewSet,
 )
 from teaching.views import ManageTeachingViewSet, TeachingViewSet
 from reservation.views import ReservationViewSet
@@ -113,7 +110,6 @@ router.register(r"payments", PaymentViewSet, basename="payments")
 router.register(
     r"service-purchases", ServicePurchaseViewSet, basename="service-purchase"
 )
-router.register(r"service-payments", ServicePaymentViewSet, basename="service-payments")
 router.register(r"register", ProfileRegisterViewSet, basename="user_register")
 router.register(r"reservation", ReservationViewSet, basename="reservation")
 router.register(r"reviews", ReviewViewSet, basename="reviews")
