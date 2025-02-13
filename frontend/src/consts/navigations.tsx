@@ -182,42 +182,22 @@ export const adminNavigation = [
       icon: <Iconify icon="carbon:purchase" />,
       children: [
         {
+          title: "Płatności",
+          path: `${paths.account.admin.purchases.payments}/?sort_by=-created_at&page_size=10`,
+          icon: <Iconify icon="carbon:money" />,
+          children: [],
+        },
+        {
           title: "Lekcje",
-          path: paths.account.admin.purchases.lessons.root,
+          path: `${paths.account.admin.purchases.lessons}/?sort_by=-created_at&page_size=10`,
           icon: <Iconify icon="carbon:notebook" />,
-          children: [
-            {
-              title: "Spis zakupów",
-              path: `${paths.account.admin.purchases.lessons.list}/?sort_by=-created_at&page_size=10`,
-              icon: <Iconify icon="carbon:list" />,
-              children: [],
-            },
-            {
-              title: "Płatności",
-              path: `${paths.account.admin.purchases.lessons.payments}/?sort_by=-created_at&page_size=10`,
-              icon: <Iconify icon="carbon:money" />,
-              children: [],
-            },
-          ],
+          children: [],
         },
         {
           title: "Usługi",
-          path: paths.account.admin.purchases.services.root,
+          path: `${paths.account.admin.purchases.services}/?sort_by=-created_at&page_size=10`,
           icon: <Iconify icon="carbon:customer-service" />,
-          children: [
-            {
-              title: "Spis zakupów",
-              path: `${paths.account.admin.purchases.services.list}/?sort_by=-created_at&page_size=10`,
-              icon: <Iconify icon="carbon:list" />,
-              children: [],
-            },
-            {
-              title: "Płatności",
-              path: `${paths.account.admin.purchases.services.payments}/?sort_by=-created_at&page_size=10`,
-              icon: <Iconify icon="carbon:money" />,
-              children: [],
-            },
-          ],
+          children: [],
         },
       ],
     },

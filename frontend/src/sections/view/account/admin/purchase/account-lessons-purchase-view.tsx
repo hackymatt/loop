@@ -19,7 +19,10 @@ import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
 
-import { usePurchase, usePurchasePageCount } from "src/api/purchases/lessons-purchases";
+import {
+  useLessonPurchases,
+  useLessonPurchasesPageCount,
+} from "src/api/purchases/lessons-purchases";
 
 import Scrollbar from "src/components/scrollbar";
 import DownloadCSVButton from "src/components/download-csv";
@@ -53,8 +56,8 @@ export default function AccountLessonsPurchaseView() {
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const { data: pagesCount } = usePurchasePageCount(filters);
-  const { data: lessons, count: recordsCount } = usePurchase(filters);
+  const { data: pagesCount } = useLessonPurchasesPageCount(filters);
+  const { data: lessons, count: recordsCount } = useLessonPurchases(filters);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
@@ -97,7 +100,7 @@ export default function AccountLessonsPurchaseView() {
 
   const handleViewPayment = useCallback(
     (purchase: IPurchaseItemProp) => {
-      push(`${paths.account.admin.purchases.lessons.payments}/?session_id=${purchase.paymentId}`);
+      push(`${paths.account.admin.purchases.payments}/?session_id=${purchase.paymentId}`);
     },
     [push],
   );
@@ -106,9 +109,9 @@ export default function AccountLessonsPurchaseView() {
     <>
       <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
         <Typography variant="h5" sx={{ mb: 3 }}>
-          Zakupy
+          Zakupy lekcji
         </Typography>
-        <DownloadCSVButton queryHook={usePurchase} disabled={(recordsCount ?? 0) === 0} />
+        <DownloadCSVButton queryHook={useLessonPurchases} disabled={(recordsCount ?? 0) === 0} />
       </Stack>
 
       <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ mt: 5, mb: 3 }}>

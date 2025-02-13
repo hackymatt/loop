@@ -1,16 +1,16 @@
 import { useForm } from "react-hook-form";
 
 import Button from "@mui/material/Button";
-import { Typography } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
+import { Alert, Stack, Typography } from "@mui/material";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useDeletePayment } from "src/api/payment/services-payment";
+import { useDeletePayment } from "src/api/payment/payment";
 
 import FormProvider from "src/components/hook-form";
 
@@ -37,7 +37,7 @@ export default function PaymentDeleteForm({ payment, onClose, ...other }: Props)
   const {
     reset,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { errors, isSubmitting },
   } = methods;
 
   const handleFormError = useFormErrorHandler(methods);
@@ -70,7 +70,10 @@ export default function PaymentDeleteForm({ payment, onClose, ...other }: Props)
         <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń płatność</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
-          <Typography>{`Czy na pewno chcesz usunąć płatność ${payment.sessionId}?`}</Typography>
+          <Stack spacing={1}>
+            <Typography>{`Czy na pewno chcesz usunąć płatność ${payment.sessionId}?`}</Typography>
+            {errors.root && <Alert severity="error">{errors.root.message}</Alert>}
+          </Stack>
         </DialogContent>
 
         <DialogActions
@@ -89,7 +92,13 @@ export default function PaymentDeleteForm({ payment, onClose, ...other }: Props)
             Anuluj
           </Button>
 
-          <LoadingButton color="error" type="submit" variant="contained" loading={isSubmitting}>
+          <LoadingButton
+            color="error"
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+            disabled={!!errors.root}
+          >
             Usuń
           </LoadingButton>
         </DialogActions>

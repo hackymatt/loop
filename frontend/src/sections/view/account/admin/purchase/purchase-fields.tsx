@@ -1,6 +1,6 @@
 import { useUsers } from "src/api/users/users";
 import { useServices } from "src/api/services/services";
-import { usePayments } from "src/api/payment/services-payments";
+import { usePayments } from "src/api/payment/payments";
 
 import { RHFTextField, RHFAutocompleteDnd } from "src/components/hook-form";
 

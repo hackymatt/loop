@@ -28,5 +28,6 @@ export type IPaymentProp = {
   currency?: IPaymentCurrencyProp;
   method?: IPaymentMethodProp;
   status: IPaymentStatus;
+  notes?: string;
   createdAt?: Date;
 };

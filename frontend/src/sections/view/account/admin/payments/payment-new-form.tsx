@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -12,16 +11,12 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { usePayment, useEditPayment } from "src/api/payment/services-payment";
+import { useCreatePayment } from "src/api/payment/payments";
 
 import FormProvider from "src/components/hook-form";
+import { useToastContext } from "src/components/toast";
 
-import {
-  IPaymentProp,
-  IPaymentStatus,
-  IPaymentMethodProp,
-  IPaymentCurrencyProp,
-} from "src/types/payment";
+import { IPaymentStatus, IPaymentMethodProp, IPaymentCurrencyProp } from "src/types/payment";
 
 import { schema, defaultValues } from "./payment";
 import { usePaymentFields } from "./payment-fields";
@@ -29,15 +24,15 @@ import { usePaymentFields } from "./payment-fields";
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  payment: IPaymentProp;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function PaymentEditForm({ payment, onClose, ...other }: Props) {
-  const { data: categoryData } = usePayment(payment.id!);
-  const { mutateAsync: editPayment } = useEditPayment(payment.id!);
+export default function PaymentNewForm({ onClose, ...other }: Props) {
+  const { enqueueSnackbar } = useToastContext();
+
+  const { mutateAsync: createPayment } = useCreatePayment();
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -51,17 +46,11 @@ export default function PaymentEditForm({ payment, onClose, ...other }: Props) {
     formState: { isSubmitting },
   } = methods;
 
-  useEffect(() => {
-    if (categoryData) {
-      reset(categoryData);
-    }
-  }, [reset, categoryData]);
-
   const handleFormError = useFormErrorHandler(methods);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await editPayment({
+      await createPayment({
         ...data,
         amount: data.amount * 100,
         currency: data.currency as IPaymentCurrencyProp,
@@ -70,6 +59,7 @@ export default function PaymentEditForm({ payment, onClose, ...other }: Props) {
       });
       reset();
       onClose();
+      enqueueSnackbar("Płatność została dodana", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }
@@ -92,7 +82,7 @@ export default function PaymentEditForm({ payment, onClose, ...other }: Props) {
       }}
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj płatność</DialogTitle>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nową płatność</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
           <Stack spacing={1}>
@@ -120,8 +110,8 @@ export default function PaymentEditForm({ payment, onClose, ...other }: Props) {
             Anuluj
           </Button>
 
-          <LoadingButton color="inherit" type="submit" variant="contained" loading={isSubmitting}>
-            Zapisz
+          <LoadingButton color="success" type="submit" variant="contained" loading={isSubmitting}>
+            Dodaj
           </LoadingButton>
         </DialogActions>
       </FormProvider>

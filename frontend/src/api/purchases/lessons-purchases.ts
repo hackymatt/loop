@@ -25,7 +25,7 @@ type IPurchase = {
   payment: string;
 };
 
-export const purchaseQuery = (query?: IQueryParams) => {
+export const lessonPurchaseQuery = (query?: IQueryParams) => {
   const url = endpoint;
   const urlParams = formatQueryParams(query);
   const queryUrl = urlParams ? `${url}?${urlParams}` : url;
@@ -52,14 +52,14 @@ export const purchaseQuery = (query?: IQueryParams) => {
   return { url, queryFn, queryKey: compact([endpoint, urlParams]) };
 };
 
-export const usePurchase = (query?: IQueryParams, enabled: boolean = true) => {
-  const { queryKey, queryFn } = purchaseQuery(query);
+export const useLessonPurchases = (query?: IQueryParams, enabled: boolean = true) => {
+  const { queryKey, queryFn } = lessonPurchaseQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
   return { data: data?.results as IPurchaseItemProp[], count: data?.count, ...rest };
 };
 
-export const usePurchasePageCount = (query?: IQueryParams) => {
-  const { queryKey, queryFn } = purchaseQuery(query);
+export const useLessonPurchasesPageCount = (query?: IQueryParams) => {
+  const { queryKey, queryFn } = lessonPurchaseQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.pagesCount, ...rest };
 };

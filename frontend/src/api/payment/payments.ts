@@ -1,5 +1,6 @@
+import { AxiosError } from "axios";
 import { compact } from "lodash-es";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
@@ -12,6 +13,7 @@ import {
 } from "src/types/payment";
 
 import { Api } from "../service";
+import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/payments" as const;
 
@@ -24,6 +26,10 @@ type IPayment = {
   status: IPaymentStatus;
   created_at: string;
 };
+
+type ICreatePayment = Omit<IPayment, "id" | "session_id" | "created_at">;
+
+type ICreatePaymentReturn = ICreatePayment;
 
 export const paymentQuery = (query?: IQueryParams) => {
   const url = endpoint;
@@ -60,4 +66,23 @@ export const usePaymentsPageCount = (query?: IQueryParams) => {
   const { queryKey, queryFn } = paymentQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.pagesCount, ...rest };
+};
+
+export const useCreatePayment = () => {
+  const queryClient = useQueryClient();
+  return useMutation<ICreatePaymentReturn, AxiosError, ICreatePayment>(
+    async (variables) => {
+      const result = await Api.post(endpoint, variables, {
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      });
+      return result.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [endpoint] });
+      },
+    },
+  );
 };

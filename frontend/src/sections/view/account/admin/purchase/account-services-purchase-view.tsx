@@ -21,7 +21,10 @@ import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
 
-import { usePurchase, usePurchasePageCount } from "src/api/purchases/services-purchases";
+import {
+  useServicePurchases,
+  useServicePurchasesPageCount,
+} from "src/api/purchases/services-purchases";
 
 import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
@@ -61,8 +64,8 @@ export default function AccountServicesPurchaseView() {
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const { data: pagesCount } = usePurchasePageCount(filters);
-  const { data: lessons, count: recordsCount } = usePurchase(filters);
+  const { data: pagesCount } = useServicePurchasesPageCount(filters);
+  const { data: lessons, count: recordsCount } = useServicePurchases(filters);
 
   const page = filters?.page ? parseInt(filters?.page, 10) - 1 : 0;
   const rowsPerPage = filters?.page_size ? parseInt(filters?.page_size, 10) : 10;
@@ -106,23 +109,23 @@ export default function AccountServicesPurchaseView() {
     [handleChange],
   );
 
-  const handleEditPayment = useCallback(
+  const handleEditPurchase = useCallback(
     (purchase: IPurchaseItemProp) => {
-      push(`${paths.account.admin.purchases.services.payments}/?session_id=${purchase.paymentId}`);
+      push(`${paths.account.admin.purchases.services}/?session_id=${purchase.paymentId}`);
     },
     [push],
   );
 
-  const handleDeletePayment = useCallback(
+  const handleDeletePurchase = useCallback(
     (purchase: IPurchaseItemProp) => {
-      push(`${paths.account.admin.purchases.services.payments}/?session_id=${purchase.paymentId}`);
+      push(`${paths.account.admin.purchases.services}/?session_id=${purchase.paymentId}`);
     },
     [push],
   );
 
   const handleViewPayment = useCallback(
     (purchase: IPurchaseItemProp) => {
-      push(`${paths.account.admin.purchases.services.payments}/?session_id=${purchase.paymentId}`);
+      push(`${paths.account.admin.purchases.services}/?session_id=${purchase.paymentId}`);
     },
     [push],
   );
@@ -131,10 +134,10 @@ export default function AccountServicesPurchaseView() {
     <>
       <Stack direction="row" spacing={1} display="flex" justifyContent="space-between">
         <Typography variant="h5" sx={{ mb: 3 }}>
-          Zakupy
+          Zakupy usług
         </Typography>
         <Stack direction="row" spacing={1}>
-          <DownloadCSVButton queryHook={usePurchase} disabled={(recordsCount ?? 0) === 0} />
+          <DownloadCSVButton queryHook={useServicePurchases} disabled={(recordsCount ?? 0) === 0} />
           <LoadingButton
             component="label"
             variant="contained"
@@ -212,8 +215,8 @@ export default function AccountServicesPurchaseView() {
                   <AccountPurchasesTableRow
                     key={row.id}
                     row={row}
-                    onEdit={handleEditPayment}
-                    onDelete={handleDeletePayment}
+                    onEdit={handleEditPurchase}
+                    onDelete={handleDeletePurchase}
                     onViewPayment={handleViewPayment}
                   />
                 ))}

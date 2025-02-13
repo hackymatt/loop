@@ -12,7 +12,7 @@ import {
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
 
-const endpoint = "/service-payments" as const;
+const endpoint = "/payments" as const;
 
 type IPayment = {
   id: string;
@@ -21,6 +21,7 @@ type IPayment = {
   currency: IPaymentCurrencyProp;
   method: IPaymentMethodProp;
   status: IPaymentStatus;
+  notes?: string;
   created_at: string;
 };
 
@@ -41,7 +42,16 @@ export const paymentQuery = (id: string) => {
     try {
       const response = await Api.get<IPayment>(queryUrl);
       const { data } = response;
-      const { id: paymentId, session_id, amount, currency, method, status, created_at } = data;
+      const {
+        id: paymentId,
+        session_id,
+        amount,
+        currency,
+        method,
+        notes,
+        status,
+        created_at,
+      } = data;
 
       modifiedResults = {
         id: paymentId,
@@ -50,6 +60,7 @@ export const paymentQuery = (id: string) => {
         currency,
         method,
         status,
+        notes,
         createdAt: created_at,
       };
     } catch (error) {

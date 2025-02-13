@@ -24,24 +24,26 @@ import { ICourseLessonProp, ICourseByTechnologyProps } from "src/types/course";
 
 import { usePurchaseFields } from "./purchase-fields";
 import { steps, schema, defaultValues } from "./purchase";
+import { usePurchase } from "src/api/purchases/services-purchases";
+import { IPurchaseItemProp } from "src/types/purchase";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  lesson: ICourseLessonProp;
+  purchase: IPurchaseItemProp;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
+export default function PurchaseEditForm({ purchase, onClose, ...other }: Props) {
   const { data: availableTechnologies } = useTechnologies({
     sort_by: "name",
     page_size: -1,
   });
 
-  const { data: lessonData } = useLesson(lesson.id);
-  const { mutateAsync: editLesson } = useEditLesson(lesson.id);
+  const { data: purchaseData } = usePurchase(purchase.id);
+  const { mutateAsync: editPurchase } = useEditLesson(lesson.id);
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -51,13 +53,13 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
   const {
     reset,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = methods;
 
   useEffect(() => {
-    if (lessonData && availableTechnologies) {
+    if (purchaseData && availableTechnologies) {
       reset({
-        ...lessonData,
+        ...purchaseData,
         github_url: lessonData.githubUrl.replace(GITHUB_REPO, ""),
         technologies: lessonData.technologies.map((t: ICourseByTechnologyProps) =>
           availableTechnologies.find(
@@ -70,32 +72,17 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
 
   const handleFormError = useFormErrorHandler(methods);
 
-  const onCloseWithReset = useCallback(() => {
-    onClose();
-    setActiveStep(0);
-  }, [onClose]);
-
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await editLesson({
-        ...data,
-        technologies: (data.technologies ?? []).map(
-          (technology: ICourseByTechnologyProps) => technology.id,
-        ),
-        github_url: `${GITHUB_REPO}${data.github_url}`,
-      });
+      await editLesson(data);
       reset();
-      onCloseWithReset();
+      onClose();
     } catch (error) {
       handleFormError(error);
     }
   });
 
-  const [activeStep, setActiveStep] = useState(0);
-
   const { fields } = usePurchaseFields();
-
-  const stepContent = steps[activeStep].fields.map((field: string) => fields[field]);
 
   return (
     <Dialog
@@ -103,7 +90,7 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
       fullWidth
       maxWidth="sm"
       disablePortal
-      onClose={onCloseWithReset}
+      onClose={onClose}
       {...other}
       sx={{
         zIndex: (theme) => theme.zIndex.modal + 1,
@@ -119,24 +106,10 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
 
         <DialogContent sx={{ py: 0 }}>
           <Stack spacing={1}>
-            <Stepper activeStep={activeStep} orientation="vertical">
-              {steps.map((step, index) => {
-                const labelProps: {
-                  optional?: React.ReactNode;
-                  error?: boolean;
-                } = {};
-                labelProps.error = isStepFailed(steps[index].fields, errors);
-
-                return (
-                  <Step key={step.label}>
-                    <StepLabel {...labelProps}>{step.label}</StepLabel>
-                    <StepContent>
-                      <Stack spacing={1}>{stepContent}</Stack>
-                    </StepContent>
-                  </Step>
-                );
-              })}
-            </Stepper>
+            {fields.service}
+            {fields.price}
+            {fields.other}
+            {fields.payment}
           </Stack>
         </DialogContent>
 
@@ -152,57 +125,12 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
             p: 2,
           }}
         >
-          {activeStep === 0 && (
-            <>
-              <Button variant="outlined" onClick={onCloseWithReset} color="inherit">
-                Anuluj
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={() => setActiveStep(activeStep + 1)}
-                color="success"
-              >
-                Dalej
-              </Button>
-            </>
-          )}
-          {activeStep > 0 && activeStep < steps.length - 1 && (
-            <>
-              <Button
-                variant="outlined"
-                onClick={() => setActiveStep(activeStep - 1)}
-                color="inherit"
-              >
-                Wstecz
-              </Button>
-              <Button
-                variant="outlined"
-                onClick={() => setActiveStep(activeStep + 1)}
-                color="success"
-              >
-                Dalej
-              </Button>
-            </>
-          )}
-          {activeStep === steps.length - 1 && (
-            <>
-              <Button
-                variant="outlined"
-                onClick={() => setActiveStep(activeStep - 1)}
-                color="inherit"
-              >
-                Wstecz
-              </Button>
-              <LoadingButton
-                color="success"
-                type="submit"
-                variant="contained"
-                loading={isSubmitting}
-              >
-                Zapisz
-              </LoadingButton>
-            </>
-          )}
+          <Button variant="outlined" onClick={onClose} color="inherit">
+            Anuluj
+          </Button>
+          <LoadingButton color="success" type="submit" variant="contained" loading={isSubmitting}>
+            Zapisz
+          </LoadingButton>
         </DialogActions>
       </FormProvider>
     </Dialog>

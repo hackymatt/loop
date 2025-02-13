@@ -57,16 +57,9 @@ export const paths = {
       },
       purchases: {
         root: "/account/admin/purchases",
-        lessons: {
-          root: "/account/admin/purchases/lessons",
-          list: "/account/admin/purchases/lessons/list",
-          payments: "/account/admin/purchases/lessons/payments",
-        },
-        services: {
-          root: "/account/admin/purchases/services",
-          list: "/account/admin/purchases/services/list",
-          payments: "/account/admin/purchases/services/payments",
-        },
+        payments: "/account/admin/purchases/payments",
+        lessons: "/account/admin/purchases/lessons",
+        services: "/account/admin/purchases/services",
       },
       tags: "/account/admin/tags",
       users: {
