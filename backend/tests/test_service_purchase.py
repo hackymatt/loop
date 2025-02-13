@@ -70,7 +70,9 @@ class ServicePurchaseTest(TestCase):
             password=self.data["password"],
             is_active=False,
         )
-        self.profile = create_other_profile(profile=create_profile(user=self.user_2))
+        self.profile = create_other_profile(
+            profile=create_profile(user=self.user_2, user_type="I")
+        )
 
         self.service_1 = create_service(
             title="Python service 1",
@@ -356,7 +358,9 @@ class ServicePurchaseSignalTest(TestCase):
             password=self.data["password"],
             is_active=False,
         )
-        self.profile = create_other_profile(profile=create_profile(user=self.user))
+        self.profile = create_other_profile(
+            profile=create_profile(user=self.user, user_type="I")
+        )
 
         self.service = create_service(
             title="Python service 1",
@@ -444,7 +448,9 @@ class ServicePurchaseFilterTest(APITestCase):
             password=self.data["password"],
             is_active=False,
         )
-        self.profile = create_other_profile(profile=create_profile(user=self.user))
+        self.profile = create_other_profile(
+            profile=create_profile(user=self.user, user_type="I")
+        )
 
         self.service_1 = create_service(
             title="Python service 1",
@@ -624,7 +630,9 @@ class ServicePurchaseOrderTest(APITestCase):
             password=self.data["password"],
             is_active=False,
         )
-        self.profile = create_other_profile(profile=create_profile(user=self.user))
+        self.profile = create_other_profile(
+            profile=create_profile(user=self.user, user_type="I")
+        )
 
         self.service_1 = create_service(
             title="Python service 1",

@@ -1,4 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from profile.others.serializers import OtherSerializer
 from profile.others.filters import OtherFilter
 from profile.models import OtherProfile
@@ -14,6 +15,7 @@ class OtherViewSet(ModelViewSet):
     )
     serializer_class = OtherSerializer
     filterset_class = OtherFilter
+    permission_classes = [IsAuthenticated, IsAdminUser]
     search_fields = [
         "profile__user__first_name",
         "profile__user__last_name",
