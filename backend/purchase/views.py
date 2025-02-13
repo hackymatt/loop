@@ -23,13 +23,13 @@ from purchase.utils import (
     discount_lesson_price,
     confirm_purchase,
 )
-from profile.models import Profile, StudentProfile
+from profile.models import Profile, StudentProfile, OtherProfile
 from profile.models import Profile
 from coupon.models import Coupon, CouponUser
 from coupon.validation import validate_coupon
 from utils.przelewy24.payment import Przelewy24Api
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Sum
+from django.db.models import Sum, Prefetch
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from purchase.utils import confirm_service_purchase
@@ -262,7 +262,13 @@ class PaymentViewSet(ModelViewSet):
 
 class ServicePurchaseViewSet(ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
-    queryset = ServicePurchase.objects.all().order_by("id")
+    queryset = (
+        ServicePurchase.objects.prefetch_related(
+            Prefetch("other", queryset=OtherProfile.objects.add_full_name())
+        )
+        .all()
+        .order_by("id")
+    )
     serializer_class = ServicePurchaseSerializer
     filterset_class = ServicePurchaseFilter
     permission_classes = [IsAuthenticated, IsAdminUser]

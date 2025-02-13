@@ -1,6 +1,6 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useState, useEffect, useCallback } from "react";
 
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -9,23 +9,23 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog, { DialogProps } from "@mui/material/Dialog";
-import { Step, Stepper, StepLabel, StepContent } from "@mui/material";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { GITHUB_REPO } from "src/config-global";
-import { useLesson, useEditLesson } from "src/api/lessons/lesson";
-import { useTechnologies } from "src/api/technologies/technologies";
+import { useOthers } from "src/api/others/others";
+import { usePayments } from "src/api/payment/payments";
+import { useServices } from "src/api/services/services";
+import { useServicePurchase, useEditServicePurchase } from "src/api/purchases/services-purchase";
 
 import FormProvider from "src/components/hook-form";
-import { isStepFailed } from "src/components/stepper/step";
 
-import { ICourseLessonProp, ICourseByTechnologyProps } from "src/types/course";
-
-import { usePurchaseFields } from "./purchase-fields";
-import { steps, schema, defaultValues } from "./purchase";
-import { usePurchase } from "src/api/purchases/services-purchases";
+import { IPaymentProp } from "src/types/payment";
+import { IServiceProp } from "src/types/service";
+import { ITeamMemberProps } from "src/types/team";
 import { IPurchaseItemProp } from "src/types/purchase";
+
+import { schema, defaultValues } from "./purchase";
+import { usePurchaseFields } from "./purchase-fields";
 
 // ----------------------------------------------------------------------
 
@@ -37,13 +37,21 @@ interface Props extends DialogProps {
 // ----------------------------------------------------------------------
 
 export default function PurchaseEditForm({ purchase, onClose, ...other }: Props) {
-  const { data: availableTechnologies } = useTechnologies({
-    sort_by: "name",
+  const { data: availableServices } = useServices({
+    sort_by: "title",
+    page_size: -1,
+  });
+  const { data: availableOthers } = useOthers({
+    sort_by: "full_name",
     page_size: -1,
   });
 
-  const { data: purchaseData } = usePurchase(purchase.id);
-  const { mutateAsync: editPurchase } = useEditLesson(lesson.id);
+  const { data: availablePayments } = usePayments({
+    sort_by: "session_id",
+    page_size: -1,
+  });
+  const { data: purchaseData } = useServicePurchase(purchase.id);
+  const { mutateAsync: editPurchase } = useEditServicePurchase(purchase.id);
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -57,24 +65,29 @@ export default function PurchaseEditForm({ purchase, onClose, ...other }: Props)
   } = methods;
 
   useEffect(() => {
-    if (purchaseData && availableTechnologies) {
+    if (purchaseData && availableServices && availableOthers && availablePayments) {
       reset({
         ...purchaseData,
-        github_url: lessonData.githubUrl.replace(GITHUB_REPO, ""),
-        technologies: lessonData.technologies.map((t: ICourseByTechnologyProps) =>
-          availableTechnologies.find(
-            (technology: ICourseByTechnologyProps) => technology.name === t.name,
-          ),
-        ),
+        price: purchaseData.lessonPrice,
+        service: [availableServices.find((s: IServiceProp) => s.id === purchaseData.lessonId)],
+        other: [availableOthers.find((o: ITeamMemberProps) => o.id === purchaseData.teacher!.id)],
+        payment: [
+          availablePayments.find((p: IPaymentProp) => p.sessionId === purchaseData.paymentId),
+        ],
       });
     }
-  }, [availableTechnologies, lessonData, reset]);
+  }, [availableOthers, availablePayments, availableServices, purchaseData, reset]);
 
   const handleFormError = useFormErrorHandler(methods);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await editLesson(data);
+      await editPurchase({
+        ...data,
+        service: data.service.map((s: IServiceProp) => s.id)[0],
+        other: data.other.map((o: ITeamMemberProps) => o.id)[0],
+        payment: data.payment.map((p: IPaymentProp) => p.id)[0]!,
+      });
       reset();
       onClose();
     } catch (error) {
@@ -100,7 +113,7 @@ export default function PurchaseEditForm({ purchase, onClose, ...other }: Props)
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj lekcję</DialogTitle>
+          <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj zakup</DialogTitle>
           {fields.active}
         </Stack>
 

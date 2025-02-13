@@ -56,7 +56,7 @@ export default function ReviewDeleteForm({ purchase, onClose, ...other }: Props)
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await deleteReview({ id: purchase.reviewId });
+      await deleteReview({ id: purchase.reviewId! });
       reset();
       onClose();
       enqueueSnackbar("Recenzja została usunięta", { variant: "success" });

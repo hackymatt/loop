@@ -20,7 +20,7 @@ import { useQueryParams } from "src/hooks/use-query-params";
 import { fDate } from "src/utils/format-time";
 
 import { useLecturers } from "src/api/lecturers/lecturers";
-import { usePurchase, usePurchasePageCount } from "src/api/purchases/lessons-purchases";
+import { usePurchases, usePurchasesPageCount } from "src/api/purchases/purchases";
 
 import Scrollbar from "src/components/scrollbar";
 
@@ -69,8 +69,8 @@ export default function AccountReviewsView() {
 
   const filters = useMemo(() => getQueryParams(), [getQueryParams]);
 
-  const { data: pagesCount } = usePurchasePageCount(filters);
-  const { data: reviews, count: recordsCount } = usePurchase(filters);
+  const { data: pagesCount } = usePurchasesPageCount(filters);
+  const { data: reviews, count: recordsCount } = usePurchases(filters);
 
   const { data: teachers } = useLecturers({ sort_by: "full_name", page_size: -1 });
 

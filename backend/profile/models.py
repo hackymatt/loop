@@ -325,8 +325,27 @@ class LecturerProfile(BaseModel):
         ]
 
 
+class OtherProfileQuerySet(QuerySet):
+    def add_full_name(self):
+        return self.annotate(
+            full_name=Concat(
+                "profile__user__first_name", Value(" "), "profile__user__last_name"
+            )
+        )
+
+
+class OtherProfileManager(Manager):
+    def get_queryset(self):
+        return OtherProfileQuerySet(self.model, using=self._db)
+
+    def add_full_name(self):
+        return self.get_queryset().add_full_name()
+
+
 class OtherProfile(BaseModel):
     profile = OneToOneField(Profile, on_delete=CASCADE)
+
+    objects = OtherProfileManager()
 
     class Meta:
         db_table = "other_profile"

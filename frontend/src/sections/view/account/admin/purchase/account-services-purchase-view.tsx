@@ -31,12 +31,14 @@ import Scrollbar from "src/components/scrollbar";
 import DownloadCSVButton from "src/components/download-csv";
 
 import FilterPrice from "src/sections/filters/filter-price";
-import AccountPurchasesTableRow from "src/sections/account/admin/account-services-purchases-table-row";
+import AccountPurchasesTableRow from "src/sections/account/admin/account-purchases-table-row";
 
 import { IPurchaseItemProp } from "src/types/purchase";
 import { IQueryParamValue } from "src/types/query-params";
 
 import PurchaseNewForm from "./purchase-new-form";
+import PurchaseEditForm from "./purchase-edit-form";
+import PurchaseDeleteForm from "./purchase-delete-form";
 import FilterSearch from "../../../../filters/filter-search";
 import AccountTableHead from "../../../../account/account-table-head";
 
@@ -111,16 +113,18 @@ export default function AccountServicesPurchaseView() {
 
   const handleEditPurchase = useCallback(
     (purchase: IPurchaseItemProp) => {
-      push(`${paths.account.admin.purchases.services}/?session_id=${purchase.paymentId}`);
+      setEditedPurchase(purchase);
+      editPurchaseFormOpen.onToggle();
     },
-    [push],
+    [editPurchaseFormOpen],
   );
 
   const handleDeletePurchase = useCallback(
     (purchase: IPurchaseItemProp) => {
-      push(`${paths.account.admin.purchases.services}/?session_id=${purchase.paymentId}`);
+      setDeletedPurchase(purchase);
+      deletePurchaseFormOpen.onToggle();
     },
-    [push],
+    [deletePurchaseFormOpen],
   );
 
   const handleViewPayment = useCallback(
@@ -241,20 +245,20 @@ export default function AccountServicesPurchaseView() {
       </Box>
 
       <PurchaseNewForm open={newPurchaseFormOpen.value} onClose={newPurchaseFormOpen.onFalse} />
-      {/* {editedPurchase && (
+      {editedPurchase && (
         <PurchaseEditForm
-          lesson={editedPurchase}
+          purchase={editedPurchase}
           open={editPurchaseFormOpen.value}
           onClose={editPurchaseFormOpen.onFalse}
         />
       )}
       {deletedPurchase && (
         <PurchaseDeleteForm
-          lesson={deletedPurchase}
+          purchase={deletedPurchase}
           open={deletePurchaseFormOpen.value}
           onClose={deletePurchaseFormOpen.onFalse}
         />
-      )} */}
+      )}
     </>
   );
 }

@@ -28,7 +28,7 @@ export default function ReservationDeleteForm({ purchase, onClose, ...other }: P
 
   const onSubmit = async () => {
     try {
-      await deleteReservation({ id: purchase.reservationId });
+      await deleteReservation({ id: purchase.reservationId! });
       onClose();
       enqueueSnackbar("Rezerwacja została usunięta", { variant: "success" });
     } catch (error) {

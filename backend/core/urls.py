@@ -14,6 +14,7 @@ from profile.password_reset.views import ProfilePasswordResetViewSet
 from profile.personal_data.views import PersonalDataViewSet
 from profile.profile_data.views import ProfileDataViewSet
 from profile.lecturers.views import LecturerViewSet, BestLecturerViewSet
+from profile.others.views import OtherViewSet
 from profile.earnings.views import EarningViewSet
 from django.urls import path, include
 from django.conf import settings
@@ -91,6 +92,7 @@ router.register(
 )
 router.register(r"lesson-schedules", ScheduleViewSet, basename="lesson_schedules")
 router.register(r"lecturers", LecturerViewSet, basename="lecturers")
+router.register(r"others", OtherViewSet, basename="others")
 router.register(r"login", EmailLoginViewSet, basename="user_login")
 router.register(r"logout", ProfileLogoutViewSet, basename="user_logout")
 router.register(r"messages", MessageViewSet, basename="messages")

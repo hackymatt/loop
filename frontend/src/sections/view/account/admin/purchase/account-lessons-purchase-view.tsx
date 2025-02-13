@@ -28,7 +28,7 @@ import Scrollbar from "src/components/scrollbar";
 import DownloadCSVButton from "src/components/download-csv";
 
 import FilterPrice from "src/sections/filters/filter-price";
-import AccountPurchasesTableRow from "src/sections/account/admin/account-lessons-purchases-table-row";
+import AccountPurchasesTableRow from "src/sections/account/admin/account-purchases-table-row";
 
 import { IPurchaseItemProp } from "src/types/purchase";
 import { IQueryParamValue } from "src/types/query-params";

@@ -27,7 +27,7 @@ import Scrollbar from "src/components/scrollbar";
 import DownloadCSVButton from "src/components/download-csv";
 
 import FilterPrice from "src/sections/filters/filter-price";
-import AccountServicesPaymentsTableRow from "src/sections/account/admin/account-services-payments-table-row";
+import AccountPaymentsTableRow from "src/sections/account/admin/account-payments-table-row";
 
 import { IQueryParamValue } from "src/types/query-params";
 import { IPaymentProp, PaymentStatus } from "src/types/payment";
@@ -231,7 +231,7 @@ export default function AccountPaymentView() {
             {lessons && (
               <TableBody>
                 {lessons.map((row) => (
-                  <AccountServicesPaymentsTableRow
+                  <AccountPaymentsTableRow
                     key={row.id}
                     row={row}
                     onEdit={handleEditPayment}

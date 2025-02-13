@@ -37,7 +37,7 @@ export default function ReviewNewForm({ purchase, onClose, ...other }: Props) {
 
   const constValues = {
     lesson: purchase.lessonId,
-    lecturer: purchase.teacher.id,
+    lecturer: purchase.teacher!.id,
   };
 
   const methods = useForm({

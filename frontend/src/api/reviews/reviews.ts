@@ -10,7 +10,7 @@ import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
-import { purchaseQuery } from "../purchases/lessons-purchases";
+import { purchasesQuery } from "../purchases/purchases";
 
 const endpoint = "/reviews" as const;
 
@@ -99,7 +99,7 @@ export const useCreateReview = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: [endpoint] });
-        queryClient.invalidateQueries({ queryKey: purchaseQuery().queryKey });
+        queryClient.invalidateQueries({ queryKey: purchasesQuery().queryKey });
       },
     },
   );

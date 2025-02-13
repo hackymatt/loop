@@ -1,22 +1,20 @@
-import { useUsers } from "src/api/users/users";
-import { useServices } from "src/api/services/services";
+import { useOthers } from "src/api/others/others";
 import { usePayments } from "src/api/payment/payments";
+import { useServices } from "src/api/services/services";
 
 import { RHFTextField, RHFAutocompleteDnd } from "src/components/hook-form";
 
 import { IPaymentProp } from "src/types/payment";
 import { IServiceProp } from "src/types/service";
-import { UserType, IUserDetailsProps } from "src/types/user";
+import { ITeamMemberProps } from "src/types/team";
 
 export const usePurchaseFields = () => {
   const { data: availableServices, isLoading: isLoadingServices } = useServices({
     sort_by: "title",
     page_size: -1,
   });
-  const { data: availableOthers, isLoading: isLoadingOthers } = useUsers({
-    sort_by: "email",
-    user_type: UserType.OTHER[0],
-    active: "False",
+  const { data: availableOthers, isLoading: isLoadingOthers } = useOthers({
+    sort_by: "full_name",
     page_size: -1,
   });
 
@@ -56,9 +54,9 @@ export const usePurchaseFields = () => {
         label="Użytkownik"
         multiple
         options={availableOthers ?? []}
-        getOptionLabel={(option) => (option as IUserDetailsProps)?.email ?? ""}
+        getOptionLabel={(option) => (option as ITeamMemberProps)?.name ?? ""}
         loading={isLoadingOthers}
-        isOptionEqualToValue={(a, b) => a.email === b.email}
+        isOptionEqualToValue={(a, b) => a.id === b.id}
       />
     ),
     payment: (
@@ -68,7 +66,9 @@ export const usePurchaseFields = () => {
         label="Płatność"
         multiple
         options={availablePayments ?? []}
-        getOptionLabel={(option) => (option as IPaymentProp)?.sessionId ?? ""}
+        getOptionLabel={(option) =>
+          `${(option as IPaymentProp).sessionId} (${(option as IPaymentProp).amount} ${(option as IPaymentProp).currency})`
+        }
         loading={isLoadingPayments}
         isOptionEqualToValue={(a, b) => a.sessionId === b.sessionId}
       />

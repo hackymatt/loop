@@ -9,7 +9,7 @@ from django.db.models import Prefetch, Sum
 from purchase.models import Purchase, ServicePurchase, Payment
 from lesson.models import Lesson, Technology
 from service.models import Service
-from profile.models import Profile, LecturerProfile, StudentProfile
+from profile.models import Profile, LecturerProfile, StudentProfile, OtherProfile
 from reservation.models import Reservation
 from schedule.models import Schedule, Recording
 from review.models import Review
@@ -236,16 +236,32 @@ class ServiceSerializer(ModelSerializer):
         )
 
 
+class OtherSerializer(ModelSerializer):
+    full_name = SerializerMethodField()
+    gender = CharField(source="profile.get_gender_display")
+    image = ImageField(source="profile.image")
+
+    class Meta:
+        model = LecturerProfile
+        fields = (
+            "id",
+            "full_name",
+            "gender",
+            "image",
+        )
+
+    def get_full_name(self, other: OtherProfile):
+        return other.full_name
+
+
 class ServicePurchaseGetSerializer(ModelSerializer):
     service = ServiceSerializer()
+    other = OtherSerializer()
     payment = SerializerMethodField()
 
     class Meta:
         model = ServicePurchase
-        exclude = (
-            "other",
-            "modified_at",
-        )
+        exclude = ("modified_at",)
 
     def get_payment(self, purchase: Purchase):
         return Payment.objects.get(id=purchase.payment_id).session_id

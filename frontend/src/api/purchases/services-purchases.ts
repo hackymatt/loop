@@ -6,78 +6,43 @@ import { formatQueryParams } from "src/utils/query-params";
 
 import { IGender } from "src/types/testimonial";
 import { IQueryParams } from "src/types/query-params";
-import { ILessonStatus, IReviewStatus, IPurchaseItemProp } from "src/types/purchase";
+import { IPurchaseItemProp } from "src/types/purchase";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/service-purchases" as const;
 
-type ILecturer = {
-  id: string;
-  full_name: string;
-  gender: IGender | null;
-  image: string | null;
-};
-
-type ILesson = {
+type IService = {
   id: string;
   title: string;
-  duration: number;
-  github_url: string;
 };
 
-type IReview = {
+type IOther = {
   id: string;
-  rating: string;
-  review: string;
-};
-
-type ISchedule = {
-  id: string;
-  lecturer: ILecturer;
-  start_time: string;
-  end_time: string;
-};
-
-type IReservation = {
-  id: string;
-  schedule: ISchedule;
-};
-
-type IRecording = {
-  file_name: string;
-  file_url: string;
+  full_name: string;
+  image: string | null;
+  gender: IGender;
 };
 
 type IPurchase = {
   id: string;
-  lesson: ILesson;
-  lesson_status: ILessonStatus;
-  reservation: IReservation;
-  review_status: IReviewStatus;
-  review: IReview | null;
+  service: IService;
+  other: IOther;
   created_at: string;
   price: number;
-  meeting_url?: string;
-  recordings: IRecording[];
   payment: string;
 };
 
-type ICreatePurchase = {
+type ICreatePurchase = Omit<IPurchase, "id" | "created_at" | "service" | "other" | "payment"> & {
   service: string;
-  price: number;
   other: string;
   payment: string;
 };
 
-type ICreatePurchaseReturn = {
-  token?: string;
-  error?: string;
-  responseCode: 0;
-};
+type ICreatePurchaseReturn = ICreatePurchase;
 
-export const servicePurchaseQuery = (query?: IQueryParams) => {
+export const servicePurchasesQuery = (query?: IQueryParams) => {
   const url = endpoint;
   const urlParams = formatQueryParams(query);
   const queryUrl = urlParams ? `${url}?${urlParams}` : url;
@@ -86,49 +51,14 @@ export const servicePurchaseQuery = (query?: IQueryParams) => {
     const { data } = await Api.get(queryUrl);
     const { results, records_count, pages_count } = data;
     const modifiedResults = results.map(
-      ({
-        id,
-        lesson,
-        price,
-        lesson_status,
-        reservation,
-        review_status,
-        review,
-        meeting_url,
-        recordings,
-        payment,
-        created_at,
-      }: IPurchase) => {
-        const { id: lessonId, title: lessonTitle, duration, github_url } = lesson;
+      ({ id, service, other, price, payment, created_at }: IPurchase) => {
+        const { id: serviceId, title: serviceTitle } = service;
         return {
           id,
-          lessonId,
-          lessonTitle,
-          lessonResource: github_url,
-          lessonDuration: duration,
+          lessonId: serviceId,
+          lessonTitle: serviceTitle,
           lessonPrice: price,
-          lessonStatus: lesson_status,
-          lessonSlot: reservation
-            ? [reservation.schedule.start_time, reservation.schedule.end_time]
-            : [null, null],
-          reservationId: reservation?.id,
-          teacher: reservation?.schedule.lecturer
-            ? {
-                id: reservation?.schedule.lecturer.id,
-                name: reservation?.schedule.lecturer.full_name,
-                avatarUrl: reservation?.schedule.lecturer.image,
-                gender: reservation?.schedule.lecturer.gender,
-              }
-            : {},
-          reviewStatus: review_status,
-          reviewId: review?.id,
-          ratingNumber: review?.rating,
-          review: review?.review,
-          meetingUrl: meeting_url,
-          recordings: (recordings ?? []).map(({ file_name, file_url }: IRecording) => ({
-            name: file_name,
-            url: file_url,
-          })),
+          teacher: other,
           paymentId: payment,
           createdAt: created_at,
         };
@@ -141,13 +71,13 @@ export const servicePurchaseQuery = (query?: IQueryParams) => {
 };
 
 export const useServicePurchases = (query?: IQueryParams, enabled: boolean = true) => {
-  const { queryKey, queryFn } = servicePurchaseQuery(query);
+  const { queryKey, queryFn } = servicePurchasesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
   return { data: data?.results as IPurchaseItemProp[], count: data?.count, ...rest };
 };
 
 export const useServicePurchasesPageCount = (query?: IQueryParams) => {
-  const { queryKey, queryFn } = servicePurchaseQuery(query);
+  const { queryKey, queryFn } = servicePurchasesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.pagesCount, ...rest };
 };

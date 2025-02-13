@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import { Typography } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -11,14 +13,17 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useCreatePurchase } from "src/api/purchases/services-purchases";
+import { useOthers } from "src/api/others/others";
+import { usePayments } from "src/api/payment/payments";
+import { useServices } from "src/api/services/services";
+import { useServicePurchase, useDeleteServicePurchase } from "src/api/purchases/services-purchase";
 
 import FormProvider from "src/components/hook-form";
-import { useToastContext } from "src/components/toast";
 
-import { IServiceProp } from "src/types/service";
 import { IPaymentProp } from "src/types/payment";
+import { IServiceProp } from "src/types/service";
 import { ITeamMemberProps } from "src/types/team";
+import { IPurchaseItemProp } from "src/types/purchase";
 
 import { schema, defaultValues } from "./purchase";
 import { usePurchaseFields } from "./purchase-fields";
@@ -26,15 +31,28 @@ import { usePurchaseFields } from "./purchase-fields";
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
+  purchase: IPurchaseItemProp;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function PurchaseNewForm({ onClose, ...other }: Props) {
-  const { enqueueSnackbar } = useToastContext();
+export default function PurchaseDeleteForm({ purchase, onClose, ...other }: Props) {
+  const { data: availableServices } = useServices({
+    sort_by: "title",
+    page_size: -1,
+  });
+  const { data: availableOthers } = useOthers({
+    sort_by: "full_name",
+    page_size: -1,
+  });
 
-  const { mutateAsync: createPurchase } = useCreatePurchase();
+  const { data: availablePayments } = usePayments({
+    sort_by: "session_id",
+    page_size: -1,
+  });
+  const { data: purchaseData } = useServicePurchase(purchase.id);
+  const { mutateAsync: deletePurchase } = useDeleteServicePurchase();
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -47,19 +65,27 @@ export default function PurchaseNewForm({ onClose, ...other }: Props) {
     formState: { isSubmitting },
   } = methods;
 
+  useEffect(() => {
+    if (purchaseData && availableServices && availableOthers && availablePayments) {
+      reset({
+        ...purchaseData,
+        price: purchaseData.lessonPrice,
+        service: [availableServices.find((s: IServiceProp) => s.id === purchaseData.lessonId)],
+        other: [availableOthers.find((o: ITeamMemberProps) => o.id === purchaseData.teacher!.id)],
+        payment: [
+          availablePayments.find((p: IPaymentProp) => p.sessionId === purchaseData.paymentId),
+        ],
+      });
+    }
+  }, [availableOthers, availablePayments, availableServices, purchaseData, reset]);
+
   const handleFormError = useFormErrorHandler(methods);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await createPurchase({
-        ...data,
-        service: data.service.map((s: IServiceProp) => s.id)[0],
-        other: data.other.map((o: ITeamMemberProps) => o.id)[0],
-        payment: data.payment.map((p: IPaymentProp) => p.id)[0]!,
-      });
+      await deletePurchase({ id: purchase!.id });
       reset();
       onClose();
-      enqueueSnackbar("Zakup został dodany", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }
@@ -83,17 +109,12 @@ export default function PurchaseNewForm({ onClose, ...other }: Props) {
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nowy zakup</DialogTitle>
+          <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń zakup</DialogTitle>
           {fields.active}
         </Stack>
 
         <DialogContent sx={{ py: 0 }}>
-          <Stack spacing={1}>
-            {fields.service}
-            {fields.price}
-            {fields.other}
-            {fields.payment}
-          </Stack>
+          <Typography>{`Czy na pewno chcesz usunąć zakup ${purchase.lessonTitle}?`}</Typography>
         </DialogContent>
 
         <DialogActions
@@ -111,8 +132,8 @@ export default function PurchaseNewForm({ onClose, ...other }: Props) {
           <Button variant="outlined" onClick={onClose} color="inherit">
             Anuluj
           </Button>
-          <LoadingButton color="success" type="submit" variant="contained" loading={isSubmitting}>
-            Dodaj
+          <LoadingButton color="error" type="submit" variant="contained" loading={isSubmitting}>
+            Usuń
           </LoadingButton>
         </DialogActions>
       </FormProvider>
