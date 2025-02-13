@@ -16,7 +16,7 @@ import { RouterLink } from "src/routes/components";
 import { trackEvents } from "src/utils/track-events";
 
 import { useCarts } from "src/api/carts/carts";
-import { useCreatePurchase } from "src/api/purchase/purchase";
+import { useCreatePurchase } from "src/api/purchases/purchases";
 
 import Iconify from "src/components/iconify";
 import { useToastContext } from "src/components/toast";

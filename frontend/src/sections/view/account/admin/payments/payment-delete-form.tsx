@@ -1,0 +1,108 @@
+import { useForm } from "react-hook-form";
+
+import Button from "@mui/material/Button";
+import LoadingButton from "@mui/lab/LoadingButton";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import { Alert, Stack, Typography } from "@mui/material";
+import Dialog, { DialogProps } from "@mui/material/Dialog";
+
+import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
+
+import { useDeletePayment } from "src/api/payment/payment";
+
+import FormProvider from "src/components/hook-form";
+
+import { IPaymentProp } from "src/types/payment";
+
+import { defaultValues } from "./payment";
+
+// ----------------------------------------------------------------------
+
+interface Props extends DialogProps {
+  payment: IPaymentProp;
+  onClose: VoidFunction;
+}
+
+// ----------------------------------------------------------------------
+
+export default function PaymentDeleteForm({ payment, onClose, ...other }: Props) {
+  const { mutateAsync: deletePayment } = useDeletePayment();
+
+  const methods = useForm({
+    defaultValues,
+  });
+
+  const {
+    reset,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = methods;
+
+  const handleFormError = useFormErrorHandler(methods);
+
+  const onSubmit = handleSubmit(async () => {
+    try {
+      await deletePayment({ id: payment.id! });
+      reset();
+      onClose();
+    } catch (error) {
+      handleFormError(error);
+    }
+  });
+
+  return (
+    <Dialog
+      fullScreen
+      fullWidth
+      maxWidth="sm"
+      disablePortal
+      onClose={onClose}
+      {...other}
+      sx={{
+        zIndex: (theme) => theme.zIndex.modal + 1,
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <FormProvider methods={methods} onSubmit={onSubmit}>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Usuń płatność</DialogTitle>
+
+        <DialogContent sx={{ py: 0 }}>
+          <Stack spacing={1}>
+            <Typography>{`Czy na pewno chcesz usunąć płatność ${payment.sessionId}?`}</Typography>
+            {errors.root && <Alert severity="error">{errors.root.message}</Alert>}
+          </Stack>
+        </DialogContent>
+
+        <DialogActions
+          sx={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: (theme) => theme.zIndex.modal + 2,
+            bgcolor: "background.paper",
+            boxShadow: (theme) => theme.shadows[4],
+            p: 2,
+          }}
+        >
+          <Button variant="outlined" onClick={onClose} color="inherit">
+            Anuluj
+          </Button>
+
+          <LoadingButton
+            color="error"
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+            disabled={!!errors.root}
+          >
+            Usuń
+          </LoadingButton>
+        </DialogActions>
+      </FormProvider>
+    </Dialog>
+  );
+}

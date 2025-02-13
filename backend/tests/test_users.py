@@ -155,7 +155,7 @@ class UsersTest(APITestCase):
         data = json.loads(response.content)
         count = data["records_count"]
         results = data["results"]
-        self.assertEqual(count, 9)
+        self.assertEqual(count, 10)
         for data in results:
             user_data = filter_dict(data, self.user_columns)
             profile_data = filter_dict(data, self.profile_columns)
@@ -814,7 +814,7 @@ class UsersFilterTest(APITestCase):
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 8)
+        self.assertEqual(records_count, 9)
         values = list(set([True == record[column] for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
@@ -862,7 +862,7 @@ class UsersFilterTest(APITestCase):
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 8)
+        self.assertEqual(records_count, 9)
         values = list(set([variable in record[column].lower() for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
@@ -1060,7 +1060,7 @@ class UsersOrderTest(APITestCase):
             data = json.loads(response.content)
             count = data["records_count"]
             results = data["results"]
-            self.assertEqual(count, 8)
+            self.assertEqual(count, 9)
             field_values = [user[field] for user in results]
             field_values = [value for value in field_values if value is not None]
             if isinstance(field_values[0], dict):
@@ -1079,7 +1079,7 @@ class UsersOrderTest(APITestCase):
             data = json.loads(response.content)
             count = data["records_count"]
             results = data["results"]
-            self.assertEqual(count, 8)
+            self.assertEqual(count, 9)
             field_values = [user[field] for user in results]
             field_values = [value for value in field_values if value is not None]
             if isinstance(field_values[0], dict):

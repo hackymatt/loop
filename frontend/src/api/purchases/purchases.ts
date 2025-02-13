@@ -11,7 +11,7 @@ import { ILessonStatus, IReviewStatus, IPurchaseItemProp } from "src/types/purch
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
 
-const endpoint = "/purchase" as const;
+const endpoint = "/purchases" as const;
 
 type ILecturer = {
   id: string;
@@ -75,7 +75,7 @@ type ICreatePurchaseReturn = {
   responseCode: 0;
 };
 
-export const purchaseQuery = (query?: IQueryParams) => {
+export const purchasesQuery = (query?: IQueryParams) => {
   const url = endpoint;
   const urlParams = formatQueryParams(query);
   const queryUrl = urlParams ? `${url}?${urlParams}` : url;
@@ -87,6 +87,7 @@ export const purchaseQuery = (query?: IQueryParams) => {
       ({
         id,
         lesson,
+        price,
         lesson_status,
         reservation,
         review_status,
@@ -103,6 +104,7 @@ export const purchaseQuery = (query?: IQueryParams) => {
           lessonTitle,
           lessonResource: github_url,
           lessonDuration: duration,
+          lessonPrice: price,
           lessonStatus: lesson_status,
           lessonSlot: reservation
             ? [reservation.schedule.start_time, reservation.schedule.end_time]
@@ -136,14 +138,14 @@ export const purchaseQuery = (query?: IQueryParams) => {
   return { url, queryFn, queryKey: compact([endpoint, urlParams]) };
 };
 
-export const usePurchase = (query?: IQueryParams, enabled: boolean = true) => {
-  const { queryKey, queryFn } = purchaseQuery(query);
+export const usePurchases = (query?: IQueryParams, enabled: boolean = true) => {
+  const { queryKey, queryFn } = purchasesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
   return { data: data?.results as IPurchaseItemProp[], count: data?.count, ...rest };
 };
 
-export const usePurchasePageCount = (query?: IQueryParams) => {
-  const { queryKey, queryFn } = purchaseQuery(query);
+export const usePurchasesPageCount = (query?: IQueryParams) => {
+  const { queryKey, queryFn } = purchasesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.pagesCount, ...rest };
 };

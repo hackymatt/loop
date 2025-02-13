@@ -1,39 +1,67 @@
+import { AxiosError } from "axios";
 import { compact } from "lodash-es";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { formatQueryParams } from "src/utils/query-params";
-
-import { IQueryParams } from "src/types/query-params";
-import { IPaymentProp, IPaymentStatus } from "src/types/payment";
+import {
+  IPaymentProp,
+  IPaymentStatus,
+  IPaymentMethodProp,
+  IPaymentCurrencyProp,
+} from "src/types/payment";
 
 import { Api } from "../service";
+import { getCsrfToken } from "../utils/csrf";
 
-const endpoint = "/payment-status" as const;
+const endpoint = "/payments" as const;
 
 type IPayment = {
+  id: string;
   session_id: string;
-  order_id: number;
   amount: number;
+  currency: IPaymentCurrencyProp;
+  method: IPaymentMethodProp;
   status: IPaymentStatus;
+  notes?: string;
+  created_at: string;
 };
 
-export const paymentQuery = (query?: IQueryParams) => {
+type IEditPayment = Omit<IPayment, "id" | "session_id" | "created_at">;
+
+type IEditPaymentReturn = IEditPayment;
+
+type IDeletePayment = { id: string };
+
+type IDeletePaymentReturn = {};
+
+export const paymentQuery = (id: string) => {
   const url = endpoint;
-  const urlParams = formatQueryParams(query);
-  const queryUrl = urlParams ? `${url}?${urlParams}` : url;
+  const queryUrl = `${url}/${id}`;
 
   const queryFn = async () => {
     let modifiedResults;
     try {
       const response = await Api.get<IPayment>(queryUrl);
       const { data } = response;
-      const { session_id, order_id, amount, status } = data;
+      const {
+        id: paymentId,
+        session_id,
+        amount,
+        currency,
+        method,
+        notes,
+        status,
+        created_at,
+      } = data;
 
       modifiedResults = {
+        id: paymentId,
         sessionId: session_id,
-        orderId: order_id,
-        amount,
+        amount: amount / 100,
+        currency,
+        method,
         status,
+        notes,
+        createdAt: created_at,
       };
     } catch (error) {
       if (error.response && (error.response.status === 400 || error.response.status === 404)) {
@@ -43,15 +71,50 @@ export const paymentQuery = (query?: IQueryParams) => {
     return { results: modifiedResults };
   };
 
-  return { url, queryFn, queryKey: compact([endpoint, urlParams]) };
+  return { url, queryFn, queryKey: compact([endpoint, id]) };
 };
 
-export const usePaymentStatus = (
-  query?: IQueryParams,
-  enabled: boolean = true,
-  refetchInterval: number = 0,
-) => {
-  const { queryKey, queryFn } = paymentQuery(query);
-  const { data, ...rest } = useQuery({ queryKey, queryFn, enabled, refetchInterval });
+export const usePayment = (id: string) => {
+  const { queryKey, queryFn } = paymentQuery(id);
+  const { data, ...rest } = useQuery({ queryKey, queryFn });
   return { data: data?.results as any as IPaymentProp, ...rest };
+};
+
+export const useEditPayment = (id: string) => {
+  const queryClient = useQueryClient();
+  const url = `${endpoint}/${id}`;
+  return useMutation<IEditPaymentReturn, AxiosError, IEditPayment>(
+    async (variables) => {
+      const result = await Api.put(url, variables, {
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      });
+      return result.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [endpoint] });
+      },
+    },
+  );
+};
+
+export const useDeletePayment = () => {
+  const queryClient = useQueryClient();
+  return useMutation<IDeletePaymentReturn, AxiosError, IDeletePayment>(
+    async ({ id }) => {
+      const result = await Api.delete(`${endpoint}/${id}`, {
+        headers: {
+          "X-CSRFToken": getCsrfToken(),
+        },
+      });
+      return result.data;
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [endpoint] });
+      },
+    },
+  );
 };

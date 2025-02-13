@@ -5,10 +5,11 @@ from rest_framework.serializers import (
     ImageField,
     ValidationError,
 )
-from django.db.models import Prefetch
-from purchase.models import Purchase, Payment
+from django.db.models import Prefetch, Sum
+from purchase.models import Purchase, ServicePurchase, Payment
 from lesson.models import Lesson, Technology
-from profile.models import Profile, LecturerProfile, StudentProfile
+from service.models import Service
+from profile.models import Profile, LecturerProfile, StudentProfile, OtherProfile
 from reservation.models import Reservation
 from schedule.models import Schedule, Recording
 from review.models import Review
@@ -155,6 +156,18 @@ class PurchaseGetSerializer(ModelSerializer):
         return Payment.objects.get(id=purchase.payment_id).session_id
 
 
+class PurchaseGetAdminSerializer(ModelSerializer):
+    lesson = LessonSerializer()
+    payment = SerializerMethodField()
+
+    class Meta:
+        model = Purchase
+        exclude = ("student",)
+
+    def get_payment(self, purchase: Purchase):
+        return Payment.objects.get(id=purchase.payment_id).session_id
+
+
 class PurchaseSerializer(ModelSerializer):
     class Meta:
         model = Purchase
@@ -209,3 +222,80 @@ class PaymentSerializer(ModelSerializer):
         instance.refresh_from_db()
 
         return instance
+
+
+class ServiceSerializer(ModelSerializer):
+    class Meta:
+        model = Service
+        exclude = (
+            "active",
+            "description",
+            "price",
+            "modified_at",
+            "created_at",
+        )
+
+
+class OtherSerializer(ModelSerializer):
+    full_name = SerializerMethodField()
+    gender = CharField(source="profile.get_gender_display")
+    image = ImageField(source="profile.image")
+
+    class Meta:
+        model = LecturerProfile
+        fields = (
+            "id",
+            "full_name",
+            "gender",
+            "image",
+        )
+
+    def get_full_name(self, other: OtherProfile):
+        return other.full_name
+
+
+class ServicePurchaseGetSerializer(ModelSerializer):
+    service = ServiceSerializer()
+    other = OtherSerializer()
+    payment = SerializerMethodField()
+
+    class Meta:
+        model = ServicePurchase
+        exclude = ("modified_at",)
+
+    def get_payment(self, purchase: Purchase):
+        return Payment.objects.get(id=purchase.payment_id).session_id
+
+
+class ServicePurchaseSerializer(ModelSerializer):
+    class Meta:
+        model = ServicePurchase
+        fields = "__all__"
+
+    def validate(self, data):
+        service = data["service"]
+        price = data["price"]
+        payment = data["payment"]
+
+        self.validate_payment_amount(price=price, payment=payment)
+        self.validate_service(service=service)
+
+        return data
+
+    def validate_payment_amount(self, price, payment: Payment):
+        amount = payment.amount / 100
+        purchases = Purchase.objects.filter(payment=payment).all()
+        total = purchases.aggregate(Sum("price"))["price__sum"] or 0
+
+        if float(total) + float(price) > amount:
+            raise ValidationError(
+                {"price": "Cena usługi przekracza wartość płatności."}
+            )
+
+        return price
+
+    def validate_service(self, service: Service):
+        if not service.active:
+            raise ValidationError("Usługa jest nieaktywna.")
+
+        return service

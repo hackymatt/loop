@@ -5,7 +5,7 @@ import { IGender } from "src/types/testimonial";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
-import { purchaseQuery } from "../purchase/purchase";
+import { purchasesQuery } from "../purchases/purchases";
 
 const endpoint = "/reviews" as const;
 
@@ -48,7 +48,7 @@ export const useEditReview = (id: string) => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: [endpoint] });
-        queryClient.invalidateQueries({ queryKey: purchaseQuery().queryKey });
+        queryClient.invalidateQueries({ queryKey: purchasesQuery().queryKey });
       },
     },
   );
@@ -68,7 +68,7 @@ export const useDeleteReview = () => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: [endpoint] });
-        queryClient.invalidateQueries({ queryKey: purchaseQuery().queryKey });
+        queryClient.invalidateQueries({ queryKey: purchasesQuery().queryKey });
       },
     },
   );

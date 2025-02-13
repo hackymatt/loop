@@ -43,7 +43,7 @@ export default function MessageForm({ purchase, onClose, ...other }: Props) {
     resolver: yupResolver(schema),
     defaultValues: {
       ...defaultValues,
-      subject: `Pytanie dotyczące lekcji ${purchase.lessonTitle} (${fDateTime(purchase.lessonSlot[0])})`,
+      subject: `Pytanie dotyczące lekcji ${purchase.lessonTitle} (${fDateTime(purchase.lessonSlot![0])})`,
     },
   });
 
@@ -59,7 +59,7 @@ export default function MessageForm({ purchase, onClose, ...other }: Props) {
     try {
       await createMessage({
         ...data,
-        recipient_id: purchase.teacher.id,
+        recipient_id: purchase.teacher!.id,
         recipient_type: UserType.TEACHER,
         status: MessageStatus.NEW,
       });
@@ -78,7 +78,7 @@ export default function MessageForm({ purchase, onClose, ...other }: Props) {
       <FormProvider methods={methods} onSubmit={onSubmit}>
         <DialogTitle
           sx={{ typography: "h3", pb: 3 }}
-        >{`Nowa wiadomość do ${purchase.teacher.name}`}</DialogTitle>
+        >{`Nowa wiadomość do ${purchase.teacher!.name}`}</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
           <Stack spacing={1}>

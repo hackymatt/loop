@@ -1,163 +1,208 @@
+from purchase.models import Payment, ServicePurchase, Purchase
+from lesson.models import Lesson
+from mailer.mailer import Mailer
+from config_global import CONTACT_EMAIL, ACCOUNT_NUMBER
+from purchase.invoice import Invoice
 from typing import List
-from django.db.models import Sum
-from django.template.loader import render_to_string
-from datetime import date, datetime
-from purchase.models import Payment
-from config_global import VAT_RATE, VAT_LIMIT, FRONTEND_URL, IS_LOCAL, STORAGES
-from weasyprint import HTML
-import os
-from django.core.files.storage import get_storage_class
-from utils.logger.logger import logger
+from math import floor
+from notification.utils import notify
 
 
-class Invoice:
-    def __init__(self, customer, items, payment, notes):
-        self.PRODUCT_TYPE = "szt."
-        self.PRODUCT_QUANTITY = 1
-        self.INVOICE_DIR = "invoices"
-        self.items = items
-        self.payment = payment
-        self.notes = notes
-        self.date = date.today()
-        self.is_vat = self._is_vat()
-        self.vat_rate = VAT_RATE if self.is_vat else 0
-        self.invoice_number = self.get_invoice_number(self.payment["id"])
-        self.customer = customer
-        self.filename = f"{self.invoice_number}.pdf"
-        self.path = os.path.join(self.INVOICE_DIR, self.filename)
+def get_lessons_price(lessons):
+    for lesson_data in lessons:
+        id = lesson_data["lesson"]
+        lesson = Lesson.objects.get(id=id)
+        lesson_data["price"] = lesson.price
 
-        self.data = {
-            "vat": self.is_vat,
-            "invoice_date": self.date,
-            "invoice_number": self.invoice_number,
-            "customer": {
-                "full_name": self.customer["full_name"],
-                "id": self._format_id(id=self.customer["id"]),
-                "street": self.customer["street_address"],
-                "city": self.customer["city"],
-                "zip_code": self.customer["zip_code"],
-                "country": self.customer["country"],
-            },
-            "products": [
-                {
-                    "id": self._format_id(id=item["id"]),
-                    "name": item["name"],
-                    "type": self.PRODUCT_TYPE,
-                    "quantity": self.PRODUCT_QUANTITY,
-                    "price_netto": self._format_number(
-                        number=self._calc_net_price(price=item["price"])
-                    ),
-                    "subtotal_netto": self._format_number(
-                        number=self._calc_net_subtotal(
-                            price=item["price"], quantity=self.PRODUCT_QUANTITY
-                        )
-                    ),
-                    "vat_percent": f"{self.vat_rate}%",
-                    "vat": self._format_number(
-                        number=self._calc_vat(price=item["price"])
-                    ),
-                    "price_brutto": self._format_number(number=item["price"]),
-                    "subtotal_brutto": self._format_number(
-                        number=item["price"] * self.PRODUCT_QUANTITY
-                    ),
-                }
-                for item in self.items
-            ],
-            "total_netto": self._format_price(
-                price=self._calc_net_price(price=self.payment["amount"])
-            ),
-            "total_vat": self._format_price(
-                price=self._calc_vat(price=self.payment["amount"])
-            ),
-            "total_brutto": self._format_price(price=self.payment["amount"]),
-            "payment_method": self.payment["method"],
-            "payment_status": self.payment["status"],
-            "payment_account": self.payment["account"],
-            "notes": self.notes,
+    return lessons
+
+
+def get_total_price(lessons):
+    return max(sum([float(lesson["price"]) for lesson in lessons]), 0)
+
+
+def get_discounted_total(total_price, coupon_details):
+    if coupon_details["is_percentage"]:
+        return (
+            floor(
+                max(float(total_price) * (1 - coupon_details["discount"] / 100), 0)
+                * 100
+            )
+            / 100
+        )
+
+    return floor(max(total_price - coupon_details["discount"], 0) * 100) / 100
+
+
+def get_discount_percentage(lessons, coupon_details):
+    if coupon_details["is_percentage"]:
+        return coupon_details["discount"]
+
+    total_price = get_total_price(lessons=lessons)
+    discounted_total_price = total_price - coupon_details["discount"]
+    return (1 - discounted_total_price / total_price) * 100
+
+
+def discount_lesson_price(lessons, discount_percentage):
+    new_lessons = []
+    for lesson in lessons:
+        new_lesson = lesson.copy()
+        original_price = lesson["price"]
+        new_price = float(original_price) * (1 - discount_percentage / 100)
+        new_lesson["price"] = floor(max(new_price, 0) * 100) / 100
+        new_lessons.append(new_lesson)
+
+    return new_lessons
+
+
+def confirm_service_purchase(purchases: List[ServicePurchase], payment: Payment):
+    payment_successful = payment.status == "S"
+    payment_rejected = payment.status == "F"
+
+    amount = payment.amount / 100
+    currency = payment.currency
+
+    purchase = purchases[0]
+
+    mailer = Mailer()
+    mail_data = {
+        **{
+            "title": "Płatność utworzona",
+            "description": "Poniżej przedstawione szczegóły zakupu.",
+            "lessons": [purchase.service.title for purchase in purchases],
+            "amount": f"{amount:,.2f} {currency}",
+            "status": "Utworzona",
         }
+    }
 
-        os.makedirs(self.INVOICE_DIR, mode=0o777, exist_ok=True)
+    attachments = []
 
-    def get_invoice_number(self, id: int):
-        return "LOOPINV{:07d}".format(id)
+    customer = {
+        "id": purchase.other.id,
+        "full_name": f"{purchase.other.profile.user.first_name} {purchase.other.profile.user.last_name}",
+        "street_address": purchase.other.profile.street_address,
+        "city": purchase.other.profile.city,
+        "zip_code": purchase.other.profile.zip_code,
+        "country": purchase.other.profile.country,
+    }
+    items = [
+        {
+            "id": purchase.service.id,
+            "name": purchase.service.title,
+            "price": purchase.service.price,
+        }
+        for purchase in purchases
+    ]
+    notes = payment.notes
+    payment = {
+        "id": payment.id,
+        "amount": payment.amount / 100,
+        "currency": payment.currency,
+        "status": "Zapłacono" if payment_successful else "Do zapłaty",
+        "method": payment.method,
+        "account": ACCOUNT_NUMBER if payment.method == "Przelew" else None,
+    }
+    invoice = Invoice(customer=customer, items=items, payment=payment, notes=notes)
+    if not payment_rejected:
+        invoice_path = invoice.create()
+        attachments = [invoice_path]
+        invoice.upload()
 
-    def _format_id(self, id: int):
-        return "{:07d}".format(id)
+    mailer.send(
+        email_template="purchase_confirmation.html",
+        to=[CONTACT_EMAIL],
+        subject="Podsumowanie zakupu",
+        data=mail_data,
+        attachments=attachments,
+    )
 
-    def _calc_net_price(self, price: float):
-        return float(price) * (1 - self.vat_rate / 100)
+    if not payment_rejected:
+        invoice.remove()
 
-    def _calc_net_subtotal(self, price: float, quantity: int):
-        return self._calc_net_price(price=price) * quantity
 
-    def _calc_vat(self, price: float):
-        return float(price) * (self.vat_rate / 100)
+def confirm_purchase(purchases, payment: Payment):
+    payment_successful = payment.status == "S"
 
-    def _format_number(self, number: float):
-        return f"{float(number):,.2f}"
+    title = (
+        "Twój zakup jest zakończony!"
+        if payment_successful
+        else "Twój zakup nie powiódł się."
+    )
+    description = (
+        "Przejdź do swojego konta i zarezerwuj termin."
+        if payment_successful
+        else "Przejdź do koszyka i ponów płatność."
+    )
+    path = (
+        "/account/lessons?sort_by=-created_at&page_size=10"
+        if payment_successful
+        else "/cart"
+    )
+    amount = payment.amount / 100
+    currency = payment.currency
 
-    def _format_price(self, price: float):
-        currency = self.payment["currency"]
-        return f"{float(price):,.2f} {currency}"
+    purchase = purchases[0]
 
-    def _calc_sales(self):
-        current_year = datetime.now().year
-        previous_year = current_year - 1
-        start_date = date(previous_year, 1, 1)
-        end_date = date(previous_year, 12, 31)
-        sales = Payment.objects.filter(
-            status="S", created_at__date__range=(start_date, end_date)
-        )
-        total_sales = (
-            sales.aggregate(total=Sum("amount"))["total"] / 1000
-            if sales.count() > 0
-            else 0
-        )
-        return total_sales
+    notify(
+        profile=purchase.student.profile,
+        title=title,
+        subtitle=f"Ilość lekcji: {purchases.count()}",
+        description=description,
+        path=path,
+        icon="mdi:shopping",
+    )
 
-    def _is_vat(self):
-        return self._calc_sales() > VAT_LIMIT
+    mailer = Mailer()
+    mail_data = {
+        **{
+            "title": title,
+            "description": description,
+            "lessons": [purchase.lesson.title for purchase in purchases],
+            "amount": f"{amount:,.2f} {currency}",
+            "status": "Otrzymana" if payment_successful else "Odrzucona",
+        }
+    }
 
-    def create(self):
-        html_content = render_to_string(
-            "invoice.html",
-            {
-                **self.data,
-                **{
-                    "website_url": FRONTEND_URL,
-                    "company": "loop",
-                },
-            },
-        )
+    attachments = []
 
-        HTML(string=html_content).write_pdf(self.path)
+    customer = {
+        "id": purchase.student.id,
+        "full_name": f"{purchase.student.profile.user.first_name} {purchase.student.profile.user.last_name}",
+        "street_address": purchase.student.profile.street_address,
+        "city": purchase.student.profile.city,
+        "zip_code": purchase.student.profile.zip_code,
+        "country": purchase.student.profile.country,
+    }
+    items = [
+        {
+            "id": purchase.lesson.id,
+            "name": purchase.lesson.title,
+            "price": purchase.lesson.price,
+        }
+        for purchase in purchases
+    ]
+    payment = {
+        "id": payment.id,
+        "amount": payment.amount / 100,
+        "currency": payment.currency,
+        "status": "Zapłacono" if payment_successful else "Do zapłaty",
+        "method": payment.method,
+        "account": "",
+    }
+    notes = ""
+    invoice = Invoice(customer=customer, items=items, payment=payment, notes=notes)
+    if payment_successful:
+        invoice_path = invoice.create()
+        attachments = [invoice_path]
+        invoice.upload()
 
-        return self.path
+    mailer.send(
+        email_template="purchase_confirmation.html",
+        to=[purchase.student.profile.user.email],
+        subject="Podsumowanie zakupu",
+        data=mail_data,
+        attachments=attachments,
+    )
 
-    def _upload(self, storage, location):  # pragma: no cover
-        if IS_LOCAL:
-            logger.warning("Invoice upload has been skipped", exc_info=True)
-            return None
-
-        with open(self.path, "rb") as f:
-            return storage.save(location, f)
-
-    def upload(self):
-        bucket_name = datetime.today().strftime("%Y%m%d")
-        invoices_storage_config = STORAGES.get(
-            "invoices",
-            {
-                "BACKEND": "storages.backends.s3.S3Storage",
-                "OPTIONS": {},
-            },
-        )
-        storage_class = get_storage_class(invoices_storage_config["BACKEND"])
-        storage = storage_class(**invoices_storage_config["OPTIONS"])
-        location = f"{bucket_name}/{self.filename}"
-
-        file_path = self._upload(storage=storage, location=location)
-
-        return storage.url(file_path) if file_path else None
-
-    def remove(self):
-        os.remove(self.path)
+    if payment_successful:
+        invoice.remove()

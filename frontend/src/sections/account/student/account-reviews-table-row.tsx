@@ -68,11 +68,11 @@ export default function AccountReviewsTableRow({ row, onAdd, onEdit, onDelete }:
         </TableCell>
 
         <TableCell>
-          <InputBase value={fDateTime(row.lessonSlot[0])} sx={{ width: 1 }} />
+          <InputBase value={fDateTime(row.lessonSlot![0])} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell>
-          <InputBase value={row.teacher.name} sx={{ width: 1 }} />
+          <InputBase value={row.teacher && row.teacher.name} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell>

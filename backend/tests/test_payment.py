@@ -10,6 +10,7 @@ from .factory import (
     create_lesson,
     create_technology,
     create_purchase,
+    create_service_purchase,
     create_payment,
     create_payment_obj,
 )
@@ -19,6 +20,7 @@ from .helpers import (
     mock_send_message,
     notifications_number,
     payments_number,
+    is_data_match,
     is_float,
 )
 import json
@@ -171,6 +173,8 @@ class PaymentStatusTest(TestCase):
             {
                 "amount": int(self.purchase_1.payment.amount),
                 "currency": self.purchase_1.payment.currency,
+                "method": self.purchase_1.payment.method,
+                "notes": None,
                 "order_id": self.purchase_1.payment.order_id,
                 "session_id": str(self.purchase_1.payment.session_id),
                 "id": self.purchase_1.payment.id,
@@ -204,6 +208,8 @@ class PaymentStatusTest(TestCase):
             {
                 "amount": int(self.purchase_1.payment.amount),
                 "currency": self.purchase_1.payment.currency,
+                "method": self.purchase_1.payment.method,
+                "notes": None,
                 "order_id": self.purchase_1.payment.order_id,
                 "session_id": str(self.purchase_1.payment.session_id),
                 "id": self.purchase_1.payment.id,
@@ -255,9 +261,27 @@ class PaymentTest(TestCase):
         self.payment_4 = create_payment(amount=22, status="F")
         self.payment_5 = create_payment(amount=44)
 
-        self.new_payment = create_payment_obj(amount=1000, status="Pending")
+        self.technology = create_technology(name="Python")
+        self.lesson = create_lesson(
+            title="Python lesson 1",
+            description="bbbb",
+            duration="90",
+            github_url="https://github.com/loopedupl/lesson",
+            price="9.99",
+            technologies=[self.technology],
+        )
+        self.purchase = create_purchase(
+            lesson=self.lesson,
+            student=self.profile,
+            price=self.lesson.price,
+            payment=self.payment_5,
+        )
+
+        self.new_payment = create_payment_obj(
+            amount=500, status="Pending", notes="test"
+        )
         self.edit_payment = create_payment_obj(
-            amount=self.payment_2.amount, status="Failed"
+            amount=self.payment_1.amount, status="Success", notes="test"
         )
 
     def test_get_payments_unauthenticated(self):
@@ -286,66 +310,151 @@ class PaymentTest(TestCase):
         records_count = data["records_count"]
         self.assertEqual(records_count, 5)
 
-    def test_create_payment_unauthenticated(self):
+    def test_get_payment_unauthenticated(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.payment_1.id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_payment_authenticated(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.payment_1.id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_payment_authenticated_admin(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # get data
+        response = self.client.get(f"{self.endpoint}/{self.payment_1.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        payment_status = data.pop("status")
+        self.assertTrue(is_data_match(self.payment_1, data))
+        self.assertEqual(payment_status[0], self.payment_1.status)
+
+    def test_create_payment_not_authenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # post data
-        response = self.client.post(self.endpoint, data=self.new_payment)
+        data = self.new_payment
+        response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(payments_number(), 5)
 
-    def test_create_payment_authenticated(self):
+    def test_create_payment_authenticated_not_admin(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
-        response = self.client.post(self.endpoint, data=self.new_payment)
+        data = self.new_payment
+        response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(payments_number(), 5)
 
     def test_create_payment_authenticated_admin(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
-        response = self.client.post(self.endpoint, data=self.new_payment)
+        data = self.new_payment
+        response = self.client.post(self.endpoint, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(data["status"], self.new_payment["status"])
-        self.assertEqual(data["amount"], self.new_payment["amount"])
         self.assertEqual(payments_number(), 6)
 
-    def test_update_payment_unauthenticated(self):
+    def test_edit_payment_not_authenticated(self):
         # no login
         self.assertFalse(auth.get_user(self.client).is_authenticated)
         # post data
         data = self.edit_payment
-        response = self.client.put(f"{self.endpoint}/{self.payment_2.id}", data)
+        response = self.client.put(f"{self.endpoint}/{self.payment_1.id}", data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_update_payment_authenticated(self):
+    def test_edit_payment_authenticated_not_admin(self):
         # login
         login(self, self.data["email"], self.data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
         data = self.edit_payment
-        response = self.client.put(f"{self.endpoint}/{self.payment_2.id}", data)
+        response = self.client.put(f"{self.endpoint}/{self.payment_1.id}", data)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_update_payment_authenticated_admin(self):
+    def test_edit_payment_authenticated_admin_not_allowed(self):
         # login
         login(self, self.admin_data["email"], self.admin_data["password"])
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # post data
+        self.payment_1.amount = self.payment_1.amount * 10
+        self.payment_1.save()
+        self.purchase.payment = self.payment_1
+        self.purchase.save()
         data = self.edit_payment
         response = self.client.put(
-            f"{self.endpoint}/{self.payment_2.id}",
+            f"{self.endpoint}/{self.payment_1.id}",
+            data=json.dumps(data),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_edit_payment_authenticated_admin_allowed(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        self.payment_1.amount = self.payment_1.amount * 10
+        self.payment_1.save()
+        data = self.edit_payment
+        response = self.client.put(
+            f"{self.endpoint}/{self.payment_1.id}",
             data=json.dumps(data),
             content_type="application/json",
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
-        self.assertEqual(data["status"], self.edit_payment["status"])
-        self.assertEqual(data["amount"], self.edit_payment["amount"])
+        self.payment_1.refresh_from_db()
+        payment_status = data.pop("status")
+        amount = data.pop("amount")
+        self.assertTrue(is_data_match(self.payment_1, data))
+        self.assertEqual(payment_status[0], self.payment_1.status[0])
+        self.assertEqual(amount, self.payment_1.amount)
+
+    def test_delete_payment_not_authenticated(self):
+        # no login
+        self.assertFalse(auth.get_user(self.client).is_authenticated)
+        # post data
+        response = self.client.delete(f"{self.endpoint}/{self.payment_1.id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_payment_authenticated_not_admin(self):
+        # login
+        login(self, self.data["email"], self.data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        response = self.client.delete(f"{self.endpoint}/{self.payment_1.id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_delete_payment_authenticated_admin_not_allowed(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        self.purchase.payment = self.payment_1
+        self.purchase.save()
+        response = self.client.delete(f"{self.endpoint}/{self.payment_1.id}")
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
         self.assertEqual(payments_number(), 5)
+
+    def test_delete_payment_authenticated_admin_allowed(self):
+        # login
+        login(self, self.admin_data["email"], self.admin_data["password"])
+        self.assertTrue(auth.get_user(self.client).is_authenticated)
+        # post data
+        response = self.client.delete(f"{self.endpoint}/{self.payment_1.id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(payments_number(), 4)
 
 
 class PaymentFilterTest(APITestCase):

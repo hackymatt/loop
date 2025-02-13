@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -12,28 +11,30 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { usePayment, useEditPayment } from "src/api/purchase/payment";
+import { useCreatePurchase } from "src/api/purchases/services-purchases";
 
 import FormProvider from "src/components/hook-form";
+import { useToastContext } from "src/components/toast";
 
-import { IPaymentStatus } from "src/types/payment";
-import { IPaymentItemProp } from "src/types/purchase";
+import { IServiceProp } from "src/types/service";
+import { IPaymentProp } from "src/types/payment";
+import { ITeamMemberProps } from "src/types/team";
 
-import { schema, defaultValues } from "./payment";
-import { usePaymentFields } from "./payment-fields";
+import { schema, defaultValues } from "./purchase";
+import { usePurchaseFields } from "./purchase-fields";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  payment: IPaymentItemProp;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function PaymentEditForm({ payment, onClose, ...other }: Props) {
-  const { data: categoryData } = usePayment(payment.id);
-  const { mutateAsync: editPayment } = useEditPayment(payment.id);
+export default function PurchaseNewForm({ onClose, ...other }: Props) {
+  const { enqueueSnackbar } = useToastContext();
+
+  const { mutateAsync: createPurchase } = useCreatePurchase();
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -46,29 +47,25 @@ export default function PaymentEditForm({ payment, onClose, ...other }: Props) {
     formState: { isSubmitting },
   } = methods;
 
-  useEffect(() => {
-    if (categoryData) {
-      reset(categoryData);
-    }
-  }, [reset, categoryData]);
-
   const handleFormError = useFormErrorHandler(methods);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await editPayment({
+      await createPurchase({
         ...data,
-        amount: data.amount * 100,
-        status: data.status as IPaymentStatus,
+        service: data.service.map((s: IServiceProp) => s.id)[0],
+        other: data.other.map((o: ITeamMemberProps) => o.id)[0],
+        payment: data.payment.map((p: IPaymentProp) => p.id)[0]!,
       });
       reset();
       onClose();
+      enqueueSnackbar("Zakup został dodany", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }
   });
 
-  const { fields } = usePaymentFields();
+  const { fields } = usePurchaseFields();
 
   return (
     <Dialog
@@ -85,13 +82,17 @@ export default function PaymentEditForm({ payment, onClose, ...other }: Props) {
       }}
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj płatność</DialogTitle>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nowy zakup</DialogTitle>
+          {fields.active}
+        </Stack>
 
         <DialogContent sx={{ py: 0 }}>
           <Stack spacing={1}>
-            {fields.amount}
-            {fields.currency}
-            {fields.status}
+            {fields.service}
+            {fields.price}
+            {fields.other}
+            {fields.payment}
           </Stack>
         </DialogContent>
 
@@ -110,9 +111,8 @@ export default function PaymentEditForm({ payment, onClose, ...other }: Props) {
           <Button variant="outlined" onClick={onClose} color="inherit">
             Anuluj
           </Button>
-
-          <LoadingButton color="inherit" type="submit" variant="contained" loading={isSubmitting}>
-            Zapisz
+          <LoadingButton color="success" type="submit" variant="contained" loading={isSubmitting}>
+            Dodaj
           </LoadingButton>
         </DialogActions>
       </FormProvider>

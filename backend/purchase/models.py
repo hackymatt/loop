@@ -6,6 +6,7 @@ from django.db.models import (
     BigIntegerField,
     IntegerField,
     CharField,
+    TextField,
     SET,
     PROTECT,
     Index,
@@ -22,17 +23,21 @@ from django.db.models import (
 from django.contrib.postgres.aggregates import ArrayAgg
 from django.db.models.functions import Coalesce, Now
 from lesson.models import Lesson
-from profile.models import StudentProfile
+from service.models import Service
+from profile.models import StudentProfile, OtherProfile
 from schedule.models import Recording
 from review.models import Review
-from config_global import DUMMY_STUDENT_EMAIL, CANCELLATION_TIME
-from datetime import datetime, timedelta
-from django.utils.timezone import make_aware
+from config_global import DUMMY_STUDENT_EMAIL, DUMMY_OTHER_EMAIL, CANCELLATION_TIME
+from datetime import timedelta
 import uuid
 
 
 def get_dummy_student_profile():
     return StudentProfile.objects.get(profile__user__email=DUMMY_STUDENT_EMAIL)
+
+
+def get_dummy_other_profile():
+    return OtherProfile.objects.get(profile__user__email=DUMMY_OTHER_EMAIL)
 
 
 class Payment(BaseModel):
@@ -46,11 +51,22 @@ class Payment(BaseModel):
         ("EUR", "EUR"),
         ("USD", "USD"),
     )
+    METHOD_CHOICES = (
+        ("Przelewy24", "Przelewy24"),
+        ("PayPal", "PayPal"),
+        ("Przelew", "Przelew"),
+    )
     session_id = UUIDField(default=uuid.uuid4)
     order_id = BigIntegerField(null=True, default=None)
     amount = IntegerField()
     currency = CharField(max_length=3, choices=CURRENCY_CHOICES, default="PLN")
+    method = CharField(
+        max_length=max(len(choice[0]) for choice in METHOD_CHOICES),
+        choices=METHOD_CHOICES,
+        default="Przelew",
+    )
     status = CharField(choices=STATUS_CHOICES, default="P")
+    notes = TextField(null=True)
 
     class Meta:
         db_table = "payment"
@@ -176,6 +192,9 @@ class PurchaseManager(Manager):
     def get_queryset(self):
         return PurchaseQuerySet(self.model, using=self._db)
 
+    def add_meeting_url(self):
+        return self.get_queryset().add_meeting_url()
+
 
 class Purchase(BaseModel):
     lesson = ForeignKey(
@@ -211,6 +230,45 @@ class Purchase(BaseModel):
                 fields=[
                     "student",
                     "lesson",
+                ]
+            ),
+        ]
+
+
+class ServicePurchase(BaseModel):
+    service = ForeignKey(
+        Service,
+        on_delete=PROTECT,
+        related_name="service_purchase_service",
+    )
+    other = ForeignKey(
+        OtherProfile,
+        on_delete=SET(get_dummy_other_profile),
+        related_name="service_purchase_other",
+    )
+    price = DecimalField(max_digits=7, decimal_places=2, null=True)
+    payment = ForeignKey(
+        Payment, on_delete=PROTECT, related_name="service_purchase_payment"
+    )
+
+    class Meta:
+        db_table = "service_purchase"
+        ordering = ["id"]
+        indexes = [
+            Index(
+                fields=[
+                    "id",
+                ]
+            ),
+            Index(
+                fields=[
+                    "service",
+                ]
+            ),
+            Index(
+                fields=[
+                    "other",
+                    "service",
                 ]
             ),
         ]

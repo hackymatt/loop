@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
+import { Alert } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -11,12 +13,16 @@ import Dialog, { DialogProps } from "@mui/material/Dialog";
 
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
-import { useCreatePayment } from "src/api/purchase/payments";
+import { usePayment, useEditPayment } from "src/api/payment/payment";
 
 import FormProvider from "src/components/hook-form";
-import { useToastContext } from "src/components/toast";
 
-import { IPaymentStatus } from "src/types/payment";
+import {
+  IPaymentProp,
+  IPaymentStatus,
+  IPaymentMethodProp,
+  IPaymentCurrencyProp,
+} from "src/types/payment";
 
 import { schema, defaultValues } from "./payment";
 import { usePaymentFields } from "./payment-fields";
@@ -24,15 +30,15 @@ import { usePaymentFields } from "./payment-fields";
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
+  payment: IPaymentProp;
   onClose: VoidFunction;
 }
 
 // ----------------------------------------------------------------------
 
-export default function PaymentNewForm({ onClose, ...other }: Props) {
-  const { enqueueSnackbar } = useToastContext();
-
-  const { mutateAsync: createPayment } = useCreatePayment();
+export default function PaymentEditForm({ payment, onClose, ...other }: Props) {
+  const { data: paymentData } = usePayment(payment.id!);
+  const { mutateAsync: editPayment } = useEditPayment(payment.id!);
 
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -40,29 +46,37 @@ export default function PaymentNewForm({ onClose, ...other }: Props) {
   });
 
   const {
+    control,
     reset,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { errors, isSubmitting },
   } = methods;
+
+  useEffect(() => {
+    if (paymentData) {
+      reset(paymentData);
+    }
+  }, [reset, paymentData]);
 
   const handleFormError = useFormErrorHandler(methods);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await createPayment({
+      await editPayment({
         ...data,
         amount: data.amount * 100,
+        currency: data.currency as IPaymentCurrencyProp,
+        method: data.method as IPaymentMethodProp,
         status: data.status as IPaymentStatus,
       });
       reset();
       onClose();
-      enqueueSnackbar("Płatność została dodana", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }
   });
 
-  const { fields } = usePaymentFields();
+  const { fields } = usePaymentFields(control);
 
   return (
     <Dialog
@@ -79,13 +93,16 @@ export default function PaymentNewForm({ onClose, ...other }: Props) {
       }}
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Dodaj nową płatność</DialogTitle>
+        <DialogTitle sx={{ typography: "h3", pb: 3 }}>Edytuj płatność</DialogTitle>
 
         <DialogContent sx={{ py: 0 }}>
           <Stack spacing={1}>
             {fields.amount}
             {fields.currency}
+            {fields.method}
             {fields.status}
+            {fields.notes}
+            {errors.root && <Alert severity="error">{errors.root.message}</Alert>}
           </Stack>
         </DialogContent>
 
@@ -105,8 +122,14 @@ export default function PaymentNewForm({ onClose, ...other }: Props) {
             Anuluj
           </Button>
 
-          <LoadingButton color="success" type="submit" variant="contained" loading={isSubmitting}>
-            Dodaj
+          <LoadingButton
+            color="inherit"
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+            disabled={!!errors.root}
+          >
+            Zapisz
           </LoadingButton>
         </DialogActions>
       </FormProvider>

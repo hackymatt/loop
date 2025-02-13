@@ -4,9 +4,13 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
-import { IPaymentStatus } from "src/types/payment";
 import { IQueryParams } from "src/types/query-params";
-import { IPaymentItemProp } from "src/types/purchase";
+import {
+  IPaymentProp,
+  IPaymentStatus,
+  IPaymentMethodProp,
+  IPaymentCurrencyProp,
+} from "src/types/payment";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils/csrf";
@@ -17,7 +21,8 @@ type IPayment = {
   id: string;
   session_id: string;
   amount: number;
-  currency: "PLN" | "USD" | "EUR";
+  currency: IPaymentCurrencyProp;
+  method: IPaymentMethodProp;
   status: IPaymentStatus;
   created_at: string;
 };
@@ -35,11 +40,12 @@ export const paymentQuery = (query?: IQueryParams) => {
     const { data } = await Api.get(queryUrl);
     const { results, records_count, pages_count } = data;
     const modifiedResults = results.map(
-      ({ id, session_id, amount, currency, status, created_at }: IPayment) => ({
+      ({ id, session_id, amount, currency, method, status, created_at }: IPayment) => ({
         id,
         sessionId: session_id,
         amount: amount / 100,
         currency,
+        method,
         status,
         createdAt: created_at,
       }),
@@ -53,7 +59,7 @@ export const paymentQuery = (query?: IQueryParams) => {
 export const usePayments = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = paymentQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as IPaymentItemProp[], count: data?.count, ...rest };
+  return { data: data?.results as IPaymentProp[], count: data?.count, ...rest };
 };
 
 export const usePaymentsPageCount = (query?: IQueryParams) => {

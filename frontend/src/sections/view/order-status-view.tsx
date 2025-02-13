@@ -14,7 +14,7 @@ import { useRouter } from "src/routes/hooks";
 
 import { useQueryParams } from "src/hooks/use-query-params";
 
-import { usePaymentStatus } from "src/api/payment/payment";
+import { usePaymentStatus } from "src/api/payment/payment-status";
 
 import { varBounce, MotionContainer } from "src/components/animate";
 

@@ -8,117 +8,38 @@ from django.http import JsonResponse
 from purchase.serializers import (
     PurchaseSerializer,
     PurchaseGetSerializer,
+    PurchaseGetAdminSerializer,
     PaymentSerializer,
+    ServicePurchaseSerializer,
+    ServicePurchaseGetSerializer,
 )
-from purchase.models import Purchase, Payment
-from purchase.filters import PurchaseFilter, PaymentFilter
-from purchase.utils import Invoice
-from profile.models import Profile, StudentProfile
+from purchase.models import Purchase, ServicePurchase, Payment
+from purchase.filters import PurchaseFilter, ServicePurchaseFilter, PaymentFilter
+from purchase.utils import (
+    get_lessons_price,
+    get_total_price,
+    get_discount_percentage,
+    get_discounted_total,
+    discount_lesson_price,
+    confirm_purchase,
+)
+from profile.models import Profile, StudentProfile, OtherProfile
 from profile.models import Profile
-from lesson.models import Lesson
 from coupon.models import Coupon, CouponUser
 from coupon.validation import validate_coupon
 from utils.przelewy24.payment import Przelewy24Api
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Sum, Prefetch
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from purchase.utils import confirm_service_purchase
 import json
-from mailer.mailer import Mailer
-from notification.utils import notify
-from math import floor
-from config_global import CONTACT_EMAIL
-
-
-def confirm_purchase(status, purchases, payment: Payment):
-    payment_successful = status == "S"
-
-    title = (
-        "Twój zakup jest zakończony!"
-        if payment_successful
-        else "Twój zakup nie powiódł się."
-    )
-    description = (
-        "Przejdź do swojego konta i zarezerwuj termin."
-        if payment_successful
-        else "Przejdź do koszyka i ponów płatność."
-    )
-    path = (
-        "/account/lessons?sort_by=-created_at&page_size=10"
-        if payment_successful
-        else "/cart"
-    )
-    amount = payment.amount / 100
-
-    purchase = purchases[0]
-
-    notify(
-        profile=purchase.student.profile,
-        title=title,
-        subtitle=f"Ilość lekcji: {purchases.count()}",
-        description=description,
-        path=path,
-        icon="mdi:shopping",
-    )
-
-    mailer = Mailer()
-    mail_data = {
-        **{
-            "title": title,
-            "description": description,
-            "lessons": [purchase.lesson.title for purchase in purchases],
-            "amount": f"{amount:.2f}",
-            "status": "Otrzymana" if payment_successful else "Odrzucona",
-        }
-    }
-
-    attachments = []
-
-    customer = {
-        "id": purchase.student.id,
-        "full_name": f"{purchase.student.profile.user.first_name} {purchase.student.profile.user.last_name}",
-        "street_address": purchase.student.profile.street_address,
-        "city": purchase.student.profile.city,
-        "zip_code": purchase.student.profile.zip_code,
-        "country": purchase.student.profile.country,
-    }
-    items = [
-        {
-            "id": purchase.lesson.id,
-            "name": purchase.lesson.title,
-            "price": purchase.lesson.price,
-        }
-        for purchase in purchases
-    ]
-    payment = {
-        "id": payment.id,
-        "amount": payment.amount / 100,
-        "currency": payment.currency,
-        "status": "Zapłacono" if payment_successful else "Do zapłaty",
-        "method": "Przelewy24",
-        "account": "",
-    }
-    notes = ""
-    invoice = Invoice(customer=customer, items=items, payment=payment, notes=notes)
-    if payment_successful:
-        invoice_path = invoice.create()
-        attachments = [invoice_path]
-        invoice.upload()
-
-    mailer.send(
-        email_template="purchase_confirmation.html",
-        to=[purchase.student.profile.user.email],
-        subject="Podsumowanie zakupu",
-        data=mail_data,
-        attachments=attachments,
-    )
-
-    if payment_successful:
-        invoice.remove()
 
 
 class PurchaseViewSet(ModelViewSet):
     http_method_names = ["get", "post"]
     queryset = (
-        Purchase.objects.filter(payment__status="S")
-        .add_meeting_url()
+        Purchase.objects.add_meeting_url()
         .add_recordings_ids()
         .add_reservation_id()
         .add_review_id()
@@ -131,11 +52,18 @@ class PurchaseViewSet(ModelViewSet):
     filterset_class = PurchaseFilter
     permission_classes = [IsAuthenticated]
 
+    def get_serializer_class(self):
+        if self.request.user.is_superuser:
+            return PurchaseGetAdminSerializer
+        return self.serializer_class
+
     def get_queryset(self):
         user = self.request.user
 
         if not user.is_superuser:
-            queryset = self.queryset.filter(student__profile__user=user)
+            queryset = self.queryset.filter(
+                student__profile__user=user, payment__status="S"
+            )
         else:
             queryset = self.queryset
 
@@ -149,55 +77,13 @@ class PurchaseViewSet(ModelViewSet):
 
         return queryset
 
-    def get_lessons_price(self, lessons):
-        for lesson_data in lessons:
-            id = lesson_data["lesson"]
-            lesson = Lesson.objects.get(id=id)
-            lesson_data["price"] = lesson.price
-
-        return lessons
-
-    def get_total_price(self, lessons):
-        return max(sum([float(lesson["price"]) for lesson in lessons]), 0)
-
-    def get_discounted_total(self, total_price, coupon_details):
-        if coupon_details["is_percentage"]:
-            return (
-                floor(
-                    max(float(total_price) * (1 - coupon_details["discount"] / 100), 0)
-                    * 100
-                )
-                / 100
-            )
-
-        return floor(max(total_price - coupon_details["discount"], 0) * 100) / 100
-
-    def get_discount_percentage(self, lessons, coupon_details):
-        if coupon_details["is_percentage"]:
-            return coupon_details["discount"]
-
-        total_price = self.get_total_price(lessons=lessons)
-        discounted_total_price = total_price - coupon_details["discount"]
-        return (1 - discounted_total_price / total_price) * 100
-
-    def discount_lesson_price(self, lessons, discount_percentage):
-        new_lessons = []
-        for lesson in lessons:
-            new_lesson = lesson.copy()
-            original_price = lesson["price"]
-            new_price = float(original_price) * (1 - discount_percentage / 100)
-            new_lesson["price"] = floor(max(new_price, 0) * 100) / 100
-            new_lessons.append(new_lesson)
-
-        return new_lessons
-
     def create(self, request, *args, **kwargs):
         user = request.user
         profile = Profile.objects.get(user=user)
         data = request.data
 
         lessons = data.pop("lessons")
-        lessons = self.get_lessons_price(lessons=lessons)
+        lessons = get_lessons_price(lessons=lessons)
 
         coupon_code = data.pop("coupon")
 
@@ -213,7 +99,7 @@ class PurchaseViewSet(ModelViewSet):
             valid, error_message = validate_coupon(
                 coupon_code=coupon_code,
                 user=profile,
-                total=self.get_total_price(lessons=lessons) * 100,
+                total=get_total_price(lessons=lessons) * 100,
             )
             if not valid:
                 raise ValidationError({"coupon": error_message})
@@ -225,20 +111,20 @@ class PurchaseViewSet(ModelViewSet):
                 "is_percentage": coupon_obj.is_percentage,
             }
 
-            discount_percentage = self.get_discount_percentage(
+            discount_percentage = get_discount_percentage(
                 lessons=lessons_data, coupon_details=coupon_details
             )
 
-            records = self.discount_lesson_price(
+            records = discount_lesson_price(
                 lessons=lessons_data, discount_percentage=discount_percentage
             )
-            total = self.get_discounted_total(
-                total_price=self.get_total_price(lessons=lessons_data),
+            total = get_discounted_total(
+                total_price=get_total_price(lessons=lessons_data),
                 coupon_details=coupon_details,
             )
         else:
             records = lessons_data
-            total = self.get_total_price(lessons=records)
+            total = get_total_price(lessons=records)
 
         # initialize payment record
         payment = Payment.objects.create(amount=total * 100)
@@ -262,7 +148,7 @@ class PurchaseViewSet(ModelViewSet):
             status_code = status.HTTP_200_OK
             data = {"token": ""}
             purchases = Purchase.objects.filter(payment=payment)
-            confirm_purchase(status="S", purchases=purchases, payment=payment)
+            confirm_purchase(purchases=purchases, payment=payment)
         else:
             # register payment
             przelewy24 = Przelewy24Api(payment=payment)
@@ -336,113 +222,69 @@ class PaymentStatusViewSet(ModelViewSet):
         serializer = PaymentSerializer(instance=payment)
         data = serializer.data
 
-        confirm_purchase(status=data["status"], purchases=purchases, payment=payment)
+        confirm_purchase(purchases=purchases, payment=payment)
 
         return Response(data)
 
 
 class PaymentViewSet(ModelViewSet):
-    http_method_names = ["get", "post", "put"]
+    http_method_names = ["get", "post", "put", "delete"]
     queryset = Payment.objects.all().order_by("id")
     serializer_class = PaymentSerializer
     filterset_class = PaymentFilter
     permission_classes = [IsAuthenticated, IsAdminUser]
 
+    def is_valid(self, instance: Payment):
+        return not Purchase.objects.filter(payment=instance).exists()
 
-class PaymentInvoiceAPIView(APIView):
-    http_method_names = ["get", "post"]
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        if not self.is_valid(instance=instance):
+            return Response(
+                status=status.HTTP_405_METHOD_NOT_ALLOWED,
+                data={"root": "Nie można edytować tej płatności."},
+            )
+
+        return super().update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        if not self.is_valid(instance=instance):
+            return Response(
+                status=status.HTTP_405_METHOD_NOT_ALLOWED,
+                data={"root": "Nie można usunąć tej płatności."},
+            )
+
+        return super().destroy(request, *args, **kwargs)
+
+
+class ServicePurchaseViewSet(ModelViewSet):
+    http_method_names = ["get", "post", "put", "delete"]
+    queryset = (
+        ServicePurchase.objects.prefetch_related(
+            Prefetch("other", queryset=OtherProfile.objects.add_full_name())
+        )
+        .all()
+        .order_by("id")
+    )
+    serializer_class = ServicePurchaseSerializer
+    filterset_class = ServicePurchaseFilter
     permission_classes = [IsAuthenticated, IsAdminUser]
 
-    def get(self, request, id):
-        payment_obj = Payment.objects.get(id=id)
-        purchases = Purchase.objects.filter(payment=payment_obj)
+    def get_serializer_class(self):
+        if self.action in ["list", "retrieve"]:
+            return ServicePurchaseGetSerializer
+        return self.serializer_class
 
-        if purchases.exists():
-            purchase = purchases.first()
-            customer = {
-                "id": purchase.student.id,
-                "full_name": f"{purchase.student.profile.user.first_name} {purchase.student.profile.user.last_name}",
-                "street_address": purchase.student.profile.street_address,
-                "city": purchase.student.profile.city,
-                "zip_code": purchase.student.profile.zip_code,
-                "country": purchase.student.profile.country,
-            }
-            items = [
-                {
-                    "id": purchase.lesson.id,
-                    "name": purchase.lesson.title,
-                    "price": purchase.lesson.price,
-                }
-                for purchase in purchases
-            ]
-            payment = {
-                "id": payment_obj.id,
-                "amount": payment_obj.amount / 100,
-                "currency": payment_obj.currency,
-                "status": "Zapłacono" if payment_obj.status == "S" else "Do zapłaty",
-                "method": "Przelewy24",
-                "account": "",
-            }
-        else:
-            customer = {
-                "id": "",
-                "full_name": "",
-                "street_address": "",
-                "city": "",
-                "zip_code": "",
-                "country": "",
-            }
-            items = []
-            payment = {
-                "id": payment_obj.id,
-                "amount": payment_obj.amount / 100,
-                "currency": payment_obj.currency,
-                "status": "Zapłacono" if payment_obj.status == "S" else "Do zapłaty",
-                "method": "Przelew",
-                "account": "PL 59 1160 2202 0000 0006 2440 0188",
-            }
 
-        return JsonResponse(
-            status=status.HTTP_200_OK,
-            data={
-                "customer": customer,
-                "items": items,
-                "payment": payment,
-                "notes": "",
-            },
-        )
+@receiver([post_save], sender=ServicePurchase)
+def check_total_purchase_amount(sender, instance: ServicePurchase, **kwargs):
+    payment = instance.payment
+    purchases = ServicePurchase.objects.filter(payment=payment)
 
-    def post(self, request):
-        invoice_data = request.data
-        customer = invoice_data["customer"]
-        items = invoice_data["items"]
-        payment = invoice_data["payment"]
-        notes = invoice_data["notes"]
+    total_price = purchases.aggregate(Sum("price"))["price__sum"]
 
-        mailer = Mailer()
-        mail_data = {
-            **{
-                "customer_full_name": customer["full_name"],
-            }
-        }
-
-        attachments = []
-
-        invoice = Invoice(customer=customer, items=items, payment=payment, notes=notes)
-        invoice_path = invoice.create()
-        attachments = [invoice_path]
-        invoice.upload()
-
-        invoice_number = invoice.get_invoice_number(id=payment["id"])
-
-        mailer.send(
-            email_template="generate_invoice.html",
-            to=[CONTACT_EMAIL],
-            subject=f"Faktura {invoice_number} została wygenerowana",
-            data=mail_data,
-            attachments=attachments,
-        )
-
-        invoice.remove()
-
-        return Response(status=status.HTTP_200_OK, data=invoice_data)
+    if total_price == payment.amount / 100:
+        confirm_service_purchase(purchases=purchases, payment=payment)

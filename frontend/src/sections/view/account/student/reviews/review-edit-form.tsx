@@ -34,11 +34,11 @@ interface Props extends DialogProps {
 export default function ReviewEditForm({ purchase, onClose, ...other }: Props) {
   const { enqueueSnackbar } = useToastContext();
 
-  const { mutateAsync: editReview } = useEditReview(purchase.reviewId);
+  const { mutateAsync: editReview } = useEditReview(purchase.reviewId!);
 
   const constValues = {
     lesson: purchase.lessonId,
-    lecturer: purchase.teacher.id,
+    lecturer: purchase.teacher!.id,
   };
 
   const methods = useForm({

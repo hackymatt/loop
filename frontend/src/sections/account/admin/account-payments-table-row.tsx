@@ -13,18 +13,17 @@ import { fCurrency } from "src/utils/format-number";
 import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 
-import { PaymentStatus } from "src/types/payment";
-import { IPaymentItemProp } from "src/types/purchase";
+import { IPaymentProp, PaymentStatus } from "src/types/payment";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: IPaymentItemProp;
-  onEdit: (payment: IPaymentItemProp) => void;
-  onInvoice: (payment: IPaymentItemProp) => void;
+  row: IPaymentProp;
+  onEdit: (payment: IPaymentProp) => void;
+  onDelete: (payment: IPaymentProp) => void;
 };
 
-export default function AccountPaymentsTableRow({ row, onEdit, onInvoice }: Props) {
+export default function AccountPaymentsTableRow({ row, onEdit, onDelete }: Props) {
   const openOptions = usePopover();
 
   const handleEdit = useCallback(() => {
@@ -32,10 +31,10 @@ export default function AccountPaymentsTableRow({ row, onEdit, onInvoice }: Prop
     onEdit(row);
   }, [openOptions, onEdit, row]);
 
-  const handleInvoice = useCallback(() => {
+  const handleDelete = useCallback(() => {
     openOptions.onClose();
-    onInvoice(row);
-  }, [openOptions, onInvoice, row]);
+    onDelete(row);
+  }, [openOptions, onDelete, row]);
 
   const isSuccess = useMemo(() => row.status === PaymentStatus.SUCCESS, [row.status]);
   const isFailure = useMemo(() => row.status === PaymentStatus.FAILURE, [row.status]);
@@ -90,9 +89,9 @@ export default function AccountPaymentsTableRow({ row, onEdit, onInvoice }: Prop
 
         <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
 
-        <MenuItem onClick={handleInvoice} sx={{ mr: 1, width: "100%" }}>
-          <Iconify icon="carbon:document-signed" sx={{ mr: 0.5 }} />
-          <Typography variant="body2">Wygeneruj fakturę</Typography>
+        <MenuItem onClick={handleDelete} sx={{ mr: 1, color: "error.main", width: "fit-content" }}>
+          <Iconify icon="carbon:trash-can" sx={{ mr: 0.5 }} />
+          <Typography variant="body2">Usuń płatność</Typography>
         </MenuItem>
       </Popover>
     </>

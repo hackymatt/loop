@@ -14,6 +14,7 @@ from profile.password_reset.views import ProfilePasswordResetViewSet
 from profile.personal_data.views import PersonalDataViewSet
 from profile.profile_data.views import ProfileDataViewSet
 from profile.lecturers.views import LecturerViewSet, BestLecturerViewSet
+from profile.others.views import OtherViewSet
 from profile.earnings.views import EarningViewSet
 from django.urls import path, include
 from django.conf import settings
@@ -54,10 +55,10 @@ from wishlist.views import WishlistViewSet
 from cart.views import CartViewSet
 from purchase.views import (
     PurchaseViewSet,
+    ServicePurchaseViewSet,
     PaymentViewSet,
     PaymentVerifyAPIView,
     PaymentStatusViewSet,
-    PaymentInvoiceAPIView,
 )
 from teaching.views import ManageTeachingViewSet, TeachingViewSet
 from reservation.views import ReservationViewSet
@@ -91,6 +92,7 @@ router.register(
 )
 router.register(r"lesson-schedules", ScheduleViewSet, basename="lesson_schedules")
 router.register(r"lecturers", LecturerViewSet, basename="lecturers")
+router.register(r"others", OtherViewSet, basename="others")
 router.register(r"login", EmailLoginViewSet, basename="user_login")
 router.register(r"logout", ProfileLogoutViewSet, basename="user_logout")
 router.register(r"messages", MessageViewSet, basename="messages")
@@ -105,8 +107,11 @@ router.register(
 )
 router.register(r"posts", PostViewSet, basename="posts")
 router.register(r"post-categories", PostCategoryViewSet, basename="post_categories")
-router.register(r"purchase", PurchaseViewSet, basename="purchase")
+router.register(r"purchases", PurchaseViewSet, basename="purchases")
 router.register(r"payments", PaymentViewSet, basename="payments")
+router.register(
+    r"service-purchases", ServicePurchaseViewSet, basename="service-purchase"
+)
 router.register(r"register", ProfileRegisterViewSet, basename="user_register")
 router.register(r"reservation", ReservationViewSet, basename="reservation")
 router.register(r"reviews", ReviewViewSet, basename="reviews")
@@ -161,14 +166,6 @@ api_urlpatterns = [
     path(
         "payment-status",
         PaymentStatusViewSet.as_view({"get": "list"}),
-    ),
-    path(
-        "invoice/<str:id>",
-        PaymentInvoiceAPIView.as_view(),
-    ),
-    path(
-        "invoice",
-        PaymentInvoiceAPIView.as_view(),
     ),
     path("contact", ContactAPIView.as_view()),
     path(

@@ -15,6 +15,7 @@ interface Props extends StackProps {
   valuePriceTo: IQueryParamValue;
   onChangeStartPrice: (priceFrom: IQueryParamValue) => void;
   onChangeEndPrice: (priceTo: IQueryParamValue) => void;
+  currency?: string;
 }
 
 // ----------------------------------------------------------------------
@@ -24,6 +25,7 @@ export default function FilterPrice({
   valuePriceTo,
   onChangeStartPrice,
   onChangeEndPrice,
+  currency = "zł",
   ...other
 }: Props) {
   return (
@@ -32,11 +34,13 @@ export default function FilterPrice({
         placeholder="od"
         price={valuePriceFrom === 0 ? "" : valuePriceFrom}
         onChange={(price) => onChangeStartPrice(price)}
+        currency={currency}
       />
       <PriceInput
         placeholder="do"
         price={valuePriceTo === 0 ? "" : valuePriceTo}
         onChange={(price) => onChangeEndPrice(price)}
+        currency={currency}
       />
     </Stack>
   );
@@ -45,10 +49,11 @@ export default function FilterPrice({
 interface PriceInputProps {
   placeholder: string;
   price: IQueryParamValue;
+  currency?: string;
   onChange: (price: IQueryParamValue) => void;
 }
 
-function PriceInput({ placeholder, price, onChange }: PriceInputProps) {
+function PriceInput({ placeholder, price, currency = "zł", onChange }: PriceInputProps) {
   const [value, setValue] = useState<IQueryParamValue>(price);
   const debouncedValue = useDebounce<IQueryParamValue>(value);
 
@@ -72,7 +77,7 @@ function PriceInput({ placeholder, price, onChange }: PriceInputProps) {
       onChange={(event) => handleChange(event)}
       InputProps={{
         inputProps: { min: 0, step: ".01" },
-        endAdornment: <InputAdornment position="end">zł</InputAdornment>,
+        endAdornment: <InputAdornment position="end">{currency}</InputAdornment>,
       }}
     />
   );
