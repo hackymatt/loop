@@ -5,6 +5,7 @@ from purchase.models import Payment
 from config_global import VAT_RATE, VAT_LIMIT, FRONTEND_URL, IS_LOCAL, STORAGES
 from weasyprint import HTML
 import os
+from collections import defaultdict
 from django.core.files.storage import get_storage_class
 from utils.logger.logger import logger
 
@@ -12,9 +13,8 @@ from utils.logger.logger import logger
 class Invoice:
     def __init__(self, customer, items, payment, notes):
         self.PRODUCT_TYPE = "szt."
-        self.PRODUCT_QUANTITY = 1
         self.INVOICE_DIR = "invoices"
-        self.items = items
+        self.items = self.group_items(items=items)
         self.payment = payment
         self.notes = notes
         self.date = date.today()
@@ -42,7 +42,7 @@ class Invoice:
                     "id": self._format_id(id=item["id"]),
                     "name": item["name"],
                     "type": self.PRODUCT_TYPE,
-                    "quantity": self.PRODUCT_QUANTITY,
+                    "quantity": item["quantity"],
                     "price_netto": self._format_number(
                         number=self._calc_net_price(price=item["price"])
                     ),
@@ -79,6 +79,22 @@ class Invoice:
 
     def get_invoice_number(self, id: int):
         return "LOOPINV{:07d}".format(id)
+
+    def group_items(self, items):
+        grouped = defaultdict(lambda: {"id": "", "name": "", "price": 0, "quantity": 0})
+
+        for item in items:
+            key = (item["name"], item["price"])
+            if key not in grouped:
+                grouped[key] = {
+                    "id": item["id"],
+                    "name": item["name"],
+                    "price": item["price"],
+                    "quantity": 0,
+                }
+            grouped[key]["quantity"] += 1
+
+        return list(grouped.values())
 
     def _format_id(self, id: int):
         return "{:07d}".format(id)
