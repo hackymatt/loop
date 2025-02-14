@@ -48,7 +48,7 @@ class Invoice:
                     ),
                     "subtotal_netto": self._format_number(
                         number=self._calc_net_subtotal(
-                            price=item["price"], quantity=self.PRODUCT_QUANTITY
+                            price=item["price"], quantity=item["quantity"]
                         )
                     ),
                     "vat_percent": f"{self.vat_rate}%",
@@ -57,7 +57,7 @@ class Invoice:
                     ),
                     "price_brutto": self._format_number(number=item["price"]),
                     "subtotal_brutto": self._format_number(
-                        number=item["price"] * self.PRODUCT_QUANTITY
+                        number=item["price"] * item["quantity"]
                     ),
                 }
                 for item in self.items
