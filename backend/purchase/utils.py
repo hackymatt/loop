@@ -6,6 +6,7 @@ from purchase.invoice import Invoice
 from typing import List
 from math import floor
 from notification.utils import notify
+from collections import defaultdict
 
 
 def get_lessons_price(lessons):
@@ -55,27 +56,32 @@ def discount_lesson_price(lessons, discount_percentage):
     return new_lessons
 
 
+def group_items(items):
+    grouped = defaultdict(lambda: {"id": "", "name": "", "price": 0, "quantity": 0})
+
+    for item in items:
+        key = (item["name"], item["price"])
+        if key not in grouped:
+            grouped[key] = {
+                "id": item["id"],
+                "name": item["name"],
+                "price": item["price"],
+                "quantity": 0,
+            }
+        grouped[key]["quantity"] += 1
+
+    return list(grouped.values())
+
+
 def confirm_service_purchase(purchases: List[ServicePurchase], payment: Payment):
     payment_successful = payment.status == "S"
     payment_rejected = payment.status == "F"
 
     amount = payment.amount / 100
     currency = payment.currency
+    method = payment.method
 
     purchase = purchases[0]
-
-    mailer = Mailer()
-    mail_data = {
-        **{
-            "title": "Płatność utworzona",
-            "description": "Poniżej przedstawione szczegóły zakupu.",
-            "lessons": [purchase.service.title for purchase in purchases],
-            "amount": f"{amount:,.2f} {currency}",
-            "status": "Utworzona",
-        }
-    }
-
-    attachments = []
 
     customer = {
         "id": purchase.other.id,
@@ -85,23 +91,40 @@ def confirm_service_purchase(purchases: List[ServicePurchase], payment: Payment)
         "zip_code": purchase.other.profile.zip_code,
         "country": purchase.other.profile.country,
     }
-    items = [
-        {
-            "id": purchase.id,
-            "name": purchase.service.title,
-            "price": purchase.price,
-        }
-        for purchase in purchases
-    ]
+    items = group_items(
+        items=[
+            {
+                "id": purchase.id,
+                "name": purchase.service.title,
+                "price": purchase.price,
+            }
+            for purchase in purchases
+        ]
+    )
     notes = payment.notes
     payment = {
         "id": payment.id,
         "amount": payment.amount / 100,
         "currency": payment.currency,
         "status": "Zapłacono" if payment_successful else "Do zapłaty",
-        "method": payment.method,
-        "account": ACCOUNT_NUMBER if payment.method == "Przelew" else None,
+        "method": method,
+        "account": ACCOUNT_NUMBER if method == "Przelew" else None,
     }
+
+    mailer = Mailer()
+    mail_data = {
+        **{
+            "title": "Płatność utworzona",
+            "description": "W załączniku dołączono fakturę.",
+            "items": items,
+            "amount": f"{amount:,.2f} {currency}",
+            "status": "Utworzona",
+            "method": method,
+        }
+    }
+
+    attachments = []
+
     invoice = Invoice(customer=customer, items=items, payment=payment, notes=notes)
     if not payment_rejected:
         invoice_path = invoice.create()
@@ -140,8 +163,37 @@ def confirm_purchase(purchases, payment: Payment):
     )
     amount = payment.amount / 100
     currency = payment.currency
+    method = payment.method
 
     purchase = purchases[0]
+
+    customer = {
+        "id": purchase.student.id,
+        "full_name": f"{purchase.student.profile.user.first_name} {purchase.student.profile.user.last_name}",
+        "street_address": purchase.student.profile.street_address,
+        "city": purchase.student.profile.city,
+        "zip_code": purchase.student.profile.zip_code,
+        "country": purchase.student.profile.country,
+    }
+    items = group_items(
+        items=[
+            {
+                "id": purchase.id,
+                "name": purchase.lesson.title,
+                "price": purchase.price,
+            }
+            for purchase in purchases
+        ]
+    )
+    payment = {
+        "id": payment.id,
+        "amount": payment.amount / 100,
+        "currency": payment.currency,
+        "status": "Zapłacono" if payment_successful else "Do zapłaty",
+        "method": method,
+        "account": "",
+    }
+    notes = ""
 
     notify(
         profile=purchase.student.profile,
@@ -157,39 +209,15 @@ def confirm_purchase(purchases, payment: Payment):
         **{
             "title": title,
             "description": description,
-            "lessons": [purchase.lesson.title for purchase in purchases],
+            "items": items,
             "amount": f"{amount:,.2f} {currency}",
             "status": "Otrzymana" if payment_successful else "Odrzucona",
+            "method": method,
         }
     }
 
     attachments = []
 
-    customer = {
-        "id": purchase.student.id,
-        "full_name": f"{purchase.student.profile.user.first_name} {purchase.student.profile.user.last_name}",
-        "street_address": purchase.student.profile.street_address,
-        "city": purchase.student.profile.city,
-        "zip_code": purchase.student.profile.zip_code,
-        "country": purchase.student.profile.country,
-    }
-    items = [
-        {
-            "id": purchase.id,
-            "name": purchase.lesson.title,
-            "price": purchase.price,
-        }
-        for purchase in purchases
-    ]
-    payment = {
-        "id": payment.id,
-        "amount": payment.amount / 100,
-        "currency": payment.currency,
-        "status": "Zapłacono" if payment_successful else "Do zapłaty",
-        "method": payment.method,
-        "account": "",
-    }
-    notes = ""
     invoice = Invoice(customer=customer, items=items, payment=payment, notes=notes)
     if payment_successful:
         invoice_path = invoice.create()

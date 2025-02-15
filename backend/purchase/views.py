@@ -127,7 +127,7 @@ class PurchaseViewSet(ModelViewSet):
             total = get_total_price(lessons=records)
 
         # initialize payment record
-        payment = Payment.objects.create(amount=total * 100)
+        payment = Payment.objects.create(amount=total * 100, method="Przelewy24")
 
         if coupon_code != "":
             CouponUser.objects.create(
