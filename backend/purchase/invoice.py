@@ -139,13 +139,14 @@ class Invoice:
             {
                 **self.data,
                 **{
-                    "website_url": FRONTEND_URL,
                     "company": "loop",
                 },
             },
         )
 
-        HTML(string=html_content).write_pdf(self.path)
+        HTML(string=html_content, base_url=FRONTEND_URL).write_pdf(
+            self.path, presentational_hints=True
+        )
 
         return self.path
 

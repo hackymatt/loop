@@ -87,9 +87,9 @@ def confirm_service_purchase(purchases: List[ServicePurchase], payment: Payment)
     }
     items = [
         {
-            "id": purchase.service.id,
+            "id": purchase.id,
             "name": purchase.service.title,
-            "price": purchase.service.price,
+            "price": purchase.price,
         }
         for purchase in purchases
     ]
@@ -175,9 +175,9 @@ def confirm_purchase(purchases, payment: Payment):
     }
     items = [
         {
-            "id": purchase.lesson.id,
+            "id": purchase.id,
             "name": purchase.lesson.title,
-            "price": purchase.lesson.price,
+            "price": purchase.price,
         }
         for purchase in purchases
     ]
