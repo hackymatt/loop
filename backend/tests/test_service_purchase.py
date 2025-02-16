@@ -368,8 +368,11 @@ class ServicePurchaseSignalTest(TestCase):
             price="9.99",
         )
 
-        self.payment = create_payment(amount=50)
+        self.payment = create_payment(amount=100)
         self.purchase_1 = create_purchase(
+            service=self.service, other=self.profile, price=30, payment=self.payment
+        )
+        self.purchase_2 = create_purchase(
             service=self.service, other=self.profile, price=30, payment=self.payment
         )
 
@@ -381,7 +384,7 @@ class ServicePurchaseSignalTest(TestCase):
         mock_send_message(mock=_send_message_mock)
         mock_upload_invoice(mock=upload_invoice_mock)
         create_purchase(
-            service=self.service, other=self.profile, price=20, payment=self.payment
+            service=self.service, other=self.profile, price=40, payment=self.payment
         )
         self.assertEqual(_send_message_mock.call_count, 1)
         self.assertEqual(upload_invoice_mock.call_count, 1)
@@ -396,7 +399,7 @@ class ServicePurchaseSignalTest(TestCase):
         self.payment.status = "F"
         self.payment.save()
         create_purchase(
-            service=self.service, other=self.profile, price=20, payment=self.payment
+            service=self.service, other=self.profile, price=40, payment=self.payment
         )
         self.assertEqual(_send_message_mock.call_count, 1)
         self.assertEqual(upload_invoice_mock.call_count, 0)

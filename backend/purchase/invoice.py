@@ -12,7 +12,6 @@ from utils.logger.logger import logger
 class Invoice:
     def __init__(self, customer, items, payment, notes):
         self.PRODUCT_TYPE = "szt."
-        self.PRODUCT_QUANTITY = 1
         self.INVOICE_DIR = "invoices"
         self.items = items
         self.payment = payment
@@ -42,13 +41,13 @@ class Invoice:
                     "id": self._format_id(id=item["id"]),
                     "name": item["name"],
                     "type": self.PRODUCT_TYPE,
-                    "quantity": self.PRODUCT_QUANTITY,
+                    "quantity": item["quantity"],
                     "price_netto": self._format_number(
                         number=self._calc_net_price(price=item["price"])
                     ),
                     "subtotal_netto": self._format_number(
                         number=self._calc_net_subtotal(
-                            price=item["price"], quantity=self.PRODUCT_QUANTITY
+                            price=item["price"], quantity=item["quantity"]
                         )
                     ),
                     "vat_percent": f"{self.vat_rate}%",
@@ -57,7 +56,7 @@ class Invoice:
                     ),
                     "price_brutto": self._format_number(number=item["price"]),
                     "subtotal_brutto": self._format_number(
-                        number=item["price"] * self.PRODUCT_QUANTITY
+                        number=item["price"] * item["quantity"]
                     ),
                 }
                 for item in self.items
@@ -123,13 +122,14 @@ class Invoice:
             {
                 **self.data,
                 **{
-                    "website_url": FRONTEND_URL,
                     "company": "loop",
                 },
             },
         )
 
-        HTML(string=html_content).write_pdf(self.path)
+        HTML(string=html_content, base_url=FRONTEND_URL).write_pdf(
+            self.path, presentational_hints=True
+        )
 
         return self.path
 
