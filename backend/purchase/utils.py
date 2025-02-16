@@ -6,7 +6,6 @@ from purchase.invoice import Invoice
 from typing import List
 from math import floor
 from notification.utils import notify
-from collections import defaultdict
 
 
 def get_lessons_price(lessons):
@@ -57,7 +56,7 @@ def discount_lesson_price(lessons, discount_percentage):
 
 
 def group_items(items):
-    grouped = defaultdict(lambda: {"id": "", "name": "", "price": 0, "quantity": 0})
+    grouped = {}
 
     for item in items:
         key = (item["name"], item["price"])
