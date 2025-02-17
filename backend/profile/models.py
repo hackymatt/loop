@@ -28,6 +28,7 @@ from django.db.models import (
 from django.contrib.auth.models import User
 from django.db.models.functions import Concat, Coalesce
 from django.contrib.postgres.aggregates import ArrayAgg
+from const import GenderType, UserType, JoinType
 import uuid
 from django.apps import apps
 
@@ -50,7 +51,7 @@ class ProfileQuerySet(QuerySet):
         ).values("account")[:1]
         return self.annotate(
             account=Case(
-                When(user_type="W", then=Subquery(account_subquery)),
+                When(user_type=UserType.INSTRUCTOR, then=Subquery(account_subquery)),
                 default=Value(None),
                 output_field=CharField(),
             )
@@ -63,7 +64,7 @@ class ProfileQuerySet(QuerySet):
         ).values("rate")[:1]
         return self.annotate(
             rate=Case(
-                When(user_type="W", then=Subquery(account_subquery)),
+                When(user_type=UserType.INSTRUCTOR, then=Subquery(account_subquery)),
                 default=Value(None),
                 output_field=CharField(),
             )
@@ -76,7 +77,7 @@ class ProfileQuerySet(QuerySet):
         ).values("commission")[:1]
         return self.annotate(
             commission=Case(
-                When(user_type="W", then=Subquery(account_subquery)),
+                When(user_type=UserType.INSTRUCTOR, then=Subquery(account_subquery)),
                 default=Value(None),
                 output_field=CharField(),
             )
@@ -95,32 +96,15 @@ class ProfileManager(Manager):
 
 
 class Profile(BaseModel):
-    GENDER_CHOICES = (
-        ("M", "Mężczyzna"),
-        ("K", "Kobieta"),
-        ("I", "Inne"),
-    )
-    USER_TYPE_CHOICES = (
-        ("S", "Student"),
-        ("W", "Wykładowca"),
-        ("A", "Admin"),
-        ("I", "Inny"),
-    )
-    JOIN_CHOICES = (
-        ("Email", "Email"),
-        ("Google", "Google"),
-        ("Facebook", "Facebook"),
-        ("GitHub", "GitHub"),
-    )
     uuid = UUIDField(default=uuid.uuid4)
     user = OneToOneField(User, on_delete=CASCADE)
-    join_type = CharField(choices=JOIN_CHOICES, default="Email")
-    user_type = CharField(choices=USER_TYPE_CHOICES, default="S")
+    join_type = CharField(choices=JoinType.choices, default=JoinType.EMAIL)
+    user_type = CharField(choices=UserType.choices, default=UserType.STUDENT)
     verification_code = CharField(max_length=8, null=True)
     verification_code_created_at = DateTimeField(null=True)
     phone_number = CharField(null=True, blank=True)
     dob = DateField(null=True, blank=True)
-    gender = CharField(choices=GENDER_CHOICES, default="I", blank=True)
+    gender = CharField(choices=GenderType.choices, default=GenderType.OTHER, blank=True)
     street_address = CharField(null=True, blank=True)
     zip_code = CharField(null=True, blank=True)
     city = CharField(null=True, blank=True)

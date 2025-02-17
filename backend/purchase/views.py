@@ -33,6 +33,7 @@ from django.db.models import Sum, Prefetch
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from purchase.utils import confirm_service_purchase
+from const import PaymentMethod, PaymentStatus
 import json
 
 
@@ -62,7 +63,7 @@ class PurchaseViewSet(ModelViewSet):
 
         if not user.is_superuser:
             queryset = self.queryset.filter(
-                student__profile__user=user, payment__status="S"
+                student__profile__user=user, payment__status=PaymentStatus.SUCCESS
             )
         else:
             queryset = self.queryset
@@ -127,7 +128,9 @@ class PurchaseViewSet(ModelViewSet):
             total = get_total_price(lessons=records)
 
         # initialize payment record
-        payment = Payment.objects.create(amount=total * 100, method="Przelewy24")
+        payment = Payment.objects.create(
+            amount=total * 100, method=PaymentMethod.PRZELEWY24
+        )
 
         if coupon_code != "":
             CouponUser.objects.create(
@@ -143,7 +146,7 @@ class PurchaseViewSet(ModelViewSet):
         instances = serializer.create(serializer.initial_data)
 
         if total == 0:
-            payment.status = "S"
+            payment.status = PaymentStatus.SUCCESS
             payment.save()
             status_code = status.HTTP_200_OK
             data = {"token": ""}
@@ -183,7 +186,9 @@ class PaymentVerifyAPIView(APIView):
         przelewy24 = Przelewy24Api(payment=payment)
         verification_success = przelewy24.verify()
 
-        payment.status = "S" if verification_success else "F"
+        payment.status = (
+            PaymentStatus.SUCCESS if verification_success else PaymentStatus.FAILURE
+        )
         payment.save()
 
         if verification_success:

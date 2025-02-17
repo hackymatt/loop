@@ -17,6 +17,7 @@ from profile.models import (
 )
 from finance.models import Finance, FinanceHistory
 from notification.utils import notify
+from const import UserType
 
 
 class UserSerializer(ModelSerializer):
@@ -51,7 +52,9 @@ class UserSerializer(ModelSerializer):
 
     def validate_user_type(self, user_type):
         user_types = (
-            ["I"] if self.context["request"].method == "POST" else ["A", "W", "S", "I"]
+            [UserType.OTHER]
+            if self.context["request"].method == "POST"
+            else [UserType.ADMIN, UserType.INSTRUCTOR, UserType.STUDENT, UserType.OTHER]
         )
         if not user_type[0] in user_types:
             raise ValidationError("Niepoprawna wartość dla user_type.")
@@ -98,9 +101,9 @@ class UserSerializer(ModelSerializer):
         user_type = validated_data.get("get_user_type_display")
 
         if current_user_type[0] != user_type[0]:
-            if user_type[0] == "A":
+            if user_type == UserType.Admin:
                 AdminProfile.objects.get_or_create(profile=instance)
-            elif user_type[0] == "W":
+            elif user_type == UserType.INSTRUCTOR:
                 LecturerProfile.objects.get_or_create(profile=instance)
                 notify(
                     profile=instance,
@@ -110,21 +113,21 @@ class UserSerializer(ModelSerializer):
                     path="/account/teacher/profile",
                     icon="mdi:teach",
                 )
-            elif user_type[0] == "S":
+            elif user_type == UserType.STUDENT:
                 StudentProfile.objects.get_or_create(profile=instance)
             else:
                 OtherProfile.objects.get_or_create(profile=instance)
 
-            if current_user_type[0] == "A":
+            if current_user_type == UserType.Admin:
                 AdminProfile.objects.get(profile=instance).delete()
-            elif current_user_type[0] == "W":
+            elif current_user_type == UserType.INSTRUCTOR:
                 LecturerProfile.objects.get(profile=instance).delete()
-            elif current_user_type[0] == "S":
+            elif current_user_type == UserType.STUDENT:
                 StudentProfile.objects.get(profile=instance).delete()
             else:
                 OtherProfile.objects.get(profile=instance).delete()
 
-        if user_type[0] == "W":
+        if user_type == UserType.INSTRUCTOR:
             data = self.context["request"].data
             rate = data["rate"]
             commission = data["commission"]

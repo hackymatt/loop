@@ -7,20 +7,17 @@ from django.db.models import (
     Index,
 )
 from profile.models import Profile
+from const import StatusType
 
 
 class Notification(BaseModel):
-    STATUS_CHOICES = (
-        ("N", "NEW"),
-        ("R", "READ"),
-    )
     profile = ForeignKey(
         Profile, on_delete=CASCADE, related_name="notification_profile"
     )
     title = CharField()
     subtitle = CharField(null=True, blank=True)
     description = TextField()
-    status = CharField(choices=STATUS_CHOICES, null=False, default="N")
+    status = CharField(choices=StatusType.choices, null=False, default=StatusType.NEW)
     path = CharField(null=True, blank=True)
     icon = CharField()
 

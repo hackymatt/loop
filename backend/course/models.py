@@ -31,6 +31,7 @@ from django.utils.timezone import make_aware
 from reservation.models import Reservation
 from profile.models import Profile
 from lesson.models import Lesson
+from const import CourseLevel, UserType, PaymentStatus
 
 
 def course_directory_path(instance, filename):
@@ -71,7 +72,9 @@ class CourseQuerySet(QuerySet):
         return self.annotate(
             students_count=Count(
                 "modules__lessons__purchase_lesson",
-                filter=Q(modules__lessons__purchase_lesson__payment__status="S"),
+                filter=Q(
+                    modules__lessons__purchase_lesson__payment__status=PaymentStatus.SUCCESS
+                ),
                 distinct=True,
             )
         )
@@ -108,7 +111,7 @@ class CourseQuerySet(QuerySet):
             return self.annotate(progress=Value(None, output_field=FloatField()))
 
         profile = Profile.objects.get(user=user)
-        if not profile.user_type[0] == "S":
+        if not profile.user_type == UserType.STUDENT:
             return self.annotate(progress=Value(None, output_field=FloatField()))
 
         student_lessons = Reservation.objects.filter(
@@ -132,16 +135,10 @@ class CourseManager(Manager):
 
 
 class Course(BaseModel):
-    LEVEL_CHOICES = (
-        ("P", "Podstawowy"),
-        ("Ś", "Średniozaawansowany"),
-        ("Z", "Zaawansowany"),
-        ("E", "Ekspert"),
-    )
     title = CharField()
     description = TextField()
     overview = TextField()
-    level = CharField(choices=LEVEL_CHOICES, null=True)
+    level = CharField(choices=CourseLevel.choices, null=True)
     tags = ManyToManyField(Tag, related_name="course_tags")
     topics = ManyToManyField(Topic, related_name="course_topics")
     candidates = ManyToManyField(Candidate, related_name="course_candidates")

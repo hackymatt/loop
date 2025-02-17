@@ -10,6 +10,7 @@ from message.models import Message
 from profile.models import Profile, StudentProfile, LecturerProfile, AdminProfile
 from notification.utils import notify
 from mailer.mailer import Mailer
+from const import UserType
 from urllib.parse import quote_plus
 
 
@@ -80,9 +81,9 @@ class MessageSerializer(ModelSerializer):
 
     def get_recipient(self, recipient_id, recipient_uuid, recipient_type):
         if recipient_id:
-            if recipient_type.startswith("S"):
+            if recipient_type == UserType.STUDENT:
                 return StudentProfile.objects.get(pk=recipient_id).profile
-            elif recipient_type.startswith("W"):
+            elif recipient_type == UserType.INSTRUCTOR:
                 return LecturerProfile.objects.get(pk=recipient_id).profile
             else:
                 return AdminProfile.objects.get(pk=recipient_id).profile

@@ -6,6 +6,7 @@ from purchase.invoice import Invoice
 from typing import List
 from math import floor
 from notification.utils import notify
+from const import PaymentMethod, PaymentStatus
 
 
 def get_lessons_price(lessons):
@@ -73,7 +74,7 @@ def group_items(items):
 
 
 def confirm_service_purchase(purchases: List[ServicePurchase], payment: Payment):
-    payment_successful = payment.status == "S"
+    payment_successful = payment.status == PaymentStatus.SUCCESS
     payment_rejected = payment.status == "F"
 
     amount = payment.amount / 100
@@ -107,7 +108,7 @@ def confirm_service_purchase(purchases: List[ServicePurchase], payment: Payment)
         "currency": payment.currency,
         "status": "Zapłacono" if payment_successful else "Do zapłaty",
         "method": method,
-        "account": ACCOUNT_NUMBER if method == "Przelew" else None,
+        "account": ACCOUNT_NUMBER if method == PaymentMethod.BANK_TRANSFER else None,
     }
 
     mailer = Mailer()
@@ -143,7 +144,7 @@ def confirm_service_purchase(purchases: List[ServicePurchase], payment: Payment)
 
 
 def confirm_purchase(purchases, payment: Payment):
-    payment_successful = payment.status == "S"
+    payment_successful = payment.status == PaymentStatus.SUCCESS
 
     title = (
         "Twój zakup jest zakończony!"

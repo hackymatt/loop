@@ -27,6 +27,7 @@ from service.models import Service
 from profile.models import StudentProfile, OtherProfile
 from schedule.models import Recording
 from review.models import Review
+from const import PaymentStatus, CurrencyType, PaymentMethod
 from config_global import DUMMY_STUDENT_EMAIL, DUMMY_OTHER_EMAIL, CANCELLATION_TIME
 from datetime import timedelta
 import uuid
@@ -41,31 +42,18 @@ def get_dummy_other_profile():
 
 
 class Payment(BaseModel):
-    STATUS_CHOICES = (
-        ("P", "Pending"),
-        ("S", "Success"),
-        ("F", "Failure"),
-    )
-    CURRENCY_CHOICES = (
-        ("PLN", "PLN"),
-        ("EUR", "EUR"),
-        ("USD", "USD"),
-    )
-    METHOD_CHOICES = (
-        ("Przelewy24", "Przelewy24"),
-        ("PayPal", "PayPal"),
-        ("Przelew", "Przelew"),
-    )
     session_id = UUIDField(default=uuid.uuid4)
     order_id = BigIntegerField(null=True, default=None)
     amount = IntegerField()
-    currency = CharField(max_length=3, choices=CURRENCY_CHOICES, default="PLN")
-    method = CharField(
-        max_length=max(len(choice[0]) for choice in METHOD_CHOICES),
-        choices=METHOD_CHOICES,
-        default="Przelew",
+    currency = CharField(
+        max_length=3, choices=CurrencyType.choices, default=CurrencyType.PLN
     )
-    status = CharField(choices=STATUS_CHOICES, default="P")
+    method = CharField(
+        max_length=max(len(choice[0]) for choice in PaymentMethod.choices),
+        choices=PaymentMethod.choices,
+        default=PaymentMethod.BANK_TRANSFER,
+    )
+    status = CharField(choices=PaymentStatus.choices, default=PaymentStatus.PENDING)
     notes = TextField(null=True)
 
     class Meta:
