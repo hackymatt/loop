@@ -7,6 +7,7 @@ from lesson.models import Lesson, Technology
 from review.models import Review
 from purchase.models import Purchase
 from django.db.models import Sum, Avg
+from const import PaymentStatus
 from math import ceil
 
 
@@ -24,7 +25,9 @@ class StatsAPIView(APIView):
         course_count = Course.objects.filter(active=True).count()
         technology_count = Technology.objects.count()
         lecturers_count = LecturerProfile.objects.count() - 1
-        purchase_count = Purchase.objects.filter(payment__status="S").count()
+        purchase_count = Purchase.objects.filter(
+            payment__status=PaymentStatus.SUCCESS
+        ).count()
 
         lessons = Lesson.objects.all()
         lessons_count = lessons.count()

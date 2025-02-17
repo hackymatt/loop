@@ -22,6 +22,7 @@ from django.contrib import auth
 import json
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
+from const import UserType, CourseLevel
 
 
 class TagTest(APITestCase):
@@ -40,7 +41,7 @@ class TagTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -55,7 +56,7 @@ class TagTest(APITestCase):
         )
         self.profile = create_student_profile(profile=create_profile(user=self.user))
 
-        create_tag(name="A")
+        create_tag(name=UserType.ADMIN)
         self.tag = create_tag(name="B")
         create_tag(name="C")
         create_tag(name="D")
@@ -199,10 +200,12 @@ class TagFilterTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
-        self.tag = create_tag(name="A")
+        self.tag = create_tag(name=UserType.ADMIN)
         self.tag_2 = create_tag(name="B")
         self.tag_3 = create_tag(name="C")
         create_tag(name="D")
@@ -257,7 +260,7 @@ class TagFilterTest(APITestCase):
             title="Python Beginner",
             description="Learn Python today",
             overview="Python is great language",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2, self.tag_3],
             topics=[
                 self.topic_1,
@@ -280,7 +283,7 @@ class TagFilterTest(APITestCase):
         results = data["results"]
         self.assertEqual(records_count, 1)
         prices = [record["name"] for record in results]
-        self.assertEqual(prices, ["A"])
+        self.assertEqual(prices, [UserType.ADMIN])
 
     def test_created_at_filter(self):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -306,7 +309,7 @@ class TagFilterTest(APITestCase):
         results = data["results"]
         self.assertEqual(records_count, 2)
         tags = [record["name"] for record in results]
-        self.assertEqual(tags, ["A", "B"])
+        self.assertEqual(tags, [UserType.ADMIN, "B"])
 
     def test_course_count_filter(self):
         self.assertFalse(auth.get_user(self.client).is_authenticated)
@@ -335,7 +338,7 @@ class TagOrderTest(APITestCase):
             password=self.data["password"],
             is_active=True,
         )
-        create_tag(name="A")
+        create_tag(name=UserType.ADMIN)
         create_tag(name="B")
         create_tag(name="C")
         create_tag(name="D")

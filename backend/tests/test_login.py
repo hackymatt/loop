@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from .factory import create_user, create_profile
 from django.contrib import auth
+from const import UserType
 
 
 class LoginTest(APITestCase):
@@ -25,7 +26,7 @@ class LoginTest(APITestCase):
             password=self.data_2["password"],
             is_active=False,
         )
-        create_profile(user=self.user2, user_type="W")
+        create_profile(user=self.user2, user_type=UserType.INSTRUCTOR)
 
     def test_login_correct_credentials_1(self):
         response = self.client.post(self.endpoint, self.data_1)

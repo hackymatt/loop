@@ -45,6 +45,7 @@ import json
 from base64 import b64encode
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
+from const import UserType, CourseLevel
 
 
 class CourseTest(APITestCase):
@@ -63,7 +64,7 @@ class CourseTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -102,10 +103,14 @@ class CourseTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile_1 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_1, user_type=UserType.INSTRUCTOR
+            )
         )
         self.lecturer_profile_2 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_2, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -147,7 +152,7 @@ class CourseTest(APITestCase):
             title="course_title",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -267,7 +272,7 @@ class CourseTest(APITestCase):
             title="course_title 2",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -310,7 +315,7 @@ class CourseTest(APITestCase):
             title="course_title 3",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -337,7 +342,7 @@ class CourseTest(APITestCase):
             title="Javascript course",
             description="course_description",
             overview="course_overview",
-            level="E",
+            level=CourseLevel.EXPERT,
             modules=[self.module_3.id, self.module_2.id],
             tags=[self.tag_1.id, self.tag_2.id],
             topics=[
@@ -356,7 +361,7 @@ class CourseTest(APITestCase):
             title="Javascript course",
             description="course_description",
             overview="course_overview",
-            level="E",
+            level=CourseLevel.EXPERT,
             modules=[self.module_3.id, self.module_2.id],
             tags=[self.tag_1.id, self.tag_2.id],
             topics=[
@@ -376,7 +381,7 @@ class CourseTest(APITestCase):
             title="Python for beginners course",
             description="course_description_other",
             overview="course_overview_other",
-            level="Z",
+            level=CourseLevel.ADVANCED,
             modules=[self.module_3.id, self.module_2.id],
             tags=[self.tag_1.id],
             topics=[self.topic_2.id],
@@ -389,7 +394,7 @@ class CourseTest(APITestCase):
             title="Python for beginners course",
             description="course_description_other",
             overview="course_overview_other",
-            level="Z",
+            level=CourseLevel.ADVANCED,
             modules=[self.module_3.id, self.module_2.id],
             tags=[self.tag_1.id],
             topics=[self.topic_2.id],
@@ -1094,10 +1099,14 @@ class BestCourseTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile_1 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_1, user_type=UserType.INSTRUCTOR
+            )
         )
         self.lecturer_profile_2 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_2, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -1139,7 +1148,7 @@ class BestCourseTest(APITestCase):
             title="course_title",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -1237,7 +1246,7 @@ class BestCourseTest(APITestCase):
             title="course_title 2",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -1283,7 +1292,7 @@ class BestCourseTest(APITestCase):
             title="course_title 3",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -1368,10 +1377,14 @@ class CourseFilterTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile_1 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_1, user_type=UserType.INSTRUCTOR
+            )
         )
         self.lecturer_profile_2 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_2, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -1414,7 +1427,7 @@ class CourseFilterTest(APITestCase):
             title="Python Beginner",
             description="Learn Python today",
             overview="Python is great language",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -1513,7 +1526,7 @@ class CourseFilterTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             overview="Learn more",
-            level="Zaawansowany",
+            level=CourseLevel.ADVANCED,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -1634,7 +1647,7 @@ class CourseFilterTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             overview="Learn more",
-            level="Ekspert",
+            level=CourseLevel.EXPERT,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -1824,10 +1837,14 @@ class CourseOrderTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile_1 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_1, user_type=UserType.INSTRUCTOR
+            )
         )
         self.lecturer_profile_2 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_2, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -1868,7 +1885,7 @@ class CourseOrderTest(APITestCase):
             title="Python Beginner",
             description="Learn Python today",
             overview="Python is great language",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -1949,7 +1966,7 @@ class CourseOrderTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             overview="Learn more",
-            level="Zaawansowany",
+            level=CourseLevel.ADVANCED,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -2044,7 +2061,7 @@ class CourseOrderTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             overview="Learn more",
-            level="Ekspert",
+            level=CourseLevel.EXPERT,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,

@@ -8,6 +8,7 @@ from .factory import (
 )
 from .helpers import login, is_data_match
 from django.contrib import auth
+from const import UserType
 import json
 
 
@@ -45,10 +46,14 @@ class FinanceTest(APITestCase):
         )
         self.student_profile = create_profile(user=self.student_user)
         self.lecturer_profile_1 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_1, user_type=UserType.INSTRUCTOR
+            )
         )
         self.lecturer_profile_2 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_2, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.finance_1 = create_finance(

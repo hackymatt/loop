@@ -12,6 +12,7 @@ from django.contrib import auth
 import json
 from notification.utils import remove_old_notifications, notify
 from datetime import timedelta
+from const import UserType, StatusType
 
 
 class NotificationTest(APITestCase):
@@ -42,7 +43,9 @@ class NotificationTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.student_notifications = []
@@ -53,7 +56,7 @@ class NotificationTest(APITestCase):
                     title=f"title_{i}",
                     subtitle=f"subtitle{i}",
                     description=f"description{i}",
-                    status="NEW",
+                    status=StatusType.NEW,
                     path=f"path{i}",
                     icon=f"icon{i}",
                 )
@@ -67,7 +70,7 @@ class NotificationTest(APITestCase):
                     title=f"title_{i}",
                     subtitle=f"subtitle{i}",
                     description=f"description{i}",
-                    status="NEW",
+                    status=StatusType.NEW,
                     path=f"path{i}",
                     icon=f"icon{i}",
                 )
@@ -77,7 +80,7 @@ class NotificationTest(APITestCase):
                 "title": self.student_notifications[0].title,
                 "subtitle": self.student_notifications[0].subtitle,
                 "description": self.student_notifications[0].description,
-                "status": "READ",
+                "status": StatusType.READ,
                 "path": self.student_notifications[0].path,
                 "icon": self.student_notifications[0].icon,
             }
@@ -159,7 +162,9 @@ class NotificationUtilsTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.notifications = []
@@ -170,7 +175,7 @@ class NotificationUtilsTest(APITestCase):
                     title=f"title_{i}",
                     subtitle=f"subtitle{i}",
                     description=f"description{i}",
-                    status="READ",
+                    status=StatusType.READ,
                     path=f"path{i}",
                     icon=f"icon{i}",
                 )
@@ -183,7 +188,7 @@ class NotificationUtilsTest(APITestCase):
                     title=f"title_{i}",
                     subtitle=f"subtitle{i}",
                     description=f"description{i}",
-                    status="READ",
+                    status=StatusType.READ,
                     path=f"path{i}",
                     icon=f"icon{i}",
                 )
@@ -239,7 +244,9 @@ class NotificationOrderTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.student_notifications = []
@@ -250,7 +257,7 @@ class NotificationOrderTest(APITestCase):
                     title=f"title_{i}",
                     subtitle=f"subtitle{i}",
                     description=f"description{i}",
-                    status="NEW",
+                    status=StatusType.NEW,
                     path=f"path{i}",
                     icon=f"icon{i}",
                 )
@@ -264,7 +271,7 @@ class NotificationOrderTest(APITestCase):
                     title=f"title_{i}",
                     subtitle=f"subtitle{i}",
                     description=f"description{i}",
-                    status="NEW",
+                    status=StatusType.NEW,
                     path=f"path{i}",
                     icon=f"icon{i}",
                 )

@@ -28,6 +28,7 @@ from django.db.models import (
 )
 from django.db.models.functions import Cast
 from django.db.models.lookups import GreaterThan
+from const import UserType, PaymentStatus
 from datetime import datetime, timedelta
 from pytz import utc
 
@@ -61,7 +62,7 @@ class EarningViewSet(ModelViewSet):
     def get_serializer_class(self):
         user = self.request.user
         profile = Profile.objects.get(user=user)
-        if profile.user_type[0] == "A":
+        if profile.user_type == UserType.ADMIN:
             if self.total():
                 return AdminEarningLecturerSerializer
             return EarningByLecturerSerializer
@@ -71,7 +72,7 @@ class EarningViewSet(ModelViewSet):
         user = self.request.user
         profile = Profile.objects.get(user=user)
 
-        if profile.user_type[0] == "W":
+        if profile.user_type == UserType.INSTRUCTOR:
             queryset = self.queryset.filter(
                 lecturer=LecturerProfile.objects.get(profile=profile)
             )
@@ -87,7 +88,9 @@ class EarningViewSet(ModelViewSet):
         )
 
         price = (
-            Purchase.objects.filter(id__in=Subquery(purchases), payment__status="S")
+            Purchase.objects.filter(
+                id__in=Subquery(purchases), payment__status=PaymentStatus.SUCCESS
+            )
             .annotate(dummy_group_by=Value(1))
             .values("dummy_group_by")
             .order_by("dummy_group_by")

@@ -6,26 +6,11 @@ from .factory import (
     create_student_profile,
     create_other_profile,
     create_admin_profile,
-    create_course,
-    create_lesson,
-    create_technology,
-    create_tag,
-    create_topic,
-    create_candidate,
-    create_teaching,
-    create_review,
-    create_lesson_price_history,
-    create_purchase,
-    create_reservation,
-    create_schedule,
-    create_module,
-    create_payment,
 )
 from .helpers import login, is_float
 from django.contrib import auth
 import json
-from datetime import datetime, timedelta
-from django.utils.timezone import make_aware
+from const import UserType, GenderType
 
 
 class OthersTest(APITestCase):
@@ -44,7 +29,7 @@ class OthersTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -92,10 +77,10 @@ class OthersTest(APITestCase):
             profile=create_profile(user=self.student_user_2)
         )
         self.other_profile_1 = create_other_profile(
-            profile=create_profile(user=self.other_user_1, user_type="I")
+            profile=create_profile(user=self.other_user_1, user_type=UserType.OTHER)
         )
         self.other_profile_2 = create_other_profile(
-            profile=create_profile(user=self.other_user_2, user_type="I")
+            profile=create_profile(user=self.other_user_2, user_type=UserType.OTHER)
         )
 
     def test_get_others_unauthenticated(self):
@@ -151,7 +136,7 @@ class OthersTest(APITestCase):
             data,
             {
                 "full_name": f"{self.other_profile_2.profile.user.first_name} {self.other_profile_2.profile.user.last_name}",
-                "gender": "Mężczyzna",
+                "gender": GenderType.MALE,
                 "id": self.other_profile_2.id,
                 "image": None,
             },
@@ -174,7 +159,7 @@ class OtherFilterTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -222,10 +207,10 @@ class OtherFilterTest(APITestCase):
             profile=create_profile(user=self.student_user_2)
         )
         self.other_profile_1 = create_other_profile(
-            profile=create_profile(user=self.other_user_1, user_type="I")
+            profile=create_profile(user=self.other_user_1, user_type=UserType.OTHER)
         )
         self.other_profile_2 = create_other_profile(
-            profile=create_profile(user=self.other_user_2, user_type="I")
+            profile=create_profile(user=self.other_user_2, user_type=UserType.OTHER)
         )
 
     def test_search_filter(self):
@@ -286,7 +271,7 @@ class OtherOrderTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -334,10 +319,10 @@ class OtherOrderTest(APITestCase):
             profile=create_profile(user=self.student_user_2)
         )
         self.other_profile_1 = create_other_profile(
-            profile=create_profile(user=self.other_user_1, user_type="I")
+            profile=create_profile(user=self.other_user_1, user_type=UserType.OTHER)
         )
         self.other_profile_2 = create_other_profile(
-            profile=create_profile(user=self.other_user_2, user_type="I")
+            profile=create_profile(user=self.other_user_2, user_type=UserType.OTHER)
         )
 
         self.fields = ["full_name"]

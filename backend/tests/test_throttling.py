@@ -15,6 +15,7 @@ from .factory import (
 from .helpers import login
 from django.contrib import auth
 from unittest.mock import patch
+from const import CourseLevel
 
 
 class ThrottlingTest(APITestCase):
@@ -72,7 +73,7 @@ class ThrottlingTest(APITestCase):
             title="Python Beginner",
             description="Learn Python today",
             overview="Python is great language",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -119,7 +120,7 @@ class ThrottlingTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             overview="Learn more",
-            level="Zaawansowany",
+            level=CourseLevel.ADVANCED,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -147,7 +148,7 @@ class ThrottlingTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             overview="Learn more",
-            level="Ekspert",
+            level=CourseLevel.EXPERT,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,

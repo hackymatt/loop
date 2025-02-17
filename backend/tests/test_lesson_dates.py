@@ -21,6 +21,7 @@ from django.contrib import auth
 import json
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
+from const import UserType, CourseLevel
 
 
 class LessonDatesTest(APITestCase):
@@ -39,7 +40,7 @@ class LessonDatesTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -82,10 +83,14 @@ class LessonDatesTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile_1 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_1, user_type=UserType.INSTRUCTOR
+            )
         )
         self.lecturer_profile_2 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_2, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -127,7 +132,7 @@ class LessonDatesTest(APITestCase):
             title="Python Beginner",
             description="Learn Python today",
             overview="Python is great language",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -184,7 +189,7 @@ class LessonDatesTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             overview="Learn more",
-            level="Zaawansowany",
+            level=CourseLevel.ADVANCED,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -223,7 +228,7 @@ class LessonDatesTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             overview="Learn more",
-            level="Ekspert",
+            level=CourseLevel.EXPERT,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -340,7 +345,7 @@ class LessonDatesFilterTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -383,10 +388,14 @@ class LessonDatesFilterTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile_1 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_1, user_type=UserType.INSTRUCTOR
+            )
         )
         self.lecturer_profile_2 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_2, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -428,7 +437,7 @@ class LessonDatesFilterTest(APITestCase):
             title="Python Beginner",
             description="Learn Python today",
             overview="Python is great language",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -485,7 +494,7 @@ class LessonDatesFilterTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             overview="Learn more",
-            level="Zaawansowany",
+            level=CourseLevel.ADVANCED,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -524,7 +533,7 @@ class LessonDatesFilterTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             overview="Learn more",
-            level="Ekspert",
+            level=CourseLevel.EXPERT,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,

@@ -27,6 +27,7 @@ import json
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from random import sample
+from const import UserType, CourseLevel
 
 
 class EarningsTest(APITestCase):
@@ -53,7 +54,7 @@ class EarningsTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.student_user_1 = create_user(
             first_name="first_name",
@@ -90,10 +91,14 @@ class EarningsTest(APITestCase):
             profile=create_profile(user=self.student_user_2)
         )
         self.lecturer_profile_1 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_1, user_type=UserType.INSTRUCTOR
+            )
         )
         self.lecturer_profile_2 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_2, user_type=UserType.INSTRUCTOR
+            )
         )
 
         create_finance(
@@ -179,7 +184,7 @@ class EarningsTest(APITestCase):
             title="course_title",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -322,7 +327,7 @@ class EarningsFilterTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.student_user_1 = create_user(
             first_name="first_name",
@@ -359,10 +364,14 @@ class EarningsFilterTest(APITestCase):
             profile=create_profile(user=self.student_user_2)
         )
         self.lecturer_profile_1 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_1, user_type=UserType.INSTRUCTOR
+            )
         )
         self.lecturer_profile_2 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_2, user_type=UserType.INSTRUCTOR
+            )
         )
 
         create_finance(
@@ -448,7 +457,7 @@ class EarningsFilterTest(APITestCase):
             title="course_title",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,

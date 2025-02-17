@@ -9,7 +9,7 @@ from profile.models import OtherProfile
 
 class OtherSerializer(ModelSerializer):
     full_name = SerializerMethodField()
-    gender = CharField(source="profile.get_gender_display")
+    gender = CharField(source="profile.gender")
     image = Base64ImageField(source="profile.image")
 
     class Meta:

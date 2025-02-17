@@ -27,6 +27,7 @@ from django.db.models.signals import post_save
 from purchase.models import ServicePurchase
 from utils.google.gmail import GmailApi
 from purchase.utils import Invoice
+from const import UserType, PaymentStatus
 
 
 class ServicePurchaseTest(TestCase):
@@ -46,7 +47,7 @@ class ServicePurchaseTest(TestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "user@example.com",
@@ -71,7 +72,7 @@ class ServicePurchaseTest(TestCase):
             is_active=False,
         )
         self.profile = create_other_profile(
-            profile=create_profile(user=self.user_2, user_type="I")
+            profile=create_profile(user=self.user_2, user_type=UserType.OTHER)
         )
 
         self.service_1 = create_service(
@@ -130,7 +131,7 @@ class ServicePurchaseTest(TestCase):
             amount=float(self.service_3.price)
             + float(self.service_4.price)
             + float(self.service_5.price),
-            status="S",
+            status=PaymentStatus.SUCCESS,
         )
         self.purchase_3 = create_purchase(
             service=self.service_3,
@@ -359,7 +360,7 @@ class ServicePurchaseSignalTest(TestCase):
             is_active=False,
         )
         self.profile = create_other_profile(
-            profile=create_profile(user=self.user, user_type="I")
+            profile=create_profile(user=self.user, user_type=UserType.OTHER)
         )
 
         self.service = create_service(
@@ -438,7 +439,7 @@ class ServicePurchaseFilterTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "user@example.com",
@@ -452,7 +453,7 @@ class ServicePurchaseFilterTest(APITestCase):
             is_active=False,
         )
         self.profile = create_other_profile(
-            profile=create_profile(user=self.user, user_type="I")
+            profile=create_profile(user=self.user, user_type=UserType.OTHER)
         )
 
         self.service_1 = create_service(
@@ -511,7 +512,7 @@ class ServicePurchaseFilterTest(APITestCase):
             amount=float(self.service_3.price)
             + float(self.service_4.price)
             + float(self.service_5.price),
-            status="S",
+            status=PaymentStatus.SUCCESS,
         )
         create_purchase(
             service=self.service_3,
@@ -620,7 +621,7 @@ class ServicePurchaseOrderTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "user@example.com",
@@ -634,7 +635,7 @@ class ServicePurchaseOrderTest(APITestCase):
             is_active=False,
         )
         self.profile = create_other_profile(
-            profile=create_profile(user=self.user, user_type="I")
+            profile=create_profile(user=self.user, user_type=UserType.OTHER)
         )
 
         self.service_1 = create_service(
@@ -693,7 +694,7 @@ class ServicePurchaseOrderTest(APITestCase):
             amount=float(self.service_3.price)
             + float(self.service_4.price)
             + float(self.service_5.price),
-            status="S",
+            status=PaymentStatus.SUCCESS,
         )
         create_purchase(
             service=self.service_3,

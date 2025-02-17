@@ -18,6 +18,7 @@ from .helpers import (
     login,
 )
 from django.contrib import auth
+from const import UserType, CourseLevel
 import json
 
 
@@ -37,7 +38,7 @@ class LessonPriceHistoryTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -90,7 +91,7 @@ class LessonPriceHistoryTest(APITestCase):
             title="course_title",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -134,7 +135,7 @@ class LessonPriceHistoryTest(APITestCase):
             title="course_title 2",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -178,7 +179,7 @@ class LessonPriceHistoryTest(APITestCase):
             title="course_title 3",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,

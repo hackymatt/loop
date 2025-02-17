@@ -25,7 +25,7 @@ def get_students_required(schedule: Schedule, lesson: Lesson = None):
 
 class StudentSerializer(ModelSerializer):
     full_name = SerializerMethodField()
-    gender = CharField(source="profile.get_gender_display")
+    gender = CharField(source="profile.gender")
     image = ImageField(source="profile.image")
 
     class Meta:

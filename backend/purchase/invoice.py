@@ -7,6 +7,7 @@ from weasyprint import HTML
 import os
 from django.core.files.storage import get_storage_class
 from utils.logger.logger import logger
+from const import PaymentStatus
 
 
 class Invoice:
@@ -104,7 +105,7 @@ class Invoice:
         start_date = date(previous_year, 1, 1)
         end_date = date(previous_year, 12, 31)
         sales = Payment.objects.filter(
-            status="S", created_at__date__range=(start_date, end_date)
+            status=PaymentStatus.SUCCESS, created_at__date__range=(start_date, end_date)
         )
         total_sales = (
             sales.aggregate(total=Sum("amount"))["total"] / 1000

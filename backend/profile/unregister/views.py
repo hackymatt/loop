@@ -12,6 +12,7 @@ from mailer.mailer import Mailer
 from notification.utils import notify
 from urllib.parse import quote_plus
 from config_global import DUMMY_STUDENT_EMAIL, DUMMY_LECTURER_EMAIL
+from const import UserType
 
 
 class ProfileUnregisterViewSet(ModelViewSet):
@@ -27,7 +28,7 @@ class ProfileUnregisterViewSet(ModelViewSet):
         mailer = Mailer()
 
         now = make_aware(datetime.now())
-        if user_type[0] == "S":
+        if user_type == UserType.STUDENT:
             dummy_profile = Profile.objects.get(user__email=DUMMY_STUDENT_EMAIL)
             past_reservations = Reservation.objects.filter(
                 student__profile=profile, schedule__start_time__lt=now

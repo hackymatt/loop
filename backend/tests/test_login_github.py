@@ -1,13 +1,11 @@
 from rest_framework import status
 from rest_framework.test import APIClient
-
 from .factory import create_image, create_newsletter, create_user, create_profile
 from .helpers import notifications_number
-
 from django.test import TestCase
 from unittest.mock import patch, Mock
-
 from base64 import b64encode
+from const import UserType
 
 
 class LoginGithubTest(TestCase):
@@ -233,7 +231,7 @@ class LoginGithubTest(TestCase):
     ):
         create_profile(
             user=create_user("first_name", "last_name", "email", "abcdef1!", True),
-            user_type="W",
+            user_type=UserType.INSTRUCTOR,
         )
         self.mock_github_get_access_token_request(
             mock=github_get_access_token_request_mock, success=True
@@ -265,7 +263,7 @@ class LoginGithubTest(TestCase):
     ):
         create_profile(
             user=create_user("first_name", "last_name", "email", "abcdef1!", True),
-            user_type="A",
+            user_type=UserType.ADMIN,
         )
         self.mock_github_get_access_token_request(
             mock=github_get_access_token_request_mock, success=True

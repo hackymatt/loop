@@ -44,7 +44,7 @@ class ManageTeachingSerializer(ModelSerializer):
 
 
 class LecturerSerializer(ModelSerializer):
-    gender = CharField(source="profile.get_gender_display")
+    gender = CharField(source="profile.gender")
     first_name = CharField(source="profile.user.first_name")
     image = Base64ImageField(source="profile.image")
 

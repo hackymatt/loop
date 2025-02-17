@@ -25,6 +25,7 @@ from django.db.models import (
     Q,
 )
 from technology.models import Technology
+from const import UserType, PaymentStatus
 from django.core.validators import MinValueValidator
 from decimal import Decimal
 from django.contrib.postgres.aggregates import ArrayAgg
@@ -44,7 +45,7 @@ class LessonQuerySet(QuerySet):
         return self.annotate(
             students_count=Count(
                 "purchase_lesson",
-                filter=Q(purchase_lesson__payment__status="S"),
+                filter=Q(purchase_lesson__payment__status=PaymentStatus.SUCCESS),
                 distinct=True,
             )
         )
@@ -60,7 +61,7 @@ class LessonQuerySet(QuerySet):
             return self.annotate(progress=Value(None, output_field=FloatField()))
 
         profile = Profile.objects.get(user=user)
-        if not profile.user_type[0] == "S":
+        if not profile.user_type == UserType.STUDENT:
             return self.annotate(progress=Value(None, output_field=FloatField()))
 
         Reservation = apps.get_model("reservation", "Reservation")

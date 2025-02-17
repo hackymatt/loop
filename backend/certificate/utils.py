@@ -11,6 +11,7 @@ from django.utils.timezone import make_aware
 from mailer.mailer import Mailer
 from notification.utils import notify
 from config_global import FRONTEND_URL
+from const import CertificateType
 
 
 def get_progress(lessons, student_profile):
@@ -33,9 +34,9 @@ def get_duration(modules):
 
 
 def add_certificate(entity_type, entity, student):
-    if entity_type == "L":
+    if entity_type == CertificateType.LESSON:
         duration = entity.duration
-    elif entity_type == "M":
+    elif entity_type == CertificateType.MODULE:
         duration = get_duration(modules=[entity])
     else:
         course_modules = (
@@ -57,7 +58,11 @@ def add_certificate(entity_type, entity, student):
 
 def transform_list(input_list):
     # Mapping of old keys to new keys
-    key_mapping = {"L": "Lekcje", "M": "Moduły", "K": "Kursy"}
+    key_mapping = {
+        CertificateType.LESSON: "Lekcje",
+        CertificateType.MODULE: "Moduły",
+        CertificateType.COURSE: "Kursy",
+    }
 
     transformed = []
 
@@ -106,12 +111,14 @@ def generate_certificates():
         for lesson in lessons:
             lesson_obj = Lesson.objects.get(pk=lesson["lesson"])
             certificate, created = add_certificate(
-                entity_type="L", entity=lesson_obj, student=student_obj
+                entity_type=CertificateType.LESSON,
+                entity=lesson_obj,
+                student=student_obj,
             )
             if created:
                 certificates.append(
                     {
-                        "type": "L",
+                        "type": CertificateType.LESSON,
                         "name": lesson_obj.title,
                         "url": f"{FRONTEND_URL}/certificate/{certificate.uuid}",
                     }
@@ -130,12 +137,14 @@ def generate_certificates():
                 )
                 if progress >= 1.0:
                     certificate, created = add_certificate(
-                        entity_type="M", entity=module_obj, student=student_obj
+                        entity_type=CertificateType.MODULE,
+                        entity=module_obj,
+                        student=student_obj,
                     )
                     if created:
                         certificates.append(
                             {
-                                "type": "M",
+                                "type": CertificateType.MODULE,
                                 "name": module_obj.title,
                                 "url": f"{FRONTEND_URL}/certificate/{certificate.uuid}",
                             }
@@ -163,12 +172,14 @@ def generate_certificates():
                 )
                 if progress >= 1.0:
                     certificate, created = add_certificate(
-                        entity_type="K", entity=course_obj, student=student_obj
+                        entity_type=CertificateType.COURSE,
+                        entity=course_obj,
+                        student=student_obj,
                     )
                     if created:
                         certificates.append(
                             {
-                                "type": "K",
+                                "type": CertificateType.COURSE,
                                 "name": course_obj.title,
                                 "url": f"{FRONTEND_URL}/certificate/{certificate.uuid}",
                             }

@@ -28,6 +28,7 @@ from django.contrib import auth
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from utils.google.gmail import GmailApi
+from const import UserType, CourseLevel
 
 
 class UnregisterTest(TestCase):
@@ -47,7 +48,7 @@ class UnregisterTest(TestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -83,7 +84,9 @@ class UnregisterTest(TestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.technology_1 = create_technology(name="Python")

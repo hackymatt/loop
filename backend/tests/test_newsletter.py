@@ -8,7 +8,6 @@ from .factory import (
     create_admin_profile,
     create_student_profile,
     create_newsletter,
-    create_coupon,
     create_lecturer_profile,
     create_notification,
 )
@@ -22,9 +21,8 @@ from .helpers import (
 )
 from django.contrib import auth
 import json
-from datetime import datetime, timedelta
-from django.utils.timezone import make_aware
 from utils.google.gmail import GmailApi
+from const import UserType, StatusType
 
 
 class NewsletterEntriesTest(APITestCase):
@@ -44,7 +42,7 @@ class NewsletterEntriesTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
 
         self.data = {
@@ -201,7 +199,7 @@ class NewsletterEntriesFilterTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
 
         self.data = {
@@ -322,7 +320,9 @@ class NotificationFilterTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.student_notifications = [
@@ -331,7 +331,7 @@ class NotificationFilterTest(APITestCase):
                 title=f"title",
                 subtitle=f"subtitle",
                 description=f"description",
-                status="READ",
+                status=StatusType.READ,
                 path=f"path",
                 icon=f"icon",
             )
@@ -343,7 +343,7 @@ class NotificationFilterTest(APITestCase):
                     title=f"title_{i}",
                     subtitle=f"subtitle{i}",
                     description=f"description{i}",
-                    status="NEW",
+                    status=StatusType.NEW,
                     path=f"path{i}",
                     icon=f"icon{i}",
                 )
@@ -357,7 +357,7 @@ class NotificationFilterTest(APITestCase):
                     title=f"title_{i}",
                     subtitle=f"subtitle{i}",
                     description=f"description{i}",
-                    status="NEW",
+                    status=StatusType.NEW,
                     path=f"path{i}",
                     icon=f"icon{i}",
                 )
@@ -398,7 +398,7 @@ class NewsletterEntriesOrderTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
 
         self.data = {
