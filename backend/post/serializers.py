@@ -31,7 +31,7 @@ class TagSerializer(ModelSerializer):
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField()
-    gender = CharField(source="profile.get_gender_display")
+    gender = CharField(source="profile.gender")
     image = Base64ImageField(source="profile.image", required=True)
 
     class Meta:
@@ -49,7 +49,7 @@ class LecturerSerializer(ModelSerializer):
 
 class LecturerDetailsSerializer(ModelSerializer):
     full_name = SerializerMethodField()
-    gender = CharField(source="profile.get_gender_display")
+    gender = CharField(source="profile.gender")
     image = Base64ImageField(source="profile.image", required=True)
     date_joined = DateTimeField(source="profile.user.date_joined")
 

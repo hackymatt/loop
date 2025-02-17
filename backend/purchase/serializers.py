@@ -40,7 +40,7 @@ class LessonSerializer(ModelSerializer):
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField()
-    gender = CharField(source="profile.get_gender_display")
+    gender = CharField(source="profile.gender")
     image = ImageField(source="profile.image")
 
     class Meta:
@@ -201,27 +201,9 @@ class PurchaseSerializer(ModelSerializer):
 
 
 class PaymentSerializer(ModelSerializer):
-    status = CharField(source="get_status_display")
-
     class Meta:
         model = Payment
         exclude = ("modified_at",)
-
-    def create(self, validated_data):
-        status = validated_data.pop("get_status_display")
-
-        payment = Payment.objects.create(status=status, **validated_data)
-
-        return payment
-
-    def update(self, instance: Payment, validated_data):
-        status = validated_data.pop("get_status_display")
-
-        Payment.objects.filter(pk=instance.pk).update(status=status, **validated_data)
-
-        instance.refresh_from_db()
-
-        return instance
 
 
 class ServiceSerializer(ModelSerializer):
@@ -238,7 +220,7 @@ class ServiceSerializer(ModelSerializer):
 
 class OtherSerializer(ModelSerializer):
     full_name = SerializerMethodField()
-    gender = CharField(source="profile.get_gender_display")
+    gender = CharField(source="profile.gender")
     image = ImageField(source="profile.image")
 
     class Meta:

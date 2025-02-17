@@ -11,6 +11,7 @@ from .helpers import login, is_data_match, filter_dict, get_user, get_profile
 from django.contrib import auth
 import json
 from base64 import b64encode
+from const import UserType, GenderType
 
 
 class PersonalDataTest(APITestCase):
@@ -45,7 +46,9 @@ class PersonalDataTest(APITestCase):
             is_active=True,
         )
         self.profile_lecturer = create_lecturer_profile(
-            profile=create_profile(user=self.user_lecturer, user_type="W")
+            profile=create_profile(
+                user=self.user_lecturer, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.user_columns = ["first_name", "last_name", "email"]
@@ -96,7 +99,7 @@ class PersonalDataTest(APITestCase):
         user_data = filter_dict(results, self.user_columns)
         profile_data = filter_dict(results, self.profile_columns)
         gender = profile_data.pop("gender")
-        self.assertEqual(get_profile(get_user(self.data["email"])).gender, gender[0])
+        self.assertEqual(get_profile(get_user(self.data["email"])).gender, gender)
         self.assertTrue(is_data_match(get_user(self.data["email"]), user_data))
         self.assertTrue(
             is_data_match(get_profile(get_user(self.data["email"])), profile_data)
@@ -113,7 +116,7 @@ class PersonalDataTest(APITestCase):
             "email": "test_email@example.com",
             "phone_number": "999888777",
             "dob": "1900-01-01",
-            "gender": "M",
+            "gender": GenderType.MALE,
             "street_address": "abc",
             "zip_code": "30-100",
             "city": "Miasto",
@@ -137,7 +140,7 @@ class PersonalDataTest(APITestCase):
             "last_name": "LastName",
             "email": "test_email@example.com",
             "phone_number": "999888777",
-            "gender": "M",
+            "gender": GenderType.MALE,
             "dob": None,
             "street_address": "abc",
             "zip_code": "30-100",
@@ -171,9 +174,9 @@ class PersonalDataTest(APITestCase):
             "first_name": "Name",
             "last_name": "LastName",
             "email": "test_email_lecturer@example.com",
-            "user_type": "W",
+            "user_type": UserType.INSTRUCTOR,
             "phone_number": "999888777",
-            "gender": "M",
+            "gender": GenderType.MALE,
             "dob": None,
             "street_address": "abc",
             "zip_code": "30-100",
@@ -207,7 +210,7 @@ class PersonalDataTest(APITestCase):
             "email": "new_email@example.com",
             "phone_number": "999888777",
             "dob": "1900-01-01",
-            "gender": "M",
+            "gender": GenderType.MALE,
             "street_address": "abc",
             "zip_code": "30-100",
             "city": "Miasto",

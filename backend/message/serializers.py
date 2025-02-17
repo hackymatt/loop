@@ -17,9 +17,7 @@ from urllib.parse import quote_plus
 class ProfileSerializer(ModelSerializer):
     id = UUIDField(source="uuid")
     full_name = SerializerMethodField()
-    gender = CharField(source="get_gender_display")
     image = ImageField()
-    user_type = CharField(source="get_user_type_display")
 
     class Meta:
         model = Profile
@@ -38,7 +36,6 @@ class ProfileSerializer(ModelSerializer):
 class MessageGetSerializer(ModelSerializer):
     sender = ProfileSerializer()
     recipient = ProfileSerializer()
-    status = CharField(source="get_status_display")
 
     class Meta:
         model = Message
@@ -46,7 +43,6 @@ class MessageGetSerializer(ModelSerializer):
 
 
 class MessageSerializer(ModelSerializer):
-    status = CharField(source="get_status_display")
     recipient_type = CharField(required=False)
     recipient_id = IntegerField(required=False)
     recipient_uuid = UUIDField(required=False)
@@ -59,7 +55,6 @@ class MessageSerializer(ModelSerializer):
         )
 
     def create(self, validated_data):
-        status = validated_data.pop("get_status_display")
         recipient_id = validated_data.pop("recipient_id", None)
         recipient_uuid = validated_data.pop("recipient_uuid", None)
         recipient_type = validated_data.pop("recipient_type", None)
@@ -70,7 +65,7 @@ class MessageSerializer(ModelSerializer):
         recipient = self.get_recipient(recipient_id, recipient_uuid, recipient_type)
 
         message, _ = Message.objects.get_or_create(
-            sender=sender, recipient=recipient, status=status, **validated_data
+            sender=sender, recipient=recipient, **validated_data
         )
 
         self.notify_recipient(message)
@@ -112,11 +107,3 @@ class MessageSerializer(ModelSerializer):
             subject="Nowa wiadomość",
             data=data,
         )
-
-    def update(self, instance: Message, validated_data):
-        status = validated_data.pop("get_status_display", instance.status)
-
-        Message.objects.filter(pk=instance.pk).update(**validated_data, status=status)
-        instance.refresh_from_db()
-
-        return instance

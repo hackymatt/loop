@@ -15,7 +15,7 @@ from const import PaymentStatus
 
 class StudentSerializer(ModelSerializer):
     first_name = CharField(source="profile.user.first_name")
-    gender = CharField(source="profile.get_gender_display")
+    gender = CharField(source="profile.gender")
     image = ImageField(source="profile.image")
 
     class Meta:
@@ -29,7 +29,7 @@ class StudentSerializer(ModelSerializer):
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField()
-    gender = CharField(source="profile.get_gender_display")
+    gender = CharField(source="profile.gender")
     image = ImageField(source="profile.image")
 
     class Meta:

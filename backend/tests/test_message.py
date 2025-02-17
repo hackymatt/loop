@@ -22,6 +22,7 @@ import json
 from message.utils import remove_old_messages
 from datetime import timedelta
 from utils.google.gmail import GmailApi
+from const import UserType, StatusType
 
 
 class MessageTest(TestCase):
@@ -41,7 +42,7 @@ class MessageTest(TestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
 
         self.data = {
@@ -69,7 +70,9 @@ class MessageTest(TestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.student_messages = []
@@ -80,7 +83,7 @@ class MessageTest(TestCase):
                     recipient=self.profile.profile,
                     subject=f"subject{i}",
                     body=f"body{i}",
-                    status="NEW",
+                    status=StatusType.NEW,
                 )
             )
 
@@ -92,14 +95,14 @@ class MessageTest(TestCase):
                     recipient=self.lecturer_profile.profile,
                     subject=f"subject{i}",
                     body=f"body{i}",
-                    status="NEW",
+                    status=StatusType.NEW,
                 )
             )
 
         self.create_data_1 = {
             "subject": "new subject",
             "body": "new body",
-            "status": "NEW",
+            "status": StatusType.NEW,
             "recipient_id": self.profile.id,
             "recipient_type": "Student",
         }
@@ -107,7 +110,7 @@ class MessageTest(TestCase):
         self.create_data_2 = {
             "subject": "new subject",
             "body": "new body",
-            "status": "NEW",
+            "status": StatusType.NEW,
             "recipient_id": self.lecturer_profile.id,
             "recipient_type": "Wykładowca",
         }
@@ -115,7 +118,7 @@ class MessageTest(TestCase):
         self.create_data_3 = {
             "subject": "new subject",
             "body": "new body",
-            "status": "NEW",
+            "status": StatusType.NEW,
             "recipient_id": self.admin_profile.id,
             "recipient_type": "Admin",
         }
@@ -123,14 +126,14 @@ class MessageTest(TestCase):
         self.create_data_4 = {
             "subject": "new subject",
             "body": "new body",
-            "status": "NEW",
+            "status": StatusType.NEW,
             "recipient_uuid": self.lecturer_profile.profile.uuid,
         }
 
         self.edit_data = {
             "subject": self.student_messages[0].subject,
             "body": self.student_messages[0].body,
-            "status": "READ",
+            "status": StatusType.READ,
         }
 
     def test_get_messages_unauthenticated(self):
@@ -282,7 +285,9 @@ class MessageUtilsTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.messages = []
@@ -293,7 +298,7 @@ class MessageUtilsTest(APITestCase):
                     recipient=self.profile.profile,
                     subject=f"subject{i}",
                     body=f"body{i}",
-                    status="READ",
+                    status=StatusType.READ,
                 )
             )
 
@@ -304,7 +309,7 @@ class MessageUtilsTest(APITestCase):
                     recipient=self.lecturer_profile.profile,
                     subject=f"subject{i}",
                     body=f"body{i}",
-                    status="READ",
+                    status=StatusType.READ,
                 )
             )
 
@@ -346,7 +351,9 @@ class MessageFilterTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.student_messages = []
@@ -357,7 +364,7 @@ class MessageFilterTest(APITestCase):
                     recipient=self.profile.profile,
                     subject=f"subject{i}",
                     body=f"body{i}",
-                    status="NEW",
+                    status=StatusType.NEW,
                 )
             )
 
@@ -369,7 +376,7 @@ class MessageFilterTest(APITestCase):
                     recipient=self.lecturer_profile.profile,
                     subject=f"subject{i}",
                     body=f"body{i}",
-                    status="NEW",
+                    status=StatusType.NEW,
                 )
             )
 
@@ -443,7 +450,9 @@ class MessageOrderTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.student_messages = []
@@ -454,7 +463,7 @@ class MessageOrderTest(APITestCase):
                     recipient=self.profile.profile,
                     subject=f"subject{i}",
                     body=f"body{i}",
-                    status="NEW",
+                    status=StatusType.NEW,
                 )
             )
 
@@ -466,7 +475,7 @@ class MessageOrderTest(APITestCase):
                     recipient=self.lecturer_profile.profile,
                     subject=f"subject{i}",
                     body=f"body{i}",
-                    status="NEW",
+                    status=StatusType.NEW,
                 )
             )
 

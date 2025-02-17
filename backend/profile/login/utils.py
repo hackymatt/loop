@@ -218,7 +218,7 @@ def create_user(username, email, first_name, last_name, dob, gender, image, join
         )
 
     user_type = profile.user_type
-    if user_type == UserType.Admin:
+    if user_type == UserType.ADMIN:
         AdminProfile.objects.get_or_create(profile=profile)
     elif user_type == UserType.INSTRUCTOR:
         LecturerProfile.objects.get_or_create(profile=profile)

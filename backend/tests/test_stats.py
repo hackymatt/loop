@@ -17,6 +17,7 @@ from .factory import (
     create_payment,
 )
 import json
+from const import UserType, CourseLevel
 
 
 class StatsTest(APITestCase):
@@ -61,7 +62,9 @@ class StatsTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -119,7 +122,7 @@ class StatsTest(APITestCase):
             title="course_title",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,

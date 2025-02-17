@@ -28,7 +28,7 @@ from django.db.models import (
 )
 from django.db.models.functions import Cast
 from django.db.models.lookups import GreaterThan
-from const import UserType
+from const import UserType, PaymentStatus
 from datetime import datetime, timedelta
 from pytz import utc
 
@@ -62,7 +62,7 @@ class EarningViewSet(ModelViewSet):
     def get_serializer_class(self):
         user = self.request.user
         profile = Profile.objects.get(user=user)
-        if profile.user_type == UserType.Admin:
+        if profile.user_type == UserType.ADMIN:
             if self.total():
                 return AdminEarningLecturerSerializer
             return EarningByLecturerSerializer

@@ -9,6 +9,7 @@ from .factory import (
 )
 from .helpers import login, is_float
 from django.contrib import auth
+from const import UserType
 import json
 
 
@@ -36,7 +37,7 @@ class FinanceHistoryTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.student_user = create_user(
             first_name="first_name",
@@ -61,10 +62,14 @@ class FinanceHistoryTest(APITestCase):
         )
         self.student_profile = create_profile(user=self.student_user)
         self.lecturer_profile_1 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_1, user_type=UserType.INSTRUCTOR
+            )
         )
         self.lecturer_profile_2 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_2, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.finance_1 = create_finance_history(
@@ -131,7 +136,7 @@ class FinanceHistoryFilterTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.student_user = create_user(
             first_name="first_name",
@@ -156,10 +161,14 @@ class FinanceHistoryFilterTest(APITestCase):
         )
         self.student_profile = create_profile(user=self.student_user)
         self.lecturer_profile_1 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_1, user_type=UserType.INSTRUCTOR
+            )
         )
         self.lecturer_profile_2 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_2, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.finance_1 = create_finance_history(
@@ -312,7 +321,7 @@ class FinanceHistoryOrderTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.student_user = create_user(
             first_name="first_name",
@@ -337,10 +346,14 @@ class FinanceHistoryOrderTest(APITestCase):
         )
         self.student_profile = create_profile(user=self.student_user)
         self.lecturer_profile_1 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_1, user_type=UserType.INSTRUCTOR
+            )
         )
         self.lecturer_profile_2 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_2, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.finance_1 = create_finance_history(

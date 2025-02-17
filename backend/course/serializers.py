@@ -201,7 +201,7 @@ class CandidateSerializer(ModelSerializer):
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField()
-    gender = CharField(source="profile.get_gender_display")
+    gender = CharField(source="profile.gender")
     image = Base64ImageField(source="profile.image", required=True)
 
     class Meta:
@@ -219,7 +219,7 @@ class LecturerSerializer(ModelSerializer):
 
 class LecturerDetailsSerializer(ModelSerializer):
     full_name = SerializerMethodField()
-    gender = CharField(source="profile.get_gender_display")
+    gender = CharField(source="profile.gender")
     image = Base64ImageField(source="profile.image", required=True)
     rating = SerializerMethodField()
     rating_count = SerializerMethodField()
@@ -334,7 +334,6 @@ class CourseListSerializer(ModelSerializer):
     rating_count = SerializerMethodField()
     progress = SerializerMethodField()
     image = Base64ImageField(required=True)
-    level = CharField(source="get_level_display")
 
     def get_price(self, course: Course):
         return course.price
@@ -381,7 +380,6 @@ class CourseListSerializer(ModelSerializer):
 
 
 class CourseGetSerializer(ModelSerializer):
-    level = CharField(source="get_level_display")
     price = SerializerMethodField()
     previous_price = SerializerMethodField()
     lowest_30_days_price = SerializerMethodField()
@@ -629,7 +627,6 @@ class BestCourseSerializer(ModelSerializer):
     rating = SerializerMethodField()
     rating_count = SerializerMethodField()
     image = Base64ImageField(required=True)
-    level = CharField(source="get_level_display")
 
     def get_price(self, course: Course):
         return course.price

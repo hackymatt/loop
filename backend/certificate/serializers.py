@@ -10,7 +10,6 @@ from certificate.models import Certificate
 
 class CertificateSerializer(ModelSerializer):
     id = UUIDField(source="uuid")
-    type = CharField(source="get_type_display")
     completed_at = SerializerMethodField()
 
     class Meta:
@@ -29,7 +28,6 @@ class CertificateSerializer(ModelSerializer):
 class CertificateInfoSerializer(ModelSerializer):
     id = UUIDField(source="uuid")
     reference_number = SerializerMethodField()
-    type = CharField(source="get_type_display")
     student_full_name = SerializerMethodField()
     completed_at = SerializerMethodField()
 

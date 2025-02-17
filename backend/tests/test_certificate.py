@@ -35,6 +35,7 @@ from django.utils.timezone import make_aware
 import uuid
 from utils.google.gmail import GmailApi
 from certificate.utils import generate_certificates
+from const import CertificateType, UserType, CourseLevel, GenderType
 
 
 class CertificateTest(APITestCase):
@@ -87,7 +88,9 @@ class CertificateTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -147,7 +150,7 @@ class CertificateTest(APITestCase):
             title="course_title",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -346,12 +349,12 @@ class CertificateTest(APITestCase):
         self.long_timeslot_3.save()
 
         self.certificate = create_certificate(
-            entity_type="L",
+            entity_type=CertificateType.LESSON,
             entity=self.lesson_1,
             student=self.profile_2,
         )
         self.certificate_2 = create_certificate(
-            entity_type="M",
+            entity_type=CertificateType.MODULE,
             entity=self.module_1,
             student=self.profile_1,
         )
@@ -438,7 +441,9 @@ class CertificateInfoTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -498,7 +503,7 @@ class CertificateInfoTest(APITestCase):
             title="course_title",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -697,12 +702,12 @@ class CertificateInfoTest(APITestCase):
         self.long_timeslot_3.save()
 
         self.certificate = create_certificate(
-            entity_type="L",
+            entity_type=CertificateType.LESSON,
             entity=self.lesson_1,
             student=self.profile_2,
         )
         self.certificate_2 = create_certificate(
-            entity_type="L",
+            entity_type=CertificateType.LESSON,
             entity=self.lesson_4,
             student=self.profile_1,
         )
@@ -729,7 +734,7 @@ class CertificateInfoTest(APITestCase):
                 "title": self.certificate_2.title,
                 "reference_number": "{:05d}".format(self.certificate_2.id),
                 "student_full_name": f"{self.certificate_2.student.profile.user.first_name} {self.certificate_2.student.profile.user.last_name}",
-                "type": "Lekcja",
+                "type": CertificateType.LESSON,
                 "authorized": True,
             },
         )
@@ -752,7 +757,7 @@ class CertificateInfoTest(APITestCase):
                 "title": self.certificate.title,
                 "reference_number": "{:05d}".format(self.certificate.id),
                 "student_full_name": f"{self.certificate.student.profile.user.first_name} {self.certificate.student.profile.user.last_name}",
-                "type": "Lekcja",
+                "type": CertificateType.LESSON,
             },
         )
 
@@ -823,7 +828,9 @@ class CertificateGenerateTest(TestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -903,7 +910,7 @@ class CertificateGenerateTest(TestCase):
             title="course_title",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -920,7 +927,7 @@ class CertificateGenerateTest(TestCase):
             title="course_title_2",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -1108,7 +1115,9 @@ class CertificateFilterTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -1168,7 +1177,7 @@ class CertificateFilterTest(APITestCase):
             title="course_title",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -1367,12 +1376,12 @@ class CertificateFilterTest(APITestCase):
         self.long_timeslot_3.save()
 
         self.certificate = create_certificate(
-            entity_type="L",
+            entity_type=CertificateType.LESSON,
             entity=self.lesson_1,
             student=self.profile_1,
         )
         self.certificate_2 = create_certificate(
-            entity_type="M",
+            entity_type=CertificateType.MODULE,
             entity=self.module_1,
             student=self.profile_1,
         )
@@ -1400,14 +1409,14 @@ class CertificateFilterTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         column = "type"
-        variable = "L"
+        variable = CertificateType.LESSON
         response = self.client.get(f"{self.endpoint}?{column}={variable}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 1)
-        values = list(set([variable == record[column][0] for record in results]))
+        values = list(set([variable == record[column] for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
 
@@ -1479,7 +1488,9 @@ class CertificateOrderTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -1539,7 +1550,7 @@ class CertificateOrderTest(APITestCase):
             title="course_title",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -1738,12 +1749,12 @@ class CertificateOrderTest(APITestCase):
         self.long_timeslot_3.save()
 
         self.certificate = create_certificate(
-            entity_type="L",
+            entity_type=CertificateType.LESSON,
             entity=self.lesson_1,
             student=self.profile_1,
         )
         self.certificate_2 = create_certificate(
-            entity_type="M",
+            entity_type=CertificateType.MODULE,
             entity=self.module_1,
             student=self.profile_1,
         )

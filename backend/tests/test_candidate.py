@@ -10,6 +10,7 @@ from .factory import (
 )
 from .helpers import login, candidates_number, is_float
 from django.contrib import auth
+from const import UserType
 import json
 
 
@@ -29,7 +30,7 @@ class CandidateTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",

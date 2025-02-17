@@ -15,6 +15,7 @@ from .factory import (
 )
 from .helpers import login
 from django.contrib import auth
+from const import UserType, CourseLevel
 import json
 
 
@@ -33,7 +34,7 @@ class LessonLecturersTest(APITestCase):
             is_active=True,
         )
         self.profile = create_lecturer_profile(
-            profile=create_profile(user=self.user, user_type="W")
+            profile=create_profile(user=self.user, user_type=UserType.INSTRUCTOR)
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -75,7 +76,7 @@ class LessonLecturersTest(APITestCase):
             title="Python Beginner",
             description="Learn Python today",
             overview="Python is great language",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -131,7 +132,7 @@ class LessonLecturersTest(APITestCase):
             title="Javascript course for Advanced",
             description="Course for programmers",
             overview="Learn more",
-            level="Zaawansowany",
+            level=CourseLevel.ADVANCED,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -166,7 +167,7 @@ class LessonLecturersTest(APITestCase):
             title="VBA course for Expert",
             description="Course for programmers",
             overview="Learn more",
-            level="Ekspert",
+            level=CourseLevel.EXPERT,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,

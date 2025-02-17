@@ -9,7 +9,7 @@ from .factory import (
 from .helpers import login, is_data_match, get_user, get_profile, get_lecturer_profile
 from django.contrib import auth
 import json
-from base64 import b64encode
+from const import UserType
 
 
 class ProfileDataTest(APITestCase):
@@ -44,7 +44,9 @@ class ProfileDataTest(APITestCase):
             is_active=True,
         )
         self.profile_lecturer = create_lecturer_profile(
-            profile=create_profile(user=self.user_lecturer, user_type="W")
+            profile=create_profile(
+                user=self.user_lecturer, user_type=UserType.INSTRUCTOR
+            )
         )
 
     def test_get_profile_data_unauthenticated(self):

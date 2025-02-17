@@ -45,6 +45,7 @@ from reservation.utils import confirm_reservations, pull_recordings
 from utils.google.gmail import GmailApi
 from utils.google.calendar import CalendarApi
 from utils.google.drive import DriveApi
+from const import UserType, CourseLevel
 
 
 class ReservationTest(TestCase):
@@ -94,7 +95,9 @@ class ReservationTest(TestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -154,7 +157,7 @@ class ReservationTest(TestCase):
             title="course_title",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -700,7 +703,9 @@ class ReservationConfirmationTest(TestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
         create_finance(lecturer=self.lecturer_profile, rate=100, commission=0)
 
@@ -743,7 +748,7 @@ class ReservationConfirmationTest(TestCase):
             title="Python Beginner",
             description="Learn Python today",
             overview="Python is great language",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -856,7 +861,9 @@ class RecordingsTest(TestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.schedules = [

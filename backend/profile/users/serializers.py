@@ -25,8 +25,6 @@ class UserSerializer(ModelSerializer):
     last_name = CharField(source="user.last_name")
     email = EmailField(source="user.email")
     active = BooleanField(source="user.is_active", required=False)
-    gender = CharField(source="get_gender_display", allow_blank=True)
-    user_type = CharField(source="get_user_type_display", allow_blank=True)
     image = Base64ImageField(required=False)
     rate = SerializerMethodField()
     commission = SerializerMethodField()
@@ -56,7 +54,7 @@ class UserSerializer(ModelSerializer):
             if self.context["request"].method == "POST"
             else [UserType.ADMIN, UserType.INSTRUCTOR, UserType.STUDENT, UserType.OTHER]
         )
-        if not user_type[0] in user_types:
+        if not user_type in user_types:
             raise ValidationError("Niepoprawna wartość dla user_type.")
 
         return user_type
@@ -70,8 +68,6 @@ class UserSerializer(ModelSerializer):
 
     def create(self, validated_data):
         user_data = validated_data.pop("user")
-        user_type = validated_data.pop("get_user_type_display")
-        gender = validated_data.pop("get_gender_display")
 
         user = User.objects.create(
             username=user_data["email"],
@@ -81,9 +77,7 @@ class UserSerializer(ModelSerializer):
             is_active=False,
         )
 
-        new_profile = Profile.objects.create(
-            user=user, user_type=user_type, gender=gender, **validated_data
-        )
+        new_profile = Profile.objects.create(user=user, **validated_data)
 
         profile = (
             Profile.objects.add_account()
@@ -98,10 +92,10 @@ class UserSerializer(ModelSerializer):
 
     def update(self, instance: Profile, validated_data):
         current_user_type = instance.user_type
-        user_type = validated_data.get("get_user_type_display")
+        user_type = validated_data.get("user_type")
 
         if current_user_type[0] != user_type[0]:
-            if user_type == UserType.Admin:
+            if user_type == UserType.ADMIN:
                 AdminProfile.objects.get_or_create(profile=instance)
             elif user_type == UserType.INSTRUCTOR:
                 LecturerProfile.objects.get_or_create(profile=instance)
@@ -118,7 +112,7 @@ class UserSerializer(ModelSerializer):
             else:
                 OtherProfile.objects.get_or_create(profile=instance)
 
-            if current_user_type == UserType.Admin:
+            if current_user_type == UserType.ADMIN:
                 AdminProfile.objects.get(profile=instance).delete()
             elif current_user_type == UserType.INSTRUCTOR:
                 LecturerProfile.objects.get(profile=instance).delete()
@@ -165,12 +159,8 @@ class UserSerializer(ModelSerializer):
         instance.user.last_name = last_name
         instance.user.save()
 
-        gender = validated_data.pop("get_gender_display", instance.gender)
         image = validated_data.pop("image", instance.image)
-        user_type = validated_data.pop("get_user_type_display", instance.user_type)
-        instance.gender = gender
         instance.image = image
-        instance.user_type = user_type
         instance.save()
 
         Profile.objects.filter(pk=instance.pk).update(**validated_data)
