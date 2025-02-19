@@ -129,17 +129,17 @@ function LandingMain() {
 
   const statsSummary = [
     {
-      value: Math.floor(stats?.students_count),
+      value: Math.floor(stats?.studentsCount),
       label: "Studentów",
       color: "warning",
     },
     {
-      value: Math.floor(stats?.course_count),
+      value: Math.floor(stats?.courseCount),
       label: "Kursów",
       color: "error",
     },
     {
-      value: Math.floor(stats?.lecturers_count),
+      value: Math.floor(stats?.lecturersCount),
       label: "Instruktorów",
       color: "success",
     },

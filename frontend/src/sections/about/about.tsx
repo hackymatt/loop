@@ -18,19 +18,19 @@ export default function About() {
 
   const statsSummary = [
     {
-      number: Math.floor(stats?.students_count),
+      number: Math.floor(stats?.studentsCount),
       name: "Studentów",
       description:
         "Studenci naszej szkoły to dynamiczna społeczność entuzjastów technologii, zdeterminowanych rozwijać swoje umiejętności programistyczne i tworzyć innowacyjne rozwiązania.",
     },
     {
-      number: Math.floor(stats?.course_count),
+      number: Math.floor(stats?.courseCount),
       name: "Kursów",
       description:
         "Kursy oferowane przez naszą szkołę to solidna droga do zdobycia praktycznych umiejętności w dynamicznie rozwijającej się dziedzinie, prowadzone przez doświadczonych instruktorów.",
     },
     {
-      number: Math.floor(stats?.lecturers_count),
+      number: Math.floor(stats?.lecturersCount),
       name: "Instruktorów",
       description:
         "Instruktorzy w naszej szkole to pasjonaci z obszaru technologii, oferujący wszechstronną wiedzę oraz inspirujące podejście, które umożliwiają studentom pełne zaangażowanie w proces nauki.",

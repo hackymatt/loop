@@ -7,12 +7,46 @@ import { Api } from "../service";
 
 const endpoint = "/stats" as const;
 
+type IStats = {
+  students_count: number;
+  course_count: number;
+  lessons_count: number;
+  technology_count: number;
+  lecturers_count: number;
+  purchase_count: number;
+  hours_sum: number;
+  rating: number;
+  rating_count: number;
+};
+
 export const statisticsQuery = () => {
   const url = endpoint;
 
   const queryFn = async () => {
-    const { data } = await Api.get(url);
-    return { results: data };
+    const { data } = await Api.get<IStats>(url);
+    const {
+      students_count,
+      course_count,
+      lessons_count,
+      technology_count,
+      lecturers_count,
+      purchase_count,
+      hours_sum,
+      rating,
+      rating_count,
+    } = data;
+    const modifiedData = {
+      studentsCount: students_count,
+      courseCount: course_count,
+      lessonsCount: lessons_count,
+      technologyCount: technology_count,
+      lecturersCount: lecturers_count,
+      purchaseCount: purchase_count,
+      hoursSum: hours_sum,
+      rating,
+      ratingCount: rating_count,
+    };
+    return { results: modifiedData };
   };
 
   return { url, queryFn, queryKey: compact([endpoint]) };

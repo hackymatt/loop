@@ -1,11 +1,11 @@
 export type IStatistics = {
-  students_count: number;
-  course_count: number;
-  lessons_count: number;
-  technology_count: number;
-  lecturers_count: number;
-  purchase_count: number;
-  hours_sum: number;
+  studentsCount: number;
+  courseCount: number;
+  lessonsCount: number;
+  technologyCount: number;
+  lecturersCount: number;
+  purchaseCount: number;
+  hoursSum: number;
   rating: number;
-  rating_count: number;
+  ratingCount: number;
 };
