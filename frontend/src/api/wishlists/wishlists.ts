@@ -8,6 +8,8 @@ import { ICartProp } from "src/types/cart";
 import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
+import { getData } from "../utils";
+import { ListQueryResponse } from "../types";
 import { getCsrfToken } from "../utils/csrf";
 
 const endpoint = "/wishlist" as const;
@@ -33,22 +35,14 @@ type IWishlist = { id: string; lesson: ILesson };
 
 type ICreateWishlist = { lesson: string };
 type ICreateWishlistReturn = ICreateWishlist;
+
 export const wishlistsQuery = (query?: IQueryParams) => {
   const url = endpoint;
   const urlParams = formatQueryParams(query);
   const queryUrl = urlParams ? `${url}?${urlParams}` : url;
 
-  const queryFn = async () => {
-    let data;
-    try {
-      const response = await Api.get(queryUrl);
-      ({ data } = response);
-    } catch (error) {
-      if (error.response && (error.response.status === 400 || error.response.status === 404)) {
-        data = { results: [], records_count: 0, pages_count: 0 };
-      }
-    }
-    const { results, records_count, pages_count } = data;
+  const queryFn = async (): Promise<ListQueryResponse<ICartProp[]>> => {
+    const { results, records_count, pages_count } = await getData<IWishlist>(queryUrl);
     const modifiedResults = results.map(({ id, lesson }: IWishlist) => {
       const { id: lessonId, title, duration, price, lecturers, technologies } = lesson;
       return {
@@ -73,7 +67,7 @@ export const wishlistsQuery = (query?: IQueryParams) => {
 export const useWishlists = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = wishlistsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as ICartProp[], ...rest };
+  return { data: data?.results, ...rest };
 };
 
 export const useWishlistsRecordsCount = (query?: IQueryParams, enabled: boolean = true) => {

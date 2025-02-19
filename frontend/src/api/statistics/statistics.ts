@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { IStatistics } from "src/types/statistics";
 
 import { Api } from "../service";
+import { GetQueryResponse } from "../types";
 
 const endpoint = "/stats" as const;
 
@@ -22,7 +23,7 @@ type IStats = {
 export const statisticsQuery = () => {
   const url = endpoint;
 
-  const queryFn = async () => {
+  const queryFn = async (): Promise<GetQueryResponse<IStatistics>> => {
     const { data } = await Api.get<IStats>(url);
     const {
       students_count,
@@ -55,5 +56,5 @@ export const statisticsQuery = () => {
 export const useStatistics = () => {
   const { queryKey, queryFn } = statisticsQuery();
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as IStatistics, ...rest };
+  return { data: data?.results, ...rest };
 };

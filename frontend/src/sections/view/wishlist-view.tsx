@@ -40,7 +40,7 @@ export default function WishlistView() {
   const { mutateAsync: deleteWishlist, isLoading: isDeletingWishlist } = useDeleteWishlist();
 
   const prices = useMemo(
-    () => wishlistItems?.map((wishlistItem: ICartProp) => Number(wishlistItem.lesson.price)),
+    () => (wishlistItems ?? []).map((wishlistItem: ICartProp) => Number(wishlistItem.lesson.price)),
     [wishlistItems],
   );
 
@@ -52,7 +52,7 @@ export default function WishlistView() {
       return;
     }
     try {
-      const cartItems = wishlistItems.map((wishlistItem: ICartProp) => [
+      const cartItems = (wishlistItems ?? []).map((wishlistItem: ICartProp) => [
         createCartItem({ lesson: wishlistItem.lesson.id }),
         deleteWishlist({ id: wishlistItem.id }),
       ]);
@@ -62,7 +62,7 @@ export default function WishlistView() {
         "add_to_cart",
         "wishlist_to_cart",
         "Wishlist items added to cart",
-        wishlistItems?.map((wishlistItem: ICartProp) => wishlistItem.lesson.title).join(","),
+        (wishlistItems ?? []).map((wishlistItem: ICartProp) => wishlistItem.lesson.title).join(","),
       );
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd podczas dodawania do koszyka", { variant: "error" });
