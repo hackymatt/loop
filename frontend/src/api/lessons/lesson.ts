@@ -6,7 +6,7 @@ import { IGender } from "src/types/testimonial";
 import { ICourseLessonProp } from "src/types/course";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils/csrf";
+import { getCsrfToken } from "../utils";
 
 const endpoint = "/lessons" as const;
 

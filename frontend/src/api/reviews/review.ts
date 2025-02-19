@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { IGender } from "src/types/testimonial";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils/csrf";
+import { getCsrfToken } from "../utils";
 import { purchasesQuery } from "../purchases/purchases";
 
 const endpoint = "/reviews" as const;

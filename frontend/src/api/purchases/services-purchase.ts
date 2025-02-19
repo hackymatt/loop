@@ -6,7 +6,7 @@ import { IGender } from "src/types/testimonial";
 import { IPurchaseItemProp } from "src/types/purchase";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils/csrf";
+import { getCsrfToken } from "../utils";
 
 const endpoint = "/service-purchases" as const;
 

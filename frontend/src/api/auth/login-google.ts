@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import { useMutation } from "@tanstack/react-query";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils/csrf";
+import { getCsrfToken } from "../utils";
 
 const endpoint = "/login-google" as const;
 

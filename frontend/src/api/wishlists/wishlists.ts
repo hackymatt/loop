@@ -8,9 +8,8 @@ import { ICartProp } from "src/types/cart";
 import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
-import { getData } from "../utils";
 import { ListQueryResponse } from "../types";
-import { getCsrfToken } from "../utils/csrf";
+import { getData, getCsrfToken } from "../utils";
 
 const endpoint = "/wishlist" as const;
 

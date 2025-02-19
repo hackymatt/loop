@@ -8,7 +8,7 @@ import { IPostCategoryProps } from "src/types/blog";
 import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils/csrf";
+import { getCsrfToken } from "../utils";
 
 const endpoint = "/post-categories" as const;
 

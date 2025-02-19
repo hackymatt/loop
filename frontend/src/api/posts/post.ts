@@ -6,7 +6,7 @@ import { IPostProps } from "src/types/blog";
 import { IGender } from "src/types/testimonial";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils/csrf";
+import { getCsrfToken } from "../utils";
 
 const endpoint = "/posts" as const;
 

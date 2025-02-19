@@ -9,7 +9,7 @@ import { IReviewItemProp } from "src/types/review";
 import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils/csrf";
+import { getCsrfToken } from "../utils";
 import { purchasesQuery } from "../purchases/purchases";
 
 const endpoint = "/reviews" as const;

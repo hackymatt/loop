@@ -10,7 +10,7 @@ import {
 } from "src/types/payment";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils/csrf";
+import { getCsrfToken } from "../utils";
 
 const endpoint = "/payments" as const;
 

@@ -9,7 +9,7 @@ import { IQueryParams } from "src/types/query-params";
 import { IPurchaseItemProp } from "src/types/purchase";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils/csrf";
+import { getCsrfToken } from "../utils";
 
 const endpoint = "/service-purchases" as const;
 

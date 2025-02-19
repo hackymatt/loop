@@ -6,7 +6,7 @@ import { UserType } from "src/types/user";
 import { IMessageProp } from "src/types/message";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils/csrf";
+import { getCsrfToken } from "../utils";
 
 const endpoint = "/messages" as const;
 

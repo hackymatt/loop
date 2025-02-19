@@ -8,7 +8,7 @@ import { IUserDetailsProps } from "src/types/user";
 import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils/csrf";
+import { getCsrfToken } from "../utils";
 
 const endpoint = "/users" as const;
 

@@ -9,7 +9,7 @@ import { IGender } from "src/types/testimonial";
 import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils/csrf";
+import { getCsrfToken } from "../utils";
 
 const endpoint = "/posts" as const;
 

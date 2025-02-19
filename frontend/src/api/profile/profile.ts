@@ -3,7 +3,7 @@ import { compact } from "lodash-es";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils/csrf";
+import { getCsrfToken } from "../utils";
 
 const endpoint = "/profile-data" as const;
 

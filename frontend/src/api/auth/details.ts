@@ -6,7 +6,7 @@ import { IGender } from "src/types/testimonial";
 import { IUserType, IUserDetailsProps } from "src/types/user";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils/csrf";
+import { getCsrfToken } from "../utils";
 
 const endpoint = "/personal-data" as const;
 
