@@ -16,7 +16,7 @@ import { useTopic, useEditTopic } from "src/api/topics/topic";
 
 import FormProvider from "src/components/hook-form";
 
-import { ICourseByTopicProps } from "src/types/course";
+import { ITopicProps } from "src/types/topic";
 
 import { schema, defaultValues } from "./topic";
 import { useTopicFields } from "./topic-fields";
@@ -24,7 +24,7 @@ import { useTopicFields } from "./topic-fields";
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  topic: ICourseByTopicProps;
+  topic: ITopicProps;
   onClose: VoidFunction;
 }
 

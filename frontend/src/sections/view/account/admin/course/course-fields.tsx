@@ -13,7 +13,8 @@ import {
 } from "src/components/hook-form";
 
 import { ITagProps } from "src/types/tags";
-import { ICourseModuleProp, ICourseByTopicProps, ICourseByCandidateProps } from "src/types/course";
+import { ITopicProps } from "src/types/topic";
+import { ICourseModuleProp, ICourseByCandidateProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -88,7 +89,7 @@ export const useCourseFields = () => {
         label="Tematy"
         multiple
         options={availableTopics ?? []}
-        getOptionLabel={(option) => (option as ICourseByTopicProps)?.name ?? ""}
+        getOptionLabel={(option) => (option as ITopicProps)?.name ?? ""}
         isOptionEqualToValue={(a, b) => a.id === b.id}
         loading={isLoadingTopics}
       />

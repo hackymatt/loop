@@ -2,10 +2,11 @@ import { AxiosError } from "axios";
 import { compact } from "lodash-es";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { ICourseByTopicProps } from "src/types/course";
+import { ITopicProps } from "src/types/topic";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils";
+import { GetQueryResponse } from "../types";
 
 const endpoint = "/topics" as const;
 
@@ -28,7 +29,7 @@ export const topicQuery = (id: string) => {
   const url = endpoint;
   const queryUrl = `${url}/${id}`;
 
-  const queryFn = async () => {
+  const queryFn = async (): Promise<GetQueryResponse<ITopicProps>> => {
     const response = await Api.get<ITopic>(queryUrl);
     const { data } = response;
     const { id: topicId, name, created_at } = data;
@@ -47,7 +48,7 @@ export const topicQuery = (id: string) => {
 export const useTopic = (id: string) => {
   const { queryKey, queryFn } = topicQuery(id);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as any as ICourseByTopicProps, ...rest };
+  return { data: data?.results, ...rest };
 };
 export const useEditTopic = (id: string) => {
   const queryClient = useQueryClient();

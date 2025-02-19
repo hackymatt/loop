@@ -4,11 +4,12 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
+import { ITopicProps } from "src/types/topic";
 import { IQueryParams } from "src/types/query-params";
-import { ICourseByTopicProps } from "src/types/course";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils";
+import { ListQueryResponse } from "../types";
+import { getData, getCsrfToken } from "../utils";
 
 const endpoint = "/topics" as const;
 
@@ -26,10 +27,10 @@ type ICreateTopicReturn = ICreateTopic;
 export const topicsQuery = (query?: IQueryParams) => {
   const url = endpoint;
   const urlParams = formatQueryParams(query);
+  const queryUrl = `${url}?${urlParams}`;
 
-  const queryFn = async () => {
-    const { data } = await Api.get(`${url}?${urlParams}`);
-    const { results, records_count, pages_count } = data;
+  const queryFn = async (): Promise<ListQueryResponse<ITopicProps[]>> => {
+    const { results, records_count, pages_count } = await getData<ITopic>(queryUrl);
     const modifiedResults = results.map(({ id, name, created_at }: ITopic) => ({
       id,
       name,
@@ -44,7 +45,7 @@ export const topicsQuery = (query?: IQueryParams) => {
 export const useTopics = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = topicsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as ICourseByTopicProps[], count: data?.count, ...rest };
+  return { data: data?.results, count: data?.count, ...rest };
 };
 
 export const useTopicsPagesCount = (query?: IQueryParams) => {

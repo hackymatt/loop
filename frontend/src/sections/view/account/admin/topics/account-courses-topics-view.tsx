@@ -26,7 +26,7 @@ import DownloadCSVButton from "src/components/download-csv";
 
 import AccountTopicsTableRow from "src/sections/account/admin/account-topics-table-row";
 
-import { ICourseByTopicProps } from "src/types/course";
+import { ITopicProps } from "src/types/topic";
 import { IQueryParamValue } from "src/types/query-params";
 
 import TopicNewForm from "./topic-new-form";
@@ -64,8 +64,8 @@ export default function AccountCoursesTopicsView() {
   const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "title";
   const order = filters?.sort_by && filters.sort_by.startsWith("-") ? "desc" : "asc";
 
-  const [editedTopic, setEditedTopic] = useState<ICourseByTopicProps>();
-  const [deletedTopic, setDeletedTopic] = useState<ICourseByTopicProps>();
+  const [editedTopic, setEditedTopic] = useState<ITopicProps>();
+  const [deletedTopic, setDeletedTopic] = useState<ITopicProps>();
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -102,7 +102,7 @@ export default function AccountCoursesTopicsView() {
   );
 
   const handleEditTopic = useCallback(
-    (topic: ICourseByTopicProps) => {
+    (topic: ITopicProps) => {
       setEditedTopic(topic);
       editTopicFormOpen.onToggle();
     },
@@ -110,7 +110,7 @@ export default function AccountCoursesTopicsView() {
   );
 
   const handleDeleteTopic = useCallback(
-    (topic: ICourseByTopicProps) => {
+    (topic: ITopicProps) => {
       setDeletedTopic(topic);
       deleteTopicFormOpen.onToggle();
     },

@@ -14,14 +14,14 @@ import { useDeleteTopic } from "src/api/topics/topic";
 
 import FormProvider from "src/components/hook-form";
 
-import { ICourseByTopicProps } from "src/types/course";
+import { ITopicProps } from "src/types/topic";
 
 import { defaultValues } from "./topic";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  topic: ICourseByTopicProps;
+  topic: ITopicProps;
   onClose: VoidFunction;
 }
 

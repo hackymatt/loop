@@ -25,6 +25,7 @@ import FormProvider from "src/components/hook-form";
 import { isStepFailed } from "src/components/stepper/step";
 
 import { ITagProps } from "src/types/tags";
+import { ITopicProps } from "src/types/topic";
 import {
   ILevel,
   ICourseProps,
@@ -86,7 +87,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
           availableTags.find((s: ITagProps) => s.name === tag),
         ),
         topics: courseData.learnList.map((topic: string) =>
-          availableTopics.find((t: ICourseByTopicProps) => t.name === topic),
+          availableTopics.find((t: ITopicProps) => t.name === topic),
         ),
         candidates: courseData.candidateList.map((candidate: string) =>
           availableCandidates.find((c: ICourseByCandidateProps) => c.name === candidate),
