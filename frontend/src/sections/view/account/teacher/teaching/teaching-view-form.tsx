@@ -14,8 +14,9 @@ import { useTechnologies } from "src/api/technologies/technologies";
 
 import FormProvider from "src/components/hook-form";
 
+import { ITeachingProp } from "src/types/teaching";
 import { ITechnologyProps } from "src/types/technology";
-import { ITeachingProp, ICourseByTechnologyProps } from "src/types/course";
+import { ICourseByTechnologyProps } from "src/types/course";
 
 import { useTeachingFields } from "./teaching-fields";
 import { steps, schema, defaultValues } from "./teaching";

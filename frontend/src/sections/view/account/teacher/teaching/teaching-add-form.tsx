@@ -15,7 +15,7 @@ import { useCreateTeaching } from "src/api/teaching/teachings";
 import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
 
-import { ITeachingProp } from "src/types/course";
+import { ITeachingProp } from "src/types/teaching";
 
 import { defaultValues } from "./teaching";
 

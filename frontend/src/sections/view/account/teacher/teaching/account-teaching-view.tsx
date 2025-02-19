@@ -25,7 +25,7 @@ import FilterDuration from "src/sections/filters/filter-duration";
 import AccountTableHead from "src/sections/account/account-table-head";
 import AccountTeachingsTableRow from "src/sections/account/teacher/account-teachings-table-row";
 
-import { ITeachingProp } from "src/types/course";
+import { ITeachingProp } from "src/types/teaching";
 import { IQueryParamValue } from "src/types/query-params";
 
 import TeachingAddForm from "./teaching-add-form";

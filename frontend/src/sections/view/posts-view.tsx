@@ -117,7 +117,7 @@ export function PostsView() {
               onChangeSearch={(value) => handleChange("search", value)}
               tags={query?.tags_in ?? ""}
               onChangeTags={(value) => handleChange("tags_in", value)}
-              tagsOptions={availableTags?.map((tag: ITagProps) => tag.name) ?? []}
+              tagsOptions={(availableTags ?? []).map((tag: ITagProps) => tag.name) ?? []}
               popularPosts={popularPosts}
               slots={{
                 bottomNode: (

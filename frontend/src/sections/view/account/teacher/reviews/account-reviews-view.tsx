@@ -16,8 +16,9 @@ import ReviewList from "src/sections/review/review-list";
 import ReviewSummary from "src/sections/review/review-summary";
 import ReviewToolbar from "src/sections/review/review-toolbar";
 
+import { ITeachingProp } from "src/types/teaching";
+import { ICourseLessonProp } from "src/types/course";
 import { IQueryParamValue } from "src/types/query-params";
-import { ITeachingProp, ICourseLessonProp } from "src/types/course";
 
 // ----------------------------------------------------------------------
 

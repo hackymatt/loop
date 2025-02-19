@@ -4,18 +4,18 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
-import { ITeachingProp } from "src/types/course";
+import { ITeachingProp } from "src/types/teaching";
 import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils";
+import { ListQueryResponse } from "../types";
+import { getData, getCsrfToken } from "../utils";
 
-const endpoint = "/teaching" as const;
+const endpoint = "/teachings" as const;
 
 type ITeaching = {
   id: string;
-  teaching: boolean;
-  teaching_id: number | null;
+  teaching_id: string;
   title: string;
   duration: number;
   github_url: string;
@@ -31,21 +31,11 @@ export const teachingsQuery = (query?: IQueryParams) => {
   const urlParams = formatQueryParams(query);
   const queryUrl = urlParams ? `${url}?${urlParams}` : url;
 
-  const queryFn = async () => {
-    let data;
-    try {
-      const response = await Api.get(queryUrl);
-      ({ data } = response);
-    } catch (error) {
-      if (error.response && (error.response.status === 400 || error.response.status === 404)) {
-        data = { results: [], records_count: 0, pages_count: 0 };
-      }
-    }
-    const { results, records_count, pages_count } = data;
+  const queryFn = async (): Promise<ListQueryResponse<ITeachingProp[]>> => {
+    const { results, records_count, pages_count } = await getData<ITeaching>(queryUrl);
     const modifiedResults = results.map(
-      ({ id, teaching, teaching_id, price, title, duration, github_url, active }: ITeaching) => ({
+      ({ id, teaching_id, price, title, duration, github_url, active }: ITeaching) => ({
         id,
-        teaching,
         teachingId: teaching_id,
         price,
         title,
@@ -63,7 +53,7 @@ export const teachingsQuery = (query?: IQueryParams) => {
 export const useTeachings = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = teachingsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as ITeachingProp[], count: data?.count, ...rest };
+  return { data: data?.results, count: data?.count, ...rest };
 };
 
 export const useTeachingsPagesCount = (query?: IQueryParams) => {

@@ -20,7 +20,7 @@ import json
 
 class TeachingTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/api/teaching"
+        self.endpoint = "/api/teachings"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -259,7 +259,7 @@ class TeachingTest(APITestCase):
 
 class ManageTeachingFilterTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/api/teaching"
+        self.endpoint = "/api/teachings"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",
@@ -735,7 +735,7 @@ class TeachingFilterTest(APITestCase):
 
 class TeachingOrderTest(APITestCase):
     def setUp(self):
-        self.endpoint = "/api/teaching"
+        self.endpoint = "/api/teachings"
         self.data = {
             "email": "test_email@example.com",
             "password": "TestPassword123",

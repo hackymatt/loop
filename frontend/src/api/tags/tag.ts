@@ -6,6 +6,7 @@ import { ITagProps } from "src/types/tags";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils";
+import { GetQueryResponse } from "../types";
 
 const endpoint = "/tags" as const;
 
@@ -27,7 +28,7 @@ export const tagQuery = (id: string) => {
   const url = endpoint;
   const queryUrl = `${url}/${id}`;
 
-  const queryFn = async () => {
+  const queryFn = async (): Promise<GetQueryResponse<ITagProps>> => {
     const response = await Api.get<ITag>(queryUrl);
     const { data } = response;
     const { id: tagId, name, created_at } = data;

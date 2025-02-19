@@ -10,7 +10,6 @@ from profile.models import LecturerProfile
 
 
 class ManageTeachingGetSerializer(ModelSerializer):
-    teaching = SerializerMethodField()
     teaching_id = SerializerMethodField()
 
     class Meta:
@@ -21,9 +20,6 @@ class ManageTeachingGetSerializer(ModelSerializer):
             "modified_at",
             "created_at",
         )
-
-    def get_teaching(self, lesson: Lesson):
-        return bool(lesson.teaching_id)
 
     def get_teaching_id(self, lesson):
         return lesson.teaching_id

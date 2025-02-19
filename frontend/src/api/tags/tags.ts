@@ -8,7 +8,8 @@ import { ITagProps } from "src/types/tags";
 import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils";
+import { ListQueryResponse } from "../types";
+import { getData, getCsrfToken } from "../utils";
 
 const endpoint = "/tags" as const;
 
@@ -26,10 +27,10 @@ type ICreateTagReturn = ICreateTag;
 export const tagsQuery = (query?: IQueryParams) => {
   const url = endpoint;
   const urlParams = formatQueryParams(query);
+  const queryUrl = `${url}?${urlParams}`;
 
-  const queryFn = async () => {
-    const { data } = await Api.get(`${url}?${urlParams}`);
-    const { results, records_count, pages_count } = data;
+  const queryFn = async (): Promise<ListQueryResponse<ITagProps[]>> => {
+    const { results, records_count, pages_count } = await getData<ITag>(queryUrl);
     const modifiedResults = results.map(({ id, name, created_at }: ITag) => ({
       id,
       name,
@@ -44,7 +45,7 @@ export const tagsQuery = (query?: IQueryParams) => {
 export const useTags = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = tagsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as ITagProps[], count: data?.count, ...rest };
+  return { data: data?.results, count: data?.count, ...rest };
 };
 
 export const useTagsPagesCount = (query?: IQueryParams) => {

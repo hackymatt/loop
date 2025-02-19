@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Api } from "../service";
 import { getCsrfToken } from "../utils";
 
-const endpoint = "/teaching" as const;
+const endpoint = "/teachings" as const;
 
 type IDeleteTechnology = { id: string };
 

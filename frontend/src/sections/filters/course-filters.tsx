@@ -141,7 +141,7 @@ export default function Filters({ open, onClose }: Props) {
       <Block title="Tagi">
         <FilterTag
           value={filters?.tags_in ?? ""}
-          options={tags?.map((tag: ITagProps) => tag.name) ?? []}
+          options={(tags ?? []).map((tag: ITagProps) => tag.name) ?? []}
           onChangeTag={(value) => handleChange("tags_in", value)}
           // sx={{ mt: 2 }}
         />
