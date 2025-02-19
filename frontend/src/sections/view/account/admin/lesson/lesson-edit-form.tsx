@@ -20,6 +20,7 @@ import { useTechnologies } from "src/api/technologies/technologies";
 import FormProvider from "src/components/hook-form";
 import { isStepFailed } from "src/components/stepper/step";
 
+import { ITechnologyProps } from "src/types/technology";
 import { ICourseLessonProp, ICourseByTechnologyProps } from "src/types/course";
 
 import { useLessonFields } from "./lesson-fields";
@@ -60,9 +61,7 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
         ...lessonData,
         github_url: lessonData.githubUrl.replace(GITHUB_REPO, ""),
         technologies: lessonData.technologies.map((t: ICourseByTechnologyProps) =>
-          availableTechnologies.find(
-            (technology: ICourseByTechnologyProps) => technology.name === t.name,
-          ),
+          availableTechnologies.find((technology: ITechnologyProps) => technology.name === t.name),
         ),
       });
     }

@@ -5,7 +5,7 @@ import { useTechnologies } from "src/api/technologies/technologies";
 
 import { RHFSwitch, RHFTextField, RHFAutocompleteDnd } from "src/components/hook-form";
 
-import { ICourseByTechnologyProps } from "src/types/course";
+import { ITechnologyProps } from "src/types/technology";
 
 export const useLessonFields = () => {
   const { data: availableTechnologies, isLoading: isLoadingTechnologies } = useTechnologies({
@@ -65,7 +65,7 @@ export const useLessonFields = () => {
         label="Technologie"
         multiple
         options={availableTechnologies ?? []}
-        getOptionLabel={(option) => (option as ICourseByTechnologyProps)?.name ?? ""}
+        getOptionLabel={(option) => (option as ITechnologyProps)?.name ?? ""}
         loading={isLoadingTechnologies}
         isOptionEqualToValue={(a, b) => a.name === b.name}
       />

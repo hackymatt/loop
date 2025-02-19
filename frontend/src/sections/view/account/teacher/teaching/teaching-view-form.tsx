@@ -14,6 +14,7 @@ import { useTechnologies } from "src/api/technologies/technologies";
 
 import FormProvider from "src/components/hook-form";
 
+import { ITechnologyProps } from "src/types/technology";
 import { ITeachingProp, ICourseByTechnologyProps } from "src/types/course";
 
 import { useTeachingFields } from "./teaching-fields";
@@ -49,9 +50,7 @@ export default function TeachingViewForm({ teaching, onClose, ...other }: Props)
         ...lessonData,
         github_url: lessonData.githubUrl,
         technologies: lessonData.technologies.map((t: ICourseByTechnologyProps) =>
-          availableTechnologies.find(
-            (technology: ICourseByTechnologyProps) => technology.name === t.name,
-          ),
+          availableTechnologies.find((technology: ITechnologyProps) => technology.name === t.name),
         ),
       });
     }

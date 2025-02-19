@@ -14,7 +14,6 @@ import { Step, Stepper, StepLabel, StepContent } from "@mui/material";
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import { useCreateCoupon } from "src/api/coupons/coupons";
-import { useTechnologies } from "src/api/technologies/technologies";
 
 import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
@@ -35,10 +34,6 @@ interface Props extends DialogProps {
 
 export default function CouponNewForm({ onClose, ...other }: Props) {
   const { enqueueSnackbar } = useToastContext();
-
-  const { data: availableTechnologies } = useTechnologies({
-    sort_by: "name",
-  });
 
   const { mutateAsync: createCoupon } = useCreateCoupon();
 
@@ -63,12 +58,11 @@ export default function CouponNewForm({ onClose, ...other }: Props) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      if (availableTechnologies) {
-        await createCoupon({
-          ...data,
-          users: data.users.map((user: IUserDetailsProps) => user.id),
-        });
-      }
+      await createCoupon({
+        ...data,
+        users: data.users.map((user: IUserDetailsProps) => user.id),
+      });
+
       reset();
       onCloseWithReset();
       enqueueSnackbar("Kupon został dodany", { variant: "success" });

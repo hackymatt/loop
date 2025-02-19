@@ -14,7 +14,6 @@ import { Step, Stepper, StepLabel, StepContent } from "@mui/material";
 import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import { useCreateCourse } from "src/api/courses/courses";
-import { useTechnologies } from "src/api/technologies/technologies";
 
 import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
@@ -42,10 +41,6 @@ interface Props extends DialogProps {
 export default function CourseNewForm({ onClose, ...other }: Props) {
   const { enqueueSnackbar } = useToastContext();
 
-  const { data: availableTechnologies } = useTechnologies({
-    sort_by: "name",
-  });
-
   const { mutateAsync: createCourse } = useCreateCourse();
 
   const methods = useForm({
@@ -68,16 +63,15 @@ export default function CourseNewForm({ onClose, ...other }: Props) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      if (availableTechnologies) {
-        await createCourse({
-          ...data,
-          level: data.level.slice(0, 1) as ILevel,
-          modules: data.modules.map((module: ICourseModuleProp) => module.id),
-          tags: data.tags.map((tag: ITagProps) => tag.id),
-          topics: data.topics.map((topic: ICourseByTopicProps) => topic.id),
-          candidates: data.candidates.map((candidate: ICourseByCandidateProps) => candidate.id),
-        });
-      }
+      await createCourse({
+        ...data,
+        level: data.level.slice(0, 1) as ILevel,
+        modules: data.modules.map((module: ICourseModuleProp) => module.id),
+        tags: data.tags.map((tag: ITagProps) => tag.id),
+        topics: data.topics.map((topic: ICourseByTopicProps) => topic.id),
+        candidates: data.candidates.map((candidate: ICourseByCandidateProps) => candidate.id),
+      });
+
       reset();
       onCloseWithReset();
       enqueueSnackbar("Kurs został dodany", { variant: "success" });

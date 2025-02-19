@@ -34,7 +34,7 @@ export const topicQuery = (id: string) => {
     const { data } = response;
     const { id: topicId, name, created_at } = data;
 
-    const modifiedResults = {
+    const modifiedResults: ITopicProps = {
       id: topicId,
       name,
       createdAt: created_at,

@@ -16,7 +16,7 @@ import { useTechnology, useEditTechnology } from "src/api/technologies/technolog
 
 import FormProvider from "src/components/hook-form";
 
-import { ICourseByTechnologyProps } from "src/types/course";
+import { ITechnologyProps } from "src/types/technology";
 
 import { schema, defaultValues } from "./technology";
 import { useTechnologyFields } from "./technology-fields";
@@ -24,7 +24,7 @@ import { useTechnologyFields } from "./technology-fields";
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  technology: ICourseByTechnologyProps;
+  technology: ITechnologyProps;
   onClose: VoidFunction;
 }
 

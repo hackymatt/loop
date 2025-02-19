@@ -2,10 +2,11 @@ import { AxiosError } from "axios";
 import { compact } from "lodash-es";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { ICourseByTechnologyProps } from "src/types/course";
+import { ITechnologyDetailsProps } from "src/types/technology";
 
 import { Api } from "../service";
 import { getCsrfToken } from "../utils";
+import { GetQueryResponse } from "../types";
 
 const endpoint = "/technologies" as const;
 
@@ -29,12 +30,12 @@ export const technologyQuery = (id: string) => {
   const url = endpoint;
   const queryUrl = `${url}/${id}`;
 
-  const queryFn = async () => {
+  const queryFn = async (): Promise<GetQueryResponse<ITechnologyDetailsProps>> => {
     const response = await Api.get<ITechnology>(queryUrl);
     const { data } = response;
     const { id: technologyId, name, description, created_at } = data;
 
-    const modifiedResults = {
+    const modifiedResults: ITechnologyDetailsProps = {
       id: technologyId,
       name,
       description,
@@ -49,7 +50,7 @@ export const technologyQuery = (id: string) => {
 export const useTechnology = (id: string) => {
   const { queryKey, queryFn } = technologyQuery(id);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as any as ICourseByTechnologyProps, ...rest };
+  return { data: data?.results, ...rest };
 };
 
 export const useEditTechnology = (id: string) => {

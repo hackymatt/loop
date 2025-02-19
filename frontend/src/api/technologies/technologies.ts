@@ -5,10 +5,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatQueryParams } from "src/utils/query-params";
 
 import { IQueryParams } from "src/types/query-params";
-import { ICourseByTechnologyProps } from "src/types/course";
+import { ITechnologyProps } from "src/types/technology";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils";
+import { ListQueryResponse } from "../types";
+import { getData, getCsrfToken } from "../utils";
 
 const endpoint = "/technologies" as const;
 
@@ -26,10 +27,10 @@ type ICreateTechnologyReturn = ICreateTechnology;
 export const technologiesQuery = (query?: IQueryParams) => {
   const url = endpoint;
   const urlParams = formatQueryParams(query);
+  const queryUrl = `${url}?${urlParams}`;
 
-  const queryFn = async () => {
-    const { data } = await Api.get(`${url}?${urlParams}`);
-    const { results, records_count, pages_count } = data;
+  const queryFn = async (): Promise<ListQueryResponse<ITechnologyProps[]>> => {
+    const { results, records_count, pages_count } = await getData<ITechnology>(queryUrl);
     const modifiedResults = results.map(({ id, name, created_at }: ITechnology) => ({
       id,
       name,
@@ -44,7 +45,7 @@ export const technologiesQuery = (query?: IQueryParams) => {
 export const useTechnologies = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = technologiesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as ICourseByTechnologyProps[], count: data?.count, ...rest };
+  return { data: data?.results, count: data?.count, ...rest };
 };
 
 export const useTechnologiesPagesCount = (query?: IQueryParams) => {

@@ -138,7 +138,7 @@ export default function Footer() {
           {technologies && technologies.length > 0 && (
             <Grid xs={12} md={6}>
               <Masonry columns={3} spacing={2} defaultColumns={3} defaultSpacing={2}>
-                {technologies?.map((technology) => (
+                {technologies.map((technology) => (
                   <Link
                     component={RouterLink}
                     key={technology.id}
