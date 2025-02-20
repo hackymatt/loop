@@ -1,5 +1,5 @@
 export interface GetApiResponse<T = any> {
-  result: T;
+  data: T;
 }
 
 export interface ListApiResponse<T = any> {

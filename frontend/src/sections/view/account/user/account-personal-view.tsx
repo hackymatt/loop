@@ -2,6 +2,7 @@
 
 import * as Yup from "yup";
 import { useEffect } from "react";
+import { parseISO } from "date-fns";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 
@@ -15,6 +16,7 @@ import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import { fDate } from "src/utils/format-time";
 
+import { Gender } from "src/consts/gender";
 import { countries } from "src/assets/data";
 import { useUserDetails, useUpdateUserDetails } from "src/api/auth/details";
 
@@ -31,11 +33,12 @@ import { IGender } from "src/types/testimonial";
 
 // ----------------------------------------------------------------------
 
-const GENDER_OPTIONS = [
-  { label: "Mężczyzna", value: "Mężczyzna" },
-  { label: "Kobieta", value: "Kobieta" },
-  { label: "Inne", value: "Inne" },
-];
+const GENDER_OPTIONS = Object.values(Gender).map((gender: IGender) => ({
+  label: gender,
+  value: gender,
+}));
+
+const DEFAULT_COUNTRY = "Polska";
 
 // ----------------------------------------------------------------------
 
@@ -46,14 +49,14 @@ export default function AccountPersonalView() {
   const { mutateAsync: updateUserDetails } = useUpdateUserDetails();
 
   const userSchemaObject = {
-    first_name: Yup.string().required("Imię jest wymagane"),
-    last_name: Yup.string().required("Nazwisko jest wymagane"),
+    firstName: Yup.string().required("Imię jest wymagane"),
+    lastName: Yup.string().required("Nazwisko jest wymagane"),
     email: Yup.string().required("Adres email jest wymagany"),
-    phone_number: Yup.string().nullable(),
+    phoneNumber: Yup.string().nullable(),
     dob: Yup.mixed<any>().nullable(),
     gender: Yup.string().required("Płeć jest wymagana"),
-    street_address: Yup.string().nullable(),
-    zip_code: Yup.string().nullable(),
+    streetAddress: Yup.string().nullable(),
+    zipCode: Yup.string().nullable(),
     city: Yup.string().nullable(),
     country: Yup.string().required("Państwo jest wymagane"),
     image: Yup.string().nullable(),
@@ -62,16 +65,17 @@ export default function AccountPersonalView() {
   const AccountPersonalSchema = Yup.object().shape(userSchemaObject);
 
   const defaultValues = {
-    ...userDetails,
-    first_name: userDetails?.first_name ?? "",
-    last_name: userDetails?.last_name ?? "",
-    phone_number: userDetails?.phone_number ?? "",
-    street_address: userDetails?.street_address ?? "",
-    zip_code: userDetails?.zip_code ?? "",
-    city: userDetails?.city ?? "",
-    country: userDetails?.country ?? "Polska",
-    dob: userDetails?.dob ? new Date(userDetails?.dob) : undefined,
-    gender: userDetails?.gender ? userDetails.gender : "Mężczyzna",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    dob: null,
+    gender: Gender.Other,
+    streetAddress: "",
+    zipCode: "",
+    city: "",
+    country: DEFAULT_COUNTRY,
+    image: "",
   };
 
   const methods = useForm({
@@ -91,31 +95,43 @@ export default function AccountPersonalView() {
     if (userDetails) {
       reset({
         ...userDetails,
-        first_name: userDetails?.first_name ?? "",
-        last_name: userDetails?.last_name ?? "",
-        phone_number: userDetails?.phone_number ?? "",
-        street_address: userDetails?.street_address ?? "",
-        zip_code: userDetails?.zip_code ?? "",
-        city: userDetails?.city ?? "",
-        country: userDetails?.country ?? "Polska",
-        dob: userDetails?.dob ? new Date(userDetails?.dob) : undefined,
-        gender: userDetails?.gender !== null ? userDetails.gender : "Mężczyzna",
+        phoneNumber: userDetails.phoneNumber ?? "",
+        streetAddress: userDetails.streetAddress ?? "",
+        zipCode: userDetails.zipCode ?? "",
+        city: userDetails.city ?? "",
+        country: userDetails.country ?? DEFAULT_COUNTRY,
+        dob: userDetails.dob ? parseISO(userDetails.dob) : null,
       });
     }
   }, [reset, userDetails]);
 
   const onSubmit = handleSubmit(async (data) => {
-    delete data.image;
-    const { phone_number, dob, gender, street_address, zip_code, city } = data;
+    const {
+      firstName,
+      lastName,
+      dob,
+      gender,
+      phoneNumber,
+      streetAddress,
+      zipCode,
+      city,
+      country,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      image,
+      ...rest
+    } = data;
     try {
       await updateUserDetails({
-        ...data,
-        phone_number: phone_number ?? "",
-        dob: fDate(dob, "yyyy-MM-dd") ?? "",
-        gender: (gender as IGender) ?? "",
-        street_address: street_address ?? "",
-        zip_code: zip_code ?? "",
-        city: city ?? "",
+        ...rest,
+        first_name: firstName,
+        last_name: lastName,
+        dob: dob ? fDate(dob, "yyyy-MM-dd") : null,
+        gender,
+        phone_number: phoneNumber ?? null,
+        street_address: streetAddress ?? null,
+        zip_code: zipCode ?? null,
+        city: city ?? null,
+        country: country ?? null,
       });
       enqueueSnackbar("Dane zostały zmienione", { variant: "success" });
     } catch (error) {
@@ -148,13 +164,13 @@ export default function AccountPersonalView() {
         gridTemplateColumns={{ xs: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
         sx={{ my: 5 }}
       >
-        <RHFTextField name="first_name" label="Imię" />
+        <RHFTextField name="firstName" label="Imię" />
 
-        <RHFTextField name="last_name" label="Nazwisko" />
+        <RHFTextField name="lastName" label="Nazwisko" />
 
         <RHFTextField name="email" label="Adres e-mail" disabled />
 
-        <RHFTextField name="phone_number" label="Numer telefonu" />
+        <RHFTextField name="phoneNumber" label="Numer telefonu" />
 
         <Controller
           name="dob"
@@ -180,9 +196,9 @@ export default function AccountPersonalView() {
 
         <RHFSelect name="gender" label="Płeć" options={GENDER_OPTIONS} placeholder="Wybierz płeć" />
 
-        <RHFTextField name="street_address" label="Ulica, numer budynku, numer lokalu" />
+        <RHFTextField name="streetAddress" label="Ulica, numer budynku, numer lokalu" />
 
-        <RHFTextField name="zip_code" label="Kod pocztowy" />
+        <RHFTextField name="zipCode" label="Kod pocztowy" />
 
         <RHFTextField name="city" label="Miasto" />
 

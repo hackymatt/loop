@@ -31,7 +31,7 @@ export const topicsQuery = (query?: IQueryParams) => {
 
   const queryFn = async (): Promise<ListQueryResponse<ITopicProps[]>> => {
     const { results, records_count, pages_count } = await getListData<ITopic>(queryUrl);
-    const modifiedResults = results.map(({ id, name, created_at }: ITopic) => ({
+    const modifiedResults = (results ?? []).map(({ id, name, created_at }: ITopic) => ({
       id,
       name,
       createdAt: created_at,

@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { IServiceProp } from "src/types/service";
 
 import { Api } from "../service";
+import { GetQueryResponse } from "../types";
 import { getData, getCsrfToken } from "../utils";
 
 const endpoint = "/services" as const;
@@ -23,7 +24,7 @@ export const serviceQuery = (id: string) => {
   const url = endpoint;
   const queryUrl = `${url}/${id}`;
 
-  const queryFn = async () => {
+  const queryFn = async (): Promise<GetQueryResponse<IServiceProp>> => {
     const { result } = await getData<IService>(queryUrl);
     return { results: result };
   };

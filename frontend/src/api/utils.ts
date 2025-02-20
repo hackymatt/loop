@@ -1,3 +1,5 @@
+import { AxiosRequestConfig } from "axios";
+
 import { Api } from "./service";
 import { GetApiResponse, ListApiResponse } from "./types";
 
@@ -15,15 +17,18 @@ export async function getListData<T>(queryUrl: string) {
   return data;
 }
 
-export async function getData<T>(queryUrl: string) {
-  let data: GetApiResponse<T> = { result: <T>{} };
+export async function getData<T>(
+  queryUrl: string,
+  config?: AxiosRequestConfig<any>,
+): Promise<GetApiResponse<T>> {
+  let data: GetApiResponse<T> = { data: {} as T };
 
   try {
-    const response = await Api.get<GetApiResponse<T>>(queryUrl);
-    ({ data } = response);
+    const response = await Api.get<T>(queryUrl, config);
+    data = { data: response.data };
   } catch (error) {
     if (error.response && (error.response.status === 400 || error.response.status === 404)) {
-      data = { result: <T>{} };
+      data = { data: {} as T };
     }
   }
   return data;

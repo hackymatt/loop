@@ -49,7 +49,7 @@ export const cartsQuery = (query?: IQueryParams) => {
       }
     }
     const { results, records_count, pages_count } = data;
-    const modifiedResults = results.map(({ id, lesson }: ICart) => {
+    const modifiedResults = (results ?? []).map(({ id, lesson }: ICart) => {
       const { id: lessonId, title, duration, price, lecturers, technologies } = lesson;
       return {
         id,

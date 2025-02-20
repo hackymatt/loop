@@ -1,4 +1,4 @@
-import { IGender } from "./testimonial";
+import { Gender } from "src/consts/gender";
 
 export enum UserType {
   ADMIN = "Admin",
@@ -27,4 +27,21 @@ export type IUserDetailsProps = {
   rate?: number;
   commission?: number;
   created_at?: string;
+};
+
+export type IGender = (typeof Gender)[keyof typeof Gender];
+
+export type IUserProps = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string | null;
+  dob: string | null;
+  gender: IGender;
+  streetAddress: string | null;
+  zipCode: string | null;
+  city: string | null;
+  country: string | null;
+  image: string | null;
 };

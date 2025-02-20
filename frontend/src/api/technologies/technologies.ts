@@ -31,7 +31,7 @@ export const technologiesQuery = (query?: IQueryParams) => {
 
   const queryFn = async (): Promise<ListQueryResponse<ITechnologyProps[]>> => {
     const { results, records_count, pages_count } = await getListData<ITechnology>(queryUrl);
-    const modifiedResults = results.map(({ id, name, created_at }: ITechnology) => ({
+    const modifiedResults = (results ?? []).map(({ id, name, created_at }: ITechnology) => ({
       id,
       name,
       createdAt: created_at,

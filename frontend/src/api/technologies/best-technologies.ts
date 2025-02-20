@@ -26,12 +26,14 @@ export const bestTechnologiesQuery = (query?: IQueryParams) => {
 
   const queryFn = async (): Promise<ListQueryResponse<IBestTechnologyProps[]>> => {
     const { results, records_count, pages_count } = await getListData<ITechnology>(queryUrl);
-    const modifiedResults = results.map(({ id, name, courses_count, created_at }: ITechnology) => ({
-      id,
-      name,
-      coursesCount: courses_count,
-      createdAt: created_at,
-    }));
+    const modifiedResults = (results ?? []).map(
+      ({ id, name, courses_count, created_at }: ITechnology) => ({
+        id,
+        name,
+        coursesCount: courses_count,
+        createdAt: created_at,
+      }),
+    );
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };
   };
 

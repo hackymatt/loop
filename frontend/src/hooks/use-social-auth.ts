@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import { paths } from "src/routes/paths";
 
 import { generateCode } from "src/utils/generateCode";
@@ -16,14 +18,13 @@ const getState = (redirectUrl?: string) => {
 };
 
 export const useGoogleAuth = (redirectUrl?: string) => {
+  const state = useMemo(() => getState(redirectUrl), [redirectUrl]);
   const googleUrl = "https://accounts.google.com/o/oauth2/v2/auth";
 
   const scope = [
     "https://www.googleapis.com/auth/userinfo.email",
     "https://www.googleapis.com/auth/userinfo.profile",
   ].join(" ");
-
-  const state = getState(redirectUrl);
 
   const params = new URLSearchParams({
     client_id: GOOGLE_CLIENT_ID,
@@ -39,11 +40,10 @@ export const useGoogleAuth = (redirectUrl?: string) => {
 };
 
 export const useFacebookAuth = (redirectUrl?: string) => {
+  const state = useMemo(() => getState(redirectUrl), [redirectUrl]);
   const facebookUrl = "https://www.facebook.com/v19.0/dialog/oauth";
 
   const scope = ["email", "user_gender", "public_profile"].join(",");
-
-  const state = getState(redirectUrl);
 
   const params = new URLSearchParams({
     client_id: FACEBOOK_CLIENT_ID,
@@ -57,11 +57,10 @@ export const useFacebookAuth = (redirectUrl?: string) => {
 };
 
 export const useGithubAuth = (redirectUrl?: string) => {
+  const state = useMemo(() => getState(redirectUrl), [redirectUrl]);
   const githubUrl = "https://github.com/login/oauth/authorize";
 
   const scope = ["user:email", "read:user"].join(" ");
-
-  const state = getState(redirectUrl);
 
   const params = new URLSearchParams({
     client_id: GITHUB_CLIENT_ID,

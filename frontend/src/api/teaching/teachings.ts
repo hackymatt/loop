@@ -33,7 +33,7 @@ export const teachingsQuery = (query?: IQueryParams) => {
 
   const queryFn = async (): Promise<ListQueryResponse<ITeachingProp[]>> => {
     const { results, records_count, pages_count } = await getListData<ITeaching>(queryUrl);
-    const modifiedResults = results.map(
+    const modifiedResults = (results ?? []).map(
       ({ id, teaching_id, price, title, duration, github_url, active }: ITeaching) => ({
         id,
         teachingId: teaching_id,

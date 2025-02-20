@@ -42,7 +42,7 @@ export const wishlistsQuery = (query?: IQueryParams) => {
 
   const queryFn = async (): Promise<ListQueryResponse<ICartProp[]>> => {
     const { results, records_count, pages_count } = await getListData<IWishlist>(queryUrl);
-    const modifiedResults = results.map(({ id, lesson }: IWishlist) => {
+    const modifiedResults = (results ?? []).map(({ id, lesson }: IWishlist) => {
       const { id: lessonId, title, duration, price, lecturers, technologies } = lesson;
       return {
         id,

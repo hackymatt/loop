@@ -31,7 +31,7 @@ export const tagsQuery = (query?: IQueryParams) => {
 
   const queryFn = async (): Promise<ListQueryResponse<ITagProps[]>> => {
     const { results, records_count, pages_count } = await getListData<ITag>(queryUrl);
-    const modifiedResults = results.map(({ id, name, created_at }: ITag) => ({
+    const modifiedResults = (results ?? []).map(({ id, name, created_at }: ITag) => ({
       id,
       name,
       createdAt: created_at,
