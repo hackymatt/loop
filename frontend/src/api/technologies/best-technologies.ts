@@ -6,7 +6,7 @@ import { formatQueryParams } from "src/utils/query-params";
 import { IQueryParams } from "src/types/query-params";
 import { IBestTechnologyProps } from "src/types/technology";
 
-import { getData } from "../utils";
+import { getListData } from "../utils";
 import { ListQueryResponse } from "../types";
 
 const endpoint = "/best-technologies" as const;
@@ -25,7 +25,7 @@ export const bestTechnologiesQuery = (query?: IQueryParams) => {
   const queryUrl = `${url}?${urlParams}`;
 
   const queryFn = async (): Promise<ListQueryResponse<IBestTechnologyProps[]>> => {
-    const { results, records_count, pages_count } = await getData<ITechnology>(queryUrl);
+    const { results, records_count, pages_count } = await getListData<ITechnology>(queryUrl);
     const modifiedResults = results.map(({ id, name, courses_count, created_at }: ITechnology) => ({
       id,
       name,

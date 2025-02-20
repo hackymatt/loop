@@ -9,7 +9,7 @@ import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
 import { ListQueryResponse } from "../types";
-import { getData, getCsrfToken } from "../utils";
+import { getListData, getCsrfToken } from "../utils";
 
 const endpoint = "/topics" as const;
 
@@ -30,7 +30,7 @@ export const topicsQuery = (query?: IQueryParams) => {
   const queryUrl = `${url}?${urlParams}`;
 
   const queryFn = async (): Promise<ListQueryResponse<ITopicProps[]>> => {
-    const { results, records_count, pages_count } = await getData<ITopic>(queryUrl);
+    const { results, records_count, pages_count } = await getListData<ITopic>(queryUrl);
     const modifiedResults = results.map(({ id, name, created_at }: ITopic) => ({
       id,
       name,

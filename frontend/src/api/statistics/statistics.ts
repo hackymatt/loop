@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { IStatistics } from "src/types/statistics";
 
-import { Api } from "../service";
+import { getData } from "../utils";
 import { GetQueryResponse } from "../types";
 
 const endpoint = "/stats" as const;
@@ -24,7 +24,7 @@ export const statisticsQuery = () => {
   const url = endpoint;
 
   const queryFn = async (): Promise<GetQueryResponse<IStatistics>> => {
-    const { data } = await Api.get<IStats>(url);
+    const { result } = await getData<IStats>(url);
     const {
       students_count,
       course_count,
@@ -35,7 +35,7 @@ export const statisticsQuery = () => {
       hours_sum,
       rating,
       rating_count,
-    } = data;
+    } = result;
     const modifiedData = {
       studentsCount: students_count,
       courseCount: course_count,

@@ -5,8 +5,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ITagProps } from "src/types/tags";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils";
 import { GetQueryResponse } from "../types";
+import { getData, getCsrfToken } from "../utils";
 
 const endpoint = "/tags" as const;
 
@@ -29,9 +29,8 @@ export const tagQuery = (id: string) => {
   const queryUrl = `${url}/${id}`;
 
   const queryFn = async (): Promise<GetQueryResponse<ITagProps>> => {
-    const response = await Api.get<ITag>(queryUrl);
-    const { data } = response;
-    const { id: tagId, name, created_at } = data;
+    const { result } = await getData<ITag>(queryUrl);
+    const { id: tagId, name, created_at } = result;
 
     const modifiedResults = {
       id: tagId,

@@ -9,7 +9,7 @@ import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
 import { ListQueryResponse } from "../types";
-import { getData, getCsrfToken } from "../utils";
+import { getListData, getCsrfToken } from "../utils";
 
 const endpoint = "/tags" as const;
 
@@ -30,7 +30,7 @@ export const tagsQuery = (query?: IQueryParams) => {
   const queryUrl = `${url}?${urlParams}`;
 
   const queryFn = async (): Promise<ListQueryResponse<ITagProps[]>> => {
-    const { results, records_count, pages_count } = await getData<ITag>(queryUrl);
+    const { results, records_count, pages_count } = await getListData<ITag>(queryUrl);
     const modifiedResults = results.map(({ id, name, created_at }: ITag) => ({
       id,
       name,

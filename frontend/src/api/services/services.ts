@@ -8,7 +8,8 @@ import { IServiceProp } from "src/types/service";
 import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils";
+import { ListQueryResponse } from "../types";
+import { getListData, getCsrfToken } from "../utils";
 
 const endpoint = "/services" as const;
 
@@ -28,17 +29,8 @@ export const servicesQuery = (query?: IQueryParams) => {
   const urlParams = formatQueryParams(query);
   const queryUrl = urlParams ? `${url}?${urlParams}` : url;
 
-  const queryFn = async () => {
-    let data;
-    try {
-      const response = await Api.get(queryUrl);
-      ({ data } = response);
-    } catch (error) {
-      if (error.response && (error.response.status === 400 || error.response.status === 404)) {
-        data = { results: [], records_count: 0, pages_count: 0 };
-      }
-    }
-    const { results, records_count, pages_count } = data;
+  const queryFn = async (): Promise<ListQueryResponse<IServiceProp[]>> => {
+    const { results, records_count, pages_count } = await getListData<IService>(queryUrl);
     return { results, count: records_count, pagesCount: pages_count };
   };
 
@@ -48,7 +40,7 @@ export const servicesQuery = (query?: IQueryParams) => {
 export const useServices = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = servicesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as IServiceProp[], count: data?.count, ...rest };
+  return { data: data?.results, count: data?.count, ...rest };
 };
 
 export const useServicesPagesCount = (query?: IQueryParams) => {

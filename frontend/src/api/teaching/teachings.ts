@@ -9,7 +9,7 @@ import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
 import { ListQueryResponse } from "../types";
-import { getData, getCsrfToken } from "../utils";
+import { getListData, getCsrfToken } from "../utils";
 
 const endpoint = "/teachings" as const;
 
@@ -32,7 +32,7 @@ export const teachingsQuery = (query?: IQueryParams) => {
   const queryUrl = urlParams ? `${url}?${urlParams}` : url;
 
   const queryFn = async (): Promise<ListQueryResponse<ITeachingProp[]>> => {
-    const { results, records_count, pages_count } = await getData<ITeaching>(queryUrl);
+    const { results, records_count, pages_count } = await getListData<ITeaching>(queryUrl);
     const modifiedResults = results.map(
       ({ id, teaching_id, price, title, duration, github_url, active }: ITeaching) => ({
         id,

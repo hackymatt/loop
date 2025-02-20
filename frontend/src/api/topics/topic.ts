@@ -5,8 +5,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ITopicProps } from "src/types/topic";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils";
 import { GetQueryResponse } from "../types";
+import { getData, getCsrfToken } from "../utils";
 
 const endpoint = "/topics" as const;
 
@@ -30,9 +30,8 @@ export const topicQuery = (id: string) => {
   const queryUrl = `${url}/${id}`;
 
   const queryFn = async (): Promise<GetQueryResponse<ITopicProps>> => {
-    const response = await Api.get<ITopic>(queryUrl);
-    const { data } = response;
-    const { id: topicId, name, created_at } = data;
+    const { result } = await getData<ITopic>(queryUrl);
+    const { id: topicId, name, created_at } = result;
 
     const modifiedResults: ITopicProps = {
       id: topicId,

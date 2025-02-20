@@ -1,4 +1,8 @@
-export interface ApiResponse<T = any> {
+export interface GetApiResponse<T = any> {
+  result: T;
+}
+
+export interface ListApiResponse<T = any> {
   results: T[];
   records_count: number;
   pages_count: number;

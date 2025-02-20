@@ -9,7 +9,7 @@ import { ITechnologyProps } from "src/types/technology";
 
 import { Api } from "../service";
 import { ListQueryResponse } from "../types";
-import { getData, getCsrfToken } from "../utils";
+import { getListData, getCsrfToken } from "../utils";
 
 const endpoint = "/technologies" as const;
 
@@ -30,7 +30,7 @@ export const technologiesQuery = (query?: IQueryParams) => {
   const queryUrl = `${url}?${urlParams}`;
 
   const queryFn = async (): Promise<ListQueryResponse<ITechnologyProps[]>> => {
-    const { results, records_count, pages_count } = await getData<ITechnology>(queryUrl);
+    const { results, records_count, pages_count } = await getListData<ITechnology>(queryUrl);
     const modifiedResults = results.map(({ id, name, created_at }: ITechnology) => ({
       id,
       name,

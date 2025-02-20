@@ -9,7 +9,7 @@ import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
 import { ListQueryResponse } from "../types";
-import { getData, getCsrfToken } from "../utils";
+import { getListData, getCsrfToken } from "../utils";
 
 const endpoint = "/wishlist" as const;
 
@@ -41,7 +41,7 @@ export const wishlistsQuery = (query?: IQueryParams) => {
   const queryUrl = urlParams ? `${url}?${urlParams}` : url;
 
   const queryFn = async (): Promise<ListQueryResponse<ICartProp[]>> => {
-    const { results, records_count, pages_count } = await getData<IWishlist>(queryUrl);
+    const { results, records_count, pages_count } = await getListData<IWishlist>(queryUrl);
     const modifiedResults = results.map(({ id, lesson }: IWishlist) => {
       const { id: lessonId, title, duration, price, lecturers, technologies } = lesson;
       return {
