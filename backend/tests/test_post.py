@@ -27,6 +27,7 @@ import json
 from base64 import b64encode
 from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
+from const import UserType
 
 
 class PostTest(APITestCase):
@@ -45,7 +46,7 @@ class PostTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -72,7 +73,9 @@ class PostTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         create_post_category(name="Technology")
@@ -512,7 +515,7 @@ class PostCategoryFilterTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -539,7 +542,9 @@ class PostCategoryFilterTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         create_post_category(name="Technology")
@@ -622,7 +627,7 @@ class PostFilterTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -649,7 +654,9 @@ class PostFilterTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         create_post_category(name="Technology")
@@ -781,7 +788,7 @@ class PostCategoryOrderTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -808,7 +815,9 @@ class PostCategoryOrderTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         create_post_category(name="Technology")
@@ -899,7 +908,7 @@ class PostOrderTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -926,7 +935,9 @@ class PostOrderTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         create_post_category(name="Technology")

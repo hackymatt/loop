@@ -23,6 +23,7 @@ from .helpers import (
 )
 from django.contrib import auth
 import json
+from const import UserType, GenderType
 
 
 class UsersTest(APITestCase):
@@ -41,7 +42,7 @@ class UsersTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -106,17 +107,19 @@ class UsersTest(APITestCase):
         self.lecturer_profile_1 = create_lecturer_profile(
             profile=create_profile(
                 user=self.lecturer_user_1,
-                user_type="W",
+                user_type=UserType.INSTRUCTOR,
             )
         )
         create_finance(
             lecturer=self.lecturer_profile_1, account="", rate=125, commission=4
         )
         self.lecturer_profile_2 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_2, user_type=UserType.INSTRUCTOR
+            )
         )
         self.other_profile = create_other_profile(
-            profile=create_profile(user=self.other_user_1, user_type="I")
+            profile=create_profile(user=self.other_user_1, user_type=UserType.OTHER)
         )
 
         self.user_columns = ["first_name", "last_name", "email"]
@@ -162,7 +165,7 @@ class UsersTest(APITestCase):
             gender = profile_data.pop("gender")
             self.assertEqual(
                 get_profile(get_user(user_data["email"])).gender,
-                gender[0] if gender else None,
+                gender if gender else None,
             )
             self.assertTrue(is_data_match(get_user(user_data["email"]), user_data))
             self.assertTrue(
@@ -170,7 +173,7 @@ class UsersTest(APITestCase):
             )
             self.assertEqual(
                 get_profile(get_user(user_data["email"])).user_type,
-                data["user_type"][0],
+                data["user_type"],
             )
             self.assertFalse(get_profile(get_user(user_data["email"])).image)
 
@@ -202,13 +205,13 @@ class UsersTest(APITestCase):
         user_data = filter_dict(results, self.user_columns)
         profile_data = filter_dict(results, self.profile_columns)
         gender = profile_data.pop("gender")
-        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender[0])
+        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender)
         self.assertTrue(is_data_match(get_user(user_data["email"]), user_data))
         self.assertTrue(
             is_data_match(get_profile(get_user(user_data["email"])), profile_data)
         )
         self.assertEqual(
-            get_profile(get_user(user_data["email"])).user_type, results["user_type"][0]
+            get_profile(get_user(user_data["email"])).user_type, results["user_type"]
         )
         self.assertFalse(get_profile(get_user(user_data["email"])).image)
 
@@ -222,8 +225,8 @@ class UsersTest(APITestCase):
             "email": "test_email@example.com",
             "phone_number": "999888777",
             "dob": "1900-01-01",
-            "gender": "M",
-            "user_type": "I",
+            "gender": GenderType.MALE,
+            "user_type": UserType.OTHER,
             "street_address": "abc",
             "zip_code": "30-100",
             "city": "Miasto",
@@ -244,8 +247,8 @@ class UsersTest(APITestCase):
             "email": "test_email@example.com",
             "phone_number": "999888777",
             "dob": "1900-01-01",
-            "gender": "M",
-            "user_type": "I",
+            "gender": GenderType.MALE,
+            "user_type": UserType.OTHER,
             "street_address": "abc",
             "zip_code": "30-100",
             "city": "Miasto",
@@ -266,8 +269,8 @@ class UsersTest(APITestCase):
             "email": "lecturer_1@example.com",
             "phone_number": "999888777",
             "dob": "1900-01-01",
-            "gender": "M",
-            "user_type": "A",
+            "gender": GenderType.MALE,
+            "user_type": UserType.ADMIN,
             "rate": 100,
             "commission": 1,
             "street_address": "abc",
@@ -290,8 +293,8 @@ class UsersTest(APITestCase):
             "email": "abc@example.com",
             "phone_number": "999888777",
             "dob": "1900-01-01",
-            "gender": "M",
-            "user_type": "I",
+            "gender": GenderType.MALE,
+            "user_type": UserType.OTHER,
             "street_address": "abc",
             "zip_code": "30-100",
             "city": "Miasto",
@@ -304,13 +307,13 @@ class UsersTest(APITestCase):
         user_data = filter_dict(results, self.user_columns)
         profile_data = filter_dict(results, self.profile_columns)
         gender = profile_data.pop("gender")
-        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender[0])
+        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender)
         self.assertTrue(is_data_match(get_user(user_data["email"]), user_data))
         self.assertTrue(
             is_data_match(get_profile(get_user(user_data["email"])), profile_data)
         )
         self.assertEqual(
-            get_profile(get_user(user_data["email"])).user_type, results["user_type"][0]
+            get_profile(get_user(user_data["email"])).user_type, results["user_type"]
         )
         self.assertFalse(get_profile(get_user(user_data["email"])).image)
         self.assertTrue(
@@ -327,7 +330,7 @@ class UsersTest(APITestCase):
             "email": "test_email@example.com",
             "phone_number": "999888777",
             "dob": "1900-01-01",
-            "gender": "M",
+            "gender": GenderType.MALE,
             "street_address": "abc",
             "zip_code": "30-100",
             "city": "Miasto",
@@ -350,7 +353,7 @@ class UsersTest(APITestCase):
             "email": "test_email@example.com",
             "phone_number": "999888777",
             "dob": "1900-01-01",
-            "gender": "M",
+            "gender": GenderType.MALE,
             "street_address": "abc",
             "zip_code": "30-100",
             "city": "Miasto",
@@ -373,8 +376,8 @@ class UsersTest(APITestCase):
             "email": self.data["email"],
             "phone_number": "999888777",
             "dob": "1900-01-01",
-            "gender": "M",
-            "user_type": "W",
+            "gender": GenderType.MALE,
+            "user_type": UserType.INSTRUCTOR,
             "street_address": "abc",
             "zip_code": "30-100",
             "city": "Miasto",
@@ -391,13 +394,13 @@ class UsersTest(APITestCase):
         user_data = filter_dict(results, self.user_columns)
         profile_data = filter_dict(results, self.profile_columns)
         gender = profile_data.pop("gender")
-        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender[0])
+        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender)
         self.assertTrue(is_data_match(get_user(user_data["email"]), user_data))
         self.assertTrue(
             is_data_match(get_profile(get_user(user_data["email"])), profile_data)
         )
         self.assertEqual(
-            get_profile(get_user(user_data["email"])).user_type, results["user_type"][0]
+            get_profile(get_user(user_data["email"])).user_type, results["user_type"]
         )
         self.assertFalse(get_profile(get_user(user_data["email"])).image)
         self.assertFalse(
@@ -418,8 +421,8 @@ class UsersTest(APITestCase):
             "email": self.other_data["email"],
             "phone_number": "999888777",
             "dob": "1900-01-01",
-            "gender": "M",
-            "user_type": "I",
+            "gender": GenderType.MALE,
+            "user_type": UserType.OTHER,
             "street_address": "abc",
             "zip_code": "30-100",
             "city": "Miasto",
@@ -434,13 +437,13 @@ class UsersTest(APITestCase):
         user_data = filter_dict(results, self.user_columns)
         profile_data = filter_dict(results, self.profile_columns)
         gender = profile_data.pop("gender")
-        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender[0])
+        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender)
         self.assertTrue(is_data_match(get_user(user_data["email"]), user_data))
         self.assertTrue(
             is_data_match(get_profile(get_user(user_data["email"])), profile_data)
         )
         self.assertEqual(
-            get_profile(get_user(user_data["email"])).user_type, results["user_type"][0]
+            get_profile(get_user(user_data["email"])).user_type, results["user_type"]
         )
         self.assertFalse(get_profile(get_user(user_data["email"])).image)
         self.assertFalse(
@@ -461,8 +464,8 @@ class UsersTest(APITestCase):
             "email": self.lecturer_data["email"],
             "phone_number": "999888777",
             "dob": "1900-01-01",
-            "gender": "M",
-            "user_type": "A",
+            "gender": GenderType.MALE,
+            "user_type": UserType.ADMIN,
             "street_address": "abc",
             "zip_code": "30-100",
             "city": "Miasto",
@@ -477,13 +480,13 @@ class UsersTest(APITestCase):
         user_data = filter_dict(results, self.user_columns)
         profile_data = filter_dict(results, self.profile_columns)
         gender = profile_data.pop("gender")
-        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender[0])
+        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender)
         self.assertTrue(is_data_match(get_user(user_data["email"]), user_data))
         self.assertTrue(
             is_data_match(get_profile(get_user(user_data["email"])), profile_data)
         )
         self.assertEqual(
-            get_profile(get_user(user_data["email"])).user_type, results["user_type"][0]
+            get_profile(get_user(user_data["email"])).user_type, results["user_type"]
         )
         self.assertFalse(get_profile(get_user(user_data["email"])).image)
         self.assertFalse(
@@ -504,8 +507,8 @@ class UsersTest(APITestCase):
             "email": self.admin_data["email"],
             "phone_number": "999888777",
             "dob": "1900-01-01",
-            "gender": "M",
-            "user_type": "S",
+            "gender": GenderType.MALE,
+            "user_type": UserType.STUDENT,
             "street_address": "abc",
             "zip_code": "30-100",
             "city": "Miasto",
@@ -520,13 +523,13 @@ class UsersTest(APITestCase):
         user_data = filter_dict(results, self.user_columns)
         profile_data = filter_dict(results, self.profile_columns)
         gender = profile_data.pop("gender")
-        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender[0])
+        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender)
         self.assertTrue(is_data_match(get_user(user_data["email"]), user_data))
         self.assertTrue(
             is_data_match(get_profile(get_user(user_data["email"])), profile_data)
         )
         self.assertEqual(
-            get_profile(get_user(user_data["email"])).user_type, results["user_type"][0]
+            get_profile(get_user(user_data["email"])).user_type, results["user_type"]
         )
         self.assertFalse(get_profile(get_user(user_data["email"])).image)
         self.assertFalse(
@@ -547,8 +550,8 @@ class UsersTest(APITestCase):
             "email": self.other_data["email"],
             "phone_number": "999888777",
             "dob": "1900-01-01",
-            "gender": "M",
-            "user_type": "S",
+            "gender": GenderType.MALE,
+            "user_type": UserType.STUDENT,
             "street_address": "abc",
             "zip_code": "30-100",
             "city": "Miasto",
@@ -563,13 +566,13 @@ class UsersTest(APITestCase):
         user_data = filter_dict(results, self.user_columns)
         profile_data = filter_dict(results, self.profile_columns)
         gender = profile_data.pop("gender")
-        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender[0])
+        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender)
         self.assertTrue(is_data_match(get_user(user_data["email"]), user_data))
         self.assertTrue(
             is_data_match(get_profile(get_user(user_data["email"])), profile_data)
         )
         self.assertEqual(
-            get_profile(get_user(user_data["email"])).user_type, results["user_type"][0]
+            get_profile(get_user(user_data["email"])).user_type, results["user_type"]
         )
         self.assertFalse(get_profile(get_user(user_data["email"])).image)
         self.assertFalse(
@@ -590,7 +593,7 @@ class UsersTest(APITestCase):
             "email": "lecturer_1@example.com",
             "phone_number": "999888777",
             "dob": "1900-01-01",
-            "gender": "M",
+            "gender": GenderType.MALE,
             "user_type": "T",
             "rate": 100,
             "commission": 1,
@@ -616,8 +619,8 @@ class UsersTest(APITestCase):
             "email": "lecturer_1@example.com",
             "phone_number": "999888777",
             "dob": "1900-01-01",
-            "gender": "M",
-            "user_type": "W",
+            "gender": GenderType.MALE,
+            "user_type": UserType.INSTRUCTOR,
             "rate": 100,
             "commission": 1,
             "street_address": "abc",
@@ -634,13 +637,13 @@ class UsersTest(APITestCase):
         user_data = filter_dict(results, self.user_columns)
         profile_data = filter_dict(results, self.profile_columns)
         gender = profile_data.pop("gender")
-        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender[0])
+        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender)
         self.assertTrue(is_data_match(get_user(user_data["email"]), user_data))
         self.assertTrue(
             is_data_match(get_profile(get_user(user_data["email"])), profile_data)
         )
         self.assertEqual(
-            get_profile(get_user(user_data["email"])).user_type, results["user_type"][0]
+            get_profile(get_user(user_data["email"])).user_type, results["user_type"]
         )
         self.assertFalse(get_profile(get_user(user_data["email"])).image)
 
@@ -655,8 +658,8 @@ class UsersTest(APITestCase):
             "email": "lecturer_1@example.com",
             "phone_number": "999888777",
             "dob": "1900-01-01",
-            "gender": "M",
-            "user_type": "W",
+            "gender": GenderType.MALE,
+            "user_type": UserType.INSTRUCTOR,
             "rate": 125,
             "commission": 4,
             "street_address": "abc",
@@ -673,13 +676,13 @@ class UsersTest(APITestCase):
         user_data = filter_dict(results, self.user_columns)
         profile_data = filter_dict(results, self.profile_columns)
         gender = profile_data.pop("gender")
-        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender[0])
+        self.assertEqual(get_profile(get_user(user_data["email"])).gender, gender)
         self.assertTrue(is_data_match(get_user(user_data["email"]), user_data))
         self.assertTrue(
             is_data_match(get_profile(get_user(user_data["email"])), profile_data)
         )
         self.assertEqual(
-            get_profile(get_user(user_data["email"])).user_type, results["user_type"][0]
+            get_profile(get_user(user_data["email"])).user_type, results["user_type"]
         )
         self.assertFalse(get_profile(get_user(user_data["email"])).image)
 
@@ -700,7 +703,7 @@ class UsersFilterTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -748,11 +751,15 @@ class UsersFilterTest(APITestCase):
             profile=create_profile(user=self.student_user_2)
         )
         self.lecturer_profile_1 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_1, user_type="W"),
+            profile=create_profile(
+                user=self.lecturer_user_1, user_type=UserType.INSTRUCTOR
+            ),
             title="soft",
         )
         self.lecturer_profile_2 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_2, user_type=UserType.INSTRUCTOR
+            )
         )
 
     def test_first_name_filter(self):
@@ -824,14 +831,14 @@ class UsersFilterTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         column = "gender"
-        variable = "m"
+        variable = GenderType.MALE
         response = self.client.get(f"{self.endpoint}?{column}={variable}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
         self.assertEqual(records_count, 5)
-        values = list(set([variable in record[column].lower() for record in results]))
+        values = list(set([variable in record[column] for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
 
@@ -840,14 +847,15 @@ class UsersFilterTest(APITestCase):
         self.assertTrue(auth.get_user(self.client).is_authenticated)
         # get data
         column = "user_type"
-        variable = "W"
+        variable = UserType.INSTRUCTOR
+        response = self.client.get(self.endpoint)
         response = self.client.get(f"{self.endpoint}?{column}={variable}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         records_count = data["records_count"]
         results = data["results"]
-        self.assertEqual(records_count, 3)
-        values = list(set([variable == record[column][0] for record in results]))
+        self.assertEqual(records_count, 2)
+        values = list(set([variable == record[column] for record in results]))
         self.assertTrue(len(values) == 1)
         self.assertTrue(values[0])
 
@@ -980,7 +988,7 @@ class UsersOrderTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -1028,10 +1036,14 @@ class UsersOrderTest(APITestCase):
             profile=create_profile(user=self.student_user_2)
         )
         self.lecturer_profile_1 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_1, user_type=UserType.INSTRUCTOR
+            )
         )
         self.lecturer_profile_2 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_2, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.fields = [

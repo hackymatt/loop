@@ -22,6 +22,7 @@ from profile.login.utils import (
     get_image_content,
 )
 from config_global import FRONTEND_URL
+from const import UserType, GenderType, JoinType
 
 
 class EmailLoginViewSet(ModelViewSet):
@@ -55,7 +56,7 @@ class EmailLoginViewSet(ModelViewSet):
         login(request, user)
         profile = Profile.objects.get(user=user)
         data = ProfileSerializer(instance=profile).data
-        if profile.user_type[0] == "S":
+        if profile.user_type == UserType.STUDENT:
             del data["user_type"]
         return Response(status=status.HTTP_200_OK, data=data)
 
@@ -89,7 +90,7 @@ class GoogleLoginAPIView(APIView):
         image_url = user_data.get("picture", "")
 
         if image_url != "":
-            image = get_image_content(url=image_url, provider="Google")
+            image = get_image_content(url=image_url, provider=JoinType.GOOGLE)
         else:
             image = None
 
@@ -99,14 +100,14 @@ class GoogleLoginAPIView(APIView):
             first_name=first_name,
             last_name=last_name,
             dob=None,
-            gender="I",
+            gender=GenderType.OTHER,
             image=image,
-            join_type="Google",
+            join_type=JoinType.GOOGLE,
         )
 
         login(request, user)
         data = ProfileSerializer(instance=profile).data
-        if profile.user_type[0] == "S":
+        if profile.user_type == UserType.STUDENT:
             del data["user_type"]
         return Response(status=status.HTTP_200_OK, data=data)
 
@@ -137,19 +138,19 @@ class FacebookLoginAPIView(APIView):
         email = user_data["email"]
         first_name = user_data.get("first_name", "")
         last_name = user_data.get("last_name", "")
-        gender = user_data.get("gender", "I")
+        gender = user_data.get("gender", GenderType.OTHER)
         image_data = user_data.get("picture", "")
 
         if gender == "male":
-            gender = "M"
+            gender = GenderType.MALE
         elif gender == "female":
-            gender = "K"
+            gender = GenderType.FEMALE
         else:
-            gender = "I"
+            gender = GenderType.OTHER
 
         if image_data != "":
             image_url = image_data["data"]["url"]
-            image = get_image_content(url=image_url, provider="Facebook")
+            image = get_image_content(url=image_url, provider=JoinType.FACEBOOK)
         else:
             image = None
 
@@ -161,12 +162,12 @@ class FacebookLoginAPIView(APIView):
             dob=None,
             gender=gender,
             image=image,
-            join_type="Facebook",
+            join_type=JoinType.FACEBOOK,
         )
 
         login(request, user)
         data = ProfileSerializer(instance=profile).data
-        if profile.user_type[0] == "S":
+        if profile.user_type == UserType.STUDENT:
             del data["user_type"]
         return Response(status=status.HTTP_200_OK, data=data)
 
@@ -200,7 +201,7 @@ class GithubLoginAPIView(APIView):
         image_url = user_data.get("avatar_url", "")
 
         if image_url != "":
-            image = get_image_content(url=image_url, provider="GitHub")
+            image = get_image_content(url=image_url, provider=JoinType.GITHUB)
         else:
             image = None
 
@@ -210,13 +211,13 @@ class GithubLoginAPIView(APIView):
             first_name=username,
             last_name=username,
             dob=None,
-            gender="I",
+            gender=GenderType.OTHER,
             image=image,
-            join_type="GitHub",
+            join_type=JoinType.GITHUB,
         )
 
         login(request, user)
         data = ProfileSerializer(instance=profile).data
-        if profile.user_type[0] == "S":
+        if profile.user_type == UserType.STUDENT:
             del data["user_type"]
         return Response(status=status.HTTP_200_OK, data=data)

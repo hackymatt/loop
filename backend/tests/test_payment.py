@@ -10,7 +10,6 @@ from .factory import (
     create_lesson,
     create_technology,
     create_purchase,
-    create_service_purchase,
     create_payment,
     create_payment_obj,
 )
@@ -27,6 +26,7 @@ import json
 from django.contrib import auth
 from utils.przelewy24.payment import Przelewy24Api
 from utils.google.gmail import GmailApi
+from const import UserType
 
 
 class PaymentVerifyTest(TestCase):
@@ -167,18 +167,17 @@ class PaymentStatusTest(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        data["status"] = data["status"][0]
         self.assertEqual(
             data,
             {
                 "amount": int(self.purchase_1.payment.amount),
-                "currency": self.purchase_1.payment.currency,
-                "method": self.purchase_1.payment.method,
+                "currency": self.purchase_1.payment.currency.value,
+                "method": self.purchase_1.payment.method.value,
                 "notes": None,
                 "order_id": self.purchase_1.payment.order_id,
                 "session_id": str(self.purchase_1.payment.session_id),
                 "id": self.purchase_1.payment.id,
-                "status": self.purchase_1.payment.status,
+                "status": self.purchase_1.payment.status.value,
                 "created_at": str(self.purchase_1.payment.created_at).replace(" ", "T")[
                     0:26
                 ]
@@ -207,8 +206,8 @@ class PaymentStatusTest(TestCase):
             data,
             {
                 "amount": int(self.purchase_1.payment.amount),
-                "currency": self.purchase_1.payment.currency,
-                "method": self.purchase_1.payment.method,
+                "currency": self.purchase_1.payment.currency.value,
+                "method": self.purchase_1.payment.method.value,
                 "notes": None,
                 "order_id": self.purchase_1.payment.order_id,
                 "session_id": str(self.purchase_1.payment.session_id),
@@ -240,7 +239,7 @@ class PaymentTest(TestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "user@example.com",
@@ -335,7 +334,7 @@ class PaymentTest(TestCase):
         data = json.loads(response.content)
         payment_status = data.pop("status")
         self.assertTrue(is_data_match(self.payment_1, data))
-        self.assertEqual(payment_status[0], self.payment_1.status)
+        self.assertEqual(payment_status, self.payment_1.status)
 
     def test_create_payment_not_authenticated(self):
         # no login
@@ -418,7 +417,7 @@ class PaymentTest(TestCase):
         payment_status = data.pop("status")
         amount = data.pop("amount")
         self.assertTrue(is_data_match(self.payment_1, data))
-        self.assertEqual(payment_status[0], self.payment_1.status[0])
+        self.assertEqual(payment_status, self.payment_1.status)
         self.assertEqual(amount, self.payment_1.amount)
 
     def test_delete_payment_not_authenticated(self):
@@ -473,7 +472,7 @@ class PaymentFilterTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "user@example.com",
@@ -588,7 +587,7 @@ class PaymentOrderTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "user@example.com",

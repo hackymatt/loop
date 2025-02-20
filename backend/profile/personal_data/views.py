@@ -5,6 +5,7 @@ from profile.personal_data.serializers import (
     ProfileDetailsSerializer,
 )
 from profile.models import Profile
+from const import UserType
 
 
 class PersonalDataViewSet(ModelViewSet):
@@ -19,7 +20,7 @@ class PersonalDataViewSet(ModelViewSet):
         serializer = ProfileDetailsSerializer(profile, context={"request": request})
         data = serializer.data
 
-        if profile.user_type[0] == "S":
+        if profile.user_type == UserType.STUDENT:
             del data["user_type"]
 
         return Response(data)

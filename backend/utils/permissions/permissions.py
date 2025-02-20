@@ -1,5 +1,6 @@
 from rest_framework.permissions import BasePermission
 from profile.models import Profile
+from const import UserType
 
 
 class IsStudent(BasePermission):
@@ -7,7 +8,7 @@ class IsStudent(BasePermission):
         user = request.user
         profile = Profile.objects.get(user=user)
 
-        return profile.user_type[0] == "S"
+        return profile.user_type == UserType.STUDENT
 
 
 class IsLecturer(BasePermission):
@@ -15,4 +16,4 @@ class IsLecturer(BasePermission):
         user = request.user
         profile = Profile.objects.get(user=user)
 
-        return profile.user_type[0] == "W"
+        return profile.user_type == UserType.INSTRUCTOR

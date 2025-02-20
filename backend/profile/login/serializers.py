@@ -34,7 +34,6 @@ class ProfileSerializer(ModelSerializer):
     first_name = CharField(source="user.first_name")
     last_name = CharField(source="user.last_name")
     email = EmailField(source="user.email")
-    user_type = CharField(source="get_user_type_display")
 
     class Meta:
         model = Profile

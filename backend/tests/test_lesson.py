@@ -32,6 +32,7 @@ from .helpers import (
     is_float,
 )
 from django.contrib import auth
+from const import UserType, CourseLevel
 import json
 
 
@@ -51,7 +52,7 @@ class LessonTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -90,10 +91,14 @@ class LessonTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile_1 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_1, user_type=UserType.INSTRUCTOR
+            )
         )
         self.lecturer_profile_2 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_2, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -643,7 +648,7 @@ class LessonFilterTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -682,10 +687,14 @@ class LessonFilterTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile_1 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_1, user_type=UserType.INSTRUCTOR
+            )
         )
         self.lecturer_profile_2 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_2, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -1036,7 +1045,7 @@ class LessonOrderTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",
@@ -1075,10 +1084,14 @@ class LessonOrderTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile_1 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_1, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_1, user_type=UserType.INSTRUCTOR
+            )
         )
         self.lecturer_profile_2 = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user_2, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user_2, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -1363,7 +1376,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -1404,7 +1417,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             title="course_title",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -1448,7 +1461,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             title="course_title 2",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -1492,7 +1505,7 @@ class LessonPriceHistoryFilterTest(APITestCase):
             title="course_title 3",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -1590,7 +1603,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
 
         self.technology_1 = create_technology(name="Python")
@@ -1631,7 +1644,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
             title="course_title",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -1676,7 +1689,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
             title="course_title 2",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,
@@ -1721,7 +1734,7 @@ class LessonPriceHistoryOrderTest(APITestCase):
             title="course_title 3",
             description="course_description",
             overview="course_overview",
-            level="Podstawowy",
+            level=CourseLevel.BASIC,
             tags=[self.tag_1, self.tag_2],
             topics=[
                 self.topic_1,

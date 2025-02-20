@@ -65,7 +65,7 @@ def get_lowest_30_days_price(lecturer: LecturerProfile):
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField()
-    gender = CharField(source="profile.get_gender_display")
+    gender = CharField(source="profile.gender")
     rating = SerializerMethodField()
     rating_count = SerializerMethodField()
     lessons_count = SerializerMethodField()
@@ -132,7 +132,7 @@ class LessonShortSerializer(ModelSerializer):
 
 class LecturerGetSerializer(ModelSerializer):
     full_name = SerializerMethodField()
-    gender = CharField(source="profile.get_gender_display")
+    gender = CharField(source="profile.gender")
     rating = SerializerMethodField()
     rating_count = SerializerMethodField()
     lessons = SerializerMethodField()
@@ -193,7 +193,7 @@ class LecturerGetSerializer(ModelSerializer):
 
 class BestLecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField()
-    gender = CharField(source="profile.get_gender_display")
+    gender = CharField(source="profile.gender")
     image = Base64ImageField(source="profile.image")
 
     class Meta:

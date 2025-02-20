@@ -14,6 +14,7 @@ from config_global import (
     GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET,
 )
+from const import UserType
 
 GOOGLE_ACCESS_TOKEN_OBTAIN_URL = "https://oauth2.googleapis.com/token"
 GOOGLE_USER_INFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
@@ -192,7 +193,7 @@ def get_image_content(url: str, provider: str) -> str:
 
 
 def create_user(username, email, first_name, last_name, dob, gender, image, join_type):
-    user, created = User.objects.get_or_create(email=email, username=email)
+    user, created = User.objects.get_or_create(email=email, username=username)
     if created:
         user.first_name = first_name
         user.last_name = last_name
@@ -217,9 +218,9 @@ def create_user(username, email, first_name, last_name, dob, gender, image, join
         )
 
     user_type = profile.user_type
-    if user_type[0] == "A":
+    if user_type == UserType.ADMIN:
         AdminProfile.objects.get_or_create(profile=profile)
-    elif user_type[0] == "W":
+    elif user_type == UserType.INSTRUCTOR:
         LecturerProfile.objects.get_or_create(profile=profile)
     else:
         StudentProfile.objects.get_or_create(profile=profile)

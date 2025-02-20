@@ -13,6 +13,7 @@ from coupon.filters import CouponFilter, CouponUserFilter
 from coupon.models import Coupon, CouponUser
 from coupon.validation import validate_coupon
 from profile.models import Profile, StudentProfile
+from const import PaymentStatus
 from django.db.models import Prefetch
 
 
@@ -43,7 +44,7 @@ class CouponUserViewSet(ModelViewSet):
         CouponUser.objects.prefetch_related(
             Prefetch("user", queryset=StudentProfile.objects.add_full_name())
         )
-        .filter(payment__status="S")
+        .filter(payment__status=PaymentStatus.SUCCESS)
         .all()
         .order_by("id")
     )

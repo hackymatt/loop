@@ -14,6 +14,7 @@ from django.db.models import (
 from lesson.models import Lesson
 from profile.models import Profile
 from reservation.models import Reservation
+from const import UserType
 from django.db.models.functions import Cast
 from datetime import datetime
 from django.utils.timezone import make_aware
@@ -34,7 +35,7 @@ class ModuleQuerySet(QuerySet):
             return self.annotate(progress=Value(None, output_field=FloatField()))
 
         profile = Profile.objects.get(user=user)
-        if not profile.user_type[0] == "S":
+        if not profile.user_type == UserType.STUDENT:
             return self.annotate(progress=Value(None, output_field=FloatField()))
 
         student_lessons = Reservation.objects.filter(

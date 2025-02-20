@@ -34,6 +34,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 import os
 from typing import List, Dict
 from django.db.models import Sum
+from const import PaymentStatus, CertificateType, UserType, GenderType
 
 
 def create_user(
@@ -93,8 +94,8 @@ def create_profile(
     user: User,
     verification_code: str = "abcdefgh",
     verification_code_created_at: datetime = make_aware(datetime.now()),
-    user_type: str = "S",
-    gender: str = "M",
+    user_type: str = UserType.STUDENT,
+    gender: str = GenderType.MALE,
     phone_number: str = "123456789",
     dob: str = "1999-12-31",
     street_address: str = "Street",
@@ -358,7 +359,7 @@ def create_review(
     )
 
 
-def create_payment(amount: int, status: str = "S"):
+def create_payment(amount: int, status: str = PaymentStatus.SUCCESS):
     return Payment.objects.create(amount=float(amount) * 100, status=status)
 
 
@@ -533,9 +534,9 @@ def create_meeting(event_id: str, url: str):
 
 
 def create_certificate(entity_type, entity, student):
-    if entity_type == "L":
+    if entity_type == CertificateType.LESSON:
         duration = entity.duration
-    elif entity_type == "M":
+    elif entity_type == CertificateType.MODULE:
         lessons_ids = entity.lessons.through.objects.filter(module=entity).values(
             "lesson_id"
         )

@@ -6,12 +6,12 @@ from .factory import (
     create_admin_profile,
     create_student_profile,
     create_topic,
-    create_candidate,
     create_topic_obj,
 )
 from .helpers import login, topics_number, is_float
 from django.contrib import auth
 import json
+from const import UserType
 
 
 class TopicTest(APITestCase):
@@ -30,7 +30,7 @@ class TopicTest(APITestCase):
             is_staff=True,
         )
         self.admin_profile = create_admin_profile(
-            profile=create_profile(user=self.admin_user, user_type="A")
+            profile=create_profile(user=self.admin_user, user_type=UserType.ADMIN)
         )
         self.data = {
             "email": "test_email@example.com",

@@ -12,6 +12,7 @@ from .factory import (
 )
 from .helpers import login, cart_number
 from django.contrib import auth
+from const import UserType
 import json
 
 
@@ -39,7 +40,9 @@ class CartTest(APITestCase):
             is_active=True,
         )
         self.lecturer_profile = create_lecturer_profile(
-            profile=create_profile(user=self.lecturer_user, user_type="W")
+            profile=create_profile(
+                user=self.lecturer_user, user_type=UserType.INSTRUCTOR
+            )
         )
 
         self.technology_1 = create_technology(name="Python")

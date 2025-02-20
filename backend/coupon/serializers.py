@@ -40,7 +40,7 @@ class CouponListSerializer(ModelSerializer):
 class StudentSerializer(ModelSerializer):
     full_name = SerializerMethodField()
     email = EmailField(source="profile.user.email")
-    gender = CharField(source="profile.get_gender_display")
+    gender = CharField(source="profile.gender")
 
     class Meta:
         model = StudentProfile

@@ -16,6 +16,7 @@ from django.db.models import (
 )
 from django.db.models.functions import Cast, TruncDate
 from profile.models import StudentProfile
+from const import CertificateType
 from datetime import timedelta
 import uuid
 
@@ -47,13 +48,10 @@ class CertificateManager(Manager):
 
 
 class Certificate(BaseModel):
-    TYPE_CHOICES = (
-        ("L", "Lekcja"),
-        ("M", "Moduł"),
-        ("K", "Kurs"),
-    )
     uuid = UUIDField(default=uuid.uuid4)
-    type = CharField(choices=TYPE_CHOICES, null=False, default="L")
+    type = CharField(
+        choices=CertificateType.choices, null=False, default=CertificateType.LESSON
+    )
     entity_id = BigIntegerField()
     title = CharField()
     duration = PositiveIntegerField()

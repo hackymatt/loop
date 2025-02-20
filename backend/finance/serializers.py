@@ -10,7 +10,7 @@ from profile.models import LecturerProfile
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField()
-    gender = CharField(source="profile.get_gender_display")
+    gender = CharField(source="profile.gender")
     image = Base64ImageField(source="profile.image", required=True)
 
     class Meta:

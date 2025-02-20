@@ -10,11 +10,12 @@ from review.models import Review
 from profile.models import LecturerProfile, StudentProfile
 from purchase.models import Purchase
 from notification.utils import notify
+from const import PaymentStatus
 
 
 class StudentSerializer(ModelSerializer):
     first_name = CharField(source="profile.user.first_name")
-    gender = CharField(source="profile.get_gender_display")
+    gender = CharField(source="profile.gender")
     image = ImageField(source="profile.image")
 
     class Meta:
@@ -28,7 +29,7 @@ class StudentSerializer(ModelSerializer):
 
 class LecturerSerializer(ModelSerializer):
     full_name = SerializerMethodField()
-    gender = CharField(source="profile.get_gender_display")
+    gender = CharField(source="profile.gender")
     image = ImageField(source="profile.image")
 
     class Meta:
@@ -110,7 +111,9 @@ class ReviewSerializer(ModelSerializer):
         lecturer = LecturerProfile.objects.get(pk=data["lecturer"])
 
         if not Purchase.objects.filter(
-            student__profile__user=user, lesson=lesson, payment__status="S"
+            student__profile__user=user,
+            lesson=lesson,
+            payment__status=PaymentStatus.SUCCESS,
         ).exists():
             raise ValidationError({"lesson": "Lekcja nie została zakupiona."})
 

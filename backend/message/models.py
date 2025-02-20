@@ -13,6 +13,7 @@ from django.db.models import (
     F,
 )
 from profile.models import Profile
+from const import StatusType
 
 
 class MessageQuerySet(QuerySet):
@@ -32,15 +33,11 @@ class MessageManager(Manager):
 
 
 class Message(BaseModel):
-    STATUS_CHOICES = (
-        ("N", "NEW"),
-        ("R", "READ"),
-    )
     sender = ForeignKey(Profile, on_delete=CASCADE, related_name="message_sender")
     recipient = ForeignKey(Profile, on_delete=CASCADE, related_name="message_recipient")
     subject = CharField()
     body = TextField()
-    status = CharField(choices=STATUS_CHOICES, null=False, default="N")
+    status = CharField(choices=StatusType.choices, null=False, default=StatusType.NEW)
 
     objects = MessageManager()
 
