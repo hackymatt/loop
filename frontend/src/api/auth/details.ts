@@ -25,7 +25,7 @@ export type IUser = {
   image: string | null;
 };
 
-type IEditUser = Omit<IUser, "uuid" | "gender" | "image"> & { gender: string };
+type IEditUser = Omit<IUser, "uuid" | "gender"> & { gender: string };
 type IEditUserReturn = IEditUser;
 
 export const userDetailsQuery = () => {

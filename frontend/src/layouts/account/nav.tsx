@@ -87,7 +87,7 @@ export default function Nav({ open, onClose }: Props) {
         {userDetails && (
           <Stack spacing={0.5}>
             <TextMaxLine variant="subtitle1" line={1}>
-              {`${userDetails.first_name} ${userDetails.last_name}`}
+              {`${userDetails.firstName} ${userDetails.lastName}`}
             </TextMaxLine>
             <TextMaxLine variant="body2" line={1} sx={{ color: "text.secondary" }}>
               {userDetails.email}

@@ -4,15 +4,15 @@ import { Stack } from "@mui/system";
 import { Avatar, Tooltip } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 
+import { fDate } from "src/utils/format-time";
 import { getGenderAvatar } from "src/utils/get-gender-avatar";
 
+import { Gender } from "src/consts/gender";
 import { useUserDetails, useUpdateUserDetails } from "src/api/auth/details";
 
 import Iconify from "src/components/iconify";
 import { useToastContext } from "src/components/toast";
 import { CropperModal } from "src/components/cropper/cropper";
-
-import { IGender } from "src/types/testimonial";
 
 // ----------------------------------------------------------------------
 
@@ -22,9 +22,9 @@ export default function AccountImage() {
   const { data: userDetails } = useUserDetails();
   const { mutateAsync: updatePhoto, isLoading } = useUpdateUserDetails();
 
-  const genderAvatarUrl = getGenderAvatar(userDetails?.gender);
+  const genderAvatarUrl = getGenderAvatar(userDetails?.gender ?? Gender.Other);
 
-  const avatarUrl = userDetails?.image || genderAvatarUrl;
+  const avatarUrl = userDetails?.image ?? genderAvatarUrl;
 
   const [isCropperModalOpen, setIsCropperModalOpen] = useState<boolean>(false);
   const [image, setImage] = useState<string>();
@@ -38,15 +38,39 @@ export default function AccountImage() {
   };
 
   const handleSubmit = async (newPhoto: string) => {
-    try {
-      await updatePhoto({
-        ...userDetails,
-        gender: (userDetails.gender as IGender) ?? "",
-        image: newPhoto ?? "",
-      });
-      enqueueSnackbar("Zapisano pomyślnie", { variant: "success" });
-    } catch (error) {
-      enqueueSnackbar("Wystąpił błąd", { variant: "error" });
+    if (userDetails) {
+      const {
+        firstName,
+        lastName,
+        dob,
+        gender,
+        phoneNumber,
+        streetAddress,
+        zipCode,
+        city,
+        country,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        image: _,
+        ...rest
+      } = userDetails;
+      try {
+        await updatePhoto({
+          ...rest,
+          first_name: firstName,
+          last_name: lastName,
+          dob: dob ? fDate(dob, "yyyy-MM-dd") : null,
+          gender,
+          phone_number: phoneNumber ?? null,
+          street_address: streetAddress ?? null,
+          zip_code: zipCode ?? null,
+          city: city ?? null,
+          country: country ?? null,
+          image: newPhoto ?? "",
+        });
+        enqueueSnackbar("Zapisano pomyślnie", { variant: "success" });
+      } catch (error) {
+        enqueueSnackbar("Wystąpił błąd", { variant: "error" });
+      }
     }
   };
 
@@ -55,8 +79,8 @@ export default function AccountImage() {
   };
 
   const isUploadDisabled = useMemo(
-    () => userDetails?.first_name === "" || userDetails?.last_name === "",
-    [userDetails?.first_name, userDetails?.last_name],
+    () => userDetails?.firstName === null || userDetails?.lastName === null,
+    [userDetails?.firstName, userDetails?.lastName],
   );
 
   return (

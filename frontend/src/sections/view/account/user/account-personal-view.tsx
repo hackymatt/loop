@@ -116,7 +116,6 @@ export default function AccountPersonalView() {
       zipCode,
       city,
       country,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       image,
       ...rest
     } = data;
@@ -132,6 +131,7 @@ export default function AccountPersonalView() {
         zip_code: zipCode ?? null,
         city: city ?? null,
         country: country ?? null,
+        image: image ?? "",
       });
       enqueueSnackbar("Dane zostały zmienione", { variant: "success" });
     } catch (error) {
