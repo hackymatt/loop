@@ -1,33 +1,7 @@
 import { Gender } from "src/consts/gender";
+import { UserType } from "src/consts/user-type";
 
-export enum UserType {
-  ADMIN = "Admin",
-  TEACHER = "Wykładowca",
-  STUDENT = "Student",
-  OTHER = "Inny",
-}
-
-export type IUserType = `${UserType}`;
-
-export type IUserDetailsProps = {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  active: boolean;
-  phone_number: string;
-  dob: string | null;
-  gender: IGender;
-  street_address: string;
-  zip_code: string;
-  city: string;
-  country: string;
-  image: string;
-  user_type?: IUserType;
-  rate?: number;
-  commission?: number;
-  created_at?: string;
-};
+export type IUserType = (typeof UserType)[keyof typeof UserType];
 
 export type IGender = (typeof Gender)[keyof typeof Gender];
 
@@ -44,4 +18,10 @@ export type IUserProps = {
   city: string | null;
   country: string | null;
   image: string | null;
+};
+
+export type IUserDetailsProps = IUserProps & {
+  active: boolean;
+  userType: IUserType;
+  createdAt: string;
 };

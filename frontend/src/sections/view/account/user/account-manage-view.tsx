@@ -25,7 +25,7 @@ import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
 import FormProvider, { RHFTextField } from "src/components/hook-form";
 
-import { UserType } from "src/types/user";
+import { UserType } from "src/consts/user-type";
 
 import AccountDeleteForm from "./account-delete-form";
 
@@ -42,7 +42,7 @@ export default function AccountManageView() {
   const { mutateAsync: changePassword } = usePasswordChange();
 
   const ChangePasswordSchema = Yup.object().shape({
-    old_password: Yup.string().required("Hasło jest wymagane"),
+    oldPassword: Yup.string().required("Hasło jest wymagane"),
     password: Yup.string()
       .required("Hasło jest wymagane")
       .min(MIN_PASSWORD_LENGTH, `Hasło musi mieć minimum ${MIN_PASSWORD_LENGTH} znaków`)
@@ -56,7 +56,7 @@ export default function AccountManageView() {
   });
 
   const defaultValues = {
-    old_password: "",
+    oldPassword: "",
     password: "",
     password2: "",
   };
@@ -72,11 +72,12 @@ export default function AccountManageView() {
     formState: { isSubmitting },
   } = methods;
 
-  const handleFormError = useFormErrorHandler(methods);
+  const handleFormError = useFormErrorHandler(methods, { old_password: "oldPassword" });
 
   const onSubmit = handleSubmit(async (data) => {
+    const { oldPassword, ...rest } = data;
     try {
-      await changePassword(data);
+      await changePassword({ ...rest, old_password: oldPassword });
       reset();
       await logoutUser({});
       push(paths.login);
@@ -96,7 +97,7 @@ export default function AccountManageView() {
         <Stack spacing={3} sx={{ my: 5 }}>
           <Stack spacing={2.5}>
             <RHFTextField
-              name="old_password"
+              name="oldPassword"
               label="Obecne hasło"
               type={passwordShow.value ? "text" : "password"}
               InputProps={{
@@ -159,7 +160,7 @@ export default function AccountManageView() {
           size="medium"
           variant="contained"
           onClick={deleteAccountFormOpen.onToggle}
-          disabled={userType === UserType.ADMIN}
+          disabled={userType === UserType.Admin}
         >
           Usuń konto
         </Button>

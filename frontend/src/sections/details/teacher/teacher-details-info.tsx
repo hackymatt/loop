@@ -21,7 +21,7 @@ import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
 
-import { UserType } from "src/types/user";
+import { UserType } from "src/consts/user-type";
 import { ITeamMemberProps } from "src/types/team";
 import { ICourseLessonProp } from "src/types/course";
 
@@ -147,7 +147,7 @@ export default function TeacherDetailsInfo({ teacher }: Props) {
             variant="contained"
             loading={isAddingToFavorites}
             onClick={handleAddToFavorites}
-            disabled={userType !== UserType.STUDENT}
+            disabled={userType !== UserType.Student}
           >
             <Iconify icon="carbon:favorite" />
           </LoadingButton>
@@ -158,7 +158,7 @@ export default function TeacherDetailsInfo({ teacher }: Props) {
             startIcon={<Iconify icon="carbon:shopping-cart-plus" />}
             loading={isAddingToCart}
             onClick={handleAddToCart}
-            disabled={userType !== UserType.STUDENT}
+            disabled={userType !== UserType.Student}
             sx={{ width: 1 }}
           >
             Dodaj do koszyka

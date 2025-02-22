@@ -57,7 +57,7 @@ export default function VerifyView() {
   const onSubmit = handleSubmit(async (data) => {
     clearErrors();
     try {
-      await verifyUser({ email, code: data.code });
+      await verifyUser({ ...data, email });
       push(paths.login);
       enqueueSnackbar("Weryfikacja poprawna", { variant: "success" });
     } catch (error) {

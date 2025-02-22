@@ -22,6 +22,7 @@ import { useQueryParams } from "src/hooks/use-query-params";
 
 import { fDate } from "src/utils/format-time";
 
+import { UserType } from "src/consts/user-type";
 import { useUsers, useUsersPagesCount } from "src/api/users/users";
 
 import Iconify from "src/components/iconify";
@@ -31,8 +32,8 @@ import DownloadCSVButton from "src/components/download-csv/download-csv";
 import FilterBoolean from "src/sections/filters/filter-boolean";
 import AccountUsersTableRow from "src/sections/account/admin/account-users-table-row";
 
+import { IUserDetailsProps } from "src/types/user";
 import { IQueryParamValue } from "src/types/query-params";
-import { UserType, IUserDetailsProps } from "src/types/user";
 
 import UserNewForm from "./user-new-form";
 import UserEditForm from "./user-edit-form";
@@ -43,10 +44,10 @@ import AccountTableHead from "../../../../account/account-table-head";
 
 const TABS = [
   { id: "", label: "Wszyscy użytkownicy" },
-  { id: UserType.ADMIN.slice(0, 1), label: "Admini" },
-  { id: UserType.TEACHER.slice(0, 1), label: "Wykładowcy" },
-  { id: UserType.STUDENT.slice(0, 1), label: "Studenci" },
-  { id: UserType.OTHER.slice(0, 1), label: "Inni" },
+  { id: UserType.Admin.slice(0, 1), label: "Admini" },
+  { id: UserType.Teacher.slice(0, 1), label: "Wykładowcy" },
+  { id: UserType.Student.slice(0, 1), label: "Studenci" },
+  { id: UserType.Other.slice(0, 1), label: "Inni" },
 ];
 
 const TABLE_HEAD = [
@@ -262,7 +263,14 @@ export default function AccountUsersView() {
       <UserNewForm open={newFormOpen.value} onClose={newFormOpen.onFalse} />
 
       {editedUser && (
-        <UserEditForm user={editedUser} open={editFormOpen.value} onClose={editFormOpen.onFalse} />
+        <UserEditForm
+          user={editedUser}
+          open={editFormOpen.value}
+          onClose={() => {
+            setEditedUser(undefined);
+            editFormOpen.onFalse();
+          }}
+        />
       )}
     </>
   );

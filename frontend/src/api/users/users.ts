@@ -8,11 +8,30 @@ import { IUserDetailsProps } from "src/types/user";
 import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils";
+import { ListQueryResponse } from "../types";
+import { getListData, getCsrfToken } from "../utils";
 
 const endpoint = "/users" as const;
 
-type ICreateUser = Omit<IUserDetailsProps, "id" | "image" | "active">;
+export type IUser = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string | null;
+  dob: string | null;
+  gender: "Mężczyzna" | "Kobieta" | "Inne";
+  street_address: string | null;
+  zip_code: string | null;
+  city: string | null;
+  country: string | null;
+  image: string | null;
+  active: boolean;
+  user_type: "Admin" | "Wykładowca" | "Student" | "Inny";
+  created_at: string;
+};
+
+type ICreateUser = Omit<IUser, "id" | "image" | "active" | "created_at">;
 
 type ICreateUserReturn = ICreateUser;
 
@@ -21,18 +40,46 @@ export const usersQuery = (query?: IQueryParams) => {
   const urlParams = formatQueryParams(query);
   const queryUrl = urlParams ? `${url}?${urlParams}` : url;
 
-  const queryFn = async () => {
-    let data;
-    try {
-      const response = await Api.get(queryUrl);
-      ({ data } = response);
-    } catch (error) {
-      if (error.response && (error.response.status === 400 || error.response.status === 404)) {
-        data = { results: [], records_count: 0, pages_count: 0 };
-      }
-    }
-    const { results, records_count, pages_count } = data;
-    return { results, count: records_count, pagesCount: pages_count };
+  const queryFn = async (): Promise<ListQueryResponse<IUserDetailsProps[]>> => {
+    const { results, records_count, pages_count } = await getListData<IUser>(queryUrl);
+
+    const modifiedResults: IUserDetailsProps[] = (results ?? []).map(
+      ({
+        id,
+        first_name,
+        last_name,
+        email,
+        phone_number,
+        dob,
+        gender,
+        street_address,
+        zip_code,
+        city,
+        country,
+        image,
+        active,
+        user_type,
+        created_at,
+      }: IUser) => ({
+        id,
+        firstName: first_name,
+        lastName: last_name,
+        email,
+        phoneNumber: phone_number,
+        dob,
+        gender,
+        streetAddress: street_address,
+        zipCode: zip_code,
+        city,
+        country,
+        image,
+        active,
+        userType: user_type,
+        createdAt: created_at,
+      }),
+    );
+
+    return { results: modifiedResults, count: records_count, pagesCount: pages_count };
   };
 
   return { url, queryFn, queryKey: compact([url, urlParams]) };
@@ -41,7 +88,7 @@ export const usersQuery = (query?: IQueryParams) => {
 export const useUsers = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = usersQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as IUserDetailsProps[], count: data?.count, ...rest };
+  return { data: data?.results, count: data?.count, ...rest };
 };
 
 export const useUsersPagesCount = (query?: IQueryParams) => {

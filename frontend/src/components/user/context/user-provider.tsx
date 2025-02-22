@@ -7,6 +7,7 @@ import { useLocalStorage } from "src/hooks/use-local-storage";
 
 import { useVerify } from "src/api/auth/verify";
 import { useLogout } from "src/api/auth/logout";
+import { UserType } from "src/consts/user-type";
 import { useRegister } from "src/api/auth/register";
 import { useUnregister } from "src/api/auth/unregister";
 import { useVerifyCode } from "src/api/auth/resend-code";
@@ -16,7 +17,7 @@ import { useLogin, ILoginReturn } from "src/api/auth/login";
 import { useLoginFacebook } from "src/api/auth/login-facebook";
 import { usePasswordReset } from "src/api/auth/password-reset";
 
-import { UserType } from "src/types/user";
+import { IUserType } from "src/types/user";
 
 import { UserContext } from "./user-context";
 
@@ -41,7 +42,7 @@ type User = {
   isUnverified: boolean;
   isPasswordReset: boolean;
   email: string;
-  userType: UserType;
+  userType: IUserType;
   loginType: ILoginType;
 };
 
@@ -51,7 +52,7 @@ const defaultSettings = {
   isUnverified: false,
   isPasswordReset: false,
   email: "",
-  userType: UserType.STUDENT,
+  userType: UserType.Student,
   loginType: LoginType.EMAIL,
 };
 
@@ -170,25 +171,25 @@ export function UserProvider({ children }: Props) {
       case LoginType.GOOGLE:
         if (isSuccessLoginGoogle) {
           updateUser("isLoggedIn", true);
-          updateUser("userType", loginGoogleData?.user_type ?? UserType.STUDENT);
+          updateUser("userType", loginGoogleData?.user_type ?? UserType.Student);
         }
         break;
       case LoginType.FACEBOOK:
         if (isSuccessLoginFacebook) {
           updateUser("isLoggedIn", true);
-          updateUser("userType", loginFacebookData?.user_type ?? UserType.STUDENT);
+          updateUser("userType", loginFacebookData?.user_type ?? UserType.Student);
         }
         break;
       case LoginType.GITHUB:
         if (isSuccessLoginGithub) {
           updateUser("isLoggedIn", true);
-          updateUser("userType", loginGithubData?.user_type ?? UserType.STUDENT);
+          updateUser("userType", loginGithubData?.user_type ?? UserType.Student);
         }
         break;
       default:
         if (isSuccessLogin) {
           updateUser("isLoggedIn", true);
-          updateUser("userType", loginData?.user_type ?? UserType.STUDENT);
+          updateUser("userType", loginData?.user_type ?? UserType.Student);
         }
         break;
     }
@@ -208,7 +209,7 @@ export function UserProvider({ children }: Props) {
   useEffect(() => {
     if (isSuccessLogout) {
       updateUser("isLoggedIn", false);
-      updateUser("userType", UserType.STUDENT);
+      updateUser("userType", UserType.Student);
     }
   }, [isSuccessLogout, updateUser]);
 

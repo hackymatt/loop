@@ -47,7 +47,10 @@ const parseDjangoError = (error: AxiosError): ErrorOptions => {
   return Object.fromEntries(compact(entries));
 };
 
-export const useFormErrorHandler = (form: UseFormReturn<any, any>) => {
+export const useFormErrorHandler = (
+  form: UseFormReturn<any, any>,
+  keyMapping?: { [key: string]: string },
+) => {
   const { setError, control } = form;
 
   const setErrors = useCallback(
@@ -57,10 +60,10 @@ export const useFormErrorHandler = (form: UseFormReturn<any, any>) => {
       const knownErrorsAsObject = Object.fromEntries(knownErrors);
 
       Object.entries(knownErrorsAsObject).forEach(([key, error]) => {
-        setError(key, error);
+        setError(keyMapping?.[key] ?? key, error);
       });
     },
-    [control, setError],
+    [control, keyMapping, setError],
   );
 
   const handleFormError = useCallback(

@@ -23,7 +23,7 @@ import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
 import { CircularProgressWithLabel } from "src/components/progress-label/circle-progress";
 
-import { UserType } from "src/types/user";
+import { UserType } from "src/consts/user-type";
 import { ICourseProps, ICourseLessonProp, ICourseModuleProp } from "src/types/course";
 
 import CourseDetailsLessonList from "./course-details-lesson-list";
@@ -170,7 +170,7 @@ export default function CourseDetailsModuleItem({ course, module, index }: Modul
               variant="contained"
               onClick={handleAddToFavorites}
               loading={isAddingToFavorites}
-              disabled={userType !== UserType.STUDENT}
+              disabled={userType !== UserType.Student}
             >
               <Iconify icon="carbon:favorite" />
             </LoadingButton>
@@ -180,7 +180,7 @@ export default function CourseDetailsModuleItem({ course, module, index }: Modul
               variant="contained"
               onClick={handleAddToCart}
               loading={isAddingToCart}
-              disabled={userType !== UserType.STUDENT}
+              disabled={userType !== UserType.Student}
             >
               <Iconify icon="carbon:shopping-cart-plus" />
             </LoadingButton>

@@ -29,7 +29,7 @@ import { useToastContext } from "src/components/toast";
 
 import AccountImage from "src/sections/account/account-image";
 
-import { UserType } from "src/types/user";
+import { UserType } from "src/consts/user-type";
 
 // ----------------------------------------------------------------------
 
@@ -52,9 +52,9 @@ export default function Nav({ open, onClose }: Props) {
   const navigations = useMemo(
     () =>
       ({
-        [UserType.ADMIN]: adminNavigation,
-        [UserType.TEACHER]: teacherNavigation,
-        [UserType.STUDENT]: studentNavigation,
+        [UserType.Admin]: adminNavigation,
+        [UserType.Teacher]: teacherNavigation,
+        [UserType.Student]: studentNavigation,
       })[userType],
     [userType],
   );

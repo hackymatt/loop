@@ -12,10 +12,12 @@ import { usePopover } from "src/hooks/use-popover";
 
 import { fDate } from "src/utils/format-time";
 
+import { UserType } from "src/consts/user-type";
+
 import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 
-import { UserType, IUserDetailsProps } from "src/types/user";
+import { IUserDetailsProps } from "src/types/user";
 
 // ----------------------------------------------------------------------
 
@@ -40,9 +42,9 @@ export default function AccountUsersTableRow({ row, onEdit, onFinanceHistoryView
 
   const isActive = useMemo(() => row.active, [row.active]);
 
-  const isAdmin = useMemo(() => row.user_type === UserType.ADMIN, [row.user_type]);
-  const isTeacher = useMemo(() => row.user_type === UserType.TEACHER, [row.user_type]);
-  const isStudent = useMemo(() => row.user_type === UserType.STUDENT, [row.user_type]);
+  const isAdmin = useMemo(() => row.userType === UserType.Admin, [row.userType]);
+  const isTeacher = useMemo(() => row.userType === UserType.Teacher, [row.userType]);
+  const isStudent = useMemo(() => row.userType === UserType.Student, [row.userType]);
 
   return (
     <>
@@ -71,12 +73,12 @@ export default function AccountUsersTableRow({ row, onEdit, onFinanceHistoryView
               "default"
             }
           >
-            {row.user_type}
+            {row.userType}
           </Label>
         </TableCell>
 
         <TableCell>
-          <InputBase value={fDate(row.created_at)} sx={{ width: 1 }} />
+          <InputBase value={fDate(row.createdAt)} sx={{ width: 1 }} />
         </TableCell>
 
         <TableCell align="right" padding="none">

@@ -45,7 +45,7 @@ import Schedule from "src/components/schedule";
 import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
 
-import { UserType } from "src/types/user";
+import { UserType } from "src/consts/user-type";
 import { ITeamMemberProps } from "src/types/team";
 import { IScheduleProp, ICourseLessonProp, ICourseByTechnologyProps } from "src/types/course";
 
@@ -444,7 +444,7 @@ export default function TeacherDetailsLessonItem({
                   variant="contained"
                   onClick={handleAddToFavorites}
                   loading={isAddingToFavorites}
-                  disabled={userType !== UserType.STUDENT}
+                  disabled={userType !== UserType.Student}
                 >
                   <Iconify icon="carbon:favorite" />
                 </LoadingButton>
@@ -454,7 +454,7 @@ export default function TeacherDetailsLessonItem({
                   variant="contained"
                   onClick={handleAddToCart}
                   loading={isAddingToCart}
-                  disabled={userType !== UserType.STUDENT}
+                  disabled={userType !== UserType.Student}
                 >
                   <Iconify icon="carbon:shopping-cart-plus" />
                 </LoadingButton>

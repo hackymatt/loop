@@ -1,6 +1,8 @@
-import { useMemo, useEffect } from "react";
+import * as Yup from "yup";
+import { useEffect } from "react";
+import { parseISO } from "date-fns";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, useController } from "react-hook-form";
 
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
@@ -14,15 +16,15 @@ import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import { fDate } from "src/utils/format-time";
 
+import { UserType } from "src/consts/user-type";
 import { useUser, useEditUser } from "src/api/users/user";
 
 import FormProvider from "src/components/hook-form";
 
-import { IGender } from "src/types/testimonial";
-import { UserType, IUserType, IUserDetailsProps } from "src/types/user";
+import { IUserDetailsProps } from "src/types/user";
 
 import { useUserFields } from "./user-fields";
-import { schema, defaultValues } from "./user";
+import { schema, defaultValues, DEFAULT_COUNTRY } from "./user";
 
 // ----------------------------------------------------------------------
 
@@ -38,40 +40,70 @@ export default function UserEditForm({ user, onClose, ...other }: Props) {
   const { mutateAsync: editUser } = useEditUser(user.id);
 
   const methods = useForm({
-    resolver: yupResolver(schema),
-    defaultValues,
+    resolver: yupResolver(schema.shape({ userType: Yup.string().required("Typ jest wymagany") })),
+    defaultValues: { ...defaultValues, userType: UserType.Student },
   });
 
   const {
     reset,
     handleSubmit,
     formState: { isSubmitting },
-    control,
   } = methods;
 
   useEffect(() => {
     if (userData) {
-      reset({ ...userData, dob: userData?.dob ? new Date(userData?.dob) : null });
+      const { phoneNumber, streetAddress, zipCode, city, country, dob, userType, ...rest } =
+        userData;
+      reset({
+        ...rest,
+        phoneNumber: phoneNumber ?? "",
+        streetAddress: streetAddress ?? "",
+        zipCode: zipCode ?? "",
+        city: city ?? "",
+        country: country ?? DEFAULT_COUNTRY,
+        dob: dob ? parseISO(dob) : null,
+        userType: userType ?? UserType.Student,
+      });
     }
   }, [reset, userData]);
 
-  const handleFormError = useFormErrorHandler(methods);
+  const handleFormError = useFormErrorHandler(methods, {
+    first_name: "firstName",
+    last_name: "lastName",
+    phone_number: "phoneNumber",
+    street_address: "streetAddress",
+    zip_code: "zipCode",
+  });
 
   const onSubmit = handleSubmit(async (data) => {
+    const {
+      firstName,
+      lastName,
+      dob,
+      gender,
+      phoneNumber,
+      streetAddress,
+      zipCode,
+      city,
+      country,
+      userType,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      image: _,
+      ...rest
+    } = data;
     try {
-      delete data.image;
       await editUser({
-        ...data,
-        user_type: data.user_type as IUserType,
-        rate: data.rate ?? 0,
-        commission: data.commission ?? 0,
-        dob: data.dob ? fDate(data.dob, "yyyy-MM-dd") : null,
-        gender: data.gender as IGender,
-        phone_number: data.phone_number ?? "",
-        street_address: data.street_address ?? "",
-        zip_code: data.zip_code ?? "",
-        city: data.city ?? "",
-        country: data.country ?? "",
+        ...rest,
+        first_name: firstName,
+        last_name: lastName,
+        dob: dob ? fDate(dob, "yyyy-MM-dd") : null,
+        gender,
+        phone_number: phoneNumber ?? null,
+        street_address: streetAddress ?? null,
+        zip_code: zipCode ?? null,
+        city: city ?? null,
+        country: country ?? null,
+        user_type: userType,
       });
       reset();
       onClose();
@@ -82,12 +114,6 @@ export default function UserEditForm({ user, onClose, ...other }: Props) {
 
   const { fields } = useUserFields();
 
-  const {
-    field: { value: userType },
-  } = useController({ name: "user_type", control });
-
-  const isTeacher = useMemo(() => userType === UserType.TEACHER, [userType]);
-
   return (
     <Dialog
       fullScreen
@@ -97,7 +123,6 @@ export default function UserEditForm({ user, onClose, ...other }: Props) {
       onClose={onClose}
       {...other}
       sx={{
-        zIndex: (theme) => theme.zIndex.modal + 1,
         display: "flex",
         flexDirection: "column",
       }}
@@ -110,20 +135,15 @@ export default function UserEditForm({ user, onClose, ...other }: Props) {
 
         <DialogContent sx={{ py: 0 }}>
           <Stack spacing={1}>
-            {fields.user_type}
-
-            {isTeacher && fields.rate}
-            {isTeacher && fields.commission}
-            {isTeacher && fields.account}
-
-            {fields.first_name}
-            {fields.last_name}
+            {fields.userType}
+            {fields.firstName}
+            {fields.lastName}
             {fields.email}
             {fields.gender}
             {fields.dob}
-            {fields.phone_number}
-            {fields.street_address}
-            {fields.zip_code}
+            {fields.phoneNumber}
+            {fields.streetAddress}
+            {fields.zipCode}
             {fields.city}
             {fields.country}
           </Stack>

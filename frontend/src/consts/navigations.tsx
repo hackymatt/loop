@@ -214,7 +214,7 @@ export const adminNavigation = [
       children: [
         {
           title: "Spis użytkowników",
-          path: `${paths.account.admin.users.list}/?sort_by=email&page_size=10`,
+          path: `${paths.account.admin.users.list}/?active=true&sort_by=email&page_size=10`,
           icon: <Iconify icon="carbon:list" />,
           children: [],
         },

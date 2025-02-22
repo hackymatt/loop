@@ -22,7 +22,7 @@ import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
-import { UserType } from "src/types/user";
+import { UserType } from "src/consts/user-type";
 import { ITeamMemberProps } from "src/types/team";
 
 import MessageForm from "./message-form";
@@ -151,7 +151,7 @@ export default function TeacherDetailsHero({ teacher }: Props) {
                         color="inherit"
                         variant="body2"
                         onClick={() => {
-                          if (userType === UserType.STUDENT) {
+                          if (userType === UserType.Student) {
                             sendMessageFormOpen.onToggle();
                           }
                         }}

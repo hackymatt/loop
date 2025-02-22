@@ -1,9 +1,10 @@
 import { Controller } from "react-hook-form";
 
-import { InputAdornment } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 
+import { Gender } from "src/consts/gender";
 import { countries } from "src/assets/data";
+import { UserType } from "src/consts/user-type";
 
 import {
   RHFSelect,
@@ -12,15 +13,7 @@ import {
   RHFAutocompleteCountry,
 } from "src/components/hook-form";
 
-import { UserType } from "src/types/user";
-
-// ----------------------------------------------------------------------
-
-const GENDER_OPTIONS = [
-  { label: "Mężczyzna", value: "Mężczyzna" },
-  { label: "Kobieta", value: "Kobieta" },
-  { label: "Inne", value: "Inne" },
-];
+import { IGender } from "src/types/user";
 
 // ----------------------------------------------------------------------
 
@@ -28,41 +21,15 @@ export const useUserFields = () => {
   const fields: { [key: string]: JSX.Element } = {
     image: <RHFAvatar name="image" sx={{ mr: 3 }} />,
 
-    first_name: <RHFTextField name="first_name" label="Imię" />,
+    firstName: <RHFTextField name="firstName" label="Imię" />,
 
-    last_name: <RHFTextField name="last_name" label="Nazwisko" />,
+    lastName: <RHFTextField name="lastName" label="Nazwisko" />,
 
     email: <RHFTextField name="email" label="Adres e-mail" />,
 
-    commission: (
-      <RHFTextField
-        name="commission"
-        label="Prowizja"
-        type="number"
-        InputProps={{
-          inputProps: { min: 0, max: 100, step: "1" },
-          endAdornment: <InputAdornment position="end">%</InputAdornment>,
-        }}
-      />
-    ),
-
-    rate: (
-      <RHFTextField
-        name="rate"
-        label="Stawka godzinowa"
-        type="number"
-        InputProps={{
-          inputProps: { min: 0, step: ".01" },
-          endAdornment: <InputAdornment position="end">zł</InputAdornment>,
-        }}
-      />
-    ),
-
-    account: <RHFTextField name="account" label="Nr konta" />,
-
-    user_type: (
+    userType: (
       <RHFSelect
-        name="user_type"
+        name="userType"
         label="Typ"
         options={Object.values(UserType).map((userType: string) => ({
           label: userType,
@@ -72,7 +39,7 @@ export const useUserFields = () => {
       />
     ),
 
-    phone_number: <RHFTextField name="phone_number" label="Numer telefonu" />,
+    phoneNumber: <RHFTextField name="phoneNumber" label="Numer telefonu" />,
 
     dob: (
       <Controller
@@ -94,14 +61,17 @@ export const useUserFields = () => {
     ),
 
     gender: (
-      <RHFSelect name="gender" label="Płeć" options={GENDER_OPTIONS} placeholder="Wybierz płeć" />
+      <RHFSelect
+        name="gender"
+        label="Płeć"
+        options={Object.values(Gender).map((gender: IGender) => ({ label: gender, value: gender }))}
+        placeholder="Wybierz płeć"
+      />
     ),
 
-    street_address: (
-      <RHFTextField name="street_address" label="Ulica, numer budynku, numer lokalu" />
-    ),
+    streetAddress: <RHFTextField name="streetAddress" label="Ulica, numer budynku, numer lokalu" />,
 
-    zip_code: <RHFTextField name="zip_code" label="Kod pocztowy" />,
+    zipCode: <RHFTextField name="zipCode" label="Kod pocztowy" />,
 
     city: <RHFTextField name="city" label="Miasto" />,
 

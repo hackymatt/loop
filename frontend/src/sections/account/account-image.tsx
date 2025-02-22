@@ -24,7 +24,12 @@ export default function AccountImage() {
 
   const genderAvatarUrl = getGenderAvatar(userDetails?.gender ?? Gender.Other);
 
-  const avatarUrl = userDetails?.image ?? genderAvatarUrl;
+  const isImage = useMemo(() => Boolean(userDetails?.image), [userDetails?.image]);
+
+  const avatarUrl = useMemo(
+    () => userDetails?.image ?? genderAvatarUrl,
+    [genderAvatarUrl, userDetails?.image],
+  );
 
   const [isCropperModalOpen, setIsCropperModalOpen] = useState<boolean>(false);
   const [image, setImage] = useState<string>();
@@ -79,57 +84,59 @@ export default function AccountImage() {
   };
 
   const isUploadDisabled = useMemo(
-    () => userDetails?.firstName === null || userDetails?.lastName === null,
+    () => userDetails?.firstName === "" || userDetails?.lastName === "",
     [userDetails?.firstName, userDetails?.lastName],
   );
 
   return (
-    <Stack spacing={2} direction="row" alignItems="center">
-      <Avatar src={avatarUrl} sx={{ width: 64, height: 64 }} />
-      <Tooltip title={isUploadDisabled ? "Uzupełnij swoje dane osobowe" : ""}>
-        <Stack
-          direction="row"
-          alignItems="center"
-          sx={{
-            typography: "caption",
-            cursor: "pointer",
-            "&:hover": { opacity: 0.72 },
-          }}
-        >
-          {userDetails?.image === null ? (
-            <LoadingButton
-              component="label"
-              variant="text"
-              size="small"
-              color="primary"
-              startIcon={<Iconify icon="carbon:add-large" />}
-              loading={isLoading}
-              disabled={isUploadDisabled}
-            >
-              Dodaj zdjęcie
-              <input type="file" hidden onChange={handleImagePick} />
-              <CropperModal
-                open={isCropperModalOpen}
-                image={image ?? ""}
-                onImageChange={handleImageChange}
-                onClose={() => setIsCropperModalOpen(false)}
-              />
-            </LoadingButton>
-          ) : (
-            <LoadingButton
-              component="label"
-              variant="text"
-              size="small"
-              color="error"
-              startIcon={<Iconify icon="carbon:subtract-large" />}
-              loading={isLoading}
-              onClick={() => handleImageChange("")}
-            >
-              Usuń zdjęcie
-            </LoadingButton>
-          )}
-        </Stack>
-      </Tooltip>
-    </Stack>
+    <>
+      <Stack spacing={2} direction="row" alignItems="center">
+        <Avatar src={avatarUrl} sx={{ width: 64, height: 64 }} />
+        <Tooltip title={isUploadDisabled ? "Uzupełnij swoje dane osobowe" : ""}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            sx={{
+              typography: "caption",
+              cursor: "pointer",
+              "&:hover": { opacity: 0.72 },
+            }}
+          >
+            {!isImage ? (
+              <LoadingButton
+                component="label"
+                variant="text"
+                size="small"
+                color="primary"
+                startIcon={<Iconify icon="carbon:add-large" />}
+                loading={isLoading}
+                disabled={isUploadDisabled}
+              >
+                Dodaj zdjęcie
+                <input type="file" hidden onChange={handleImagePick} />
+              </LoadingButton>
+            ) : (
+              <LoadingButton
+                component="label"
+                variant="text"
+                size="small"
+                color="error"
+                startIcon={<Iconify icon="carbon:subtract-large" />}
+                loading={isLoading}
+                onClick={() => handleImageChange("")}
+              >
+                Usuń zdjęcie
+              </LoadingButton>
+            )}
+          </Stack>
+        </Tooltip>
+      </Stack>
+      <CropperModal
+        open={isCropperModalOpen}
+        image={image ?? ""}
+        onImageChange={handleImageChange}
+        onClose={() => setIsCropperModalOpen(false)}
+      />
+    </>
   );
 }

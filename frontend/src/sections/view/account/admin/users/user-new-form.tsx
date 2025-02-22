@@ -14,13 +14,14 @@ import { useFormErrorHandler } from "src/hooks/use-form-error-handler";
 
 import { fDate } from "src/utils/format-time";
 
+import { UserType } from "src/consts/user-type";
 import { useCreateUser } from "src/api/users/users";
 
 import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
 
+import { IUserType } from "src/types/user";
 import { IGender } from "src/types/testimonial";
-import { UserType, IUserType } from "src/types/user";
 
 import { useUserFields } from "./user-fields";
 import { schema, defaultValues } from "./user";
@@ -62,8 +63,6 @@ export default function UserNewForm({ onClose, ...other }: Props) {
       await createUser({
         ...data,
         user_type: data.user_type as IUserType,
-        rate: data.rate ?? 0,
-        commission: data.commission ?? 0,
         dob: data.dob ? fDate(data.dob, "yyyy-MM-dd") : null,
         gender: data.gender as IGender,
         phone_number: data.phone_number ?? "",
@@ -86,7 +85,7 @@ export default function UserNewForm({ onClose, ...other }: Props) {
     field: { value: userType },
   } = useController({ name: "user_type", control });
 
-  const isTeacher = useMemo(() => userType === UserType.TEACHER, [userType]);
+  const isTeacher = useMemo(() => userType === UserType.Teacher, [userType]);
 
   return (
     <Dialog

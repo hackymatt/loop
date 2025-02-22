@@ -19,7 +19,7 @@ import { useCreateMessage } from "src/api/message/messages";
 import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
 
-import { UserType } from "src/types/user";
+import { UserType } from "src/consts/user-type";
 import { MessageStatus } from "src/types/message";
 import { IScheduleStudentProp } from "src/types/course";
 
@@ -63,7 +63,7 @@ export default function MessageForm({ students, info, onClose, ...other }: Props
         createMessage({
           ...data,
           recipient_id: student.id,
-          recipient_type: UserType.STUDENT,
+          recipient_type: UserType.Student,
           status: MessageStatus.NEW,
         }),
       );

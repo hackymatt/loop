@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import { compact } from "lodash-es";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { UserType } from "src/types/user";
+import { UserType } from "src/consts/user-type";
 import { IMessageProp } from "src/types/message";
 
 import { Api } from "../service";

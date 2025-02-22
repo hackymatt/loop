@@ -25,7 +25,7 @@ import DownloadCSVButton from "src/components/download-csv";
 import FilterUser from "src/sections/filters/filter-user";
 import AccountCouponUsageTableRow from "src/sections/account/admin/account-finance-table-usage-row";
 
-import { UserType } from "src/types/user";
+import { UserType } from "src/consts/user-type";
 import { IQueryParamValue } from "src/types/query-params";
 
 import FilterSearch from "../../../../filters/filter-search";
@@ -51,7 +51,7 @@ export default function AdminCouponUsageView() {
   const { data: pagesCount } = useCouponUsagePagesCount(filters);
   const { data: couponUsages, count: recordsCount } = useCouponUsage(filters);
   const { data: users } = useUsers({
-    user_type: UserType.STUDENT[0],
+    user_type: UserType.Student[0],
     sort_by: "email",
     page_size: -1,
   });

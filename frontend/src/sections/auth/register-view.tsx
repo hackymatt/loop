@@ -50,8 +50,8 @@ export default function RegisterView() {
   const { registerUser, loginGoogleUser, loginFacebookUser, loginGithubUser } = useUserContext();
 
   const RegisterSchema = Yup.object().shape({
-    first_name: Yup.string().required("Imię jest wymagane"),
-    last_name: Yup.string().required("Nazwisko jest wymagane"),
+    firstName: Yup.string().required("Imię jest wymagane"),
+    lastName: Yup.string().required("Nazwisko jest wymagane"),
     email: Yup.string().required("Adres e-mail jest wymagany").email("Podaj poprawny adres e-mail"),
     password: Yup.string()
       .required("Hasło jest wymagane")
@@ -73,8 +73,8 @@ export default function RegisterView() {
   });
 
   const defaultValues = {
-    first_name: "",
-    last_name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     password2: "",
@@ -98,8 +98,9 @@ export default function RegisterView() {
 
   const onEmailSubmit = handleSubmit(async (data) => {
     clearErrors();
+    const { firstName, lastName, ...rest } = data;
     try {
-      await registerUser(data);
+      await registerUser({ ...rest, first_name: firstName, last_name: lastName });
       push(paths.verify);
       enqueueSnackbar("Zarejestrowano pomyślnie", { variant: "success" });
     } catch (error) {
@@ -210,9 +211,9 @@ export default function RegisterView() {
   const renderForm = (
     <FormProvider methods={methods} onSubmit={onEmailSubmit}>
       <Stack spacing={2.5}>
-        <RHFTextField name="first_name" label="Imię" />
+        <RHFTextField name="firstName" label="Imię" />
 
-        <RHFTextField name="last_name" label="Nazwisko" />
+        <RHFTextField name="lastName" label="Nazwisko" />
 
         <RHFTextField name="email" label="Adres e-mail" />
 
