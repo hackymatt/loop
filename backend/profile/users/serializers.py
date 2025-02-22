@@ -26,18 +26,6 @@ class UserSerializer(ModelSerializer):
     email = EmailField(source="user.email")
     active = BooleanField(source="user.is_active", required=False)
     image = Base64ImageField(required=False)
-    rate = SerializerMethodField()
-    commission = SerializerMethodField()
-    account = SerializerMethodField()
-
-    def get_rate(self, profile: Profile):
-        return profile.rate
-
-    def get_commission(self, profile: Profile):
-        return profile.commission
-
-    def get_account(self, profile: Profile):
-        return profile.account
 
     class Meta:
         model = Profile
@@ -122,36 +110,6 @@ class UserSerializer(ModelSerializer):
             else:
                 OtherProfile.objects.get(profile=instance).delete()
 
-        if user_type == UserType.INSTRUCTOR:
-            data = self.context["request"].data
-            rate = data["rate"]
-            commission = data["commission"]
-            finance, _ = Finance.objects.get_or_create(
-                lecturer=LecturerProfile.objects.get(profile=instance)
-            )
-            current_rate = finance.rate
-            current_commission = finance.commission
-
-            if current_rate != rate or current_commission != commission:
-                FinanceHistory.objects.create(
-                    lecturer=LecturerProfile.objects.get(profile=instance),
-                    account=finance.account,
-                    rate=current_rate,
-                    commission=current_commission,
-                )
-                notify(
-                    profile=instance,
-                    title="Stawka została zmieniona",
-                    subtitle="",
-                    description=f"Twoje wynagrodzenie uległo zmianie. Stawka godzinowa: {rate} zł, prowizja: {commission}%.",
-                    path="/account/teacher/finance",
-                    icon="mdi:finance",
-                )
-
-            finance.rate = rate
-            finance.commission = commission
-            finance.save()
-
         user = validated_data.pop("user")
         user.pop("email")
         first_name = user.pop("first_name", instance.user.first_name)
@@ -166,5 +124,62 @@ class UserSerializer(ModelSerializer):
 
         Profile.objects.filter(pk=instance.pk).update(**validated_data)
         instance.refresh_from_db()
+
+        return instance
+
+class UserFinanceSerializer(ModelSerializer):
+    rate = SerializerMethodField()
+    commission = SerializerMethodField()
+    account = SerializerMethodField()
+
+    def get_rate(self, profile: Profile):
+        return profile.rate
+
+    def get_commission(self, profile: Profile):
+        return profile.commission
+
+    def get_account(self, profile: Profile):
+        return profile.account
+
+    class Meta:
+        model = Profile
+        fields = (
+            "rate",
+            "commission",
+            "account",
+        )
+
+
+    def update(self, instance: Profile, validated_data):
+        data = self.context["request"].data
+        account = data["account"]
+        rate = data["rate"]
+        commission = data["commission"]
+
+        finance, _ = Finance.objects.get_or_create(
+            lecturer=LecturerProfile.objects.get(profile=instance)
+        )
+        current_rate = finance.rate
+        current_commission = finance.commission
+
+        if current_rate != rate or current_commission != commission:
+            FinanceHistory.objects.create(
+                lecturer=LecturerProfile.objects.get(profile=instance),
+                account=account,
+                rate=current_rate,
+                commission=current_commission,
+            )
+            notify(
+                profile=instance,
+                title="Stawka została zmieniona",
+                subtitle="",
+                description=f"Twoje wynagrodzenie uległo zmianie. Stawka godzinowa: {rate} zł, prowizja: {commission}%.",
+                path="/account/teacher/finance",
+                icon="mdi:finance",
+            )
+
+        finance.rate = rate
+        finance.commission = commission
+        finance.save()
 
         return instance

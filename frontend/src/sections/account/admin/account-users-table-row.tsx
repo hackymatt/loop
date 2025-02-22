@@ -24,16 +24,27 @@ import { IUserDetailsProps } from "src/types/user";
 type Props = {
   row: IUserDetailsProps;
   onEdit: (user: IUserDetailsProps) => void;
+  onEditFinance: (user: IUserDetailsProps) => void;
   onFinanceHistoryView: (user: IUserDetailsProps) => void;
 };
 
-export default function AccountUsersTableRow({ row, onEdit, onFinanceHistoryView }: Props) {
+export default function AccountUsersTableRow({
+  row,
+  onEdit,
+  onEditFinance,
+  onFinanceHistoryView,
+}: Props) {
   const openOptions = usePopover();
 
   const handleEditDetails = useCallback(() => {
     openOptions.onClose();
     onEdit(row);
   }, [openOptions, onEdit, row]);
+
+  const handleEditFinanceDetails = useCallback(() => {
+    openOptions.onClose();
+    onEditFinance(row);
+  }, [openOptions, onEditFinance, row]);
 
   const handleViewFinanceHistory = useCallback(() => {
     openOptions.onClose();
@@ -107,6 +118,11 @@ export default function AccountUsersTableRow({ row, onEdit, onFinanceHistoryView
 
         {isTeacher && (
           <>
+            <MenuItem onClick={handleEditFinanceDetails} sx={{ mr: 1, width: "100%" }}>
+              <Iconify icon="carbon:edit" sx={{ mr: 0.5 }} />
+              <Typography variant="body2">Edytuj dane finansowe</Typography>
+            </MenuItem>
+
             <Divider sx={{ borderStyle: "dashed", mt: 0.5 }} />
 
             <MenuItem onClick={handleViewFinanceHistory} sx={{ mr: 1, width: "100%" }}>

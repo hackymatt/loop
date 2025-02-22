@@ -25,3 +25,9 @@ export type IUserDetailsProps = IUserProps & {
   userType: IUserType;
   createdAt: string;
 };
+
+export type IUserFinanceProps = {
+  account: string | null;
+  commission: number | null;
+  rate: number | null;
+};

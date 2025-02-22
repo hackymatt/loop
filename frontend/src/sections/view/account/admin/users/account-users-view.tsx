@@ -37,6 +37,7 @@ import { IQueryParamValue } from "src/types/query-params";
 
 import UserNewForm from "./user-new-form";
 import UserEditForm from "./user-edit-form";
+import UserEditFinanceForm from "./user-edit-finance-form";
 import FilterSearch from "../../../../filters/filter-search";
 import AccountTableHead from "../../../../account/account-table-head";
 
@@ -66,6 +67,7 @@ export default function AccountUsersView() {
   const { push } = useRouter();
   const newFormOpen = useBoolean();
   const editFormOpen = useBoolean();
+  const editFinanceFormOpen = useBoolean();
 
   const { setQueryParam, removeQueryParam, getQueryParams } = useQueryParams();
 
@@ -129,6 +131,14 @@ export default function AccountUsersView() {
       editFormOpen.onToggle();
     },
     [editFormOpen],
+  );
+
+  const handleEditFinance = useCallback(
+    (user: IUserDetailsProps) => {
+      setEditedUser(user);
+      editFinanceFormOpen.onToggle();
+    },
+    [editFinanceFormOpen],
   );
 
   const handleFinanceHistoryView = useCallback(
@@ -237,6 +247,7 @@ export default function AccountUsersView() {
                     key={row.id}
                     row={row}
                     onEdit={handleEditUser}
+                    onEditFinance={handleEditFinance}
                     onFinanceHistoryView={handleFinanceHistoryView}
                   />
                 ))}
@@ -269,6 +280,17 @@ export default function AccountUsersView() {
           onClose={() => {
             setEditedUser(undefined);
             editFormOpen.onFalse();
+          }}
+        />
+      )}
+
+      {editedUser && (
+        <UserEditFinanceForm
+          user={editedUser}
+          open={editFinanceFormOpen.value}
+          onClose={() => {
+            setEditedUser(undefined);
+            editFinanceFormOpen.onFalse();
           }}
         />
       )}

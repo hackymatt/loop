@@ -1,4 +1,4 @@
-from profile.users.views import UserViewSet
+from profile.users.views import UserViewSet, UserFinanceViewSet
 from profile.register.views import ProfileRegisterViewSet
 from profile.unregister.views import ProfileUnregisterViewSet
 from profile.verify.views import ProfileVerificationCodeViewSet, ProfileVerifyViewSet
@@ -124,6 +124,7 @@ router.register(r"technologies", TechnologyViewSet, basename="technologies")
 router.register(r"topics", TopicViewSet, basename="topics")
 router.register(r"candidates", CandidateViewSet, basename="candidates")
 router.register(r"users", UserViewSet, basename="users")
+router.register(r"users-finance", UserFinanceViewSet, basename="users_finance")
 router.register(r"verify", ProfileVerifyViewSet, basename="user_verification")
 router.register(
     r"verify-code", ProfileVerificationCodeViewSet, basename="user_verification_code"
