@@ -31,7 +31,13 @@ export type IUser = {
   created_at: string;
 };
 
-type ICreateUser = Omit<IUser, "id" | "image" | "active" | "created_at">;
+type ICreateUser = Omit<
+  IUser,
+  "id" | "active" | "image" | "created_at" | "gender" | "user_type"
+> & {
+  gender: string;
+  user_type: string;
+};
 
 type ICreateUserReturn = ICreateUser;
 

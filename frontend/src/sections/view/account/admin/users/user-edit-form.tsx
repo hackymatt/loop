@@ -73,6 +73,7 @@ export default function UserEditForm({ user, onClose, ...other }: Props) {
     phone_number: "phoneNumber",
     street_address: "streetAddress",
     zip_code: "zipCode",
+    user_type: "userType",
   });
 
   const onSubmit = handleSubmit(async (data) => {
