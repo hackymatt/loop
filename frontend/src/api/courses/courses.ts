@@ -9,7 +9,8 @@ import { IQueryParams } from "src/types/query-params";
 import { ILevel, ICourseProps } from "src/types/course";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils";
+import { ListQueryResponse } from "../types";
+import { getListData, getCsrfToken } from "../utils";
 
 const endpoint = "/courses" as const;
 
@@ -17,7 +18,7 @@ type ILecturer = {
   full_name: string;
   id: string;
   image: string | null;
-  gender: IGender | null;
+  gender: IGender;
 };
 
 export type ITechnology = {
@@ -70,17 +71,8 @@ export const coursesQuery = (query?: IQueryParams) => {
   const urlParams = formatQueryParams(query);
   const queryUrl = urlParams ? `${url}?${urlParams}` : url;
 
-  const queryFn = async () => {
-    let data;
-    try {
-      const response = await Api.get(queryUrl);
-      ({ data } = response);
-    } catch (error) {
-      if (error.response && (error.response.status === 400 || error.response.status === 404)) {
-        data = { results: [], records_count: 0, pages_count: 0 };
-      }
-    }
-    const { results, records_count, pages_count } = data;
+  const queryFn = async (): Promise<ListQueryResponse<ICourseProps[]>> => {
+    const { results, records_count, pages_count } = await getListData<ICourse>(queryUrl);
     const modifiedResults = results.map(
       ({
         id,
@@ -104,8 +96,8 @@ export const coursesQuery = (query?: IQueryParams) => {
         description,
         price,
         level,
-        coverUrl: image,
-        slug: title,
+        image,
+        title,
         technologies,
         priceSale: previous_price,
         lowest30DaysPrice: lowest_30_days_price,
@@ -117,12 +109,12 @@ export const coursesQuery = (query?: IQueryParams) => {
           ({ id: lecturerId, full_name, gender, image: lecturerImage }: ILecturer) => ({
             id: lecturerId,
             name: full_name,
-            avatarUrl: lecturerImage,
+            image: lecturerImage,
             gender,
           }),
         ),
         active,
-        progress: progress !== null ? progress * 100 : undefined,
+        progress: progress !== null ? progress * 100 : null,
       }),
     );
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };
@@ -134,7 +126,7 @@ export const coursesQuery = (query?: IQueryParams) => {
 export const useCourses = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = coursesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as ICourseProps[], count: data?.count, ...rest };
+  return { data: data?.results, count: data?.count, ...rest };
 };
 
 export const useCoursesPagesCount = (query?: IQueryParams) => {

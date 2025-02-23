@@ -43,7 +43,7 @@ class PostViewSet(ModelViewSet):
         return [permission() for permission in permission_classes]
 
     def get_queryset(self):
-        if self.action == "list":
+        if self.action in ["list"]:
             queryset = self.queryset
             user = self.request.user
 
@@ -55,15 +55,15 @@ class PostViewSet(ModelViewSet):
                 return queryset.filter(active=True).all().distinct()
 
             return queryset.distinct()
-        elif self.action == "retrieve":
+        elif self.action in ["retrieve"]:
             return self.queryset.add_previous_post().add_next_post().distinct()
 
         return self.queryset.distinct()
 
     def get_serializer_class(self):
-        if self.action == "list":
+        if self.action in ["list"]:
             return PostListSerializer
-        elif self.action == "retrieve":
+        elif self.action in ["retrieve"]:
             return PostGetSerializer
         return self.serializer_class
 

@@ -19,6 +19,6 @@ class WishlistViewSet(ModelViewSet):
         return self.queryset.filter(student__profile__user=user)
 
     def get_serializer_class(self):
-        if self.action == "create":
+        if self.action in ["create"]:
             return WishlistSerializer
         return self.serializer_class

@@ -31,9 +31,9 @@ class CouponViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get_serializer_class(self):
-        if self.action == "list":
+        if self.action in ["list"]:
             return CouponListSerializer
-        elif self.action == "retrieve":
+        elif self.action in ["retrieve"]:
             return CouponGetSerializer
         return self.serializer_class
 

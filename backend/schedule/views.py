@@ -42,12 +42,12 @@ class ManageScheduleViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, IsLecturer]
 
     def get_serializer_class(self):
-        if self.action == "list":
+        if self.action in ["list"]:
             return ManageScheduleGetSerializer
         return self.serializer_class
 
     def get_permissions(self):
-        if self.action == "retrieve":
+        if self.action in ["retrieve"]:
             permission_classes = [IsAdminUser]
         else:
             permission_classes = self.permission_classes
@@ -153,7 +153,7 @@ class ScheduleAvailableDateViewSet(ModelViewSet):
     permission_classes = [AllowAny]
 
     def get_permissions(self):
-        if self.action == "retrieve":
+        if self.action in ["retrieve"]:
             permission_classes = [IsAuthenticated, IsAdminUser]
         else:
             permission_classes = self.permission_classes

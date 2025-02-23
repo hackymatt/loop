@@ -1,6 +1,12 @@
+import { Level } from "src/consts/level";
+
+import { IUserProps } from "./user";
 import { IGender } from "./testimonial";
+import { ITechnologyProps } from "./technology";
 
 // ----------------------------------------------------------------------
+
+export type ILevel = (typeof Level)[keyof typeof Level];
 
 export type ICourseTeacherProp = {
   id: string;
@@ -57,13 +63,6 @@ export type IScheduleProp = {
   studentsRequired: number;
 };
 
-export type ICourseLessonPriceHistoryProp = {
-  id: string;
-  lesson: ICourseLessonProp;
-  price: number;
-  createdAt: Date;
-};
-
 export type ICourseByTechnologyProps = {
   id: string;
   name: string;
@@ -72,42 +71,35 @@ export type ICourseByTechnologyProps = {
   createdAt?: Date;
 };
 
-export type ICourseByTopicProps = {
-  id: string;
-  name: string;
-  createdAt: Date;
-};
+// export type ICourseProps = {
+//   createdAt?: Date;
+//   video?: string;
+//   tags: string[];
+//   overview?: string;
+//   learnList: string[];
+//   candidateList: string[];
+//   modules: ICourseModuleProp[];
+// };
 
-export type ICourseByCandidateProps = {
-  id: string;
-  name: string;
-  createdAt: Date;
-};
+export type ICourseTechnologyProps = Pick<ITechnologyProps, "id" | "name">;
 
-export type ILevel = "P" | "Ś" | "Z" | "E";
+export type ICourseTeacherProps = Pick<IUserProps, "id" | "gender" | "image"> & { name: string };
 
 export type ICourseProps = {
   id: string;
-  slug: string;
   price: number;
-  level: ILevel;
-  createdAt?: Date;
-  coverUrl: string;
-  video?: string;
-  technologies: ICourseByTechnologyProps[];
-  tags: string[];
-  priceSale: number;
-  lowest30DaysPrice?: number;
+  priceSale: number | null;
+  lowest30DaysPrice: number | null;
   totalHours: number;
-  description?: string;
-  overview?: string;
-  learnList: string[];
-  candidateList: string[];
+  technologies: ICourseTechnologyProps[];
+  teachers: ICourseTeacherProps[];
+  totalStudents: number;
   ratingNumber: number;
   totalReviews: number;
-  totalStudents: number;
-  modules: ICourseModuleProp[];
-  teachers: ICourseTeacherProp[];
+  image: string;
+  level: ILevel;
+  title: string;
+  description: string;
   active: boolean;
-  progress?: number;
+  progress: number | null;
 };

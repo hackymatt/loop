@@ -1,6 +1,9 @@
+import { IUserProps } from "./user";
 import { ITechnologyProps } from "./technology";
 
 export type ILessonTechnologyProps = Pick<ITechnologyProps, "id" | "name">;
+
+export type ILessonLecturerProps = Pick<IUserProps, "id" | "gender" | "image"> & { name: string };
 
 export type ILessonProps = {
   id: string;
@@ -10,7 +13,13 @@ export type ILessonProps = {
   duration: number;
   githubUrl: string;
   price: number;
+  priceSale: number | null;
+  lowest30DaysPrice: number | null;
   active: boolean;
+  ratingNumber: number | null;
+  totalReviews: number;
+  totalStudents: number;
+  teachers: ILessonLecturerProps[];
 };
 
 export type ILessonPriceHistoryProps = {

@@ -36,7 +36,7 @@ class ReviewViewSet(ModelViewSet):
         return self.serializer_class
 
     def get_permissions(self):
-        if self.action == "create":
+        if self.action in ["create"]:
             permission_classes = [IsAuthenticated]
         elif self.action in ["update", "destroy"]:
             permission_classes = [IsAuthenticated, IsUserReview]

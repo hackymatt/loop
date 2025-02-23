@@ -10,6 +10,13 @@ import { getData, getCsrfToken } from "../utils";
 
 const endpoint = "/lessons" as const;
 
+type ILecturer = {
+  full_name: string;
+  id: string;
+  image: string | null;
+  gender: "Mężczyzna" | "Kobieta" | "Inne";
+};
+
 type ITechnology = {
   id: string;
   name: string;
@@ -18,15 +25,22 @@ type ITechnology = {
 type ILesson = {
   id: string;
   technologies: ITechnology[];
+  lecturers: ILecturer[];
   title: string;
   description: string;
   duration: number;
   github_url: string;
   price: number;
+  rating: number | null;
+  rating_count: number;
+  students_count: number;
   active: boolean;
 };
 
-type IEditLesson = Omit<ILesson, "id" | "technologies"> & { technologies: string[] };
+type IEditLesson = Omit<
+  ILesson,
+  "id" | "lecturers" | "students_count" | "rating" | "rating_count" | "technologies"
+> & { technologies: string[] };
 type IEditLessonReturn = IEditLesson;
 export const lessonQuery = (id: string) => {
   const url = endpoint;
@@ -36,22 +50,41 @@ export const lessonQuery = (id: string) => {
     const { data } = await getData<ILesson>(queryUrl);
     const {
       id: lessonId,
+      lecturers,
+      students_count,
+      rating,
+      rating_count,
       title,
       description,
       duration,
       github_url,
       price,
+      previous_price,
+      lowest_30_days_price,
       active,
       technologies,
     } = data;
 
     const modifiedResults = {
       id: lessonId,
-      title,
       description,
       price,
-      duration,
+      priceSale: previous_price,
+      lowest30DaysPrice: lowest_30_days_price,
+      title,
       technologies,
+      duration,
+      ratingNumber: rating,
+      totalReviews: rating_count,
+      totalStudents: students_count,
+      teachers: (lecturers ?? []).map(
+        ({ id: lecturerId, full_name, gender, image: lecturerImage }: ILecturer) => ({
+          id: lecturerId,
+          name: full_name,
+          image: lecturerImage,
+          gender,
+        }),
+      ),
       githubUrl: github_url,
       active,
     };

@@ -20,12 +20,9 @@ import { useToastContext } from "src/components/toast";
 import { isStepFailed } from "src/components/stepper/step";
 
 import { ITagProps } from "src/types/tags";
-import {
-  ILevel,
-  ICourseModuleProp,
-  ICourseByTopicProps,
-  ICourseByCandidateProps,
-} from "src/types/course";
+import { ITopicProps } from "src/types/topic";
+import { IModuleProps } from "src/types/module";
+import { ICandidateProps } from "src/types/candidate";
 
 import { useCourseFields } from "./course-fields";
 import { steps, schema, defaultValues } from "./course";
@@ -62,16 +59,15 @@ export default function CourseNewForm({ onClose, ...other }: Props) {
   }, [onClose]);
 
   const onSubmit = handleSubmit(async (data) => {
+    const { modules, tags, topics, candidates, ...rest } = data;
     try {
       await createCourse({
-        ...data,
-        level: data.level.slice(0, 1) as ILevel,
-        modules: data.modules.map((module: ICourseModuleProp) => module.id),
-        tags: data.tags.map((tag: ITagProps) => tag.id),
-        topics: data.topics.map((topic: ICourseByTopicProps) => topic.id),
-        candidates: data.candidates.map((candidate: ICourseByCandidateProps) => candidate.id),
+        ...rest,
+        modules: modules.map((module: IModuleProps) => module.id),
+        tags: tags.map((tag: ITagProps) => tag.id),
+        topics: topics.map((topic: ITopicProps) => topic.id),
+        candidates: candidates.map((candidate: ICandidateProps) => candidate.id),
       });
-
       reset();
       onCloseWithReset();
       enqueueSnackbar("Kurs został dodany", { variant: "success" });

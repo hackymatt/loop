@@ -1,7 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from lesson.serializers import (
-    LessonAdminSerializer,
     LessonGetSerializer,
     LessonSerializer,
     LessonPriceHistorySerializer,
@@ -32,11 +31,7 @@ class LessonViewSet(ModelViewSet):
     filterset_class = LessonFilter
 
     def get_serializer_class(self):
-        if self.action in ["list"]:
-            return LessonAdminSerializer
-        elif self.action in ["retrieve"]:
-            if self.request.user.is_staff:
-                return LessonAdminSerializer
+        if self.action in ["list", "retrieve"]:
             return LessonGetSerializer
         return self.serializer_class
 

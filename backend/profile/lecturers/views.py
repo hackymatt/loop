@@ -35,12 +35,12 @@ class LecturerViewSet(ModelViewSet):
     ]
 
     def get_serializer_class(self):
-        if self.action == "retrieve":
+        if self.action in ["retrieve"]:
             return LecturerGetSerializer
         return self.serializer_class
 
     def get_queryset(self):
-        if self.action == "retrieve":
+        if self.action in ["retrieve"]:
             return self.queryset.add_lessons().add_lessons_price()
         return self.queryset
 
