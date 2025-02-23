@@ -27,13 +27,8 @@ import { isStepFailed } from "src/components/stepper/step";
 import { ITagProps } from "src/types/tags";
 import { ITopicProps } from "src/types/topic";
 import { IModuleProps } from "src/types/module";
-import {
-  ILevel,
-  ICourseProps,
-  ICourseModuleProp,
-  ICourseByTopicProps,
-  ICourseByCandidateProps,
-} from "src/types/course";
+import { ICandidateProps } from "src/types/candidate";
+import { ILevel, ICourseProps, ICourseModuleProp } from "src/types/course";
 
 import { useCourseFields } from "./course-fields";
 import { steps, schema, defaultValues } from "./course";
@@ -91,7 +86,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
           availableTopics.find((t: ITopicProps) => t.name === topic),
         ),
         candidates: courseData.candidateList.map((candidate: string) =>
-          availableCandidates.find((c: ICourseByCandidateProps) => c.name === candidate),
+          availableCandidates.find((c: ICandidateProps) => c.name === candidate),
         ),
         modules: courseData.modules.map((module: ICourseModuleProp) => {
           const moduleData = availableModules.find((m: IModuleProps) => m.id === module.id);
@@ -121,10 +116,10 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
     try {
       await editCourse({
         ...data,
-        modules: data.modules.map((module: ICourseModuleProp) => module.id),
+        modules: data.modules.map((module: IModuleProps) => module.id),
         tags: data.tags.map((tag: ITagProps) => tag.id),
-        topics: data.topics.map((topic: ICourseByTopicProps) => topic.id),
-        candidates: data.candidates.map((candidate: ICourseByCandidateProps) => candidate.id),
+        topics: data.topics.map((topic: ITopicProps) => topic.id),
+        candidates: data.candidates.map((candidate: ICandidateProps) => candidate.id),
         level: data.level.slice(0, 1) as ILevel,
         image: (await urlToBlob(data.image)) as string,
         video: data.video ? ((await urlToBlob(data.video)) as string) : "",

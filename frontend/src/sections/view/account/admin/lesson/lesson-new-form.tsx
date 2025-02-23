@@ -20,7 +20,7 @@ import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
 import { isStepFailed } from "src/components/stepper/step";
 
-import { ITechnologyProps } from "src/types/technology";
+import { ILessonTechnologyProps } from "src/types/lesson";
 
 import { useLessonFields } from "./lesson-fields";
 import { steps, schema, defaultValues } from "./lesson";
@@ -62,7 +62,7 @@ export default function LessonNewForm({ onClose, ...other }: Props) {
       await createLesson({
         ...rest,
         technologies: (technologies ?? []).map(
-          (technology: Pick<ITechnologyProps, "id" | "name">) => technology.id,
+          (technology: ILessonTechnologyProps) => technology.id,
         ),
         github_url: `${GITHUB_REPO}${githubUrl}`,
       });

@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
-from tag.serializers import TagSerializer, TagCreateSerializer
+from tag.serializers import TagSerializer
 from tag.filters import TagFilter
 from tag.models import Tag
 
@@ -18,8 +18,3 @@ class TagViewSet(ModelViewSet):
         else:
             permission_classes = self.permission_classes
         return [permission() for permission in permission_classes]
-
-    def get_serializer_class(self):
-        if self.action in ["create"]:
-            return TagCreateSerializer
-        return self.serializer_class

@@ -223,14 +223,20 @@ export default function AccountTagsView() {
         <TagEditForm
           tag={editedTag}
           open={editTagFormOpen.value}
-          onClose={editTagFormOpen.onFalse}
+          onClose={() => {
+            setEditedTag(undefined);
+            editTagFormOpen.onFalse();
+          }}
         />
       )}
       {deletedTag && (
         <TagDeleteForm
           tag={deletedTag}
           open={deleteTagFormOpen.value}
-          onClose={deleteTagFormOpen.onFalse}
+          onClose={() => {
+            setDeletedTag(undefined);
+            deleteTagFormOpen.onFalse();
+          }}
         />
       )}
     </>

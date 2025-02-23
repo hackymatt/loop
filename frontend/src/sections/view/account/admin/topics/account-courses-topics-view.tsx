@@ -223,14 +223,20 @@ export default function AccountCoursesTopicsView() {
         <TopicEditForm
           topic={editedTopic}
           open={editTopicFormOpen.value}
-          onClose={editTopicFormOpen.onFalse}
+          onClose={() => {
+            setEditedTopic(undefined);
+            editTopicFormOpen.onFalse();
+          }}
         />
       )}
       {deletedTopic && (
         <TopicDeleteForm
           topic={deletedTopic}
           open={deleteTopicFormOpen.value}
-          onClose={deleteTopicFormOpen.onFalse}
+          onClose={() => {
+            setDeletedTopic(undefined);
+            deleteTopicFormOpen.onFalse();
+          }}
         />
       )}
     </>

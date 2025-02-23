@@ -12,7 +12,6 @@ const endpoint = "/topics" as const;
 
 type ITopic = {
   id: string;
-  modified_at: string;
   created_at: string;
   name: string;
 };
@@ -30,8 +29,8 @@ export const topicQuery = (id: string) => {
   const queryUrl = `${url}/${id}`;
 
   const queryFn = async (): Promise<GetQueryResponse<ITopicProps>> => {
-    const { result } = await getData<ITopic>(queryUrl);
-    const { id: topicId, name, created_at } = result;
+    const { data } = await getData<ITopic>(queryUrl);
+    const { id: topicId, name, created_at } = data;
 
     const modifiedResults: ITopicProps = {
       id: topicId,

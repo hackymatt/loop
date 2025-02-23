@@ -29,8 +29,8 @@ export const tagQuery = (id: string) => {
   const queryUrl = `${url}/${id}`;
 
   const queryFn = async (): Promise<GetQueryResponse<ITagProps>> => {
-    const { result } = await getData<ITag>(queryUrl);
-    const { id: tagId, name, created_at } = result;
+    const { data } = await getData<ITag>(queryUrl);
+    const { id: tagId, name, created_at } = data;
 
     const modifiedResults = {
       id: tagId,

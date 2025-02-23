@@ -50,7 +50,7 @@ export default function CandidateNewForm({ onClose, ...other }: Props) {
       await createCandidate(data);
       reset();
       onClose();
-      enqueueSnackbar("Temat został dodany", { variant: "success" });
+      enqueueSnackbar("Kandydat został dodany", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }

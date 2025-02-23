@@ -15,7 +15,6 @@ const endpoint = "/tags" as const;
 
 type ITag = {
   id: string;
-  modified_at: string;
   created_at: string;
   name: string;
 };

@@ -19,8 +19,8 @@ import { useModule, useEditModule } from "src/api/modules/module";
 import FormProvider from "src/components/hook-form";
 import { isStepFailed } from "src/components/stepper/step";
 
-import { IModuleProps } from "src/types/module";
 import { ILessonProps } from "src/types/lesson";
+import { IModuleProps, IModuleLessonProps } from "src/types/module";
 
 import { useModuleFields } from "./module-fields";
 import { steps, schema, defaultValues } from "./module";
@@ -58,7 +58,7 @@ export default function ModuleEditForm({ module, onClose, ...other }: Props) {
     if (moduleData && availableLessons) {
       reset({
         ...moduleData,
-        lessons: moduleData.lessons.map((lesson: Pick<ILessonProps, "id" | "title">) =>
+        lessons: moduleData.lessons.map((lesson: IModuleLessonProps) =>
           availableLessons.find((l: ILessonProps) => l.id === lesson.id),
         ),
       });

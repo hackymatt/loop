@@ -15,7 +15,7 @@ import {
 import { ITagProps } from "src/types/tags";
 import { ITopicProps } from "src/types/topic";
 import { IModuleProps } from "src/types/module";
-import { ICourseByCandidateProps } from "src/types/course";
+import { ICandidateProps } from "src/types/candidate";
 
 // ----------------------------------------------------------------------
 
@@ -102,7 +102,7 @@ export const useCourseFields = () => {
         label="Kandydaci"
         multiple
         options={availableCandidates ?? []}
-        getOptionLabel={(option) => (option as ICourseByCandidateProps)?.name ?? ""}
+        getOptionLabel={(option) => (option as ICandidateProps)?.name ?? ""}
         isOptionEqualToValue={(a, b) => a.id === b.id}
         loading={isLoadingCandidates}
       />

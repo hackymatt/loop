@@ -1,8 +1,10 @@
 import { ITechnologyProps } from "./technology";
 
+export type ILessonTechnologyProps = Pick<ITechnologyProps, "id" | "name">;
+
 export type ILessonProps = {
   id: string;
-  technologies: Pick<ITechnologyProps, "id" | "name">[];
+  technologies: ILessonTechnologyProps[];
   title: string;
   description: string;
   duration: number;

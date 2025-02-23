@@ -15,7 +15,6 @@ const endpoint = "/topics" as const;
 
 type ITopic = {
   id: string;
-  modified_at: string;
   created_at: string;
   name: string;
 };
