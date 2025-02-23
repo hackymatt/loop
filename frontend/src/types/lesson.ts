@@ -10,3 +10,10 @@ export type ILessonProps = {
   price: number;
   active: boolean;
 };
+
+export type ILessonPriceHistoryProps = {
+  id: string;
+  lesson: ILessonProps;
+  price: number;
+  createdAt: string;
+};

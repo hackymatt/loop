@@ -5,12 +5,12 @@ import InputBase from "@mui/material/InputBase";
 import { fDate } from "src/utils/format-time";
 import { fCurrency } from "src/utils/format-number";
 
-import { ICourseLessonPriceHistoryProp } from "src/types/course";
+import { ILessonPriceHistoryProps } from "src/types/lesson";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: ICourseLessonPriceHistoryProp;
+  row: ILessonPriceHistoryProps;
 };
 
 export default function AccountLessonsPriceHistoryTableRow({ row }: Props) {

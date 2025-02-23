@@ -3,20 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
-import { IGender } from "src/types/testimonial";
 import { IQueryParams } from "src/types/query-params";
-import { ICourseLessonPriceHistoryProp } from "src/types/course";
+import { ILessonPriceHistoryProps } from "src/types/lesson";
 
-import { Api } from "../service";
+import { getListData } from "../utils";
+import { ListQueryResponse } from "../types";
 
 const endpoint = "/lesson-price-history" as const;
-
-type ILecturer = {
-  full_name: string;
-  id: string;
-  image: string | null;
-  gender: IGender | null;
-};
 
 type ITechnology = {
   id: string;
@@ -25,18 +18,12 @@ type ITechnology = {
 
 type ILesson = {
   id: string;
-  lecturers: ILecturer[];
-  students_count: number;
-  rating: number;
-  rating_count: number;
   technologies: ITechnology[];
   title: string;
   description: string;
   duration: number;
   github_url: string;
-  price: string;
-  previous_price: number | null;
-  lowest_30_days_price: number | null;
+  price: number;
   active: boolean;
 };
 
@@ -52,24 +39,37 @@ export const lessonsPriceHistoryQuery = (query?: IQueryParams) => {
   const urlParams = formatQueryParams(query);
   const queryUrl = urlParams ? `${url}?${urlParams}` : url;
 
-  const queryFn = async () => {
-    let data;
-    try {
-      const response = await Api.get(queryUrl);
-      ({ data } = response);
-    } catch (error) {
-      if (error.response && (error.response.status === 400 || error.response.status === 404)) {
-        data = { results: [], records_count: 0, pages_count: 0 };
-      }
-    }
-    const { results, records_count, pages_count } = data;
+  const queryFn = async (): Promise<ListQueryResponse<ILessonPriceHistoryProps[]>> => {
+    const { results, records_count, pages_count } =
+      await getListData<ILessonPriceHistory>(queryUrl);
     const modifiedResults = results.map(
-      ({ id, lesson, price, created_at }: ILessonPriceHistory) => ({
-        id,
-        lesson,
-        price,
-        createdAt: created_at,
-      }),
+      ({ id, lesson, price, created_at }: ILessonPriceHistory) => {
+        const {
+          id: lessonId,
+          title,
+          description,
+          duration,
+          github_url,
+          price: lessonPrice,
+          active,
+          technologies,
+        } = lesson;
+        return {
+          id,
+          lesson: {
+            id: lessonId,
+            title,
+            description,
+            price: lessonPrice,
+            duration,
+            technologies,
+            githubUrl: github_url,
+            active,
+          },
+          price,
+          createdAt: created_at,
+        };
+      },
     );
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };
   };
@@ -80,7 +80,7 @@ export const lessonsPriceHistoryQuery = (query?: IQueryParams) => {
 export const useLessonsPriceHistory = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = lessonsPriceHistoryQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as ICourseLessonPriceHistoryProp[], count: data?.count, ...rest };
+  return { data: data?.results, count: data?.count, ...rest };
 };
 
 export const useLessonsPriceHistoryPagesCount = (query?: IQueryParams) => {

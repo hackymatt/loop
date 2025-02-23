@@ -218,7 +218,7 @@ class LessonSerializer(ModelSerializer):
 
 
 class LessonPriceHistorySerializer(ModelSerializer):
-    lesson = LessonSerializer()
+    lesson = LessonAdminSerializer()
 
     class Meta:
         model = LessonPriceHistory
