@@ -41,7 +41,7 @@ export default function AccountNewsletterTableRow({ row }: Props) {
       </TableCell>
 
       <TableCell>
-        <InputBase value={fDate(row.created_at)} />
+        <InputBase value={fDate(row.createdAt)} />
       </TableCell>
     </TableRow>
   );
