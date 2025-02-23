@@ -2,16 +2,16 @@ import { AxiosError } from "axios";
 import { compact } from "lodash-es";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { ICourseByCandidateProps } from "src/types/course";
+import { ICandidateProps } from "src/types/candidate";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils";
+import { GetQueryResponse } from "../types";
+import { getData, getCsrfToken } from "../utils";
 
 const endpoint = "/candidates" as const;
 
 type ICandidate = {
   id: string;
-  modified_at: string;
   created_at: string;
   name: string;
 };
@@ -28,9 +28,8 @@ export const candidateQuery = (id: string) => {
   const url = endpoint;
   const queryUrl = `${url}/${id}`;
 
-  const queryFn = async () => {
-    const response = await Api.get<ICandidate>(queryUrl);
-    const { data } = response;
+  const queryFn = async (): Promise<GetQueryResponse<ICandidateProps>> => {
+    const { data } = await getData<ICandidate>(queryUrl);
     const { id: candidateId, name, created_at } = data;
 
     const modifiedResults = {
@@ -47,7 +46,7 @@ export const candidateQuery = (id: string) => {
 export const useCandidate = (id: string) => {
   const { queryKey, queryFn } = candidateQuery(id);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as any as ICourseByCandidateProps, ...rest };
+  return { data: data?.results, ...rest };
 };
 export const useEditCandidate = (id: string) => {
   const queryClient = useQueryClient();

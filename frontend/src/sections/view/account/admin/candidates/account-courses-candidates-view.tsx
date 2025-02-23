@@ -26,8 +26,8 @@ import DownloadCSVButton from "src/components/download-csv";
 
 import AccountCandidatesTableRow from "src/sections/account/admin/account-candidates-table-row";
 
+import { ICandidateProps } from "src/types/candidate";
 import { IQueryParamValue } from "src/types/query-params";
-import { ICourseByCandidateProps } from "src/types/course";
 
 import CandidateNewForm from "./candidate-new-form";
 import CandidateEditForm from "./candidate-edit-form";
@@ -64,8 +64,8 @@ export default function AccountCoursesCandidatesView() {
   const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "title";
   const order = filters?.sort_by && filters.sort_by.startsWith("-") ? "desc" : "asc";
 
-  const [editedCandidate, setEditedCandidate] = useState<ICourseByCandidateProps>();
-  const [deletedCandidate, setDeletedCandidate] = useState<ICourseByCandidateProps>();
+  const [editedCandidate, setEditedCandidate] = useState<ICandidateProps>();
+  const [deletedCandidate, setDeletedCandidate] = useState<ICandidateProps>();
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -102,7 +102,7 @@ export default function AccountCoursesCandidatesView() {
   );
 
   const handleEditCandidate = useCallback(
-    (candidate: ICourseByCandidateProps) => {
+    (candidate: ICandidateProps) => {
       setEditedCandidate(candidate);
       editCandidateFormOpen.onToggle();
     },
@@ -110,7 +110,7 @@ export default function AccountCoursesCandidatesView() {
   );
 
   const handleDeleteCandidate = useCallback(
-    (candidate: ICourseByCandidateProps) => {
+    (candidate: ICandidateProps) => {
       setDeletedCandidate(candidate);
       deleteCandidateFormOpen.onToggle();
     },
@@ -223,14 +223,20 @@ export default function AccountCoursesCandidatesView() {
         <CandidateEditForm
           candidate={editedCandidate}
           open={editCandidateFormOpen.value}
-          onClose={editCandidateFormOpen.onFalse}
+          onClose={() => {
+            setEditedCandidate(undefined);
+            editCandidateFormOpen.onFalse();
+          }}
         />
       )}
       {deletedCandidate && (
         <CandidateDeleteForm
           candidate={deletedCandidate}
           open={deleteCandidateFormOpen.value}
-          onClose={deleteCandidateFormOpen.onFalse}
+          onClose={() => {
+            setDeletedCandidate(undefined);
+            deleteCandidateFormOpen.onFalse();
+          }}
         />
       )}
     </>

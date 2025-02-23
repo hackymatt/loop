@@ -14,14 +14,14 @@ import { useDeleteCandidate } from "src/api/candidates/candidate";
 
 import FormProvider from "src/components/hook-form";
 
-import { ICourseByCandidateProps } from "src/types/course";
+import { ICandidateProps } from "src/types/candidate";
 
 import { defaultValues } from "./candidate";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  candidate: ICourseByCandidateProps;
+  candidate: ICandidateProps;
   onClose: VoidFunction;
 }
 

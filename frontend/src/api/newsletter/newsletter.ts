@@ -15,7 +15,6 @@ type INewsletter = {
   uuid: string;
   email: string;
   active: boolean;
-  modified_at: string;
   created_at: string;
 };
 
@@ -26,12 +25,10 @@ export const newsletterQuery = (query?: IQueryParams) => {
 
   const queryFn = async (): Promise<ListQueryResponse<INewsletterProps[]>> => {
     const { results, records_count, pages_count } = await getListData<INewsletter>(queryUrl);
-    const modifiedResults = (results ?? []).map(
-      ({ created_at, modified_at: _, ...rest }: INewsletter) => ({
-        ...rest,
-        createdAt: created_at,
-      }),
-    );
+    const modifiedResults = (results ?? []).map(({ created_at, ...rest }: INewsletter) => ({
+      ...rest,
+      createdAt: created_at,
+    }));
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };
   };
 

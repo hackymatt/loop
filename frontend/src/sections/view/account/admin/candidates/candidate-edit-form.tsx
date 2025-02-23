@@ -16,7 +16,7 @@ import { useCandidate, useEditCandidate } from "src/api/candidates/candidate";
 
 import FormProvider from "src/components/hook-form";
 
-import { ICourseByCandidateProps } from "src/types/course";
+import { ICandidateProps } from "src/types/candidate";
 
 import { schema, defaultValues } from "./candidate";
 import { useCandidateFields } from "./candidate-fields";
@@ -24,7 +24,7 @@ import { useCandidateFields } from "./candidate-fields";
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  candidate: ICourseByCandidateProps;
+  candidate: ICandidateProps;
   onClose: VoidFunction;
 }
 

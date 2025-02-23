@@ -6,7 +6,7 @@ from mailer.mailer import Mailer
 class NewsletterEntrySerializer(ModelSerializer):
     class Meta:
         model = Newsletter
-        exclude = ("id",)
+        exclude = ("id", "modified_at", )
 
 
 class NewsletterSerializer(ModelSerializer):

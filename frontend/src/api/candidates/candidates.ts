@@ -5,16 +5,16 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatQueryParams } from "src/utils/query-params";
 
 import { IQueryParams } from "src/types/query-params";
-import { ICourseByCandidateProps } from "src/types/course";
+import { ICandidateProps } from "src/types/candidate";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils";
+import { ListQueryResponse } from "../types";
+import { getListData, getCsrfToken } from "../utils";
 
 const endpoint = "/candidates" as const;
 
 type ICandidate = {
   id: string;
-  modified_at: string;
   created_at: string;
   name: string;
 };
@@ -26,10 +26,10 @@ type ICreateCandidateReturn = ICreateCandidate;
 export const candidatesQuery = (query?: IQueryParams) => {
   const url = endpoint;
   const urlParams = formatQueryParams(query);
+  const queryUrl = urlParams ? `${url}?${urlParams}` : url;
 
-  const queryFn = async () => {
-    const { data } = await Api.get(`${url}?${urlParams}`);
-    const { results, records_count, pages_count } = data;
+  const queryFn = async (): Promise<ListQueryResponse<ICandidateProps[]>> => {
+    const { results, records_count, pages_count } = await getListData<ICandidate>(queryUrl);
     const modifiedResults = results.map(({ id, name, created_at }: ICandidate) => ({
       id,
       name,
@@ -44,7 +44,7 @@ export const candidatesQuery = (query?: IQueryParams) => {
 export const useCandidates = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = candidatesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as ICourseByCandidateProps[], count: data?.count, ...rest };
+  return { data: data?.results, count: data?.count, ...rest };
 };
 
 export const useCandidatesPagesCount = (query?: IQueryParams) => {

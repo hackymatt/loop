@@ -14,14 +14,14 @@ import { fDate } from "src/utils/format-time";
 
 import Iconify from "src/components/iconify";
 
-import { ICourseByCandidateProps } from "src/types/course";
+import { ICandidateProps } from "src/types/candidate";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: ICourseByCandidateProps;
-  onEdit: (candidate: ICourseByCandidateProps) => void;
-  onDelete: (candidate: ICourseByCandidateProps) => void;
+  row: ICandidateProps;
+  onEdit: (candidate: ICandidateProps) => void;
+  onDelete: (candidate: ICandidateProps) => void;
 };
 
 export default function AccountCandidatesTableRow({ row, onEdit, onDelete }: Props) {
