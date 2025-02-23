@@ -26,6 +26,7 @@ import { isStepFailed } from "src/components/stepper/step";
 
 import { ITagProps } from "src/types/tags";
 import { ITopicProps } from "src/types/topic";
+import { IModuleProps } from "src/types/module";
 import {
   ILevel,
   ICourseProps,
@@ -93,7 +94,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
           availableCandidates.find((c: ICourseByCandidateProps) => c.name === candidate),
         ),
         modules: courseData.modules.map((module: ICourseModuleProp) => {
-          const moduleData = availableModules.find((m: ICourseModuleProp) => m.id === module.id);
+          const moduleData = availableModules.find((m: IModuleProps) => m.id === module.id);
 
           if (!moduleData) {
             return moduleData;

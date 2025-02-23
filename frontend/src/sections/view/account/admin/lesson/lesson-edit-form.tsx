@@ -68,7 +68,7 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
     }
   }, [availableTechnologies, lessonData, reset]);
 
-  const handleFormError = useFormErrorHandler(methods);
+  const handleFormError = useFormErrorHandler(methods, { github_url: "githubUrl" });
 
   const onCloseWithReset = useCallback(() => {
     onClose();

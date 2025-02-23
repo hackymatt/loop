@@ -42,7 +42,7 @@ export const lessonsPriceHistoryQuery = (query?: IQueryParams) => {
   const queryFn = async (): Promise<ListQueryResponse<ILessonPriceHistoryProps[]>> => {
     const { results, records_count, pages_count } =
       await getListData<ILessonPriceHistory>(queryUrl);
-    const modifiedResults = results.map(
+    const modifiedResults = (results ?? []).map(
       ({ id, lesson, price, created_at }: ILessonPriceHistory) => {
         const {
           id: lessonId,

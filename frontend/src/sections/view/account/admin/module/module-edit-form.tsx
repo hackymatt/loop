@@ -19,7 +19,8 @@ import { useModule, useEditModule } from "src/api/modules/module";
 import FormProvider from "src/components/hook-form";
 import { isStepFailed } from "src/components/stepper/step";
 
-import { ICourseModuleProp, ICourseLessonProp } from "src/types/course";
+import { IModuleProps } from "src/types/module";
+import { ILessonProps } from "src/types/lesson";
 
 import { useModuleFields } from "./module-fields";
 import { steps, schema, defaultValues } from "./module";
@@ -27,7 +28,7 @@ import { steps, schema, defaultValues } from "./module";
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  module: ICourseModuleProp;
+  module: IModuleProps;
   onClose: VoidFunction;
 }
 
@@ -57,8 +58,8 @@ export default function ModuleEditForm({ module, onClose, ...other }: Props) {
     if (moduleData && availableLessons) {
       reset({
         ...moduleData,
-        lessons: moduleData.lessons?.map((lesson: ICourseLessonProp) =>
-          availableLessons.find((l: ICourseLessonProp) => l.id === lesson.id),
+        lessons: moduleData.lessons.map((lesson: Pick<ILessonProps, "id" | "title">) =>
+          availableLessons.find((l: ILessonProps) => l.id === lesson.id),
         ),
       });
     }
@@ -75,7 +76,7 @@ export default function ModuleEditForm({ module, onClose, ...other }: Props) {
     try {
       await editModule({
         ...data,
-        lessons: data.lessons.map((lesson: ICourseLessonProp) => lesson.id),
+        lessons: data.lessons.map((lesson: ILessonProps) => lesson.id),
       });
       reset();
       onCloseWithReset();

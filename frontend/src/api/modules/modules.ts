@@ -4,11 +4,12 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
-import { ICourseModuleProp } from "src/types/course";
+import { IModuleProps } from "src/types/module";
 import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils";
+import { ListQueryResponse } from "../types";
+import { getListData, getCsrfToken } from "../utils";
 
 const endpoint = "/modules" as const;
 
@@ -25,7 +26,7 @@ type IModule = {
   lessons: ILesson[];
 };
 
-type ICreateModule = Omit<IModule, "id" | "lessons" | "price" | "duration" | "lessons_count"> & {
+type ICreateModule = Omit<IModule, "id" | "lessons" | "price" | "duration"> & {
   lessons: string[];
 };
 type ICreateModuleReturn = ICreateModule;
@@ -34,24 +35,17 @@ export const modulesQuery = (query?: IQueryParams) => {
   const urlParams = formatQueryParams(query);
   const queryUrl = urlParams ? `${url}?${urlParams}` : url;
 
-  const queryFn = async () => {
-    let data;
-    try {
-      const response = await Api.get(queryUrl);
-      ({ data } = response);
-    } catch (error) {
-      if (error.response && (error.response.status === 400 || error.response.status === 404)) {
-        data = { results: [], records_count: 0, pages_count: 0 };
-      }
-    }
-    const { results, records_count, pages_count } = data;
-    const modifiedResults = results.map(({ id, title, price, duration, lessons }: IModule) => ({
-      id,
-      title,
-      totalHours: duration / 60,
-      price,
-      lessonsCount: lessons.length,
-    }));
+  const queryFn = async (): Promise<ListQueryResponse<IModuleProps[]>> => {
+    const { results, records_count, pages_count } = await getListData<IModule>(queryUrl);
+    const modifiedResults = (results ?? []).map(
+      ({ id, title, price, duration, lessons }: IModule) => ({
+        id,
+        title,
+        duration,
+        price,
+        lessons,
+      }),
+    );
     return { results: modifiedResults, count: records_count, pagesCount: pages_count };
   };
 
@@ -61,7 +55,7 @@ export const modulesQuery = (query?: IQueryParams) => {
 export const useModules = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = modulesQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as ICourseModuleProp[], count: data?.count, ...rest };
+  return { data: data?.results, count: data?.count, ...rest };
 };
 
 export const useModulesPagesCount = (query?: IQueryParams) => {

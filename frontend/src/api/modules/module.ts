@@ -2,10 +2,11 @@ import { AxiosError } from "axios";
 import { compact } from "lodash-es";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { ICourseModuleProp } from "src/types/course";
+import { IModuleProps } from "src/types/module";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils";
+import { GetQueryResponse } from "../types";
+import { getData, getCsrfToken } from "../utils";
 
 const endpoint = "/modules" as const;
 
@@ -17,6 +18,8 @@ type ILesson = {
 type IModule = {
   id: string;
   title: string;
+  price: number;
+  duration: number;
   lessons: ILesson[];
 };
 
@@ -29,26 +32,21 @@ export const moduleQuery = (id: string) => {
   const url = endpoint;
   const queryUrl = `${url}/${id}`;
 
-  const queryFn = async () => {
-    let modifiedResults;
-    try {
-      const response = await Api.get<IModule>(queryUrl);
-      const { data } = response;
-      const { id: moduleId, title, lessons } = data;
+  const queryFn = async (): Promise<GetQueryResponse<IModuleProps>> => {
+    const { data } = await getData<IModule>(queryUrl);
+    const { id: moduleId, title, price, duration, lessons } = data;
 
-      modifiedResults = {
-        id: moduleId,
-        title,
-        lessons: lessons.map(({ id: lessonId, title: titleId }: ILesson) => ({
-          id: lessonId,
-          title: titleId,
-        })),
-      };
-    } catch (error) {
-      if (error.response && (error.response.status === 400 || error.response.status === 404)) {
-        modifiedResults = {};
-      }
-    }
+    const modifiedResults = {
+      id: moduleId,
+      title,
+      lessons: lessons.map(({ id: lessonId, title: titleId }: ILesson) => ({
+        id: lessonId,
+        title: titleId,
+      })),
+      price,
+      duration,
+    };
+
     return { results: modifiedResults };
   };
 
@@ -58,7 +56,7 @@ export const moduleQuery = (id: string) => {
 export const useModule = (id: string) => {
   const { queryKey, queryFn } = moduleQuery(id);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as any as ICourseModuleProp, ...rest };
+  return { data: data?.results, ...rest };
 };
 
 export const useEditModule = (id: string) => {

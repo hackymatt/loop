@@ -14,7 +14,8 @@ import {
 
 import { ITagProps } from "src/types/tags";
 import { ITopicProps } from "src/types/topic";
-import { ICourseModuleProp, ICourseByCandidateProps } from "src/types/course";
+import { IModuleProps } from "src/types/module";
+import { ICourseByCandidateProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -65,7 +66,7 @@ export const useCourseFields = () => {
         label="Moduły"
         multiple
         options={availableModules ?? []}
-        getOptionLabel={(option) => (option as ICourseModuleProp)?.title ?? ""}
+        getOptionLabel={(option) => (option as IModuleProps)?.title ?? ""}
         isOptionEqualToValue={(a, b) => a.id === b.id}
         loading={isLoadingModules}
       />

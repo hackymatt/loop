@@ -14,14 +14,14 @@ import { useDeleteModule } from "src/api/modules/module";
 
 import FormProvider from "src/components/hook-form";
 
-import { ICourseModuleProp } from "src/types/course";
+import { IModuleProps } from "src/types/module";
 
 import { defaultValues } from "./module";
 
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  module: ICourseModuleProp;
+  module: IModuleProps;
   onClose: VoidFunction;
 }
 

@@ -23,7 +23,7 @@ import DownloadCSVButton from "src/components/download-csv";
 
 import AccountModulesTableRow from "src/sections/account/admin/account-modules-table-row";
 
-import { ICourseModuleProp } from "src/types/course";
+import { IModuleProps } from "src/types/module";
 import { IQueryParamValue } from "src/types/query-params";
 
 import ModuleNewForm from "./module-new-form";
@@ -63,8 +63,8 @@ export default function AccountModulesView() {
   const orderBy = filters?.sort_by ? filters.sort_by.replace("-", "") : "title";
   const order = filters?.sort_by && filters.sort_by.startsWith("-") ? "desc" : "asc";
 
-  const [editedModule, setEditedModule] = useState<ICourseModuleProp>();
-  const [deletedModule, setDeletedModule] = useState<ICourseModuleProp>();
+  const [editedModule, setEditedModule] = useState<IModuleProps>();
+  const [deletedModule, setDeletedModule] = useState<IModuleProps>();
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -101,7 +101,7 @@ export default function AccountModulesView() {
   );
 
   const handleEditModule = useCallback(
-    (module: ICourseModuleProp) => {
+    (module: IModuleProps) => {
       setEditedModule(module);
       editModuleFormOpen.onToggle();
     },
@@ -109,7 +109,7 @@ export default function AccountModulesView() {
   );
 
   const handleDeleteModule = useCallback(
-    (module: ICourseModuleProp) => {
+    (module: IModuleProps) => {
       setDeletedModule(module);
       deleteModuleFormOpen.onToggle();
     },
@@ -206,14 +206,20 @@ export default function AccountModulesView() {
         <ModuleEditForm
           module={editedModule}
           open={editModuleFormOpen.value}
-          onClose={editModuleFormOpen.onFalse}
+          onClose={() => {
+            setEditedModule(undefined);
+            editModuleFormOpen.onFalse();
+          }}
         />
       )}
       {deletedModule && (
         <ModuleDeleteForm
           module={deletedModule}
           open={deleteModuleFormOpen.value}
-          onClose={deleteModuleFormOpen.onFalse}
+          onClose={() => {
+            setDeletedModule(undefined);
+            deleteModuleFormOpen.onFalse();
+          }}
         />
       )}
     </>

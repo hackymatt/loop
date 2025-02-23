@@ -14,14 +14,14 @@ import { fCurrency } from "src/utils/format-number";
 
 import Iconify from "src/components/iconify";
 
-import { ICourseModuleProp } from "src/types/course";
+import { IModuleProps } from "src/types/module";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: ICourseModuleProp;
-  onEdit: (module: ICourseModuleProp) => void;
-  onDelete: (module: ICourseModuleProp) => void;
+  row: IModuleProps;
+  onEdit: (module: IModuleProps) => void;
+  onDelete: (module: IModuleProps) => void;
 };
 
 export default function AccountModulesTableRow({ row, onEdit, onDelete }: Props) {
@@ -45,7 +45,7 @@ export default function AccountModulesTableRow({ row, onEdit, onDelete }: Props)
         </TableCell>
 
         <TableCell>
-          <InputBase value={`${(row?.totalHours ?? 0) * 60} min`} />
+          <InputBase value={`${row.duration} min`} />
         </TableCell>
 
         <TableCell>
@@ -53,7 +53,7 @@ export default function AccountModulesTableRow({ row, onEdit, onDelete }: Props)
         </TableCell>
 
         <TableCell>
-          <InputBase value={row.lessonsCount} />
+          <InputBase value={row.lessons.length} />
         </TableCell>
 
         <TableCell align="right" padding="none">

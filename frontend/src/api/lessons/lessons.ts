@@ -38,7 +38,7 @@ export const lessonsQuery = (query?: IQueryParams) => {
 
   const queryFn = async (): Promise<ListQueryResponse<ILessonProps[]>> => {
     const { results, records_count, pages_count } = await getListData<ILesson>(queryUrl);
-    const modifiedResults = results.map(
+    const modifiedResults = (results ?? []).map(
       ({ id, description, price, title, technologies, duration, github_url, active }: ILesson) => ({
         id,
         description,

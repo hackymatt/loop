@@ -49,7 +49,7 @@ export default function LessonNewForm({ onClose, ...other }: Props) {
     formState: { errors, isSubmitting },
   } = methods;
 
-  const handleFormError = useFormErrorHandler(methods);
+  const handleFormError = useFormErrorHandler(methods, { github_url: "githubUrl" });
 
   const onCloseWithReset = useCallback(() => {
     onClose();

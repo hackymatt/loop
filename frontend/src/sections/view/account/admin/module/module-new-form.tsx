@@ -63,7 +63,7 @@ export default function ModuleNewForm({ onClose, ...other }: Props) {
       });
       reset();
       onCloseWithReset();
-      enqueueSnackbar("Lekcja została dodana", { variant: "success" });
+      enqueueSnackbar("Moduł został dodany", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }
