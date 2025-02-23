@@ -8,14 +8,14 @@ export const defaultValues = {
   description: "",
   price: 0,
   duration: 30,
-  github_url: "",
+  githubUrl: "",
   technologies: [],
 };
 
 export const steps = [
   {
     label: "Uzupełnij podstawowe informacje",
-    fields: ["title", "description", "price", "duration", "github_url"],
+    fields: ["title", "description", "price", "duration", "githubUrl"],
   },
   { label: "Wybierz technologie", fields: ["technologies"] },
 ];
@@ -36,6 +36,6 @@ export const schema = Yup.object().shape({
       `Czas trwania musi być wielokrotnością ${LESSON_DURATION_MULTIPLIER} minut`,
       (number) => number % LESSON_DURATION_MULTIPLIER === 0,
     ),
-  github_url: Yup.string().required("Link do repozytorium jest wymagany"),
+  githubUrl: Yup.string().required("Link do repozytorium jest wymagany"),
   technologies: Yup.array().nullable(),
 });

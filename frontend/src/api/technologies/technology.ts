@@ -31,8 +31,8 @@ export const technologyQuery = (id: string) => {
   const queryUrl = `${url}/${id}`;
 
   const queryFn = async (): Promise<GetQueryResponse<ITechnologyDetailsProps>> => {
-    const { result } = await getData<ITechnology>(queryUrl);
-    const { id: technologyId, name, description, created_at } = result;
+    const { data } = await getData<ITechnology>(queryUrl);
+    const { id: technologyId, name, description, created_at } = data;
 
     const modifiedResults: ITechnologyDetailsProps = {
       id: technologyId,

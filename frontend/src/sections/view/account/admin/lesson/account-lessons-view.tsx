@@ -25,7 +25,7 @@ import Iconify from "src/components/iconify";
 import Scrollbar from "src/components/scrollbar";
 import DownloadCSVButton from "src/components/download-csv";
 
-import { ICourseLessonProp } from "src/types/course";
+import { ILessonProps } from "src/types/lesson";
 import { IQueryParamValue } from "src/types/query-params";
 
 import LessonNewForm from "./lesson-new-form";
@@ -85,7 +85,7 @@ export default function AccountLessonsView() {
   const order = filters?.sort_by && filters.sort_by.startsWith("-") ? "desc" : "asc";
   const tab = filters?.active ? filters.active : "";
 
-  const [editedLesson, setEditedLesson] = useState<ICourseLessonProp>();
+  const [editedLesson, setEditedLesson] = useState<ILessonProps>();
 
   const handleChange = useCallback(
     (name: string, value: IQueryParamValue) => {
@@ -129,7 +129,7 @@ export default function AccountLessonsView() {
   );
 
   const handlePriceHistoryView = useCallback(
-    (lesson: ICourseLessonProp) => {
+    (lesson: ILessonProps) => {
       push(
         `${paths.account.admin.lessons.priceHistory}/?lesson_name=${lesson.title}&sort_by=-created_at`,
       );
@@ -138,7 +138,7 @@ export default function AccountLessonsView() {
   );
 
   const handleEditLesson = useCallback(
-    (lesson: ICourseLessonProp) => {
+    (lesson: ILessonProps) => {
       setEditedLesson(lesson);
       editLessonFormOpen.onToggle();
     },
@@ -260,7 +260,10 @@ export default function AccountLessonsView() {
         <LessonEditForm
           lesson={editedLesson}
           open={editLessonFormOpen.value}
-          onClose={editLessonFormOpen.onFalse}
+          onClose={() => {
+            setEditedLesson(undefined);
+            editLessonFormOpen.onFalse();
+          }}
         />
       )}
     </>

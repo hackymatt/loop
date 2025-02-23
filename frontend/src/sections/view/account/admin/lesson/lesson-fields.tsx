@@ -42,10 +42,10 @@ export const useLessonFields = () => {
         }}
       />
     ),
-    github_url: (
+    githubUrl: (
       <RHFTextField
-        key="github_url"
-        name="github_url"
+        key="githubUrl"
+        name="githubUrl"
         label="Repozytorium"
         type="url"
         InputLabelProps={{ shrink: true }}

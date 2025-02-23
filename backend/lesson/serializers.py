@@ -115,6 +115,30 @@ class LessonGetSerializer(ModelSerializer):
             "modified_at",
         )
 
+class LessonAdminSerializer(ModelSerializer):
+    technologies = SerializerMethodField()
+
+    def get_technologies(self, lesson: Lesson):
+        technology_ids = list(
+            Lesson.technologies.through.objects.filter(lesson=lesson)
+            .order_by("id")
+            .values_list("technology_id", flat=True)
+        )
+        preserved_order = Case(
+            *[When(pk=pk, then=pos) for pos, pk in enumerate(technology_ids)],
+            output_field=IntegerField(),
+        )
+        technologies = Technology.objects.filter(id__in=technology_ids).order_by(
+            preserved_order
+        )
+        return TechnologySerializer(technologies, many=True).data
+    class Meta:
+        model = Lesson
+        exclude = (
+            "created_at",
+            "modified_at",
+        )
+
 
 class LessonSerializer(ModelSerializer):
     class Meta:

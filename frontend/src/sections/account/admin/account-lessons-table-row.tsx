@@ -15,14 +15,14 @@ import { fCurrency } from "src/utils/format-number";
 import Label from "src/components/label";
 import Iconify from "src/components/iconify";
 
-import { ICourseLessonProp } from "src/types/course";
+import { ILessonProps } from "src/types/lesson";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  row: ICourseLessonProp;
-  onEdit: (lesson: ICourseLessonProp) => void;
-  onPriceHistoryView: (lesson: ICourseLessonProp) => void;
+  row: ILessonProps;
+  onEdit: (lesson: ILessonProps) => void;
+  onPriceHistoryView: (lesson: ILessonProps) => void;
 };
 
 export default function AccountLessonsTableRow({ row, onEdit, onPriceHistoryView }: Props) {

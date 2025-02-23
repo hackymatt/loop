@@ -2,20 +2,13 @@ import { AxiosError } from "axios";
 import { compact } from "lodash-es";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { IGender } from "src/types/testimonial";
-import { ICourseLessonProp } from "src/types/course";
+import { ILessonProps } from "src/types/lesson";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils";
+import { GetQueryResponse } from "../types";
+import { getData, getCsrfToken } from "../utils";
 
 const endpoint = "/lessons" as const;
-
-type ILecturer = {
-  full_name: string;
-  id: string;
-  image: string | null;
-  gender: IGender | null;
-};
 
 type ITechnology = {
   id: string;
@@ -24,10 +17,6 @@ type ITechnology = {
 
 type ILesson = {
   id: string;
-  lecturers: ILecturer[];
-  students_count: number;
-  rating: number;
-  rating_count: number;
   technologies: ITechnology[];
   title: string;
   description: string;
@@ -37,61 +26,36 @@ type ILesson = {
   active: boolean;
 };
 
-type IEditLesson = Omit<
-  ILesson,
-  "id" | "lecturers" | "students_count" | "rating" | "rating_count" | "technologies"
-> & { technologies: string[] };
+type IEditLesson = Omit<ILesson, "id" | "technologies"> & { technologies: string[] };
 type IEditLessonReturn = IEditLesson;
 export const lessonQuery = (id: string) => {
   const url = endpoint;
   const queryUrl = `${url}/${id}`;
 
-  const queryFn = async () => {
-    let modifiedResults;
-    try {
-      const response = await Api.get<ILesson>(queryUrl);
-      const { data } = response;
-      const {
-        id: lessonId,
-        lecturers,
-        students_count,
-        rating,
-        rating_count,
-        title,
-        description,
-        duration,
-        github_url,
-        price,
-        active,
-        technologies,
-      } = data;
+  const queryFn = async (): Promise<GetQueryResponse<ILessonProps>> => {
+    const { data } = await getData<ILesson>(queryUrl);
+    const {
+      id: lessonId,
+      title,
+      description,
+      duration,
+      github_url,
+      price,
+      active,
+      technologies,
+    } = data;
 
-      modifiedResults = {
-        id: lessonId,
-        title,
-        description,
-        price,
-        duration,
-        ratingNumber: rating,
-        totalReviews: rating_count,
-        totalStudents: students_count,
-        technologies,
-        teachers: lecturers.map(
-          ({ id: lecturerId, full_name, gender, image: lecturerImage }: ILecturer) => ({
-            id: lecturerId,
-            name: full_name,
-            gender,
-            avatarUrl: lecturerImage,
-          }),
-        ),
-        githubUrl: github_url,
-        active,
-      };
-    } catch (error) {
-      if (error.response && (error.response.status === 400 || error.response.status === 404)) {
-        modifiedResults = {};
-      }
-    }
+    const modifiedResults = {
+      id: lessonId,
+      title,
+      description,
+      price,
+      duration,
+      technologies,
+      githubUrl: github_url,
+      active,
+    };
+
     return { results: modifiedResults };
   };
 
@@ -101,7 +65,7 @@ export const lessonQuery = (id: string) => {
 export const useLesson = (id: string) => {
   const { queryKey, queryFn } = lessonQuery(id);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as any as ICourseLessonProp, ...rest };
+  return { data: data?.results, ...rest };
 };
 
 export const useEditLesson = (id: string) => {

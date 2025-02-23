@@ -20,7 +20,7 @@ import FormProvider from "src/components/hook-form";
 import { useToastContext } from "src/components/toast";
 import { isStepFailed } from "src/components/stepper/step";
 
-import { ICourseByTechnologyProps } from "src/types/course";
+import { ITechnologyProps } from "src/types/technology";
 
 import { useLessonFields } from "./lesson-fields";
 import { steps, schema, defaultValues } from "./lesson";
@@ -57,13 +57,14 @@ export default function LessonNewForm({ onClose, ...other }: Props) {
   }, [onClose]);
 
   const onSubmit = handleSubmit(async (data) => {
+    const { technologies, githubUrl, ...rest } = data;
     try {
       await createLesson({
-        ...data,
-        technologies: (data.technologies ?? []).map(
-          (technology: ICourseByTechnologyProps) => technology.id,
+        ...rest,
+        technologies: (technologies ?? []).map(
+          (technology: Pick<ITechnologyProps, "id" | "name">) => technology.id,
         ),
-        github_url: `${GITHUB_REPO}${data.github_url}`,
+        github_url: `${GITHUB_REPO}${githubUrl}`,
       });
       reset();
       onCloseWithReset();

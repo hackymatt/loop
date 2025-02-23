@@ -1,217 +1,180 @@
 import os
 import sys
 import time
-import urllib.parse
 from dotenv import load_dotenv
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException
 from utils import set_up_chrome, record_exists_in_file, append_to_file, random_scroll
 import random
 
 
-def send_messages(
-    email, password, tracker_path, message_limit, query, message, short_message
-):
+def get_categories(folder_path):
     # set options and driver
     driver = set_up_chrome()
 
-    # login to linkedin
-    driver.get("https://www.linkedin.com/login")
+    main_url = "https://aleo.com/pl/firmy"
+    driver.get(main_url)
+    time.sleep(10)
 
-    time.sleep(5)
-
-    # enter email
-    email_input = driver.find_element(By.ID, "username")
-    email_input.send_keys(email)
-
-    # enter password
-    password_input = driver.find_element(By.ID, "password")
-    password_input.send_keys(password)
-    password_input.send_keys(Keys.RETURN)
-    time.sleep(15)
-
-    query_encoded = urllib.parse.quote(query)
-
-    # search for term
-    people_url = "https://www.linkedin.com/search/results/people/"
-    driver.get(
-        f'{people_url}?geoUrn=%5B"105072130"%5D&keywords={query_encoded}&origin=SWITCH_SEARCH_VERTICAL&sid=aAl'
+    categories = driver.find_elements(
+        By.XPATH, "//app-root-category-tree//span[@class='space-x-2']"
     )
+
+    categories_dict = {}
+    for category in categories:
+        category_element = category.find_element(By.CSS_SELECTOR, "a")
+        category_url = category_element.get_attribute(
+            "href"
+        )
+        category_name = category_element.text
+        category_folder = f"{folder_path}\\{category_name}"
+        os.makedirs(category_folder, exist_ok=True)
+        categories_dict[category_name] = {"url": category_url, "folder": category_folder}
+
+    return categories_dict
+
+
+def get_subcategories(folder_path, category_url):
+    # set options and driver
+    driver = set_up_chrome()
+
+    driver.get(category_url)
     time.sleep(10)
 
-    # Scroll to ensure any lazy-loaded elements are rendered
-    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    subcategories = driver.find_elements(
+        By.XPATH, "//app-catalog-menu//span[contains(@class, 'space-x-1')]"
+    )
 
-    time.sleep(10)
+    subcategories_dict = {}
+    for subcategory in subcategories:
+        subcategory_element = subcategory.find_element(By.CSS_SELECTOR, "a")
+        subcategory_url = subcategory_element.get_attribute(
+            "href"
+        )
+        subcategory_name = subcategory_element.text
+        subcategory_folder = f"{folder_path}\\{subcategory_name}"
+        os.makedirs(subcategory_folder, exist_ok=True)
+        subcategories_dict[subcategory_name] = {"url": subcategory_url, "folder": subcategory_folder}
+
+    return subcategories_dict
+
+def get_data(
+    folder_path, subcategory_url
+):
+    tracker_path = f"{folder_path}\\data.txt"
+    headers = "CompanyName,NIP,Address,PhoneNumber,Website,Email,Url\n"
+
+    # Create the file and write headers if it does not exist
+    if not os.path.exists(tracker_path):
+        with open(tracker_path, "w", encoding="utf-8") as file:
+            file.write(headers)
+
+    # set options and driver
+    driver = set_up_chrome()
+    # search for term
+    driver.get(subcategory_url)
 
     # determine last page number
     pagination = driver.find_elements(
-        By.XPATH, '//ul[contains(@class, "artdeco-pagination__pages")]/li'
+        By.XPATH, "//app-catalog-pagination//nav//ul//li"
     )
 
     if pagination:
-        last_page = int(pagination[-1].text)
+        last_page = int(pagination[-2].text)
     else:
         last_page = 1
 
+    print(f"Last page: {last_page}")
+    sys.stdout.flush()
+
     # iterate over pages
-    sent_messages = 0
-    not_sent_messages = 0
-    early_exit = False
     for page in range(1, last_page):
         # search for page
-        driver.get(
-            f'{people_url}?geoUrn=%5B"105072130"%5D&keywords={query_encoded}&origin=SWITCH_SEARCH_VERTICAL&page={page}&sid=aAl'
-        )
-        time.sleep(5)
+        driver.get(f"{subcategory_url}/{page}")
 
         # get results
-        profiles = driver.find_elements(
-            By.CLASS_NAME, "reusable-search__result-container"
+        records = driver.find_elements(
+            By.XPATH, "//app-base-catalog-row"
         )
 
         # iterate over profiles
-        for profile in profiles:
-            profile_opened = False
+        for record in records:
+            opened = False
             try:
-                # open profile in new tab
-                profile_link = profile.find_element(By.CSS_SELECTOR, "a").get_attribute(
+                link = record.find_element(By.CSS_SELECTOR, "a").get_attribute(
                     "href"
                 )
+                print(f"Reading: {link}")
+                sys.stdout.flush()
+
                 if not record_exists_in_file(
-                    file_path=tracker_path, record=profile_link
+                    file_path=tracker_path, record=link
                 ):
                     driver.execute_script("window.open('');")
                     driver.switch_to.window(driver.window_handles[1])
-                    driver.get(profile_link)
-                    profile_opened = True
-                    time.sleep(5)
+                    driver.get(link)
+                    opened = True
 
-                    name_element = driver.find_element(By.TAG_NAME, "h1")
-                    full_name = name_element.text
-                    first_name = full_name.split()[0]
+                    time.sleep(10)
+
+                    try:
+                        name_element = driver.find_element(By.XPATH, "//span[contains(@class, 'text-company-name')]")
+                        company_name = name_element.text
+                    except NoSuchElementException:
+                        company_name = ""
+
+                    try:
+                        nip_element = driver.find_element(By.XPATH, "//div[contains(@class, 'tax-id')]//span[contains(@class, 'pre-mobile:text-xs-small-line')]")
+                        nip_number = nip_element.text
+                    except NoSuchElementException:
+                        nip_number = ""
+
+                    try:
+                        address_element = driver.find_element(By.XPATH, "//div[contains(@class, 'address-data')]")
+                        address = address_element.text
+                    except NoSuchElementException:
+                        address = ""
+
+                    try:
+                        phone_element = driver.find_element(By.XPATH, "//app-company-contact//div[contains(@class, 'phone')]//span[contains(@class, 'questo-paywall')]")
+                        phone_number = phone_element.text
+                    except NoSuchElementException:
+                        phone_number = ""
+
+                    try:
+                        website_element = driver.find_element(By.XPATH, "//app-company-contact//div[contains(@class, 'site')]//span[contains(@class, 'questo-paywall')]")
+                        website = website_element.text
+                    except NoSuchElementException:
+                        website = ""
+
+                    try:
+                        email_element = driver.find_element(By.XPATH, "//app-company-contact//div[contains(@class, 'e-mail ')]//span[contains(@class, 'questo-paywall')]")
+                        email = email_element.text
+                    except NoSuchElementException:
+                        email = ""
 
                     random_scroll(driver=driver, duration=random.randint(10, 30))
 
-                    # click message button
-                    message_button = driver.find_elements(
-                        By.XPATH, "//button[contains(@aria-label, 'Message')]"
-                    )[1]
-                    message_button.click()
-                    time.sleep(5)
+                    time.sleep(random.uniform(1, 5))
 
-                    # check if message box opened
-                    message_boxes = driver.find_elements(
-                        By.XPATH,
-                        "//header//h2[text()='New message']//following::div[contains(@class, 'msg-form__contenteditable')]",
+                    append_to_file(
+                        file_path=tracker_path,
+                        text=";".join([company_name, nip_number, address, website, email, phone_number, link]),
                     )
-                    if len(message_boxes) > 0:
-                        message_box = message_boxes[0]
-
-                        time.sleep(15)
-
-                        # enter message text
-                        message_box.send_keys(message.replace("[Imię]", first_name))
-                        time.sleep(15)
-
-                        # send message
-                        send_button = driver.find_element(
-                            By.XPATH, "//button[@type='submit']"
-                        )
-                        send_button.click()
-                        sent_messages += 1
-                        append_to_file(
-                            file_path=tracker_path,
-                            text=";".join([profile_link, "True"]),
-                        )
-                    else:
-                        print(f"Could not send message for profile: {profile_link}")
-                        sys.stdout.flush()
-
-                        try:
-                            dismiss_button = driver.find_element(
-                                By.XPATH,
-                                "//button[@aria-label='Dismiss']",
-                            )
-                            dismiss_button.click()
-                            time.sleep(2)
-
-                            invite_button = driver.find_element(
-                                By.XPATH,
-                                "//button[@aria-label[contains(., 'Invite')] and contains(@class, 'artdeco-button--primary') and contains(@class, 'pvs-profile-actions__action')]",
-                            )
-                            invite_button.click()
-                            time.sleep(2)
-
-                            note_button = driver.find_element(
-                                By.XPATH,
-                                "//button[@aria-label='Add a note']",
-                            )
-                            note_button.click()
-                            time.sleep(2)
-
-                            message_box = driver.find_element(
-                                By.XPATH,
-                                "//textarea[@name='message']",
-                            )
-                            # enter message text
-                            message_box.send_keys(
-                                short_message.replace("[Imię]", first_name)
-                            )
-                            time.sleep(15)
-
-                            # send message
-                            send_button = driver.find_element(
-                                By.XPATH,
-                                "//button[@aria-label='Send invitation']",
-                            )
-                            send_button.click()
-                            sent_messages += 1
-                            append_to_file(
-                                file_path=tracker_path,
-                                text=";".join([profile_link, "True"]),
-                            )
-                            if sent_messages == message_limit:
-                                print(f"Reached message limit: {message_limit}")
-                                sys.stdout.flush()
-                                early_exit = True
-                                break
-                        except:
-                            not_sent_messages += 1
-                            append_to_file(
-                                file_path=tracker_path,
-                                text=";".join([profile_link, "False"]),
-                            )
                 else:
-                    print(f"Skipping profile: {profile_link}")
+                    print(f"Skipping record: {link}")
                     sys.stdout.flush()
-                    sent_messages += 1
-                    if sent_messages == message_limit:
-                        print(f"Reached message limit: {message_limit}")
-                        sys.stdout.flush()
-                        early_exit = True
-                        break
 
             except Exception as error:
-                not_sent_messages += 1
-                print(f"Could not send message for profile. Error: {error}")
+                print(f"Could not get record. Error: {error}")
                 sys.stdout.flush()
                 continue
 
-            # close profile tab
-            if profile_opened:
+            # close tab
+            if opened:
                 driver.close()
                 driver.switch_to.window(driver.window_handles[0])
-                time.sleep(random.uniform(10, 60))  # random delay
-
-            success_rate = (sent_messages / (sent_messages + not_sent_messages)) * 100
-            print(f"Success rate: {success_rate:.2f}%")
-            sys.stdout.flush()
-
-        if early_exit:
-            print("Exiting earlier due to message limit.")
-            sys.stdout.flush()
-            break
+                time.sleep(random.uniform(10, 30))  # random delay
 
     # close browser
     driver.quit()
@@ -221,49 +184,21 @@ if __name__ == "__main__":
     # load environment variables from .env file
     load_dotenv()
 
-    # read email and password from environment variables
-    email_secret = os.getenv("LINKEDIN_EMAIL")
-    password_secret = os.getenv("LINKEDIN_PASSWORD")
-    tracker_path_secret = os.getenv("TRACKER_PATH")
+    folder_path_secret = "C:\\Users\\szcze\\OneDrive\\Pulpit\\aleo"
 
-    # check if email or password is missing
-    if not email_secret:
-        raise ValueError("Email is missing from the environment variables.")
-    if not password_secret:
-        raise ValueError("Password is missing from the environment variables.")
-    if not tracker_path_secret:
+    if not folder_path_secret:
         raise ValueError("Tracker path is missing from the environment variables.")
 
     try:
-        send_messages(
-            email=email_secret,
-            password=password_secret,
-            tracker_path=tracker_path_secret,
-            message_limit=100,
-            query="(instruktor OR nauczyciel OR wykładowca OR trener OR lecturer) AND (Coders Lab)",
-            message="""Cześć [Imię]!
-
-Piszę do Ciebie, bo prowadzę nowo otwartą szkołę programowania online, loop, i uważam, że mógłbyś/mogłabyś świetnie wpasować się do naszego zespołu instruktorów! Stawiamy na elastyczność — każdy instruktor sam ustala swój grafik w 30-minutowych slotach, co daje pełną kontrolę nad czasem pracy.
-
-Oferujemy różne formy wynagrodzenia do wyboru: stawkę godzinową, prowizyjną lub mieszaną. Chętnie porozmawiamy o Twoich oczekiwaniach finansowych, więc śmiało podaj nam swoją propozycję stawki!
-
-Dopiero zaczynamy, więc dołączając teraz, będziesz mieć realny wpływ na rozwój naszej szkoły. Zachęcamy również do proponowania swoich kursów — napisz, czego chciałbyś/chciałabyś uczyć lub w jakich tematach mógłbyś/mogłabyś prowadzić zajęcia. Materiały są podzielone na lekcje, więc nie musisz znać się na całym kursie, wystarczy, że będziesz prowadzić wybrane zajęcia zgodne z Twoją specjalizacją.
-
-Współpracujemy na umowę zlecenie lub B2B, zależnie od preferencji. Naszym celem jest stworzenie szkoły, która oferuje praktyczne umiejętności dostosowane do rynku, a jednocześnie pozwala instruktorom na pełną swobodę i satysfakcjonującą współpracę.
-
-Będzie mi bardzo miło, jeśli zajrzysz na naszą stronę: https://loop.edu.pl i dowiesz się więcej. Jeśli masz pytania lub chciałbyś/chciałabyś omówić szczegóły, jestem do dyspozycji.
-
-Pozdrawiam serdecznie,
-Mateusz Szczepek
-Założyciel szkoły loop""",
-            short_message="""Cześć [Imię]!
-
-Piszę do Ciebie, bo prowadzę nowo otwartą szkołę programowania online, https://loop.edu.pl, i uważam, że pasujesz do naszego zespołu instruktorów! Jeśli masz pytania, jestem do dyspozycji.
-
-Pozdrawiam serdecznie,
-Mateusz Szczepek
-Założyciel szkoły loop""",
-        )
+        categories = get_categories(folder_path=folder_path_secret)
+        for category_key, category in categories.items():
+            print(f"Reading category {category_key}")
+            sys.stdout.flush()
+            subcategories = get_subcategories(folder_path=category["folder"], category_url=category["url"])
+            for subcategory_key, subcategory in subcategories.items():
+                print(f"Reading subcategory {subcategory_key}")
+                sys.stdout.flush()
+                get_data(folder_path=subcategory["folder"], subcategory_url=subcategory["url"])
     except Exception as error:
         print(error)
         sys.stdout.flush()

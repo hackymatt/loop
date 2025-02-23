@@ -4,21 +4,14 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { formatQueryParams } from "src/utils/query-params";
 
-import { IGender } from "src/types/testimonial";
-import { ICourseLessonProp } from "src/types/course";
+import { ILessonProps } from "src/types/lesson";
 import { IQueryParams } from "src/types/query-params";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils";
+import { ListQueryResponse } from "../types";
+import { getListData, getCsrfToken } from "../utils";
 
 const endpoint = "/lessons" as const;
-
-type ILecturer = {
-  full_name: string;
-  id: string;
-  image: string | null;
-  gender: IGender | null;
-};
 
 type ITechnology = {
   id: string;
@@ -27,85 +20,32 @@ type ITechnology = {
 
 type ILesson = {
   id: string;
-  lecturers: ILecturer[];
-  students_count: number;
-  rating: number;
-  rating_count: number;
   technologies: ITechnology[];
   title: string;
   description: string;
   duration: number;
   github_url: string;
   price: number;
-  previous_price: number | null;
-  lowest_30_days_price: number | null;
   active: boolean;
 };
 
-type ICreateLesson = Omit<
-  ILesson,
-  | "id"
-  | "lecturers"
-  | "students_count"
-  | "rating"
-  | "rating_count"
-  | "previous_price"
-  | "lowest_30_days_price"
-  | "technologies"
-> & { technologies: string[] };
+type ICreateLesson = Omit<ILesson, "id" | "technologies"> & { technologies: string[] };
 type ICreateLessonReturn = ICreateLesson;
 export const lessonsQuery = (query?: IQueryParams) => {
   const url = endpoint;
   const urlParams = formatQueryParams(query);
   const queryUrl = urlParams ? `${url}?${urlParams}` : url;
 
-  const queryFn = async () => {
-    let data;
-    try {
-      const response = await Api.get(queryUrl);
-      ({ data } = response);
-    } catch (error) {
-      if (error.response && (error.response.status === 400 || error.response.status === 404)) {
-        data = { results: [], records_count: 0, pages_count: 0 };
-      }
-    }
-    const { results, records_count, pages_count } = data;
+  const queryFn = async (): Promise<ListQueryResponse<ILessonProps[]>> => {
+    const { results, records_count, pages_count } = await getListData<ILesson>(queryUrl);
     const modifiedResults = results.map(
-      ({
+      ({ id, description, price, title, technologies, duration, github_url, active }: ILesson) => ({
         id,
         description,
         price,
-        previous_price,
-        lowest_30_days_price,
         title,
         technologies,
         duration,
-        rating,
-        rating_count,
-        students_count,
-        lecturers,
-        github_url,
-        active,
-      }: ILesson) => ({
-        id,
-        description,
-        price,
-        priceSale: previous_price,
-        lowest30DaysPrice: lowest_30_days_price,
-        title,
-        technologies,
-        duration,
-        ratingNumber: rating,
-        totalReviews: rating_count,
-        totalStudents: students_count,
-        teachers: lecturers.map(
-          ({ id: lecturerId, full_name, gender, image: lecturerImage }: ILecturer) => ({
-            id: lecturerId,
-            name: full_name,
-            avatarUrl: lecturerImage,
-            gender,
-          }),
-        ),
         githubUrl: github_url,
         active,
       }),
@@ -119,7 +59,7 @@ export const lessonsQuery = (query?: IQueryParams) => {
 export const useLessons = (query?: IQueryParams, enabled: boolean = true) => {
   const { queryKey, queryFn } = lessonsQuery(query);
   const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
-  return { data: data?.results as ICourseLessonProp[], count: data?.count, ...rest };
+  return { data: data?.results, count: data?.count, ...rest };
 };
 
 export const useLessonsPagesCount = (query?: IQueryParams) => {

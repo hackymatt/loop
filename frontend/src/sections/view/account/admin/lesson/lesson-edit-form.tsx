@@ -20,8 +20,8 @@ import { useTechnologies } from "src/api/technologies/technologies";
 import FormProvider from "src/components/hook-form";
 import { isStepFailed } from "src/components/stepper/step";
 
+import { ILessonProps } from "src/types/lesson";
 import { ITechnologyProps } from "src/types/technology";
-import { ICourseLessonProp, ICourseByTechnologyProps } from "src/types/course";
 
 import { useLessonFields } from "./lesson-fields";
 import { steps, schema, defaultValues } from "./lesson";
@@ -29,7 +29,7 @@ import { steps, schema, defaultValues } from "./lesson";
 // ----------------------------------------------------------------------
 
 interface Props extends DialogProps {
-  lesson: ICourseLessonProp;
+  lesson: ILessonProps;
   onClose: VoidFunction;
 }
 
@@ -57,10 +57,11 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
 
   useEffect(() => {
     if (lessonData && availableTechnologies) {
+      const { technologies, githubUrl, ...rest } = lessonData;
       reset({
-        ...lessonData,
-        github_url: lessonData.githubUrl.replace(GITHUB_REPO, ""),
-        technologies: lessonData.technologies.map((t: ICourseByTechnologyProps) =>
+        ...rest,
+        githubUrl: githubUrl.replace(GITHUB_REPO, ""),
+        technologies: technologies.map((t: Pick<ITechnologyProps, "id" | "name">) =>
           availableTechnologies.find((technology: ITechnologyProps) => technology.name === t.name),
         ),
       });
@@ -75,13 +76,12 @@ export default function LessonEditForm({ lesson, onClose, ...other }: Props) {
   }, [onClose]);
 
   const onSubmit = handleSubmit(async (data) => {
+    const { technologies, githubUrl, ...rest } = data;
     try {
       await editLesson({
-        ...data,
-        technologies: (data.technologies ?? []).map(
-          (technology: ICourseByTechnologyProps) => technology.id,
-        ),
-        github_url: `${GITHUB_REPO}${data.github_url}`,
+        ...rest,
+        technologies: (technologies ?? []).map((technology: ITechnologyProps) => technology.id),
+        github_url: `${GITHUB_REPO}${githubUrl}`,
       });
       reset();
       onCloseWithReset();
