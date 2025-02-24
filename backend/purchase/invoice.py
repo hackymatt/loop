@@ -1,6 +1,6 @@
 from django.db.models import Sum
 from django.template.loader import render_to_string
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from purchase.models import Payment
 from config_global import VAT_RATE, VAT_LIMIT, FRONTEND_URL, IS_LOCAL, STORAGES
 from weasyprint import HTML
@@ -28,6 +28,7 @@ class Invoice:
         self.data = {
             "vat": self.is_vat,
             "invoice_date": self.date,
+            "completion_date": self.date,
             "invoice_number": self.invoice_number,
             "customer": {
                 "full_name": self.customer["full_name"],
@@ -69,6 +70,7 @@ class Invoice:
                 price=self._calc_vat(price=self.payment["amount"])
             ),
             "total_brutto": self._format_price(price=self.payment["amount"]),
+            "payment_due": self.date + timedelta(days=14),
             "payment_method": self.payment["method"],
             "payment_status": self.payment["status"],
             "payment_account": self.payment["account"],

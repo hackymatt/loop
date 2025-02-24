@@ -26,7 +26,6 @@ export const useLessonFields = () => {
         type="number"
         InputProps={{
           inputProps: { min: 0, step: ".01" },
-          endAdornment: <InputAdornment position="end">zł</InputAdornment>,
         }}
       />
     ),
