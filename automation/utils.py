@@ -34,17 +34,29 @@ def append_to_file(file_path, text):
 
 def random_scroll(driver, duration):
     start_time = time.time()
+    scrolling_down = True  # Start by scrolling down
 
-    # Scroll the page for the designated duration
     while time.time() - start_time < duration:
-        # Generate random scroll distance and speed
-        scroll_distance = random.randint(100, 300)  # pixels to scroll at once
-        scroll_pause = random.uniform(0.5, 2)  # seconds between scrolls
+        scroll_distance = random.randint(100, 300)  # Random scroll distance
+        scroll_pause = random.uniform(0.5, 2)  # Random pause
 
-        # Scroll by the randomly chosen amount
-        driver.execute_script(f"window.scrollBy(0, {scroll_distance});")
+        if scrolling_down:
+            driver.execute_script(f"window.scrollBy(0, {scroll_distance});")
+        else:
+            driver.execute_script(f"window.scrollBy(0, {-scroll_distance});")
 
-        # Pause for a random duration
         time.sleep(scroll_pause)
+
+        # Get current scroll position
+        current_scroll = driver.execute_script("return window.scrollY;")
+        max_scroll = driver.execute_script("return document.body.scrollHeight - window.innerHeight;")
+
+        # If we reach the bottom, start scrolling up
+        if current_scroll >= max_scroll:
+            scrolling_down = False
+
+        # If we reach the top, start scrolling down
+        elif current_scroll <= 0:
+            scrolling_down = True
 
     driver.execute_script("window.scrollTo(0, 0);")

@@ -62,7 +62,7 @@ def get_data(
     folder_path, subcategory_url
 ):
     tracker_path = f"{folder_path}\\data.txt"
-    headers = "CompanyName,NIP,Address,PhoneNumber,Website,Email,Url\n"
+    headers = ";".join(["CompanyName", "NIP", "Address", "Website", "Email", "PhoneNumber", "Url"]) + "\n"
 
     # Create the file and write headers if it does not exist
     if not os.path.exists(tracker_path):

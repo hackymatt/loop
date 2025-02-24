@@ -84,7 +84,7 @@ def confirm_service_purchase(purchases: List[ServicePurchase], payment: Payment)
     purchase = purchases[0]
 
     customer = {
-        "id": purchase.other.id,
+        "id": purchase.other.profile.id,
         "full_name": f"{purchase.other.profile.user.first_name} {purchase.other.profile.user.last_name}",
         "street_address": purchase.other.profile.street_address,
         "city": purchase.other.profile.city,
@@ -168,7 +168,7 @@ def confirm_purchase(purchases, payment: Payment):
     purchase = purchases[0]
 
     customer = {
-        "id": purchase.student.id,
+        "id": purchase.student.profile.id,
         "full_name": f"{purchase.student.profile.user.first_name} {purchase.student.profile.user.last_name}",
         "street_address": purchase.student.profile.street_address,
         "city": purchase.student.profile.city,
