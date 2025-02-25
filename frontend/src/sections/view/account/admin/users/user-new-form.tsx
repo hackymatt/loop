@@ -74,7 +74,7 @@ export default function UserNewForm({ onClose, ...other }: Props) {
       });
       reset();
       onClose();
-      enqueueSnackbar("Płatność została dodana", { variant: "success" });
+      enqueueSnackbar("Użytkownik został dodany", { variant: "success" });
     } catch (error) {
       handleFormError(error);
     }

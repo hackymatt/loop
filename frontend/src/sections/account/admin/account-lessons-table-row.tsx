@@ -10,7 +10,7 @@ import { Link, Divider, Typography } from "@mui/material";
 
 import { usePopover } from "src/hooks/use-popover";
 
-import { fCurrency } from "src/utils/format-number";
+import { fNumber } from "src/utils/format-number";
 
 import Label from "src/components/label";
 import Iconify from "src/components/iconify";
@@ -63,7 +63,7 @@ export default function AccountLessonsTableRow({ row, onEdit, onPriceHistoryView
         </TableCell>
 
         <TableCell>
-          <InputBase value={fCurrency(row.price ?? 0)} />
+          <InputBase value={fNumber(row.price ?? 0)} />
         </TableCell>
 
         <TableCell align="right" padding="none">

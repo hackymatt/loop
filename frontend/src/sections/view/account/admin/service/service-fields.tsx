@@ -1,5 +1,3 @@
-import { InputAdornment } from "@mui/material";
-
 import { RHFSwitch, RHFTextField } from "src/components/hook-form";
 
 export const useServiceFields = () => {
@@ -16,7 +14,6 @@ export const useServiceFields = () => {
         type="number"
         InputProps={{
           inputProps: { min: 0, step: ".01" },
-          endAdornment: <InputAdornment position="end">zł</InputAdornment>,
         }}
       />
     ),

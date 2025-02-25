@@ -461,12 +461,26 @@
                               <p
                                 class="whitespace-nowrap text-slate-400 text-right"
                               >
-                                Data
+                                Data wystawienia faktury
                               </p>
                               <p
                                 class="whitespace-nowrap font-bold text-main text-right"
                               >
                                 {{ invoice_date }}
+                              </p>
+                            </div>
+                          </td>
+                          <td class="border-r pr-4 pl-4">
+                            <div>
+                              <p
+                                class="whitespace-nowrap text-slate-400 text-right"
+                              >
+                                Data wykonania usługi
+                              </p>
+                              <p
+                                class="whitespace-nowrap font-bold text-main text-right"
+                              >
+                                {{ completion_date }}
                               </p>
                             </div>
                           </td>
@@ -694,6 +708,7 @@
           <p>Forma płatności: {{ payment_method }}</p>
           {% if payment_method != "Przelewy24" %}
           <p>Nr konta: {{ payment_account }}</p>
+          <p>Termin płatności: {{ payment_due }}</p>
           {% endif %}
           <p>Status płatności: {{ payment_status}}</p>
         </div>

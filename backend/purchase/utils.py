@@ -7,6 +7,7 @@ from typing import List
 from math import floor
 from notification.utils import notify
 from const import PaymentMethod, PaymentStatus
+from django.db.models import Count, Q
 
 
 def get_lessons_price(lessons):
@@ -73,6 +74,20 @@ def group_items(items):
     return list(grouped.values())
 
 
+def get_invoice_id():
+    return Payment.objects.aggregate(
+        total=Count(
+            "id",
+            filter=Q(status=PaymentStatus.SUCCESS, method=PaymentMethod.PRZELEWY24),
+        )
+        + Count(
+            "id",
+            filter=Q(status=PaymentStatus.PENDING)
+            & ~Q(method=PaymentMethod.PRZELEWY24),
+        )
+    )["total"]
+
+
 def confirm_service_purchase(purchases: List[ServicePurchase], payment: Payment):
     payment_successful = payment.status == PaymentStatus.SUCCESS
     payment_rejected = payment.status == "F"
@@ -103,7 +118,7 @@ def confirm_service_purchase(purchases: List[ServicePurchase], payment: Payment)
     )
     notes = payment.notes
     payment = {
-        "id": payment.id,
+        "id": get_invoice_id(),
         "amount": payment.amount / 100,
         "currency": payment.currency,
         "status": "Zapłacono" if payment_successful else "Do zapłaty",
@@ -186,7 +201,7 @@ def confirm_purchase(purchases, payment: Payment):
         ]
     )
     payment = {
-        "id": payment.id,
+        "id": get_invoice_id(),
         "amount": payment.amount / 100,
         "currency": payment.currency,
         "status": "Zapłacono" if payment_successful else "Do zapłaty",
