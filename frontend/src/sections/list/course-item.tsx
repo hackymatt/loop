@@ -21,7 +21,7 @@ import Iconify from "src/components/iconify";
 import TextMaxLine from "src/components/text-max-line";
 import { CircularProgressWithLabel } from "src/components/progress-label/circle-progress";
 
-import { ILevel, ICourseProps, ICourseByTechnologyProps } from "src/types/course";
+import { ILevel, ICourseProps, ICourseTechnologyProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -33,11 +33,11 @@ type Props = {
 export default function CourseItem({ course, vertical }: Props) {
   const {
     id,
-    slug,
+    title,
     level,
     price,
     teachers,
-    coverUrl,
+    image,
     technologies,
     priceSale,
     lowest30DaysPrice,
@@ -49,11 +49,13 @@ export default function CourseItem({ course, vertical }: Props) {
     progress,
   } = course;
 
-  const genderAvatarUrl = getGenderAvatar(teachers?.[0]?.gender);
+  const firstTeacher = teachers.length > 0 ? teachers[0] : undefined;
 
-  const avatarUrl = teachers?.[0]?.avatarUrl || genderAvatarUrl;
+  const genderAvatarUrl = getGenderAvatar(firstTeacher?.gender);
 
-  const path = useMemo(() => `${slug}-${id}`, [id, slug]);
+  const firstTeacherImage = firstTeacher?.image ?? genderAvatarUrl;
+
+  const path = useMemo(() => `${title}-${id}`, [id, title]);
 
   return (
     <Link
@@ -76,8 +78,8 @@ export default function CourseItem({ course, vertical }: Props) {
       >
         <Box sx={{ flexShrink: { sm: 0 } }}>
           <Image
-            alt={slug}
-            src={coverUrl}
+            alt={title}
+            src={image}
             sx={{
               objectFit: "cover",
               width: { xs: 1, md: 240 },
@@ -90,7 +92,7 @@ export default function CourseItem({ course, vertical }: Props) {
           />
         </Box>
 
-        {progress !== undefined ? (
+        {progress !== null ? (
           <Stack
             justifyContent="center"
             alignItems="center"
@@ -112,7 +114,7 @@ export default function CourseItem({ course, vertical }: Props) {
             }}
           >
             <Stack direction="row" alignItems="center" justifyContent="space-between">
-              {technologies && (
+              {technologies.length > 0 ? (
                 <Stack
                   spacing={0.5}
                   direction="row"
@@ -129,7 +131,7 @@ export default function CourseItem({ course, vertical }: Props) {
                     />
                   }
                 >
-                  {technologies.map((technology: ICourseByTechnologyProps) => (
+                  {technologies.map((technology: ICourseTechnologyProps) => (
                     <Typography
                       key={technology.id}
                       variant="overline"
@@ -139,10 +141,10 @@ export default function CourseItem({ course, vertical }: Props) {
                     </Typography>
                   ))}
                 </Stack>
-              )}
+              ) : null}
 
               <Typography variant="h4" sx={{ textAlign: "right" }}>
-                {priceSale !== undefined && (
+                {priceSale !== null ? (
                   <Box
                     component="span"
                     sx={{
@@ -153,22 +155,21 @@ export default function CourseItem({ course, vertical }: Props) {
                   >
                     {fCurrency(priceSale)}
                   </Box>
-                )}
+                ) : null}
+
                 {fCurrency(price)}
-                {priceSale !== undefined &&
-                  priceSale !== null &&
-                  lowest30DaysPrice !== undefined &&
-                  lowest30DaysPrice !== null && (
-                    <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "center" }}>
-                      Najniższa cena z 30 dni przed: {fCurrency(lowest30DaysPrice)}
-                    </Typography>
-                  )}
+
+                {priceSale !== null && lowest30DaysPrice !== null ? (
+                  <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "center" }}>
+                    Najniższa cena z 30 dni przed: {fCurrency(lowest30DaysPrice)}
+                  </Typography>
+                ) : null}
               </Typography>
             </Stack>
 
             <Stack spacing={1}>
               <TextMaxLine variant="h6" line={2}>
-                {slug}
+                {title}
               </TextMaxLine>
 
               <TextMaxLine
@@ -193,7 +194,7 @@ export default function CourseItem({ course, vertical }: Props) {
             flexWrap="wrap"
             divider={<Divider orientation="vertical" sx={{ height: 20, my: "auto" }} />}
           >
-            {totalReviews && (
+            {totalReviews > 0 ? (
               <Stack spacing={0.5} direction="row" alignItems="center">
                 <Iconify icon="carbon:star-filled" sx={{ color: "warning.main" }} />
                 <Box sx={{ typography: "h6" }}>
@@ -205,7 +206,7 @@ export default function CourseItem({ course, vertical }: Props) {
                   {polishPlurals("recenzja", "recenzje", "recenzji", totalReviews)})
                 </Typography>
               </Stack>
-            )}
+            ) : null}
 
             {totalStudents > 0 && (
               <Stack direction="row" sx={{ typography: "subtitle2" }}>
@@ -217,15 +218,15 @@ export default function CourseItem({ course, vertical }: Props) {
             )}
           </Stack>
 
-          {teachers?.length > 0 && (
+          {firstTeacher ? (
             <Stack direction="row" alignItems="center">
-              <Avatar src={avatarUrl} />
+              <Avatar src={firstTeacherImage} />
 
               <Typography variant="body2" sx={{ ml: 1, mr: 0.5 }}>
-                {teachers[0]?.name}
+                {firstTeacher.name}
               </Typography>
 
-              {teachers?.length > 1 && (
+              {teachers.length > 1 ? (
                 <Typography
                   color="text.secondary"
                   variant="body2"
@@ -234,9 +235,9 @@ export default function CourseItem({ course, vertical }: Props) {
                   + {teachers.length - 1}{" "}
                   {polishPlurals("nauczyciel", "nauczycieli", "nauczycieli", teachers.length - 1)}
                 </Typography>
-              )}
+              ) : null}
             </Stack>
-          )}
+          ) : null}
 
           <Divider
             sx={{

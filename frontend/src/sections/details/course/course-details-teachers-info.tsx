@@ -17,12 +17,12 @@ import { getGenderAvatar } from "src/utils/get-gender-avatar";
 
 import Iconify from "src/components/iconify";
 
-import { ICourseTeacherProp } from "src/types/course";
+import { ICourseTeacherDetailsProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  teachers: ICourseTeacherProp[];
+  teachers: ICourseTeacherDetailsProps[];
 };
 
 export default function CourseDetailsTeachersInfo({ teachers = [] }: Props) {
@@ -53,15 +53,17 @@ export default function CourseDetailsTeachersInfo({ teachers = [] }: Props) {
 // ----------------------------------------------------------------------
 
 type TeacherItemProps = {
-  teacher: ICourseTeacherProp;
+  teacher: ICourseTeacherDetailsProps;
 };
 
 function TeacherItem({ teacher }: TeacherItemProps) {
-  const genderAvatarUrl = getGenderAvatar(teacher?.gender);
+  const { id, name, gender, role, image, totalLessons, ratingNumber, totalReviews } = teacher;
 
-  const avatarUrl = teacher?.avatarUrl || genderAvatarUrl;
+  const genderAvatarUrl = getGenderAvatar(gender);
 
-  const path = useMemo(() => `${teacher.name}-${teacher.id}`, [teacher.id, teacher.name]);
+  const avatarUrl = image || genderAvatarUrl;
+
+  const path = useMemo(() => `${name}-${id}`, [id, name]);
 
   return (
     <Link
@@ -76,14 +78,14 @@ function TeacherItem({ teacher }: TeacherItemProps) {
 
           <Stack spacing={1} flexGrow={1}>
             <Stack spacing={0.5}>
-              <Typography variant="h6">{teacher.name}</Typography>
+              <Typography variant="h6">{name}</Typography>
 
               <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                {teacher.role}
+                {role}
               </Typography>
             </Stack>
 
-            {teacher.totalLessons && (
+            {totalLessons > 0 ? (
               <Stack
                 direction="row"
                 alignItems="center"
@@ -93,27 +95,23 @@ function TeacherItem({ teacher }: TeacherItemProps) {
                 <Box component="strong" sx={{ mr: 0.25 }}>
                   {teacher.totalLessons}
                 </Box>
-                {polishPlurals("lekcja", "lekcje", "lekcji", teacher.totalLessons)}
+                {polishPlurals("lekcja", "lekcje", "lekcji", totalLessons)}
               </Stack>
-            )}
+            ) : null}
 
-            {teacher.ratingNumber && (
+            {ratingNumber !== null ? (
               <Stack spacing={0.5} direction="row" alignItems="center">
                 <Iconify icon="carbon:star-filled" sx={{ color: "warning.main" }} />
                 <Box sx={{ typography: "h6" }}>
-                  {Number.isInteger(teacher.ratingNumber)
-                    ? `${teacher.ratingNumber}.0`
-                    : teacher.ratingNumber}
+                  {Number.isInteger(ratingNumber) ? `${ratingNumber}.0` : ratingNumber}
                 </Box>
 
-                {teacher.totalReviews && (
-                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    ({fShortenNumber(teacher.totalReviews)}{" "}
-                    {polishPlurals("recenzja", "recenzje", "recenzji", teacher.totalReviews)})
-                  </Typography>
-                )}
+                <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                  ({fShortenNumber(totalReviews)}{" "}
+                  {polishPlurals("recenzja", "recenzje", "recenzji", totalReviews)})
+                </Typography>
               </Stack>
-            )}
+            ) : null}
           </Stack>
         </Stack>
       </Paper>

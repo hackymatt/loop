@@ -6,6 +6,6 @@ export type IModuleProps = {
   id: string;
   title: string;
   price: number;
-  duration: number;
+  totalHours: number;
   lessons: IModuleLessonProps[];
 };

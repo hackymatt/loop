@@ -9,7 +9,7 @@ import { useReviewsStatistics } from "src/api/reviews/reviews-statistics";
 import { SplashScreen } from "src/components/loading-screen";
 
 import { IQueryParamValue } from "src/types/query-params";
-import { ICourseLessonProp, ICourseTeacherProp } from "src/types/course";
+import { ICourseModuleLessonProps, ICourseTeacherDetailsProps } from "src/types/course";
 
 import ReviewList from "./review-list";
 import ReviewSummary from "./review-summary";
@@ -22,8 +22,8 @@ type Props = {
   teacherId: string;
   ratingNumber: number;
   reviewNumber: number;
-  lessons: ICourseLessonProp[];
-  teachers: ICourseTeacherProp[];
+  lessons: ICourseModuleLessonProps[];
+  teachers: ICourseTeacherDetailsProps[];
 };
 
 export default function Review({

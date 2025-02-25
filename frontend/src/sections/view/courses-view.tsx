@@ -150,22 +150,18 @@ export default function CoursesView() {
               width: { md: `calc(100% - ${280}px)` },
             }}
           >
-            {courses?.length > 0 && (
-              <Stack
-                direction="row"
-                alignItems="center"
-                justifyContent="right"
-                sx={{ mb: 5, display: { xs: "none", md: "flex" } }}
-              >
-                <Sorting
-                  value={query.sort_by ?? defaultSort}
-                  options={sortOptions}
-                  onChange={(event: SelectChangeEvent) =>
-                    handleChange("sort_by", event.target.value)
-                  }
-                />
-              </Stack>
-            )}
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="right"
+              sx={{ mb: 5, display: { xs: "none", md: "flex" } }}
+            >
+              <Sorting
+                value={query.sort_by ?? defaultSort}
+                options={sortOptions}
+                onChange={(event: SelectChangeEvent) => handleChange("sort_by", event.target.value)}
+              />
+            </Stack>
 
             <Popover
               open={openSorting.open}

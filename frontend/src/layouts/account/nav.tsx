@@ -19,6 +19,7 @@ import { RouterLink } from "src/routes/components";
 
 import { useResponsive } from "src/hooks/use-responsive";
 
+import { UserType } from "src/consts/user-type";
 import { useUserDetails } from "src/api/auth/details";
 import { adminNavigation, studentNavigation, teacherNavigation } from "src/consts/navigations";
 
@@ -28,8 +29,6 @@ import TextMaxLine from "src/components/text-max-line";
 import { useToastContext } from "src/components/toast";
 
 import AccountImage from "src/sections/account/account-image";
-
-import { UserType } from "src/consts/user-type";
 
 // ----------------------------------------------------------------------
 
@@ -45,9 +44,9 @@ export default function Nav({ open, onClose }: Props) {
 
   const mdUp = useResponsive("up", "md");
 
-  const { logoutUser, userType } = useUserContext();
+  const { logoutUser, userType, isLoggedIn } = useUserContext();
 
-  const { data: userDetails } = useUserDetails();
+  const { data: userDetails } = useUserDetails(isLoggedIn);
 
   const navigations = useMemo(
     () =>

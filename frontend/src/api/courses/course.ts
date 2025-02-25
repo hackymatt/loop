@@ -2,25 +2,24 @@ import { AxiosError } from "axios";
 import { compact } from "lodash-es";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { ICourseProps } from "src/types/course";
 import { IGender } from "src/types/testimonial";
+import { ICourseDetailsProps } from "src/types/course";
 
 import { Api } from "../service";
-import { getCsrfToken } from "../utils";
+import { GetQueryResponse } from "../types";
+import { getData, getCsrfToken } from "../utils";
 
 const endpoint = "/courses" as const;
-
-type ILevel = "P" | "Ś" | "Z" | "E";
 
 type ILecturer = {
   full_name: string;
   id: string;
   image: string | null;
-  gender: IGender | null;
+  gender: IGender;
   lessons_count: number;
   rating: number | null;
   rating_count: number;
-  title: string | null;
+  title: string;
 };
 
 type ITechnology = {
@@ -48,8 +47,8 @@ type ILesson = {
   id: string;
   title: string;
   price: number;
-  previous_price?: number | null;
-  lowest_30_days_price?: number | null;
+  previous_price: number | null;
+  lowest_30_days_price: number | null;
   progress: number | null;
 };
 
@@ -57,15 +56,14 @@ type IModule = {
   id: string;
   title: string;
   price: number;
-  previous_price?: number | null;
-  lowest_30_days_price?: number | null;
+  previous_price: number | null;
+  lowest_30_days_price: number | null;
   lessons: ILesson[];
   progress: number | null;
 };
 
 type ICourse = {
   id: string;
-  level: ILevel;
   price: number;
   previous_price: number | null;
   lowest_30_days_price: number | null;
@@ -77,15 +75,16 @@ type ICourse = {
   candidates: ICandidate[];
   lecturers: ILecturer[];
   students_count: number;
-  rating: number;
+  rating: number | null;
   rating_count: number;
+  progress: number | null;
   image: string;
-  video?: string;
+  video: string | null;
   title: string;
   description: string;
   overview: string;
-  active: boolean;
-  progress: number | null;
+  level: "Podstawowy" | "Średniozaawansowany" | "Zaawansowany" | "Ekspert";
+  active?: boolean;
 };
 
 type IEditCourse = Omit<
@@ -117,119 +116,112 @@ export const courseQuery = (id: string) => {
   const url = endpoint;
   const queryUrl = `${url}/${id}`;
 
-  const queryFn = async () => {
-    let modifiedResults;
-    try {
-      const response = await Api.get<ICourse>(queryUrl);
-      const { data } = response;
-      const {
-        id: courseId,
-        description,
-        overview,
-        price,
-        level,
-        image,
-        video,
-        title,
-        technologies,
-        previous_price,
-        lowest_30_days_price,
-        duration,
-        rating,
-        rating_count,
-        students_count,
-        lecturers,
-        tags,
-        topics,
-        candidates,
-        modules,
-        active,
-        progress,
-      } = data;
+  const queryFn = async (): Promise<GetQueryResponse<ICourseDetailsProps>> => {
+    const { data } = await getData<ICourse>(queryUrl);
+    const {
+      id: courseId,
+      description,
+      overview,
+      price,
+      level,
+      image,
+      video,
+      title,
+      technologies,
+      previous_price,
+      lowest_30_days_price,
+      duration,
+      rating,
+      rating_count,
+      students_count,
+      lecturers,
+      tags,
+      topics,
+      candidates,
+      modules,
+      active,
+      progress,
+    } = data;
 
-      modifiedResults = {
-        id: courseId,
-        description,
-        overview,
-        price,
-        level,
-        coverUrl: image,
-        video,
-        slug: title,
-        technologies,
-        priceSale: previous_price,
-        lowest30DaysPrice: lowest_30_days_price,
-        totalHours: duration / 60,
-        ratingNumber: rating,
-        totalReviews: rating_count,
-        totalStudents: students_count,
-        teachers: lecturers.map(
-          ({
-            id: lecturerId,
-            full_name,
-            gender,
-            image: lecturerImage,
-            lessons_count,
-            rating: lecturerRating,
-            rating_count: lecturerRatingCount,
-            title: lecturerTitle,
-          }: ILecturer) => ({
-            id: lecturerId,
-            name: full_name,
-            gender,
-            avatarUrl: lecturerImage,
-            totalLessons: lessons_count,
-            ratingNumber: lecturerRating,
-            totalReviews: lecturerRatingCount,
-            role: lecturerTitle,
-          }),
-        ),
-        tags: tags.map((tag: ITag) => tag.name),
-        learnList: topics.map((topic: ITopic) => topic.name),
-        candidateList: candidates.map((candidate: ICandidate) => candidate.name),
-        modules: modules.map(
-          ({
-            id: moduleId,
-            title: moduleTitle,
-            lowest_30_days_price: moduleLowest30DaysPrice,
-            previous_price: modulePreviousPrice,
-            price: modulePrice,
-            lessons,
-            progress: moduleProgress,
-          }: IModule) => ({
-            id: moduleId,
-            title: moduleTitle,
-            lowest30DaysPrice: moduleLowest30DaysPrice,
-            priceSale: modulePreviousPrice,
-            price: modulePrice,
-            progress: moduleProgress !== null ? moduleProgress * 100 : undefined,
-            lessons: lessons.map(
-              ({
-                id: lessonId,
-                title: lessonTitle,
-                lowest_30_days_price: lessonLowest30DaysPrice,
-                previous_price: lessonPreviousPrice,
-                price: lessonPrice,
-                progress: lessonProgress,
-              }: ILesson) => ({
-                id: lessonId,
-                title: lessonTitle,
-                lowest30DaysPrice: lessonLowest30DaysPrice,
-                priceSale: lessonPreviousPrice,
-                price: lessonPrice,
-                progress: lessonProgress !== null ? lessonProgress * 100 : undefined,
-              }),
-            ),
-          }),
-        ),
-        active,
-        progress: progress !== null ? progress * 100 : undefined,
-      };
-    } catch (error) {
-      if (error.response && (error.response.status === 400 || error.response.status === 404)) {
-        modifiedResults = {};
-      }
-    }
+    const modifiedResults: ICourseDetailsProps = {
+      id: courseId,
+      description,
+      overview,
+      price,
+      level,
+      image,
+      video,
+      title,
+      technologies,
+      priceSale: previous_price,
+      lowest30DaysPrice: lowest_30_days_price,
+      totalHours: duration / 60,
+      ratingNumber: rating,
+      totalReviews: rating_count,
+      totalStudents: students_count,
+      teachers: lecturers.map(
+        ({
+          id: lecturerId,
+          full_name,
+          gender,
+          image: lecturerImage,
+          lessons_count,
+          rating: lecturerRating,
+          rating_count: lecturerRatingCount,
+          title: lecturerTitle,
+        }: ILecturer) => ({
+          id: lecturerId,
+          name: full_name,
+          gender,
+          image: lecturerImage,
+          totalLessons: lessons_count,
+          ratingNumber: lecturerRating,
+          totalReviews: lecturerRatingCount,
+          role: lecturerTitle,
+        }),
+      ),
+      tags,
+      topics,
+      candidates,
+      modules: modules.map(
+        ({
+          id: moduleId,
+          title: moduleTitle,
+          lowest_30_days_price: moduleLowest30DaysPrice,
+          previous_price: modulePreviousPrice,
+          price: modulePrice,
+          lessons,
+          progress: moduleProgress,
+        }: IModule) => ({
+          id: moduleId,
+          title: moduleTitle,
+          lowest30DaysPrice: moduleLowest30DaysPrice,
+          priceSale: modulePreviousPrice,
+          price: modulePrice,
+          progress: moduleProgress !== null ? moduleProgress * 100 : null,
+          lessons: lessons.map(
+            ({
+              id: lessonId,
+              title: lessonTitle,
+              lowest_30_days_price: lessonLowest30DaysPrice,
+              previous_price: lessonPreviousPrice,
+              price: lessonPrice,
+              progress: lessonProgress,
+            }: ILesson) => ({
+              id: lessonId,
+              title: lessonTitle,
+              lowest30DaysPrice: lessonLowest30DaysPrice,
+              priceSale: lessonPreviousPrice,
+              price: lessonPrice,
+              progress: lessonProgress !== null ? lessonProgress * 100 : null,
+            }),
+          ),
+        }),
+      ),
+      active: active ?? true,
+      progress: progress !== null ? progress * 100 : null,
+    };
+
     return { results: modifiedResults };
   };
 
@@ -239,7 +231,7 @@ export const courseQuery = (id: string) => {
 export const useCourse = (id: string) => {
   const { queryKey, queryFn } = courseQuery(id);
   const { data, ...rest } = useQuery({ queryKey, queryFn });
-  return { data: data?.results as any as ICourseProps, ...rest };
+  return { data: data?.results, ...rest };
 };
 
 export const useEditCourse = (id: string) => {

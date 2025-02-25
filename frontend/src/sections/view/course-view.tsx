@@ -22,12 +22,7 @@ import { SplashScreen } from "src/components/loading-screen";
 import Review from "src/sections/review/review";
 import NotFoundView from "src/sections/error/not-found-view";
 
-import {
-  ICourseProps,
-  ICourseLessonProp,
-  ICourseModuleProp,
-  ICourseByTechnologyProps,
-} from "src/types/course";
+import { ICourseProps, ICourseModuleProps, ICourseTechnologyProps } from "src/types/course";
 
 import Advertisement from "../advertisement";
 import Newsletter from "../newsletter/newsletter";
@@ -50,7 +45,9 @@ export default function CourseView({ id }: { id: string }) {
 
   const technologies = useMemo(
     () =>
-      course?.technologies.map((technology: ICourseByTechnologyProps) => technology.name).join(","),
+      (course?.technologies ?? [])
+        .map((technology: ICourseTechnologyProps) => technology.name)
+        .join(","),
     [course?.technologies],
   );
   const query = { page_size: 3 };
@@ -68,18 +65,15 @@ export default function CourseView({ id }: { id: string }) {
   );
 
   const allLessons = useMemo(
-    () =>
-      course?.modules
-        ?.map((module: ICourseModuleProp) => module.lessons)
-        .flat() as ICourseLessonProp[],
+    () => (course?.modules ?? []).map((module: ICourseModuleProps) => module.lessons).flat(),
     [course?.modules],
   );
 
-  if (isLoading) {
+  if (!course || isLoading) {
     return <SplashScreen />;
   }
 
-  if (Object.keys(course).length === 0) {
+  if (Object.keys(course ?? {}).length === 0) {
     return <NotFoundView />;
   }
 
@@ -106,7 +100,7 @@ export default function CourseView({ id }: { id: string }) {
 
             <Divider sx={{ my: 5 }} />
 
-            {course && <CourseDetailsTeachersInfo teachers={course.teachers} />}
+            <CourseDetailsTeachersInfo teachers={course.teachers} />
           </Grid>
 
           <Grid xs={12} md={5} lg={4}>
@@ -131,13 +125,13 @@ export default function CourseView({ id }: { id: string }) {
       <Review
         courseId={course.id}
         teacherId=""
-        ratingNumber={course.ratingNumber}
+        ratingNumber={course.ratingNumber ?? 0}
         reviewNumber={course.totalReviews}
         lessons={allLessons ?? []}
         teachers={course.teachers ?? []}
       />
 
-      {similarCourses?.length === 3 && <CourseListSimilar courses={similarCourses} />}
+      {similarCourses.length === 3 && <CourseListSimilar courses={similarCourses} />}
 
       <Newsletter />
     </>

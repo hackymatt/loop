@@ -14,6 +14,7 @@ import { encodeUrl } from "src/utils/url-utils";
 import { fCurrency } from "src/utils/format-number";
 import { trackEvents } from "src/utils/track-events";
 
+import { UserType } from "src/consts/user-type";
 import { useCreateCart } from "src/api/carts/carts";
 import { useCreateWishlist } from "src/api/wishlists/wishlists";
 
@@ -21,16 +22,21 @@ import Iconify from "src/components/iconify";
 import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
 
-import { UserType } from "src/consts/user-type";
-import { ICourseProps, ICourseLessonProp, ICourseModuleProp } from "src/types/course";
+import {
+  ICourseModuleProps,
+  ICourseDetailsProps,
+  ICourseModuleLessonProps,
+} from "src/types/course";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  course: ICourseProps;
+  course: ICourseDetailsProps;
 };
 
 export default function CourseDetailsInfo({ course }: Props) {
+  const { id, title, price, priceSale, lowest30DaysPrice, modules } = course;
+
   const { enqueueSnackbar } = useToastContext();
   const { isLoggedIn, userType } = useUserContext();
   const { push } = useRouter();
@@ -39,17 +45,11 @@ export default function CourseDetailsInfo({ course }: Props) {
   const { mutateAsync: createCartItem, isLoading: isAddingToCart } = useCreateCart();
 
   const allLessons = useMemo(
-    () =>
-      course?.modules
-        ?.map((module: ICourseModuleProp) => module.lessons)
-        .flat() as ICourseLessonProp[],
-    [course?.modules],
+    () => (modules ?? []).map((module: ICourseModuleProps) => module.lessons).flat(),
+    [modules],
   );
 
-  const path = useMemo(
-    () => `${paths.course}/${encodeUrl(`${course.slug}-${course.id}`)}/`,
-    [course.id, course.slug],
-  );
+  const path = useMemo(() => `${paths.course}/${encodeUrl(`${title}-${id}`)}/`, [id, title]);
 
   const handleAddToFavorites = async () => {
     if (!isLoggedIn) {
@@ -58,12 +58,12 @@ export default function CourseDetailsInfo({ course }: Props) {
     }
 
     try {
-      const wishlistItems = allLessons.map((lesson: ICourseLessonProp) =>
+      const wishlistItems = allLessons.map((lesson: ICourseModuleLessonProps) =>
         createWishlistItem({ lesson: lesson.id }),
       );
       await Promise.allSettled(wishlistItems);
       enqueueSnackbar("Kurs został dodany do ulubionych", { variant: "success" });
-      trackEvents("add_to_wishlist", "course", "Course added to wishlist", course.slug);
+      trackEvents("add_to_wishlist", "course", "Course added to wishlist", title);
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd podczas dodawania do ulubionych", { variant: "error" });
     }
@@ -75,12 +75,12 @@ export default function CourseDetailsInfo({ course }: Props) {
       return;
     }
     try {
-      const cartItems = allLessons.map((lesson: ICourseLessonProp) =>
+      const cartItems = allLessons.map((lesson: ICourseModuleLessonProps) =>
         createCartItem({ lesson: lesson.id }),
       );
       await Promise.allSettled(cartItems);
       enqueueSnackbar("Kurs został dodany do koszyka", { variant: "success" });
-      trackEvents("add_to_cart", "course", "Course added to cart", course.slug);
+      trackEvents("add_to_cart", "course", "Course added to cart", title);
     } catch (error) {
       enqueueSnackbar("Wystąpił błąd podczas dodawania do koszyka", { variant: "error" });
     }
@@ -91,7 +91,7 @@ export default function CourseDetailsInfo({ course }: Props) {
       <Stack spacing={3}>
         <Stack>
           <Stack direction="row" justifyContent="left" sx={{ typography: "h3" }}>
-            {course.priceSale !== undefined && (
+            {priceSale !== null ? (
               <Box
                 component="span"
                 sx={{
@@ -100,32 +100,29 @@ export default function CourseDetailsInfo({ course }: Props) {
                   textDecoration: "line-through",
                 }}
               >
-                {fCurrency(course.priceSale)}
+                {fCurrency(priceSale)}
               </Box>
-            )}
-            {fCurrency(course.price)}
+            ) : null}
+            {fCurrency(price)}
           </Stack>
-          {course.priceSale !== undefined &&
-            course.priceSale !== null &&
-            course.lowest30DaysPrice !== undefined &&
-            course.lowest30DaysPrice !== null && (
-              <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "left" }}>
-                Najniższa cena z 30 dni przed: {fCurrency(course.lowest30DaysPrice)}
-              </Typography>
-            )}
+          {priceSale !== null && lowest30DaysPrice !== null && (
+            <Typography sx={{ fontSize: 10, color: "text.disabled", textAlign: "left" }}>
+              Najniższa cena z 30 dni przed: {fCurrency(lowest30DaysPrice)}
+            </Typography>
+          )}
         </Stack>
 
         <Stack spacing={2}>
           <Typography>Ten kurs zawiera:</Typography>
 
-          {course.modules && (
+          {modules.length > 0 ? (
             <>
               <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
                 <Iconify icon="carbon:document-multiple-01" sx={{ mr: 1 }} />
                 <Box component="strong" sx={{ mr: 0.5 }}>
-                  {course.modules?.length}
+                  {modules.length}
                 </Box>
-                {polishPlurals("moduł", "moduły", "modułów", course.modules?.length)}
+                {polishPlurals("moduł", "moduły", "modułów", modules.length)}
               </Stack>
 
               <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
@@ -136,7 +133,7 @@ export default function CourseDetailsInfo({ course }: Props) {
                 {polishPlurals("lekcję", "lekcje", "lekcji", allLessons?.length)}
               </Stack>
             </>
-          )}
+          ) : null}
 
           <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
             <Iconify icon="carbon:data-accessor" sx={{ mr: 1 }} />

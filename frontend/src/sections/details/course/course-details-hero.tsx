@@ -20,33 +20,29 @@ import { encodeUrl } from "src/utils/url-utils";
 import { fShortenNumber } from "src/utils/format-number";
 import { getGenderAvatar } from "src/utils/get-gender-avatar";
 
+import { Level } from "src/consts/level";
+
 import Image from "src/components/image";
 import Iconify from "src/components/iconify";
 import { PlayerDialog } from "src/components/player";
 import CustomBreadcrumbs from "src/components/custom-breadcrumbs";
 
-import {
-  ILevel,
-  ICourseProps,
-  ICourseLessonProp,
-  ICourseModuleProp,
-  ICourseByTechnologyProps,
-} from "src/types/course";
+import { ICourseModuleProps, ICourseDetailsProps, ICourseTechnologyProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  course: ICourseProps;
+  course: ICourseDetailsProps;
 };
 
 export default function CourseDetailsHero({ course }: Props) {
   const {
     id,
-    slug,
+    title,
     level,
     modules,
     technologies,
-    coverUrl,
+    image,
     video,
     totalHours,
     description,
@@ -58,15 +54,14 @@ export default function CourseDetailsHero({ course }: Props) {
 
   const videoOpen = useBoolean();
 
-  const genderAvatarUrl = getGenderAvatar(teachers?.[0]?.gender);
+  const firstTeacher = teachers.length > 0 ? teachers[0] : undefined;
 
-  const avatarUrl = teachers?.[0]?.avatarUrl || genderAvatarUrl;
+  const genderAvatarUrl = getGenderAvatar(firstTeacher?.gender);
+
+  const avatarUrl = firstTeacher?.image || genderAvatarUrl;
 
   const allLessons = useMemo(
-    () =>
-      course?.modules
-        ?.map((module: ICourseModuleProp) => module.lessons)
-        .flat() as ICourseLessonProp[],
+    () => (course.modules ?? []).map((module: ICourseModuleProps) => module.lessons).flat(),
     [course?.modules],
   );
 
@@ -83,7 +78,7 @@ export default function CourseDetailsHero({ course }: Props) {
             links={[
               { name: "Strona główna", href: "/" },
               { name: "Kursy", href: paths.courses },
-              { name: course.slug || "" },
+              { name: title || "" },
             ]}
             sx={{
               pt: 5,
@@ -102,7 +97,7 @@ export default function CourseDetailsHero({ course }: Props) {
                   overflow: "hidden",
                 }}
               >
-                {video && (
+                {video ? (
                   <Fab
                     color="primary"
                     onClick={videoOpen.onTrue}
@@ -113,16 +108,16 @@ export default function CourseDetailsHero({ course }: Props) {
                   >
                     <Iconify icon="carbon:play" width={24} />
                   </Fab>
-                )}
+                ) : null}
 
-                <Image alt={slug} src={coverUrl} />
+                <Image alt={title} src={image} />
               </Stack>
             </Grid>
 
             <Grid xs={12} md={7}>
               <Stack spacing={3}>
                 <Stack spacing={2} alignItems="flex-start">
-                  {technologies && (
+                  {technologies.length > 0 ? (
                     <Stack
                       spacing={0.5}
                       direction="row"
@@ -139,7 +134,7 @@ export default function CourseDetailsHero({ course }: Props) {
                         />
                       }
                     >
-                      {technologies.map((technology: ICourseByTechnologyProps) => (
+                      {technologies.map((technology: ICourseTechnologyProps) => (
                         <Typography
                           key={technology.id}
                           variant="overline"
@@ -149,10 +144,10 @@ export default function CourseDetailsHero({ course }: Props) {
                         </Typography>
                       ))}
                     </Stack>
-                  )}
+                  ) : null}
 
                   <Typography variant="h3" component="h1">
-                    {slug}
+                    {title}
                   </Typography>
 
                   <Typography sx={{ color: "text.secondary" }}>{description}</Typography>
@@ -164,38 +159,36 @@ export default function CourseDetailsHero({ course }: Props) {
                   alignItems="center"
                   divider={<Divider orientation="vertical" sx={{ height: 20 }} />}
                 >
-                  {totalReviews > 0 && (
+                  {totalReviews > 0 ? (
                     <Stack spacing={0.5} direction="row" alignItems="center">
                       <Iconify icon="carbon:star-filled" sx={{ color: "warning.main" }} />
                       <Box sx={{ typography: "h6" }}>
                         {Number.isInteger(ratingNumber) ? `${ratingNumber}.0` : ratingNumber}
                       </Box>
 
-                      {totalReviews && (
-                        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                          ({fShortenNumber(totalReviews)}{" "}
-                          {polishPlurals("recenzja", "recenzje", "recenzji", totalReviews)})
-                        </Typography>
-                      )}
+                      <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                        ({fShortenNumber(totalReviews)}{" "}
+                        {polishPlurals("recenzja", "recenzje", "recenzji", totalReviews)})
+                      </Typography>
                     </Stack>
-                  )}
+                  ) : null}
 
-                  {totalStudents > 0 && (
+                  {totalStudents > 0 ? (
                     <Stack direction="row" sx={{ typography: "subtitle2" }}>
                       {fShortenNumber(totalStudents)}
                       <Box component="span" typography="body2" sx={{ ml: 0.5 }}>
                         {polishPlurals("student", "studentów", "studentów", totalStudents)}
                       </Box>
                     </Stack>
-                  )}
+                  ) : null}
 
                   <Box display="flex" alignItems="center">
                     <IconButton
                       onClick={() =>
                         navigator.share({
-                          url: `${paths.course}/${encodeUrl(`${slug}-${id}/`)}`,
-                          title: course?.slug,
-                          text: course?.description,
+                          url: `${paths.course}/${encodeUrl(`${title}-${id}/`)}`,
+                          title,
+                          text: description,
                         })
                       }
                     >
@@ -204,13 +197,13 @@ export default function CourseDetailsHero({ course }: Props) {
                   </Box>
                 </Stack>
 
-                {teachers?.length > 0 && (
+                {teachers.length > 0 ? (
                   <Stack direction="row" alignItems="center">
                     <Avatar src={avatarUrl} />
                     <Typography variant="body2" sx={{ ml: 1, mr: 0.5 }}>
-                      {teachers[0]?.name}
+                      {firstTeacher?.name}
                     </Typography>
-                    {teachers?.length > 1 && (
+                    {teachers.length > 1 && (
                       <Link underline="always" color="text.secondary" variant="body2">
                         + {teachers.length - 1}{" "}
                         {polishPlurals(
@@ -222,7 +215,7 @@ export default function CourseDetailsHero({ course }: Props) {
                       </Link>
                     )}
                   </Stack>
-                )}
+                ) : null}
 
                 <Divider sx={{ borderStyle: "dashed" }} />
 
@@ -240,7 +233,7 @@ export default function CourseDetailsHero({ course }: Props) {
                       {polishPlurals("godzina", "godziny", "godzin", totalHours)}
                     </Stack>
 
-                    {modules && (
+                    {modules ? (
                       <>
                         <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
                           <Iconify icon="carbon:document-multiple-01" sx={{ mr: 1 }} />
@@ -262,16 +255,14 @@ export default function CourseDetailsHero({ course }: Props) {
                           )}`}
                         </Stack>
                       </>
-                    )}
+                    ) : null}
 
                     <Stack direction="row" alignItems="center" sx={{ typography: "body2" }}>
                       <Iconify
                         icon={
-                          (level === ("Podstawowy" as ILevel) && "carbon:skill-level") ||
-                          (level === ("Średniozaawansowany" as ILevel) &&
-                            "carbon:skill-level-basic") ||
-                          (level === ("Zaawansowany" as ILevel) &&
-                            "carbon:skill-level-intermediate") ||
+                          (level === Level.Basic && "carbon:skill-level") ||
+                          (level === Level.Intermediate && "carbon:skill-level-basic") ||
+                          (level === Level.Advanced && "carbon:skill-level-intermediate") ||
                           "carbon:skill-level-advanced"
                         }
                         sx={{ mr: 1 }}
@@ -286,9 +277,9 @@ export default function CourseDetailsHero({ course }: Props) {
         </Container>
       </Box>
 
-      {video && (
+      {video ? (
         <PlayerDialog open={videoOpen.value} onClose={videoOpen.onFalse} videoPath={video} />
-      )}
+      ) : null}
     </>
   );
 }

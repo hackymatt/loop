@@ -5,8 +5,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { formatQueryParams } from "src/utils/query-params";
 
 import { IGender } from "src/types/testimonial";
+import { ICourseProps } from "src/types/course";
 import { IQueryParams } from "src/types/query-params";
-import { ILevel, ICourseProps } from "src/types/course";
 
 import { Api } from "../service";
 import { ListQueryResponse } from "../types";
@@ -15,8 +15,8 @@ import { getListData, getCsrfToken } from "../utils";
 const endpoint = "/courses" as const;
 
 type ILecturer = {
-  full_name: string;
   id: string;
+  full_name: string;
   image: string | null;
   gender: IGender;
 };
@@ -38,10 +38,10 @@ type ICourse = {
   rating: number;
   rating_count: number;
   image: string;
-  level: ILevel;
+  level: "Podstawowy" | "Średniozaawansowany" | "Zaawansowany" | "Ekspert";
   title: string;
   description: string;
-  active: boolean;
+  active?: boolean;
   progress: number | null;
 };
 
@@ -113,7 +113,7 @@ export const coursesQuery = (query?: IQueryParams) => {
             gender,
           }),
         ),
-        active,
+        active: active ?? true,
         progress: progress !== null ? progress * 100 : null,
       }),
     );

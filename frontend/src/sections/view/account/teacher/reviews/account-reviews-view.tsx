@@ -12,6 +12,8 @@ import { useLecturers } from "src/api/lecturers/lecturers";
 import { useReviews, useReviewsPageCount } from "src/api/reviews/reviews";
 import { useReviewsStatistics } from "src/api/reviews/reviews-statistics";
 
+import { useUserContext } from "src/components/user";
+
 import ReviewList from "src/sections/review/review-list";
 import ReviewSummary from "src/sections/review/review-summary";
 import ReviewToolbar from "src/sections/review/review-toolbar";
@@ -23,7 +25,9 @@ import { IQueryParamValue } from "src/types/query-params";
 // ----------------------------------------------------------------------
 
 export default function AccountReviewsView() {
-  const { data: userDetails } = useUserDetails();
+  const { isLoggedIn } = useUserContext();
+
+  const { data: userDetails } = useUserDetails(isLoggedIn);
   const { data: teachings } = useTeachings({ teaching: "True" });
   const { data: lecturerStats } = useLecturers(
     userDetails

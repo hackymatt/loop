@@ -17,6 +17,7 @@ import { fDate } from "src/utils/format-time";
 import { useUserDetails, useUpdateUserDetails } from "src/api/auth/details";
 
 import FormProvider from "src/components/hook-form";
+import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
 
 import AccountImage from "src/sections/account/account-image";
@@ -29,7 +30,9 @@ import { schema, defaultValues, DEFAULT_COUNTRY } from "../admin/users/user";
 export default function AccountPersonalView() {
   const { enqueueSnackbar } = useToastContext();
 
-  const { data: userDetails } = useUserDetails();
+  const { isLoggedIn } = useUserContext();
+
+  const { data: userDetails } = useUserDetails(isLoggedIn);
   const { mutateAsync: updateUserDetails } = useUpdateUserDetails();
 
   const methods = useForm({

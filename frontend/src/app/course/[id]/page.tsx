@@ -9,7 +9,7 @@ import { courseQuery } from "src/api/courses/course";
 
 import CourseView from "src/sections/view/course-view";
 
-import { ICourseByTechnologyProps } from "src/types/course";
+import { ICourseTechnologyDetailsProps } from "src/types/course";
 
 // ----------------------------------------------------------------------
 
@@ -26,13 +26,13 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   const { results: course } = await queryFn();
 
   const courseTitle =
-    course?.slug ?? decodedId.slice(0, decodedId.lastIndexOf("-")).replace(/-/g, " ");
+    course?.title ?? decodedId.slice(0, decodedId.lastIndexOf("-")).replace(/-/g, " ");
   const courseDescription = course?.description
     ? course.description
     : `Zapisz się na kurs ${courseTitle} w loop i naucz się programować. Oferujemy praktyczne lekcje online z certyfikatem ukończenia oraz wsparcie doświadczonych instruktorów.`;
 
   const technologyKeywords = (course?.technologies ?? [])
-    .map((technology: ICourseByTechnologyProps) => [
+    .map((technology: ICourseTechnologyDetailsProps) => [
       `${technology.name} online`,
       `nauka ${technology.name}`,
       `programowanie ${technology.name}`,
@@ -53,6 +53,6 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
       ...(technologyKeywords ?? []),
     ],
     `${paths.course}/${params.id}`,
-    course?.coverUrl,
+    course?.image,
   );
 }

@@ -120,7 +120,7 @@ export default function CourseEditForm({ course, onClose, ...other }: Props) {
         tags: data.tags.map((tag: ITagProps) => tag.id),
         topics: data.topics.map((topic: ITopicProps) => topic.id),
         candidates: data.candidates.map((candidate: ICandidateProps) => candidate.id),
-        level: data.level.slice(0, 1) as ILevel,
+        level: data.level as ILevel,
         image: (await urlToBlob(data.image)) as string,
         video: data.video ? ((await urlToBlob(data.video)) as string) : "",
       });

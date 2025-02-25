@@ -74,9 +74,9 @@ export const userDetailsQuery = () => {
   return { url, queryFn, queryKey: compact([endpoint]) };
 };
 
-export const useUserDetails = () => {
+export const useUserDetails = (enabled: boolean = true) => {
   const { queryKey, queryFn } = userDetailsQuery();
-  const { data, ...rest } = useQuery({ queryKey, queryFn });
+  const { data, ...rest } = useQuery({ queryKey, queryFn, enabled });
   return { data: data?.results, ...rest };
 };
 

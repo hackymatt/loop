@@ -1,9 +1,9 @@
-import { IGender } from "./testimonial";
+import { IUserProps } from "./user";
 
-export type ITeacherProp = {
-  id: string;
+export type ITeacherProps = Pick<IUserProps, "id" | "gender" | "image"> & {
   name: string;
   role: string;
-  image: string;
-  gender: IGender;
+  totalLessons: number;
+  ratingNumber: number | null;
+  totalReviews: number;
 };

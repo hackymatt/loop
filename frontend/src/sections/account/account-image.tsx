@@ -3,6 +3,7 @@ import { fDate } from "src/utils/format-time";
 import { useUserDetails, useUpdateUserDetails } from "src/api/auth/details";
 
 import UserImage from "src/components/user-image";
+import { useUserContext } from "src/components/user";
 import { useToastContext } from "src/components/toast";
 
 // ----------------------------------------------------------------------
@@ -10,7 +11,9 @@ import { useToastContext } from "src/components/toast";
 export default function AccountImage() {
   const { enqueueSnackbar } = useToastContext();
 
-  const { data: userDetails } = useUserDetails();
+  const { isLoggedIn } = useUserContext();
+
+  const { data: userDetails } = useUserDetails(isLoggedIn);
   const { mutateAsync: updatePhoto, isLoading } = useUpdateUserDetails();
 
   const handleSubmit = async (newPhoto: string) => {

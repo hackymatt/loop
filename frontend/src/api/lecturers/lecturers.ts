@@ -42,7 +42,7 @@ export const lecturersQuery = (query?: IQueryParams) => {
       }
     }
     const { results, records_count, pages_count } = data;
-    const modifiedResults = results.map(
+    const modifiedResults = (results ?? []).map(
       ({
         id,
         full_name,

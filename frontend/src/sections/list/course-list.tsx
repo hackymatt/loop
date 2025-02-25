@@ -29,7 +29,7 @@ export default function CourseList({ courses, loading, pagesCount, page, onPageC
         )}
       </Stack>
 
-      {courses?.length > 0 && (
+      {courses.length > 0 && (
         <Pagination
           count={pagesCount ?? 0}
           page={page}
