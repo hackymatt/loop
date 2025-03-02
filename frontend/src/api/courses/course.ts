@@ -159,7 +159,7 @@ export const courseQuery = (id: string) => {
       ratingNumber: rating,
       totalReviews: rating_count,
       totalStudents: students_count,
-      teachers: lecturers.map(
+      teachers: (lecturers ?? []).map(
         ({
           id: lecturerId,
           full_name,
@@ -183,7 +183,7 @@ export const courseQuery = (id: string) => {
       tags,
       topics,
       candidates,
-      modules: modules.map(
+      modules: (modules ?? []).map(
         ({
           id: moduleId,
           title: moduleTitle,
@@ -199,7 +199,7 @@ export const courseQuery = (id: string) => {
           priceSale: modulePreviousPrice,
           price: modulePrice,
           progress: moduleProgress !== null ? moduleProgress * 100 : null,
-          lessons: lessons.map(
+          lessons: (lessons ?? []).map(
             ({
               id: lessonId,
               title: lessonTitle,

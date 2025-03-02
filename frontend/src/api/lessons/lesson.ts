@@ -59,8 +59,6 @@ export const lessonQuery = (id: string) => {
       duration,
       github_url,
       price,
-      previous_price,
-      lowest_30_days_price,
       active,
       technologies,
     } = data;
@@ -69,8 +67,6 @@ export const lessonQuery = (id: string) => {
       id: lessonId,
       description,
       price,
-      priceSale: previous_price,
-      lowest30DaysPrice: lowest_30_days_price,
       title,
       technologies,
       duration,

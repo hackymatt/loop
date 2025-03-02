@@ -13,8 +13,6 @@ export type ILessonProps = {
   duration: number;
   githubUrl: string;
   price: number;
-  priceSale: number | null;
-  lowest30DaysPrice: number | null;
   active: boolean;
   ratingNumber: number | null;
   totalReviews: number;

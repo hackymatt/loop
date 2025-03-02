@@ -33,10 +33,7 @@ export type ICourseTeacherProps = Pick<ITeacherProps, "id" | "name" | "gender" |
 
 export type ICourseTeacherDetailsProps = ITeacherProps;
 
-export type ICourseModuleLessonProps = Pick<
-  ILessonProps,
-  "id" | "title" | "price" | "priceSale" | "lowest30DaysPrice"
-> & {
+export type ICourseModuleLessonProps = Pick<ILessonProps, "id" | "title" | "price"> & {
   progress: number | null;
 };
 
