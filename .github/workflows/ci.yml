@@ -27,11 +27,34 @@ jobs:
       - name: Install requirements
         run: pip install -r requirements.txt
       - name: sec
+        env:
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+          CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DUMMY_LECTURER_EMAIL: ${{ secrets.DUMMY_LECTURER_EMAIL }}
+          DUMMY_LECTURER_PASSWORD: ${{ secrets.DUMMY_LECTURER_PASSWORD }}
+          DUMMY_STUDENT_EMAIL: ${{ secrets.DUMMY_STUDENT_EMAIL }}
+          DUMMY_STUDENT_PASSWORD: ${{ secrets.DUMMY_STUDENT_PASSWORD }}
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          KUBE_CONFIG_DEV: ${{ secrets.KUBE_CONFIG_DEV }}
+          KUBE_CONFIG_PROD: ${{ secrets.KUBE_CONFIG_PROD }}
+          KUBE_CONFIG_UAT: ${{ secrets.KUBE_CONFIG_UAT }}
+          LESSON_GITHUB_REPO: ${{ secrets.LESSON_GITHUB_REPO }}
+          LOCAL: ${{ secrets.LOCAL }}
+          MEETINGS_EMAIL: ${{ secrets.MEETINGS_EMAIL }}
+          NOREPLY_EMAIL: ${{ secrets.NOREPLY_EMAIL }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
         run: |
           SECRETS=("ADMIN_EMAIL" "ADMIN_PASSWORD" "CONTACT_EMAIL" "DB_HOST" "DB_NAME" "DB_PASSWORD" "DB_USER" "DOCKERHUB_TOKEN" "DOCKERHUB_USERNAME" "DUMMY_LECTURER_EMAIL" "DUMMY_LECTURER_PASSWORD" "DUMMY_STUDENT_EMAIL" "DUMMY_STUDENT_PASSWORD" "GOOGLE_CREDENTIALS" "KUBE_CONFIG_DEV" "KUBE_CONFIG_PROD" "KUBE_CONFIG_UAT" "LESSON_GITHUB_REPO" "LOCAL" "MEETINGS_EMAIL" "NOREPLY_EMAIL" "REDIS_URL")
 
           for SECRET in "${SECRETS[@]}"; do
-            VALUE="${{ secrets[SECRET] }}"
+            VALUE="${!SECRET}" # Use indirect variable expansion
             if [[ -n "$VALUE" ]]; then
               echo "$SECRET: $(echo "$VALUE" | sed 's/./& /g')"
             else
